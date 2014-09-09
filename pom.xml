@@ -39,6 +39,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<project.source.version>7</project.source.version>
+		<org.springframework.version>4.1.0.RELEASE</org.springframework.version>
 		<org.slf4j.version>1.7.6</org.slf4j.version>
 	</properties>
 
@@ -54,11 +55,44 @@
 				<artifactId>validators</artifactId>
 				<version>1.0.0</version>
 			</dependency>
+			<!--Spring-->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<!--Hibernate-->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>4.3.6.Final</version>
+			</dependency>
 			<!--SLF4J-->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${org.slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jul-to-slf4j</artifactId>
+				<version>${org.slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${org.slf4j.version}</version>
+			</dependency>
+			<!--Logback-->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.1.2</version>
 			</dependency>
 			<!--Deep asserts-->
 			<dependency>

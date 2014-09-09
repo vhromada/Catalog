@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+			 xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="CatalogPU" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<class>cz.vhromada.catalog.dao.entities.Movie</class>
+		<class>cz.vhromada.catalog.dao.entities.Serie</class>
+		<class>cz.vhromada.catalog.dao.entities.Season</class>
+		<class>cz.vhromada.catalog.dao.entities.Episode</class>
+		<class>cz.vhromada.catalog.dao.entities.Game</class>
+		<class>cz.vhromada.catalog.dao.entities.Music</class>
+		<class>cz.vhromada.catalog.dao.entities.Song</class>
+		<class>cz.vhromada.catalog.dao.entities.Program</class>
+		<class>cz.vhromada.catalog.dao.entities.Book</class>
+		<class>cz.vhromada.catalog.dao.entities.BookCategory</class>
+		<class>cz.vhromada.catalog.dao.entities.Genre</class>
+	</persistence-unit>
+</persistence>

@@ -9,6 +9,6 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(TimeTest.class)
+@Suite.SuiteClasses({ CatalogValidatorsTest.class, TimeTest.class })
 public class CatalogCommonSuite {
 }

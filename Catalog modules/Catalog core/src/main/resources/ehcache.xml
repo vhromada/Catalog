@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+		 updateCheck="false">
+
+	<diskStore path="java.io.tmpdir"/>
+
+	<cache name="movieCache"
+		   eternal="false"
+		   maxElementsInMemory="1000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   timeToIdleSeconds="0"
+		   timeToLiveSeconds="300"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="serieCache"
+		   eternal="false"
+		   maxElementsInMemory="1000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   timeToIdleSeconds="0"
+		   timeToLiveSeconds="300"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="gameCache"
+		   eternal="false"
+		   maxElementsInMemory="1000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   timeToIdleSeconds="0"
+		   timeToLiveSeconds="300"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="musicCache"
+		   eternal="false"
+		   maxElementsInMemory="1000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   timeToIdleSeconds="0"
+		   timeToLiveSeconds="300"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="programCache"
+		   eternal="false"
+		   maxElementsInMemory="1000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   timeToIdleSeconds="0"
+		   timeToLiveSeconds="300"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="bookCache"
+		   eternal="false"
+		   maxElementsInMemory="1000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   timeToIdleSeconds="0"
+		   timeToLiveSeconds="300"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="genreCache"
+		   eternal="false"
+		   maxElementsInMemory="1000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   timeToIdleSeconds="0"
+		   timeToLiveSeconds="300"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+</ehcache>

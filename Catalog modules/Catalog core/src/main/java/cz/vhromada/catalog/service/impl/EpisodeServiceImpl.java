@@ -1,0 +1,327 @@
+package cz.vhromada.catalog.service.impl;
+
+import java.util.List;
+
+import cz.vhromada.catalog.commons.Time;
+import cz.vhromada.catalog.dao.EpisodeDAO;
+import cz.vhromada.catalog.dao.entities.Episode;
+import cz.vhromada.catalog.dao.entities.Season;
+import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.exceptions.DataStorageException;
+import cz.vhromada.catalog.service.EpisodeService;
+import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.validators.Validators;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ * A class represents implementation of service for episodes.
+ *
+ * @author Vladimir Hromada
+ */
+@Component("episodeService")
+public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeService {
+
+	/** DAO for episodes */
+	@Autowired
+	private EpisodeDAO episodeDAO;
+
+	/**
+	 * Returns DAO for episodes.
+	 *
+	 * @return DAO for episodes
+	 */
+	public EpisodeDAO getEpisodeDAO() {
+		return episodeDAO;
+	}
+
+	/**
+	 * Sets a new value to DAO for episodes.
+	 *
+	 * @param episodeDAO new value
+	 */
+	public void setEpisodeDAO(final EpisodeDAO episodeDAO) {
+		this.episodeDAO = episodeDAO;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public Episode getEpisode(final Integer id) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(id, "ID");
+
+		try {
+			return getCachedEpisode(id);
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public void add(final Episode episode) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(episode, "Episode");
+
+		try {
+			episodeDAO.add(episode);
+			addEpisodeToCache(episode);
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public void update(final Episode episode) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(episode, "Episode");
+
+		try {
+			episodeDAO.update(episode);
+			clearCache();
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public void remove(final Episode episode) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(episode, "Episode");
+
+		try {
+			episodeDAO.remove(episode);
+			removeEpisodeFromCache(episode);
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public void duplicate(final Episode episode) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(episode, "Episode");
+
+		try {
+			final Episode newEpisode = new Episode();
+			newEpisode.setNumber(episode.getNumber());
+			newEpisode.setName(episode.getName());
+			newEpisode.setLength(episode.getLength());
+			newEpisode.setNote(episode.getNote());
+			newEpisode.setSeason(episode.getSeason());
+			episodeDAO.add(newEpisode);
+			newEpisode.setPosition(episode.getPosition());
+			episodeDAO.update(newEpisode);
+			addEpisodeToCache(newEpisode);
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public void moveUp(final Episode episode) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(episode, "Episode");
+
+		try {
+			final List<Episode> episodes = getCachedEpisodes(episode.getSeason(), false);
+			final Episode otherEpisode = episodes.get(episodes.indexOf(episode) - 1);
+			switchPosition(episode, otherEpisode);
+			episodeDAO.update(episode);
+			episodeDAO.update(otherEpisode);
+			clearCache();
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public void moveDown(final Episode episode) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(episode, "Episode");
+
+		try {
+			final List<Episode> episodes = getCachedEpisodes(episode.getSeason(), false);
+			final Episode otherEpisode = episodes.get(episodes.indexOf(episode) + 1);
+			switchPosition(episode, otherEpisode);
+			episodeDAO.update(episode);
+			episodeDAO.update(otherEpisode);
+			clearCache();
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public boolean exists(final Episode episode) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(episode, "Episode");
+
+		try {
+			return getCachedEpisode(episode.getId()) != null;
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public List<Episode> findEpisodesBySeason(final Season season) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(season, "Season");
+
+		try {
+			return getCachedEpisodes(season, true);
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException     if DAO for episodes isn't set
+	 *                                   or cache for series isn't set
+	 * @throws IllegalArgumentException  {@inheritDoc}
+	 * @throws ServiceOperationException {@inheritDoc}
+	 */
+	@Override
+	public Time getTotalLengthBySeason(final Season season) {
+		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		validateSerieCacheNotNull();
+		Validators.validateArgumentNotNull(season, "Season");
+
+		try {
+			int sum = 0;
+			for (Episode episode : getCachedEpisodes(season, true)) {
+				sum += episode.getLength();
+			}
+			return new Time(sum);
+		} catch (final DataStorageException ex) {
+			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+		}
+	}
+
+
+	@Override
+	protected List<Serie> getDAOSeries() {
+		return null;
+	}
+
+	@Override
+	protected List<Season> getDAOSeasons(final Serie serie) {
+		return null;
+	}
+
+	@Override
+	protected List<Episode> getDAOEpisodes(final Season season) {
+		return episodeDAO.findEpisodesBySeason(season);
+	}
+
+	@Override
+	protected Serie getDAOSerie(final Integer id) {
+		return null;
+	}
+
+	@Override
+	protected Season getDAOSeason(final Integer id) {
+		return null;
+	}
+
+	@Override
+	protected Episode getDAOEpisode(final Integer id) {
+		return episodeDAO.getEpisode(id);
+	}
+
+	/**
+	 * Switch position of episodes.
+	 *
+	 * @param episode1 1st episode
+	 * @param episode2 2nd episode
+	 */
+	private void switchPosition(final Episode episode1, final Episode episode2) {
+		final int position = episode1.getPosition();
+		episode1.setPosition(episode2.getPosition());
+		episode2.setPosition(position);
+	}
+
+}
+

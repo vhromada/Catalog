@@ -124,6 +124,13 @@
 				<version>1.0.0</version>
 				<scope>test</scope>
 			</dependency>
+			<!--Object generator-->
+			<dependency>
+				<groupId>cz.vhromada.generator</groupId>
+				<artifactId>object-generator</artifactId>
+				<version>1.0.1</version>
+				<scope>test</scope>
+			</dependency>
 			<!--Mockito-->
 			<dependency>
 				<groupId>org.mockito</groupId>

@@ -30,6 +30,19 @@
 			<groupId>cz.vhromada.test</groupId>
 			<artifactId>deep-assert</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>cz.vhromada.generator</groupId>
+			<artifactId>object-generator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

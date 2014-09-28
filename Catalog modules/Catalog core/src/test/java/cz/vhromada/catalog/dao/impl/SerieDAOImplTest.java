@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.SerieDAO;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +40,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SerieDAOImplTest {
+public class SerieDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -57,18 +54,10 @@ public class SerieDAOImplTest {
 	@InjectMocks
 	private SerieDAO serieDAO = new SerieDAOImpl();
 
-	/** Test method for {@link SerieDAOImpl#getEntityManager()} and {@link SerieDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final SerieDAOImpl serieDAOImpl = new SerieDAOImpl();
-		serieDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, serieDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link SerieDAO#getSeries()}. */
 	@Test
 	public void testGetSeries() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Serie.class))).thenReturn(seriesQuery);
 		when(seriesQuery.getResultList()).thenReturn(series);
 
@@ -106,12 +95,13 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAO#getSerie(Integer)} with existing serie. */
 	@Test
 	public void testGetSerieWithExistingSerie() {
+		final int id = generate(Integer.class);
 		final Serie serie = mock(Serie.class);
 		when(entityManager.find(eq(Serie.class), anyInt())).thenReturn(serie);
 
-		DeepAsserts.assertEquals(serie, serieDAO.getSerie(PRIMARY_ID));
+		DeepAsserts.assertEquals(serie, serieDAO.getSerie(id));
 
-		verify(entityManager).find(Serie.class, PRIMARY_ID);
+		verify(entityManager).find(Serie.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -165,12 +155,13 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAO#add(Serie)}. */
 	@Test
 	public void testAdd() {
-		final Serie serie = EntityGenerator.createSerie();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Serie.class));
+		final Serie serie = generate(Serie.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Serie.class));
 
 		serieDAO.add(serie);
-		DeepAsserts.assertEquals(ID, serie.getId());
-		DeepAsserts.assertEquals(ID - 1, serie.getPosition());
+		DeepAsserts.assertEquals(id, serie.getId());
+		DeepAsserts.assertEquals(id - 1, serie.getPosition());
 
 		verify(entityManager).persist(serie);
 		verify(entityManager).merge(serie);
@@ -200,7 +191,7 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAOImpl#add(Serie)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Serie serie = EntityGenerator.createSerie();
+		final Serie serie = generate(Serie.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Serie.class));
 
 		try {
@@ -217,7 +208,7 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAO#update(Serie)}. */
 	@Test
 	public void testUpdate() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 
 		serieDAO.update(serie);
 
@@ -248,7 +239,7 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAOImpl#update(Serie)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Serie.class));
 
 		try {
@@ -265,7 +256,7 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAO#remove(Serie)} with managed serie. */
 	@Test
 	public void testRemoveWithManagedSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		when(entityManager.contains(any(Serie.class))).thenReturn(true);
 
 		serieDAO.remove(serie);
@@ -278,14 +269,14 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAO#remove(Serie)} with not managed serie. */
 	@Test
 	public void testRemoveWithNotManagedSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		when(entityManager.contains(any(Serie.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Serie.class), anyInt())).thenReturn(serie);
 
 		serieDAO.remove(serie);
 
 		verify(entityManager).contains(serie);
-		verify(entityManager).getReference(Serie.class, PRIMARY_ID);
+		verify(entityManager).getReference(Serie.class, serie.getId());
 		verify(entityManager).remove(serie);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -313,7 +304,7 @@ public class SerieDAOImplTest {
 	/** Test method for {@link SerieDAOImpl#remove(Serie)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Serie.class));
 
 		try {

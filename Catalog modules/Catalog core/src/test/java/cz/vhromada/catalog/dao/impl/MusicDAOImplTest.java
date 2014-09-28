@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.MusicDAO;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +40,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MusicDAOImplTest {
+public class MusicDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -68,7 +65,7 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAO#getMusic()}. */
 	@Test
 	public void testGetMusic() {
-		final List<Music> music = CollectionUtils.newList(EntityGenerator.createMusic(PRIMARY_ID), EntityGenerator.createMusic(SECONDARY_ID));
+		final List<Music> music = CollectionUtils.newList(generate(Music.class), generate(Music.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Music.class))).thenReturn(musicQuery);
 		when(musicQuery.getResultList()).thenReturn(music);
 
@@ -106,12 +103,13 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAO#getMusic(Integer)} with existing music. */
 	@Test
 	public void testGetMusicByIdWithExistingMusic() {
+		final int id = generate(Integer.class);
 		final Music music = mock(Music.class);
 		when(entityManager.find(eq(Music.class), anyInt())).thenReturn(music);
 
-		DeepAsserts.assertEquals(music, musicDAO.getMusic(PRIMARY_ID));
+		DeepAsserts.assertEquals(music, musicDAO.getMusic(id));
 
-		verify(entityManager).find(Music.class, PRIMARY_ID);
+		verify(entityManager).find(Music.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -165,12 +163,13 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAO#add(Music)} . */
 	@Test
 	public void testAdd() {
-		final Music music = EntityGenerator.createMusic();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Music.class));
+		final Music music = generate(Music.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Music.class));
 
 		musicDAO.add(music);
-		DeepAsserts.assertEquals(ID, music.getId());
-		DeepAsserts.assertEquals(ID - 1, music.getPosition());
+		DeepAsserts.assertEquals(id, music.getId());
+		DeepAsserts.assertEquals(id - 1, music.getPosition());
 
 		verify(entityManager).persist(music);
 		verify(entityManager).merge(music);
@@ -200,7 +199,7 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAOImpl#add(Music)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Music music = EntityGenerator.createMusic();
+		final Music music = generate(Music.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Music.class));
 
 		try {
@@ -217,7 +216,7 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAO#update(Music)}. */
 	@Test
 	public void testUpdate() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 
 		musicDAO.update(music);
 
@@ -248,7 +247,7 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAOImpl#update(Music)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Music music = EntityGenerator.createMusic(Integer.MAX_VALUE);
+		final Music music = generate(Music.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Music.class));
 
 		try {
@@ -265,7 +264,7 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAO#remove(Music)} with managed music. */
 	@Test
 	public void testRemoveWithManagedMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		when(entityManager.contains(any(Music.class))).thenReturn(true);
 
 		musicDAO.remove(music);
@@ -278,14 +277,14 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAO#remove(Music)} with not managed music. */
 	@Test
 	public void testRemoveWithNotManagedMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		when(entityManager.contains(any(Music.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Music.class), anyInt())).thenReturn(music);
 
 		musicDAO.remove(music);
 
 		verify(entityManager).contains(music);
-		verify(entityManager).getReference(Music.class, PRIMARY_ID);
+		verify(entityManager).getReference(Music.class, music.getId());
 		verify(entityManager).remove(music);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -313,7 +312,7 @@ public class MusicDAOImplTest {
 	/** Test method for {@link MusicDAOImpl#remove(Music)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Music music = EntityGenerator.createMusic(Integer.MAX_VALUE);
+		final Music music = generate(Music.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Music.class));
 
 		try {

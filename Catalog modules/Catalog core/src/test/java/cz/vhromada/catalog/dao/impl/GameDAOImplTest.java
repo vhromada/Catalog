@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.GameDAO;
 import cz.vhromada.catalog.dao.entities.Game;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +40,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GameDAOImplTest {
+public class GameDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -68,7 +65,7 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAO#getGames()}. */
 	@Test
 	public void testGetGames() {
-		final List<Game> games = CollectionUtils.newList(EntityGenerator.createGame(PRIMARY_ID), EntityGenerator.createGame(SECONDARY_ID));
+		final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Game.class))).thenReturn(gamesQuery);
 		when(gamesQuery.getResultList()).thenReturn(games);
 
@@ -106,12 +103,13 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAO#getGame(Integer)} with existing game. */
 	@Test
 	public void testGetGameWithExistingGame() {
+		final int id = generate(Integer.class);
 		final Game game = mock(Game.class);
 		when(entityManager.find(eq(Game.class), anyInt())).thenReturn(game);
 
-		DeepAsserts.assertEquals(game, gameDAO.getGame(PRIMARY_ID));
+		DeepAsserts.assertEquals(game, gameDAO.getGame(id));
 
-		verify(entityManager).find(Game.class, PRIMARY_ID);
+		verify(entityManager).find(Game.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -165,12 +163,13 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAO#add(Game)}. */
 	@Test
 	public void testAdd() {
-		final Game game = EntityGenerator.createGame();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Game.class));
+		final Game game = generate(Game.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Game.class));
 
 		gameDAO.add(game);
-		DeepAsserts.assertEquals(ID, game.getId());
-		DeepAsserts.assertEquals(ID - 1, game.getPosition());
+		DeepAsserts.assertEquals(id, game.getId());
+		DeepAsserts.assertEquals(id - 1, game.getPosition());
 
 		verify(entityManager).persist(game);
 		verify(entityManager).merge(game);
@@ -200,7 +199,7 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAOImpl#add(Game)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Game game = EntityGenerator.createGame();
+		final Game game = generate(Game.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Game.class));
 
 		try {
@@ -217,7 +216,7 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAO#update(Game)}. */
 	@Test
 	public void testUpdate() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 
 		gameDAO.update(game);
 
@@ -248,7 +247,7 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAOImpl#update(Game)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Game game = EntityGenerator.createGame(Integer.MAX_VALUE);
+		final Game game = generate(Game.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Game.class));
 
 		try {
@@ -265,7 +264,7 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAO#remove(Game)} with managed game. */
 	@Test
 	public void testRemoveWithManagedGame() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		when(entityManager.contains(any(Game.class))).thenReturn(true);
 
 		gameDAO.remove(game);
@@ -278,14 +277,14 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAO#remove(Game)} with not managed game. */
 	@Test
 	public void testRemoveWithNotManagedGame() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		when(entityManager.contains(any(Game.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Game.class), anyInt())).thenReturn(game);
 
 		gameDAO.remove(game);
 
 		verify(entityManager).contains(game);
-		verify(entityManager).getReference(Game.class, PRIMARY_ID);
+		verify(entityManager).getReference(Game.class, game.getId());
 		verify(entityManager).remove(game);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -313,7 +312,7 @@ public class GameDAOImplTest {
 	/** Test method for {@link GameDAOImpl#remove(Game)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Game game = EntityGenerator.createGame(Integer.MAX_VALUE);
+		final Game game = generate(Game.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Game.class));
 
 		try {

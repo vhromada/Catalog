@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +40,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GenreDAOImplTest {
+public class GenreDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -68,7 +65,7 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAO#getGenres()}. */
 	@Test
 	public void testGetGenres() {
-		final List<Genre> genres = CollectionUtils.newList(EntityGenerator.createGenre(PRIMARY_ID), EntityGenerator.createGenre(SECONDARY_ID));
+		final List<Genre> genres = CollectionUtils.newList(generate(Genre.class), generate(Genre.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Genre.class))).thenReturn(genresQuery);
 		when(genresQuery.getResultList()).thenReturn(genres);
 
@@ -107,11 +104,12 @@ public class GenreDAOImplTest {
 	@Test
 	public void testGetGenreWithExistingGenre() {
 		final Genre genre = mock(Genre.class);
+		final int id = generate(Integer.class);
 		when(entityManager.find(eq(Genre.class), anyInt())).thenReturn(genre);
 
-		DeepAsserts.assertEquals(genre, genreDAO.getGenre(PRIMARY_ID));
+		DeepAsserts.assertEquals(genre, genreDAO.getGenre(id));
 
-		verify(entityManager).find(Genre.class, PRIMARY_ID);
+		verify(entityManager).find(Genre.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -165,11 +163,12 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAO#add(Genre)}. */
 	@Test
 	public void testAdd() {
-		final Genre genre = EntityGenerator.createGenre();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Genre.class));
+		final int id = generate(Integer.class);
+		final Genre genre = generate(Genre.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Genre.class));
 
 		genreDAO.add(genre);
-		DeepAsserts.assertEquals(ID, genre.getId());
+		DeepAsserts.assertEquals(id, genre.getId());
 
 		verify(entityManager).persist(genre);
 		verifyNoMoreInteractions(entityManager);
@@ -198,7 +197,7 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAOImpl#add(Genre)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Genre genre = EntityGenerator.createGenre();
+		final Genre genre = generate(Genre.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Genre.class));
 
 		try {
@@ -215,7 +214,7 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAO#update(Genre)}. */
 	@Test
 	public void testUpdate() {
-		final Genre genre = EntityGenerator.createGenre(PRIMARY_ID);
+		final Genre genre = generate(Genre.class);
 
 		genreDAO.update(genre);
 
@@ -246,7 +245,7 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAOImpl#update(Genre)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Genre genre = EntityGenerator.createGenre(Integer.MAX_VALUE);
+		final Genre genre = generate(Genre.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Genre.class));
 
 		try {
@@ -263,7 +262,7 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAO#remove(Genre)} with managed genre. */
 	@Test
 	public void testRemoveWithManagedGenre() {
-		final Genre genre = EntityGenerator.createGenre(PRIMARY_ID);
+		final Genre genre = generate(Genre.class);
 		when(entityManager.contains(any(Genre.class))).thenReturn(true);
 
 		genreDAO.remove(genre);
@@ -276,14 +275,14 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAO#remove(Genre)} with not managed genre. */
 	@Test
 	public void testRemoveWithNotManagedGenre() {
-		final Genre genre = EntityGenerator.createGenre(PRIMARY_ID);
+		final Genre genre = generate(Genre.class);
 		when(entityManager.contains(any(Genre.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Genre.class), anyInt())).thenReturn(genre);
 
 		genreDAO.remove(genre);
 
 		verify(entityManager).contains(genre);
-		verify(entityManager).getReference(Genre.class, PRIMARY_ID);
+		verify(entityManager).getReference(Genre.class, genre.getId());
 		verify(entityManager).remove(genre);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -311,7 +310,7 @@ public class GenreDAOImplTest {
 	/** Test method for {@link GenreDAOImpl#remove(Genre)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Genre genre = EntityGenerator.createGenre(Integer.MAX_VALUE);
+		final Genre genre = generate(Genre.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Genre.class));
 
 		try {

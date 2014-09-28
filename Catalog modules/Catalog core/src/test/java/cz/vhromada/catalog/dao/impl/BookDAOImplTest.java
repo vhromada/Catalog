@@ -1,9 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_INNER_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -25,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.BookDAO;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
@@ -45,7 +41,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BookDAOImplTest {
+public class BookDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -70,12 +66,13 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAO#getBook(Integer)} with existing book. */
 	@Test
 	public void testGetBookWithExistingBook() {
+		final int id = generate(Integer.class);
 		final Book book = mock(Book.class);
 		when(entityManager.find(eq(Book.class), anyInt())).thenReturn(book);
 
-		DeepAsserts.assertEquals(book, bookDAO.getBook(PRIMARY_ID));
+		DeepAsserts.assertEquals(book, bookDAO.getBook(id));
 
-		verify(entityManager).find(Book.class, PRIMARY_ID);
+		verify(entityManager).find(Book.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -129,12 +126,13 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAO#add(Book)}. */
 	@Test
 	public void testAdd() {
-		final Book book = EntityGenerator.createBook();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Book.class));
+		final Book book = generate(Book.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Book.class));
 
 		bookDAO.add(book);
-		DeepAsserts.assertEquals(ID, book.getId());
-		DeepAsserts.assertEquals(ID - 1, book.getPosition());
+		DeepAsserts.assertEquals(id, book.getId());
+		DeepAsserts.assertEquals(id - 1, book.getPosition());
 
 		verify(entityManager).persist(book);
 		verify(entityManager).merge(book);
@@ -164,7 +162,7 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAOImpl#add(Book)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Book book = EntityGenerator.createBook();
+		final Book book = generate(Book.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Book.class));
 
 		try {
@@ -181,7 +179,7 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAO#update(Book)}. */
 	@Test
 	public void testUpdate() {
-		final Book book = EntityGenerator.createBook(PRIMARY_ID);
+		final Book book = generate(Book.class);
 
 		bookDAO.update(book);
 
@@ -212,7 +210,7 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAOImpl#update(Book)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Book book = EntityGenerator.createBook(Integer.MAX_VALUE);
+		final Book book = generate(Book.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Book.class));
 
 		try {
@@ -229,7 +227,7 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAO#remove(Book)} with managed book. */
 	@Test
 	public void testRemoveWithManagedBook() {
-		final Book book = EntityGenerator.createBook(PRIMARY_ID);
+		final Book book = generate(Book.class);
 		when(entityManager.contains(any(Book.class))).thenReturn(true);
 
 		bookDAO.remove(book);
@@ -242,14 +240,14 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAO#remove(Book)} with not managed book. */
 	@Test
 	public void testRemoveWithNotManagedBook() {
-		final Book book = EntityGenerator.createBook(PRIMARY_ID);
+		final Book book = generate(Book.class);
 		when(entityManager.contains(any(Book.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Book.class), anyInt())).thenReturn(book);
 
 		bookDAO.remove(book);
 
 		verify(entityManager).contains(book);
-		verify(entityManager).getReference(Book.class, PRIMARY_ID);
+		verify(entityManager).getReference(Book.class, book.getId());
 		verify(entityManager).remove(book);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -277,7 +275,7 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAOImpl#remove(Book)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Book book = EntityGenerator.createBook(Integer.MAX_VALUE);
+		final Book book = generate(Book.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Book.class));
 
 		try {
@@ -294,9 +292,8 @@ public class BookDAOImplTest {
 	/** Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)}. */
 	@Test
 	public void testFindBooksByBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
-		final List<Book> books = CollectionUtils.newList(EntityGenerator.createBook(INNER_INNER_ID, bookCategory),
-				EntityGenerator.createBook(SECONDARY_INNER_INNER_ID, bookCategory));
+		final BookCategory bookCategory = generate(BookCategory.class);
+		final List<Book> books = CollectionUtils.newList(generate(Book.class), generate(Book.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Book.class))).thenReturn(booksQuery);
 		when(booksQuery.getResultList()).thenReturn(books);
 
@@ -334,7 +331,7 @@ public class BookDAOImplTest {
 		doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Book.class));
 
 		try {
-			bookDAO.findBooksByBookCategory(EntityGenerator.createBookCategory(Integer.MAX_VALUE));
+			bookDAO.findBooksByBookCategory(generate(BookCategory.class));
 			fail("Can't find books by book category with not thrown DataStorageException for exception in persistence.");
 		} catch (final DataStorageException ex) {
 			// OK

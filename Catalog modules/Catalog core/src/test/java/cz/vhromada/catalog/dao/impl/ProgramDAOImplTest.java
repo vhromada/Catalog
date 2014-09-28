@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.ProgramDAO;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +40,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ProgramDAOImplTest {
+public class ProgramDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -68,7 +65,7 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAO#getPrograms()}. */
 	@Test
 	public void testGetPrograms() {
-		final List<Program> programs = CollectionUtils.newList(EntityGenerator.createProgram(PRIMARY_ID), EntityGenerator.createProgram(SECONDARY_ID));
+		final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Program.class))).thenReturn(programsQuery);
 		when(programsQuery.getResultList()).thenReturn(programs);
 
@@ -106,12 +103,13 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAO#getProgram(Integer)} with existing program. */
 	@Test
 	public void testGetProgramWithExistingProgram() {
+		final int id = generate(Integer.class);
 		final Program program = mock(Program.class);
 		when(entityManager.find(eq(Program.class), anyInt())).thenReturn(program);
 
-		DeepAsserts.assertEquals(program, programDAO.getProgram(PRIMARY_ID));
+		DeepAsserts.assertEquals(program, programDAO.getProgram(id));
 
-		verify(entityManager).find(Program.class, PRIMARY_ID);
+		verify(entityManager).find(Program.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -165,12 +163,13 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAO#add(Program)}. */
 	@Test
 	public void testAdd() {
-		final Program program = EntityGenerator.createProgram();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Program.class));
+		final Program program = generate(Program.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Program.class));
 
 		programDAO.add(program);
-		DeepAsserts.assertEquals(ID, program.getId());
-		DeepAsserts.assertEquals(ID - 1, program.getPosition());
+		DeepAsserts.assertEquals(id, program.getId());
+		DeepAsserts.assertEquals(id - 1, program.getPosition());
 
 		verify(entityManager).persist(program);
 		verify(entityManager).merge(program);
@@ -200,7 +199,7 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAOImpl#add(Program)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Program program = EntityGenerator.createProgram();
+		final Program program = generate(Program.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Program.class));
 
 		try {
@@ -217,7 +216,7 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAO#update(Program)}. */
 	@Test
 	public void testUpdate() {
-		final Program program = EntityGenerator.createProgram(PRIMARY_ID);
+		final Program program = generate(Program.class);
 
 		programDAO.update(program);
 
@@ -248,7 +247,7 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAOImpl#update(Program)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Program program = EntityGenerator.createProgram(Integer.MAX_VALUE);
+		final Program program = generate(Program.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Program.class));
 
 		try {
@@ -265,7 +264,7 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAO#remove(Program)} with managed program. */
 	@Test
 	public void testRemoveWithManagedProgram() {
-		final Program program = EntityGenerator.createProgram(PRIMARY_ID);
+		final Program program = generate(Program.class);
 		when(entityManager.contains(any(Program.class))).thenReturn(true);
 
 		programDAO.remove(program);
@@ -278,14 +277,14 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAO#remove(Program)} with not managed program. */
 	@Test
 	public void testRemoveWithNotManagedProgram() {
-		final Program program = EntityGenerator.createProgram(PRIMARY_ID);
+		final Program program = generate(Program.class);
 		when(entityManager.contains(any(Program.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Program.class), anyInt())).thenReturn(program);
 
 		programDAO.remove(program);
 
 		verify(entityManager).contains(program);
-		verify(entityManager).getReference(Program.class, PRIMARY_ID);
+		verify(entityManager).getReference(Program.class, program.getId());
 		verify(entityManager).remove(program);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -313,7 +312,7 @@ public class ProgramDAOImplTest {
 	/** Test method for {@link ProgramDAOImpl#remove(Program)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Program program = EntityGenerator.createProgram(Integer.MAX_VALUE);
+		final Program program = generate(Program.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Program.class));
 
 		try {

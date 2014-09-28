@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.MovieDAO;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +40,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MovieDAOImplTest {
+public class MovieDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -68,7 +65,7 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAO#getMovies()}. */
 	@Test
 	public void testGetMovies() {
-		final List<Movie> movies = CollectionUtils.newList(EntityGenerator.createMovie(PRIMARY_ID), EntityGenerator.createMovie(SECONDARY_ID));
+		final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Movie.class))).thenReturn(moviesQuery);
 		when(moviesQuery.getResultList()).thenReturn(movies);
 
@@ -106,12 +103,13 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAO#getMovie(Integer)} with existing movie. */
 	@Test
 	public void testGetMovieWithExistingMovie() {
+		final int id = generate(Integer.class);
 		final Movie movie = mock(Movie.class);
 		when(entityManager.find(eq(Movie.class), anyInt())).thenReturn(movie);
 
-		DeepAsserts.assertEquals(movie, movieDAO.getMovie(PRIMARY_ID));
+		DeepAsserts.assertEquals(movie, movieDAO.getMovie(id));
 
-		verify(entityManager).find(Movie.class, PRIMARY_ID);
+		verify(entityManager).find(Movie.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -165,12 +163,13 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAO#add(Movie)}. */
 	@Test
 	public void testAdd() {
-		final Movie movie = EntityGenerator.createMovie();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Movie.class));
+		final Movie movie = generate(Movie.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Movie.class));
 
 		movieDAO.add(movie);
-		DeepAsserts.assertEquals(ID, movie.getId());
-		DeepAsserts.assertEquals(ID - 1, movie.getPosition());
+		DeepAsserts.assertEquals(id, movie.getId());
+		DeepAsserts.assertEquals(id - 1, movie.getPosition());
 
 		verify(entityManager).persist(movie);
 		verify(entityManager).merge(movie);
@@ -200,7 +199,7 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAOImpl#add(Movie)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Movie movie = EntityGenerator.createMovie();
+		final Movie movie = generate(Movie.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Movie.class));
 
 		try {
@@ -217,7 +216,7 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAO#update(Movie)}. */
 	@Test
 	public void testUpdate() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 
 		movieDAO.update(movie);
 
@@ -248,7 +247,7 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAOImpl#update(Movie)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Movie.class));
 
 		try {
@@ -265,7 +264,7 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAO#remove(Movie)} with managed movie. */
 	@Test
 	public void testRemoveWithManagedMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		when(entityManager.contains(any(Movie.class))).thenReturn(true);
 
 		movieDAO.remove(movie);
@@ -278,14 +277,14 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAO#remove(Movie)} with not managed movie. */
 	@Test
 	public void testRemoveWithNotManagedMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		when(entityManager.contains(any(Movie.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Movie.class), anyInt())).thenReturn(movie);
 
 		movieDAO.remove(movie);
 
 		verify(entityManager).contains(movie);
-		verify(entityManager).getReference(Movie.class, PRIMARY_ID);
+		verify(entityManager).getReference(Movie.class, movie.getId());
 		verify(entityManager).remove(movie);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -313,7 +312,7 @@ public class MovieDAOImplTest {
 	/** Test method for {@link MovieDAOImpl#remove(Movie)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Movie.class));
 
 		try {

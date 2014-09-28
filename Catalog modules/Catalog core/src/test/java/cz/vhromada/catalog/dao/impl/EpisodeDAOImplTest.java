@@ -1,9 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_INNER_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -25,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
@@ -45,7 +41,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EpisodeDAOImplTest {
+public class EpisodeDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -70,12 +66,13 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAO#getEpisode(Integer)} with existing episode. */
 	@Test
 	public void testGetEpisodeWithExistingEpisode() {
+		final int id = generate(Integer.class);
 		final Episode episode = mock(Episode.class);
 		when(entityManager.find(eq(Episode.class), anyInt())).thenReturn(episode);
 
-		DeepAsserts.assertEquals(episode, episodeDAO.getEpisode(PRIMARY_ID));
+		DeepAsserts.assertEquals(episode, episodeDAO.getEpisode(id));
 
-		verify(entityManager).find(Episode.class, PRIMARY_ID);
+		verify(entityManager).find(Episode.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -129,12 +126,13 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAO#add(Episode)}. */
 	@Test
 	public void testAdd() {
-		final Episode episode = EntityGenerator.createEpisode();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Episode.class));
+		final Episode episode = generate(Episode.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Episode.class));
 
 		episodeDAO.add(episode);
-		DeepAsserts.assertEquals(ID, episode.getId());
-		DeepAsserts.assertEquals(ID - 1, episode.getPosition());
+		DeepAsserts.assertEquals(id, episode.getId());
+		DeepAsserts.assertEquals(id - 1, episode.getPosition());
 
 		verify(entityManager).persist(episode);
 		verify(entityManager).merge(episode);
@@ -164,7 +162,7 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAOImpl#add(Episode)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Episode episode = EntityGenerator.createEpisode();
+		final Episode episode = generate(Episode.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Episode.class));
 
 		try {
@@ -181,7 +179,7 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAO#update(Episode)}. */
 	@Test
 	public void testUpdate() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
 
 		episodeDAO.update(episode);
 
@@ -212,7 +210,7 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAOImpl#update(Episode)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE);
+		final Episode episode = generate(Episode.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Episode.class));
 
 		try {
@@ -229,7 +227,7 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAO#remove(Episode)} with managed episode. */
 	@Test
 	public void testRemoveWithManagedEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
 		when(entityManager.contains(any(Episode.class))).thenReturn(true);
 
 		episodeDAO.remove(episode);
@@ -242,14 +240,14 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAO#remove(Episode)} with not managed episode. */
 	@Test
 	public void testRemoveWithNotManagedEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
 		when(entityManager.contains(any(Episode.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Episode.class), anyInt())).thenReturn(episode);
 
 		episodeDAO.remove(episode);
 
 		verify(entityManager).contains(episode);
-		verify(entityManager).getReference(Episode.class, PRIMARY_ID);
+		verify(entityManager).getReference(Episode.class, episode.getId());
 		verify(entityManager).remove(episode);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -277,7 +275,7 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAOImpl#remove(Episode)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE);
+		final Episode episode = generate(Episode.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Episode.class));
 
 		try {
@@ -294,9 +292,8 @@ public class EpisodeDAOImplTest {
 	/** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)}. */
 	@Test
 	public void testFindEpisodesBySeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
-		final List<Episode> episodes = CollectionUtils.newList(EntityGenerator.createEpisode(INNER_INNER_ID, season),
-				EntityGenerator.createEpisode(SECONDARY_INNER_INNER_ID, season));
+		final Season season = generate(Season.class);
+		final List<Episode> episodes = CollectionUtils.newList(generate(Episode.class), generate(Episode.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Episode.class))).thenReturn(episodesQuery);
 		when(episodesQuery.getResultList()).thenReturn(episodes);
 
@@ -334,7 +331,7 @@ public class EpisodeDAOImplTest {
 		doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Episode.class));
 
 		try {
-			episodeDAO.findEpisodesBySeason(EntityGenerator.createSeason(Integer.MAX_VALUE));
+			episodeDAO.findEpisodesBySeason(generate(Season.class));
 			fail("Can't find episodes by season with not thrown DataStorageException for exception in persistence.");
 		} catch (final DataStorageException ex) {
 			// OK

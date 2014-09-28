@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.BookCategoryDAO;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +40,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BookCategoryDAOImplTest {
+public class BookCategoryDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -68,8 +65,7 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAO#getBookCategories()}. */
 	@Test
 	public void testGetBookCategories() {
-		final List<BookCategory> bookCategories = CollectionUtils.newList(EntityGenerator.createBookCategory(PRIMARY_ID),
-				EntityGenerator.createBookCategory(SECONDARY_ID));
+		final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
 		when(entityManager.createNamedQuery(anyString(), eq(BookCategory.class))).thenReturn(bookCategoriesQuery);
 		when(bookCategoriesQuery.getResultList()).thenReturn(bookCategories);
 
@@ -107,12 +103,13 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAO#getBookCategory(Integer)} with existing bookCategory. */
 	@Test
 	public void testGetBookCategoryWithExistingBookCategory() {
+		final int id = generate(Integer.class);
 		final BookCategory bookCategory = mock(BookCategory.class);
 		when(entityManager.find(eq(BookCategory.class), anyInt())).thenReturn(bookCategory);
 
-		DeepAsserts.assertEquals(bookCategory, bookCategoryDAO.getBookCategory(PRIMARY_ID));
+		DeepAsserts.assertEquals(bookCategory, bookCategoryDAO.getBookCategory(id));
 
-		verify(entityManager).find(BookCategory.class, PRIMARY_ID);
+		verify(entityManager).find(BookCategory.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -166,12 +163,13 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAO#add(BookCategory)} with empty data storage. */
 	@Test
 	public void testAddWithEmptyDataStorage() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory();
-		doAnswer(setId(ID)).when(entityManager).persist(any(BookCategory.class));
+		final BookCategory bookCategory = generate(BookCategory.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(BookCategory.class));
 
 		bookCategoryDAO.add(bookCategory);
-		DeepAsserts.assertEquals(ID, bookCategory.getId());
-		DeepAsserts.assertEquals(ID - 1, bookCategory.getPosition());
+		DeepAsserts.assertEquals(id, bookCategory.getId());
+		DeepAsserts.assertEquals(id - 1, bookCategory.getPosition());
 
 		verify(entityManager).persist(bookCategory);
 		verify(entityManager).merge(bookCategory);
@@ -201,7 +199,7 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAOImpl#add(BookCategory)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory();
+		final BookCategory bookCategory = generate(BookCategory.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(BookCategory.class));
 
 		try {
@@ -218,7 +216,7 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAO#update(BookCategory)}. */
 	@Test
 	public void testUpdate() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 
 		bookCategoryDAO.update(bookCategory);
 
@@ -249,7 +247,7 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAOImpl#update(BookCategory)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(Integer.MAX_VALUE);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(BookCategory.class));
 
 		try {
@@ -266,7 +264,7 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAO#remove(BookCategory)} with managed book category. */
 	@Test
 	public void testRemoveWithManagedBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(entityManager.contains(any(BookCategory.class))).thenReturn(true);
 
 		bookCategoryDAO.remove(bookCategory);
@@ -279,14 +277,14 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAO#remove(BookCategory)} with not managed book category. */
 	@Test
 	public void testRemoveWithNotManagedBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(entityManager.contains(any(BookCategory.class))).thenReturn(false);
 		when(entityManager.getReference(eq(BookCategory.class), anyInt())).thenReturn(bookCategory);
 
 		bookCategoryDAO.remove(bookCategory);
 
 		verify(entityManager).contains(bookCategory);
-		verify(entityManager).getReference(BookCategory.class, PRIMARY_ID);
+		verify(entityManager).getReference(BookCategory.class, bookCategory.getId());
 		verify(entityManager).remove(bookCategory);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -314,7 +312,7 @@ public class BookCategoryDAOImplTest {
 	/** Test method for {@link BookCategoryDAOImpl#remove(BookCategory)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(BookCategory.class));
 
 		try {

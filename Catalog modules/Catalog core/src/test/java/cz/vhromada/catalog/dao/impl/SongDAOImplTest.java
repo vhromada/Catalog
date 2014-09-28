@@ -1,9 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_INNER_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -25,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.SongDAO;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
@@ -45,7 +41,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SongDAOImplTest {
+public class SongDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -59,23 +55,16 @@ public class SongDAOImplTest {
 	@InjectMocks
 	private SongDAO songDAO = new SongDAOImpl();
 
-	/** Test method for {@link SongDAOImpl#getEntityManager()} and {@link SongDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final SongDAOImpl songDAOImpl = new SongDAOImpl();
-		songDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, songDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link SongDAO#getSong(Integer)} with existing song. */
 	@Test
 	public void testGetSongWithExistingSong() {
+		final int id = generate(Integer.class);
 		final Song song = mock(Song.class);
 		when(entityManager.find(eq(Song.class), anyInt())).thenReturn(song);
 
-		DeepAsserts.assertEquals(song, songDAO.getSong(PRIMARY_ID));
+		DeepAsserts.assertEquals(song, songDAO.getSong(id));
 
-		verify(entityManager).find(Song.class, PRIMARY_ID);
+		verify(entityManager).find(Song.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -129,12 +118,13 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAO#add(Song)}. */
 	@Test
 	public void testAdd() {
-		final Song song = EntityGenerator.createSong();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Song.class));
+		final Song song = generate(Song.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Song.class));
 
 		songDAO.add(song);
-		DeepAsserts.assertEquals(ID, song.getId());
-		DeepAsserts.assertEquals(ID - 1, song.getPosition());
+		DeepAsserts.assertEquals(id, song.getId());
+		DeepAsserts.assertEquals(id - 1, song.getPosition());
 
 		verify(entityManager).persist(song);
 		verify(entityManager).merge(song);
@@ -164,7 +154,7 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAOImpl#add(Song)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Song song = EntityGenerator.createSong();
+		final Song song = generate(Song.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Song.class));
 
 		try {
@@ -181,7 +171,7 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAO#update(Song)}. */
 	@Test
 	public void testUpdate() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
 
 		songDAO.update(song);
 
@@ -212,7 +202,7 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAOImpl#update(Song)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Song song = EntityGenerator.createSong(Integer.MAX_VALUE);
+		final Song song = generate(Song.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Song.class));
 
 		try {
@@ -229,7 +219,7 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAO#remove(Song)} with managed song. */
 	@Test
 	public void testRemoveWithManagedSong() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
 		when(entityManager.contains(any(Song.class))).thenReturn(true);
 
 		songDAO.remove(song);
@@ -242,14 +232,14 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAO#remove(Song)} with not managed song. */
 	@Test
 	public void testRemoveWithNotManagedSong() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
 		when(entityManager.contains(any(Song.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Song.class), anyInt())).thenReturn(song);
 
 		songDAO.remove(song);
 
 		verify(entityManager).contains(song);
-		verify(entityManager).getReference(Song.class, PRIMARY_ID);
+		verify(entityManager).getReference(Song.class, song.getId());
 		verify(entityManager).remove(song);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -277,7 +267,7 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAOImpl#remove(Song)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Song song = EntityGenerator.createSong(Integer.MAX_VALUE);
+		final Song song = generate(Song.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Song.class));
 
 		try {
@@ -294,9 +284,8 @@ public class SongDAOImplTest {
 	/** Test method for {@link SongDAO#findSongsByMusic(Music)}. */
 	@Test
 	public void testFindSongsByMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
-		final List<Song> songs = CollectionUtils.newList(EntityGenerator.createSong(INNER_INNER_ID, music),
-				EntityGenerator.createSong(SECONDARY_INNER_INNER_ID, music));
+		final Music music = generate(Music.class);
+		final List<Song> songs = CollectionUtils.newList(generate(Song.class), generate(Song.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Song.class))).thenReturn(songsQuery);
 		when(songsQuery.getResultList()).thenReturn(songs);
 
@@ -334,7 +323,7 @@ public class SongDAOImplTest {
 		doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Song.class));
 
 		try {
-			songDAO.findSongsByMusic(EntityGenerator.createMusic(Integer.MAX_VALUE));
+			songDAO.findSongsByMusic(generate(Music.class));
 			fail("Can't find songs by music with not thrown DataStorageException for exception in persistence.");
 		} catch (final DataStorageException ex) {
 			// OK

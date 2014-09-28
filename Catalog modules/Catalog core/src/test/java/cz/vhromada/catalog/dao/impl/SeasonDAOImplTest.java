@@ -1,9 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_INNER_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -25,7 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.SeasonDAO;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
@@ -45,7 +41,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SeasonDAOImplTest {
+public class SeasonDAOImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EntityManager} */
 	@Mock
@@ -70,12 +66,13 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAO#getSeason(Integer)} with existing season. */
 	@Test
 	public void testGetSeasonWithExistingSeason() {
+		final int id = generate(Integer.class);
 		final Season season = mock(Season.class);
 		when(entityManager.find(eq(Season.class), anyInt())).thenReturn(season);
 
-		DeepAsserts.assertEquals(season, seasonDAO.getSeason(PRIMARY_ID));
+		DeepAsserts.assertEquals(season, seasonDAO.getSeason(id));
 
-		verify(entityManager).find(Season.class, PRIMARY_ID);
+		verify(entityManager).find(Season.class, id);
 		verifyNoMoreInteractions(entityManager);
 	}
 
@@ -129,12 +126,13 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAO#add(Season)}. */
 	@Test
 	public void testAdd() {
-		final Season season = EntityGenerator.createSeason();
-		doAnswer(setId(ID)).when(entityManager).persist(any(Season.class));
+		final Season season = generate(Season.class);
+		final int id = generate(Integer.class);
+		doAnswer(setId(id)).when(entityManager).persist(any(Season.class));
 
 		seasonDAO.add(season);
-		DeepAsserts.assertEquals(ID, season.getId());
-		DeepAsserts.assertEquals(ID - 1, season.getPosition());
+		DeepAsserts.assertEquals(id, season.getId());
+		DeepAsserts.assertEquals(id - 1, season.getPosition());
 
 		verify(entityManager).persist(season);
 		verify(entityManager).merge(season);
@@ -164,7 +162,7 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAOImpl#add(Season)} with exception in persistence. */
 	@Test
 	public void testAddWithPersistenceException() {
-		final Season season = EntityGenerator.createSeason();
+		final Season season = generate(Season.class);
 		doThrow(PersistenceException.class).when(entityManager).persist(any(Season.class));
 
 		try {
@@ -181,7 +179,7 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAO#update(Season)}. */
 	@Test
 	public void testUpdate() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
+		final Season season = generate(Season.class);
 
 		seasonDAO.update(season);
 
@@ -212,7 +210,7 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAOImpl#update(Season)} with exception in persistence. */
 	@Test
 	public void testUpdateWithPersistenceException() {
-		final Season season = EntityGenerator.createSeason(Integer.MAX_VALUE);
+		final Season season = generate(Season.class);
 		doThrow(PersistenceException.class).when(entityManager).merge(any(Season.class));
 
 		try {
@@ -229,7 +227,7 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAO#remove(Season)} with managed season. */
 	@Test
 	public void testRemoveWithManagedSeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
+		final Season season = generate(Season.class);
 		when(entityManager.contains(any(Season.class))).thenReturn(true);
 
 		seasonDAO.remove(season);
@@ -242,14 +240,14 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAO#remove(Season)} with not managed season. */
 	@Test
 	public void testRemoveWithNotManagedSeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
+		final Season season = generate(Season.class);
 		when(entityManager.contains(any(Season.class))).thenReturn(false);
 		when(entityManager.getReference(eq(Season.class), anyInt())).thenReturn(season);
 
 		seasonDAO.remove(season);
 
 		verify(entityManager).contains(season);
-		verify(entityManager).getReference(Season.class, PRIMARY_ID);
+		verify(entityManager).getReference(Season.class, season.getId());
 		verify(entityManager).remove(season);
 		verifyNoMoreInteractions(entityManager);
 	}
@@ -277,7 +275,7 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAOImpl#remove(Season)} with exception in persistence. */
 	@Test
 	public void testRemoveWithPersistenceException() {
-		final Season season = EntityGenerator.createSeason(Integer.MAX_VALUE);
+		final Season season = generate(Season.class);
 		doThrow(PersistenceException.class).when(entityManager).contains(any(Season.class));
 
 		try {
@@ -294,9 +292,8 @@ public class SeasonDAOImplTest {
 	/** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)}. */
 	@Test
 	public void testFindSeasonsBySerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_INNER_ID, serie),
-				EntityGenerator.createSeason(SECONDARY_INNER_INNER_ID, serie));
+		final Serie serie = generate(Serie.class);
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		when(entityManager.createNamedQuery(anyString(), eq(Season.class))).thenReturn(seasonsQuery);
 		when(seasonsQuery.getResultList()).thenReturn(seasons);
 
@@ -334,7 +331,7 @@ public class SeasonDAOImplTest {
 		doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Season.class));
 
 		try {
-			seasonDAO.findSeasonsBySerie(EntityGenerator.createSerie(Integer.MAX_VALUE));
+			seasonDAO.findSeasonsBySerie(generate(Serie.class));
 			fail("Can't find seasons by serie with not thrown DataStorageException for exception in persistence.");
 		} catch (final DataStorageException ex) {
 			// OK

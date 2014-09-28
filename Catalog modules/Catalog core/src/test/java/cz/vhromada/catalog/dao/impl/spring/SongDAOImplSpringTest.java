@@ -1,15 +1,15 @@
 package cz.vhromada.catalog.dao.impl.spring;
 
-import static cz.vhromada.catalog.common.SpringUtils.MUSIC_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SONGS_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SONGS_PER_MUSIC_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SONGS_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SONGS_PER_MUSIC_COUNT;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.SpringEntitiesUtils;
-import cz.vhromada.catalog.common.SpringUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.SpringEntitiesUtils;
+import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.SongDAO;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;

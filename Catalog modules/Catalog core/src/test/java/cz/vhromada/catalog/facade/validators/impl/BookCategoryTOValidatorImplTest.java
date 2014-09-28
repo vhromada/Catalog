@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.common.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
 
-import cz.vhromada.catalog.common.ToGenerator;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.validators.BookCategoryTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;

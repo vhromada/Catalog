@@ -1,11 +1,11 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static cz.vhromada.catalog.common.TestConstants.ADD_ID;
-import static cz.vhromada.catalog.common.TestConstants.ADD_POSITION;
-import static cz.vhromada.catalog.common.TestConstants.COUNT;
-import static cz.vhromada.catalog.common.TestConstants.INNER_COUNT;
-import static cz.vhromada.catalog.common.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.common.TestConstants.SECONDARY_ID;
+import static cz.vhromada.catalog.commons.TestConstants.ADD_ID;
+import static cz.vhromada.catalog.commons.TestConstants.ADD_POSITION;
+import static cz.vhromada.catalog.commons.TestConstants.COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -24,9 +24,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.ToGenerator;
 import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.facade.BookCategoryFacade;

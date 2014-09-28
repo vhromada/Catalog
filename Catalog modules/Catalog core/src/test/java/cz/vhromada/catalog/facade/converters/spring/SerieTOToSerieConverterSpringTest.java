@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.common.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.ToGenerator;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.converters.SerieTOToSerieConverter;
 import cz.vhromada.catalog.facade.to.SerieTO;

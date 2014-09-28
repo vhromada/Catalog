@@ -1,18 +1,18 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.common.TestConstants.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.common.TestConstants.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.common.TestConstants.BAD_MIN_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.BAD_SUBTITLES;
-import static cz.vhromada.catalog.common.TestConstants.ID;
-import static cz.vhromada.catalog.common.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.common.TestConstants.MEDIUM_1;
-import static cz.vhromada.catalog.common.TestConstants.SECONDARY_INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_SUBTITLES;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.MEDIUM_1;
+import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.mockito.Mockito.mock;
 
-import cz.vhromada.catalog.common.ToGenerator;
 import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;

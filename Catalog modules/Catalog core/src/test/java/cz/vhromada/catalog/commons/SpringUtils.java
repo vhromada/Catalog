@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.commons;
 
 import static org.junit.Assert.assertNotNull;
 

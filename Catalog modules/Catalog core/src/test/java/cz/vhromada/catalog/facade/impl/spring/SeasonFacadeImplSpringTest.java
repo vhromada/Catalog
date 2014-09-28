@@ -1,16 +1,16 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.common.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SEASONS_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SERIES_COUNT;
-import static cz.vhromada.catalog.common.TestConstants.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.BAD_MIN_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.BAD_SUBTITLES;
-import static cz.vhromada.catalog.common.TestConstants.END_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.common.TestConstants.NEGATIVE_TIME;
-import static cz.vhromada.catalog.common.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.common.TestConstants.START_YEAR;
+import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_SUBTITLES;
+import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
+import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -19,11 +19,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.SpringEntitiesUtils;
-import cz.vhromada.catalog.common.SpringToUtils;
-import cz.vhromada.catalog.common.SpringUtils;
-import cz.vhromada.catalog.common.ToGenerator;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.SpringEntitiesUtils;
+import cz.vhromada.catalog.commons.SpringToUtils;
+import cz.vhromada.catalog.commons.SpringUtils;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;

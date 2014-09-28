@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.dao.impl.spring;
 
-import static cz.vhromada.catalog.common.SpringUtils.SERIES_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
@@ -8,10 +8,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.SpringEntitiesUtils;
-import cz.vhromada.catalog.common.SpringUtils;
 import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.SpringEntitiesUtils;
+import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.SerieDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Serie;

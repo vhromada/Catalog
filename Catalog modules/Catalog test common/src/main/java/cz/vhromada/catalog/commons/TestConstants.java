@@ -1,12 +1,8 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.commons;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.Constants;
-import cz.vhromada.catalog.commons.Language;
-import cz.vhromada.catalog.commons.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

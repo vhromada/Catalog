@@ -1,17 +1,17 @@
 package cz.vhromada.catalog.dao.impl.spring;
 
-import static cz.vhromada.catalog.common.SpringUtils.EPISODES_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.EPISODES_PER_SEASON_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.EPISODES_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SEASONS_PER_SERIE_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SEASON_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SERIE_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.SpringEntitiesUtils;
-import cz.vhromada.catalog.common.SpringUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.SpringEntitiesUtils;
+import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;

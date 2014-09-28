@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.common.TestConstants.LENGTH;
+import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.dao.entities.Medium;

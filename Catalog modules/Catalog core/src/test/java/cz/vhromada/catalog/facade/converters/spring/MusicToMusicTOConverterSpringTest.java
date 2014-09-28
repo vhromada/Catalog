@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.common.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.EntityGenerator;
+import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.facade.converters.MusicToMusicTOConverter;
 import cz.vhromada.catalog.facade.to.MusicTO;

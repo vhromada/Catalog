@@ -1,15 +1,15 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.common.TestConstants.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.BAD_MIN_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.BAD_SUBTITLES;
-import static cz.vhromada.catalog.common.TestConstants.END_YEAR;
-import static cz.vhromada.catalog.common.TestConstants.ID;
-import static cz.vhromada.catalog.common.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.common.TestConstants.NEGATIVE_TIME;
-import static cz.vhromada.catalog.common.TestConstants.START_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_SUBTITLES;
+import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
+import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
 
-import cz.vhromada.catalog.common.ToGenerator;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;

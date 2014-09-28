@@ -1,11 +1,11 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.common.TestConstants.ID;
-import static cz.vhromada.catalog.common.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.common.TestConstants.INNER_INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.ToGenerator;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.test.DeepAsserts;

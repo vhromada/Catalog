@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.common.TestConstants.NAME_1;
-import static cz.vhromada.catalog.common.TestConstants.NAME_2;
-import static cz.vhromada.catalog.common.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.TestConstants.NAME_1;
+import static cz.vhromada.catalog.commons.TestConstants.NAME_2;
+import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -21,8 +21,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.common.EntityGenerator;
 import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;

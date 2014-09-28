@@ -1,10 +1,10 @@
 package cz.vhromada.catalog.service.impl.spring;
 
-import static cz.vhromada.catalog.common.SpringUtils.EPISODES_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.GENRES_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.MOVIES_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SERIES_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.GENRES_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.MOVIES_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -14,10 +14,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.SpringEntitiesUtils;
-import cz.vhromada.catalog.common.SpringUtils;
 import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.SpringEntitiesUtils;
+import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.impl.GenreServiceImpl;

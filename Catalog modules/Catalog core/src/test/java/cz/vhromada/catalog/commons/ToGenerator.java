@@ -1,9 +1,8 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.commons;
 
-import static cz.vhromada.catalog.common.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.common.TestConstants.SECONDARY_INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.to.EpisodeTO;

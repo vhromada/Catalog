@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.common.SpringUtils.GENRES_COUNT;
-import static cz.vhromada.catalog.common.TestConstants.NAME_1;
-import static cz.vhromada.catalog.common.TestConstants.NAME_2;
-import static cz.vhromada.catalog.common.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.SpringUtils.GENRES_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.NAME_1;
+import static cz.vhromada.catalog.commons.TestConstants.NAME_2;
+import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -12,12 +12,12 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.SpringEntitiesUtils;
-import cz.vhromada.catalog.common.SpringToUtils;
-import cz.vhromada.catalog.common.SpringUtils;
-import cz.vhromada.catalog.common.ToGenerator;
 import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.SpringEntitiesUtils;
+import cz.vhromada.catalog.commons.SpringToUtils;
+import cz.vhromada.catalog.commons.SpringUtils;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Movie;

@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade.converters;
 
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.EntityGenerator;
+import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;

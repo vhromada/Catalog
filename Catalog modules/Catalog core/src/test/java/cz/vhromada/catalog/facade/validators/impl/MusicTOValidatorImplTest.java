@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.common.TestConstants.ID;
-import static cz.vhromada.catalog.common.TestConstants.NEGATIVE_TIME;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
 
-import cz.vhromada.catalog.common.ToGenerator;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;

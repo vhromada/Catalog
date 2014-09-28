@@ -1,21 +1,21 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.common.SpringUtils.MUSIC_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SONGS_COUNT;
-import static cz.vhromada.catalog.common.SpringUtils.SONGS_PER_MUSIC_COUNT;
-import static cz.vhromada.catalog.common.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.common.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SONGS_COUNT;
+import static cz.vhromada.catalog.commons.SpringUtils.SONGS_PER_MUSIC_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EntityGenerator;
-import cz.vhromada.catalog.common.SpringEntitiesUtils;
-import cz.vhromada.catalog.common.SpringToUtils;
-import cz.vhromada.catalog.common.SpringUtils;
-import cz.vhromada.catalog.common.ToGenerator;
+import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.SpringEntitiesUtils;
+import cz.vhromada.catalog.commons.SpringToUtils;
+import cz.vhromada.catalog.commons.SpringUtils;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.facade.SongFacade;

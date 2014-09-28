@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.dao.impl;
 
-import static cz.vhromada.catalog.common.TestConstants.ID;
-import static cz.vhromada.catalog.common.TestConstants.INNER_INNER_ID;
-import static cz.vhromada.catalog.common.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.common.TestConstants.SECONDARY_INNER_INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.ID;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_INNER_ID;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -24,8 +24,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import cz.vhromada.catalog.common.EntityGenerator;
 import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.SongDAO;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;

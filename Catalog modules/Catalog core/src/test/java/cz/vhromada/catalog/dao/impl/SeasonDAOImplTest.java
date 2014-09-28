@@ -55,14 +55,6 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private SeasonDAO seasonDAO = new SeasonDAOImpl();
 
-	/** Test method for {@link SeasonDAOImpl#getEntityManager()} and {@link SeasonDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final SeasonDAOImpl seasonDAOImpl = new SeasonDAOImpl();
-		seasonDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, seasonDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link SeasonDAO#getSeason(Integer)} with existing season. */
 	@Test
 	public void testGetSeasonWithExistingSeason() {

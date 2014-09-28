@@ -54,14 +54,6 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private ProgramDAO programDAO = new ProgramDAOImpl();
 
-	/** Test method for {@link ProgramDAOImpl#getEntityManager()} and {@link ProgramDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final ProgramDAOImpl programDAOImpl = new ProgramDAOImpl();
-		programDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, programDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link ProgramDAO#getPrograms()}. */
 	@Test
 	public void testGetPrograms() {

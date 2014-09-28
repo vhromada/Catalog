@@ -55,14 +55,6 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private EpisodeDAO episodeDAO = new EpisodeDAOImpl();
 
-	/** Test method for {@link EpisodeDAOImpl#getEntityManager()} and {@link EpisodeDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final EpisodeDAOImpl episodeDAOImpl = new EpisodeDAOImpl();
-		episodeDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, episodeDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link EpisodeDAO#getEpisode(Integer)} with existing episode. */
 	@Test
 	public void testGetEpisodeWithExistingEpisode() {

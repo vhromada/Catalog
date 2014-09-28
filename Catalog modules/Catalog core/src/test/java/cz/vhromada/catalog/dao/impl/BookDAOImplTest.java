@@ -55,14 +55,6 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private BookDAO bookDAO = new BookDAOImpl();
 
-	/** Test method for {@link BookDAOImpl#getEntityManager()} and {@link BookDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final BookDAOImpl bookDAOImpl = new BookDAOImpl();
-		bookDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, bookDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link BookDAO#getBook(Integer)} with existing book. */
 	@Test
 	public void testGetBookWithExistingBook() {

@@ -54,14 +54,6 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private GenreDAO genreDAO = new GenreDAOImpl();
 
-	/** Test method for {@link GenreDAOImpl#getEntityManager()} and {@link GenreDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final GenreDAOImpl genreDAOImpl = new GenreDAOImpl();
-		genreDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, genreDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link GenreDAO#getGenres()}. */
 	@Test
 	public void testGetGenres() {

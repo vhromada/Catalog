@@ -54,14 +54,6 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private MusicDAO musicDAO = new MusicDAOImpl();
 
-	/** Test method for {@link MusicDAOImpl#getEntityManager()} and {@link MusicDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final MusicDAOImpl musicDAOImpl = new MusicDAOImpl();
-		musicDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, musicDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link MusicDAO#getMusic()}. */
 	@Test
 	public void testGetMusic() {

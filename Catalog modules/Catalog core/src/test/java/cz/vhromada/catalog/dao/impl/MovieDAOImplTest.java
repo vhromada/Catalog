@@ -54,14 +54,6 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private MovieDAO movieDAO = new MovieDAOImpl();
 
-	/** Test method for {@link MovieDAOImpl#getEntityManager()} and {@link MovieDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final MovieDAOImpl movieDAOImpl = new MovieDAOImpl();
-		movieDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, movieDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link MovieDAO#getMovies()}. */
 	@Test
 	public void testGetMovies() {

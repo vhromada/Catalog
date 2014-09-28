@@ -54,14 +54,6 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
 	@InjectMocks
 	private GameDAO gameDAO = new GameDAOImpl();
 
-	/** Test method for {@link GameDAOImpl#getEntityManager()} and {@link GameDAOImpl#setEntityManager(EntityManager)}. */
-	@Test
-	public void testEntityManager() {
-		final GameDAOImpl gameDAOImpl = new GameDAOImpl();
-		gameDAOImpl.setEntityManager(entityManager);
-		DeepAsserts.assertEquals(entityManager, gameDAOImpl.getEntityManager());
-	}
-
 	/** Test method for {@link GameDAO#getGames()}. */
 	@Test
 	public void testGetGames() {

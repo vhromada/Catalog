@@ -1,10 +1,5 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.MOVE_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.SeasonDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
@@ -48,7 +43,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SeasonServiceImplTest {
+public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SeasonDAO} */
 	@Mock
@@ -66,39 +61,15 @@ public class SeasonServiceImplTest {
 	@InjectMocks
 	private SeasonService seasonService = new SeasonServiceImpl();
 
-	/** Test method for {@link SeasonServiceImpl#getSeasonDAO()} and {@link SeasonServiceImpl#setSeasonDAO(SeasonDAO)}. */
-	@Test
-	public void testSeasonDAO() {
-		final SeasonServiceImpl seasonService = new SeasonServiceImpl();
-		seasonService.setSeasonDAO(seasonDAO);
-		DeepAsserts.assertEquals(seasonDAO, seasonService.getSeasonDAO());
-	}
-
-	/** Test method for {@link SeasonServiceImpl#getEpisodeDAO()} and {@link SeasonServiceImpl#setEpisodeDAO(EpisodeDAO)}. */
-	@Test
-	public void testEpisodeDAO() {
-		final SeasonServiceImpl seasonService = new SeasonServiceImpl();
-		seasonService.setEpisodeDAO(episodeDAO);
-		DeepAsserts.assertEquals(episodeDAO, seasonService.getEpisodeDAO());
-	}
-
-	/** Test method for {@link SeasonServiceImpl#getSerieCache()} and {@link SeasonServiceImpl#setSerieCache(Cache)}. */
-	@Test
-	public void testSerieCache() {
-		final SeasonServiceImpl seasonService = new SeasonServiceImpl();
-		seasonService.setSerieCache(serieCache);
-		DeepAsserts.assertEquals(serieCache, seasonService.getSerieCache());
-	}
-
 	/** Test method for {@link SeasonService#getSeason(Integer)} with cached existing season. */
 	@Test
 	public void testGetSeasonWithCachedExistingSeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(season));
 
-		DeepAsserts.assertEquals(season, seasonService.getSeason(PRIMARY_ID));
+		DeepAsserts.assertEquals(season, seasonService.getSeason(season.getId()));
 
-		verify(serieCache).get("season" + PRIMARY_ID);
+		verify(serieCache).get("season" + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -106,11 +77,12 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#getSeason(Integer)} with cached not existing season. */
 	@Test
 	public void testGetSeasonWithCachedNotExistingSeason() {
+		final Season season = generate(Season.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
-		assertNull(seasonService.getSeason(PRIMARY_ID));
+		assertNull(seasonService.getSeason(season.getId()));
 
-		verify(serieCache).get("season" + PRIMARY_ID);
+		verify(serieCache).get("season" + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -118,29 +90,30 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#getSeason(Integer)} with not cached existing season. */
 	@Test
 	public void testGetSeasonWithNotCachedExistingSeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		when(seasonDAO.getSeason(anyInt())).thenReturn(season);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		DeepAsserts.assertEquals(season, seasonService.getSeason(PRIMARY_ID));
+		DeepAsserts.assertEquals(season, seasonService.getSeason(season.getId()));
 
-		verify(seasonDAO).getSeason(PRIMARY_ID);
-		verify(serieCache).get("season" + PRIMARY_ID);
-		verify(serieCache).put("season" + PRIMARY_ID, season);
+		verify(seasonDAO).getSeason(season.getId());
+		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).put("season" + season.getId(), season);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
 	/** Test method for {@link SeasonService#getSeason(Integer)} with not cached not existing season. */
 	@Test
 	public void testGetSeasonWithNotCachedNotExistingSeason() {
+		final Season season = generate(Season.class);
 		when(seasonDAO.getSeason(anyInt())).thenReturn(null);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		assertNull(seasonService.getSeason(PRIMARY_ID));
+		assertNull(seasonService.getSeason(season.getId()));
 
-		verify(seasonDAO).getSeason(PRIMARY_ID);
-		verify(serieCache).get("season" + PRIMARY_ID);
-		verify(serieCache).put("season" + PRIMARY_ID, null);
+		verify(seasonDAO).getSeason(season.getId());
+		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).put("season" + season.getId(), null);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -192,7 +165,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#add(Season)} with cached seasons. */
 	@Test
 	public void testAddWithCachedSeasons() {
-		final Season season = EntityGenerator.createSeason(EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		final List<Season> seasons = CollectionUtils.newList(mock(Season.class), mock(Season.class));
 		final List<Season> seasonsList = new ArrayList<>(seasons);
 		seasonsList.add(season);
@@ -201,24 +174,24 @@ public class SeasonServiceImplTest {
 		seasonService.add(season);
 
 		verify(seasonDAO).add(season);
-		verify(serieCache).get("seasons" + INNER_ID);
-		verify(serieCache).get("season" + null);
-		verify(serieCache).put("seasons" + INNER_ID, seasonsList);
-		verify(serieCache).put("season" + null, season);
+		verify(serieCache).get("seasons" + season.getSerie().getId());
+		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).put("seasons" + season.getSerie().getId(), seasonsList);
+		verify(serieCache).put("season" + season.getId(), season);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
 	/** Test method for {@link SeasonService#add(Season)} with not cached seasons. */
 	@Test
 	public void testAddWithNotCachedSeasons() {
-		final Season season = EntityGenerator.createSeason(EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		seasonService.add(season);
 
 		verify(seasonDAO).add(season);
-		verify(serieCache).get("seasons" + INNER_ID);
-		verify(serieCache).get("season" + null);
+		verify(serieCache).get("seasons" + season.getSerie().getId());
+		verify(serieCache).get("season" + season.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -252,7 +225,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#add(Season)} with exception in DAO tier. */
 	@Test
 	public void testAddWithDAOTierException() {
-		final Season season = EntityGenerator.createSeason(EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		doThrow(DataStorageException.class).when(seasonDAO).add(any(Season.class));
 
 		try {
@@ -270,7 +243,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#update(Season)}. */
 	@Test
 	public void testUpdate() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 
 		seasonService.update(season);
 
@@ -309,7 +282,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#update(Season)} with exception in DAO tier. */
 	@Test
 	public void testUpdateWithDAOTierException() {
-		final Season season = EntityGenerator.createSeason(Integer.MAX_VALUE, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		doThrow(DataStorageException.class).when(seasonDAO).update(any(Season.class));
 
 		try {
@@ -327,7 +300,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#remove(Season)} with cached data. */
 	@Test
 	public void testRemoveWithCachedData() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
@@ -337,7 +310,7 @@ public class SeasonServiceImplTest {
 		for (Episode episode : episodes) {
 			verify(episodeDAO).remove(episode);
 		}
-		verify(serieCache).get("episodes" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -345,7 +318,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#remove(Season)} with not cached data. */
 	@Test
 	public void testRemoveWithNotCachedData() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 		when(serieCache.get(anyString())).thenReturn(null);
@@ -357,7 +330,7 @@ public class SeasonServiceImplTest {
 		for (Episode episode : episodes) {
 			verify(episodeDAO).remove(episode);
 		}
-		verify(serieCache).get("episodes" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -399,7 +372,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#remove(Season)} with exception in DAO tier. */
 	@Test
 	public void testRemoveWithDAOTierException() {
-		final Season season = EntityGenerator.createSeason(Integer.MAX_VALUE, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
@@ -411,7 +384,7 @@ public class SeasonServiceImplTest {
 		}
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + Integer.MAX_VALUE);
+		verify(serieCache).get("episodes" + season.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 		verifyZeroInteractions(episodeDAO);
 	}
@@ -419,16 +392,17 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#duplicate(Season)} with cached data. */
 	@Test
 	public void testDuplicateWithCachedData() {
+		final Season season = generate(Season.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
-		seasonService.duplicate(EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID)));
+		seasonService.duplicate(season);
 
 		verify(seasonDAO).add(any(Season.class));
 		verify(seasonDAO).update(any(Season.class));
 		verify(episodeDAO, times(episodes.size())).add(any(Episode.class));
 		verify(episodeDAO, times(episodes.size())).update(any(Episode.class));
-		verify(serieCache).get("episodes" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -436,7 +410,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#duplicate(Season)} with not cached data. */
 	@Test
 	public void testDuplicateWithNotCachedData() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 		when(serieCache.get(anyString())).thenReturn(null);
@@ -448,7 +422,7 @@ public class SeasonServiceImplTest {
 		verify(episodeDAO).findEpisodesBySeason(season);
 		verify(episodeDAO, times(episodes.size())).add(any(Episode.class));
 		verify(episodeDAO, times(episodes.size())).update(any(Episode.class));
-		verify(serieCache).get("episodes" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -493,7 +467,7 @@ public class SeasonServiceImplTest {
 		doThrow(DataStorageException.class).when(seasonDAO).add(any(Season.class));
 
 		try {
-			seasonService.duplicate(EntityGenerator.createSeason(Integer.MAX_VALUE, EntityGenerator.createSerie(INNER_ID)));
+			seasonService.duplicate(generate(Season.class));
 			fail("Can't duplicate season with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -507,20 +481,23 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#moveUp(Season)} with cached seasons. */
 	@Test
 	public void testMoveUpWithCachedSeasons() {
-		final Serie serie = EntityGenerator.createSerie(INNER_ID);
-		final Season season1 = EntityGenerator.createSeason(PRIMARY_ID, serie);
-		season1.setPosition(MOVE_POSITION);
-		final Season season2 = EntityGenerator.createSeason(SECONDARY_ID, serie);
+		final Serie serie = generate(Serie.class);
+		final Season season1 = generate(Season.class);
+		season1.setSerie(serie);
+		final int position1 = season1.getPosition();
+		final Season season2 = generate(Season.class);
+		season2.setSerie(serie);
+		final int position2 = season2.getPosition();
 		final List<Season> seasons = CollectionUtils.newList(season1, season2);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(seasons));
 
 		seasonService.moveUp(season2);
-		DeepAsserts.assertEquals(POSITION, season1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, season2.getPosition());
+		DeepAsserts.assertEquals(position2, season1.getPosition());
+		DeepAsserts.assertEquals(position1, season2.getPosition());
 
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
-		verify(serieCache).get("seasons" + INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -528,22 +505,25 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#moveUp(Season)} with not cached seasons. */
 	@Test
 	public void testMoveUpWithNotCachedSeasons() {
-		final Serie serie = EntityGenerator.createSerie(INNER_ID);
-		final Season season1 = EntityGenerator.createSeason(PRIMARY_ID, serie);
-		season1.setPosition(MOVE_POSITION);
-		final Season season2 = EntityGenerator.createSeason(SECONDARY_ID, serie);
+		final Serie serie = generate(Serie.class);
+		final Season season1 = generate(Season.class);
+		season1.setSerie(serie);
+		final int position1 = season1.getPosition();
+		final Season season2 = generate(Season.class);
+		season2.setSerie(serie);
+		final int position2 = season2.getPosition();
 		final List<Season> seasons = CollectionUtils.newList(season1, season2);
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		seasonService.moveUp(season2);
-		DeepAsserts.assertEquals(POSITION, season1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, season2.getPosition());
+		DeepAsserts.assertEquals(position2, season1.getPosition());
+		DeepAsserts.assertEquals(position1, season2.getPosition());
 
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -578,39 +558,44 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#moveUp(Season)} with exception in DAO tier. */
 	@Test
 	public void testMoveUpWithDAOTierException() {
-		final Serie serie = EntityGenerator.createSerie(INNER_ID);
+		final Serie serie = generate(Serie.class);
+		final Season season = generate(Season.class);
+		season.setSerie(serie);
 		doThrow(DataStorageException.class).when(seasonDAO).findSeasonsBySerie(any(Serie.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			seasonService.moveUp(EntityGenerator.createSeason(Integer.MAX_VALUE, serie));
+			seasonService.moveUp(season);
 			fail("Can't move up season with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
 	/** Test method for {@link SeasonService#moveDown(Season)} with cached seasons. */
 	@Test
 	public void testMoveDownWithCachedSeasons() {
-		final Serie serie = EntityGenerator.createSerie(INNER_ID);
-		final Season season1 = EntityGenerator.createSeason(PRIMARY_ID, serie);
-		final Season season2 = EntityGenerator.createSeason(SECONDARY_ID, serie);
-		season2.setPosition(MOVE_POSITION);
+		final Serie serie = generate(Serie.class);
+		final Season season1 = generate(Season.class);
+		season1.setSerie(serie);
+		final int position1 = season1.getPosition();
+		final Season season2 = generate(Season.class);
+		season2.setSerie(serie);
+		final int position2 = season2.getPosition();
 		final List<Season> seasons = CollectionUtils.newList(season1, season2);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(seasons));
 
 		seasonService.moveDown(season1);
-		DeepAsserts.assertEquals(MOVE_POSITION, season1.getPosition());
-		DeepAsserts.assertEquals(POSITION, season2.getPosition());
+		DeepAsserts.assertEquals(position2, season1.getPosition());
+		DeepAsserts.assertEquals(position1, season2.getPosition());
 
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
-		verify(serieCache).get("seasons" + INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -618,22 +603,25 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#moveDown(Season)} with not cached seasons. */
 	@Test
 	public void testMoveDownWithNotCachedSeasons() {
-		final Serie serie = EntityGenerator.createSerie(INNER_ID);
-		final Season season1 = EntityGenerator.createSeason(PRIMARY_ID, serie);
-		final Season season2 = EntityGenerator.createSeason(SECONDARY_ID, serie);
-		season2.setPosition(MOVE_POSITION);
+		final Serie serie = generate(Serie.class);
+		final Season season1 = generate(Season.class);
+		season1.setSerie(serie);
+		final int position1 = season1.getPosition();
+		final Season season2 = generate(Season.class);
+		season2.setSerie(serie);
+		final int position2 = season2.getPosition();
 		final List<Season> seasons = CollectionUtils.newList(season1, season2);
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		seasonService.moveDown(season1);
-		DeepAsserts.assertEquals(MOVE_POSITION, season1.getPosition());
-		DeepAsserts.assertEquals(POSITION, season2.getPosition());
+		DeepAsserts.assertEquals(position2, season1.getPosition());
+		DeepAsserts.assertEquals(position1, season2.getPosition());
 
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -668,31 +656,33 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#moveDown(Season)} with exception in DAO tier. */
 	@Test
 	public void testMoveDownWithDAOTierException() {
-		final Serie serie = EntityGenerator.createSerie(INNER_ID);
+		final Serie serie = generate(Serie.class);
+		final Season season = generate(Season.class);
+		season.setSerie(serie);
 		doThrow(DataStorageException.class).when(seasonDAO).findSeasonsBySerie(any(Serie.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			seasonService.moveDown(EntityGenerator.createSeason(Integer.MAX_VALUE, serie));
+			seasonService.moveDown(season);
 			fail("Can't move down season with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
 	/** Test method for {@link SeasonService#exists(Season)} with cached existing season. */
 	@Test
 	public void testExistsWithCachedExistingSeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(season));
 
 		assertTrue(seasonService.exists(season));
 
-		verify(serieCache).get("season" + PRIMARY_ID);
+		verify(serieCache).get("season" + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -700,12 +690,12 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#exists(Season)} with cached not existing season. */
 	@Test
 	public void testExistsWithCachedNotExistingSeason() {
-		final Season season = EntityGenerator.createSeason(Integer.MAX_VALUE, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
 		assertFalse(seasonService.exists(season));
 
-		verify(serieCache).get("season" + Integer.MAX_VALUE);
+		verify(serieCache).get("season" + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -713,29 +703,30 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#exists(Season)} with not cached existing season. */
 	@Test
 	public void testExistsWithNotCachedExistingSeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		when(seasonDAO.getSeason(anyInt())).thenReturn(season);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		assertTrue(seasonService.exists(season));
 
-		verify(seasonDAO).getSeason(PRIMARY_ID);
-		verify(serieCache).get("season" + PRIMARY_ID);
-		verify(serieCache).put("season" + PRIMARY_ID, season);
+		verify(seasonDAO).getSeason(season.getId());
+		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).put("season" + season.getId(), season);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
 	/** Test method for {@link SeasonService#exists(Season)} with not cached not existing season. */
 	@Test
 	public void testExistsWithNotCachedNotExistingSeason() {
+		final Season season = generate(Season.class);
 		when(seasonDAO.getSeason(anyInt())).thenReturn(null);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		assertFalse(seasonService.exists(EntityGenerator.createSeason(Integer.MAX_VALUE, EntityGenerator.createSerie(INNER_ID))));
+		assertFalse(seasonService.exists(season));
 
-		verify(seasonDAO).getSeason(Integer.MAX_VALUE);
-		verify(serieCache).get("season" + Integer.MAX_VALUE);
-		verify(serieCache).put("season" + Integer.MAX_VALUE, null);
+		verify(seasonDAO).getSeason(season.getId());
+		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).put("season" + season.getId(), null);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -769,31 +760,32 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#exists(Season)} with exception in DAO tier. */
 	@Test
 	public void testExistsWithDAOTierException() {
+		final Season season = generate(Season.class);
 		doThrow(DataStorageException.class).when(seasonDAO).getSeason(anyInt());
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			seasonService.exists(EntityGenerator.createSeason(Integer.MAX_VALUE, EntityGenerator.createSerie(INNER_ID)));
+			seasonService.exists(season);
 			fail("Can't exists season with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
-		verify(seasonDAO).getSeason(Integer.MAX_VALUE);
-		verify(serieCache).get("season" + Integer.MAX_VALUE);
+		verify(seasonDAO).getSeason(season.getId());
+		verify(serieCache).get("season" + season.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
 	/** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with cached seasons. */
 	@Test
 	public void testFindSeasonsBySerieWithCachedSeasons() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		final List<Season> seasons = CollectionUtils.newList(mock(Season.class), mock(Season.class));
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(seasons));
 
 		DeepAsserts.assertEquals(seasons, seasonService.findSeasonsBySerie(serie));
 
-		verify(serieCache).get("seasons" + PRIMARY_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -801,7 +793,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with not cached seasons. */
 	@Test
 	public void testFindSeasonsBySerieWithNotCachedSeasons() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		final List<Season> seasons = CollectionUtils.newList(mock(Season.class), mock(Season.class));
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(serieCache.get(anyString())).thenReturn(null);
@@ -809,8 +801,8 @@ public class SeasonServiceImplTest {
 		DeepAsserts.assertEquals(seasons, seasonService.findSeasonsBySerie(serie));
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + PRIMARY_ID);
-		verify(serieCache).put("seasons" + PRIMARY_ID, seasons);
+		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).put("seasons" + serie.getId(), seasons);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -844,7 +836,7 @@ public class SeasonServiceImplTest {
 	/** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with exception in DAO tier. */
 	@Test
 	public void testFindSeasonsBySerieWithDAOTierException() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		doThrow(DataStorageException.class).when(seasonDAO).findSeasonsBySerie(any(Serie.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
@@ -856,7 +848,7 @@ public class SeasonServiceImplTest {
 		}
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + Integer.MAX_VALUE);
+		verify(serieCache).get("seasons" + serie.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 

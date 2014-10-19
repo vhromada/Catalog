@@ -1,9 +1,5 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.MOVE_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.MovieDAO;
 import cz.vhromada.catalog.dao.entities.Medium;
@@ -47,7 +43,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MovieServiceImplTest {
+public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link MovieDAO} */
 	@Mock
@@ -60,22 +56,6 @@ public class MovieServiceImplTest {
 	/** Instance of {@link MovieService} */
 	@InjectMocks
 	private MovieService movieService = new MovieServiceImpl();
-
-	/** Test method for {@link MovieServiceImpl#getMovieDAO()} and {@link MovieServiceImpl#setMovieDAO(MovieDAO)}. */
-	@Test
-	public void testMovieDAO() {
-		final MovieServiceImpl movieService = new MovieServiceImpl();
-		movieService.setMovieDAO(movieDAO);
-		DeepAsserts.assertEquals(movieDAO, movieService.getMovieDAO());
-	}
-
-	/** Test method for {@link MovieServiceImpl#getMovieCache()} and {@link MovieServiceImpl#setMovieCache(Cache)}. */
-	@Test
-	public void testMovieCache() {
-		final MovieServiceImpl movieService = new MovieServiceImpl();
-		movieService.setMovieCache(movieCache);
-		DeepAsserts.assertEquals(movieCache, movieService.getMovieCache());
-	}
 
 	/** Test method for {@link MovieService#newData()} with cached movies. */
 	@Test
@@ -206,12 +186,12 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#getMovie(Integer)} with cached existing movie. */
 	@Test
 	public void testGetMovieWithCachedExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(movie));
 
-		DeepAsserts.assertEquals(movie, movieService.getMovie(PRIMARY_ID));
+		DeepAsserts.assertEquals(movie, movieService.getMovie(movie.getId()));
 
-		verify(movieCache).get("movie" + PRIMARY_ID);
+		verify(movieCache).get("movie" + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -219,11 +199,12 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#getMovie(Integer)} with cached not existing movie. */
 	@Test
 	public void testGetMovieWithCachedNotExistingMovie() {
+		final Movie movie = generate(Movie.class);
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
-		assertNull(movieService.getMovie(PRIMARY_ID));
+		assertNull(movieService.getMovie(movie.getId()));
 
-		verify(movieCache).get("movie" + PRIMARY_ID);
+		verify(movieCache).get("movie" + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -231,29 +212,30 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#getMovie(Integer)} with not cached existing movie. */
 	@Test
 	public void testGetMovieWithNotCachedExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		when(movieDAO.getMovie(anyInt())).thenReturn(movie);
 		when(movieCache.get(anyString())).thenReturn(null);
 
-		DeepAsserts.assertEquals(movie, movieService.getMovie(PRIMARY_ID));
+		DeepAsserts.assertEquals(movie, movieService.getMovie(movie.getId()));
 
-		verify(movieDAO).getMovie(PRIMARY_ID);
-		verify(movieCache).get("movie" + PRIMARY_ID);
-		verify(movieCache).put("movie" + PRIMARY_ID, movie);
+		verify(movieDAO).getMovie(movie.getId());
+		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).put("movie" + movie.getId(), movie);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
 	/** Test method for {@link MovieService#getMovie(Integer)} with not cached not existing movie. */
 	@Test
 	public void testGetMovieWithNotCachedNotExistingMovie() {
+		final Movie movie = generate(Movie.class);
 		when(movieDAO.getMovie(anyInt())).thenReturn(null);
 		when(movieCache.get(anyString())).thenReturn(null);
 
-		assertNull(movieService.getMovie(PRIMARY_ID));
+		assertNull(movieService.getMovie(movie.getId()));
 
-		verify(movieDAO).getMovie(PRIMARY_ID);
-		verify(movieCache).get("movie" + PRIMARY_ID);
-		verify(movieCache).put("movie" + PRIMARY_ID, null);
+		verify(movieDAO).getMovie(movie.getId());
+		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).put("movie" + movie.getId(), null);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -305,7 +287,7 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#add(Movie)} with cached movies. */
 	@Test
 	public void testAddWithCachedMovies() {
-		final Movie movie = EntityGenerator.createMovie();
+		final Movie movie = generate(Movie.class);
 		final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), mock(Movie.class));
 		final List<Movie> moviesList = new ArrayList<>(movies);
 		moviesList.add(movie);
@@ -315,23 +297,23 @@ public class MovieServiceImplTest {
 
 		verify(movieDAO).add(movie);
 		verify(movieCache).get("movies");
-		verify(movieCache).get("movie" + null);
+		verify(movieCache).get("movie" + movie.getId());
 		verify(movieCache).put("movies", moviesList);
-		verify(movieCache).put("movie" + null, movie);
+		verify(movieCache).put("movie" + movie.getId(), movie);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
 	/** Test method for {@link MovieService#add(Movie)} with not cached movies. */
 	@Test
 	public void testAddWithNotCachedMovies() {
-		final Movie movie = EntityGenerator.createMovie();
+		final Movie movie = generate(Movie.class);
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		movieService.add(movie);
 
 		verify(movieDAO).add(movie);
 		verify(movieCache).get("movies");
-		verify(movieCache).get("movie" + null);
+		verify(movieCache).get("movie" + movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -365,7 +347,7 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#add(Movie)} with exception in DAO tier. */
 	@Test
 	public void testAddWithDAOTierException() {
-		final Movie movie = EntityGenerator.createMovie();
+		final Movie movie = generate(Movie.class);
 		doThrow(DataStorageException.class).when(movieDAO).add(any(Movie.class));
 
 		try {
@@ -383,7 +365,7 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#update(Movie)}. */
 	@Test
 	public void testUpdate() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 
 		movieService.update(movie);
 
@@ -422,7 +404,7 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#update(Movie)} with exception in DAO tier. */
 	@Test
 	public void testUpdateWithDAOTierException() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
 		doThrow(DataStorageException.class).when(movieDAO).update(any(Movie.class));
 
 		try {
@@ -440,33 +422,33 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#remove(Movie)} with cached movies. */
 	@Test
 	public void testRemoveWithCachedMovies() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), mock(Movie.class));
 		final List<Movie> moviesList = new ArrayList<>(movies);
 		moviesList.add(movie);
 		when(movieCache.get("movies")).thenReturn(new SimpleValueWrapper(moviesList));
-		when(movieCache.get("movie" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(movie));
+		when(movieCache.get("movie" + movie.getId())).thenReturn(new SimpleValueWrapper(movie));
 
 		movieService.remove(movie);
 
 		verify(movieDAO).remove(movie);
 		verify(movieCache).get("movies");
 		verify(movieCache).put("movies", movies);
-		verify(movieCache).evict(PRIMARY_ID);
+		verify(movieCache).evict(movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
 	/** Test method for {@link MovieService#remove(Movie)} with not cached movies. */
 	@Test
 	public void testRemoveWithNotCachedMovies() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		movieService.remove(movie);
 
 		verify(movieDAO).remove(movie);
 		verify(movieCache).get("movies");
-		verify(movieCache).evict(PRIMARY_ID);
+		verify(movieCache).evict(movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -500,7 +482,7 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#remove(Movie)} with exception in DAO tier. */
 	@Test
 	public void testRemoveWithDAOTierException() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
 		doThrow(DataStorageException.class).when(movieDAO).remove(any(Movie.class));
 
 		try {
@@ -520,7 +502,7 @@ public class MovieServiceImplTest {
 	public void testDuplicateWithCachedMovies() {
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(CollectionUtils.newList(mock(Movie.class), mock(Movie.class))));
 
-		movieService.duplicate(EntityGenerator.createMovie(PRIMARY_ID));
+		movieService.duplicate(generate(Movie.class));
 
 		verify(movieDAO).add(any(Movie.class));
 		verify(movieDAO).update(any(Movie.class));
@@ -536,7 +518,7 @@ public class MovieServiceImplTest {
 	public void testDuplicateWithNotCachedMovies() {
 		when(movieCache.get(anyString())).thenReturn(null);
 
-		movieService.duplicate(EntityGenerator.createMovie(PRIMARY_ID));
+		movieService.duplicate(generate(Movie.class));
 
 		verify(movieDAO).add(any(Movie.class));
 		verify(movieDAO).update(any(Movie.class));
@@ -578,7 +560,7 @@ public class MovieServiceImplTest {
 		doThrow(DataStorageException.class).when(movieDAO).add(any(Movie.class));
 
 		try {
-			movieService.duplicate(EntityGenerator.createMovie(Integer.MAX_VALUE));
+			movieService.duplicate(generate(Movie.class));
 			fail("Can't duplicate movie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -592,15 +574,16 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#moveUp(Movie)} with cached movies. */
 	@Test
 	public void testMoveUpWithCachedMovies() {
-		final Movie movie1 = EntityGenerator.createMovie(PRIMARY_ID);
-		movie1.setPosition(MOVE_POSITION);
-		final Movie movie2 = EntityGenerator.createMovie(SECONDARY_ID);
+		final Movie movie1 = generate(Movie.class);
+		final int position1 = movie1.getPosition();
+		final Movie movie2 = generate(Movie.class);
+		final int position2 = movie2.getPosition();
 		final List<Movie> movies = CollectionUtils.newList(movie1, movie2);
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(movies));
 
 		movieService.moveUp(movie2);
-		DeepAsserts.assertEquals(POSITION, movie1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, movie2.getPosition());
+		DeepAsserts.assertEquals(position2, movie1.getPosition());
+		DeepAsserts.assertEquals(position1, movie2.getPosition());
 
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
@@ -612,16 +595,17 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#moveUp(Movie)} with not cached movies. */
 	@Test
 	public void testMoveUpWithNotCachedMovies() {
-		final Movie movie1 = EntityGenerator.createMovie(PRIMARY_ID);
-		movie1.setPosition(MOVE_POSITION);
-		final Movie movie2 = EntityGenerator.createMovie(SECONDARY_ID);
+		final Movie movie1 = generate(Movie.class);
+		final int position1 = movie1.getPosition();
+		final Movie movie2 = generate(Movie.class);
+		final int position2 = movie2.getPosition();
 		final List<Movie> movies = CollectionUtils.newList(movie1, movie2);
 		when(movieDAO.getMovies()).thenReturn(movies);
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		movieService.moveUp(movie2);
-		DeepAsserts.assertEquals(POSITION, movie1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, movie2.getPosition());
+		DeepAsserts.assertEquals(position2, movie1.getPosition());
+		DeepAsserts.assertEquals(position1, movie2.getPosition());
 
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
@@ -665,7 +649,7 @@ public class MovieServiceImplTest {
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		try {
-			movieService.moveUp(EntityGenerator.createMovie(Integer.MAX_VALUE));
+			movieService.moveUp(generate(Movie.class));
 			fail("Can't move up movie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -679,15 +663,16 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#moveDown(Movie)} with cached movies. */
 	@Test
 	public void testMoveDownWithCachedMovies() {
-		final Movie movie1 = EntityGenerator.createMovie(PRIMARY_ID);
-		final Movie movie2 = EntityGenerator.createMovie(SECONDARY_ID);
-		movie2.setPosition(MOVE_POSITION);
+		final Movie movie1 = generate(Movie.class);
+		final int position1 = movie1.getPosition();
+		final Movie movie2 = generate(Movie.class);
+		final int position2 = movie2.getPosition();
 		final List<Movie> movies = CollectionUtils.newList(movie1, movie2);
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(movies));
 
 		movieService.moveDown(movie1);
-		DeepAsserts.assertEquals(MOVE_POSITION, movie1.getPosition());
-		DeepAsserts.assertEquals(POSITION, movie2.getPosition());
+		DeepAsserts.assertEquals(position2, movie1.getPosition());
+		DeepAsserts.assertEquals(position1, movie2.getPosition());
 
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
@@ -699,16 +684,17 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#moveDown(Movie)} with not cached movies. */
 	@Test
 	public void testMoveDownWithNotCachedMovies() {
-		final Movie movie1 = EntityGenerator.createMovie(PRIMARY_ID);
-		final Movie movie2 = EntityGenerator.createMovie(SECONDARY_ID);
-		movie2.setPosition(MOVE_POSITION);
+		final Movie movie1 = generate(Movie.class);
+		final int position1 = movie1.getPosition();
+		final Movie movie2 = generate(Movie.class);
+		final int position2 = movie2.getPosition();
 		final List<Movie> movies = CollectionUtils.newList(movie1, movie2);
 		when(movieDAO.getMovies()).thenReturn(movies);
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		movieService.moveDown(movie1);
-		DeepAsserts.assertEquals(MOVE_POSITION, movie1.getPosition());
-		DeepAsserts.assertEquals(POSITION, movie2.getPosition());
+		DeepAsserts.assertEquals(position2, movie1.getPosition());
+		DeepAsserts.assertEquals(position1, movie2.getPosition());
 
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
@@ -752,7 +738,7 @@ public class MovieServiceImplTest {
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		try {
-			movieService.moveDown(EntityGenerator.createMovie(Integer.MAX_VALUE));
+			movieService.moveDown(generate(Movie.class));
 			fail("Can't move down movie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -766,12 +752,12 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#exists(Movie)} with cached existing movie. */
 	@Test
 	public void testExistsWithCachedExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(movie));
 
 		assertTrue(movieService.exists(movie));
 
-		verify(movieCache).get("movie" + PRIMARY_ID);
+		verify(movieCache).get("movie" + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -779,12 +765,12 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#exists(Movie)} with cached not existing movie. */
 	@Test
 	public void testExistsWithCachedNotExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
 		assertFalse(movieService.exists(movie));
 
-		verify(movieCache).get("movie" + Integer.MAX_VALUE);
+		verify(movieCache).get("movie" + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -792,29 +778,30 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#exists(Movie)} with not cached existing movie. */
 	@Test
 	public void testExistsWithNotCachedExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		when(movieDAO.getMovie(anyInt())).thenReturn(movie);
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		assertTrue(movieService.exists(movie));
 
-		verify(movieDAO).getMovie(PRIMARY_ID);
-		verify(movieCache).get("movie" + PRIMARY_ID);
-		verify(movieCache).put("movie" + PRIMARY_ID, movie);
+		verify(movieDAO).getMovie(movie.getId());
+		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).put("movie" + movie.getId(), movie);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
 	/** Test method for {@link MovieService#exists(Movie)} with not cached not existing movie. */
 	@Test
 	public void testExistsWithNotCachedNotExistingMovie() {
+		final Movie movie = generate(Movie.class);
 		when(movieDAO.getMovie(anyInt())).thenReturn(null);
 		when(movieCache.get(anyString())).thenReturn(null);
 
-		assertFalse(movieService.exists(EntityGenerator.createMovie(Integer.MAX_VALUE)));
+		assertFalse(movieService.exists(movie));
 
-		verify(movieDAO).getMovie(Integer.MAX_VALUE);
-		verify(movieCache).get("movie" + Integer.MAX_VALUE);
-		verify(movieCache).put("movie" + Integer.MAX_VALUE, null);
+		verify(movieDAO).getMovie(movie.getId());
+		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).put("movie" + movie.getId(), null);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -848,25 +835,26 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#exists(Movie)} with exception in DAO tier. */
 	@Test
 	public void testExistsWithDAOTierException() {
+		final Movie movie = generate(Movie.class);
 		doThrow(DataStorageException.class).when(movieDAO).getMovie(anyInt());
 		when(movieCache.get(anyString())).thenReturn(null);
 
 		try {
-			movieService.exists(EntityGenerator.createMovie(Integer.MAX_VALUE));
+			movieService.exists(movie);
 			fail("Can't exists movie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
-		verify(movieDAO).getMovie(Integer.MAX_VALUE);
-		verify(movieCache).get("movie" + Integer.MAX_VALUE);
+		verify(movieDAO).getMovie(movie.getId());
+		verify(movieCache).get("movie" + movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
 	/** Test method for {@link MovieService#updatePositions()} with cached movies. */
 	@Test
 	public void testUpdatePositionsWithCachedMovies() {
-		final List<Movie> movies = CollectionUtils.newList(EntityGenerator.createMovie(PRIMARY_ID), EntityGenerator.createMovie(SECONDARY_ID));
+		final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(movies));
 
 		movieService.updatePositions();
@@ -884,7 +872,7 @@ public class MovieServiceImplTest {
 	/** Test method for {@link MovieService#updatePositions()} with not cached movies. */
 	@Test
 	public void testUpdatePositionsWithNotCachedMovies() {
-		final List<Movie> movies = CollectionUtils.newList(EntityGenerator.createMovie(PRIMARY_ID), EntityGenerator.createMovie(SECONDARY_ID));
+		final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
 		when(movieDAO.getMovies()).thenReturn(movies);
 		when(movieCache.get(anyString())).thenReturn(null);
 

@@ -1,11 +1,5 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.MOVE_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.MusicDAO;
 import cz.vhromada.catalog.dao.SongDAO;
@@ -49,7 +43,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MusicServiceImplTest {
+public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link MusicDAO} */
 	@Mock
@@ -67,38 +61,15 @@ public class MusicServiceImplTest {
 	@InjectMocks
 	private MusicService musicService = new MusicServiceImpl();
 
-	/** Test method for {@link MusicServiceImpl#getMusicDAO()} and {@link MusicServiceImpl#setMusicDAO(MusicDAO)}. */
-	@Test
-	public void testMusicDAO() {
-		final MusicServiceImpl musicService = new MusicServiceImpl();
-		musicService.setMusicDAO(musicDAO);
-		DeepAsserts.assertEquals(musicDAO, musicService.getMusicDAO());
-	}
-
-	/** Test method for {@link MusicServiceImpl#getSongDAO()} and {@link MusicServiceImpl#setSongDAO(SongDAO)}. */
-	@Test
-	public void testSongDAO() {
-		final MusicServiceImpl musicService = new MusicServiceImpl();
-		musicService.setSongDAO(songDAO);
-		DeepAsserts.assertEquals(songDAO, musicService.getSongDAO());
-	}
-
-	/** Test method for {@link MusicServiceImpl#getMusicCache()} and {@link MusicServiceImpl#setMusicCache(Cache)}. */
-	@Test
-	public void testMusicCache() {
-		final MusicServiceImpl musicService = new MusicServiceImpl();
-		musicService.setMusicCache(musicCache);
-		DeepAsserts.assertEquals(musicCache, musicService.getMusicCache());
-	}
-
 	/** Test method for {@link MusicService#newData()} with cached data. */
 	@Test
 	public void testNewDataWithCachedData() {
-		final List<Music> musicList = CollectionUtils.newList(EntityGenerator.createMusic(PRIMARY_ID), EntityGenerator.createMusic(SECONDARY_ID));
+		final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), mock(Song.class));
 		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(musicList));
-		when(musicCache.get("songs" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(songs));
-		when(musicCache.get("songs" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(songs));
+		for (Music music : musicList) {
+			when(musicCache.get("songs" + music.getId())).thenReturn(new SimpleValueWrapper(songs));
+		}
 
 		musicService.newData();
 
@@ -117,7 +88,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#newData()} with not cached data. */
 	@Test
 	public void testNewDataWithNotCachedData() {
-		final List<Music> musicList = CollectionUtils.newList(EntityGenerator.createMusic(PRIMARY_ID), EntityGenerator.createMusic(SECONDARY_ID));
+		final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), mock(Song.class));
 		when(musicDAO.getMusic()).thenReturn(musicList);
 		when(songDAO.findSongsByMusic(any(Music.class))).thenReturn(songs);
@@ -242,12 +213,12 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#getMusic(Integer)} with cached existing music. */
 	@Test
 	public void testGetMusicByIdWithCachedExistingMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(music));
 
-		DeepAsserts.assertEquals(music, musicService.getMusic(PRIMARY_ID));
+		DeepAsserts.assertEquals(music, musicService.getMusic(music.getId()));
 
-		verify(musicCache).get("music" + PRIMARY_ID);
+		verify(musicCache).get("music" + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -255,11 +226,12 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#getMusic(Integer)} with cached not existing music. */
 	@Test
 	public void testGetMusicByIdWithCachedNotExistingMusic() {
+		final Music music = generate(Music.class);
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
-		assertNull(musicService.getMusic(PRIMARY_ID));
+		assertNull(musicService.getMusic(music.getId()));
 
-		verify(musicCache).get("music" + PRIMARY_ID);
+		verify(musicCache).get("music" + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -267,29 +239,30 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#getMusic(Integer)} with not cached existing music. */
 	@Test
 	public void testGetMusicByIdWithNotCachedExistingMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		when(musicDAO.getMusic(anyInt())).thenReturn(music);
 		when(musicCache.get(anyString())).thenReturn(null);
 
-		DeepAsserts.assertEquals(music, musicService.getMusic(PRIMARY_ID));
+		DeepAsserts.assertEquals(music, musicService.getMusic(music.getId()));
 
-		verify(musicDAO).getMusic(PRIMARY_ID);
-		verify(musicCache).get("music" + PRIMARY_ID);
-		verify(musicCache).put("music" + PRIMARY_ID, music);
+		verify(musicDAO).getMusic(music.getId());
+		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).put("music" + music.getId(), music);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
 	/** Test method for {@link MusicService#getMusic(Integer)} with not cached not existing music. */
 	@Test
 	public void testGetMusicByIdWithNotCachedNotExistingMusic() {
+		final Music music = generate(Music.class);
 		when(musicDAO.getMusic(anyInt())).thenReturn(null);
 		when(musicCache.get(anyString())).thenReturn(null);
 
-		assertNull(musicService.getMusic(PRIMARY_ID));
+		assertNull(musicService.getMusic(music.getId()));
 
-		verify(musicDAO).getMusic(PRIMARY_ID);
-		verify(musicCache).get("music" + PRIMARY_ID);
-		verify(musicCache).put("music" + PRIMARY_ID, null);
+		verify(musicDAO).getMusic(music.getId());
+		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).put("music" + music.getId(), null);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -341,7 +314,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#add(Music)} with cached music. */
 	@Test
 	public void testAddWithCachedMusic() {
-		final Music music = EntityGenerator.createMusic();
+		final Music music = generate(Music.class);
 		final List<Music> musicList = CollectionUtils.newList(mock(Music.class), mock(Music.class));
 		final List<Music> addedMusicList = new ArrayList<>(musicList);
 		addedMusicList.add(music);
@@ -351,22 +324,22 @@ public class MusicServiceImplTest {
 
 		verify(musicDAO).add(music);
 		verify(musicCache).get("music");
-		verify(musicCache).get("music" + null);
+		verify(musicCache).get("music" + music.getId());
 		verify(musicCache).put("music", addedMusicList);
-		verify(musicCache).put("music" + null, music);
+		verify(musicCache).put("music" + music.getId(), music);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
 	/** Test method for {@link MusicService#add(Music)} with not cached music. */
 	@Test
 	public void testAddWithNotCachedMusic() {
-		final Music music = EntityGenerator.createMusic();
+		final Music music = generate(Music.class);
 		when(musicCache.get(anyString())).thenReturn(null);
 
 		musicService.add(music);
 
 		verify(musicDAO).add(music);
-		verify(musicCache).get("music" + null);
+		verify(musicCache).get("music" + music.getId());
 		verify(musicCache).get("music");
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
@@ -401,7 +374,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#add(Music)} with exception in DAO tier. */
 	@Test
 	public void testAddWithDAOTierException() {
-		final Music music = EntityGenerator.createMusic();
+		final Music music = generate(Music.class);
 		doThrow(DataStorageException.class).when(musicDAO).add(any(Music.class));
 
 		try {
@@ -419,7 +392,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#update(Music)}. */
 	@Test
 	public void testUpdate() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 
 		musicService.update(music);
 
@@ -458,7 +431,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#update(Music)} with exception in DAO tier. */
 	@Test
 	public void testUpdateWithDAOTierException() {
-		final Music music = EntityGenerator.createMusic(Integer.MAX_VALUE);
+		final Music music = generate(Music.class);
 		doThrow(DataStorageException.class).when(musicDAO).update(any(Music.class));
 
 		try {
@@ -476,7 +449,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#remove(Music)} with cached songs. */
 	@Test
 	public void testRemoveWithCachedSongs() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), mock(Song.class));
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(songs));
 
@@ -486,7 +459,7 @@ public class MusicServiceImplTest {
 		for (Song song : songs) {
 			verify(songDAO).remove(song);
 		}
-		verify(musicCache).get("songs" + PRIMARY_ID);
+		verify(musicCache).get("songs" + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -494,7 +467,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#remove(Music)} with not cached songs. */
 	@Test
 	public void testRemoveWithNotCachedSongs() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), mock(Song.class));
 		when(songDAO.findSongsByMusic(any(Music.class))).thenReturn(songs);
 		when(musicCache.get(anyString())).thenReturn(null);
@@ -506,7 +479,7 @@ public class MusicServiceImplTest {
 		for (Song song : songs) {
 			verify(songDAO).remove(song);
 		}
-		verify(musicCache).get("songs" + PRIMARY_ID);
+		verify(musicCache).get("songs" + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -548,7 +521,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#remove(Music)} with exception in DAO tier. */
 	@Test
 	public void testRemoveWithDAOTierException() {
-		final Music music = EntityGenerator.createMusic(Integer.MAX_VALUE);
+		final Music music = generate(Music.class);
 		doThrow(DataStorageException.class).when(songDAO).findSongsByMusic(any(Music.class));
 		when(musicCache.get(anyString())).thenReturn(null);
 
@@ -560,7 +533,7 @@ public class MusicServiceImplTest {
 		}
 
 		verify(songDAO).findSongsByMusic(music);
-		verify(musicCache).get("songs" + Integer.MAX_VALUE);
+		verify(musicCache).get("songs" + music.getId());
 		verifyNoMoreInteractions(songDAO, musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -568,16 +541,17 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#duplicate(Music)} with cached songs. */
 	@Test
 	public void testDuplicateWithCachedSongs() {
+		final Music music = generate(Music.class);
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), mock(Song.class));
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(songs));
 
-		musicService.duplicate(EntityGenerator.createMusic(PRIMARY_ID));
+		musicService.duplicate(music);
 
 		verify(musicDAO).add(any(Music.class));
 		verify(musicDAO).update(any(Music.class));
 		verify(songDAO, times(songs.size())).add(any(Song.class));
 		verify(songDAO, times(songs.size())).update(any(Song.class));
-		verify(musicCache).get("songs" + PRIMARY_ID);
+		verify(musicCache).get("songs" + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -585,7 +559,7 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#duplicate(Music)} with not cached songs. */
 	@Test
 	public void testDuplicateWithNotCachedSongs() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), mock(Song.class));
 		when(songDAO.findSongsByMusic(any(Music.class))).thenReturn(songs);
 		when(musicCache.get(anyString())).thenReturn(null);
@@ -597,7 +571,7 @@ public class MusicServiceImplTest {
 		verify(songDAO).findSongsByMusic(music);
 		verify(songDAO, times(songs.size())).add(any(Song.class));
 		verify(songDAO, times(songs.size())).update(any(Song.class));
-		verify(musicCache).get("songs" + PRIMARY_ID);
+		verify(musicCache).get("songs" + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -642,7 +616,7 @@ public class MusicServiceImplTest {
 		doThrow(DataStorageException.class).when(musicDAO).add(any(Music.class));
 
 		try {
-			musicService.duplicate(EntityGenerator.createMusic(Integer.MAX_VALUE));
+			musicService.duplicate(generate(Music.class));
 			fail("Can't duplicate music with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -656,15 +630,16 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#moveUp(Music)} with cached music. */
 	@Test
 	public void testMoveUpWithCachedMusic() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		music1.setPosition(MOVE_POSITION);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
+		final Music music1 = generate(Music.class);
+		final int position1 = music1.getPosition();
+		final Music music2 = generate(Music.class);
+		final int position2 = music2.getPosition();
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(music));
 
 		musicService.moveUp(music2);
-		DeepAsserts.assertEquals(POSITION, music1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, music2.getPosition());
+		DeepAsserts.assertEquals(position2, music1.getPosition());
+		DeepAsserts.assertEquals(position1, music2.getPosition());
 
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
@@ -676,16 +651,17 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#moveUp(Music)} with not cached music. */
 	@Test
 	public void testMoveUpWithNotCachedMusic() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		music1.setPosition(MOVE_POSITION);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
+		final Music music1 = generate(Music.class);
+		final int position1 = music1.getPosition();
+		final Music music2 = generate(Music.class);
+		final int position2 = music2.getPosition();
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		when(musicDAO.getMusic()).thenReturn(music);
 		when(musicCache.get(anyString())).thenReturn(null);
 
 		musicService.moveUp(music2);
-		DeepAsserts.assertEquals(POSITION, music1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, music2.getPosition());
+		DeepAsserts.assertEquals(position2, music1.getPosition());
+		DeepAsserts.assertEquals(position1, music2.getPosition());
 
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
@@ -729,7 +705,7 @@ public class MusicServiceImplTest {
 		when(musicCache.get(anyString())).thenReturn(null);
 
 		try {
-			musicService.moveUp(EntityGenerator.createMusic(Integer.MAX_VALUE));
+			musicService.moveUp(generate(Music.class));
 			fail("Can't move up music with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -743,15 +719,16 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#moveDown(Music)} with cached music. */
 	@Test
 	public void testMoveDownWithCachedMusic() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
-		music2.setPosition(MOVE_POSITION);
+		final Music music1 = generate(Music.class);
+		final int position1 = music1.getPosition();
+		final Music music2 = generate(Music.class);
+		final int position2 = music2.getPosition();
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(music));
 
 		musicService.moveDown(music1);
-		DeepAsserts.assertEquals(MOVE_POSITION, music1.getPosition());
-		DeepAsserts.assertEquals(POSITION, music2.getPosition());
+		DeepAsserts.assertEquals(position2, music1.getPosition());
+		DeepAsserts.assertEquals(position1, music2.getPosition());
 
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
@@ -763,16 +740,17 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#moveDown(Music)} with not cached music. */
 	@Test
 	public void testMoveDownWithNotCachedMusic() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
-		music2.setPosition(MOVE_POSITION);
+		final Music music1 = generate(Music.class);
+		final int position1 = music1.getPosition();
+		final Music music2 = generate(Music.class);
+		final int position2 = music2.getPosition();
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		when(musicDAO.getMusic()).thenReturn(music);
 		when(musicCache.get(anyString())).thenReturn(null);
 
 		musicService.moveDown(music1);
-		DeepAsserts.assertEquals(MOVE_POSITION, music1.getPosition());
-		DeepAsserts.assertEquals(POSITION, music2.getPosition());
+		DeepAsserts.assertEquals(position2, music1.getPosition());
+		DeepAsserts.assertEquals(position1, music2.getPosition());
 
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
@@ -816,7 +794,7 @@ public class MusicServiceImplTest {
 		when(musicCache.get(anyString())).thenReturn(null);
 
 		try {
-			musicService.moveDown(EntityGenerator.createMusic(Integer.MAX_VALUE));
+			musicService.moveDown(generate(Music.class));
 			fail("Can't move down music with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -830,12 +808,12 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#exists(Music)} with cached existing music. */
 	@Test
 	public void testExistsWithCachedExistingMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(music));
 
 		assertTrue(musicService.exists(music));
 
-		verify(musicCache).get("music" + PRIMARY_ID);
+		verify(musicCache).get("music" + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -843,12 +821,12 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#exists(Music)} with cached not existing music. */
 	@Test
 	public void testExistsWithCachedNotExistingMusic() {
-		final Music music = EntityGenerator.createMusic(Integer.MAX_VALUE);
+		final Music music = generate(Music.class);
 		when(musicCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
 		assertFalse(musicService.exists(music));
 
-		verify(musicCache).get("music" + Integer.MAX_VALUE);
+		verify(musicCache).get("music" + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -856,29 +834,30 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#exists(Music)} with not cached existing music. */
 	@Test
 	public void testExistsWithNotCachedExistingMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
+		final Music music = generate(Music.class);
 		when(musicDAO.getMusic(anyInt())).thenReturn(music);
 		when(musicCache.get(anyString())).thenReturn(null);
 
 		assertTrue(musicService.exists(music));
 
-		verify(musicDAO).getMusic(PRIMARY_ID);
-		verify(musicCache).get("music" + PRIMARY_ID);
-		verify(musicCache).put("music" + PRIMARY_ID, music);
+		verify(musicDAO).getMusic(music.getId());
+		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).put("music" + music.getId(), music);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
 	/** Test method for {@link MusicService#exists(Music)} with not cached not existing music. */
 	@Test
 	public void testExistsWithNotCachedNotExistingMusic() {
+		final Music music = generate(Music.class);
 		when(musicDAO.getMusic(anyInt())).thenReturn(null);
 		when(musicCache.get(anyString())).thenReturn(null);
 
-		assertFalse(musicService.exists(EntityGenerator.createMusic(Integer.MAX_VALUE)));
+		assertFalse(musicService.exists(music));
 
-		verify(musicDAO).getMusic(Integer.MAX_VALUE);
-		verify(musicCache).get("music" + Integer.MAX_VALUE);
-		verify(musicCache).put("music" + Integer.MAX_VALUE, null);
+		verify(musicDAO).getMusic(music.getId());
+		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).put("music" + music.getId(), null);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -912,29 +891,31 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#exists(Music)} with exception in DAO tier. */
 	@Test
 	public void testExistsWithDAOTierException() {
+		final Music music = generate(Music.class);
 		doThrow(DataStorageException.class).when(musicDAO).getMusic(anyInt());
 		when(musicCache.get(anyString())).thenReturn(null);
 
 		try {
-			musicService.exists(EntityGenerator.createMusic(Integer.MAX_VALUE));
+			musicService.exists(music);
 			fail("Can't exists music with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
-		verify(musicDAO).getMusic(Integer.MAX_VALUE);
-		verify(musicCache).get("music" + Integer.MAX_VALUE);
+		verify(musicDAO).getMusic(music.getId());
+		verify(musicCache).get("music" + music.getId());
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
 	/** Test method for {@link MusicService#updatePositions()} with cached data. */
 	@Test
 	public void testUpdatePositionsWithCachedData() {
-		final List<Music> musicList = CollectionUtils.newList(EntityGenerator.createMusic(PRIMARY_ID), EntityGenerator.createMusic(SECONDARY_ID));
-		final List<Song> songs = CollectionUtils.newList(EntityGenerator.createSong(INNER_ID), EntityGenerator.createSong(SECONDARY_INNER_ID));
+		final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
+		final List<Song> songs = CollectionUtils.newList(generate(Song.class), generate(Song.class));
 		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(musicList));
-		when(musicCache.get("songs" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(songs));
-		when(musicCache.get("songs" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(songs));
+		for (Music music : musicList) {
+			when(musicCache.get("songs" + music.getId())).thenReturn(new SimpleValueWrapper(songs));
+		}
 
 		musicService.updatePositions();
 
@@ -957,8 +938,8 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#updatePositions()} with not cached data. */
 	@Test
 	public void testUpdatePositionsWithNotCachedData() {
-		final List<Music> musicList = CollectionUtils.newList(EntityGenerator.createMusic(PRIMARY_ID), EntityGenerator.createMusic(SECONDARY_ID));
-		final List<Song> songs = CollectionUtils.newList(EntityGenerator.createSong(INNER_ID), EntityGenerator.createSong(SECONDARY_INNER_ID));
+		final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
+		final List<Song> songs = CollectionUtils.newList(generate(Song.class), generate(Song.class));
 		when(musicDAO.getMusic()).thenReturn(musicList);
 		when(songDAO.findSongsByMusic(any(Music.class))).thenReturn(songs);
 		when(musicCache.get(anyString())).thenReturn(null);
@@ -1104,8 +1085,8 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#getTotalLength()} with cached data. */
 	@Test
 	public void testGetTotalLengthWithCachedData() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
+		final Music music1 = generate(Music.class);
+		final Music music2 = generate(Music.class);
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		final Song song1 = mock(Song.class);
 		final Song song2 = mock(Song.class);
@@ -1113,8 +1094,8 @@ public class MusicServiceImplTest {
 		final List<Song> songs1 = CollectionUtils.newList(song1);
 		final List<Song> songs2 = CollectionUtils.newList(song2, song3);
 		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(music));
-		when(musicCache.get("songs" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(songs1));
-		when(musicCache.get("songs" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(songs2));
+		when(musicCache.get("songs" + music1.getId())).thenReturn(new SimpleValueWrapper(songs1));
+		when(musicCache.get("songs" + music2.getId())).thenReturn(new SimpleValueWrapper(songs2));
 		when(song1.getLength()).thenReturn(100);
 		when(song2.getLength()).thenReturn(200);
 		when(song3.getLength()).thenReturn(300);
@@ -1122,8 +1103,8 @@ public class MusicServiceImplTest {
 		DeepAsserts.assertEquals(new Time(600), musicService.getTotalLength());
 
 		verify(musicCache).get("music");
-		verify(musicCache).get("songs" + PRIMARY_ID);
-		verify(musicCache).get("songs" + SECONDARY_ID);
+		verify(musicCache).get("songs" + music1.getId());
+		verify(musicCache).get("songs" + music2.getId());
 		verify(song1).getLength();
 		verify(song2).getLength();
 		verify(song3).getLength();
@@ -1134,8 +1115,8 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#getTotalLength()} with not cached data. */
 	@Test
 	public void testGetTotalLengthWithNotCachedMusic() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
+		final Music music1 = generate(Music.class);
+		final Music music2 = generate(Music.class);
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		final Song song1 = mock(Song.class);
 		final Song song2 = mock(Song.class);
@@ -1157,10 +1138,10 @@ public class MusicServiceImplTest {
 		verify(songDAO).findSongsByMusic(music2);
 		verify(musicCache).get("music");
 		verify(musicCache).put("music", music);
-		verify(musicCache).get("songs" + PRIMARY_ID);
-		verify(musicCache).put("songs" + PRIMARY_ID, songs1);
-		verify(musicCache).get("songs" + SECONDARY_ID);
-		verify(musicCache).put("songs" + SECONDARY_ID, songs2);
+		verify(musicCache).get("songs" + music1.getId());
+		verify(musicCache).put("songs" + music1.getId(), songs1);
+		verify(musicCache).get("songs" + music2.getId());
+		verify(musicCache).put("songs" + music2.getId(), songs2);
 		verify(song1).getLength();
 		verify(song2).getLength();
 		verify(song3).getLength();
@@ -1210,20 +1191,20 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#getSongsCount()} with cached data. */
 	@Test
 	public void testGetSongsCountWithCachedData() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
+		final Music music1 = generate(Music.class);
+		final Music music2 = generate(Music.class);
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		final List<Song> songs1 = CollectionUtils.newList(mock(Song.class));
 		final List<Song> songs2 = CollectionUtils.newList(mock(Song.class), mock(Song.class));
 		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(music));
-		when(musicCache.get("songs" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(songs1));
-		when(musicCache.get("songs" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(songs2));
+		when(musicCache.get("songs" + music1.getId())).thenReturn(new SimpleValueWrapper(songs1));
+		when(musicCache.get("songs" + music2.getId())).thenReturn(new SimpleValueWrapper(songs2));
 
 		DeepAsserts.assertEquals(songs1.size() + songs2.size(), musicService.getSongsCount());
 
 		verify(musicCache).get("music");
-		verify(musicCache).get("songs" + PRIMARY_ID);
-		verify(musicCache).get("songs" + SECONDARY_ID);
+		verify(musicCache).get("songs" + music1.getId());
+		verify(musicCache).get("songs" + music2.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO, songDAO);
 	}
@@ -1231,8 +1212,8 @@ public class MusicServiceImplTest {
 	/** Test method for {@link MusicService#getSongsCount()} with not cached data. */
 	@Test
 	public void testGetSongsCountWithNotCachedMusic() {
-		final Music music1 = EntityGenerator.createMusic(PRIMARY_ID);
-		final Music music2 = EntityGenerator.createMusic(SECONDARY_ID);
+		final Music music1 = generate(Music.class);
+		final Music music2 = generate(Music.class);
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		final List<Song> songs1 = CollectionUtils.newList(mock(Song.class));
 		final List<Song> songs2 = CollectionUtils.newList(mock(Song.class), mock(Song.class));
@@ -1248,10 +1229,10 @@ public class MusicServiceImplTest {
 		verify(songDAO).findSongsByMusic(music2);
 		verify(musicCache).get("music");
 		verify(musicCache).put("music", music);
-		verify(musicCache).get("songs" + PRIMARY_ID);
-		verify(musicCache).put("songs" + PRIMARY_ID, songs1);
-		verify(musicCache).get("songs" + SECONDARY_ID);
-		verify(musicCache).put("songs" + SECONDARY_ID, songs2);
+		verify(musicCache).get("songs" + music1.getId());
+		verify(musicCache).put("songs" + music1.getId(), songs1);
+		verify(musicCache).get("songs" + music2.getId());
+		verify(musicCache).put("songs" + music2.getId(), songs2);
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
 

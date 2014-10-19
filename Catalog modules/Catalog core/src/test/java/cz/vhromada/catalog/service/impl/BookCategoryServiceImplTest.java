@@ -1,11 +1,5 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.MOVE_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.BookCategoryDAO;
 import cz.vhromada.catalog.dao.BookDAO;
 import cz.vhromada.catalog.dao.entities.Book;
@@ -48,7 +42,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BookCategoryServiceImplTest {
+public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link BookCategoryDAO} */
 	@Mock
@@ -66,39 +60,15 @@ public class BookCategoryServiceImplTest {
 	@InjectMocks
 	private BookCategoryService bookCategoryService = new BookCategoryServiceImpl();
 
-	/** Test method for {@link BookCategoryServiceImpl#getBookCategoryDAO()} and {@link BookCategoryServiceImpl#setBookCategoryDAO(BookCategoryDAO)}. */
-	@Test
-	public void testBookCategoryDAO() {
-		final BookCategoryServiceImpl bookCategoryService = new BookCategoryServiceImpl();
-		bookCategoryService.setBookCategoryDAO(bookCategoryDAO);
-		DeepAsserts.assertEquals(bookCategoryDAO, bookCategoryService.getBookCategoryDAO());
-	}
-
-	/** Test method for {@link BookCategoryServiceImpl#getBookDAO()} and {@link BookCategoryServiceImpl#setBookDAO(BookDAO)}. */
-	@Test
-	public void testBookDAO() {
-		final BookCategoryServiceImpl bookCategoryService = new BookCategoryServiceImpl();
-		bookCategoryService.setBookDAO(bookDAO);
-		DeepAsserts.assertEquals(bookDAO, bookCategoryService.getBookDAO());
-	}
-
-	/** Test method for {@link BookCategoryServiceImpl#getBookCache()} and {@link BookCategoryServiceImpl#setBookCache(Cache)}. */
-	@Test
-	public void testBookCache() {
-		final BookCategoryServiceImpl bookCategoryService = new BookCategoryServiceImpl();
-		bookCategoryService.setBookCache(bookCache);
-		DeepAsserts.assertEquals(bookCache, bookCategoryService.getBookCache());
-	}
-
 	/** Test method for {@link BookCategoryService#newData()} with cached data. */
 	@Test
 	public void testNewDataWithCachedData() {
-		final List<BookCategory> bookCategories = CollectionUtils.newList(EntityGenerator.createBookCategory(PRIMARY_ID),
-				EntityGenerator.createBookCategory(SECONDARY_ID));
+		final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
 		final List<Book> books = CollectionUtils.newList(mock(Book.class), mock(Book.class));
 		when(bookCache.get("bookCategories")).thenReturn(new SimpleValueWrapper(bookCategories));
-		when(bookCache.get("books" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(books));
-		when(bookCache.get("books" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(books));
+		for (BookCategory bookCategory : bookCategories) {
+			when(bookCache.get("books" + bookCategory.getId())).thenReturn(new SimpleValueWrapper(books));
+		}
 
 		bookCategoryService.newData();
 
@@ -117,8 +87,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#newData()} with not cached data. */
 	@Test
 	public void testNewDataWithNotCachedData() {
-		final List<BookCategory> bookCategories = CollectionUtils.newList(EntityGenerator.createBookCategory(PRIMARY_ID),
-				EntityGenerator.createBookCategory(SECONDARY_ID));
+		final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
 		final List<Book> books = CollectionUtils.newList(mock(Book.class), mock(Book.class));
 		when(bookCategoryDAO.getBookCategories()).thenReturn(bookCategories);
 		when(bookDAO.findBooksByBookCategory(any(BookCategory.class))).thenReturn(books);
@@ -243,12 +212,12 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#getBookCategory(Integer)} with cached existing book category. */
 	@Test
 	public void testGetBookCategoryWithCachedExistingBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(bookCategory));
 
-		DeepAsserts.assertEquals(bookCategory, bookCategoryService.getBookCategory(PRIMARY_ID));
+		DeepAsserts.assertEquals(bookCategory, bookCategoryService.getBookCategory(bookCategory.getId()));
 
-		verify(bookCache).get("bookCategory" + PRIMARY_ID);
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookCategoryDAO);
 	}
@@ -256,11 +225,12 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#getBookCategory(Integer)} with cached not existing book category. */
 	@Test
 	public void testGetBookCategoryWithCachedNotExistingBookCategory() {
+		final int id = generate(Integer.class);
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
-		assertNull(bookCategoryService.getBookCategory(PRIMARY_ID));
+		assertNull(bookCategoryService.getBookCategory(id));
 
-		verify(bookCache).get("bookCategory" + PRIMARY_ID);
+		verify(bookCache).get("bookCategory" + id);
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookCategoryDAO);
 	}
@@ -268,29 +238,30 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#getBookCategory(Integer)} with not cached existing book category. */
 	@Test
 	public void testGetBookCategoryWithNotCachedExistingBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(bookCategoryDAO.getBookCategory(anyInt())).thenReturn(bookCategory);
 		when(bookCache.get(anyString())).thenReturn(null);
 
-		DeepAsserts.assertEquals(bookCategory, bookCategoryService.getBookCategory(PRIMARY_ID));
+		DeepAsserts.assertEquals(bookCategory, bookCategoryService.getBookCategory(bookCategory.getId()));
 
-		verify(bookCategoryDAO).getBookCategory(PRIMARY_ID);
-		verify(bookCache).get("bookCategory" + PRIMARY_ID);
-		verify(bookCache).put("bookCategory" + PRIMARY_ID, bookCategory);
+		verify(bookCategoryDAO).getBookCategory(bookCategory.getId());
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
+		verify(bookCache).put("bookCategory" + bookCategory.getId(), bookCategory);
 		verifyNoMoreInteractions(bookCategoryDAO, bookCache);
 	}
 
 	/** Test method for {@link BookCategoryService#getBookCategory(Integer)} with not cached not existing book category. */
 	@Test
 	public void testGetBookCategoryWithNotCachedNotExistingBookCategory() {
+		final int id = generate(Integer.class);
 		when(bookCategoryDAO.getBookCategory(anyInt())).thenReturn(null);
 		when(bookCache.get(anyString())).thenReturn(null);
 
-		assertNull(bookCategoryService.getBookCategory(PRIMARY_ID));
+		assertNull(bookCategoryService.getBookCategory(id));
 
-		verify(bookCategoryDAO).getBookCategory(PRIMARY_ID);
-		verify(bookCache).get("bookCategory" + PRIMARY_ID);
-		verify(bookCache).put("bookCategory" + PRIMARY_ID, null);
+		verify(bookCategoryDAO).getBookCategory(id);
+		verify(bookCache).get("bookCategory" + id);
+		verify(bookCache).put("bookCategory" + id, null);
 		verifyNoMoreInteractions(bookCategoryDAO, bookCache);
 	}
 
@@ -342,7 +313,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#add(BookCategory)} with cached book categories. */
 	@Test
 	public void testAddWithCachedBookCategories() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory();
+		final BookCategory bookCategory = generate(BookCategory.class);
 		final List<BookCategory> bookCategories = CollectionUtils.newList(mock(BookCategory.class), mock(BookCategory.class));
 		final List<BookCategory> bookCategoriesList = new ArrayList<>(bookCategories);
 		bookCategoriesList.add(bookCategory);
@@ -352,16 +323,16 @@ public class BookCategoryServiceImplTest {
 
 		verify(bookCategoryDAO).add(bookCategory);
 		verify(bookCache).get("bookCategories");
-		verify(bookCache).get("bookCategory" + null);
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
 		verify(bookCache).put("bookCategories", bookCategoriesList);
-		verify(bookCache).put("bookCategory" + null, bookCategory);
+		verify(bookCache).put("bookCategory" + bookCategory.getId(), bookCategory);
 		verifyNoMoreInteractions(bookCategoryDAO, bookCache);
 	}
 
 	/** Test method for {@link BookCategoryService#add(BookCategory)} with not cached book categories. */
 	@Test
 	public void testAddWithNotCachedBookCategories() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory();
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(bookCache.get(anyString())).thenReturn(null);
 
 		bookCategoryService.add(bookCategory);
@@ -402,7 +373,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#add(BookCategory)} with exception in DAO tier. */
 	@Test
 	public void testAddWithDAOTierException() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory();
+		final BookCategory bookCategory = generate(BookCategory.class);
 		doThrow(DataStorageException.class).when(bookCategoryDAO).add(any(BookCategory.class));
 
 		try {
@@ -420,7 +391,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#update(BookCategory)}. */
 	@Test
 	public void testUpdate() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 
 		bookCategoryService.update(bookCategory);
 
@@ -459,7 +430,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#update(BookCategory)} with exception in DAO tier. */
 	@Test
 	public void testUpdateWithDAOTierException() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(Integer.MAX_VALUE);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		doThrow(DataStorageException.class).when(bookCategoryDAO).update(any(BookCategory.class));
 
 		try {
@@ -477,7 +448,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#remove(BookCategory)} with cached books. */
 	@Test
 	public void testRemoveWithCachedBooks() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		final List<Book> books = CollectionUtils.newList(mock(Book.class), mock(Book.class));
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(books));
 
@@ -487,7 +458,7 @@ public class BookCategoryServiceImplTest {
 		for (Book book : books) {
 			verify(bookDAO).remove(book);
 		}
-		verify(bookCache).get("books" + PRIMARY_ID);
+		verify(bookCache).get("books" + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
 	}
@@ -495,7 +466,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#remove(BookCategory)} with not cached books. */
 	@Test
 	public void testRemoveWithNotCachedBooks() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		final List<Book> books = CollectionUtils.newList(mock(Book.class), mock(Book.class));
 		when(bookDAO.findBooksByBookCategory(any(BookCategory.class))).thenReturn(books);
 		when(bookCache.get(anyString())).thenReturn(null);
@@ -507,7 +478,7 @@ public class BookCategoryServiceImplTest {
 		for (Book book : books) {
 			verify(bookDAO).remove(book);
 		}
-		verify(bookCache).get("books" + PRIMARY_ID);
+		verify(bookCache).get("books" + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
 	}
@@ -549,7 +520,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#remove(BookCategory)} with exception in DAO tier. */
 	@Test
 	public void testRemoveWithDAOTierException() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(Integer.MAX_VALUE);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		doThrow(DataStorageException.class).when(bookDAO).findBooksByBookCategory(any(BookCategory.class));
 		when(bookCache.get(anyString())).thenReturn(null);
 
@@ -561,7 +532,7 @@ public class BookCategoryServiceImplTest {
 		}
 
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
-		verify(bookCache).get("books" + Integer.MAX_VALUE);
+		verify(bookCache).get("books" + bookCategory.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 		verifyZeroInteractions(bookCategoryDAO);
 	}
@@ -569,16 +540,17 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#duplicate(BookCategory)} with cached books. */
 	@Test
 	public void testDuplicateWithCachedBooks() {
+		final BookCategory bookCategory = generate(BookCategory.class);
 		final List<Book> books = CollectionUtils.newList(mock(Book.class), mock(Book.class));
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(books));
 
-		bookCategoryService.duplicate(EntityGenerator.createBookCategory(PRIMARY_ID));
+		bookCategoryService.duplicate(bookCategory);
 
 		verify(bookCategoryDAO).add(any(BookCategory.class));
 		verify(bookCategoryDAO).update(any(BookCategory.class));
 		verify(bookDAO, times(books.size())).add(any(Book.class));
 		verify(bookDAO, times(books.size())).update(any(Book.class));
-		verify(bookCache).get("books" + PRIMARY_ID);
+		verify(bookCache).get("books" + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
 	}
@@ -586,7 +558,7 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#duplicate(BookCategory)} with not cached books. */
 	@Test
 	public void testDuplicateWithNotCachedBooks() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		final List<Book> books = CollectionUtils.newList(mock(Book.class), mock(Book.class));
 		when(bookDAO.findBooksByBookCategory(any(BookCategory.class))).thenReturn(books);
 		when(bookCache.get(anyString())).thenReturn(null);
@@ -598,7 +570,7 @@ public class BookCategoryServiceImplTest {
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
 		verify(bookDAO, times(books.size())).add(any(Book.class));
 		verify(bookDAO, times(books.size())).update(any(Book.class));
-		verify(bookCache).get("books" + PRIMARY_ID);
+		verify(bookCache).get("books" + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
 	}
@@ -643,7 +615,7 @@ public class BookCategoryServiceImplTest {
 		doThrow(DataStorageException.class).when(bookCategoryDAO).add(any(BookCategory.class));
 
 		try {
-			bookCategoryService.duplicate(EntityGenerator.createBookCategory(Integer.MAX_VALUE));
+			bookCategoryService.duplicate(generate(BookCategory.class));
 			fail("Can't duplicate book category with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -657,15 +629,16 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#moveUp(BookCategory)} with cached book categories. */
 	@Test
 	public void testMoveUpWithCachedBookCategories() {
-		final BookCategory bookCategory1 = EntityGenerator.createBookCategory(PRIMARY_ID);
-		bookCategory1.setPosition(MOVE_POSITION);
-		final BookCategory bookCategory2 = EntityGenerator.createBookCategory(SECONDARY_ID);
+		final BookCategory bookCategory1 = generate(BookCategory.class);
+		final int position1 = bookCategory1.getPosition();
+		final BookCategory bookCategory2 = generate(BookCategory.class);
+		final int position2 = bookCategory2.getPosition();
 		final List<BookCategory> bookCategories = CollectionUtils.newList(bookCategory1, bookCategory2);
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(bookCategories));
 
 		bookCategoryService.moveUp(bookCategory2);
-		DeepAsserts.assertEquals(POSITION, bookCategory1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, bookCategory2.getPosition());
+		DeepAsserts.assertEquals(position2, bookCategory1.getPosition());
+		DeepAsserts.assertEquals(position1, bookCategory2.getPosition());
 
 		verify(bookCategoryDAO).update(bookCategory1);
 		verify(bookCategoryDAO).update(bookCategory2);
@@ -677,16 +650,17 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#moveUp(BookCategory)} with not cached book categories. */
 	@Test
 	public void testMoveUpWithNotCachedBookCategories() {
-		final BookCategory bookCategory1 = EntityGenerator.createBookCategory(PRIMARY_ID);
-		bookCategory1.setPosition(MOVE_POSITION);
-		final BookCategory bookCategory2 = EntityGenerator.createBookCategory(SECONDARY_ID);
+		final BookCategory bookCategory1 = generate(BookCategory.class);
+		final int position1 = bookCategory1.getPosition();
+		final BookCategory bookCategory2 = generate(BookCategory.class);
+		final int position2 = bookCategory2.getPosition();
 		final List<BookCategory> bookCategories = CollectionUtils.newList(bookCategory1, bookCategory2);
 		when(bookCategoryDAO.getBookCategories()).thenReturn(bookCategories);
 		when(bookCache.get(anyString())).thenReturn(null);
 
 		bookCategoryService.moveUp(bookCategory2);
-		DeepAsserts.assertEquals(POSITION, bookCategory1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, bookCategory2.getPosition());
+		DeepAsserts.assertEquals(position2, bookCategory1.getPosition());
+		DeepAsserts.assertEquals(position1, bookCategory2.getPosition());
 
 		verify(bookCategoryDAO).update(bookCategory1);
 		verify(bookCategoryDAO).update(bookCategory2);
@@ -730,7 +704,7 @@ public class BookCategoryServiceImplTest {
 		when(bookCache.get(anyString())).thenReturn(null);
 
 		try {
-			bookCategoryService.moveUp(EntityGenerator.createBookCategory(Integer.MAX_VALUE));
+			bookCategoryService.moveUp(generate(BookCategory.class));
 			fail("Can't move up book category with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -744,15 +718,16 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#moveDown(BookCategory)} with cached book categories. */
 	@Test
 	public void testMoveDownWithCachedBookCategories() {
-		final BookCategory bookCategory1 = EntityGenerator.createBookCategory(PRIMARY_ID);
-		final BookCategory bookCategory2 = EntityGenerator.createBookCategory(SECONDARY_ID);
-		bookCategory2.setPosition(MOVE_POSITION);
+		final BookCategory bookCategory1 = generate(BookCategory.class);
+		final int position1 = bookCategory1.getPosition();
+		final BookCategory bookCategory2 = generate(BookCategory.class);
+		final int position2 = bookCategory2.getPosition();
 		final List<BookCategory> bookCategories = CollectionUtils.newList(bookCategory1, bookCategory2);
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(bookCategories));
 
 		bookCategoryService.moveDown(bookCategory1);
-		DeepAsserts.assertEquals(MOVE_POSITION, bookCategory1.getPosition());
-		DeepAsserts.assertEquals(POSITION, bookCategory2.getPosition());
+		DeepAsserts.assertEquals(position2, bookCategory1.getPosition());
+		DeepAsserts.assertEquals(position1, bookCategory2.getPosition());
 
 		verify(bookCategoryDAO).update(bookCategory1);
 		verify(bookCategoryDAO).update(bookCategory2);
@@ -764,16 +739,17 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#moveDown(BookCategory)} with not cached book categories. */
 	@Test
 	public void testMoveDownWithNotCachedBookCategories() {
-		final BookCategory bookCategory1 = EntityGenerator.createBookCategory(PRIMARY_ID);
-		final BookCategory bookCategory2 = EntityGenerator.createBookCategory(SECONDARY_ID);
-		bookCategory2.setPosition(MOVE_POSITION);
+		final BookCategory bookCategory1 = generate(BookCategory.class);
+		final int position1 = bookCategory1.getPosition();
+		final BookCategory bookCategory2 = generate(BookCategory.class);
+		final int position2 = bookCategory2.getPosition();
 		final List<BookCategory> bookCategories = CollectionUtils.newList(bookCategory1, bookCategory2);
 		when(bookCategoryDAO.getBookCategories()).thenReturn(bookCategories);
 		when(bookCache.get(anyString())).thenReturn(null);
 
 		bookCategoryService.moveDown(bookCategory1);
-		DeepAsserts.assertEquals(MOVE_POSITION, bookCategory1.getPosition());
-		DeepAsserts.assertEquals(POSITION, bookCategory2.getPosition());
+		DeepAsserts.assertEquals(position2, bookCategory1.getPosition());
+		DeepAsserts.assertEquals(position1, bookCategory2.getPosition());
 
 		verify(bookCategoryDAO).update(bookCategory1);
 		verify(bookCategoryDAO).update(bookCategory2);
@@ -817,7 +793,7 @@ public class BookCategoryServiceImplTest {
 		when(bookCache.get(anyString())).thenReturn(null);
 
 		try {
-			bookCategoryService.moveDown(EntityGenerator.createBookCategory(Integer.MAX_VALUE));
+			bookCategoryService.moveDown(generate(BookCategory.class));
 			fail("Can't move down book category with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -831,12 +807,12 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#exists(BookCategory)} with cached existing book category. */
 	@Test
 	public void testExistsWithCachedExistingBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(bookCategory));
 
 		assertTrue(bookCategoryService.exists(bookCategory));
 
-		verify(bookCache).get("bookCategory" + PRIMARY_ID);
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookCategoryDAO);
 	}
@@ -844,12 +820,12 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#exists(BookCategory)} with cached not existing book category. */
 	@Test
 	public void testExistsWithCachedNotExistingBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(Integer.MAX_VALUE);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(bookCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
 		assertFalse(bookCategoryService.exists(bookCategory));
 
-		verify(bookCache).get("bookCategory" + Integer.MAX_VALUE);
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookCategoryDAO);
 	}
@@ -857,29 +833,30 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#exists(BookCategory)} with not cached existing book category. */
 	@Test
 	public void testExistsWithNotCachedExistingBookCategory() {
-		final BookCategory bookCategory = EntityGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(bookCategoryDAO.getBookCategory(anyInt())).thenReturn(bookCategory);
 		when(bookCache.get(anyString())).thenReturn(null);
 
 		assertTrue(bookCategoryService.exists(bookCategory));
 
-		verify(bookCategoryDAO).getBookCategory(PRIMARY_ID);
-		verify(bookCache).get("bookCategory" + PRIMARY_ID);
-		verify(bookCache).put("bookCategory" + PRIMARY_ID, bookCategory);
+		verify(bookCategoryDAO).getBookCategory(bookCategory.getId());
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
+		verify(bookCache).put("bookCategory" + bookCategory.getId(), bookCategory);
 		verifyNoMoreInteractions(bookCategoryDAO, bookCache);
 	}
 
 	/** Test method for {@link BookCategoryService#exists(BookCategory)} with not cached not existing book category. */
 	@Test
 	public void testExistsWithNotCachedNotExistingBookCategory() {
+		final BookCategory bookCategory = generate(BookCategory.class);
 		when(bookCategoryDAO.getBookCategory(anyInt())).thenReturn(null);
 		when(bookCache.get(anyString())).thenReturn(null);
 
-		assertFalse(bookCategoryService.exists(EntityGenerator.createBookCategory(Integer.MAX_VALUE)));
+		assertFalse(bookCategoryService.exists(bookCategory));
 
-		verify(bookCategoryDAO).getBookCategory(Integer.MAX_VALUE);
-		verify(bookCache).get("bookCategory" + Integer.MAX_VALUE);
-		verify(bookCache).put("bookCategory" + Integer.MAX_VALUE, null);
+		verify(bookCategoryDAO).getBookCategory(bookCategory.getId());
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
+		verify(bookCache).put("bookCategory" + bookCategory.getId(), null);
 		verifyNoMoreInteractions(bookCategoryDAO, bookCache);
 	}
 
@@ -913,30 +890,31 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#exists(BookCategory)} with exception in DAO tier. */
 	@Test
 	public void testExistsWithDAOTierException() {
+		final BookCategory bookCategory = generate(BookCategory.class);
 		doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategory(anyInt());
 		when(bookCache.get(anyString())).thenReturn(null);
 
 		try {
-			bookCategoryService.exists(EntityGenerator.createBookCategory(Integer.MAX_VALUE));
+			bookCategoryService.exists(bookCategory);
 			fail("Can't exists book category with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
-		verify(bookCategoryDAO).getBookCategory(Integer.MAX_VALUE);
-		verify(bookCache).get("bookCategory" + Integer.MAX_VALUE);
+		verify(bookCategoryDAO).getBookCategory(bookCategory.getId());
+		verify(bookCache).get("bookCategory" + bookCategory.getId());
 		verifyNoMoreInteractions(bookCategoryDAO, bookCache);
 	}
 
 	/** Test method for {@link BookCategoryService#updatePositions()} with cached data. */
 	@Test
 	public void testUpdatePositionsWithCachedData() {
-		final List<BookCategory> bookCategories = CollectionUtils.newList(EntityGenerator.createBookCategory(PRIMARY_ID),
-				EntityGenerator.createBookCategory(SECONDARY_ID));
-		final List<Book> books = CollectionUtils.newList(EntityGenerator.createBook(INNER_ID), EntityGenerator.createBook(SECONDARY_INNER_ID));
+		final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
+		final List<Book> books = CollectionUtils.newList(generate(Book.class), generate(Book.class));
 		when(bookCache.get("bookCategories")).thenReturn(new SimpleValueWrapper(bookCategories));
-		when(bookCache.get("books" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(books));
-		when(bookCache.get("books" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(books));
+		for (BookCategory bookCategory : bookCategories) {
+			when(bookCache.get("books" + bookCategory.getId())).thenReturn(new SimpleValueWrapper(books));
+		}
 
 		bookCategoryService.updatePositions();
 
@@ -959,9 +937,8 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#updatePositions()} with not cached data. */
 	@Test
 	public void testUpdatePositionsWithNotCachedData() {
-		final List<BookCategory> bookCategories = CollectionUtils.newList(EntityGenerator.createBookCategory(PRIMARY_ID),
-				EntityGenerator.createBookCategory(SECONDARY_ID));
-		final List<Book> books = CollectionUtils.newList(EntityGenerator.createBook(INNER_ID), EntityGenerator.createBook(SECONDARY_INNER_ID));
+		final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
+		final List<Book> books = CollectionUtils.newList(generate(Book.class), generate(Book.class));
 		when(bookCategoryDAO.getBookCategories()).thenReturn(bookCategories);
 		when(bookDAO.findBooksByBookCategory(any(BookCategory.class))).thenReturn(books);
 		when(bookCache.get(anyString())).thenReturn(null);
@@ -1029,20 +1006,20 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#getBooksCount()} with cached data. */
 	@Test
 	public void testGetBooksCountWithCachedData() {
-		final BookCategory bookCategory1 = EntityGenerator.createBookCategory(PRIMARY_ID);
-		final BookCategory bookCategory2 = EntityGenerator.createBookCategory(SECONDARY_ID);
+		final BookCategory bookCategory1 = generate(BookCategory.class);
+		final BookCategory bookCategory2 = generate(BookCategory.class);
 		final List<BookCategory> bookCategories = CollectionUtils.newList(bookCategory1, bookCategory2);
 		final List<Book> books1 = CollectionUtils.newList(mock(Book.class));
 		final List<Book> books2 = CollectionUtils.newList(mock(Book.class), mock(Book.class));
 		when(bookCache.get("bookCategories")).thenReturn(new SimpleValueWrapper(bookCategories));
-		when(bookCache.get("books" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(books1));
-		when(bookCache.get("books" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(books2));
+		when(bookCache.get("books" + bookCategory1.getId())).thenReturn(new SimpleValueWrapper(books1));
+		when(bookCache.get("books" + bookCategory2.getId())).thenReturn(new SimpleValueWrapper(books2));
 
 		DeepAsserts.assertEquals(books1.size() + books2.size(), bookCategoryService.getBooksCount());
 
 		verify(bookCache).get("bookCategories");
-		verify(bookCache).get("books" + PRIMARY_ID);
-		verify(bookCache).get("books" + SECONDARY_ID);
+		verify(bookCache).get("books" + bookCategory1.getId());
+		verify(bookCache).get("books" + bookCategory2.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookCategoryDAO, bookDAO);
 	}
@@ -1050,8 +1027,8 @@ public class BookCategoryServiceImplTest {
 	/** Test method for {@link BookCategoryService#getBooksCount()} with not cached data. */
 	@Test
 	public void testGetBooksCountWithNotCachedBookCategories() {
-		final BookCategory bookCategory1 = EntityGenerator.createBookCategory(PRIMARY_ID);
-		final BookCategory bookCategory2 = EntityGenerator.createBookCategory(SECONDARY_ID);
+		final BookCategory bookCategory1 = generate(BookCategory.class);
+		final BookCategory bookCategory2 = generate(BookCategory.class);
 		final List<BookCategory> bookCategories = CollectionUtils.newList(bookCategory1, bookCategory2);
 		final List<Book> books1 = CollectionUtils.newList(mock(Book.class));
 		final List<Book> books2 = CollectionUtils.newList(mock(Book.class), mock(Book.class));
@@ -1067,10 +1044,10 @@ public class BookCategoryServiceImplTest {
 		verify(bookDAO).findBooksByBookCategory(bookCategory2);
 		verify(bookCache).get("bookCategories");
 		verify(bookCache).put("bookCategories", bookCategories);
-		verify(bookCache).get("books" + PRIMARY_ID);
-		verify(bookCache).put("books" + PRIMARY_ID, books1);
-		verify(bookCache).get("books" + SECONDARY_ID);
-		verify(bookCache).put("books" + SECONDARY_ID, books2);
+		verify(bookCache).get("books" + bookCategory1.getId());
+		verify(bookCache).put("books" + bookCategory1.getId(), books1);
+		verify(bookCache).get("books" + bookCategory2.getId());
+		verify(bookCache).put("books" + bookCategory2.getId(), books2);
 		verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
 	}
 

@@ -1,10 +1,5 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.MOVE_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
@@ -48,7 +43,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EpisodeServiceImplTest {
+public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link EpisodeDAO} */
 	@Mock
@@ -62,31 +57,15 @@ public class EpisodeServiceImplTest {
 	@InjectMocks
 	private EpisodeService episodeService = new EpisodeServiceImpl();
 
-	/** Test method for {@link EpisodeServiceImpl#getEpisodeDAO()} and {@link EpisodeServiceImpl#setEpisodeDAO(EpisodeDAO)}. */
-	@Test
-	public void testEpisodeDAO() {
-		final EpisodeServiceImpl episodeService = new EpisodeServiceImpl();
-		episodeService.setEpisodeDAO(episodeDAO);
-		DeepAsserts.assertEquals(episodeDAO, episodeService.getEpisodeDAO());
-	}
-
-	/** Test method for {@link EpisodeServiceImpl#getSerieCache()} and {@link EpisodeServiceImpl#setSerieCache(Cache)}. */
-	@Test
-	public void testSerieCache() {
-		final EpisodeServiceImpl episodeService = new EpisodeServiceImpl();
-		episodeService.setSerieCache(serieCache);
-		DeepAsserts.assertEquals(serieCache, episodeService.getSerieCache());
-	}
-
 	/** Test method for {@link EpisodeService#getEpisode(Integer)} with cached existing episode. */
 	@Test
 	public void testGetEpisodeWithCachedExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episode));
 
-		DeepAsserts.assertEquals(episode, episodeService.getEpisode(PRIMARY_ID));
+		DeepAsserts.assertEquals(episode, episodeService.getEpisode(episode.getId()));
 
-		verify(serieCache).get("episode" + PRIMARY_ID);
+		verify(serieCache).get("episode" + episode.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(episodeDAO);
 	}
@@ -94,11 +73,12 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#getEpisode(Integer)} with cached not existing episode. */
 	@Test
 	public void testGetEpisodeWithCachedNotExistingEpisode() {
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
-		assertNull(episodeService.getEpisode(PRIMARY_ID));
+		assertNull(episodeService.getEpisode(episode.getId()));
 
-		verify(serieCache).get("episode" + PRIMARY_ID);
+		verify(serieCache).get("episode" + episode.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(episodeDAO);
 	}
@@ -106,29 +86,30 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#getEpisode(Integer)} with not cached existing episode. */
 	@Test
 	public void testGetEpisodeWithNotCachedExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		when(episodeDAO.getEpisode(anyInt())).thenReturn(episode);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		DeepAsserts.assertEquals(episode, episodeService.getEpisode(PRIMARY_ID));
+		DeepAsserts.assertEquals(episode, episodeService.getEpisode(episode.getId()));
 
-		verify(episodeDAO).getEpisode(PRIMARY_ID);
-		verify(serieCache).get("episode" + PRIMARY_ID);
-		verify(serieCache).put("episode" + PRIMARY_ID, episode);
+		verify(episodeDAO).getEpisode(episode.getId());
+		verify(serieCache).get("episode" + episode.getId());
+		verify(serieCache).put("episode" + episode.getId(), episode);
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#getEpisode(Integer)} with not cached not existing episode. */
 	@Test
 	public void testGetEpisodeWithNotCachedNotExistingEpisode() {
+		final Episode episode = generate(Episode.class);
 		when(episodeDAO.getEpisode(anyInt())).thenReturn(null);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		assertNull(episodeService.getEpisode(PRIMARY_ID));
+		assertNull(episodeService.getEpisode(episode.getId()));
 
-		verify(episodeDAO).getEpisode(PRIMARY_ID);
-		verify(serieCache).get("episode" + PRIMARY_ID);
-		verify(serieCache).put("episode" + PRIMARY_ID, null);
+		verify(episodeDAO).getEpisode(episode.getId());
+		verify(serieCache).get("episode" + episode.getId());
+		verify(serieCache).put("episode" + episode.getId(), null);
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
@@ -180,7 +161,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#add(Episode)} with cached episodes. */
 	@Test
 	public void testAddWithCachedEpisodes() {
-		final Episode episode = EntityGenerator.createEpisode(EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		final List<Episode> episodesList = new ArrayList<>(episodes);
 		episodesList.add(episode);
@@ -189,23 +170,23 @@ public class EpisodeServiceImplTest {
 		episodeService.add(episode);
 
 		verify(episodeDAO).add(episode);
-		verify(serieCache).get("episodes" + INNER_ID);
-		verify(serieCache).get("episode" + null);
-		verify(serieCache).put("episodes" + INNER_ID, episodesList);
-		verify(serieCache).put("episode" + null, episode);
+		verify(serieCache).get("episodes" + episode.getSeason().getId());
+		verify(serieCache).get("episode" + episode.getId());
+		verify(serieCache).put("episodes" + episode.getSeason().getId(), episodesList);
+		verify(serieCache).put("episode" + episode.getId(), episode);
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#add(Episode)} with not cached episodes. */
 	@Test
 	public void testAddWithNotCachedEpisodes() {
-		final Episode episode = EntityGenerator.createEpisode(EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		episodeService.add(episode);
 
 		verify(episodeDAO).add(episode);
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + episode.getSeason().getId());
 		verify(serieCache).get("episode" + episode.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
@@ -240,7 +221,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#add(Episode)} with exception in DAO tier. */
 	@Test
 	public void testAddWithDAOTierException() {
-		final Episode episode = EntityGenerator.createEpisode(EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		doThrow(DataStorageException.class).when(episodeDAO).add(any(Episode.class));
 
 		try {
@@ -258,7 +239,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#update(Episode)}. */
 	@Test
 	public void testUpdate() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 
 		episodeService.update(episode);
 
@@ -297,7 +278,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#update(Episode)} with exception in DAO tier. */
 	@Test
 	public void testUpdateWithDAOTierException() {
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		doThrow(DataStorageException.class).when(episodeDAO).update(any(Episode.class));
 
 		try {
@@ -315,7 +296,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#remove(Episode)} with cached episodes. */
 	@Test
 	public void testRemoveWithCachedEpisodes() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		final List<Episode> episodesList = new ArrayList<>(episodes);
 		episodesList.add(episode);
@@ -324,23 +305,23 @@ public class EpisodeServiceImplTest {
 		episodeService.remove(episode);
 
 		verify(episodeDAO).remove(episode);
-		verify(serieCache).get("episodes" + INNER_ID);
-		verify(serieCache).put("episodes" + INNER_ID, episodes);
-		verify(serieCache).evict("episode" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + episode.getSeason().getId());
+		verify(serieCache).put("episodes" + episode.getSeason().getId(), episodes);
+		verify(serieCache).evict("episode" + episode.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#remove(Episode)} with not cached episodes. */
 	@Test
 	public void testRemoveWithNotCachedEpisodes() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		episodeService.remove(episode);
 
 		verify(episodeDAO).remove(episode);
-		verify(serieCache).get("episodes" + INNER_ID);
-		verify(serieCache).evict("episode" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + episode.getSeason().getId());
+		verify(serieCache).evict("episode" + episode.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
@@ -374,7 +355,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#remove(Episode)} with exception in DAO tier. */
 	@Test
 	public void testRemoveWithDAOTierException() {
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		doThrow(DataStorageException.class).when(episodeDAO).remove(any(Episode.class));
 
 		try {
@@ -392,15 +373,16 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#duplicate(Episode)} with cached episodes. */
 	@Test
 	public void testDuplicateWithCachedEpisodes() {
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(CollectionUtils.newList(mock(Episode.class), mock(Episode.class))));
 
-		episodeService.duplicate(EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID)));
+		episodeService.duplicate(episode);
 
 		verify(episodeDAO).add(any(Episode.class));
 		verify(episodeDAO).update(any(Episode.class));
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + episode.getSeason().getId());
 		verify(serieCache).get("episode" + null);
-		verify(serieCache).put(eq("episodes" + INNER_ID), anyListOf(Episode.class));
+		verify(serieCache).put(eq("episodes" + episode.getSeason().getId()), anyListOf(Episode.class));
 		verify(serieCache).put(eq("episode" + null), any(Episode.class));
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
@@ -408,13 +390,14 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#duplicate(Episode)} with not cached episodes. */
 	@Test
 	public void testDuplicateWithNotCachedEpisodes() {
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		episodeService.duplicate(EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID)));
+		episodeService.duplicate(episode);
 
 		verify(episodeDAO).add(any(Episode.class));
 		verify(episodeDAO).update(any(Episode.class));
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + episode.getSeason().getId());
 		verify(serieCache).get("episode" + null);
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
@@ -452,7 +435,7 @@ public class EpisodeServiceImplTest {
 		doThrow(DataStorageException.class).when(episodeDAO).add(any(Episode.class));
 
 		try {
-			episodeService.duplicate(EntityGenerator.createEpisode(Integer.MAX_VALUE, EntityGenerator.createSeason(INNER_ID)));
+			episodeService.duplicate(generate(Episode.class));
 			fail("Can't duplicate episode with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -466,20 +449,23 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#moveUp(Episode)} with cached episodes. */
 	@Test
 	public void testMoveUpWithCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode1 = EntityGenerator.createEpisode(PRIMARY_ID, season);
-		episode1.setPosition(MOVE_POSITION);
-		final Episode episode2 = EntityGenerator.createEpisode(SECONDARY_ID, season);
+		final Season season = generate(Season.class);
+		final Episode episode1 = generate(Episode.class);
+		episode1.setSeason(season);
+		final int position1 = episode1.getPosition();
+		final Episode episode2 = generate(Episode.class);
+		episode2.setSeason(season);
+		final int position2 = episode2.getPosition();
 		final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
 		episodeService.moveUp(episode2);
-		DeepAsserts.assertEquals(POSITION, episode1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, episode2.getPosition());
+		DeepAsserts.assertEquals(position2, episode1.getPosition());
+		DeepAsserts.assertEquals(position1, episode2.getPosition());
 
 		verify(episodeDAO).update(episode1);
 		verify(episodeDAO).update(episode2);
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
@@ -487,22 +473,25 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#moveUp(Episode)} with not cached episodes. */
 	@Test
 	public void testMoveUpWithNotCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode1 = EntityGenerator.createEpisode(PRIMARY_ID, season);
-		episode1.setPosition(MOVE_POSITION);
-		final Episode episode2 = EntityGenerator.createEpisode(SECONDARY_ID, season);
+		final Season season = generate(Season.class);
+		final Episode episode1 = generate(Episode.class);
+		episode1.setSeason(season);
+		final int position1 = episode1.getPosition();
+		final Episode episode2 = generate(Episode.class);
+		episode2.setSeason(season);
+		final int position2 = episode2.getPosition();
 		final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		episodeService.moveUp(episode2);
-		DeepAsserts.assertEquals(POSITION, episode1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, episode2.getPosition());
+		DeepAsserts.assertEquals(position2, episode1.getPosition());
+		DeepAsserts.assertEquals(position1, episode2.getPosition());
 
 		verify(episodeDAO).update(episode1);
 		verify(episodeDAO).update(episode2);
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
@@ -537,39 +526,44 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#moveUp(Episode)} with exception in DAO tier. */
 	@Test
 	public void testMoveUpWithDAOTierException() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
+		final Season season = generate(Season.class);
+		final Episode episode = generate(Episode.class);
+		episode.setSeason(season);
 		doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			episodeService.moveUp(EntityGenerator.createEpisode(Integer.MAX_VALUE, season));
+			episodeService.moveUp(episode);
 			fail("Can't move up episode with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#moveDown(Episode)} with cached episodes. */
 	@Test
 	public void testMoveDownWithCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode1 = EntityGenerator.createEpisode(PRIMARY_ID, season);
-		final Episode episode2 = EntityGenerator.createEpisode(SECONDARY_ID, season);
-		episode2.setPosition(MOVE_POSITION);
+		final Season season = generate(Season.class);
+		final Episode episode1 = generate(Episode.class);
+		episode1.setSeason(season);
+		final int position1 = episode1.getPosition();
+		final Episode episode2 = generate(Episode.class);
+		episode2.setSeason(season);
+		final int position2 = episode2.getPosition();
 		final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
 		episodeService.moveDown(episode1);
-		DeepAsserts.assertEquals(MOVE_POSITION, episode1.getPosition());
-		DeepAsserts.assertEquals(POSITION, episode2.getPosition());
+		DeepAsserts.assertEquals(position2, episode1.getPosition());
+		DeepAsserts.assertEquals(position1, episode2.getPosition());
 
 		verify(episodeDAO).update(episode1);
 		verify(episodeDAO).update(episode2);
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
@@ -577,22 +571,25 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#moveDown(Episode)} with not cached episodes. */
 	@Test
 	public void testMoveDownWithNotCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode1 = EntityGenerator.createEpisode(PRIMARY_ID, season);
-		final Episode episode2 = EntityGenerator.createEpisode(SECONDARY_ID, season);
-		episode2.setPosition(MOVE_POSITION);
+		final Season season = generate(Season.class);
+		final Episode episode1 = generate(Episode.class);
+		episode1.setSeason(season);
+		final int position1 = episode1.getPosition();
+		final Episode episode2 = generate(Episode.class);
+		episode2.setSeason(season);
+		final int position2 = episode2.getPosition();
 		final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		episodeService.moveDown(episode1);
-		DeepAsserts.assertEquals(MOVE_POSITION, episode1.getPosition());
-		DeepAsserts.assertEquals(POSITION, episode2.getPosition());
+		DeepAsserts.assertEquals(position2, episode1.getPosition());
+		DeepAsserts.assertEquals(position1, episode2.getPosition());
 
 		verify(episodeDAO).update(episode1);
 		verify(episodeDAO).update(episode2);
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
@@ -627,31 +624,33 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#moveDown(Episode)} with exception in DAO tier. */
 	@Test
 	public void testMoveDownWithDAOTierException() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
+		final Season season = generate(Season.class);
+		final Episode episode = generate(Episode.class);
+		episode.setSeason(season);
 		doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			episodeService.moveDown(EntityGenerator.createEpisode(Integer.MAX_VALUE, season));
+			episodeService.moveDown(episode);
 			fail("Can't move down episode with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + INNER_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#exists(Episode)} with cached existing episode. */
 	@Test
 	public void testExistsWithCachedExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episode));
 
 		assertTrue(episodeService.exists(episode));
 
-		verify(serieCache).get("episode" + PRIMARY_ID);
+		verify(serieCache).get("episode" + episode.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(episodeDAO);
 	}
@@ -659,12 +658,12 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#exists(Episode)} with cached not existing episode. */
 	@Test
 	public void testExistsWithCachedNotExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
 		assertFalse(episodeService.exists(episode));
 
-		verify(serieCache).get("episode" + Integer.MAX_VALUE);
+		verify(serieCache).get("episode" + episode.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(episodeDAO);
 	}
@@ -672,29 +671,30 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#exists(Episode)} with not cached existing episode. */
 	@Test
 	public void testExistsWithNotCachedExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
 		when(episodeDAO.getEpisode(anyInt())).thenReturn(episode);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		assertTrue(episodeService.exists(episode));
 
-		verify(episodeDAO).getEpisode(PRIMARY_ID);
-		verify(serieCache).get("episode" + PRIMARY_ID);
-		verify(serieCache).put("episode" + PRIMARY_ID, episode);
+		verify(episodeDAO).getEpisode(episode.getId());
+		verify(serieCache).get("episode" + episode.getId());
+		verify(serieCache).put("episode" + episode.getId(), episode);
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#exists(Episode)} with not cached not existing episode. */
 	@Test
 	public void testExistsWithNotCachedNotExistingEpisode() {
+		final Episode episode = generate(Episode.class);
 		when(episodeDAO.getEpisode(anyInt())).thenReturn(null);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		assertFalse(episodeService.exists(EntityGenerator.createEpisode(Integer.MAX_VALUE, EntityGenerator.createSeason(INNER_ID))));
+		assertFalse(episodeService.exists(episode));
 
-		verify(episodeDAO).getEpisode(Integer.MAX_VALUE);
-		verify(serieCache).get("episode" + Integer.MAX_VALUE);
-		verify(serieCache).put("episode" + Integer.MAX_VALUE, null);
+		verify(episodeDAO).getEpisode(episode.getId());
+		verify(serieCache).get("episode" + episode.getId());
+		verify(serieCache).put("episode" + episode.getId(), null);
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
@@ -728,31 +728,32 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#exists(Episode)} with exception in DAO tier. */
 	@Test
 	public void testExistsWithDAOTierException() {
+		final Episode episode = generate(Episode.class);
 		doThrow(DataStorageException.class).when(episodeDAO).getEpisode(anyInt());
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			episodeService.exists(EntityGenerator.createEpisode(Integer.MAX_VALUE, EntityGenerator.createSeason(INNER_ID)));
+			episodeService.exists(episode);
 			fail("Can't exists episode with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
-		verify(episodeDAO).getEpisode(Integer.MAX_VALUE);
-		verify(serieCache).get("episode" + Integer.MAX_VALUE);
+		verify(episodeDAO).getEpisode(episode.getId());
+		verify(serieCache).get("episode" + episode.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with cached episodes. */
 	@Test
 	public void testFindEpisodesBySeasonWithCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
+		final Season season = generate(Season.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
 		DeepAsserts.assertEquals(episodes, episodeService.findEpisodesBySeason(season));
 
-		verify(serieCache).get("episodes" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(episodeDAO);
 	}
@@ -760,7 +761,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with not cached episodes. */
 	@Test
 	public void testFindEpisodesBySeasonWithNotCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
+		final Season season = generate(Season.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 		when(serieCache.get(anyString())).thenReturn(null);
@@ -768,8 +769,8 @@ public class EpisodeServiceImplTest {
 		DeepAsserts.assertEquals(episodes, episodeService.findEpisodesBySeason(season));
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + PRIMARY_ID);
-		verify(serieCache).put("episodes" + PRIMARY_ID, episodes);
+		verify(serieCache).get("episodes" + season.getId());
+		verify(serieCache).put("episodes" + season.getId(), episodes);
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
@@ -803,7 +804,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with exception in DAO tier. */
 	@Test
 	public void testFindEpisodesBySeasonWithDAOTierException() {
-		final Season season = EntityGenerator.createSeason(Integer.MAX_VALUE);
+		final Season season = generate(Season.class);
 		doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
@@ -815,14 +816,14 @@ public class EpisodeServiceImplTest {
 		}
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + Integer.MAX_VALUE);
+		verify(serieCache).get("episodes" + season.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 
 	/** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with cached episodes. */
 	@Test
 	public void testGetTotalLengthBySeasonWithCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
+		final Season season = generate(Season.class);
 		final Episode episode1 = mock(Episode.class);
 		final Episode episode2 = mock(Episode.class);
 		final Episode episode3 = mock(Episode.class);
@@ -834,7 +835,7 @@ public class EpisodeServiceImplTest {
 
 		DeepAsserts.assertEquals(new Time(600), episodeService.getTotalLengthBySeason(season));
 
-		verify(serieCache).get("episodes" + PRIMARY_ID);
+		verify(serieCache).get("episodes" + season.getId());
 		verify(episode1).getLength();
 		verify(episode2).getLength();
 		verify(episode3).getLength();
@@ -845,7 +846,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with not cached episodes. */
 	@Test
 	public void testGetTotalLengthBySeasonWithNotCachedEpisodes() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
+		final Season season = generate(Season.class);
 		final Episode episode1 = mock(Episode.class);
 		final Episode episode2 = mock(Episode.class);
 		final Episode episode3 = mock(Episode.class);
@@ -859,8 +860,8 @@ public class EpisodeServiceImplTest {
 		DeepAsserts.assertEquals(new Time(600), episodeService.getTotalLengthBySeason(season));
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + PRIMARY_ID);
-		verify(serieCache).put("episodes" + PRIMARY_ID, episodes);
+		verify(serieCache).get("episodes" + season.getId());
+		verify(serieCache).put("episodes" + season.getId(), episodes);
 		verify(episode1).getLength();
 		verify(episode2).getLength();
 		verify(episode3).getLength();
@@ -897,7 +898,7 @@ public class EpisodeServiceImplTest {
 	/** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with exception in DAO tier. */
 	@Test
 	public void testGetTotalLengthBySeasonWithDAOTierException() {
-		final Season season = EntityGenerator.createSeason(Integer.MAX_VALUE);
+		final Season season = generate(Season.class);
 		doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
@@ -909,7 +910,7 @@ public class EpisodeServiceImplTest {
 		}
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + Integer.MAX_VALUE);
+		verify(serieCache).get("episodes" + season.getId());
 		verifyNoMoreInteractions(episodeDAO, serieCache);
 	}
 

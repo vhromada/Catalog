@@ -1,12 +1,5 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.MOVE_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.SeasonDAO;
@@ -52,7 +45,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SerieServiceImplTest {
+public class SerieServiceImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SerieDAO} */
 	@Mock
@@ -74,49 +67,19 @@ public class SerieServiceImplTest {
 	@InjectMocks
 	private SerieService serieService = new SerieServiceImpl();
 
-	/** Test method for {@link SerieServiceImpl#getSerieDAO()} and {@link SerieServiceImpl#setSerieDAO(SerieDAO)}. */
-	@Test
-	public void testSerieDAO() {
-		final SerieServiceImpl serieService = new SerieServiceImpl();
-		serieService.setSerieDAO(serieDAO);
-		DeepAsserts.assertEquals(serieDAO, serieService.getSerieDAO());
-	}
-
-	/** Test method for {@link SerieServiceImpl#getSeasonDAO()} and {@link SerieServiceImpl#setSeasonDAO(SeasonDAO)}. */
-	@Test
-	public void testSeasonDAO() {
-		final SerieServiceImpl serieService = new SerieServiceImpl();
-		serieService.setSeasonDAO(seasonDAO);
-		DeepAsserts.assertEquals(seasonDAO, serieService.getSeasonDAO());
-	}
-
-	/** Test method for {@link SerieServiceImpl#getEpisodeDAO()} and {@link SerieServiceImpl#setEpisodeDAO(EpisodeDAO)}. */
-	@Test
-	public void testEpisodeDAO() {
-		final SerieServiceImpl serieService = new SerieServiceImpl();
-		serieService.setEpisodeDAO(episodeDAO);
-		DeepAsserts.assertEquals(episodeDAO, serieService.getEpisodeDAO());
-	}
-
-	/** Test method for {@link SerieServiceImpl#getSerieCache()} and {@link SerieServiceImpl#setSerieCache(Cache)}. */
-	@Test
-	public void testSerieCache() {
-		final SerieServiceImpl serieService = new SerieServiceImpl();
-		serieService.setSerieCache(serieCache);
-		DeepAsserts.assertEquals(serieCache, serieService.getSerieCache());
-	}
-
 	/** Test method for {@link SerieService#newData()} with cached data. */
 	@Test
 	public void testNewDataWithCachedData() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(serieCache.get("series")).thenReturn(new SimpleValueWrapper(series));
-		when(serieCache.get("seasons" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("seasons" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("episodes" + INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
-		when(serieCache.get("episodes" + SECONDARY_INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
+		for (Serie serie : series) {
+			when(serieCache.get("seasons" + serie.getId())).thenReturn(new SimpleValueWrapper(seasons));
+		}
+		for (Season season : seasons) {
+			when(serieCache.get("episodes" + season.getId())).thenReturn(new SimpleValueWrapper(episodes));
+		}
 
 		serieService.newData();
 
@@ -139,8 +102,8 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#newData()} with not cached data. */
 	@Test
 	public void testNewDataWithNotCachedData() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(serieDAO.getSeries()).thenReturn(series);
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
@@ -278,12 +241,12 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getSerie(Integer)} with cached existing serie. */
 	@Test
 	public void testGetSerieWithCachedExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(serie));
 
-		DeepAsserts.assertEquals(serie, serieService.getSerie(PRIMARY_ID));
+		DeepAsserts.assertEquals(serie, serieService.getSerie(serie.getId()));
 
-		verify(serieCache).get("serie" + PRIMARY_ID);
+		verify(serieCache).get("serie" + serie.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(serieDAO);
 	}
@@ -291,11 +254,12 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getSerie(Integer)} with cached not existing serie. */
 	@Test
 	public void testGetSerieWithCachedNotExistingSerie() {
+		final Serie serie = generate(Serie.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
-		assertNull(serieService.getSerie(PRIMARY_ID));
+		assertNull(serieService.getSerie(serie.getId()));
 
-		verify(serieCache).get("serie" + PRIMARY_ID);
+		verify(serieCache).get("serie" + serie.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(serieDAO);
 	}
@@ -303,29 +267,30 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getSerie(Integer)} with not cached existing serie. */
 	@Test
 	public void testGetSerieWithNotCachedExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		when(serieDAO.getSerie(anyInt())).thenReturn(serie);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		DeepAsserts.assertEquals(serie, serieService.getSerie(PRIMARY_ID));
+		DeepAsserts.assertEquals(serie, serieService.getSerie(serie.getId()));
 
-		verify(serieDAO).getSerie(PRIMARY_ID);
-		verify(serieCache).get("serie" + PRIMARY_ID);
-		verify(serieCache).put("serie" + PRIMARY_ID, serie);
+		verify(serieDAO).getSerie(serie.getId());
+		verify(serieCache).get("serie" + serie.getId());
+		verify(serieCache).put("serie" + serie.getId(), serie);
 		verifyNoMoreInteractions(serieDAO, serieCache);
 	}
 
 	/** Test method for {@link SerieService#getSerie(Integer)} with not cached not existing serie. */
 	@Test
 	public void testGetSerieWithNotCachedNotExistingSerie() {
+		final Serie serie = generate(Serie.class);
 		when(serieDAO.getSerie(anyInt())).thenReturn(null);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		assertNull(serieService.getSerie(PRIMARY_ID));
+		assertNull(serieService.getSerie(serie.getId()));
 
-		verify(serieDAO).getSerie(PRIMARY_ID);
-		verify(serieCache).get("serie" + PRIMARY_ID);
-		verify(serieCache).put("serie" + PRIMARY_ID, null);
+		verify(serieDAO).getSerie(serie.getId());
+		verify(serieCache).get("serie" + serie.getId());
+		verify(serieCache).put("serie" + serie.getId(), null);
 		verifyNoMoreInteractions(serieDAO, serieCache);
 	}
 
@@ -377,7 +342,7 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#add(Serie)} with cached series. */
 	@Test
 	public void testAddWithCachedSeries() {
-		final Serie serie = EntityGenerator.createSerie();
+		final Serie serie = generate(Serie.class);
 		final List<Serie> series = CollectionUtils.newList(mock(Serie.class), mock(Serie.class));
 		final List<Serie> seriesList = new ArrayList<>(series);
 		seriesList.add(serie);
@@ -387,23 +352,23 @@ public class SerieServiceImplTest {
 
 		verify(serieDAO).add(serie);
 		verify(serieCache).get("series");
-		verify(serieCache).get("serie" + null);
+		verify(serieCache).get("serie" + serie.getId());
 		verify(serieCache).put("series", seriesList);
-		verify(serieCache).put("serie" + null, serie);
+		verify(serieCache).put("serie" + serie.getId(), serie);
 		verifyNoMoreInteractions(serieDAO, serieCache);
 	}
 
 	/** Test method for {@link SerieService#add(Serie)} with not cached series. */
 	@Test
 	public void testAddWithNotCachedSeries() {
-		final Serie serie = EntityGenerator.createSerie();
+		final Serie serie = generate(Serie.class);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		serieService.add(serie);
 
 		verify(serieDAO).add(serie);
 		verify(serieCache).get("series");
-		verify(serieCache).get("serie" + null);
+		verify(serieCache).get("serie" + serie.getId());
 		verifyNoMoreInteractions(serieDAO, serieCache);
 	}
 
@@ -437,7 +402,7 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#add(Serie)} with exception in DAO tier. */
 	@Test
 	public void testAddWithDAOTierException() {
-		final Serie serie = EntityGenerator.createSerie();
+		final Serie serie = generate(Serie.class);
 		doThrow(DataStorageException.class).when(serieDAO).add(any(Serie.class));
 
 		try {
@@ -455,7 +420,7 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#update(Serie)}. */
 	@Test
 	public void testUpdate() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 
 		serieService.update(serie);
 
@@ -494,7 +459,7 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#update(Serie)} with exception in DAO tier. */
 	@Test
 	public void testUpdateWithDAOTierException() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		doThrow(DataStorageException.class).when(serieDAO).update(any(Serie.class));
 
 		try {
@@ -512,13 +477,13 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#remove(Serie)} with cached data. */
 	@Test
 	public void testRemoveWithCachedData() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final Serie serie = generate(Serie.class);
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
-		when(serieCache.get("seasons" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("seasons" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("episodes" + INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
-		when(serieCache.get("episodes" + SECONDARY_INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
+		when(serieCache.get("seasons" + serie.getId())).thenReturn(new SimpleValueWrapper(seasons));
+		for (Season season : seasons) {
+			when(serieCache.get("episodes" + season.getId())).thenReturn(new SimpleValueWrapper(episodes));
+		}
 
 		serieService.remove(serie);
 
@@ -530,7 +495,7 @@ public class SerieServiceImplTest {
 		for (Episode episode : episodes) {
 			verify(episodeDAO, times(seasons.size())).remove(episode);
 		}
-		verify(serieCache).get("seasons" + PRIMARY_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
 	}
@@ -538,8 +503,8 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#remove(Serie)} with not cached data. */
 	@Test
 	public void testRemoveWithNotCachedData() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final Serie serie = generate(Serie.class);
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
@@ -557,7 +522,7 @@ public class SerieServiceImplTest {
 		for (Episode episode : episodes) {
 			verify(episodeDAO, times(seasons.size())).remove(episode);
 		}
-		verify(serieCache).get("seasons" + PRIMARY_ID);
+		verify(serieCache).get("seasons" + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
 	}
@@ -606,7 +571,7 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#remove(Serie)} with exception in DAO tier. */
 	@Test
 	public void testRemoveWithDAOTierException() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		doThrow(DataStorageException.class).when(seasonDAO).findSeasonsBySerie(any(Serie.class));
 		when(serieCache.get(anyString())).thenReturn(null);
 
@@ -618,7 +583,7 @@ public class SerieServiceImplTest {
 		}
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + Integer.MAX_VALUE);
+		verify(serieCache).get("seasons" + serie.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 		verifyZeroInteractions(serieDAO, episodeDAO);
 	}
@@ -626,13 +591,15 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#duplicate(Serie)} with cached data. */
 	@Test
 	public void testDuplicateWithCachedData() {
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final Serie serie = generate(Serie.class);
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
-		when(serieCache.get("seasons" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("episodes" + INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
-		when(serieCache.get("episodes" + SECONDARY_INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
+		when(serieCache.get("seasons" + serie.getId())).thenReturn(new SimpleValueWrapper(seasons));
+		for (Season season : seasons) {
+			when(serieCache.get("episodes" + season.getId())).thenReturn(new SimpleValueWrapper(episodes));
+		}
 
-		serieService.duplicate(EntityGenerator.createSerie(PRIMARY_ID));
+		serieService.duplicate(serie);
 
 		verify(serieDAO).add(any(Serie.class));
 		verify(serieDAO).update(any(Serie.class));
@@ -640,9 +607,10 @@ public class SerieServiceImplTest {
 		verify(seasonDAO, times(seasons.size())).update(any(Season.class));
 		verify(episodeDAO, times(seasons.size() * episodes.size())).add(any(Episode.class));
 		verify(episodeDAO, times(seasons.size() * episodes.size())).update(any(Episode.class));
-		verify(serieCache).get("seasons" + PRIMARY_ID);
-		verify(serieCache).get("episodes" + INNER_ID);
-		verify(serieCache).get("episodes" + SECONDARY_INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
+		for (Season season : seasons) {
+			verify(serieCache).get("episodes" + season.getId());
+		}
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
 	}
@@ -650,8 +618,8 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#duplicate(Serie)} with not cached data. */
 	@Test
 	public void testDuplicateWithNotCachedData() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final Serie serie = generate(Serie.class);
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
@@ -669,9 +637,10 @@ public class SerieServiceImplTest {
 		for (Season season : seasons) {
 			verify(episodeDAO).findEpisodesBySeason(season);
 		}
-		verify(serieCache).get("seasons" + PRIMARY_ID);
-		verify(serieCache).get("episodes" + INNER_ID);
-		verify(serieCache).get("episodes" + SECONDARY_INNER_ID);
+		verify(serieCache).get("seasons" + serie.getId());
+		for (Season season : seasons) {
+			verify(serieCache).get("episodes" + season.getId());
+		}
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
 	}
@@ -723,7 +692,7 @@ public class SerieServiceImplTest {
 		doThrow(DataStorageException.class).when(serieDAO).add(any(Serie.class));
 
 		try {
-			serieService.duplicate(EntityGenerator.createSerie(Integer.MAX_VALUE));
+			serieService.duplicate(generate(Serie.class));
 			fail("Can't duplicate serie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -737,15 +706,16 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#moveUp(Serie)} with cached series. */
 	@Test
 	public void testMoveUpWithCachedSeries() {
-		final Serie serie1 = EntityGenerator.createSerie(PRIMARY_ID);
-		serie1.setPosition(MOVE_POSITION);
-		final Serie serie2 = EntityGenerator.createSerie(SECONDARY_ID);
+		final Serie serie1 = generate(Serie.class);
+		final int position1 = serie1.getPosition();
+		final Serie serie2 = generate(Serie.class);
+		final int position2 = serie2.getPosition();
 		final List<Serie> series = CollectionUtils.newList(serie1, serie2);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(series));
 
 		serieService.moveUp(serie2);
-		DeepAsserts.assertEquals(POSITION, serie1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, serie2.getPosition());
+		DeepAsserts.assertEquals(position2, serie1.getPosition());
+		DeepAsserts.assertEquals(position1, serie2.getPosition());
 
 		verify(serieDAO).update(serie1);
 		verify(serieDAO).update(serie2);
@@ -757,16 +727,17 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#moveUp(Serie)} with not cached series. */
 	@Test
 	public void testMoveUpWithNotCachedSeries() {
-		final Serie serie1 = EntityGenerator.createSerie(PRIMARY_ID);
-		serie1.setPosition(MOVE_POSITION);
-		final Serie serie2 = EntityGenerator.createSerie(SECONDARY_ID);
+		final Serie serie1 = generate(Serie.class);
+		final int position1 = serie1.getPosition();
+		final Serie serie2 = generate(Serie.class);
+		final int position2 = serie2.getPosition();
 		final List<Serie> series = CollectionUtils.newList(serie1, serie2);
 		when(serieDAO.getSeries()).thenReturn(series);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		serieService.moveUp(serie2);
-		DeepAsserts.assertEquals(POSITION, serie1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, serie2.getPosition());
+		DeepAsserts.assertEquals(position2, serie1.getPosition());
+		DeepAsserts.assertEquals(position1, serie2.getPosition());
 
 		verify(serieDAO).update(serie1);
 		verify(serieDAO).update(serie2);
@@ -810,7 +781,7 @@ public class SerieServiceImplTest {
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			serieService.moveUp(EntityGenerator.createSerie(Integer.MAX_VALUE));
+			serieService.moveUp(generate(Serie.class));
 			fail("Can't move up serie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -824,15 +795,16 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#moveDown(Serie)} with cached series. */
 	@Test
 	public void testMoveDownWithCachedSeries() {
-		final Serie serie1 = EntityGenerator.createSerie(PRIMARY_ID);
-		final Serie serie2 = EntityGenerator.createSerie(SECONDARY_ID);
-		serie2.setPosition(MOVE_POSITION);
+		final Serie serie1 = generate(Serie.class);
+		final int position1 = serie1.getPosition();
+		final Serie serie2 = generate(Serie.class);
+		final int position2 = serie2.getPosition();
 		final List<Serie> series = CollectionUtils.newList(serie1, serie2);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(series));
 
 		serieService.moveDown(serie1);
-		DeepAsserts.assertEquals(MOVE_POSITION, serie1.getPosition());
-		DeepAsserts.assertEquals(POSITION, serie2.getPosition());
+		DeepAsserts.assertEquals(position2, serie1.getPosition());
+		DeepAsserts.assertEquals(position1, serie2.getPosition());
 
 		verify(serieDAO).update(serie1);
 		verify(serieDAO).update(serie2);
@@ -844,16 +816,17 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#moveDown(Serie)} with not cached series. */
 	@Test
 	public void testMoveDownWithNotCachedSeries() {
-		final Serie serie1 = EntityGenerator.createSerie(PRIMARY_ID);
-		final Serie serie2 = EntityGenerator.createSerie(SECONDARY_ID);
-		serie2.setPosition(MOVE_POSITION);
+		final Serie serie1 = generate(Serie.class);
+		final int position1 = serie1.getPosition();
+		final Serie serie2 = generate(Serie.class);
+		final int position2 = serie2.getPosition();
 		final List<Serie> series = CollectionUtils.newList(serie1, serie2);
 		when(serieDAO.getSeries()).thenReturn(series);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		serieService.moveDown(serie1);
-		DeepAsserts.assertEquals(MOVE_POSITION, serie1.getPosition());
-		DeepAsserts.assertEquals(POSITION, serie2.getPosition());
+		DeepAsserts.assertEquals(position2, serie1.getPosition());
+		DeepAsserts.assertEquals(position1, serie2.getPosition());
 
 		verify(serieDAO).update(serie1);
 		verify(serieDAO).update(serie2);
@@ -897,7 +870,7 @@ public class SerieServiceImplTest {
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			serieService.moveDown(EntityGenerator.createSerie(Integer.MAX_VALUE));
+			serieService.moveDown(generate(Serie.class));
 			fail("Can't move down serie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -911,12 +884,12 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#exists(Serie)} with cached existing serie. */
 	@Test
 	public void testExistsWithCachedExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(serie));
 
 		assertTrue(serieService.exists(serie));
 
-		verify(serieCache).get("serie" + PRIMARY_ID);
+		verify(serieCache).get("serie" + serie.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(serieDAO);
 	}
@@ -924,12 +897,12 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#exists(Serie)} with cached not existing serie. */
 	@Test
 	public void testExistsWithCachedNotExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
 		assertFalse(serieService.exists(serie));
 
-		verify(serieCache).get("serie" + Integer.MAX_VALUE);
+		verify(serieCache).get("serie" + serie.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(serieDAO);
 	}
@@ -937,29 +910,30 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#exists(Serie)} with not cached existing serie. */
 	@Test
 	public void testExistsWithNotCachedExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		when(serieDAO.getSerie(anyInt())).thenReturn(serie);
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		assertTrue(serieService.exists(serie));
 
-		verify(serieDAO).getSerie(PRIMARY_ID);
-		verify(serieCache).get("serie" + PRIMARY_ID);
-		verify(serieCache).put("serie" + PRIMARY_ID, serie);
+		verify(serieDAO).getSerie(serie.getId());
+		verify(serieCache).get("serie" + serie.getId());
+		verify(serieCache).put("serie" + serie.getId(), serie);
 		verifyNoMoreInteractions(serieDAO, serieCache);
 	}
 
 	/** Test method for {@link SerieService#exists(Serie)} with not cached not existing serie. */
 	@Test
 	public void testExistsWithNotCachedNotExistingSerie() {
+		final Serie serie = generate(Serie.class);
 		when(serieDAO.getSerie(anyInt())).thenReturn(null);
 		when(serieCache.get(anyString())).thenReturn(null);
 
-		assertFalse(serieService.exists(EntityGenerator.createSerie(Integer.MAX_VALUE)));
+		assertFalse(serieService.exists(serie));
 
-		verify(serieDAO).getSerie(Integer.MAX_VALUE);
-		verify(serieCache).get("serie" + Integer.MAX_VALUE);
-		verify(serieCache).put("serie" + Integer.MAX_VALUE, null);
+		verify(serieDAO).getSerie(serie.getId());
+		verify(serieCache).get("serie" + serie.getId());
+		verify(serieCache).put("serie" + serie.getId(), null);
 		verifyNoMoreInteractions(serieDAO, serieCache);
 	}
 
@@ -993,33 +967,35 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#exists(Serie)} with exception in DAO tier. */
 	@Test
 	public void testExistsWithDAOTierException() {
+		final Serie serie = generate(Serie.class);
 		doThrow(DataStorageException.class).when(serieDAO).getSerie(anyInt());
 		when(serieCache.get(anyString())).thenReturn(null);
 
 		try {
-			serieService.exists(EntityGenerator.createSerie(Integer.MAX_VALUE));
+			serieService.exists(serie);
 			fail("Can't exists serie with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
-		verify(serieDAO).getSerie(Integer.MAX_VALUE);
-		verify(serieCache).get("serie" + Integer.MAX_VALUE);
+		verify(serieDAO).getSerie(serie.getId());
+		verify(serieCache).get("serie" + serie.getId());
 		verifyNoMoreInteractions(serieDAO, serieCache);
 	}
 
 	/** Test method for {@link SerieService#updatePositions()} with cached data. */
 	@Test
 	public void testUpdatePositionsWithCachedData() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
-		final List<Episode> episodes = CollectionUtils
-				.newList(EntityGenerator.createEpisode(INNER_INNER_ID), EntityGenerator.createEpisode(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
+		final List<Episode> episodes = CollectionUtils.newList(generate(Episode.class), generate(Episode.class));
 		when(serieCache.get("series")).thenReturn(new SimpleValueWrapper(series));
-		when(serieCache.get("seasons" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("seasons" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("episodes" + INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
-		when(serieCache.get("episodes" + SECONDARY_INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
+		for (Serie serie : series) {
+			when(serieCache.get("seasons" + serie.getId())).thenReturn(new SimpleValueWrapper(seasons));
+		}
+		for (Season season : seasons) {
+			when(serieCache.get("episodes" + season.getId())).thenReturn(new SimpleValueWrapper(episodes));
+		}
 
 		serieService.updatePositions();
 
@@ -1048,10 +1024,9 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#updatePositions()} with not cached data. */
 	@Test
 	public void testUpdatePositionsWithNotCachedData() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
-		final List<Episode> episodes = CollectionUtils
-				.newList(EntityGenerator.createEpisode(INNER_INNER_ID), EntityGenerator.createEpisode(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
+		final List<Episode> episodes = CollectionUtils.newList(generate(Episode.class), generate(Episode.class));
 		when(serieDAO.getSeries()).thenReturn(series);
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
@@ -1134,16 +1109,18 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getTotalLength()} with cached series. */
 	@Test
 	public void testGetTotalLengthWithCachedSeries() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final Episode episode1 = mock(Episode.class);
 		final Episode episode2 = mock(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
 		when(serieCache.get("series")).thenReturn(new SimpleValueWrapper(series));
-		when(serieCache.get("seasons" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("seasons" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("episodes" + INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
-		when(serieCache.get("episodes" + SECONDARY_INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
+		for (Serie serie : series) {
+			when(serieCache.get("seasons" + serie.getId())).thenReturn(new SimpleValueWrapper(seasons));
+		}
+		for (Season season : seasons) {
+			when(serieCache.get("episodes" + season.getId())).thenReturn(new SimpleValueWrapper(episodes));
+		}
 		when(episode1.getLength()).thenReturn(100);
 		when(episode2.getLength()).thenReturn(200);
 
@@ -1165,8 +1142,8 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getTotalLength()} with not cached series. */
 	@Test
 	public void testGetTotalLengthWithNotCachedSeries() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final Episode episode1 = mock(Episode.class);
 		final Episode episode2 = mock(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
@@ -1246,20 +1223,20 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getSeasonsCount()} with cached data. */
 	@Test
 	public void testGetSeasonsCountWithCachedData() {
-		final Serie serie1 = EntityGenerator.createSerie(PRIMARY_ID);
-		final Serie serie2 = EntityGenerator.createSerie(SECONDARY_ID);
+		final Serie serie1 = generate(Serie.class);
+		final Serie serie2 = generate(Serie.class);
 		final List<Serie> series = CollectionUtils.newList(serie1, serie2);
 		final List<Season> seasons1 = CollectionUtils.newList(mock(Season.class));
 		final List<Season> seasons2 = CollectionUtils.newList(mock(Season.class), mock(Season.class));
 		when(serieCache.get("series")).thenReturn(new SimpleValueWrapper(series));
-		when(serieCache.get("seasons" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(seasons1));
-		when(serieCache.get("seasons" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(seasons2));
+		when(serieCache.get("seasons" + serie1.getId())).thenReturn(new SimpleValueWrapper(seasons1));
+		when(serieCache.get("seasons" + serie2.getId())).thenReturn(new SimpleValueWrapper(seasons2));
 
 		DeepAsserts.assertEquals(seasons1.size() + seasons2.size(), serieService.getSeasonsCount());
 
 		verify(serieCache).get("series");
-		verify(serieCache).get("seasons" + PRIMARY_ID);
-		verify(serieCache).get("seasons" + SECONDARY_ID);
+		verify(serieCache).get("seasons" + serie1.getId());
+		verify(serieCache).get("seasons" + serie2.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(serieDAO, seasonDAO);
 	}
@@ -1267,8 +1244,8 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getSeasonsCount()} with not cached data. */
 	@Test
 	public void testGetSeasonsCountWithNotCachedSeasonCategories() {
-		final Serie serie1 = EntityGenerator.createSerie(PRIMARY_ID);
-		final Serie serie2 = EntityGenerator.createSerie(SECONDARY_ID);
+		final Serie serie1 = generate(Serie.class);
+		final Serie serie2 = generate(Serie.class);
 		final List<Serie> series = CollectionUtils.newList(serie1, serie2);
 		final List<Season> seasons1 = CollectionUtils.newList(mock(Season.class));
 		final List<Season> seasons2 = CollectionUtils.newList(mock(Season.class), mock(Season.class));
@@ -1284,10 +1261,10 @@ public class SerieServiceImplTest {
 		verify(seasonDAO).findSeasonsBySerie(serie2);
 		verify(serieCache).get("series");
 		verify(serieCache).put("series", series);
-		verify(serieCache).get("seasons" + PRIMARY_ID);
-		verify(serieCache).put("seasons" + PRIMARY_ID, seasons1);
-		verify(serieCache).get("seasons" + SECONDARY_ID);
-		verify(serieCache).put("seasons" + SECONDARY_ID, seasons2);
+		verify(serieCache).get("seasons" + serie1.getId());
+		verify(serieCache).put("seasons" + serie1.getId(), seasons1);
+		verify(serieCache).get("seasons" + serie2.getId());
+		verify(serieCache).put("seasons" + serie2.getId(), seasons2);
 		verifyNoMoreInteractions(serieDAO, seasonDAO, serieCache);
 	}
 
@@ -1334,14 +1311,16 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getEpisodesCount()} with cached data. */
 	@Test
 	public void testGetEpisodesCountWithCachedData() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(serieCache.get("series")).thenReturn(new SimpleValueWrapper(series));
-		when(serieCache.get("seasons" + PRIMARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("seasons" + SECONDARY_ID)).thenReturn(new SimpleValueWrapper(seasons));
-		when(serieCache.get("episodes" + INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
-		when(serieCache.get("episodes" + SECONDARY_INNER_ID)).thenReturn(new SimpleValueWrapper(episodes));
+		for (Serie serie : series) {
+			when(serieCache.get("seasons" + serie.getId())).thenReturn(new SimpleValueWrapper(seasons));
+		}
+		for (Season season : seasons) {
+			when(serieCache.get("episodes" + season.getId())).thenReturn(new SimpleValueWrapper(episodes));
+		}
 
 		DeepAsserts.assertEquals(series.size() * seasons.size() * episodes.size(), serieService.getEpisodesCount());
 
@@ -1359,8 +1338,8 @@ public class SerieServiceImplTest {
 	/** Test method for {@link SerieService#getEpisodesCount()} with not cached data. */
 	@Test
 	public void testGetEpisodesCountWithNotCachedSeasonCategories() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<Season> seasons = CollectionUtils.newList(EntityGenerator.createSeason(INNER_ID), EntityGenerator.createSeason(SECONDARY_INNER_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
 		when(serieDAO.getSeries()).thenReturn(series);
 		when(seasonDAO.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);

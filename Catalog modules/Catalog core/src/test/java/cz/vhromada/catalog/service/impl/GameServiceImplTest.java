@@ -1,9 +1,5 @@
 package cz.vhromada.catalog.service.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.MOVE_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -22,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.GameDAO;
 import cz.vhromada.catalog.dao.entities.Game;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -43,7 +39,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GameServiceImplTest {
+public class GameServiceImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link GameDAO} */
 	@Mock
@@ -56,22 +52,6 @@ public class GameServiceImplTest {
 	/** Instance of {@link GameService} */
 	@InjectMocks
 	private GameService gameService = new GameServiceImpl();
-
-	/** Test method for {@link GameServiceImpl#getGameDAO()} and {@link GameServiceImpl#setGameDAO(GameDAO)}. */
-	@Test
-	public void testGameDAO() {
-		final GameServiceImpl gameService = new GameServiceImpl();
-		gameService.setGameDAO(gameDAO);
-		DeepAsserts.assertEquals(gameDAO, gameService.getGameDAO());
-	}
-
-	/** Test method for {@link GameServiceImpl#getGameCache()} and {@link GameServiceImpl#setGameCache(Cache)}. */
-	@Test
-	public void testGameCache() {
-		final GameServiceImpl gameService = new GameServiceImpl();
-		gameService.setGameCache(gameCache);
-		DeepAsserts.assertEquals(gameCache, gameService.getGameCache());
-	}
 
 	/** Test method for {@link GameService#newData()} with cached games. */
 	@Test
@@ -202,12 +182,12 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#getGame(Integer)} with cached existing game. */
 	@Test
 	public void testGetGameWithCachedExistingGame() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		when(gameCache.get(anyString())).thenReturn(new SimpleValueWrapper(game));
 
-		DeepAsserts.assertEquals(game, gameService.getGame(PRIMARY_ID));
+		DeepAsserts.assertEquals(game, gameService.getGame(game.getId()));
 
-		verify(gameCache).get("game" + PRIMARY_ID);
+		verify(gameCache).get("game" + game.getId());
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -215,11 +195,12 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#getGame(Integer)} with cached not existing game. */
 	@Test
 	public void testGetGameWithCachedNotExistingGame() {
+		final int id = generate(Integer.class);
 		when(gameCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
-		assertNull(gameService.getGame(PRIMARY_ID));
+		assertNull(gameService.getGame(id));
 
-		verify(gameCache).get("game" + PRIMARY_ID);
+		verify(gameCache).get("game" + id);
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -227,29 +208,30 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#getGame(Integer)} with not cached existing game. */
 	@Test
 	public void testGetGameWithNotCachedExistingGame() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		when(gameDAO.getGame(anyInt())).thenReturn(game);
 		when(gameCache.get(anyString())).thenReturn(null);
 
-		DeepAsserts.assertEquals(game, gameService.getGame(PRIMARY_ID));
+		DeepAsserts.assertEquals(game, gameService.getGame(game.getId()));
 
-		verify(gameDAO).getGame(PRIMARY_ID);
-		verify(gameCache).get("game" + PRIMARY_ID);
-		verify(gameCache).put("game" + PRIMARY_ID, game);
+		verify(gameDAO).getGame(game.getId());
+		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).put("game" + game.getId(), game);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
 	/** Test method for {@link GameService#getGame(Integer)} with not cached not existing game. */
 	@Test
 	public void testGetGameWithNotCachedNotExistingGame() {
+		final int id = generate(Integer.class);
 		when(gameDAO.getGame(anyInt())).thenReturn(null);
 		when(gameCache.get(anyString())).thenReturn(null);
 
-		assertNull(gameService.getGame(PRIMARY_ID));
+		assertNull(gameService.getGame(id));
 
-		verify(gameDAO).getGame(PRIMARY_ID);
-		verify(gameCache).get("game" + PRIMARY_ID);
-		verify(gameCache).put("game" + PRIMARY_ID, null);
+		verify(gameDAO).getGame(id);
+		verify(gameCache).get("game" + id);
+		verify(gameCache).put("game" + id, null);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -301,7 +283,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#add(Game)} with cached games. */
 	@Test
 	public void testAddWithCachedGames() {
-		final Game game = EntityGenerator.createGame();
+		final Game game = generate(Game.class);
 		final List<Game> games = CollectionUtils.newList(mock(Game.class), mock(Game.class));
 		final List<Game> gamesList = new ArrayList<>(games);
 		gamesList.add(game);
@@ -320,7 +302,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#add(Game)} with not cached games. */
 	@Test
 	public void testAddWithNotCachedGames() {
-		final Game game = EntityGenerator.createGame();
+		final Game game = generate(Game.class);
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		gameService.add(game);
@@ -361,7 +343,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#add(Game)} with exception in DAO tier. */
 	@Test
 	public void testAddWithDAOTierException() {
-		final Game game = EntityGenerator.createGame();
+		final Game game = generate(Game.class);
 		doThrow(DataStorageException.class).when(gameDAO).add(any(Game.class));
 
 		try {
@@ -379,7 +361,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#update(Game)}. */
 	@Test
 	public void testUpdate() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 
 		gameService.update(game);
 
@@ -418,7 +400,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#update(Game)} with exception in DAO tier. */
 	@Test
 	public void testUpdateWithDAOTierException() {
-		final Game game = EntityGenerator.createGame(Integer.MAX_VALUE);
+		final Game game = generate(Game.class);
 		doThrow(DataStorageException.class).when(gameDAO).update(any(Game.class));
 
 		try {
@@ -436,7 +418,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#remove(Game)} with cached games. */
 	@Test
 	public void testRemoveWithCachedGames() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		final List<Game> games = CollectionUtils.newList(mock(Game.class), mock(Game.class));
 		final List<Game> gamesList = new ArrayList<>(games);
 		gamesList.add(game);
@@ -447,21 +429,21 @@ public class GameServiceImplTest {
 		verify(gameDAO).remove(game);
 		verify(gameCache).get("games");
 		verify(gameCache).put("games", games);
-		verify(gameCache).evict(PRIMARY_ID);
+		verify(gameCache).evict(game.getId());
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
 	/** Test method for {@link GameService#remove(Game)} with not cached games. */
 	@Test
 	public void testRemoveWithNotCachedGames() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		gameService.remove(game);
 
 		verify(gameDAO).remove(game);
 		verify(gameCache).get("games");
-		verify(gameCache).evict(PRIMARY_ID);
+		verify(gameCache).evict(game.getId());
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -495,7 +477,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#remove(Game)} with exception in DAO tier. */
 	@Test
 	public void testRemoveWithDAOTierException() {
-		final Game game = EntityGenerator.createGame(Integer.MAX_VALUE);
+		final Game game = generate(Game.class);
 		doThrow(DataStorageException.class).when(gameDAO).remove(any(Game.class));
 
 		try {
@@ -513,7 +495,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#duplicate(Game)}. */
 	@Test
 	public void testDuplicate() {
-		gameService.duplicate(EntityGenerator.createGame(PRIMARY_ID));
+		gameService.duplicate(generate(Game.class));
 
 		verify(gameDAO).add(any(Game.class));
 		verify(gameDAO).update(any(Game.class));
@@ -554,7 +536,7 @@ public class GameServiceImplTest {
 		doThrow(DataStorageException.class).when(gameDAO).add(any(Game.class));
 
 		try {
-			gameService.duplicate(EntityGenerator.createGame(Integer.MAX_VALUE));
+			gameService.duplicate(generate(Game.class));
 			fail("Can't duplicate game with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -568,15 +550,16 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#moveUp(Game)} with cached games. */
 	@Test
 	public void testMoveUpWithCachedGames() {
-		final Game game1 = EntityGenerator.createGame(PRIMARY_ID);
-		game1.setPosition(MOVE_POSITION);
-		final Game game2 = EntityGenerator.createGame(SECONDARY_ID);
+		final Game game1 = generate(Game.class);
+		final int position1 = game1.getPosition();
+		final Game game2 = generate(Game.class);
+		final int position2 = game2.getPosition();
 		final List<Game> games = CollectionUtils.newList(game1, game2);
 		when(gameCache.get(anyString())).thenReturn(new SimpleValueWrapper(games));
 
 		gameService.moveUp(game2);
-		DeepAsserts.assertEquals(POSITION, game1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, game2.getPosition());
+		DeepAsserts.assertEquals(position2, game1.getPosition());
+		DeepAsserts.assertEquals(position1, game2.getPosition());
 
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
@@ -588,16 +571,17 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#moveUp(Game)} with not cached games. */
 	@Test
 	public void testMoveUpWithNotCachedGames() {
-		final Game game1 = EntityGenerator.createGame(PRIMARY_ID);
-		game1.setPosition(MOVE_POSITION);
-		final Game game2 = EntityGenerator.createGame(SECONDARY_ID);
+		final Game game1 = generate(Game.class);
+		final int position1 = game1.getPosition();
+		final Game game2 = generate(Game.class);
+		final int position2 = game2.getPosition();
 		final List<Game> games = CollectionUtils.newList(game1, game2);
 		when(gameDAO.getGames()).thenReturn(games);
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		gameService.moveUp(game2);
-		DeepAsserts.assertEquals(POSITION, game1.getPosition());
-		DeepAsserts.assertEquals(MOVE_POSITION, game2.getPosition());
+		DeepAsserts.assertEquals(position2, game1.getPosition());
+		DeepAsserts.assertEquals(position1, game2.getPosition());
 
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
@@ -641,7 +625,7 @@ public class GameServiceImplTest {
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		try {
-			gameService.moveUp(EntityGenerator.createGame(Integer.MAX_VALUE));
+			gameService.moveUp(generate(Game.class));
 			fail("Can't move up game with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -655,15 +639,16 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#moveDown(Game)} with cached games. */
 	@Test
 	public void testMoveDownWithCachedGames() {
-		final Game game1 = EntityGenerator.createGame(PRIMARY_ID);
-		final Game game2 = EntityGenerator.createGame(SECONDARY_ID);
-		game2.setPosition(MOVE_POSITION);
+		final Game game1 = generate(Game.class);
+		final int position1 = game1.getPosition();
+		final Game game2 = generate(Game.class);
+		final int position2 = game2.getPosition();
 		final List<Game> games = CollectionUtils.newList(game1, game2);
 		when(gameCache.get(anyString())).thenReturn(new SimpleValueWrapper(games));
 
 		gameService.moveDown(game1);
-		DeepAsserts.assertEquals(MOVE_POSITION, game1.getPosition());
-		DeepAsserts.assertEquals(POSITION, game2.getPosition());
+		DeepAsserts.assertEquals(position2, game1.getPosition());
+		DeepAsserts.assertEquals(position1, game2.getPosition());
 
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
@@ -675,16 +660,17 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#moveDown(Game)} with not cached games. */
 	@Test
 	public void testMoveDownWithNotCachedGames() {
-		final Game game1 = EntityGenerator.createGame(PRIMARY_ID);
-		final Game game2 = EntityGenerator.createGame(SECONDARY_ID);
-		game2.setPosition(MOVE_POSITION);
+		final Game game1 = generate(Game.class);
+		final int position1 = game1.getPosition();
+		final Game game2 = generate(Game.class);
+		final int position2 = game2.getPosition();
 		final List<Game> games = CollectionUtils.newList(game1, game2);
 		when(gameDAO.getGames()).thenReturn(games);
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		gameService.moveDown(game1);
-		DeepAsserts.assertEquals(MOVE_POSITION, game1.getPosition());
-		DeepAsserts.assertEquals(POSITION, game2.getPosition());
+		DeepAsserts.assertEquals(position2, game1.getPosition());
+		DeepAsserts.assertEquals(position1, game2.getPosition());
 
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
@@ -728,7 +714,7 @@ public class GameServiceImplTest {
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		try {
-			gameService.moveDown(EntityGenerator.createGame(Integer.MAX_VALUE));
+			gameService.moveDown(generate(Game.class));
 			fail("Can't move down game with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
@@ -742,12 +728,12 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#exists(Game)} with cached existing game. */
 	@Test
 	public void testExistsWithCachedExistingGame() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		when(gameCache.get(anyString())).thenReturn(new SimpleValueWrapper(game));
 
 		assertTrue(gameService.exists(game));
 
-		verify(gameCache).get("game" + PRIMARY_ID);
+		verify(gameCache).get("game" + game.getId());
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -755,12 +741,12 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#exists(Game)} with cached not existing game. */
 	@Test
 	public void testExistsWithCachedNotExistingGame() {
-		final Game game = EntityGenerator.createGame(Integer.MAX_VALUE);
+		final Game game = generate(Game.class);
 		when(gameCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
 		assertFalse(gameService.exists(game));
 
-		verify(gameCache).get("game" + Integer.MAX_VALUE);
+		verify(gameCache).get("game" + game.getId());
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -768,29 +754,30 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#exists(Game)} with not cached existing game. */
 	@Test
 	public void testExistsWithNotCachedExistingGame() {
-		final Game game = EntityGenerator.createGame(PRIMARY_ID);
+		final Game game = generate(Game.class);
 		when(gameDAO.getGame(anyInt())).thenReturn(game);
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		assertTrue(gameService.exists(game));
 
-		verify(gameDAO).getGame(PRIMARY_ID);
-		verify(gameCache).get("game" + PRIMARY_ID);
-		verify(gameCache).put("game" + PRIMARY_ID, game);
+		verify(gameDAO).getGame(game.getId());
+		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).put("game" + game.getId(), game);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
 	/** Test method for {@link GameService#exists(Game)} with not cached not existing game. */
 	@Test
 	public void testExistsWithNotCachedNotExistingGame() {
+		final Game game = generate(Game.class);
 		when(gameDAO.getGame(anyInt())).thenReturn(null);
 		when(gameCache.get(anyString())).thenReturn(null);
 
-		assertFalse(gameService.exists(EntityGenerator.createGame(Integer.MAX_VALUE)));
+		assertFalse(gameService.exists(game));
 
-		verify(gameDAO).getGame(Integer.MAX_VALUE);
-		verify(gameCache).get("game" + Integer.MAX_VALUE);
-		verify(gameCache).put("game" + Integer.MAX_VALUE, null);
+		verify(gameDAO).getGame(game.getId());
+		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).put("game" + game.getId(), null);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -824,25 +811,26 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#exists(Game)} with exception in DAO tier. */
 	@Test
 	public void testExistsWithDAOTierException() {
+		final Game game = generate(Game.class);
 		doThrow(DataStorageException.class).when(gameDAO).getGame(anyInt());
 		when(gameCache.get(anyString())).thenReturn(null);
 
 		try {
-			gameService.exists(EntityGenerator.createGame(Integer.MAX_VALUE));
+			gameService.exists(game);
 			fail("Can't exists game with not thrown ServiceOperationException for DAO tier exception.");
 		} catch (final ServiceOperationException ex) {
 			// OK
 		}
 
-		verify(gameDAO).getGame(Integer.MAX_VALUE);
-		verify(gameCache).get("game" + Integer.MAX_VALUE);
+		verify(gameDAO).getGame(game.getId());
+		verify(gameCache).get("game" + game.getId());
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
 	/** Test method for {@link GameService#updatePositions()} with cached games. */
 	@Test
 	public void testUpdatePositionsWithCachedGames() {
-		final List<Game> games = CollectionUtils.newList(EntityGenerator.createGame(PRIMARY_ID), EntityGenerator.createGame(SECONDARY_ID));
+		final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
 		when(gameCache.get(anyString())).thenReturn(new SimpleValueWrapper(games));
 
 		gameService.updatePositions();
@@ -860,7 +848,7 @@ public class GameServiceImplTest {
 	/** Test method for {@link GameService#updatePositions()} with not cached games. */
 	@Test
 	public void testUpdatePositionsWithNotCachedGames() {
-		final List<Game> games = CollectionUtils.newList(EntityGenerator.createGame(PRIMARY_ID), EntityGenerator.createGame(SECONDARY_ID));
+		final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
 		when(gameDAO.getGames()).thenReturn(games);
 		when(gameCache.get(anyString())).thenReturn(null);
 

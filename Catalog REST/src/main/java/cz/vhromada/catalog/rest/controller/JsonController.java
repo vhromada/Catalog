@@ -1,5 +1,8 @@
 package cz.vhromada.catalog.rest.controller;
 
+import java.util.List;
+
+import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import org.springframework.beans.factory.InitializingBean;
@@ -39,6 +42,18 @@ public class JsonController implements InitializingBean {
 	 */
 	protected <T> T deserialize(final String json, final Class<T> clazz) {
 		return genson.deserialize(json, clazz);
+	}
+
+	/**
+	 * Deserialize list of object from JSON.
+	 *
+	 * @param json list of object in JSON
+	 * @param <T>  type of returned object
+	 * @return deserialized list of object from JSON
+	 */
+	protected <T> List<T> deserializeList(final String json) {
+		return genson.deserialize(json, new GenericType<List<T>>() {
+		});
 	}
 
 }

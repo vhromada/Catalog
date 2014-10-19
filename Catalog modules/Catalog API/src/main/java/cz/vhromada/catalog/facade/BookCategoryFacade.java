@@ -22,9 +22,9 @@ public interface BookCategoryFacade {
 	void newData();
 
 	/**
-	 * Returns list of book category.
+	 * Returns list of book categories.
 	 *
-	 * @return list of TO for book category
+	 * @return list of TO for book categories
 	 * @throws FacadeOperationException if there was error in working with service tier
 	 */
 	List<BookCategoryTO> getBookCategories();

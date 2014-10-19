@@ -169,7 +169,7 @@ public class MovieController extends JsonController {
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
 	public void moveUp(final String movie) {
-		movieFacade.remove(deserialize(movie, MovieTO.class));
+		movieFacade.moveUp(deserialize(movie, MovieTO.class));
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class MovieController extends JsonController {
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
 	public void moveDown(final String movie) {
-		movieFacade.remove(deserialize(movie, MovieTO.class));
+		movieFacade.moveDown(deserialize(movie, MovieTO.class));
 	}
 
 	/**

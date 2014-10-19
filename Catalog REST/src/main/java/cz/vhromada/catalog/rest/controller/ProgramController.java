@@ -163,7 +163,7 @@ public class ProgramController extends JsonController {
 	 * @throws IllegalArgumentException if program is null
 	 * @throws ValidationException      if ID is null
 	 */
-	@RequestMapping(value = "/exists", method = RequestMethod.POST)
+	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
 	public String exists(final String program) {
 		return serialize(programFacade.exists(deserialize(program, ProgramTO.class)));

@@ -167,7 +167,7 @@ public class MusicController extends JsonController {
 	 * @throws IllegalArgumentException if music is null
 	 * @throws ValidationException      if ID is null
 	 */
-	@RequestMapping(value = "/exists", method = RequestMethod.POST)
+	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
 	public String exists(final String music) {
 		return serialize(musicFacade.exists(deserialize(music, MusicTO.class)));

@@ -157,7 +157,7 @@ public class BookCategoryController extends JsonController {
 	 * @throws IllegalArgumentException if book category is null
 	 * @throws ValidationException      if ID is null
 	 */
-	@RequestMapping(value = "/exists", method = RequestMethod.POST)
+	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
 	public String exists(final String bookCategory) {
 		return serialize(bookCategoryFacade.exists(deserialize(bookCategory, BookCategoryTO.class)));

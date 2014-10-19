@@ -195,7 +195,7 @@ public class MovieController extends JsonController {
 	 * @throws IllegalArgumentException if movie is null
 	 * @throws ValidationException      if ID is null
 	 */
-	@RequestMapping(value = "/exists", method = RequestMethod.POST)
+	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
 	public String exists(final String movie) {
 		return serialize(movieFacade.exists(deserialize(movie, MovieTO.class)));

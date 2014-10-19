@@ -163,7 +163,7 @@ public class GameController extends JsonController {
 	 * @throws IllegalArgumentException if game is null
 	 * @throws ValidationException      if ID is null
 	 */
-	@RequestMapping(value = "/exists", method = RequestMethod.POST)
+	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
 	public String exists(final String game) {
 		return serialize(gameFacade.exists(deserialize(game, GameTO.class)));

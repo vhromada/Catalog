@@ -190,7 +190,7 @@ public class SerieController extends JsonController {
 	 * @throws IllegalArgumentException if serie is null
 	 * @throws ValidationException      if ID is null
 	 */
-	@RequestMapping(value = "/exists", method = RequestMethod.POST)
+	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
 	public String exists(final String serie) {
 		return serialize(serieFacade.exists(deserialize(serie, SerieTO.class)));

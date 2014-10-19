@@ -47,7 +47,7 @@ public class BookCategoryController extends JsonController {
 	 * Returns book category with ID or null if there isn't such book category.
 	 *
 	 * @param id ID
-	 * @return book category with ID or null if there isn't such TO for book category
+	 * @return book category with ID or null if there isn't such book category
 	 * @throws IllegalArgumentException if ID is null
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -59,7 +59,7 @@ public class BookCategoryController extends JsonController {
 	/**
 	 * Adds book category. Sets new ID and position.
 	 *
-	 * @param bookCategory TO for book category
+	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
 	 * @throws ValidationException      if ID isn't null
 	 *                                  or name is null

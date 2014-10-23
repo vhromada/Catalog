@@ -5,12 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.ProgramDAO;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.dao.impl.ProgramDAOImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +37,10 @@ public class ProgramDAOImplSpringTest {
 	/** Instance of {@link ProgramDAO} */
 	@Autowired
 	private ProgramDAO programDAO;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Restarts sequence. */
 	@Before
@@ -66,9 +70,8 @@ public class ProgramDAOImplSpringTest {
 	/** Test method for {@link ProgramDAO#add(Program)}. */
 	@Test
 	public void testAdd() {
-		final Program program = EntityGenerator.createProgram();
-		final Program expectedProgram = EntityGenerator.createProgram(PROGRAMS_COUNT + 1);
-		expectedProgram.setPosition(PROGRAMS_COUNT);
+		final Program program = objectGenerator.generate(Program.class);
+		program.setId(null);
 
 		programDAO.add(program);
 
@@ -77,21 +80,18 @@ public class ProgramDAOImplSpringTest {
 		DeepAsserts.assertEquals(PROGRAMS_COUNT, program.getPosition());
 		final Program addedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, addedProgram);
-		DeepAsserts.assertEquals(expectedProgram, addedProgram);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramDAO#update(Program)}. */
 	@Test
 	public void testUpdate() {
-		final Program program = SpringEntitiesUtils.updateProgram(SpringUtils.getProgram(entityManager, 1));
-		final Program expectedProgram = EntityGenerator.createProgram(1);
+		final Program program = SpringEntitiesUtils.updateProgram(SpringUtils.getProgram(entityManager, 1), objectGenerator);
 
 		programDAO.update(program);
 
 		final Program updatedProgram = SpringUtils.getProgram(entityManager, 1);
 		DeepAsserts.assertEquals(program, updatedProgram);
-		DeepAsserts.assertEquals(expectedProgram, updatedProgram);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 

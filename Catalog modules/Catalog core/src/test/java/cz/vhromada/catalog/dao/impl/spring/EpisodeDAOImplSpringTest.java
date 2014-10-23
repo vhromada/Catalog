@@ -9,13 +9,13 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.impl.EpisodeDAOImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +43,10 @@ public class EpisodeDAOImplSpringTest {
 	@Autowired
 	private EpisodeDAO episodeDAO;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Restarts sequence. */
 	@Before
 	public void setUp() {
@@ -67,10 +71,9 @@ public class EpisodeDAOImplSpringTest {
 	/** Test method for {@link EpisodeDAO#add(Episode)}. */
 	@Test
 	public void testAdd() {
-		final Season season = SpringUtils.getSeason(entityManager, 1);
-		final Episode episode = EntityGenerator.createEpisode(season);
-		final Episode expectedEpisode = EntityGenerator.createEpisode(EPISODES_COUNT + 1, season);
-		expectedEpisode.setPosition(EPISODES_COUNT);
+		final Episode episode = objectGenerator.generate(Episode.class);
+		episode.setId(null);
+		episode.setSeason(SpringUtils.getSeason(entityManager, 1));
 
 		episodeDAO.add(episode);
 
@@ -79,21 +82,18 @@ public class EpisodeDAOImplSpringTest {
 		DeepAsserts.assertEquals(EPISODES_COUNT, episode.getPosition());
 		final Episode addedEpisode = SpringUtils.getEpisode(entityManager, EPISODES_COUNT + 1);
 		DeepAsserts.assertEquals(episode, addedEpisode);
-		DeepAsserts.assertEquals(expectedEpisode, addedEpisode);
 		DeepAsserts.assertEquals(EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeDAO#update(Episode)}. */
 	@Test
 	public void testUpdate() {
-		final Episode episode = SpringEntitiesUtils.updateEpisode(SpringUtils.getEpisode(entityManager, 1));
-		final Episode expectedEpisode = EntityGenerator.createEpisode(1, SpringUtils.getSeason(entityManager, 1));
+		final Episode episode = SpringEntitiesUtils.updateEpisode(SpringUtils.getEpisode(entityManager, 1), objectGenerator);
 
 		episodeDAO.update(episode);
 
 		final Episode updatedEpisode = SpringUtils.getEpisode(entityManager, 1);
 		DeepAsserts.assertEquals(episode, updatedEpisode);
-		DeepAsserts.assertEquals(expectedEpisode, updatedEpisode);
 		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
 	}
 

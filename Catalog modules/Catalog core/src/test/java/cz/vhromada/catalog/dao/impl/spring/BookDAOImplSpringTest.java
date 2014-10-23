@@ -7,13 +7,13 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.BookDAO;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.impl.BookDAOImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +41,10 @@ public class BookDAOImplSpringTest {
 	@Autowired
 	private BookDAO bookDAO;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Restarts sequence. */
 	@Before
 	public void setUp() {
@@ -64,10 +68,9 @@ public class BookDAOImplSpringTest {
 	/** Test method for {@link BookDAO#add(Book)}. */
 	@Test
 	public void testAdd() {
-		final BookCategory bookCategory = SpringUtils.getBookCategory(entityManager, 1);
-		final Book book = EntityGenerator.createBook(bookCategory);
-		final Book expectedBook = EntityGenerator.createBook(BOOKS_COUNT + 1, bookCategory);
-		expectedBook.setPosition(BOOKS_COUNT);
+		final Book book = objectGenerator.generate(Book.class);
+		book.setId(null);
+		book.setBookCategory(SpringUtils.getBookCategory(entityManager, 1));
 
 		bookDAO.add(book);
 
@@ -76,21 +79,18 @@ public class BookDAOImplSpringTest {
 		DeepAsserts.assertEquals(BOOKS_COUNT, book.getPosition());
 		final Book addedBook = SpringUtils.getBook(entityManager, BOOKS_COUNT + 1);
 		DeepAsserts.assertEquals(book, addedBook);
-		DeepAsserts.assertEquals(expectedBook, addedBook);
 		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookDAO#update(Book)}. */
 	@Test
 	public void testUpdate() {
-		final Book book = SpringEntitiesUtils.updateBook(SpringUtils.getBook(entityManager, 1));
-		final Book expectedBook = EntityGenerator.createBook(1, SpringUtils.getBookCategory(entityManager, 1));
+		final Book book = SpringEntitiesUtils.updateBook(SpringUtils.getBook(entityManager, 1), objectGenerator);
 
 		bookDAO.update(book);
 
 		final Book updatedBook = SpringUtils.getBook(entityManager, 1);
 		DeepAsserts.assertEquals(book, updatedBook);
-		DeepAsserts.assertEquals(expectedBook, updatedBook);
 		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
 

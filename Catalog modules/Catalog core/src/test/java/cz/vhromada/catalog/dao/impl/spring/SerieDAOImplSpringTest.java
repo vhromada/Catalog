@@ -3,19 +3,15 @@ package cz.vhromada.catalog.dao.impl.spring;
 import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static org.junit.Assert.assertNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.SerieDAO;
-import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.impl.SerieDAOImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +38,10 @@ public class SerieDAOImplSpringTest {
 	/** Instance of {@link SerieDAO} */
 	@Autowired
 	private SerieDAO serieDAO;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Restarts sequence. */
 	@Before
@@ -71,13 +71,9 @@ public class SerieDAOImplSpringTest {
 	/** Test method for {@link SerieDAO#add(Serie)}. */
 	@Test
 	public void testAdd() {
-		final List<Genre> genres = new ArrayList<>();
-		genres.add(SpringUtils.getGenre(entityManager, 4));
-		final Serie serie = EntityGenerator.createSerie();
-		serie.setGenres(genres);
-		final Serie expectedSerie = EntityGenerator.createSerie(SERIES_COUNT + 1);
-		expectedSerie.setPosition(SERIES_COUNT);
-		expectedSerie.setGenres(genres);
+		final Serie serie = objectGenerator.generate(Serie.class);
+		serie.setId(null);
+		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 
 		serieDAO.add(serie);
 
@@ -86,32 +82,27 @@ public class SerieDAOImplSpringTest {
 		DeepAsserts.assertEquals(SERIES_COUNT, serie.getPosition());
 		final Serie addedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, addedSerie);
-		DeepAsserts.assertEquals(expectedSerie, addedSerie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieDAO#update(Serie)}. */
 	@Test
 	public void testUpdate() {
-		final List<Genre> genres = new ArrayList<>();
-		genres.add(SpringUtils.getGenre(entityManager, 4));
-		final Serie serie = SpringEntitiesUtils.updateSerie(SpringUtils.getSerie(entityManager, 1));
-		serie.setGenres(genres);
-		final Serie expectedSerie = EntityGenerator.createSerie(1);
-		expectedSerie.setGenres(genres);
+		final Serie serie = SpringEntitiesUtils.updateSerie(SpringUtils.getSerie(entityManager, 1), objectGenerator);
+		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 
 		serieDAO.update(serie);
 
 		final Serie updatedSerie = SpringUtils.getSerie(entityManager, 1);
 		DeepAsserts.assertEquals(serie, updatedSerie);
-		DeepAsserts.assertEquals(expectedSerie, updatedSerie);
 		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieDAO#remove(Serie)}. */
 	@Test
 	public void testRemove() {
-		final Serie serie = EntityGenerator.createSerie();
+		final Serie serie = objectGenerator.generate(Serie.class);
+		serie.setId(null);
 		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 		entityManager.persist(serie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));

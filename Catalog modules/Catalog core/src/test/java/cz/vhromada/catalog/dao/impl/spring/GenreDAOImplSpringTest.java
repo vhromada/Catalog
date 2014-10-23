@@ -5,12 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.impl.GenreDAOImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +37,10 @@ public class GenreDAOImplSpringTest {
 	/** Instance of {@link GenreDAO} */
 	@Autowired
 	private GenreDAO genreDAO;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Restarts sequence. */
 	@Before
@@ -66,8 +70,8 @@ public class GenreDAOImplSpringTest {
 	/** Test method for {@link GenreDAO#add(Genre)}. */
 	@Test
 	public void testAdd() {
-		final Genre genre = EntityGenerator.createGenre();
-		final Genre expectedGenre = EntityGenerator.createGenre(GENRES_COUNT + 1);
+		final Genre genre = objectGenerator.generate(Genre.class);
+		genre.setId(null);
 
 		genreDAO.add(genre);
 
@@ -75,28 +79,26 @@ public class GenreDAOImplSpringTest {
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, genre.getId());
 		final Genre addedGenre = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
 		DeepAsserts.assertEquals(genre, addedGenre);
-		DeepAsserts.assertEquals(expectedGenre, addedGenre);
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreDAO#update(Genre)}. */
 	@Test
 	public void testUpdate() {
-		final Genre genre = SpringEntitiesUtils.updateGenre(SpringUtils.getGenre(entityManager, 1));
-		final Genre expectedGenre = EntityGenerator.createGenre(1);
+		final Genre genre = SpringEntitiesUtils.updateGenre(SpringUtils.getGenre(entityManager, 1), objectGenerator);
 
 		genreDAO.update(genre);
 
 		final Genre updatedGenre = SpringUtils.getGenre(entityManager, 1);
 		DeepAsserts.assertEquals(genre, updatedGenre);
-		DeepAsserts.assertEquals(expectedGenre, updatedGenre);
 		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreDAO#remove(Genre)}. */
 	@Test
 	public void testRemove() {
-		final Genre genre = EntityGenerator.createGenre();
+		final Genre genre = objectGenerator.generate(Genre.class);
+		genre.setId(null);
 		entityManager.persist(genre);
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 

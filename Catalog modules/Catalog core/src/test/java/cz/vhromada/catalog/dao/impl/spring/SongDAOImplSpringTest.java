@@ -7,13 +7,13 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.SongDAO;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.dao.impl.SongDAOImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +41,10 @@ public class SongDAOImplSpringTest {
 	@Autowired
 	private SongDAO songDAO;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Restarts sequence. */
 	@Before
 	public void setUp() {
@@ -64,10 +68,9 @@ public class SongDAOImplSpringTest {
 	/** Test method for {@link SongDAO#add(Song)}. */
 	@Test
 	public void testAdd() {
-		final Music music = SpringUtils.getMusic(entityManager, 1);
-		final Song song = EntityGenerator.createSong(music);
-		final Song expectedSong = EntityGenerator.createSong(SONGS_COUNT + 1, music);
-		expectedSong.setPosition(SONGS_COUNT);
+		final Song song = objectGenerator.generate(Song.class);
+		song.setId(null);
+		song.setMusic(SpringUtils.getMusic(entityManager, 1));
 
 		songDAO.add(song);
 
@@ -76,21 +79,18 @@ public class SongDAOImplSpringTest {
 		DeepAsserts.assertEquals(SONGS_COUNT, song.getPosition());
 		final Song addedSong = SpringUtils.getSong(entityManager, SONGS_COUNT + 1);
 		DeepAsserts.assertEquals(song, addedSong);
-		DeepAsserts.assertEquals(expectedSong, addedSong);
 		DeepAsserts.assertEquals(SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongDAO#update(Song)}. */
 	@Test
 	public void testUpdate() {
-		final Song song = SpringEntitiesUtils.updateSong(SpringUtils.getSong(entityManager, 1));
-		final Song expectedSong = EntityGenerator.createSong(1, SpringUtils.getMusic(entityManager, 1));
+		final Song song = SpringEntitiesUtils.updateSong(SpringUtils.getSong(entityManager, 1), objectGenerator);
 
 		songDAO.update(song);
 
 		final Song updatedSong = SpringUtils.getSong(entityManager, 1);
 		DeepAsserts.assertEquals(song, updatedSong);
-		DeepAsserts.assertEquals(expectedSong, updatedSong);
 		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
 

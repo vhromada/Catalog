@@ -59,6 +59,7 @@ import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.entities.Song;
+import cz.vhromada.generator.ObjectGenerator;
 
 /**
  * A class represents utility class for entities for Spring framework.
@@ -138,6 +139,29 @@ public final class SpringEntitiesUtils {
 	/**
 	 * Returns movie with updated fields.
 	 *
+	 * @param movie           movie
+	 * @param objectGenerator object generator
+	 * @return movie with updated fields
+	 */
+	public static Movie updateMovie(final Movie movie, final ObjectGenerator objectGenerator) {
+		movie.setCzechName(objectGenerator.generate(String.class));
+		movie.setOriginalName(objectGenerator.generate(String.class));
+		movie.setYear(1940 + objectGenerator.generate(Integer.class));
+		movie.setLanguage(objectGenerator.generate(Language.class));
+		movie.setSubtitles(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
+		movie.setCsfd(objectGenerator.generate(String.class));
+		movie.setImdbCode(objectGenerator.generate(Integer.class));
+		movie.setWikiEn(objectGenerator.generate(String.class));
+		movie.setWikiCz(objectGenerator.generate(String.class));
+		movie.setPicture(objectGenerator.generate(String.class));
+		movie.setNote(objectGenerator.generate(String.class));
+		movie.setPosition(objectGenerator.generate(Integer.class));
+		return movie;
+	}
+
+	/**
+	 * Returns movie with updated fields.
+	 *
 	 * @param movie movie
 	 * @return movie with updated fields
 	 */
@@ -195,6 +219,26 @@ public final class SpringEntitiesUtils {
 		}
 		serie.setGenres(genres);
 
+		return serie;
+	}
+
+	/**
+	 * Returns serie with updated fields.
+	 *
+	 * @param serie           serie
+	 * @param objectGenerator object generator
+	 * @return serie with updated fields
+	 */
+	public static Serie updateSerie(final Serie serie, final ObjectGenerator objectGenerator) {
+		serie.setCzechName(objectGenerator.generate(String.class));
+		serie.setOriginalName(objectGenerator.generate(String.class));
+		serie.setCsfd(objectGenerator.generate(String.class));
+		serie.setImdbCode(objectGenerator.generate(Integer.class));
+		serie.setWikiEn(objectGenerator.generate(String.class));
+		serie.setWikiCz(objectGenerator.generate(String.class));
+		serie.setPicture(objectGenerator.generate(String.class));
+		serie.setNote(objectGenerator.generate(String.class));
+		serie.setPosition(objectGenerator.generate(Integer.class));
 		return serie;
 	}
 
@@ -274,6 +318,24 @@ public final class SpringEntitiesUtils {
 	/**
 	 * Returns season with updated fields.
 	 *
+	 * @param season          season
+	 * @param objectGenerator object generator
+	 * @return season with updated fields
+	 */
+	public static Season updateSeason(final Season season, final ObjectGenerator objectGenerator) {
+		season.setNumber(objectGenerator.generate(Integer.class));
+		season.setStartYear(1940 + objectGenerator.generate(Integer.class));
+		season.setEndYear(1940 + objectGenerator.generate(Integer.class));
+		season.setLanguage(objectGenerator.generate(Language.class));
+		season.setSubtitles(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
+		season.setNote(objectGenerator.generate(String.class));
+		season.setPosition(objectGenerator.generate(Integer.class));
+		return season;
+	}
+
+	/**
+	 * Returns season with updated fields.
+	 *
 	 * @param season season
 	 * @return season with updated fields
 	 */
@@ -321,6 +383,22 @@ public final class SpringEntitiesUtils {
 		episode.setPosition(episodeIndex - 1);
 		episode.setSeason(getSeason(serieIndex, seasonIndex));
 
+		return episode;
+	}
+
+	/**
+	 * Returns episode with updated fields.
+	 *
+	 * @param episode         episode
+	 * @param objectGenerator object generator
+	 * @return episode with updated fields
+	 */
+	public static Episode updateEpisode(final Episode episode, final ObjectGenerator objectGenerator) {
+		episode.setNumber(objectGenerator.generate(Integer.class));
+		episode.setName(objectGenerator.generate(String.class));
+		episode.setLength(objectGenerator.generate(Integer.class));
+		episode.setNote(objectGenerator.generate(String.class));
+		episode.setPosition(objectGenerator.generate(Integer.class));
 		return episode;
 	}
 
@@ -376,6 +454,31 @@ public final class SpringEntitiesUtils {
 		game.setNote(index == 3 ? "Game 3 note" : "");
 		game.setPosition(index - 1);
 
+		return game;
+	}
+
+	/**
+	 * Returns game with updated fields.
+	 *
+	 * @param game            game
+	 * @param objectGenerator object generator
+	 * @return game with updated fields
+	 */
+	public static Game updateGame(final Game game, final ObjectGenerator objectGenerator) {
+		game.setName(objectGenerator.generate(String.class));
+		game.setWikiEn(objectGenerator.generate(String.class));
+		game.setWikiCz(objectGenerator.generate(String.class));
+		game.setMediaCount(objectGenerator.generate(Integer.class));
+		game.setCrack(objectGenerator.generate(Boolean.class));
+		game.setSerialKey(objectGenerator.generate(Boolean.class));
+		game.setPatch(objectGenerator.generate(Boolean.class));
+		game.setTrainer(objectGenerator.generate(Boolean.class));
+		game.setTrainerData(objectGenerator.generate(Boolean.class));
+		game.setEditor(objectGenerator.generate(Boolean.class));
+		game.setSaves(objectGenerator.generate(Boolean.class));
+		game.setOtherData(objectGenerator.generate(String.class));
+		game.setNote(objectGenerator.generate(String.class));
+		game.setPosition(objectGenerator.generate(Integer.class));
 		return game;
 	}
 
@@ -438,6 +541,23 @@ public final class SpringEntitiesUtils {
 	/**
 	 * Returns music with updated fields.
 	 *
+	 * @param music           music
+	 * @param objectGenerator object generator
+	 * @return music with updated fields
+	 */
+	public static Music updateMusic(final Music music, final ObjectGenerator objectGenerator) {
+		music.setName(objectGenerator.generate(String.class));
+		music.setWikiEn(objectGenerator.generate(String.class));
+		music.setWikiCz(objectGenerator.generate(String.class));
+		music.setMediaCount(objectGenerator.generate(Integer.class));
+		music.setNote(objectGenerator.generate(String.class));
+		music.setPosition(objectGenerator.generate(Integer.class));
+		return music;
+	}
+
+	/**
+	 * Returns music with updated fields.
+	 *
 	 * @param music music
 	 * @return music with updated fields
 	 */
@@ -481,6 +601,21 @@ public final class SpringEntitiesUtils {
 		song.setPosition(songIndex - 1);
 		song.setMusic(getMusic(musicIndex));
 
+		return song;
+	}
+
+	/**
+	 * Returns song with updated fields.
+	 *
+	 * @param song            song
+	 * @param objectGenerator object generator
+	 * @return song with updated fields
+	 */
+	public static Song updateSong(final Song song, final ObjectGenerator objectGenerator) {
+		song.setName(objectGenerator.generate(String.class));
+		song.setLength(objectGenerator.generate(Integer.class));
+		song.setNote(objectGenerator.generate(String.class));
+		song.setPosition(objectGenerator.generate(Integer.class));
 		return song;
 	}
 
@@ -536,6 +671,26 @@ public final class SpringEntitiesUtils {
 	/**
 	 * Returns program with updated fields.
 	 *
+	 * @param program         program
+	 * @param objectGenerator object generator
+	 * @return program with updated fields
+	 */
+	public static Program updateProgram(final Program program, final ObjectGenerator objectGenerator) {
+		program.setName(objectGenerator.generate(String.class));
+		program.setWikiEn(objectGenerator.generate(String.class));
+		program.setWikiCz(objectGenerator.generate(String.class));
+		program.setMediaCount(objectGenerator.generate(Integer.class));
+		program.setCrack(objectGenerator.generate(Boolean.class));
+		program.setSerialKey(objectGenerator.generate(Boolean.class));
+		program.setOtherData(objectGenerator.generate(String.class));
+		program.setNote(objectGenerator.generate(String.class));
+		program.setPosition(objectGenerator.generate(Integer.class));
+		return program;
+	}
+
+	/**
+	 * Returns program with updated fields.
+	 *
 	 * @param program program
 	 * @return program with updated fields
 	 */
@@ -578,6 +733,20 @@ public final class SpringEntitiesUtils {
 		bookCategory.setNote(index == 1 ? "Book category 1 note" : "");
 		bookCategory.setPosition(index - 1);
 
+		return bookCategory;
+	}
+
+	/**
+	 * Returns book category with updated fields.
+	 *
+	 * @param bookCategory    book category
+	 * @param objectGenerator object generator
+	 * @return book category with updated fields
+	 */
+	public static BookCategory updateBookCategory(final BookCategory bookCategory, final ObjectGenerator objectGenerator) {
+		bookCategory.setName(objectGenerator.generate(String.class));
+		bookCategory.setNote(objectGenerator.generate(String.class));
+		bookCategory.setPosition(objectGenerator.generate(Integer.class));
 		return bookCategory;
 	}
 
@@ -647,6 +816,23 @@ public final class SpringEntitiesUtils {
 	/**
 	 * Returns book with updated fields.
 	 *
+	 * @param book            book
+	 * @param objectGenerator object generator
+	 * @return book with updated fields
+	 */
+	public static Book updateBook(final Book book, final ObjectGenerator objectGenerator) {
+		book.setAuthor(objectGenerator.generate(String.class));
+		book.setTitle(objectGenerator.generate(String.class));
+		book.setLanguages(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
+		book.setCategory(objectGenerator.generate(String.class));
+		book.setNote(objectGenerator.generate(String.class));
+		book.setPosition(objectGenerator.generate(Integer.class));
+		return book;
+	}
+
+	/**
+	 * Returns book with updated fields.
+	 *
 	 * @param book book
 	 * @return book with updated fields
 	 */
@@ -684,6 +870,18 @@ public final class SpringEntitiesUtils {
 		genre.setId(index);
 		genre.setName("Genre " + index + " name");
 
+		return genre;
+	}
+
+	/**
+	 * Returns genre with updated fields.
+	 *
+	 * @param genre           genre
+	 * @param objectGenerator object generator
+	 * @return genre with updated fields
+	 */
+	public static Genre updateGenre(final Genre genre, final ObjectGenerator objectGenerator) {
+		genre.setName(objectGenerator.generate(String.class));
 		return genre;
 	}
 

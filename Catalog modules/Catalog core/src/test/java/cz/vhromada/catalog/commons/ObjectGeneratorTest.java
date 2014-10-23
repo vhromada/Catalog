@@ -18,7 +18,7 @@ public abstract class ObjectGeneratorTest {
 	/** Initialize instance of {@link ObjectGenerator}. */
 	@BeforeClass
 	public static void setUp() {
-		final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:testGeneratorContext.xml");
+		final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("testGeneratorContext.xml");
 		objectGenerator = applicationContext.getBean(ObjectGenerator.class);
 	}
 

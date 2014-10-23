@@ -14,7 +14,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.commons.Time;
@@ -22,6 +21,7 @@ import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.service.SongService;
 import cz.vhromada.catalog.service.impl.SongServiceImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +54,10 @@ public class SongServiceImplSpringTest {
 	/** Instance of {@link SongService} */
 	@Autowired
 	private SongService songService;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Clears cache and restarts sequence. */
 	@Before
@@ -98,10 +102,9 @@ public class SongServiceImplSpringTest {
 	/** Test method for {@link SongService#add(Song)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Music music = SpringUtils.getMusic(entityManager, 1);
-		final Song song = EntityGenerator.createSong(music);
-		final Song expectedSong = EntityGenerator.createSong(SONGS_COUNT + 1, music);
-		expectedSong.setPosition(SONGS_COUNT);
+		final Song song = objectGenerator.generate(Song.class);
+		song.setId(null);
+		song.setMusic(SpringUtils.getMusic(entityManager, 1));
 
 		songService.add(song);
 
@@ -109,7 +112,6 @@ public class SongServiceImplSpringTest {
 		DeepAsserts.assertEquals(SONGS_COUNT + 1, song.getId());
 		final Song addedSong = SpringUtils.getSong(entityManager, SONGS_COUNT + 1);
 		DeepAsserts.assertEquals(song, addedSong);
-		DeepAsserts.assertEquals(expectedSong, addedSong);
 		DeepAsserts.assertEquals(SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
@@ -118,9 +120,9 @@ public class SongServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Music music = SpringUtils.getMusic(entityManager, 1);
-		final Song song = EntityGenerator.createSong(music);
-		final Song expectedSong = EntityGenerator.createSong(SONGS_COUNT + 1, music);
-		expectedSong.setPosition(SONGS_COUNT);
+		final Song song = objectGenerator.generate(Song.class);
+		song.setId(null);
+		song.setMusic(music);
 		final String keyList = "songs" + music.getId();
 		final String keyItem = "song" + (SONGS_COUNT + 1);
 		musicCache.put(keyList, new ArrayList<>());
@@ -132,7 +134,6 @@ public class SongServiceImplSpringTest {
 		DeepAsserts.assertEquals(SONGS_COUNT + 1, song.getId());
 		final Song addedSong = SpringUtils.getSong(entityManager, SONGS_COUNT + 1);
 		DeepAsserts.assertEquals(song, addedSong);
-		DeepAsserts.assertEquals(expectedSong, addedSong);
 		DeepAsserts.assertEquals(SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, keyList, CollectionUtils.newList(song));
@@ -142,13 +143,12 @@ public class SongServiceImplSpringTest {
 	/** Test method for {@link SongService#update(Song)}. */
 	@Test
 	public void testUpdate() {
-		final Song song = SpringEntitiesUtils.updateSong(SpringUtils.getSong(entityManager, 1));
+		final Song song = SpringEntitiesUtils.updateSong(SpringUtils.getSong(entityManager, 1), objectGenerator);
 
 		songService.update(song);
 
 		final Song updatedSong = SpringUtils.getSong(entityManager, 1);
 		DeepAsserts.assertEquals(song, updatedSong);
-		DeepAsserts.assertEquals(SpringEntitiesUtils.updateSong(SpringUtils.getSong(entityManager, 1)), updatedSong);
 		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
@@ -156,7 +156,9 @@ public class SongServiceImplSpringTest {
 	/** Test method for {@link SongService#remove(Song)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Song song = EntityGenerator.createSong(SpringUtils.getMusic(entityManager, 1));
+		final Song song = objectGenerator.generate(Song.class);
+		song.setId(null);
+		song.setMusic(SpringUtils.getMusic(entityManager, 1));
 		entityManager.persist(song);
 		DeepAsserts.assertEquals(SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
 
@@ -170,7 +172,9 @@ public class SongServiceImplSpringTest {
 	/** Test method for {@link SongService#remove(Song)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Song song = EntityGenerator.createSong(SpringUtils.getMusic(entityManager, 1));
+		final Song song = objectGenerator.generate(Song.class);
+		song.setId(null);
+		song.setMusic(SpringUtils.getMusic(entityManager, 1));
 		entityManager.persist(song);
 		DeepAsserts.assertEquals(SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
 		final String key = "songs" + song.getMusic().getId();
@@ -300,9 +304,11 @@ public class SongServiceImplSpringTest {
 	/** Test method for {@link SongService#exists(Song)} with not existing song. */
 	@Test
 	public void testExistsWithNotExistingSong() {
+		final Song song = objectGenerator.generate(Song.class);
+		song.setId(Integer.MAX_VALUE);
 		final String key = "song" + Integer.MAX_VALUE;
 
-		assertFalse(songService.exists(EntityGenerator.createSong(Integer.MAX_VALUE)));
+		assertFalse(songService.exists(song));
 		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, key, null);

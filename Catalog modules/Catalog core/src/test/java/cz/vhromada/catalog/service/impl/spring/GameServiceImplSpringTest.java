@@ -11,12 +11,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Game;
 import cz.vhromada.catalog.service.GameService;
 import cz.vhromada.catalog.service.impl.GameServiceImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +49,10 @@ public class GameServiceImplSpringTest {
 	/** Instance of {@link GameService} */
 	@Autowired
 	private GameService gameService;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Clears cache and restarts sequence. */
 	@Before
@@ -110,9 +114,8 @@ public class GameServiceImplSpringTest {
 	/** Test method for {@link GameService#add(Game)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Game game = EntityGenerator.createGame();
-		final Game expectedGame = EntityGenerator.createGame(GAMES_COUNT + 1);
-		expectedGame.setPosition(GAMES_COUNT);
+		final Game game = objectGenerator.generate(Game.class);
+		game.setId(null);
 
 		gameService.add(game);
 
@@ -120,7 +123,6 @@ public class GameServiceImplSpringTest {
 		DeepAsserts.assertEquals(GAMES_COUNT + 1, game.getId());
 		final Game addedGame = SpringUtils.getGame(entityManager, GAMES_COUNT + 1);
 		DeepAsserts.assertEquals(game, addedGame);
-		DeepAsserts.assertEquals(expectedGame, addedGame);
 		DeepAsserts.assertEquals(GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
 	}
@@ -128,9 +130,8 @@ public class GameServiceImplSpringTest {
 	/** Test method for {@link GameService#add(Game)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Game game = EntityGenerator.createGame();
-		final Game expectedGame = EntityGenerator.createGame(GAMES_COUNT + 1);
-		expectedGame.setPosition(GAMES_COUNT);
+		final Game game = objectGenerator.generate(Game.class);
+		game.setId(null);
 		final String keyList = "games";
 		final String keyItem = "game" + (GAMES_COUNT + 1);
 		gameCache.put(keyList, new ArrayList<>());
@@ -142,7 +143,6 @@ public class GameServiceImplSpringTest {
 		DeepAsserts.assertEquals(GAMES_COUNT + 1, game.getId());
 		final Game addedGame = SpringUtils.getGame(entityManager, GAMES_COUNT + 1);
 		DeepAsserts.assertEquals(game, addedGame);
-		DeepAsserts.assertEquals(expectedGame, addedGame);
 		DeepAsserts.assertEquals(GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(gameCache));
 		SpringUtils.assertCacheValue(gameCache, keyList, CollectionUtils.newList(game));
@@ -152,13 +152,12 @@ public class GameServiceImplSpringTest {
 	/** Test method for {@link GameService#update(Game)}. */
 	@Test
 	public void testUpdate() {
-		final Game game = SpringEntitiesUtils.updateGame(SpringUtils.getGame(entityManager, 1));
+		final Game game = SpringEntitiesUtils.updateGame(SpringUtils.getGame(entityManager, 1), objectGenerator);
 
 		gameService.update(game);
 
 		final Game updatedGame = SpringUtils.getGame(entityManager, 1);
 		DeepAsserts.assertEquals(game, updatedGame);
-		DeepAsserts.assertEquals(EntityGenerator.createGame(1), updatedGame);
 		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
 	}
@@ -166,7 +165,8 @@ public class GameServiceImplSpringTest {
 	/** Test method for {@link GameService#remove(Game)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Game game = EntityGenerator.createGame();
+		final Game game = objectGenerator.generate(Game.class);
+		game.setId(null);
 		entityManager.persist(game);
 		DeepAsserts.assertEquals(GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
 
@@ -180,7 +180,8 @@ public class GameServiceImplSpringTest {
 	/** Test method for {@link GameService#remove(Game)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Game game = EntityGenerator.createGame();
+		final Game game = objectGenerator.generate(Game.class);
+		game.setId(null);
 		entityManager.persist(game);
 		DeepAsserts.assertEquals(GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
 		final String key = "games";
@@ -275,9 +276,11 @@ public class GameServiceImplSpringTest {
 	/** Test method for {@link GameService#exists(Game)} with not existing game. */
 	@Test
 	public void testExistsWithNotExistingGame() {
+		final Game game = objectGenerator.generate(Game.class);
+		game.setId(Integer.MAX_VALUE);
 		final String key = "game" + Integer.MAX_VALUE;
 
-		assertFalse(gameService.exists(EntityGenerator.createGame(Integer.MAX_VALUE)));
+		assertFalse(gameService.exists(game));
 		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(gameCache));
 		SpringUtils.assertCacheValue(gameCache, key, null);

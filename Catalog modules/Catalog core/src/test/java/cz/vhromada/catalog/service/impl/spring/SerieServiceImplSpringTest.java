@@ -15,14 +15,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.impl.SerieServiceImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +54,10 @@ public class SerieServiceImplSpringTest {
 	/** Instance of {@link SerieService} */
 	@Autowired
 	private SerieService serieService;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Clears cache and restarts sequences. */
 	@Before
@@ -120,13 +123,9 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#add(Serie)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final List<Genre> genres = new ArrayList<>();
-		genres.add(SpringUtils.getGenre(entityManager, 4));
-		final Serie serie = EntityGenerator.createSerie();
-		serie.setGenres(genres);
-		final Serie expectedSerie = EntityGenerator.createSerie(SERIES_COUNT + 1);
-		expectedSerie.setPosition(SERIES_COUNT);
-		expectedSerie.setGenres(genres);
+		final Serie serie = objectGenerator.generate(Serie.class);
+		serie.setId(null);
+		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 
 		serieService.add(serie);
 
@@ -134,7 +133,6 @@ public class SerieServiceImplSpringTest {
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, serie.getId());
 		final Serie addedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, addedSerie);
-		DeepAsserts.assertEquals(expectedSerie, addedSerie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
@@ -142,13 +140,9 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#add(Serie)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final List<Genre> genres = new ArrayList<>();
-		genres.add(SpringUtils.getGenre(entityManager, 4));
-		final Serie serie = EntityGenerator.createSerie();
-		serie.setGenres(genres);
-		final Serie expectedSerie = EntityGenerator.createSerie(SERIES_COUNT + 1);
-		expectedSerie.setGenres(genres);
-		expectedSerie.setPosition(SERIES_COUNT);
+		final Serie serie = objectGenerator.generate(Serie.class);
+		serie.setId(null);
+		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 		final String keyList = "series";
 		final String keyItem = "serie" + (SERIES_COUNT + 1);
 		serieCache.put(keyList, new ArrayList<>());
@@ -160,7 +154,6 @@ public class SerieServiceImplSpringTest {
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, serie.getId());
 		final Serie addedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, addedSerie);
-		DeepAsserts.assertEquals(expectedSerie, addedSerie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, keyList, CollectionUtils.newList(serie));
@@ -170,13 +163,12 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#update(Serie)}. */
 	@Test
 	public void testUpdate() {
-		final Serie serie = SpringEntitiesUtils.updateSerie(SpringUtils.getSerie(entityManager, 1));
+		final Serie serie = SpringEntitiesUtils.updateSerie(SpringUtils.getSerie(entityManager, 1), objectGenerator);
 
 		serieService.update(serie);
 
 		final Serie updatedSerie = SpringUtils.getSerie(entityManager, 1);
 		DeepAsserts.assertEquals(serie, updatedSerie);
-		DeepAsserts.assertEquals(SpringEntitiesUtils.updateSerie(SpringUtils.getSerie(entityManager, 1)), updatedSerie);
 		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
@@ -184,9 +176,9 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#remove(Serie)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final List<Genre> genres = CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4));
-		final Serie serie = EntityGenerator.createSerie();
-		serie.setGenres(genres);
+		final Serie serie = objectGenerator.generate(Serie.class);
+		serie.setId(null);
+		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 		entityManager.persist(serie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 
@@ -200,9 +192,9 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#remove(Serie)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final List<Genre> genres = CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4));
-		final Serie serie = EntityGenerator.createSerie();
-		serie.setGenres(genres);
+		final Serie serie = objectGenerator.generate(Serie.class);
+		serie.setId(null);
+		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 		entityManager.persist(serie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 		final String key = "series";
@@ -317,9 +309,11 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#exists(Serie)} with not existing serie. */
 	@Test
 	public void testExistsWithNotExistingSerie() {
+		final Serie serie = objectGenerator.generate(Serie.class);
+		serie.setId(Integer.MAX_VALUE);
 		final String key = "serie" + Integer.MAX_VALUE;
 
-		assertFalse(serieService.exists(EntityGenerator.createSerie(Integer.MAX_VALUE)));
+		assertFalse(serieService.exists(serie));
 		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, key, null);

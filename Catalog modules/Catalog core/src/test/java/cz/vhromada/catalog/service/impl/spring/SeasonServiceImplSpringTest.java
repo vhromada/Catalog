@@ -13,13 +13,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.impl.SeasonServiceImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +52,10 @@ public class SeasonServiceImplSpringTest {
 	/** Instance of {@link SeasonService} */
 	@Autowired
 	private SeasonService seasonService;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Clears cache and restarts sequence. */
 	@Before
@@ -96,10 +100,11 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#add(Season)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Serie serie = SpringUtils.getSerie(entityManager, 1);
-		final Season season = EntityGenerator.createSeason(serie);
-		final Season expectedSeason = EntityGenerator.createSeason(SEASONS_COUNT + 1, serie);
-		expectedSeason.setPosition(SEASONS_COUNT);
+		final Season season = objectGenerator.generate(Season.class);
+		season.setId(null);
+		season.setStartYear(1940 + season.getStartYear());
+		season.setEndYear(1940 + season.getEndYear());
+		season.setSerie(SpringUtils.getSerie(entityManager, 1));
 
 		seasonService.add(season);
 
@@ -107,7 +112,6 @@ public class SeasonServiceImplSpringTest {
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, season.getId());
 		final Season addedSeason = SpringUtils.getSeason(entityManager, SEASONS_COUNT + 1);
 		DeepAsserts.assertEquals(season, addedSeason);
-		DeepAsserts.assertEquals(expectedSeason, addedSeason);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
@@ -116,9 +120,11 @@ public class SeasonServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Serie serie = SpringUtils.getSerie(entityManager, 1);
-		final Season season = EntityGenerator.createSeason(serie);
-		final Season expectedSeason = EntityGenerator.createSeason(SEASONS_COUNT + 1, serie);
-		expectedSeason.setPosition(SEASONS_COUNT);
+		final Season season = objectGenerator.generate(Season.class);
+		season.setId(null);
+		season.setStartYear(1940 + season.getStartYear());
+		season.setEndYear(1940 + season.getEndYear());
+		season.setSerie(serie);
 		final String keyList = "seasons" + serie.getId();
 		final String keyItem = "season" + (SEASONS_COUNT + 1);
 		serieCache.put(keyList, new ArrayList<>());
@@ -130,7 +136,6 @@ public class SeasonServiceImplSpringTest {
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, season.getId());
 		final Season addedSeason = SpringUtils.getSeason(entityManager, SEASONS_COUNT + 1);
 		DeepAsserts.assertEquals(season, addedSeason);
-		DeepAsserts.assertEquals(expectedSeason, addedSeason);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, keyList, CollectionUtils.newList(season));
@@ -140,13 +145,12 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#update(Season)}. */
 	@Test
 	public void testUpdate() {
-		final Season season = SpringEntitiesUtils.updateSeason(SpringUtils.getSeason(entityManager, 1));
+		final Season season = SpringEntitiesUtils.updateSeason(SpringUtils.getSeason(entityManager, 1), objectGenerator);
 
 		seasonService.update(season);
 
 		final Season updatedSeason = SpringUtils.getSeason(entityManager, 1);
 		DeepAsserts.assertEquals(season, updatedSeason);
-		DeepAsserts.assertEquals(SpringEntitiesUtils.updateSeason(SpringUtils.getSeason(entityManager, 1)), updatedSeason);
 		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
@@ -154,7 +158,11 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#remove(Season)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Season season = EntityGenerator.createSeason(SpringUtils.getSerie(entityManager, 1));
+		final Season season = objectGenerator.generate(Season.class);
+		season.setId(null);
+		season.setStartYear(1940 + season.getStartYear());
+		season.setEndYear(1940 + season.getEndYear());
+		season.setSerie(SpringUtils.getSerie(entityManager, 1));
 		entityManager.persist(season);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 
@@ -168,7 +176,11 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#remove(Season)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Season season = EntityGenerator.createSeason(SpringUtils.getSerie(entityManager, 1));
+		final Season season = objectGenerator.generate(Season.class);
+		season.setId(null);
+		season.setStartYear(1940 + season.getStartYear());
+		season.setEndYear(1940 + season.getEndYear());
+		season.setSerie(SpringUtils.getSerie(entityManager, 1));
 		entityManager.persist(season);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 		final String key = "seasons" + season.getSerie().getId();
@@ -295,9 +307,11 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#exists(Season)} with not existing season. */
 	@Test
 	public void testExistsWithNotExistingSeason() {
+		final Season season = objectGenerator.generate(Season.class);
+		season.setId(Integer.MAX_VALUE);
 		final String key = "season" + Integer.MAX_VALUE;
 
-		assertFalse(seasonService.exists(EntityGenerator.createSeason(Integer.MAX_VALUE)));
+		assertFalse(seasonService.exists(season));
 		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, key, null);

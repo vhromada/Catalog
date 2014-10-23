@@ -11,12 +11,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.service.ProgramService;
 import cz.vhromada.catalog.service.impl.ProgramServiceImpl;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +49,10 @@ public class ProgramServiceImplSpringTest {
 	/** Instance of {@link ProgramService} */
 	@Autowired
 	private ProgramService programService;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Clears cache and restarts sequence. */
 	@Before
@@ -110,9 +114,8 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#add(Program)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Program program = EntityGenerator.createProgram();
-		final Program expectedProgram = EntityGenerator.createProgram(PROGRAMS_COUNT + 1);
-		expectedProgram.setPosition(PROGRAMS_COUNT);
+		final Program program = objectGenerator.generate(Program.class);
+		program.setId(null);
 
 		programService.add(program);
 
@@ -120,7 +123,6 @@ public class ProgramServiceImplSpringTest {
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, program.getId());
 		final Program addedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, addedProgram);
-		DeepAsserts.assertEquals(expectedProgram, addedProgram);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
@@ -128,9 +130,8 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#add(Program)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Program program = EntityGenerator.createProgram();
-		final Program expectedProgram = EntityGenerator.createProgram(PROGRAMS_COUNT + 1);
-		expectedProgram.setPosition(PROGRAMS_COUNT);
+		final Program program = objectGenerator.generate(Program.class);
+		program.setId(null);
 		final String keyList = "programs";
 		final String keyItem = "program" + (PROGRAMS_COUNT + 1);
 		programCache.put(keyList, new ArrayList<>());
@@ -142,7 +143,6 @@ public class ProgramServiceImplSpringTest {
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, program.getId());
 		final Program addedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, addedProgram);
-		DeepAsserts.assertEquals(expectedProgram, addedProgram);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, keyList, CollectionUtils.newList(program));
@@ -152,13 +152,12 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#update(Program)}. */
 	@Test
 	public void testUpdate() {
-		final Program program = SpringEntitiesUtils.updateProgram(SpringUtils.getProgram(entityManager, 1));
+		final Program program = SpringEntitiesUtils.updateProgram(SpringUtils.getProgram(entityManager, 1), objectGenerator);
 
 		programService.update(program);
 
 		final Program updatedProgram = SpringUtils.getProgram(entityManager, 1);
 		DeepAsserts.assertEquals(program, updatedProgram);
-		DeepAsserts.assertEquals(EntityGenerator.createProgram(1), updatedProgram);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
@@ -166,7 +165,8 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#remove(Program)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Program program = EntityGenerator.createProgram();
+		final Program program = objectGenerator.generate(Program.class);
+		program.setId(null);
 		entityManager.persist(program);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 
@@ -180,7 +180,8 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#remove(Program)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Program program = EntityGenerator.createProgram();
+		final Program program = objectGenerator.generate(Program.class);
+		program.setId(null);
 		entityManager.persist(program);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 		final String key = "programs";
@@ -275,9 +276,11 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#exists(Program)} with not existing program. */
 	@Test
 	public void testExistsWithNotExistingProgram() {
+		final Program program = objectGenerator.generate(Program.class);
+		program.setId(Integer.MAX_VALUE);
 		final String key = "program" + Integer.MAX_VALUE;
 
-		assertFalse(programService.exists(EntityGenerator.createProgram(Integer.MAX_VALUE)));
+		assertFalse(programService.exists(program));
 		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, key, null);

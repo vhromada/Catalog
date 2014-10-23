@@ -21,6 +21,7 @@ import cz.vhromada.catalog.dao.entities.Song;
  *
  * @author Vladimir Hromada
  */
+@Deprecated
 public final class EntityGenerator {
 
 	/** Creates a new instance of EntityGenerator. */

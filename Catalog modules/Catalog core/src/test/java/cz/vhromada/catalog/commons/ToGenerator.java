@@ -20,6 +20,7 @@ import cz.vhromada.catalog.facade.to.SongTO;
  *
  * @author Vladimir Hromada
  */
+@Deprecated
 public final class ToGenerator {
 
 	/** Creates a new instance of ToGenerator. */

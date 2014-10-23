@@ -165,6 +165,7 @@ public final class SpringEntitiesUtils {
 	 * @param movie movie
 	 * @return movie with updated fields
 	 */
+	@Deprecated
 	public static Movie updateMovie(final Movie movie) {
 		movie.setCzechName(CZECH_NAME);
 		movie.setOriginalName(ORIGINAL_NAME);
@@ -248,6 +249,7 @@ public final class SpringEntitiesUtils {
 	 * @param serie serie
 	 * @return serie with updated fields
 	 */
+	@Deprecated
 	public static Serie updateSerie(final Serie serie) {
 		serie.setCzechName(CZECH_NAME);
 		serie.setOriginalName(ORIGINAL_NAME);
@@ -339,6 +341,7 @@ public final class SpringEntitiesUtils {
 	 * @param season season
 	 * @return season with updated fields
 	 */
+	@Deprecated
 	public static Season updateSeason(final Season season) {
 		season.setNumber(NUMBER);
 		season.setStartYear(START_YEAR);
@@ -408,6 +411,7 @@ public final class SpringEntitiesUtils {
 	 * @param episode episode
 	 * @return episode with updated fields
 	 */
+	@Deprecated
 	public static Episode updateEpisode(final Episode episode) {
 		episode.setNumber(NUMBER);
 		episode.setName(NAME);
@@ -488,6 +492,7 @@ public final class SpringEntitiesUtils {
 	 * @param game game
 	 * @return game with updated fields
 	 */
+	@Deprecated
 	public static Game updateGame(final Game game) {
 		game.setName(NAME);
 		game.setWikiEn(WIKIPEDIA_EN);
@@ -561,6 +566,7 @@ public final class SpringEntitiesUtils {
 	 * @param music music
 	 * @return music with updated fields
 	 */
+	@Deprecated
 	public static Music updateMusic(final Music music) {
 		music.setName(NAME);
 		music.setWikiEn(WIKIPEDIA_EN);
@@ -625,6 +631,7 @@ public final class SpringEntitiesUtils {
 	 * @param song song
 	 * @return song with updated fields
 	 */
+	@Deprecated
 	public static Song updateSong(final Song song) {
 		song.setName(NAME);
 		song.setLength(LENGTH);
@@ -694,6 +701,7 @@ public final class SpringEntitiesUtils {
 	 * @param program program
 	 * @return program with updated fields
 	 */
+	@Deprecated
 	public static Program updateProgram(final Program program) {
 		program.setName(NAME);
 		program.setWikiEn(WIKIPEDIA_EN);
@@ -756,6 +764,7 @@ public final class SpringEntitiesUtils {
 	 * @param bookCategory book category
 	 * @return book category with updated fields
 	 */
+	@Deprecated
 	public static BookCategory updateBookCategory(final BookCategory bookCategory) {
 		bookCategory.setName(NAME);
 		bookCategory.setNote(NOTE);
@@ -836,6 +845,7 @@ public final class SpringEntitiesUtils {
 	 * @param book book
 	 * @return book with updated fields
 	 */
+	@Deprecated
 	public static Book updateBook(final Book book) {
 		book.setAuthor(AUTHOR);
 		book.setTitle(TITLE);
@@ -891,6 +901,7 @@ public final class SpringEntitiesUtils {
 	 * @param genre genre
 	 * @return genre with updated fields
 	 */
+	@Deprecated
 	public static Genre updateGenre(final Genre genre) {
 		genre.setName(NAME);
 		return genre;
@@ -930,6 +941,7 @@ public final class SpringEntitiesUtils {
 	 * @param medium medium
 	 * @return medium with updated fields
 	 */
+	@Deprecated
 	public static Medium updateMedium(final Medium medium) {
 		medium.setNumber(NUMBER);
 		medium.setLength(LENGTH);

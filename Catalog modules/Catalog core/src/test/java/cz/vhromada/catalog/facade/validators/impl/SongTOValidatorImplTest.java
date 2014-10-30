@@ -1,9 +1,6 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.catalog.facade.validators.SongTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -15,7 +12,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class SongTOValidatorImplTest {
+public class SongTOValidatorImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SongTOValidator} */
 	private SongTOValidator songTOValidator;
@@ -35,13 +32,14 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateNewSongTO(SongTO)} with TO for song with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSongTOWithNotNullId() {
-		songTOValidator.validateNewSongTO(ToGenerator.createSong(ID, ToGenerator.createMusic(INNER_ID)));
+		songTOValidator.validateNewSongTO(generate(SongTO.class));
 	}
 
 	/** Test method for {@link SongTOValidator#validateNewSongTO(SongTO)} with TO for song with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSongTOWithNullName() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
 		song.setName(null);
 
 		songTOValidator.validateNewSongTO(song);
@@ -50,7 +48,8 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateNewSongTO(SongTO)} with TO for song with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSongTOWithEmptyName() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
 		song.setName("");
 
 		songTOValidator.validateNewSongTO(song);
@@ -59,7 +58,8 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateNewSongTO(SongTO)} with TO for song with negative length of song. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSongTOWithNegativeLength() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
 		song.setLength(-1);
 
 		songTOValidator.validateNewSongTO(song);
@@ -68,7 +68,8 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateNewSongTO(SongTO)} with TO for song with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSongTOWithNullNote() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
 		song.setNote(null);
 
 		songTOValidator.validateNewSongTO(song);
@@ -77,13 +78,21 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateNewSongTO(SongTO)} with TO for song with null TO for music. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSongTOWithNullMusicTO() {
-		songTOValidator.validateNewSongTO(ToGenerator.createSong());
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
+		song.setMusic(null);
+
+		songTOValidator.validateNewSongTO(song);
 	}
 
 	/** Test method for {@link SongTOValidator#validateNewSongTO(SongTO)} with TO for song with TO for music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSongTOWithMusicTOWithNullId() {
-		songTOValidator.validateNewSongTO(ToGenerator.createSong(ToGenerator.createMusic()));
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
+		song.getMusic().setId(null);
+
+		songTOValidator.validateNewSongTO(song);
 	}
 
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with null argument. */
@@ -95,13 +104,16 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with TO for song with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSongTOWithNullId() {
-		songTOValidator.validateExistingSongTO(ToGenerator.createSong(ToGenerator.createMusic(INNER_ID)));
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
+
+		songTOValidator.validateExistingSongTO(song);
 	}
 
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with TO for song with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSongTOWithNullName() {
-		final SongTO song = ToGenerator.createSong(ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
 		song.setName(null);
 
 		songTOValidator.validateExistingSongTO(song);
@@ -110,7 +122,7 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with TO for song with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSongTOWithEmptyName() {
-		final SongTO song = ToGenerator.createSong(ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
 		song.setName("");
 
 		songTOValidator.validateExistingSongTO(song);
@@ -119,7 +131,7 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with TO for song with negative length of song. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSongTOWithNegativeLength() {
-		final SongTO song = ToGenerator.createSong(ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
 		song.setLength(-1);
 
 		songTOValidator.validateExistingSongTO(song);
@@ -128,7 +140,7 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with TO for song with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSongTOWithNullNote() {
-		final SongTO song = ToGenerator.createSong(ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = generate(SongTO.class);
 		song.setNote(null);
 
 		songTOValidator.validateExistingSongTO(song);
@@ -137,13 +149,19 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with TO for song with null TO for music. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSongTOWithNullMusicTO() {
-		songTOValidator.validateExistingSongTO(ToGenerator.createSong(ID));
+		final SongTO song = generate(SongTO.class);
+		song.setMusic(null);
+
+		songTOValidator.validateExistingSongTO(song);
 	}
 
 	/** Test method for {@link SongTOValidator#validateExistingSongTO(SongTO)} with TO for song with TO for music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSongTOWithMusicTOWithNullId() {
-		songTOValidator.validateExistingSongTO(ToGenerator.createSong(ID, ToGenerator.createMusic()));
+		final SongTO song = generate(SongTO.class);
+		song.getMusic().setId(null);
+
+		songTOValidator.validateExistingSongTO(song);
 	}
 
 	/** Test method for {@link SongTOValidator#validateSongTOWithId(SongTO)} with null argument. */
@@ -155,7 +173,10 @@ public class SongTOValidatorImplTest {
 	/** Test method for {@link SongTOValidator#validateSongTOWithId(SongTO)} with TO for song with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateSongTOWithIdWithNullId() {
-		songTOValidator.validateSongTOWithId(ToGenerator.createSong());
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
+
+		songTOValidator.validateSongTOWithId(song);
 	}
 
 }

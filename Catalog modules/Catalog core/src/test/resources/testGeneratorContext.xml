@@ -3,7 +3,13 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="objectGeneratorConfiguration" class="cz.vhromada.generator.configuration.Configuration"/>
+	<bean id="objectGeneratorConfiguration" class="cz.vhromada.generator.configuration.Configuration">
+		<property name="rules">
+			<list>
+				<bean class="cz.vhromada.catalog.commons.TimeRule"/>
+			</list>
+		</property>
+	</bean>
 
 	<bean id="objectGenerator" class="cz.vhromada.generator.ObjectGenerator">
 		<constructor-arg ref="objectGeneratorConfiguration"/>

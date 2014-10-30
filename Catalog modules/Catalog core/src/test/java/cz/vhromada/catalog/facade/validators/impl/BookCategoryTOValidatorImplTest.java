@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.validators.BookCategoryTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -14,7 +12,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class BookCategoryTOValidatorImplTest {
+public class BookCategoryTOValidatorImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link BookCategoryTOValidator} */
 	private BookCategoryTOValidator bookCategoryTOValidator;
@@ -34,13 +32,14 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateNewBookCategoryTO(BookCategoryTO)} with TO for book category with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookCategoryTOWithNotNullId() {
-		bookCategoryTOValidator.validateNewBookCategoryTO(ToGenerator.createBookCategory(ID));
+		bookCategoryTOValidator.validateNewBookCategoryTO(generate(BookCategoryTO.class));
 	}
 
 	/** Test method for {@link BookCategoryTOValidator#validateNewBookCategoryTO(BookCategoryTO)} with TO for book category with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookCategoryTOWithNullName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setName(null);
 
 		bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
@@ -49,7 +48,8 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateNewBookCategoryTO(BookCategoryTO)} with TO for book category with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookCategoryTOWithEmptyName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setName("");
 
 		bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
@@ -58,7 +58,8 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateNewBookCategoryTO(BookCategoryTO)} with TO for book category with negative count of books. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookCategoryTOWithNegativeBooksCount() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setBooksCount(-1);
 
 		bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
@@ -67,7 +68,8 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateNewBookCategoryTO(BookCategoryTO)} with TO for book category with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookCategoryTOWithNullNote() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setNote(null);
 
 		bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
@@ -82,13 +84,16 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateExistingBookCategoryTO(BookCategoryTO)} with TO for book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookCategoryTOWithNullId() {
-		bookCategoryTOValidator.validateExistingBookCategoryTO(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryTOValidator#validateExistingBookCategoryTO(BookCategoryTO)} with TO for book category with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookCategoryTOWithNullName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(ID);
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
 		bookCategory.setName(null);
 
 		bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
@@ -97,7 +102,7 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateExistingBookCategoryTO(BookCategoryTO)} with TO for book category with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookCategoryTOWithEmptyName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(ID);
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
 		bookCategory.setName("");
 
 		bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
@@ -109,7 +114,8 @@ public class BookCategoryTOValidatorImplTest {
 	 */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookCategoryTOWithNegativeBooksCount() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setBooksCount(-1);
 
 		bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
@@ -118,7 +124,7 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateExistingBookCategoryTO(BookCategoryTO)} with TO for book category with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookCategoryTOWithNullNote() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(ID);
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
 		bookCategory.setNote(null);
 
 		bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
@@ -133,7 +139,10 @@ public class BookCategoryTOValidatorImplTest {
 	/** Test method for {@link BookCategoryTOValidator#validateBookCategoryTOWithId(BookCategoryTO)} with TO for book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateBookCategoryTOWithIdWithNullId() {
-		bookCategoryTOValidator.validateBookCategoryTOWithId(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
 	}
 
 }

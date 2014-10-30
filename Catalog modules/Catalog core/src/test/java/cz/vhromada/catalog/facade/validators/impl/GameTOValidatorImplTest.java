@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.validators.GameTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -14,7 +12,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class GameTOValidatorImplTest {
+public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link GameTOValidator} */
 	private GameTOValidator gameTOValidator;
@@ -34,13 +32,14 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNotNullId() {
-		gameTOValidator.validateNewGameTO(ToGenerator.createGame(ID));
+		gameTOValidator.validateNewGameTO(generate(GameTO.class));
 	}
 
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullName() {
-		final GameTO game = ToGenerator.createGame();
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
 		game.setName(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -49,7 +48,8 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithEmptyName() {
-		final GameTO game = ToGenerator.createGame();
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
 		game.setName("");
 		gameTOValidator.validateNewGameTO(game);
 	}
@@ -57,7 +57,8 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null URL to english Wikipedia page about game is null. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullWikiEn() {
-		final GameTO game = ToGenerator.createGame();
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
 		game.setWikiEn(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -66,7 +67,8 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null URL to czech Wikipedia page about game is null. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullWikiCz() {
-		final GameTO game = ToGenerator.createGame();
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
 		game.setWikiCz(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -75,7 +77,8 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNotPositiveMediaCount() {
-		final GameTO game = ToGenerator.createGame();
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
 		game.setMediaCount(0);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -84,7 +87,8 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullOtherData() {
-		final GameTO game = ToGenerator.createGame();
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
 		game.setOtherData(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -93,7 +97,8 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullNote() {
-		final GameTO game = ToGenerator.createGame();
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
 		game.setNote(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -108,13 +113,16 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullId() {
-		gameTOValidator.validateExistingGameTO(ToGenerator.createGame());
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
+
+		gameTOValidator.validateExistingGameTO(game);
 	}
 
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullName() {
-		final GameTO game = ToGenerator.createGame(ID);
+		final GameTO game = generate(GameTO.class);
 		game.setName(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -123,7 +131,7 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithEmptyName() {
-		final GameTO game = ToGenerator.createGame(ID);
+		final GameTO game = generate(GameTO.class);
 		game.setName("");
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -132,7 +140,7 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null URL to Wikipedia page about game is null. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullWiki() {
-		final GameTO game = ToGenerator.createGame(ID);
+		final GameTO game = generate(GameTO.class);
 		game.setWikiCz(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -141,7 +149,7 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNotPositiveMediaCount() {
-		final GameTO game = ToGenerator.createGame(ID);
+		final GameTO game = generate(GameTO.class);
 		game.setMediaCount(0);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -150,7 +158,7 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullOtherData() {
-		final GameTO game = ToGenerator.createGame(ID);
+		final GameTO game = generate(GameTO.class);
 		game.setOtherData(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -159,7 +167,7 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullNote() {
-		final GameTO game = ToGenerator.createGame(ID);
+		final GameTO game = generate(GameTO.class);
 		game.setNote(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -174,7 +182,10 @@ public class GameTOValidatorImplTest {
 	/** Test method for {@link GameTOValidator#validateGameTOWithId(GameTO)} with TO for game with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateGameTOWithIdWithNullId() {
-		gameTOValidator.validateGameTOWithId(ToGenerator.createGame());
+		final GameTO game = generate(GameTO.class);
+		game.setId(null);
+
+		gameTOValidator.validateGameTOWithId(game);
 	}
 
 }

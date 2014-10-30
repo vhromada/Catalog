@@ -17,6 +17,7 @@ import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.impl.MovieDAOImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,7 +79,7 @@ public class MovieDAOImplSpringTest {
 	public void testAdd() {
 		final Movie movie = objectGenerator.generate(Movie.class);
 		movie.setId(null);
-		movie.setYear(1940 + movie.getYear());
+		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
 		movie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 		for (Medium medium : movie.getMedia()) {
 			medium.setId(null);

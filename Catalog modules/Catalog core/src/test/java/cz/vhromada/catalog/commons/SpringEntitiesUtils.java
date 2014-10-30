@@ -60,6 +60,7 @@ import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.generator.ObjectGenerator;
+import org.joda.time.DateTime;
 
 /**
  * A class represents utility class for entities for Spring framework.
@@ -146,7 +147,7 @@ public final class SpringEntitiesUtils {
 	public static Movie updateMovie(final Movie movie, final ObjectGenerator objectGenerator) {
 		movie.setCzechName(objectGenerator.generate(String.class));
 		movie.setOriginalName(objectGenerator.generate(String.class));
-		movie.setYear(1940 + objectGenerator.generate(Integer.class));
+		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
 		movie.setLanguage(objectGenerator.generate(Language.class));
 		movie.setSubtitles(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
 		movie.setCsfd(objectGenerator.generate(String.class));
@@ -326,8 +327,8 @@ public final class SpringEntitiesUtils {
 	 */
 	public static Season updateSeason(final Season season, final ObjectGenerator objectGenerator) {
 		season.setNumber(objectGenerator.generate(Integer.class));
-		season.setStartYear(1940 + objectGenerator.generate(Integer.class));
-		season.setEndYear(1940 + objectGenerator.generate(Integer.class));
+		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
 		season.setLanguage(objectGenerator.generate(Language.class));
 		season.setSubtitles(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
 		season.setNote(objectGenerator.generate(String.class));

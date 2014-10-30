@@ -21,6 +21,7 @@ import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.impl.SeasonServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -102,8 +103,8 @@ public class SeasonServiceImplSpringTest {
 	public void testAddWithEmptyCache() {
 		final Season season = objectGenerator.generate(Season.class);
 		season.setId(null);
-		season.setStartYear(1940 + season.getStartYear());
-		season.setEndYear(1940 + season.getEndYear());
+		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
 		season.setSerie(SpringUtils.getSerie(entityManager, 1));
 
 		seasonService.add(season);
@@ -122,8 +123,8 @@ public class SeasonServiceImplSpringTest {
 		final Serie serie = SpringUtils.getSerie(entityManager, 1);
 		final Season season = objectGenerator.generate(Season.class);
 		season.setId(null);
-		season.setStartYear(1940 + season.getStartYear());
-		season.setEndYear(1940 + season.getEndYear());
+		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
 		season.setSerie(serie);
 		final String keyList = "seasons" + serie.getId();
 		final String keyItem = "season" + (SEASONS_COUNT + 1);
@@ -160,8 +161,8 @@ public class SeasonServiceImplSpringTest {
 	public void testRemoveWithEmptyCache() {
 		final Season season = objectGenerator.generate(Season.class);
 		season.setId(null);
-		season.setStartYear(1940 + season.getStartYear());
-		season.setEndYear(1940 + season.getEndYear());
+		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
 		season.setSerie(SpringUtils.getSerie(entityManager, 1));
 		entityManager.persist(season);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
@@ -178,8 +179,8 @@ public class SeasonServiceImplSpringTest {
 	public void testRemoveWithNotEmptyCache() {
 		final Season season = objectGenerator.generate(Season.class);
 		season.setId(null);
-		season.setStartYear(1940 + season.getStartYear());
-		season.setEndYear(1940 + season.getEndYear());
+		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
 		season.setSerie(SpringUtils.getSerie(entityManager, 1));
 		entityManager.persist(season);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));

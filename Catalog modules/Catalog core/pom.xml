@@ -37,12 +37,6 @@
 			<artifactId>ehcache</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>catalog-test-common</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>cz.vhromada.test</groupId>
 			<artifactId>deep-assert</artifactId>
 		</dependency>

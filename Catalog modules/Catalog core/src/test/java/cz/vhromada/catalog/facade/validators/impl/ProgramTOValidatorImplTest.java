@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -32,14 +33,13 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateNewProgramTO(ProgramTO)} with TO for program with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithNotNullId() {
-		programTOValidator.validateNewProgramTO(generate(ProgramTO.class));
+		programTOValidator.validateNewProgramTO(ToGenerator.newProgramWithId(getObjectGenerator()));
 	}
 
 	/** Test method for {@link ProgramTOValidator#validateNewProgramTO(ProgramTO)} with TO for program with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithNullName() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = ToGenerator.newProgram(getObjectGenerator());
 		program.setName(null);
 
 		programTOValidator.validateNewProgramTO(program);
@@ -48,8 +48,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateNewProgramTO(ProgramTO)} with TO for program with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithEmptyName() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = ToGenerator.newProgram(getObjectGenerator());
 		program.setName("");
 		programTOValidator.validateNewProgramTO(program);
 	}
@@ -60,8 +59,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	 */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithNullWikiEn() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = ToGenerator.newProgram(getObjectGenerator());
 		program.setWikiEn(null);
 
 		programTOValidator.validateNewProgramTO(program);
@@ -73,8 +71,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	 */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithNullWikiCz() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = ToGenerator.newProgram(getObjectGenerator());
 		program.setWikiCz(null);
 
 		programTOValidator.validateNewProgramTO(program);
@@ -83,8 +80,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateNewProgramTO(ProgramTO)} with TO for program with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithNotPositiveMediaCount() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = ToGenerator.newProgram(getObjectGenerator());
 		program.setMediaCount(0);
 
 		programTOValidator.validateNewProgramTO(program);
@@ -93,8 +89,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateNewProgramTO(ProgramTO)} with TO for program with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithNullOtherData() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = ToGenerator.newProgram(getObjectGenerator());
 		program.setOtherData(null);
 
 		programTOValidator.validateNewProgramTO(program);
@@ -103,8 +98,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateNewProgramTO(ProgramTO)} with TO for program with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewProgramTOWithNullNote() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = ToGenerator.newProgram(getObjectGenerator());
 		program.setNote(null);
 
 		programTOValidator.validateNewProgramTO(program);
@@ -119,16 +113,13 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateExistingProgramTO(ProgramTO)} with TO for program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingProgramTOWithNullId() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
-
-		programTOValidator.validateExistingProgramTO(program);
+		programTOValidator.validateExistingProgramTO(ToGenerator.newProgram(getObjectGenerator()));
 	}
 
 	/** Test method for {@link ProgramTOValidator#validateExistingProgramTO(ProgramTO)} with TO for program with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingProgramTOWithNullName() {
-		final ProgramTO program = generate(ProgramTO.class);
+		final ProgramTO program = ToGenerator.newProgramWithId(getObjectGenerator());
 		program.setName(null);
 
 		programTOValidator.validateExistingProgramTO(program);
@@ -137,7 +128,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateExistingProgramTO(ProgramTO)} with TO for program with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingProgramTOWithEmptyName() {
-		final ProgramTO program = generate(ProgramTO.class);
+		final ProgramTO program = ToGenerator.newProgramWithId(getObjectGenerator());
 		program.setName("");
 
 		programTOValidator.validateExistingProgramTO(program);
@@ -149,7 +140,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	 */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingProgramTOWithNullWiki() {
-		final ProgramTO program = generate(ProgramTO.class);
+		final ProgramTO program = ToGenerator.newProgramWithId(getObjectGenerator());
 		program.setWikiCz(null);
 
 		programTOValidator.validateExistingProgramTO(program);
@@ -158,7 +149,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateExistingProgramTO(ProgramTO)} with TO for program with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingProgramTOWithNotPositiveMediaCount() {
-		final ProgramTO program = generate(ProgramTO.class);
+		final ProgramTO program = ToGenerator.newProgramWithId(getObjectGenerator());
 		program.setMediaCount(0);
 
 		programTOValidator.validateExistingProgramTO(program);
@@ -167,7 +158,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateExistingProgramTO(ProgramTO)} with TO for program with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingProgramTOWithNullOtherData() {
-		final ProgramTO program = generate(ProgramTO.class);
+		final ProgramTO program = ToGenerator.newProgramWithId(getObjectGenerator());
 		program.setOtherData(null);
 
 		programTOValidator.validateExistingProgramTO(program);
@@ -176,7 +167,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateExistingProgramTO(ProgramTO)} with TO for program with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingProgramTOWithNullNote() {
-		final ProgramTO program = generate(ProgramTO.class);
+		final ProgramTO program = ToGenerator.newProgramWithId(getObjectGenerator());
 		program.setNote(null);
 
 		programTOValidator.validateExistingProgramTO(program);
@@ -191,10 +182,7 @@ public class ProgramTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link ProgramTOValidator#validateProgramTOWithId(ProgramTO)} with TO for program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateProgramTOWithIdWithNullId() {
-		final ProgramTO program = generate(ProgramTO.class);
-		program.setId(null);
-
-		programTOValidator.validateProgramTOWithId(program);
+		programTOValidator.validateProgramTOWithId(ToGenerator.newProgram(getObjectGenerator()));
 	}
 
 }

@@ -763,27 +763,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns program with updated fields.
-	 *
-	 * @param program         program
-	 * @param objectGenerator object generator
-	 * @return program with updated fields
-	 */
-	@Deprecated
-	public static Program updateProgram(final Program program, final ObjectGenerator objectGenerator) {
-		program.setName(objectGenerator.generate(String.class));
-		program.setWikiEn(objectGenerator.generate(String.class));
-		program.setWikiCz(objectGenerator.generate(String.class));
-		program.setMediaCount(objectGenerator.generate(Integer.class));
-		program.setCrack(objectGenerator.generate(Boolean.class));
-		program.setSerialKey(objectGenerator.generate(Boolean.class));
-		program.setOtherData(objectGenerator.generate(String.class));
-		program.setNote(objectGenerator.generate(String.class));
-		program.setPosition(objectGenerator.generate(Integer.class));
-		return program;
-	}
-
-	/**
 	 * Returns book categories.
 	 *
 	 * @return book categories

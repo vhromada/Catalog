@@ -114,8 +114,7 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#add(Program)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Program program = objectGenerator.generate(Program.class);
-		program.setId(null);
+		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 
 		programService.add(program);
 
@@ -130,8 +129,7 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#add(Program)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Program program = objectGenerator.generate(Program.class);
-		program.setId(null);
+		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 		final String keyList = "programs";
 		final String keyItem = "program" + (PROGRAMS_COUNT + 1);
 		programCache.put(keyList, new ArrayList<>());
@@ -152,7 +150,7 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#update(Program)}. */
 	@Test
 	public void testUpdate() {
-		final Program program = SpringEntitiesUtils.updateProgram(SpringUtils.getProgram(entityManager, 1), objectGenerator);
+		final Program program = SpringEntitiesUtils.updateProgram(1, objectGenerator, entityManager);
 
 		programService.update(program);
 
@@ -165,8 +163,7 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#remove(Program)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Program program = objectGenerator.generate(Program.class);
-		program.setId(null);
+		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 		entityManager.persist(program);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 
@@ -180,8 +177,7 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#remove(Program)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Program program = objectGenerator.generate(Program.class);
-		program.setId(null);
+		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 		entityManager.persist(program);
 		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 		final String key = "programs";
@@ -276,7 +272,7 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#exists(Program)} with not existing program. */
 	@Test
 	public void testExistsWithNotExistingProgram() {
-		final Program program = objectGenerator.generate(Program.class);
+		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 		program.setId(Integer.MAX_VALUE);
 		final String key = "program" + Integer.MAX_VALUE;
 

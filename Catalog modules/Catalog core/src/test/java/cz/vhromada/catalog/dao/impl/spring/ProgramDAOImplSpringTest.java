@@ -70,8 +70,7 @@ public class ProgramDAOImplSpringTest {
 	/** Test method for {@link ProgramDAO#add(Program)}. */
 	@Test
 	public void testAdd() {
-		final Program program = objectGenerator.generate(Program.class);
-		program.setId(null);
+		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 
 		programDAO.add(program);
 
@@ -86,7 +85,7 @@ public class ProgramDAOImplSpringTest {
 	/** Test method for {@link ProgramDAO#update(Program)}. */
 	@Test
 	public void testUpdate() {
-		final Program program = SpringEntitiesUtils.updateProgram(SpringUtils.getProgram(entityManager, 1), objectGenerator);
+		final Program program = SpringEntitiesUtils.updateProgram(1, objectGenerator, entityManager);
 
 		programDAO.update(program);
 

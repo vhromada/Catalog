@@ -98,8 +98,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)}. */
 	@Test
 	public void testAdd() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 
 		programFacade.add(program);
 
@@ -119,17 +118,13 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithNotNullId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(Integer.MAX_VALUE);
-
-		programFacade.add(program);
+		programFacade.add(SpringToUtils.newProgramWithId(objectGenerator));
 	}
 
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithNullName() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 		program.setName(null);
 
 		programFacade.add(program);
@@ -138,8 +133,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithEmptyName() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 		program.setName("");
 
 		programFacade.add(program);
@@ -148,8 +142,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with null URL to english Wikipedia about program. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithNullWikiEn() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 		program.setWikiEn(null);
 
 		programFacade.add(program);
@@ -158,8 +151,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with null URL to czech Wikipedia about program. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithNullWikiCz() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 		program.setWikiCz(null);
 
 		programFacade.add(program);
@@ -168,8 +160,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithNotPositiveMediaCount() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 		program.setMediaCount(0);
 
 		programFacade.add(program);
@@ -178,8 +169,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithNullOtherData() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 		program.setOtherData(null);
 
 		programFacade.add(program);
@@ -188,8 +178,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with program with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithProgramWithNullNote() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator);
 		program.setNote(null);
 
 		programFacade.add(program);
@@ -198,8 +187,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)}. */
 	@Test
 	public void testUpdate() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(1);
+		final ProgramTO program = SpringToUtils.newProgram(objectGenerator, 1);
 
 		programFacade.update(program);
 
@@ -217,16 +205,13 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithNullId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
-
-		programFacade.update(program);
+		programFacade.update(SpringToUtils.newProgram(objectGenerator));
 	}
 
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with null name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithNullName() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		final ProgramTO program = SpringToUtils.newProgramWithId(objectGenerator);
 		program.setName(null);
 
 		programFacade.update(program);
@@ -235,7 +220,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithEmptyName() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		final ProgramTO program = SpringToUtils.newProgramWithId(objectGenerator);
 		program.setName(null);
 
 		programFacade.update(program);
@@ -244,7 +229,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with null URL to english Wikipedia about program. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithNullWikiEn() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		final ProgramTO program = SpringToUtils.newProgramWithId(objectGenerator);
 		program.setWikiEn(null);
 
 		programFacade.update(program);
@@ -253,7 +238,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with null URL to czech Wikipedia about program. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithNullWikiCz() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		final ProgramTO program = SpringToUtils.newProgramWithId(objectGenerator);
 		program.setWikiCz(null);
 
 		programFacade.update(program);
@@ -262,7 +247,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithNotPositiveMediaCount() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		final ProgramTO program = SpringToUtils.newProgramWithId(objectGenerator);
 		program.setMediaCount(0);
 
 		programFacade.update(program);
@@ -271,7 +256,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithNullOtherData() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		final ProgramTO program = SpringToUtils.newProgramWithId(objectGenerator);
 		program.setOtherData(null);
 
 		programFacade.update(program);
@@ -280,7 +265,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with null note. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithProgramWithNullNote() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		final ProgramTO program = SpringToUtils.newProgramWithId(objectGenerator);
 		program.setNote(null);
 
 		programFacade.update(program);
@@ -289,19 +274,13 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with program with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithProgramWithBadId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(Integer.MAX_VALUE);
-
-		programFacade.update(program);
+		programFacade.update(SpringToUtils.newProgram(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link ProgramFacade#remove(ProgramTO)}. */
 	@Test
 	public void testRemove() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(1);
-
-		programFacade.remove(program);
+		programFacade.remove(SpringToUtils.newProgram(objectGenerator, 1));
 
 		assertNull(SpringUtils.getProgram(entityManager, 1));
 		DeepAsserts.assertEquals(PROGRAMS_COUNT - 1, SpringUtils.getProgramsCount(entityManager));
@@ -316,30 +295,22 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#remove(ProgramTO)} with program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testRemoveWithProgramWithNullId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
-
-		programFacade.remove(program);
+		programFacade.remove(SpringToUtils.newProgram(objectGenerator));
 	}
 
 	/** Test method for {@link ProgramFacade#remove(ProgramTO)} with program with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testRemoveWithProgramWithBadId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(Integer.MAX_VALUE);
-
-		programFacade.remove(program);
+		programFacade.remove(SpringToUtils.newProgram(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link ProgramFacade#duplicate(ProgramTO)}. */
 	@Test
 	public void testDuplicate() {
-		final ProgramTO programTO = objectGenerator.generate(ProgramTO.class);
-		programTO.setId(PROGRAMS_COUNT);
 		final Program program = SpringEntitiesUtils.getProgram(PROGRAMS_COUNT);
 		program.setId(PROGRAMS_COUNT + 1);
 
-		programFacade.duplicate(programTO);
+		programFacade.duplicate(SpringToUtils.newProgram(objectGenerator, PROGRAMS_COUNT));
 
 		final Program duplicatedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, duplicatedProgram);
@@ -355,32 +326,24 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testDuplicateWithProgramWithNullId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
-
-		programFacade.duplicate(program);
+		programFacade.duplicate(SpringToUtils.newProgram(objectGenerator));
 	}
 
 	/** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with program with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testDuplicateWithProgramWithBadId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(Integer.MAX_VALUE);
-
-		programFacade.duplicate(program);
+		programFacade.duplicate(SpringToUtils.newProgram(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link ProgramFacade#moveUp(ProgramTO)}. */
 	@Test
 	public void testMoveUp() {
-		final ProgramTO programTO = objectGenerator.generate(ProgramTO.class);
-		programTO.setId(2);
 		final Program program1 = SpringEntitiesUtils.getProgram(1);
 		program1.setPosition(1);
 		final Program program2 = SpringEntitiesUtils.getProgram(2);
 		program2.setPosition(0);
 
-		programFacade.moveUp(programTO);
+		programFacade.moveUp(SpringToUtils.newProgram(objectGenerator, 2));
 		DeepAsserts.assertEquals(program1, SpringUtils.getProgram(entityManager, 1));
 		DeepAsserts.assertEquals(program2, SpringUtils.getProgram(entityManager, 2));
 		for (int i = 3; i <= PROGRAMS_COUNT; i++) {
@@ -398,41 +361,30 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithProgramWithNullId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
-
-		programFacade.moveUp(program);
+		programFacade.moveUp(SpringToUtils.newProgram(objectGenerator));
 	}
 
 	/** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithNotMoveableArgument() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(1);
-
-		programFacade.moveUp(program);
+		programFacade.moveUp(SpringToUtils.newProgram(objectGenerator, 1));
 	}
 
 	/** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveUpWithBadId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(Integer.MAX_VALUE);
-
-		programFacade.moveUp(program);
+		programFacade.moveUp(SpringToUtils.newProgram(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link ProgramFacade#moveDown(ProgramTO)}. */
 	@Test
 	public void testMoveDown() {
-		final ProgramTO programTO = objectGenerator.generate(ProgramTO.class);
-		programTO.setId(1);
 		final Program program1 = SpringEntitiesUtils.getProgram(1);
 		program1.setPosition(1);
 		final Program program2 = SpringEntitiesUtils.getProgram(2);
 		program2.setPosition(0);
 
-		programFacade.moveDown(programTO);
+		programFacade.moveDown(SpringToUtils.newProgram(objectGenerator, 1));
 		DeepAsserts.assertEquals(program1, SpringUtils.getProgram(entityManager, 1));
 		DeepAsserts.assertEquals(program2, SpringUtils.getProgram(entityManager, 2));
 		for (int i = 3; i <= PROGRAMS_COUNT; i++) {
@@ -450,42 +402,29 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithProgramWithNullId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
-
-		programFacade.moveDown(program);
+		programFacade.moveDown(SpringToUtils.newProgram(objectGenerator));
 	}
 
 	/** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(PROGRAMS_COUNT);
-
-		programFacade.moveDown(program);
+		programFacade.moveDown(SpringToUtils.newProgram(objectGenerator, PROGRAMS_COUNT));
 	}
 
 	/** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveDownWithBadId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(Integer.MAX_VALUE);
-
-		programFacade.moveDown(program);
+		programFacade.moveDown(SpringToUtils.newProgram(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link ProgramFacade#exists(ProgramTO)} with existing program. */
 	@Test
 	public void testExists() {
 		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
-			final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-			program.setId(i);
-			assertTrue(programFacade.exists(program));
+			assertTrue(programFacade.exists(SpringToUtils.newProgram(objectGenerator, i)));
 		}
 
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(Integer.MAX_VALUE);
-		assertFalse(programFacade.exists(program));
+		assertFalse(programFacade.exists(SpringToUtils.newProgram(objectGenerator, Integer.MAX_VALUE)));
 
 		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
@@ -499,10 +438,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#exists(ProgramTO)} with program with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testExistsWithProgramWithNullId() {
-		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
-		program.setId(null);
-
-		programFacade.exists(program);
+		programFacade.exists(SpringToUtils.newProgram(objectGenerator));
 	}
 
 	/** Test method for {@link ProgramFacade#updatePositions()}. */

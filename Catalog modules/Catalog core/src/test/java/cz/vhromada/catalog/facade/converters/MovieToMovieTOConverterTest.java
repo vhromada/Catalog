@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class MovieToMovieTOConverterTest {
+public class MovieToMovieTOConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link MovieToMovieTOConverter} */
 	private MovieToMovieTOConverter converter;
@@ -28,29 +27,10 @@ public class MovieToMovieTOConverterTest {
 		converter.setGenreConverter(new GenreToGenreTOConverter());
 	}
 
-	/**
-	 * Test method for {@link MovieToMovieTOConverter#getMediumConverter()} and
-	 * {@link MovieToMovieTOConverter#setMediumConverter(MediumToIntegerConverter)}.
-	 */
-	@Test
-	public void testMediumConverter() {
-		final MediumToIntegerConverter mediumConverter = new MediumToIntegerConverter();
-		converter.setMediumConverter(mediumConverter);
-		DeepAsserts.assertEquals(mediumConverter, converter.getMediumConverter());
-	}
-
-	/** Test method for {@link MovieToMovieTOConverter#getGenreConverter()} and {@link MovieToMovieTOConverter#setGenreConverter(GenreToGenreTOConverter)}. */
-	@Test
-	public void testGenreConverter() {
-		final GenreToGenreTOConverter genreConverter = new GenreToGenreTOConverter();
-		converter.setGenreConverter(genreConverter);
-		DeepAsserts.assertEquals(genreConverter, converter.getGenreConverter());
-	}
-
 	/** Test method for {@link MovieToMovieTOConverter#convert(Movie)}. */
 	@Test
 	public void testConvert() {
-		final Movie movie = EntityGenerator.createMovie(ID);
+		final Movie movie = generate(Movie.class);
 		final MovieTO movieTO = converter.convert(movie);
 		DeepAsserts.assertNotNull(movieTO);
 		DeepAsserts.assertEquals(movie, movieTO, "subtitlesAsString", "media", "totalLength", "genresAsString");

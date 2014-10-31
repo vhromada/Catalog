@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class ProgramTOToProgramConverterTest {
+public class ProgramTOToProgramConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link ProgramTOToProgramConverter} */
 	private ProgramTOToProgramConverter converter;
@@ -29,7 +28,7 @@ public class ProgramTOToProgramConverterTest {
 	/** Test method for {@link ProgramTOToProgramConverter#convert(ProgramTO)}. */
 	@Test
 	public void testConvert() {
-		final ProgramTO programTO = ToGenerator.createProgram(ID);
+		final ProgramTO programTO = generate(ProgramTO.class);
 		final Program program = converter.convert(programTO);
 		DeepAsserts.assertNotNull(program);
 		DeepAsserts.assertEquals(programTO, program, "additionalData");

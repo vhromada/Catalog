@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class MusicToMusicTOConverterTest {
+public class MusicToMusicTOConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link MusicToMusicTOConverter} */
 	private MusicToMusicTOConverter converter;
@@ -29,7 +28,7 @@ public class MusicToMusicTOConverterTest {
 	/** Test method for {@link MusicToMusicTOConverter#convert(Music)}. */
 	@Test
 	public void testConvert() {
-		final Music music = EntityGenerator.createMusic(ID);
+		final Music music = generate(Music.class);
 		final MusicTO musicTO = converter.convert(music);
 		DeepAsserts.assertNotNull(musicTO, "totalLength");
 		DeepAsserts.assertEquals(music, musicTO, "songsCount", "totalLength");

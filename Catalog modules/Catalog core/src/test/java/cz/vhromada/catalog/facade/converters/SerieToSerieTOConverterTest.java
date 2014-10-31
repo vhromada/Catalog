@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class SerieToSerieTOConverterTest {
+public class SerieToSerieTOConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SerieToSerieTOConverter} */
 	private SerieToSerieTOConverter converter;
@@ -27,18 +26,10 @@ public class SerieToSerieTOConverterTest {
 		converter.setConverter(new GenreToGenreTOConverter());
 	}
 
-	/** Test method for {@link SerieToSerieTOConverter#getConverter()} and {@link SerieToSerieTOConverter#setConverter(GenreToGenreTOConverter)}. */
-	@Test
-	public void testConverter() {
-		final GenreToGenreTOConverter genreConverter = new GenreToGenreTOConverter();
-		converter.setConverter(genreConverter);
-		DeepAsserts.assertEquals(genreConverter, converter.getConverter());
-	}
-
 	/** Test method for {@link SerieToSerieTOConverter#convert(Serie)}. */
 	@Test
 	public void testConvert() {
-		final Serie serie = EntityGenerator.createSerie(ID);
+		final Serie serie = generate(Serie.class);
 		final SerieTO serieTO = converter.convert(serie);
 		DeepAsserts.assertNotNull(serieTO, "totalLength");
 		DeepAsserts.assertEquals(serie, serieTO, "seasonsCount", "episodesCount", "totalLength", "genresAsString");

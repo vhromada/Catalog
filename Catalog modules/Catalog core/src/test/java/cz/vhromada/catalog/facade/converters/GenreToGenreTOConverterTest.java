@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class GenreToGenreTOConverterTest {
+public class GenreToGenreTOConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link GenreToGenreTOConverter} */
 	private GenreToGenreTOConverter converter;
@@ -29,7 +28,7 @@ public class GenreToGenreTOConverterTest {
 	/** Test method for {@link GenreToGenreTOConverter#convert(Genre)}. */
 	@Test
 	public void testConvert() {
-		final Genre genre = EntityGenerator.createGenre(ID);
+		final Genre genre = generate(Genre.class);
 		final GenreTO genreTO = converter.convert(genre);
 		DeepAsserts.assertNotNull(genreTO);
 		DeepAsserts.assertEquals(genre, genreTO);

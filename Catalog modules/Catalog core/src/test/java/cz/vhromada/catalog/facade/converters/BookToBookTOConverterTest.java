@@ -1,10 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.test.DeepAsserts;
@@ -16,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class BookToBookTOConverterTest {
+public class BookToBookTOConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link BookToBookTOConverter} */
 	private BookToBookTOConverter converter;
@@ -28,18 +26,10 @@ public class BookToBookTOConverterTest {
 		converter.setConverter(new BookCategoryToBookCategoryTOConverter());
 	}
 
-	/** Test method for {@link BookToBookTOConverter#getConverter()} and {@link BookToBookTOConverter#setConverter(BookCategoryToBookCategoryTOConverter)}. */
-	@Test
-	public void testConverter() {
-		final BookCategoryToBookCategoryTOConverter bookCategoryConverter = new BookCategoryToBookCategoryTOConverter();
-		converter.setConverter(bookCategoryConverter);
-		DeepAsserts.assertEquals(bookCategoryConverter, converter.getConverter());
-	}
-
 	/** Test method for {@link BookToBookTOConverter#convert(Book)}. */
 	@Test
 	public void testConvert() {
-		final Book book = EntityGenerator.createBook(ID, EntityGenerator.createBookCategory(INNER_ID));
+		final Book book = generate(Book.class);
 		final BookTO bookTO = converter.convert(book);
 		DeepAsserts.assertNotNull(bookTO);
 		DeepAsserts.assertEquals(book, bookTO, "booksCount");

@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class BookCategoryTOToBookCategoryConverterTest {
+public class BookCategoryTOToBookCategoryConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link BookCategoryTOToBookCategoryConverter} */
 	private BookCategoryTOToBookCategoryConverter converter;
@@ -29,7 +28,7 @@ public class BookCategoryTOToBookCategoryConverterTest {
 	/** Test method for {@link BookCategoryTOToBookCategoryConverter#convert(BookCategoryTO)}. */
 	@Test
 	public void testConvert() {
-		final BookCategoryTO bookCategoryTO = ToGenerator.createBookCategory(ID);
+		final BookCategoryTO bookCategoryTO = generate(BookCategoryTO.class);
 		final BookCategory bookCategory = converter.convert(bookCategoryTO);
 		DeepAsserts.assertNotNull(bookCategory);
 		DeepAsserts.assertEquals(bookCategoryTO, bookCategory, "booksCount");

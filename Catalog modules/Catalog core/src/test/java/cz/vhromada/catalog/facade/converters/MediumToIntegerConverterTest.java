@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade.converters;
 
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -13,7 +13,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class MediumToIntegerConverterTest {
+public class MediumToIntegerConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link MediumToIntegerConverter} */
 	private MediumToIntegerConverter converter;
@@ -27,7 +27,7 @@ public class MediumToIntegerConverterTest {
 	/** Test method for {@link MediumToIntegerConverter#convert(Medium)}. */
 	@Test
 	public void testConvert() {
-		final Medium medium = EntityGenerator.createMedium();
+		final Medium medium = generate(Medium.class);
 		final Integer length = converter.convert(medium);
 		DeepAsserts.assertNotNull(length);
 		DeepAsserts.assertEquals(medium.getLength(), length);

@@ -1,10 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.test.DeepAsserts;
@@ -16,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class SongToSongTOConverterTest {
+public class SongToSongTOConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SongToSongTOConverter} */
 	private SongToSongTOConverter converter;
@@ -28,18 +26,10 @@ public class SongToSongTOConverterTest {
 		converter.setConverter(new MusicToMusicTOConverter());
 	}
 
-	/** Test method for {@link SongToSongTOConverter#getConverter()} and {@link SongToSongTOConverter#setConverter(MusicToMusicTOConverter)}. */
-	@Test
-	public void testConverter() {
-		final MusicToMusicTOConverter musicConverter = new MusicToMusicTOConverter();
-		converter.setConverter(musicConverter);
-		DeepAsserts.assertEquals(musicConverter, converter.getConverter());
-	}
-
 	/** Test method for {@link SongToSongTOConverter#convert(Song)}. */
 	@Test
 	public void testConvert() {
-		final Song song = EntityGenerator.createSong(ID, EntityGenerator.createMusic(INNER_ID));
+		final Song song = generate(Song.class);
 		final SongTO songTO = converter.convert(song);
 		DeepAsserts.assertNotNull(songTO, "totalLength");
 		DeepAsserts.assertEquals(song, songTO, "songsCount", "totalLength");

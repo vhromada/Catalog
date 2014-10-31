@@ -1,10 +1,8 @@
 package cz.vhromada.catalog.facade.converters;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.test.DeepAsserts;
@@ -16,7 +14,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class SeasonToSeasonTOConverterTest {
+public class SeasonToSeasonTOConverterTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SeasonToSeasonTOConverter} */
 	private SeasonToSeasonTOConverter converter;
@@ -30,18 +28,10 @@ public class SeasonToSeasonTOConverterTest {
 		converter.setConverter(serieToSerieTOConverter);
 	}
 
-	/** Test method for {@link SeasonToSeasonTOConverter#getConverter()} and {@link SeasonToSeasonTOConverter#setConverter(SerieToSerieTOConverter)}. */
-	@Test
-	public void testConverter() {
-		final SerieToSerieTOConverter serieConverter = new SerieToSerieTOConverter();
-		converter.setConverter(serieConverter);
-		DeepAsserts.assertEquals(serieConverter, converter.getConverter());
-	}
-
 	/** Test method for {@link SeasonToSeasonTOConverter#convert(Season)}. */
 	@Test
 	public void testConvert() {
-		final Season season = EntityGenerator.createSeason(ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = generate(Season.class);
 		final SeasonTO seasonTO = converter.convert(season);
 		DeepAsserts.assertNotNull(seasonTO, "totalLength");
 		DeepAsserts.assertEquals(season, seasonTO, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");

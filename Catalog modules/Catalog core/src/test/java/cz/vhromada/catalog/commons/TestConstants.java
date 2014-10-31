@@ -1,10 +1,6 @@
 package cz.vhromada.catalog.commons;
 
-import java.lang.reflect.Field;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A class represents constants for tests.
@@ -23,9 +19,6 @@ public final class TestConstants {
 	/** Original name */
 	public static final String ORIGINAL_NAME = "Original name";
 
-	/** Year */
-	public static final int YEAR = 2000;
-
 	/** Language */
 	public static final Language LANGUAGE = Language.FR;
 
@@ -37,15 +30,6 @@ public final class TestConstants {
 
 	/** Subtitles */
 	public static final List<Language> SUBTITLES = CollectionUtils.newList(SUBTITLES_1, SUBTITLES_2);
-
-	/** 1st medium length */
-	public static final int MEDIUM_1 = 100;
-
-	/** 2st medium length */
-	public static final int MEDIUM_2 = 200;
-
-	/** Media */
-	public static final List<Integer> MEDIA = CollectionUtils.newList(MEDIUM_1, MEDIUM_2);
 
 	/** URL to ČSFD */
 	public static final String CSFD = "CSFD";
@@ -86,30 +70,6 @@ public final class TestConstants {
 	/** Count of media */
 	public static final int MEDIA_COUNT = 4;
 
-	/** Crack */
-	public static final boolean CRACK = true;
-
-	/** Serial key */
-	public static final boolean SERIAL_KEY = false;
-
-	/** Patch */
-	public static final boolean PATCH = true;
-
-	/** Trainer */
-	public static final boolean TRAINER = true;
-
-	/** Data for trainer */
-	public static final boolean TRAINER_DATA = false;
-
-	/** Editor */
-	public static final boolean EDITOR = false;
-
-	/** Saves */
-	public static final boolean SAVES = true;
-
-	/** URL to Wikipedia */
-	public static final String OTHER_DATA = "Other data";
-
 	/** Author */
 	public static final String AUTHOR = "Author";
 
@@ -134,32 +94,8 @@ public final class TestConstants {
 	/** Inner ID */
 	public static final int INNER_ID = 11;
 
-	/** Inner inner ID */
-	public static final int INNER_INNER_ID = 21;
-
-	/** Secondary ID */
-	public static final int SECONDARY_ID = 2;
-
 	/** Secondary inner ID */
 	public static final int SECONDARY_INNER_ID = 12;
-
-	/** Secondary inner inner ID */
-	public static final int SECONDARY_INNER_INNER_ID = 22;
-
-	/** Add ID */
-	public static final int ADD_ID = 5;
-
-	/** Add position */
-	public static final int ADD_POSITION = 10;
-
-	/** Move position */
-	public static final int MOVE_POSITION = 2;
-
-	/** 1st name */
-	public static final String NAME_1 = "Name 1";
-
-	/** 2nd name */
-	public static final String NAME_2 = "Name 2";
 
 	/** Inner count */
 	public static final int INNER_COUNT = 5;
@@ -170,29 +106,17 @@ public final class TestConstants {
 	/** Total length */
 	public static final Time TOTAL_LENGTH = new Time(500);
 
-	/** Count */
-	public static final int COUNT = 50;
-
-	/** Hours */
-	public static final int HOURS = 10;
-
-	/** Minutes */
-	public static final int MINUTES = 20;
-
-	/** Seconds */
-	public static final int SECONDS = 30;
-
 	/** Bad minimal year */
-	public static final int BAD_MIN_YEAR = Constants.MIN_YEAR - 1;
+	public static final int BAD_MIN_YEAR = TC.BAD_MIN_YEAR;
 
 	/** Bad maximal year */
-	public static final int BAD_MAX_YEAR = Constants.CURRENT_YEAR + 1;
+	public static final int BAD_MAX_YEAR = TC.BAD_MAX_YEAR;
 
 	/** Bad minimum IMDB code */
-	public static final int BAD_MIN_IMDB_CODE = -2;
+	public static final int BAD_MIN_IMDB_CODE = TC.BAD_MIN_IMDB_CODE;
 
 	/** Bad maximum IMDB code */
-	public static final int BAD_MAX_IMDB_CODE = Constants.MAX_IMDB_CODE + 1;
+	public static final int BAD_MAX_IMDB_CODE = TC.BAD_MAX_IMDB_CODE;
 
 	/** Bad subtitles */
 	public static final List<Language> BAD_SUBTITLES = CollectionUtils.newList(Language.CZ, null);
@@ -201,20 +125,7 @@ public final class TestConstants {
 	public static final List<Language> BAD_LANGUAGES = CollectionUtils.newList(Language.CZ, null);
 
 	/** Negative time */
-	public static final Time NEGATIVE_TIME = new Time(0);
-
-	/** Logger */
-	private static final Logger logger = LoggerFactory.getLogger(TestConstants.class);
-
-	static {
-		try {
-			Field length = Time.class.getDeclaredField("length");
-			length.setAccessible(true);
-			length.setInt(NEGATIVE_TIME, -1);
-		} catch (IllegalAccessException | NoSuchFieldException ex) {
-			logger.error("Time with negative length can't be created.", ex);
-		}
-	}
+	public static final Time NEGATIVE_TIME = TC.NEGATIVE_TIME;
 
 	/** Creates a new instance of TestConstants. */
 	private TestConstants() {

@@ -144,6 +144,7 @@ public final class SpringToUtils {
 	 * @param movie TO for movie
 	 * @return TO for movie with updated fields
 	 */
+	@Deprecated
 	public static MovieTO updateMovie(final MovieTO movie) {
 		movie.setCzechName(CZECH_NAME);
 		movie.setOriginalName(ORIGINAL_NAME);
@@ -211,6 +212,7 @@ public final class SpringToUtils {
 	 * @param serie TO for serie
 	 * @return TO for serie with updated fields
 	 */
+	@Deprecated
 	public static SerieTO updateSerie(final SerieTO serie) {
 		serie.setCzechName(CZECH_NAME);
 		serie.setOriginalName(ORIGINAL_NAME);
@@ -289,6 +291,7 @@ public final class SpringToUtils {
 	 * @param season TO for season
 	 * @return TO for season with updated fields
 	 */
+	@Deprecated
 	public static SeasonTO updateSeason(final SeasonTO season) {
 		season.setNumber(NUMBER);
 		season.setStartYear(START_YEAR);
@@ -344,6 +347,7 @@ public final class SpringToUtils {
 	 * @param episode TO for episode
 	 * @return TO for episode with updated fields
 	 */
+	@Deprecated
 	public static EpisodeTO updateEpisode(final EpisodeTO episode) {
 		episode.setNumber(NUMBER);
 		episode.setName(NAME);
@@ -399,6 +403,7 @@ public final class SpringToUtils {
 	 * @param game TO for game
 	 * @return TO for game with updated fields
 	 */
+	@Deprecated
 	public static GameTO updateGame(final GameTO game) {
 		game.setName(NAME);
 		game.setWikiEn(WIKIPEDIA_EN);
@@ -457,6 +462,7 @@ public final class SpringToUtils {
 	 * @param music TO for music
 	 * @return TO for music with updated fields
 	 */
+	@Deprecated
 	public static MusicTO updateMusic(final MusicTO music) {
 		music.setName(NAME);
 		music.setWikiEn(WIKIPEDIA_EN);
@@ -508,6 +514,7 @@ public final class SpringToUtils {
 	 * @param song TO for song
 	 * @return TO for song with updated fields
 	 */
+	@Deprecated
 	public static SongTO updateSong(final SongTO song) {
 		song.setName(NAME);
 		song.setLength(LENGTH);
@@ -557,6 +564,7 @@ public final class SpringToUtils {
 	 * @param program TO for program
 	 * @return TO for program with updated fields
 	 */
+	@Deprecated
 	public static ProgramTO updateProgram(final ProgramTO program) {
 		program.setName(NAME);
 		program.setWikiEn(WIKIPEDIA_EN);
@@ -606,6 +614,7 @@ public final class SpringToUtils {
 	 * @param bookCategory TO for book category
 	 * @return TO for book category with updated fields
 	 */
+	@Deprecated
 	public static BookCategoryTO updateBookCategory(final BookCategoryTO bookCategory) {
 		bookCategory.setName(NAME);
 		bookCategory.setBooksCount(INNER_COUNT);
@@ -670,6 +679,7 @@ public final class SpringToUtils {
 	 * @param book TO for book
 	 * @return TO for book with updated fields
 	 */
+	@Deprecated
 	public static BookTO updateBook(final BookTO book) {
 		book.setAuthor(AUTHOR);
 		book.setTitle(TITLE);
@@ -713,6 +723,7 @@ public final class SpringToUtils {
 	 * @param genre TO for genre
 	 * @return TO for genre with updated fields
 	 */
+	@Deprecated
 	public static GenreTO updateGenre(final GenreTO genre) {
 		genre.setName(NAME);
 		return genre;

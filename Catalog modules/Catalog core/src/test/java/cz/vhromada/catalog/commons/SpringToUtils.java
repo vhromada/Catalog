@@ -26,7 +26,6 @@ import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
 import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.MEDIA;
 import static cz.vhromada.catalog.commons.TestConstants.MEDIA_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NOTE;
@@ -46,7 +45,6 @@ import static cz.vhromada.catalog.commons.TestConstants.TRAINER;
 import static cz.vhromada.catalog.commons.TestConstants.TRAINER_DATA;
 import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
 import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
-import static cz.vhromada.catalog.commons.TestConstants.YEAR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,30 +171,6 @@ public final class SpringToUtils {
 		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
 		movie.setGenres(CollectionUtils.newList(SpringToUtils.getGenre(4)));
 
-		return movie;
-	}
-
-	/**
-	 * Returns TO for movie with updated fields.
-	 *
-	 * @param movie TO for movie
-	 * @return TO for movie with updated fields
-	 */
-	@Deprecated
-	public static MovieTO updateMovie(final MovieTO movie) {
-		movie.setCzechName(CZECH_NAME);
-		movie.setOriginalName(ORIGINAL_NAME);
-		movie.setYear(YEAR);
-		movie.setLanguage(LANGUAGE);
-		movie.setSubtitles(SUBTITLES);
-		movie.setMedia(MEDIA);
-		movie.setCsfd(CSFD);
-		movie.setImdbCode(IMDB);
-		movie.setWikiEn(WIKIPEDIA_EN);
-		movie.setWikiCz(WIKIPEDIA_CZ);
-		movie.setPicture(PICTURE);
-		movie.setNote(NOTE);
-		movie.setPosition(POSITION);
 		return movie;
 	}
 
@@ -782,22 +756,10 @@ public final class SpringToUtils {
 	 * @param id              genre ID
 	 * @return new TO for genre with specified ID
 	 */
-	private static GenreTO newGenre(final ObjectGenerator objectGenerator, final Integer id) {
+	public static GenreTO newGenre(final ObjectGenerator objectGenerator, final Integer id) {
 		final GenreTO genre = objectGenerator.generate(GenreTO.class);
 		genre.setId(id);
 
-		return genre;
-	}
-
-	/**
-	 * Returns TO for genre with updated fields.
-	 *
-	 * @param genre TO for genre
-	 * @return TO for genre with updated fields
-	 */
-	@Deprecated
-	public static GenreTO updateGenre(final GenreTO genre) {
-		genre.setName(NAME);
 		return genre;
 	}
 

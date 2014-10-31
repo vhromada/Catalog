@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -32,14 +33,13 @@ public class GenreTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GenreTOValidator#validateNewGenreTO(GenreTO)} with TO for genre with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGenreTOWithNotNullId() {
-		genreTOValidator.validateNewGenreTO(generate(GenreTO.class));
+		genreTOValidator.validateNewGenreTO(ToGenerator.newGenreWithId(getObjectGenerator()));
 	}
 
 	/** Test method for {@link GenreTOValidator#validateNewGenreTO(GenreTO)} with TO for genre with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGenreTOWithNullName() {
-		final GenreTO genre = generate(GenreTO.class);
-		genre.setId(null);
+		final GenreTO genre = ToGenerator.newGenre(getObjectGenerator());
 		genre.setName(null);
 
 		genreTOValidator.validateNewGenreTO(genre);
@@ -48,9 +48,9 @@ public class GenreTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GenreTOValidator#validateNewGenreTO(GenreTO)} with TO for genre with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGenreTOWithEmptyName() {
-		final GenreTO genre = generate(GenreTO.class);
-		genre.setId(null);
+		final GenreTO genre = ToGenerator.newGenre(getObjectGenerator());
 		genre.setName("");
+
 		genreTOValidator.validateNewGenreTO(genre);
 	}
 
@@ -63,16 +63,13 @@ public class GenreTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GenreTOValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGenreTOWithNullId() {
-		final GenreTO genre = generate(GenreTO.class);
-		genre.setId(null);
-
-		genreTOValidator.validateExistingGenreTO(genre);
+		genreTOValidator.validateExistingGenreTO(ToGenerator.newGenre(getObjectGenerator()));
 	}
 
 	/** Test method for {@link GenreTOValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGenreTOWithNullName() {
-		final GenreTO genre = generate(GenreTO.class);
+		final GenreTO genre = ToGenerator.newGenreWithId(getObjectGenerator());
 		genre.setName(null);
 
 		genreTOValidator.validateExistingGenreTO(genre);
@@ -81,7 +78,7 @@ public class GenreTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GenreTOValidator#validateExistingGenreTO(GenreTO)} with TO for genre with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGenreTOWithEmptyName() {
-		final GenreTO genre = generate(GenreTO.class);
+		final GenreTO genre = ToGenerator.newGenreWithId(getObjectGenerator());
 		genre.setName("");
 
 		genreTOValidator.validateExistingGenreTO(genre);
@@ -96,10 +93,7 @@ public class GenreTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GenreTOValidator#validateGenreTOWithId(GenreTO)} with TO for genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateGenreTOWithIdWithNullId() {
-		final GenreTO genre = generate(GenreTO.class);
-		genre.setId(null);
-
-		genreTOValidator.validateGenreTOWithId(genre);
+		genreTOValidator.validateGenreTOWithId(ToGenerator.newGenre(getObjectGenerator()));
 	}
 
 }

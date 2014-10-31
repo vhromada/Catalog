@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.commons;
 
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 
 import cz.vhromada.catalog.dao.entities.Book;
@@ -35,6 +36,21 @@ public final class EntityGenerator {
 		final Serie serie = SpringEntitiesUtils.updateSerie(new Serie());
 		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
 		return serie;
+	}
+
+
+	/**
+	 * Returns new genre with specified ID.
+	 *
+	 * @param id ID
+	 * @return new genre with specified ID
+	 */
+	@Deprecated
+	private static Genre createGenre(final Integer id) {
+		final Genre genre = new Genre();
+		genre.setName(NAME);
+		genre.setId(id);
+		return genre;
 	}
 
 	/**
@@ -314,27 +330,6 @@ public final class EntityGenerator {
 		final Book book = createBook(bookCategory);
 		book.setId(id);
 		return book;
-	}
-
-	/**
-	 * Returns new genre.
-	 *
-	 * @return new genre
-	 */
-	public static Genre createGenre() {
-		return SpringEntitiesUtils.updateGenre(new Genre());
-	}
-
-	/**
-	 * Returns new genre with specified ID.
-	 *
-	 * @param id ID
-	 * @return new genre with specified ID
-	 */
-	public static Genre createGenre(final Integer id) {
-		final Genre genre = createGenre();
-		genre.setId(id);
-		return genre;
 	}
 
 }

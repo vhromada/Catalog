@@ -7,6 +7,7 @@ import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
 import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
 import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.junit.Assert.assertFalse;
@@ -334,7 +335,7 @@ public class SerieFacadeImplSpringTest {
 	public void testAddWithBadGenres() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
 		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), null));
+		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), null));
 
 		serieFacade.add(serie);
 	}
@@ -344,7 +345,7 @@ public class SerieFacadeImplSpringTest {
 	public void testAddWithGenresWithGenreWithNullId() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
 		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), ToGenerator.createGenre()));
+		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre()));
 
 		serieFacade.add(serie);
 	}
@@ -354,9 +355,9 @@ public class SerieFacadeImplSpringTest {
 	public void testAddWithGenresWithGenreWithNullName() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
 		serie.setId(null);
-		final GenreTO badGenre = ToGenerator.createGenre(SECONDARY_INNER_ID);
+		final GenreTO badGenre = createGenre(SECONDARY_INNER_ID);
 		badGenre.setName(null);
-		serie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), badGenre));
+		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), badGenre));
 
 		serieFacade.add(serie);
 	}
@@ -549,7 +550,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadGenres() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), null));
+		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), null));
 
 		serieFacade.update(serie);
 	}
@@ -558,7 +559,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenresWithGenreWithNullId() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), ToGenerator.createGenre()));
+		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre()));
 
 		serieFacade.update(serie);
 	}
@@ -567,9 +568,9 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenresWithGenreWithNullName() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		final GenreTO badGenre = ToGenerator.createGenre(SECONDARY_INNER_ID);
+		final GenreTO badGenre = createGenre(SECONDARY_INNER_ID);
 		badGenre.setName(null);
-		serie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), badGenre));
+		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), badGenre));
 
 		serieFacade.update(serie);
 	}
@@ -823,6 +824,31 @@ public class SerieFacadeImplSpringTest {
 	public void testGetEpisodesCount() {
 		DeepAsserts.assertEquals(EPISODES_COUNT, serieFacade.getEpisodesCount());
 		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+	}
+
+	/**
+	 * Returns new TO for genre.
+	 *
+	 * @return new TO for genre
+	 */
+	@Deprecated
+	private static GenreTO createGenre() {
+		final GenreTO genre = new GenreTO();
+		genre.setName(NAME);
+		return genre;
+	}
+
+	/**
+	 * Returns new TO for genre with specified ID.
+	 *
+	 * @param id ID
+	 * @return new TO for genre with specified ID
+	 */
+	@Deprecated
+	private static GenreTO createGenre(final Integer id) {
+		final GenreTO genre = createGenre();
+		genre.setId(id);
+		return genre;
 	}
 
 }

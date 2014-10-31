@@ -131,8 +131,7 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#add(Genre)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Genre genre = objectGenerator.generate(Genre.class);
-		genre.setId(null);
+		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 
 		genreService.add(genre);
 
@@ -147,8 +146,7 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#add(Genre)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Genre genre = objectGenerator.generate(Genre.class);
-		genre.setId(null);
+		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		final String keyList = "genres";
 		final String keyItem = "genre" + (GENRES_COUNT + 1);
 		genreCache.put(keyList, new ArrayList<>());
@@ -184,7 +182,7 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#update(Genre)}. */
 	@Test
 	public void testUpdate() {
-		final Genre genre = SpringEntitiesUtils.updateGenre(SpringUtils.getGenre(entityManager, 1), objectGenerator);
+		final Genre genre = SpringEntitiesUtils.updateGenre(1, objectGenerator, entityManager);
 
 		genreService.update(genre);
 
@@ -197,8 +195,7 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#remove(Genre)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Genre genre = objectGenerator.generate(Genre.class);
-		genre.setId(null);
+		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		entityManager.persist(genre);
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 
@@ -212,8 +209,7 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#remove(Genre)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Genre genre = objectGenerator.generate(Genre.class);
-		genre.setId(null);
+		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		entityManager.persist(genre);
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 		final String key = "genres";
@@ -250,7 +246,7 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#exists(Genre)} with not existing genre. */
 	@Test
 	public void testExistsWithNotExistingGenre() {
-		final Genre genre = objectGenerator.generate(Genre.class);
+		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		genre.setId(Integer.MAX_VALUE);
 		final String key = "genre" + Integer.MAX_VALUE;
 
@@ -268,9 +264,10 @@ public class GenreServiceImplSpringTest {
 	 * @return new genre
 	 */
 	private Genre createGenre(final int id, final String name) {
-		final Genre genre = objectGenerator.generate(Genre.class);
+		final Genre genre = new Genre();
 		genre.setId(id);
 		genre.setName(name);
+
 		return genre;
 	}
 

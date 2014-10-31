@@ -66,20 +66,6 @@ public final class ToGenerator {
 	}
 
 	/**
-	 * Returns new TO for movie with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for movie with specified ID
-	 */
-	@Deprecated
-	public static MovieTO createMovie(final Integer id) {
-		final MovieTO movie = SpringToUtils.updateMovie(new MovieTO());
-		movie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
-		movie.setId(id);
-		return movie;
-	}
-
-	/**
 	 * Returns new TO for serie.
 	 *
 	 * @return new TO for serie
@@ -89,6 +75,19 @@ public final class ToGenerator {
 		final SerieTO serie = SpringToUtils.updateSerie(new SerieTO());
 		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
 		return serie;
+	}
+
+	/**
+	 * Returns new TO for genre with specified ID.
+	 *
+	 * @param id ID
+	 * @return new TO for genre with specified ID
+	 */
+	@Deprecated
+	private static GenreTO createGenre(final Integer id) {
+		final GenreTO genre = new GenreTO();
+		genre.setId(id);
+		return genre;
 	}
 
 	/**
@@ -428,29 +427,6 @@ public final class ToGenerator {
 			genre.setId(null);
 		}
 
-		return genre;
-	}
-
-	/**
-	 * Returns new TO for genre.
-	 *
-	 * @return new TO for genre
-	 */
-	@Deprecated
-	public static GenreTO createGenre() {
-		return SpringToUtils.updateGenre(new GenreTO());
-	}
-
-	/**
-	 * Returns new TO for genre with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for genre with specified ID
-	 */
-	@Deprecated
-	public static GenreTO createGenre(final Integer id) {
-		final GenreTO genre = createGenre();
-		genre.setId(id);
 		return genre;
 	}
 

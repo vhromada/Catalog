@@ -70,8 +70,7 @@ public class GenreDAOImplSpringTest {
 	/** Test method for {@link GenreDAO#add(Genre)}. */
 	@Test
 	public void testAdd() {
-		final Genre genre = objectGenerator.generate(Genre.class);
-		genre.setId(null);
+		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 
 		genreDAO.add(genre);
 
@@ -85,7 +84,7 @@ public class GenreDAOImplSpringTest {
 	/** Test method for {@link GenreDAO#update(Genre)}. */
 	@Test
 	public void testUpdate() {
-		final Genre genre = SpringEntitiesUtils.updateGenre(SpringUtils.getGenre(entityManager, 1), objectGenerator);
+		final Genre genre = SpringEntitiesUtils.updateGenre(1, objectGenerator, entityManager);
 
 		genreDAO.update(genre);
 
@@ -97,8 +96,7 @@ public class GenreDAOImplSpringTest {
 	/** Test method for {@link GenreDAO#remove(Genre)}. */
 	@Test
 	public void testRemove() {
-		final Genre genre = objectGenerator.generate(Genre.class);
-		genre.setId(null);
+		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		entityManager.persist(genre);
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 

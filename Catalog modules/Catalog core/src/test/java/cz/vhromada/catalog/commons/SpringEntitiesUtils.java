@@ -885,26 +885,30 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns genre with updated fields.
+	 * Returns new genre.
 	 *
-	 * @param genre           genre
 	 * @param objectGenerator object generator
-	 * @return genre with updated fields
+	 * @return new genre
 	 */
-	public static Genre updateGenre(final Genre genre, final ObjectGenerator objectGenerator) {
-		genre.setName(objectGenerator.generate(String.class));
+	public static Genre newGenre(final ObjectGenerator objectGenerator) {
+		final Genre genre = objectGenerator.generate(Genre.class);
+		genre.setId(null);
+
 		return genre;
 	}
 
 	/**
 	 * Returns genre with updated fields.
 	 *
-	 * @param genre genre
+	 * @param id              genre ID
+	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
 	 * @return genre with updated fields
 	 */
-	@Deprecated
-	public static Genre updateGenre(final Genre genre) {
-		genre.setName(NAME);
+	public static Genre updateGenre(final int id, final ObjectGenerator objectGenerator, final EntityManager entityManager) {
+		final Genre genre = SpringUtils.getGenre(entityManager, id);
+		genre.setName(objectGenerator.generate(String.class));
+
 		return genre;
 	}
 

@@ -70,8 +70,7 @@ public class BookCategoryDAOImplSpringTest {
 	/** Test method for {@link BookCategoryDAO#add(BookCategory)}. */
 	@Test
 	public void testAdd() {
-		final BookCategory bookCategory = objectGenerator.generate(BookCategory.class);
-		bookCategory.setId(null);
+		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 
 		bookCategoryDAO.add(bookCategory);
 
@@ -86,7 +85,7 @@ public class BookCategoryDAOImplSpringTest {
 	/** Test method for {@link BookCategoryDAO#update(BookCategory)}. */
 	@Test
 	public void testUpdate() {
-		final BookCategory bookCategory = SpringEntitiesUtils.updateBookCategory(SpringUtils.getBookCategory(entityManager, 1), objectGenerator);
+		final BookCategory bookCategory = SpringEntitiesUtils.updateBookCategory(1, objectGenerator, entityManager);
 
 		bookCategoryDAO.update(bookCategory);
 
@@ -98,8 +97,7 @@ public class BookCategoryDAOImplSpringTest {
 	/** Test method for {@link BookCategoryDAO#remove(BookCategory)}. */
 	@Test
 	public void testRemove() {
-		final BookCategory bookCategory = objectGenerator.generate(BookCategory.class);
-		bookCategory.setId(null);
+		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 		entityManager.persist(bookCategory);
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
 

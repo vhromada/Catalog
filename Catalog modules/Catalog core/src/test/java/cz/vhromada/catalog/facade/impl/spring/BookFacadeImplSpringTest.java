@@ -4,7 +4,11 @@ import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.BOOK_CATEGORIES_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.BAD_LANGUAGES;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.NAME;
+import static cz.vhromada.catalog.commons.TestConstants.NOTE;
+import static cz.vhromada.catalog.commons.TestConstants.POSITION;
 import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -127,13 +131,13 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithNotNullId() {
-		bookFacade.add(ToGenerator.createBook(Integer.MAX_VALUE, ToGenerator.createBookCategory(INNER_ID)));
+		bookFacade.add(ToGenerator.createBook(Integer.MAX_VALUE, createBookCategory(INNER_ID)));
 	}
 
 	/** Test method for {@link BookFacade#add(BookTO)} with book with null author. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithNullAuthor() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setAuthor(null);
 
 		bookFacade.add(book);
@@ -142,7 +146,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with empty string as author. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithEmptyAuthor() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setAuthor("");
 
 		bookFacade.add(book);
@@ -151,7 +155,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with null title. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithNullTitle() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setTitle(null);
 
 		bookFacade.add(book);
@@ -160,7 +164,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with empty string as title. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithEmptyTitle() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setTitle("");
 
 		bookFacade.add(book);
@@ -169,7 +173,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with null languages. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithNullLanguages() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setLanguages(null);
 
 		bookFacade.add(book);
@@ -178,7 +182,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with languages with null value. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithBadLanguages() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setLanguages(BAD_LANGUAGES);
 
 		bookFacade.add(book);
@@ -187,7 +191,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with null category. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithNullCategory() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setCategory(null);
 
 		bookFacade.add(book);
@@ -196,7 +200,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with empty string as category. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithEmptyCategory() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setCategory("");
 
 		bookFacade.add(book);
@@ -205,7 +209,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithNullNote() {
-		final BookTO book = ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(createBookCategory(INNER_ID));
 		book.setNote(null);
 
 		bookFacade.add(book);
@@ -220,13 +224,13 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#add(BookTO)} with book with TO for book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookWithBookCategoryWithNullId() {
-		bookFacade.add(ToGenerator.createBook(ToGenerator.createBookCategory()));
+		bookFacade.add(ToGenerator.createBook(createBookCategory()));
 	}
 
 	/** Test method for {@link BookFacade#add(BookTO)} with book with not existing book category. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testAddWithBookWithNotExistingBookCategory() {
-		bookFacade.add(ToGenerator.createBook(ToGenerator.createBookCategory(Integer.MAX_VALUE)));
+		bookFacade.add(ToGenerator.createBook(createBookCategory(Integer.MAX_VALUE)));
 	}
 
 	/** Test method for {@link BookFacade#update(BookTO)}. */
@@ -252,13 +256,13 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithNullId() {
-		bookFacade.update(ToGenerator.createBook(ToGenerator.createBookCategory(INNER_ID)));
+		bookFacade.update(ToGenerator.createBook(createBookCategory(INNER_ID)));
 	}
 
 	/** Test method for {@link BookFacade#update(BookTO)} with book with null author. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithNullAuthor() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setAuthor(null);
 
 		bookFacade.update(book);
@@ -267,7 +271,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with empty string as author. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithEmptyAuthor() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setAuthor("");
 
 		bookFacade.update(book);
@@ -276,7 +280,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with null title. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithNullTitle() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setTitle(null);
 
 		bookFacade.update(book);
@@ -285,7 +289,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with empty string as title. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithEmptyTitle() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setTitle("");
 
 		bookFacade.update(book);
@@ -294,7 +298,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with null languages. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithNullLanguages() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setLanguages(null);
 
 		bookFacade.update(book);
@@ -303,7 +307,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with languages with null value. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithBadLanguages() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setLanguages(BAD_LANGUAGES);
 
 		bookFacade.update(book);
@@ -312,7 +316,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with null category. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithNullCategory() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setCategory(null);
 
 		bookFacade.update(book);
@@ -321,7 +325,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with empty string as category. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithEmptyCategory() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setCategory("");
 
 		bookFacade.update(book);
@@ -330,7 +334,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with null note. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithNullNote() {
-		final BookTO book = ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(INNER_ID));
+		final BookTO book = ToGenerator.createBook(PRIMARY_ID, createBookCategory(INNER_ID));
 		book.setNote(null);
 
 		bookFacade.update(book);
@@ -345,19 +349,19 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#update(BookTO)} with book with null TO for book category. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookWithBookCategoryWithNullId() {
-		bookFacade.update(ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory()));
+		bookFacade.update(ToGenerator.createBook(PRIMARY_ID, createBookCategory()));
 	}
 
 	/** Test method for {@link BookFacade#update(BookTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithBadId() {
-		bookFacade.update(ToGenerator.createBook(Integer.MAX_VALUE, ToGenerator.createBookCategory(INNER_ID)));
+		bookFacade.update(ToGenerator.createBook(Integer.MAX_VALUE, createBookCategory(INNER_ID)));
 	}
 
 	/** Test method for {@link BookFacade#update(BookTO)} with not existing book category. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithNotExistingBookCategory() {
-		bookFacade.update(ToGenerator.createBook(PRIMARY_ID, ToGenerator.createBookCategory(Integer.MAX_VALUE)));
+		bookFacade.update(ToGenerator.createBook(PRIMARY_ID, createBookCategory(Integer.MAX_VALUE)));
 	}
 
 	/** Test method for {@link BookFacade#remove(BookTO)}. */
@@ -532,7 +536,7 @@ public class BookFacadeImplSpringTest {
 	@Test
 	public void testFindBooksByBookCategory() {
 		for (int i = 1; i <= BOOK_CATEGORIES_COUNT; i++) {
-			DeepAsserts.assertEquals(SpringToUtils.getBooks(i), bookFacade.findBooksByBookCategory(ToGenerator.createBookCategory(i)), "booksCount");
+			DeepAsserts.assertEquals(SpringToUtils.getBooks(i), bookFacade.findBooksByBookCategory(createBookCategory(i)), "booksCount");
 		}
 		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
@@ -546,13 +550,41 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#findBooksByBookCategory(BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testFindBooksByBookCategoryWithNullId() {
-		bookFacade.findBooksByBookCategory(ToGenerator.createBookCategory());
+		bookFacade.findBooksByBookCategory(createBookCategory());
 	}
 
 	/** Test method for {@link BookFacade#findBooksByBookCategory(BookCategoryTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testFindBooksByBookCategoryWithBadId() {
-		bookFacade.findBooksByBookCategory(ToGenerator.createBookCategory(Integer.MAX_VALUE));
+		bookFacade.findBooksByBookCategory(createBookCategory(Integer.MAX_VALUE));
+	}
+
+	/**
+	 * Returns new TO for book category.
+	 *
+	 * @return new TO for book category
+	 */
+	@Deprecated
+	private static BookCategoryTO createBookCategory() {
+		final BookCategoryTO bookCategory = new BookCategoryTO();
+		bookCategory.setName(NAME);
+		bookCategory.setBooksCount(INNER_COUNT);
+		bookCategory.setNote(NOTE);
+		bookCategory.setPosition(POSITION);
+
+		return bookCategory;
+	}
+
+	/**
+	 * Returns new TO for book category with specified ID.
+	 *
+	 * @return new TO for book category with specified ID
+	 */
+	@Deprecated
+	private static BookCategoryTO createBookCategory(final Integer id) {
+		final BookCategoryTO bookCategory = createBookCategory();
+		bookCategory.setId(id);
+		return bookCategory;
 	}
 
 }

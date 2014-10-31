@@ -822,21 +822,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns book category with updated fields.
-	 *
-	 * @param bookCategory    book category
-	 * @param objectGenerator object generator
-	 * @return book category with updated fields
-	 */
-	@Deprecated
-	public static BookCategory updateBookCategory(final BookCategory bookCategory, final ObjectGenerator objectGenerator) {
-		bookCategory.setName(objectGenerator.generate(String.class));
-		bookCategory.setNote(objectGenerator.generate(String.class));
-		bookCategory.setPosition(objectGenerator.generate(Integer.class));
-		return bookCategory;
-	}
-
-	/**
 	 * Returns books.
 	 *
 	 * @param bookCategory index of book category

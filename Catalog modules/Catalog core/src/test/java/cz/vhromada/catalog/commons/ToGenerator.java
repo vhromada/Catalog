@@ -709,34 +709,6 @@ public final class ToGenerator {
 	}
 
 	/**
-	 * Returns new TO for book category.
-	 *
-	 * @return new TO for book category
-	 */
-	@Deprecated
-	public static BookCategoryTO createBookCategory() {
-		final BookCategoryTO bookCategory = new BookCategoryTO();
-		bookCategory.setName(NAME);
-		bookCategory.setBooksCount(INNER_COUNT);
-		bookCategory.setNote(NOTE);
-		bookCategory.setPosition(POSITION);
-
-		return bookCategory;
-	}
-
-	/**
-	 * Returns new TO for book category with specified ID.
-	 *
-	 * @return new TO for book category with specified ID
-	 */
-	@Deprecated
-	public static BookCategoryTO createBookCategory(final Integer id) {
-		final BookCategoryTO bookCategory = createBookCategory();
-		bookCategory.setId(id);
-		return bookCategory;
-	}
-
-	/**
 	 * Returns new TO for book.
 	 *
 	 * @return new TO for book

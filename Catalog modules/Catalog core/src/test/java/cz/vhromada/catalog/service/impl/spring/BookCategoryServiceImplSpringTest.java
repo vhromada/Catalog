@@ -117,8 +117,7 @@ public class BookCategoryServiceImplSpringTest {
 	/** Test method for {@link BookCategoryService#add(BookCategory)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final BookCategory bookCategory = objectGenerator.generate(BookCategory.class);
-		bookCategory.setId(null);
+		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 
 		bookCategoryService.add(bookCategory);
 
@@ -133,8 +132,7 @@ public class BookCategoryServiceImplSpringTest {
 	/** Test method for {@link BookCategoryService#add(BookCategory)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final BookCategory bookCategory = objectGenerator.generate(BookCategory.class);
-		bookCategory.setId(null);
+		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 		final String keyList = "bookCategories";
 		final String keyItem = "bookCategory" + (BOOK_CATEGORIES_COUNT + 1);
 		bookCache.put(keyList, new ArrayList<>());
@@ -155,7 +153,7 @@ public class BookCategoryServiceImplSpringTest {
 	/** Test method for {@link BookCategoryService#update(BookCategory)}. */
 	@Test
 	public void testUpdate() {
-		final BookCategory bookCategory = SpringEntitiesUtils.updateBookCategory(SpringUtils.getBookCategory(entityManager, 1), objectGenerator);
+		final BookCategory bookCategory = SpringEntitiesUtils.updateBookCategory(1, objectGenerator, entityManager);
 
 		bookCategoryService.update(bookCategory);
 
@@ -168,8 +166,7 @@ public class BookCategoryServiceImplSpringTest {
 	/** Test method for {@link BookCategoryService#remove(BookCategory)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final BookCategory bookCategory = objectGenerator.generate(BookCategory.class);
-		bookCategory.setId(null);
+		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 		entityManager.persist(bookCategory);
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
 
@@ -183,8 +180,7 @@ public class BookCategoryServiceImplSpringTest {
 	/** Test method for {@link BookCategoryService#remove(BookCategory)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final BookCategory bookCategory = objectGenerator.generate(BookCategory.class);
-		bookCategory.setId(null);
+		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 		entityManager.persist(bookCategory);
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
 		final String key = "bookCategories";
@@ -299,7 +295,7 @@ public class BookCategoryServiceImplSpringTest {
 	/** Test method for {@link BookCategoryService#exists(BookCategory)} with not existing book category. */
 	@Test
 	public void testExistsWithNotExistingBookCategory() {
-		final BookCategory bookCategory = objectGenerator.generate(BookCategory.class);
+		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 		bookCategory.setId(Integer.MAX_VALUE);
 		final String key = "bookCategory" + Integer.MAX_VALUE;
 

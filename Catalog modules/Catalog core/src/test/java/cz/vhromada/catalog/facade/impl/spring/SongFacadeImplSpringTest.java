@@ -3,8 +3,16 @@ package cz.vhromada.catalog.facade.impl.spring;
 import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SONGS_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SONGS_PER_MUSIC_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.MEDIA_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.NAME;
+import static cz.vhromada.catalog.commons.TestConstants.NOTE;
+import static cz.vhromada.catalog.commons.TestConstants.POSITION;
 import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
+import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
+import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -126,13 +134,13 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with song with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithSongWithNotNullId() {
-		songFacade.add(ToGenerator.createSong(Integer.MAX_VALUE, ToGenerator.createMusic(INNER_ID)));
+		songFacade.add(ToGenerator.createSong(Integer.MAX_VALUE, createMusic(INNER_ID)));
 	}
 
 	/** Test method for {@link SongFacade#add(SongTO)} with song with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithSongWithNullName() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(createMusic(INNER_ID));
 		song.setName(null);
 
 		songFacade.add(song);
@@ -141,7 +149,7 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with song with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithSongWithEmptyName() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(createMusic(INNER_ID));
 		song.setName("");
 
 		songFacade.add(song);
@@ -150,7 +158,7 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with song with negative length. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithSongWithNegativeLength() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(createMusic(INNER_ID));
 		song.setLength(-1);
 
 		songFacade.add(song);
@@ -159,7 +167,7 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with song with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithSongWithNullNote() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(createMusic(INNER_ID));
 		song.setNote(null);
 
 		songFacade.add(song);
@@ -174,13 +182,13 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with song with TO for music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithSongWithMusicWithNullId() {
-		songFacade.add(ToGenerator.createSong(ToGenerator.createMusic()));
+		songFacade.add(ToGenerator.createSong(createMusic()));
 	}
 
 	/** Test method for {@link SongFacade#add(SongTO)} with song with not existing music. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testAddWithSongWithNotExistingMusic() {
-		songFacade.add(ToGenerator.createSong(ToGenerator.createMusic(Integer.MAX_VALUE)));
+		songFacade.add(ToGenerator.createSong(createMusic(Integer.MAX_VALUE)));
 	}
 
 	/** Test method for {@link SongFacade#update(SongTO)}. */
@@ -206,13 +214,13 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with song with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithSongWithNullId() {
-		songFacade.update(ToGenerator.createSong(ToGenerator.createMusic(INNER_ID)));
+		songFacade.update(ToGenerator.createSong(createMusic(INNER_ID)));
 	}
 
 	/** Test method for {@link SongFacade#update(SongTO)} with song with null name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithSongWithNullName() {
-		final SongTO song = ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(PRIMARY_ID, createMusic(INNER_ID));
 		song.setName(null);
 
 		songFacade.update(song);
@@ -221,7 +229,7 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with song with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithSongWithEmptyName() {
-		final SongTO song = ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(PRIMARY_ID, createMusic(INNER_ID));
 		song.setName(null);
 
 		songFacade.update(song);
@@ -230,7 +238,7 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with song with negative length. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithSongWithNegativeLength() {
-		final SongTO song = ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(PRIMARY_ID, createMusic(INNER_ID));
 		song.setLength(-1);
 
 		songFacade.update(song);
@@ -239,7 +247,7 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with song with null note. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithSongWithNullNote() {
-		final SongTO song = ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic(INNER_ID));
+		final SongTO song = ToGenerator.createSong(PRIMARY_ID, createMusic(INNER_ID));
 		song.setNote(null);
 
 		songFacade.update(song);
@@ -254,19 +262,19 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with song with null TO for music. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithSongWithMusicWithNullId() {
-		songFacade.update(ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic()));
+		songFacade.update(ToGenerator.createSong(PRIMARY_ID, createMusic()));
 	}
 
 	/** Test method for {@link SongFacade#update(SongTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithBadId() {
-		songFacade.update(ToGenerator.createSong(Integer.MAX_VALUE, ToGenerator.createMusic(INNER_ID)));
+		songFacade.update(ToGenerator.createSong(Integer.MAX_VALUE, createMusic(INNER_ID)));
 	}
 
 	/** Test method for {@link SongFacade#update(SongTO)} with not existing music. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithNotExistingMusic() {
-		songFacade.update(ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic(Integer.MAX_VALUE)));
+		songFacade.update(ToGenerator.createSong(PRIMARY_ID, createMusic(Integer.MAX_VALUE)));
 	}
 
 	/** Test method for {@link SongFacade#remove(SongTO)}. */
@@ -441,7 +449,7 @@ public class SongFacadeImplSpringTest {
 	@Test
 	public void testFindSongsByMusic() {
 		for (int i = 1; i <= MUSIC_COUNT; i++) {
-			DeepAsserts.assertEquals(SpringToUtils.getSongs(i), songFacade.findSongsByMusic(ToGenerator.createMusic(i)), "songsCount", "totalLength");
+			DeepAsserts.assertEquals(SpringToUtils.getSongs(i), songFacade.findSongsByMusic(createMusic(i)), "songsCount", "totalLength");
 		}
 		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
@@ -455,13 +463,46 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testFindSongsByMusicWithNullId() {
-		songFacade.findSongsByMusic(ToGenerator.createMusic());
+		songFacade.findSongsByMusic(createMusic());
 	}
 
 	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testFindSongsByMusicWithBadId() {
-		songFacade.findSongsByMusic(ToGenerator.createMusic(Integer.MAX_VALUE));
+		songFacade.findSongsByMusic(createMusic(Integer.MAX_VALUE));
+	}
+
+	/**
+	 * Returns new TO for music.
+	 *
+	 * @return new TO for music
+	 */
+	@Deprecated
+	private static MusicTO createMusic() {
+		final MusicTO music = new MusicTO();
+		music.setName(NAME);
+		music.setWikiEn(WIKIPEDIA_EN);
+		music.setWikiCz(WIKIPEDIA_CZ);
+		music.setMediaCount(MEDIA_COUNT);
+		music.setSongsCount(INNER_COUNT);
+		music.setTotalLength(TOTAL_LENGTH);
+		music.setNote(NOTE);
+		music.setPosition(POSITION);
+
+		return music;
+	}
+
+	/**
+	 * Returns new TO for music with specified ID.
+	 *
+	 * @param id ID
+	 * @return new TO for music with specified ID
+	 */
+	@Deprecated
+	private static MusicTO createMusic(final Integer id) {
+		final MusicTO music = createMusic();
+		music.setId(id);
+		return music;
 	}
 
 }

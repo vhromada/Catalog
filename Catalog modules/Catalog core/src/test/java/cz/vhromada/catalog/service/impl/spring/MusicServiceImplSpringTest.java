@@ -118,8 +118,7 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#add(Music)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Music music = objectGenerator.generate(Music.class);
-		music.setId(null);
+		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 
 		musicService.add(music);
 
@@ -134,8 +133,7 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#add(Music)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Music music = objectGenerator.generate(Music.class);
-		music.setId(null);
+		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		final String keyList = "music";
 		final String keyItem = "music" + (MUSIC_COUNT + 1);
 		musicCache.put(keyList, new ArrayList<>());
@@ -156,7 +154,7 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#update(Music)}. */
 	@Test
 	public void testUpdate() {
-		final Music music = SpringEntitiesUtils.updateMusic(SpringUtils.getMusic(entityManager, 1), objectGenerator);
+		final Music music = SpringEntitiesUtils.updateMusic(1, objectGenerator, entityManager);
 
 		musicService.update(music);
 
@@ -169,8 +167,7 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#remove(Music)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Music music = objectGenerator.generate(Music.class);
-		music.setId(null);
+		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		entityManager.persist(music);
 		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 
@@ -184,8 +181,7 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#remove(Music)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Music music = objectGenerator.generate(Music.class);
-		music.setId(null);
+		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		entityManager.persist(music);
 		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 		final String key = "music";
@@ -300,7 +296,7 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#exists(Music)} with not existing music. */
 	@Test
 	public void testExistsWithNotExistingMusic() {
-		final Music music = objectGenerator.generate(Music.class);
+		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		music.setId(Integer.MAX_VALUE);
 		final String key = "music" + Integer.MAX_VALUE;
 

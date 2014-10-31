@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade.impl.spring;
 
 import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SONGS_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
+import static cz.vhromada.catalog.commons.TC.NEGATIVE_TIME;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -110,8 +110,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)}. */
 	@Test
 	public void testAdd() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 
 		musicFacade.add(music);
 
@@ -131,17 +130,13 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNotNullId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(Integer.MAX_VALUE);
-
-		musicFacade.add(music);
+		musicFacade.add(SpringToUtils.newMusicWithId(objectGenerator));
 	}
 
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNullName() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setName(null);
 
 		musicFacade.add(music);
@@ -150,8 +145,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithEmptyName() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setName("");
 
 		musicFacade.add(music);
@@ -160,8 +154,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with null URL to english Wikipedia about music. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNullWikiEn() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setWikiEn(null);
 
 		musicFacade.add(music);
@@ -170,8 +163,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with null URL to czech Wikipedia about music. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNullWikiCz() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setWikiCz(null);
 
 		musicFacade.add(music);
@@ -180,8 +172,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNotPositiveMediaCount() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setMediaCount(0);
 
 		musicFacade.add(music);
@@ -190,8 +181,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with negative count of songs. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNotNegativeSongsCount() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setSongsCount(-1);
 
 		musicFacade.add(music);
@@ -200,8 +190,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with null total length. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNullTotalLength() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setTotalLength(null);
 
 		musicFacade.add(music);
@@ -210,8 +199,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with negative total length. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNegativeTotalLength() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setTotalLength(NEGATIVE_TIME);
 
 		musicFacade.add(music);
@@ -220,8 +208,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#add(MusicTO)} with music with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMusicWithNullNote() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator);
 		music.setNote(null);
 
 		musicFacade.add(music);
@@ -230,8 +217,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)}. */
 	@Test
 	public void testUpdate() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(1);
+		final MusicTO music = SpringToUtils.newMusic(objectGenerator, 1);
 
 		musicFacade.update(music);
 
@@ -249,16 +235,13 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNullId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
-
-		musicFacade.update(music);
+		musicFacade.update(SpringToUtils.newMusic(objectGenerator));
 	}
 
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with null name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNullName() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setName(null);
 
 		musicFacade.update(music);
@@ -267,7 +250,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithEmptyName() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setName(null);
 
 		musicFacade.update(music);
@@ -276,7 +259,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with null URL to english Wikipedia about music. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNullWikiEn() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setWikiEn(null);
 
 		musicFacade.update(music);
@@ -285,7 +268,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with null URL to czech Wikipedia about music. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNullWikiCz() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setWikiCz(null);
 
 		musicFacade.update(music);
@@ -294,7 +277,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNotPositiveMediaCount() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setMediaCount(0);
 
 		musicFacade.update(music);
@@ -303,7 +286,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with negative count of songs. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNotNegativeSongsCount() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setSongsCount(-1);
 
 		musicFacade.update(music);
@@ -312,7 +295,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with null total length. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNullTotalLength() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setTotalLength(null);
 
 		musicFacade.update(music);
@@ -321,7 +304,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with negative total length. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNegativeTotalLength() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setTotalLength(NEGATIVE_TIME);
 
 		musicFacade.update(music);
@@ -330,7 +313,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with null note. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMusicWithNullNote() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
 		music.setNote(null);
 
 		musicFacade.update(music);
@@ -339,19 +322,13 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#update(MusicTO)} with music with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithMusicWithBadId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(Integer.MAX_VALUE);
-
-		musicFacade.update(music);
+		musicFacade.update(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link MusicFacade#remove(MusicTO)}. */
 	@Test
 	public void testRemove() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(1);
-
-		musicFacade.remove(music);
+		musicFacade.remove(SpringToUtils.newMusic(objectGenerator, 1));
 
 		assertNull(SpringUtils.getMusic(entityManager, 1));
 		DeepAsserts.assertEquals(MUSIC_COUNT - 1, SpringUtils.getMusicCount(entityManager));
@@ -366,30 +343,22 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#remove(MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testRemoveWithMusicWithNullId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
-
-		musicFacade.remove(music);
+		musicFacade.remove(SpringToUtils.newMusic(objectGenerator));
 	}
 
 	/** Test method for {@link MusicFacade#remove(MusicTO)} with music with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testRemoveWithMusicWithBadId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(Integer.MAX_VALUE);
-
-		musicFacade.remove(music);
+		musicFacade.remove(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link MusicFacade#duplicate(MusicTO)}. */
 	@Test
 	public void testDuplicate() {
-		final MusicTO musicTO = objectGenerator.generate(MusicTO.class);
-		musicTO.setId(MUSIC_COUNT);
 		final Music music = SpringEntitiesUtils.getMusic(MUSIC_COUNT);
 		music.setId(MUSIC_COUNT + 1);
 
-		musicFacade.duplicate(musicTO);
+		musicFacade.duplicate(SpringToUtils.newMusic(objectGenerator, MUSIC_COUNT));
 
 		final Music duplicatedMusic = SpringUtils.getMusic(entityManager, MUSIC_COUNT + 1);
 		DeepAsserts.assertEquals(music, duplicatedMusic);
@@ -405,32 +374,24 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#duplicate(MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testDuplicateWithMusicWithNullId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
-
-		musicFacade.duplicate(music);
+		musicFacade.duplicate(SpringToUtils.newMusic(objectGenerator));
 	}
 
 	/** Test method for {@link MusicFacade#duplicate(MusicTO)} with music with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testDuplicateWithMusicWithBadId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(Integer.MAX_VALUE);
-
-		musicFacade.duplicate(music);
+		musicFacade.duplicate(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link MusicFacade#moveUp(MusicTO)}. */
 	@Test
 	public void testMoveUp() {
-		final MusicTO musicTO = objectGenerator.generate(MusicTO.class);
-		musicTO.setId(2);
 		final Music music1 = SpringEntitiesUtils.getMusic(1);
 		music1.setPosition(1);
 		final Music music2 = SpringEntitiesUtils.getMusic(2);
 		music2.setPosition(0);
 
-		musicFacade.moveUp(musicTO);
+		musicFacade.moveUp(SpringToUtils.newMusic(objectGenerator, 2));
 		DeepAsserts.assertEquals(music1, SpringUtils.getMusic(entityManager, 1));
 		DeepAsserts.assertEquals(music2, SpringUtils.getMusic(entityManager, 2));
 		for (int i = 3; i <= MUSIC_COUNT; i++) {
@@ -448,41 +409,30 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#moveUp(MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithMusicWithNullId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
-
-		musicFacade.moveUp(music);
+		musicFacade.moveUp(SpringToUtils.newMusic(objectGenerator));
 	}
 
 	/** Test method for {@link MusicFacade#moveUp(MusicTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithNotMoveableArgument() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(1);
-
-		musicFacade.moveUp(music);
+		musicFacade.moveUp(SpringToUtils.newMusic(objectGenerator, 1));
 	}
 
 	/** Test method for {@link MusicFacade#moveUp(MusicTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveUpWithBadId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(Integer.MAX_VALUE);
-
-		musicFacade.moveUp(music);
+		musicFacade.moveUp(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link MusicFacade#moveDown(MusicTO)}. */
 	@Test
 	public void testMoveDown() {
-		final MusicTO musicTO = objectGenerator.generate(MusicTO.class);
-		musicTO.setId(1);
 		final Music music1 = SpringEntitiesUtils.getMusic(1);
 		music1.setPosition(1);
 		final Music music2 = SpringEntitiesUtils.getMusic(2);
 		music2.setPosition(0);
 
-		musicFacade.moveDown(musicTO);
+		musicFacade.moveDown(SpringToUtils.newMusic(objectGenerator, 1));
 		DeepAsserts.assertEquals(music1, SpringUtils.getMusic(entityManager, 1));
 		DeepAsserts.assertEquals(music2, SpringUtils.getMusic(entityManager, 2));
 		for (int i = 3; i <= MUSIC_COUNT; i++) {
@@ -500,42 +450,29 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#moveDown(MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithMusicWithNullId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
-
-		musicFacade.moveDown(music);
+		musicFacade.moveDown(SpringToUtils.newMusic(objectGenerator));
 	}
 
 	/** Test method for {@link MusicFacade#moveDown(MusicTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(MUSIC_COUNT);
-
-		musicFacade.moveDown(music);
+		musicFacade.moveDown(SpringToUtils.newMusic(objectGenerator, MUSIC_COUNT));
 	}
 
 	/** Test method for {@link MusicFacade#moveDown(MusicTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveDownWithBadId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(Integer.MAX_VALUE);
-
-		musicFacade.moveDown(music);
+		musicFacade.moveDown(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link MusicFacade#exists(MusicTO)} with existing music. */
 	@Test
 	public void testExists() {
 		for (int i = 1; i <= MUSIC_COUNT; i++) {
-			final MusicTO music = objectGenerator.generate(MusicTO.class);
-			music.setId(i);
-			assertTrue(musicFacade.exists(music));
+			assertTrue(musicFacade.exists(SpringToUtils.newMusic(objectGenerator, i)));
 		}
 
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(Integer.MAX_VALUE);
-		assertFalse(musicFacade.exists(music));
+		assertFalse(musicFacade.exists(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE)));
 
 		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 	}
@@ -549,10 +486,7 @@ public class MusicFacadeImplSpringTest {
 	/** Test method for {@link MusicFacade#exists(MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testExistsWithMusicWithNullId() {
-		final MusicTO music = objectGenerator.generate(MusicTO.class);
-		music.setId(null);
-
-		musicFacade.exists(music);
+		musicFacade.exists(SpringToUtils.newMusic(objectGenerator));
 	}
 
 	/** Test method for {@link MusicFacade#updatePositions()}. */

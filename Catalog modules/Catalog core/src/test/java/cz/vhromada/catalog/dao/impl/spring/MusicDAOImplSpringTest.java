@@ -70,8 +70,7 @@ public class MusicDAOImplSpringTest {
 	/** Test method for {@link MusicDAO#add(Music)}. */
 	@Test
 	public void testAdd() {
-		final Music music = objectGenerator.generate(Music.class);
-		music.setId(null);
+		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 
 		musicDAO.add(music);
 
@@ -86,7 +85,7 @@ public class MusicDAOImplSpringTest {
 	/** Test method for {@link MusicDAO#update(Music)}. */
 	@Test
 	public void testUpdate() {
-		final Music music = SpringEntitiesUtils.updateMusic(SpringUtils.getMusic(entityManager, 1), objectGenerator);
+		final Music music = SpringEntitiesUtils.updateMusic(1, objectGenerator, entityManager);
 
 		musicDAO.update(music);
 
@@ -98,8 +97,7 @@ public class MusicDAOImplSpringTest {
 	/** Test method for {@link MusicDAO#remove(Music)}. */
 	@Test
 	public void testRemove() {
-		final Music music = objectGenerator.generate(Music.class);
-		music.setId(null);
+		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		entityManager.persist(music);
 		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 

@@ -594,24 +594,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns music with updated fields.
-	 *
-	 * @param music           music
-	 * @param objectGenerator object generator
-	 * @return music with updated fields
-	 */
-	@Deprecated
-	public static Music updateMusic(final Music music, final ObjectGenerator objectGenerator) {
-		music.setName(objectGenerator.generate(String.class));
-		music.setWikiEn(objectGenerator.generate(String.class));
-		music.setWikiCz(objectGenerator.generate(String.class));
-		music.setMediaCount(objectGenerator.generate(Integer.class));
-		music.setNote(objectGenerator.generate(String.class));
-		music.setPosition(objectGenerator.generate(Integer.class));
-		return music;
-	}
-
-	/**
 	 * Returns songs.
 	 *
 	 * @param music index of music

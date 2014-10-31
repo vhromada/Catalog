@@ -12,7 +12,6 @@ import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
 import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.MEDIA_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NOTE;
 import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
@@ -617,39 +616,6 @@ public final class ToGenerator {
 		final EpisodeTO episode = createEpisode(season);
 		episode.setId(id);
 		return episode;
-	}
-
-	/**
-	 * Returns new TO for music.
-	 *
-	 * @return new TO for music
-	 */
-	@Deprecated
-	public static MusicTO createMusic() {
-		final MusicTO music = new MusicTO();
-		music.setName(NAME);
-		music.setWikiEn(WIKIPEDIA_EN);
-		music.setWikiCz(WIKIPEDIA_CZ);
-		music.setMediaCount(MEDIA_COUNT);
-		music.setSongsCount(INNER_COUNT);
-		music.setTotalLength(TOTAL_LENGTH);
-		music.setNote(NOTE);
-		music.setPosition(POSITION);
-
-		return music;
-	}
-
-	/**
-	 * Returns new TO for music with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for music with specified ID
-	 */
-	@Deprecated
-	public static MusicTO createMusic(final Integer id) {
-		final MusicTO music = createMusic();
-		music.setId(id);
-		return music;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.validators.GameTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -32,14 +33,13 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNotNullId() {
-		gameTOValidator.validateNewGameTO(generate(GameTO.class));
+		gameTOValidator.validateNewGameTO(ToGenerator.newGameWithId(getObjectGenerator()));
 	}
 
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullName() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
+		final GameTO game = ToGenerator.newGame(getObjectGenerator());
 		game.setName(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -48,17 +48,16 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithEmptyName() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
+		final GameTO game = ToGenerator.newGame(getObjectGenerator());
 		game.setName("");
+
 		gameTOValidator.validateNewGameTO(game);
 	}
 
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null URL to english Wikipedia page about game is null. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullWikiEn() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
+		final GameTO game = ToGenerator.newGame(getObjectGenerator());
 		game.setWikiEn(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -67,8 +66,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null URL to czech Wikipedia page about game is null. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullWikiCz() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
+		final GameTO game = ToGenerator.newGame(getObjectGenerator());
 		game.setWikiCz(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -77,8 +75,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNotPositiveMediaCount() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
+		final GameTO game = ToGenerator.newGame(getObjectGenerator());
 		game.setMediaCount(0);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -87,8 +84,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullOtherData() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
+		final GameTO game = ToGenerator.newGame(getObjectGenerator());
 		game.setOtherData(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -97,8 +93,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateNewGameTO(GameTO)} with TO for game with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewGameTOWithNullNote() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
+		final GameTO game = ToGenerator.newGame(getObjectGenerator());
 		game.setNote(null);
 
 		gameTOValidator.validateNewGameTO(game);
@@ -113,16 +108,13 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullId() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
-
-		gameTOValidator.validateExistingGameTO(game);
+		gameTOValidator.validateExistingGameTO(ToGenerator.newGame(getObjectGenerator()));
 	}
 
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullName() {
-		final GameTO game = generate(GameTO.class);
+		final GameTO game = ToGenerator.newGameWithId(getObjectGenerator());
 		game.setName(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -131,7 +123,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithEmptyName() {
-		final GameTO game = generate(GameTO.class);
+		final GameTO game = ToGenerator.newGameWithId(getObjectGenerator());
 		game.setName("");
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -140,7 +132,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null URL to Wikipedia page about game is null. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullWiki() {
-		final GameTO game = generate(GameTO.class);
+		final GameTO game = ToGenerator.newGameWithId(getObjectGenerator());
 		game.setWikiCz(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -149,7 +141,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with not positive count of media. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNotPositiveMediaCount() {
-		final GameTO game = generate(GameTO.class);
+		final GameTO game = ToGenerator.newGameWithId(getObjectGenerator());
 		game.setMediaCount(0);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -158,7 +150,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null other data. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullOtherData() {
-		final GameTO game = generate(GameTO.class);
+		final GameTO game = ToGenerator.newGameWithId(getObjectGenerator());
 		game.setOtherData(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -167,7 +159,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateExistingGameTO(GameTO)} with TO for game with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingGameTOWithNullNote() {
-		final GameTO game = generate(GameTO.class);
+		final GameTO game = ToGenerator.newGameWithId(getObjectGenerator());
 		game.setNote(null);
 
 		gameTOValidator.validateExistingGameTO(game);
@@ -182,10 +174,7 @@ public class GameTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link GameTOValidator#validateGameTOWithId(GameTO)} with TO for game with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateGameTOWithIdWithNullId() {
-		final GameTO game = generate(GameTO.class);
-		game.setId(null);
-
-		gameTOValidator.validateGameTOWithId(game);
+		gameTOValidator.validateGameTOWithId(ToGenerator.newGame(getObjectGenerator()));
 	}
 
 }

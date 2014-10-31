@@ -380,13 +380,28 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
+	 * Returns new game.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new game
+	 */
+	public static Game newGame(final ObjectGenerator objectGenerator) {
+		final Game game = objectGenerator.generate(Game.class);
+		game.setId(null);
+
+		return game;
+	}
+
+	/**
 	 * Returns game with updated fields.
 	 *
-	 * @param game            game
+	 * @param id              game ID
 	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
 	 * @return game with updated fields
 	 */
-	public static Game updateGame(final Game game, final ObjectGenerator objectGenerator) {
+	public static Game updateGame(final int id, final ObjectGenerator objectGenerator, final EntityManager entityManager) {
+		final Game game = SpringUtils.getGame(entityManager, id);
 		game.setName(objectGenerator.generate(String.class));
 		game.setWikiEn(objectGenerator.generate(String.class));
 		game.setWikiCz(objectGenerator.generate(String.class));
@@ -401,6 +416,7 @@ public final class SpringEntitiesUtils {
 		game.setOtherData(objectGenerator.generate(String.class));
 		game.setNote(objectGenerator.generate(String.class));
 		game.setPosition(objectGenerator.generate(Integer.class));
+
 		return game;
 	}
 

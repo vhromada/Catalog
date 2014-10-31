@@ -319,6 +319,40 @@ public final class SpringToUtils {
 	}
 
 	/**
+	 * Returns new TO for game.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for game
+	 */
+	public static GameTO newGame(final ObjectGenerator objectGenerator) {
+		return newGame(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for game with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for game  with ID
+	 */
+	public static GameTO newGameWithId(final ObjectGenerator objectGenerator) {
+		return newGame(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for game with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              game ID
+	 * @return new TO for game with specified ID
+	 */
+	public static GameTO newGame(final ObjectGenerator objectGenerator, final Integer id) {
+		final GameTO game = objectGenerator.generate(GameTO.class);
+		game.setId(id);
+
+		return game;
+	}
+
+	/**
 	 * Returns music.
 	 *
 	 * @return music

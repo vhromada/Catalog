@@ -30,6 +30,7 @@ import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
+import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.to.MusicTO;
@@ -253,6 +254,42 @@ public final class ToGenerator {
 		final EpisodeTO episode = createEpisode(season);
 		episode.setId(id);
 		return episode;
+	}
+
+	/**
+	 * Returns new TO for game.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for game
+	 */
+	public static GameTO newGame(final ObjectGenerator objectGenerator) {
+		return newGame(objectGenerator, false);
+	}
+
+	/**
+	 * Returns new TO for game with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for game with ID
+	 */
+	public static GameTO newGameWithId(final ObjectGenerator objectGenerator) {
+		return newGame(objectGenerator, true);
+	}
+
+	/**
+	 * Returns new TO for game.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              true if id should be generated
+	 * @return new TO for game
+	 */
+	private static GameTO newGame(final ObjectGenerator objectGenerator, final boolean id) {
+		final GameTO game = objectGenerator.generate(GameTO.class);
+		if (!id) {
+			game.setId(null);
+		}
+
+		return game;
 	}
 
 	/**

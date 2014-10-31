@@ -70,8 +70,7 @@ public class GameDAOImplSpringTest {
 	/** Test method for {@link GameDAO#add(Game)}. */
 	@Test
 	public void testAdd() {
-		final Game game = objectGenerator.generate(Game.class);
-		game.setId(null);
+		final Game game = SpringEntitiesUtils.newGame(objectGenerator);
 
 		gameDAO.add(game);
 
@@ -86,7 +85,7 @@ public class GameDAOImplSpringTest {
 	/** Test method for {@link GameDAO#update(Game)}. */
 	@Test
 	public void testUpdate() {
-		final Game game = SpringEntitiesUtils.updateGame(SpringUtils.getGame(entityManager, 1), objectGenerator);
+		final Game game = SpringEntitiesUtils.updateGame(1, objectGenerator, entityManager);
 
 		gameDAO.update(game);
 

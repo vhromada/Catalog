@@ -332,7 +332,7 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#exists(Movie)} with not existing movie. */
 	@Test
 	public void testExistsWithNotExistingMovie() {
-		final Movie movie = objectGenerator.generate(Movie.class);
+		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
 		movie.setId(Integer.MAX_VALUE);
 		final String key = "movie" + Integer.MAX_VALUE;
 

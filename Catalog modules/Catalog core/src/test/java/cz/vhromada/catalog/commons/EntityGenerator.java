@@ -2,31 +2,21 @@ package cz.vhromada.catalog.commons;
 
 import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
 import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
-import static cz.vhromada.catalog.commons.TestConstants.CSFD;
-import static cz.vhromada.catalog.commons.TestConstants.CZECH_NAME;
 import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.IMDB;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
 import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NOTE;
 import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
-import static cz.vhromada.catalog.commons.TestConstants.ORIGINAL_NAME;
-import static cz.vhromada.catalog.commons.TestConstants.PICTURE;
 import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
 import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
 import static cz.vhromada.catalog.commons.TestConstants.TITLE;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.entities.Episode;
-import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
@@ -42,41 +32,6 @@ public final class EntityGenerator {
 
 	/** Creates a new instance of EntityGenerator. */
 	private EntityGenerator() {
-	}
-
-	/**
-	 * Returns new genre with specified ID.
-	 *
-	 * @param id ID
-	 * @return new genre with specified ID
-	 */
-	private static Genre createGenre(final Integer id) {
-		final Genre genre = new Genre();
-		genre.setName(NAME);
-		genre.setId(id);
-		return genre;
-	}
-
-	/**
-	 * Returns new serie with specified ID.
-	 *
-	 * @param id ID
-	 * @return new serie with specified ID
-	 */
-	public static Serie createSerie(final Integer id) {
-		final Serie serie = new Serie();
-		serie.setCzechName(CZECH_NAME);
-		serie.setOriginalName(ORIGINAL_NAME);
-		serie.setCsfd(CSFD);
-		serie.setImdbCode(IMDB);
-		serie.setWikiEn(WIKIPEDIA_EN);
-		serie.setWikiCz(WIKIPEDIA_CZ);
-		serie.setPicture(PICTURE);
-		serie.setNote(NOTE);
-		serie.setPosition(POSITION);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
-		serie.setId(id);
-		return serie;
 	}
 
 	/**

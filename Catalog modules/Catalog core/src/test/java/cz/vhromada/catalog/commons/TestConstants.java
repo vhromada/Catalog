@@ -112,12 +112,6 @@ public final class TestConstants {
 	/** Bad maximal year */
 	public static final int BAD_MAX_YEAR = TC.BAD_MAX_YEAR;
 
-	/** Bad minimum IMDB code */
-	public static final int BAD_MIN_IMDB_CODE = TC.BAD_MIN_IMDB_CODE;
-
-	/** Bad maximum IMDB code */
-	public static final int BAD_MAX_IMDB_CODE = TC.BAD_MAX_IMDB_CODE;
-
 	/** Bad subtitles */
 	public static final List<Language> BAD_SUBTITLES = CollectionUtils.newList(Language.CZ, null);
 

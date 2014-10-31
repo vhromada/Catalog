@@ -4,12 +4,9 @@ import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.NAME;
-import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
+import static cz.vhromada.catalog.commons.TC.BAD_MAX_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TC.BAD_MIN_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TC.NEGATIVE_TIME;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -17,12 +14,10 @@ import static org.junit.Assert.assertTrue;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
@@ -49,7 +44,6 @@ import org.springframework.transaction.PlatformTransactionManager;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
-//TODO vhromada 31.10.2014: implement object generator
 public class SerieFacadeImplSpringTest {
 
 	/** Instance of {@link EntityManager} */
@@ -133,9 +127,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)}. */
 	@Test
 	public void testAdd() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(SpringToUtils.getGenre(4)));
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 
 		serieFacade.add(serie);
 
@@ -155,17 +147,13 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithSerieWithNotNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(Integer.MAX_VALUE);
-
-		serieFacade.add(serie);
+		serieFacade.add(SpringToUtils.newSerieWithId(objectGenerator));
 	}
 
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null czech name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullCzechName() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setCzechName(null);
 
 		serieFacade.add(serie);
@@ -174,8 +162,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with empty string as czech name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEmptyCzechName() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setCzechName("");
 
 		serieFacade.add(serie);
@@ -184,8 +171,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null original name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullOriginalName() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setOriginalName(null);
 
 		serieFacade.add(serie);
@@ -194,8 +180,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with empty string as original name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEmptyOriginalName() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setOriginalName("");
 
 		serieFacade.add(serie);
@@ -204,8 +189,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null URL to ČSFD page about serie. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullCsfd() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setCsfd(null);
 
 		serieFacade.add(serie);
@@ -214,8 +198,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with bad minimal IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimalImdb() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setImdbCode(BAD_MIN_IMDB_CODE);
 
 		serieFacade.add(serie);
@@ -224,8 +207,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with bad divider IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadDividerImdb() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setImdbCode(0);
 
 		serieFacade.add(serie);
@@ -234,8 +216,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with bad maximal IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximalImdb() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setImdbCode(BAD_MAX_IMDB_CODE);
 
 		serieFacade.add(serie);
@@ -244,8 +225,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null URL to english Wikipedia page about serie. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullWikiEn() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setWikiEn(null);
 
 		serieFacade.add(serie);
@@ -254,8 +234,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null URL to czech Wikipedia page about serie. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullWikiCz() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setWikiCz(null);
 
 		serieFacade.add(serie);
@@ -264,17 +243,16 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null path to file with serie's picture. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullPicture() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setPicture(null);
+
 		serieFacade.add(serie);
 	}
 
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with negative count of seasons. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNegativeSeasonsCount() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setSeasonsCount(-1);
 
 		serieFacade.add(serie);
@@ -283,8 +261,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with negative count of episodes. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNegativeEpisodesCount() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setEpisodesCount(-1);
 
 		serieFacade.add(serie);
@@ -293,8 +270,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null total length of seasons. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullTotalLength() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setTotalLength(null);
 
 		serieFacade.add(serie);
@@ -303,8 +279,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with negative total length of seasons. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNegativeTotalLength() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setTotalLength(NEGATIVE_TIME);
 
 		serieFacade.add(serie);
@@ -313,8 +288,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullNote() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setNote(null);
 
 		serieFacade.add(serie);
@@ -323,8 +297,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with null genres. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullGenres() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
 		serie.setGenres(null);
 
 		serieFacade.add(serie);
@@ -333,9 +306,8 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with genres with null value. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadGenres() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), null));
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
+		serie.setGenres(CollectionUtils.newList(SpringToUtils.newGenreWithId(objectGenerator), null));
 
 		serieFacade.add(serie);
 	}
@@ -343,9 +315,8 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with genres with genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithGenresWithGenreWithNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre()));
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
+		serie.setGenres(CollectionUtils.newList(SpringToUtils.newGenreWithId(objectGenerator), SpringToUtils.newGenre(objectGenerator)));
 
 		serieFacade.add(serie);
 	}
@@ -353,11 +324,10 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with serie with genres with genre with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithGenresWithGenreWithNullName() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-		final GenreTO badGenre = createGenre(SECONDARY_INNER_ID);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
+		final GenreTO badGenre = SpringToUtils.newGenreWithId(objectGenerator);
 		badGenre.setName(null);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), badGenre));
+		serie.setGenres(CollectionUtils.newList(SpringToUtils.newGenreWithId(objectGenerator), badGenre));
 
 		serieFacade.add(serie);
 	}
@@ -365,16 +335,13 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#update(SerieTO)}. */
 	@Test
 	public void testUpdate() {
-		final SerieTO serie = ToGenerator.createSerie(1);
+		final SerieTO serie = SpringToUtils.newSerie(objectGenerator, 1);
 		serie.setGenres(CollectionUtils.newList(SpringToUtils.getGenre(4)));
-		final Serie expectedSerie = EntityGenerator.createSerie(1);
-		expectedSerie.setGenres(CollectionUtils.newList(SpringEntitiesUtils.getGenre(4)));
 
 		serieFacade.update(serie);
 
 		final Serie updatedSerie = SpringUtils.getSerie(entityManager, 1);
 		DeepAsserts.assertEquals(serie, updatedSerie, "seasonsCount", "episodesCount", "totalLength", "genresAsString");
-		DeepAsserts.assertEquals(expectedSerie, updatedSerie);
 		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
@@ -387,10 +354,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#update(SerieTO)} with serie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithSerieWithNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-
-		serieFacade.update(serie);
+		serieFacade.update(SpringToUtils.newSerie(objectGenerator));
 	}
 
 	/** Test method for {@link SerieFacade#update(SerieTO)} with serie with null czech name. */
@@ -550,7 +514,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadGenres() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), null));
+		serie.setGenres(CollectionUtils.newList(SpringToUtils.newGenreWithId(objectGenerator), null));
 
 		serieFacade.update(serie);
 	}
@@ -559,7 +523,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenresWithGenreWithNullId() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre()));
+		serie.setGenres(CollectionUtils.newList(SpringToUtils.newGenreWithId(objectGenerator), SpringToUtils.newGenre(objectGenerator)));
 
 		serieFacade.update(serie);
 	}
@@ -568,9 +532,9 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenresWithGenreWithNullName() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		final GenreTO badGenre = createGenre(SECONDARY_INNER_ID);
+		final GenreTO badGenre = SpringToUtils.newGenreWithId(objectGenerator);
 		badGenre.setName(null);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), badGenre));
+		serie.setGenres(CollectionUtils.newList(SpringToUtils.newGenreWithId(objectGenerator), badGenre));
 
 		serieFacade.update(serie);
 	}
@@ -587,10 +551,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#remove(SerieTO)}. */
 	@Test
 	public void testRemove() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(1);
-
-		serieFacade.remove(serie);
+		serieFacade.remove(SpringToUtils.newSerie(objectGenerator, 1));
 
 		assertNull(SpringUtils.getSerie(entityManager, 1));
 		DeepAsserts.assertEquals(SERIES_COUNT - 1, SpringUtils.getSeriesCount(entityManager));
@@ -605,30 +566,22 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#remove(SerieTO)} with serie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testRemoveWithSerieWithNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-
-		serieFacade.remove(serie);
+		serieFacade.remove(SpringToUtils.newSerie(objectGenerator));
 	}
 
 	/** Test method for {@link SerieFacade#remove(SerieTO)} with serie with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testRemoveWithSerieWithBadId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(Integer.MAX_VALUE);
-
-		serieFacade.remove(serie);
+		serieFacade.remove(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)}. */
 	@Test
 	public void testDuplicate() {
-		final SerieTO serieTO = objectGenerator.generate(SerieTO.class);
-		serieTO.setId(SERIES_COUNT);
 		final Serie serie = SpringEntitiesUtils.getSerie(SERIES_COUNT);
 		serie.setId(SERIES_COUNT + 1);
 
-		serieFacade.duplicate(serieTO);
+		serieFacade.duplicate(SpringToUtils.newSerie(objectGenerator, SERIES_COUNT));
 
 		final Serie duplicatedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, duplicatedSerie);
@@ -644,32 +597,24 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)} with serie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testDuplicateWithSerieWithNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-
-		serieFacade.duplicate(serie);
+		serieFacade.duplicate(SpringToUtils.newSerie(objectGenerator));
 	}
 
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)} with serie with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testDuplicateWithSerieWithBadId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(Integer.MAX_VALUE);
-
-		serieFacade.duplicate(serie);
+		serieFacade.duplicate(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)}. */
 	@Test
 	public void testMoveUp() {
-		final SerieTO serieTO = objectGenerator.generate(SerieTO.class);
-		serieTO.setId(2);
 		final Serie serie1 = SpringEntitiesUtils.getSerie(1);
 		serie1.setPosition(1);
 		final Serie serie2 = SpringEntitiesUtils.getSerie(2);
 		serie2.setPosition(0);
 
-		serieFacade.moveUp(serieTO);
+		serieFacade.moveUp(SpringToUtils.newSerie(objectGenerator, 2));
 		DeepAsserts.assertEquals(serie1, SpringUtils.getSerie(entityManager, 1));
 		DeepAsserts.assertEquals(serie2, SpringUtils.getSerie(entityManager, 2));
 		for (int i = 3; i <= SERIES_COUNT; i++) {
@@ -687,41 +632,30 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with serie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithSerieWithNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-
-		serieFacade.moveUp(serie);
+		serieFacade.moveUp(SpringToUtils.newSerie(objectGenerator));
 	}
 
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithNotMoveableArgument() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(1);
-
-		serieFacade.moveUp(serie);
+		serieFacade.moveUp(SpringToUtils.newSerie(objectGenerator, 1));
 	}
 
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveUpWithBadId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(Integer.MAX_VALUE);
-
-		serieFacade.moveUp(serie);
+		serieFacade.moveUp(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)}. */
 	@Test
 	public void testMoveDown() {
-		final SerieTO serieTO = objectGenerator.generate(SerieTO.class);
-		serieTO.setId(1);
 		final Serie serie1 = SpringEntitiesUtils.getSerie(1);
 		serie1.setPosition(1);
 		final Serie serie2 = SpringEntitiesUtils.getSerie(2);
 		serie2.setPosition(0);
 
-		serieFacade.moveDown(serieTO);
+		serieFacade.moveDown(SpringToUtils.newSerie(objectGenerator, 1));
 		DeepAsserts.assertEquals(serie1, SpringUtils.getSerie(entityManager, 1));
 		DeepAsserts.assertEquals(serie2, SpringUtils.getSerie(entityManager, 2));
 		for (int i = 3; i <= SERIES_COUNT; i++) {
@@ -739,10 +673,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with serie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithSerieWithNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-
-		serieFacade.moveDown(serie);
+		serieFacade.moveDown(SpringToUtils.newSerie(objectGenerator));
 	}
 
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with not moveable argument. */
@@ -757,24 +688,17 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveDownWithBadId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(Integer.MAX_VALUE);
-
-		serieFacade.moveDown(serie);
+		serieFacade.moveDown(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE));
 	}
 
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with existing serie. */
 	@Test
 	public void testExists() {
 		for (int i = 1; i <= SERIES_COUNT; i++) {
-			final SerieTO serie = objectGenerator.generate(SerieTO.class);
-			serie.setId(i);
-			assertTrue(serieFacade.exists(serie));
+			assertTrue(serieFacade.exists(SpringToUtils.newSerie(objectGenerator, i)));
 		}
 
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(Integer.MAX_VALUE);
-		assertFalse(serieFacade.exists(serie));
+		assertFalse(serieFacade.exists(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE)));
 
 		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
@@ -788,10 +712,7 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with serie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testExistsWithSerieWithNullId() {
-		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(null);
-
-		serieFacade.exists(serie);
+		serieFacade.exists(SpringToUtils.newSerie(objectGenerator));
 	}
 
 	/** Test method for {@link SerieFacade#updatePositions()}. */
@@ -824,31 +745,6 @@ public class SerieFacadeImplSpringTest {
 	public void testGetEpisodesCount() {
 		DeepAsserts.assertEquals(EPISODES_COUNT, serieFacade.getEpisodesCount());
 		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
-	}
-
-	/**
-	 * Returns new TO for genre.
-	 *
-	 * @return new TO for genre
-	 */
-	@Deprecated
-	private static GenreTO createGenre() {
-		final GenreTO genre = new GenreTO();
-		genre.setName(NAME);
-		return genre;
-	}
-
-	/**
-	 * Returns new TO for genre with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for genre with specified ID
-	 */
-	@Deprecated
-	private static GenreTO createGenre(final Integer id) {
-		final GenreTO genre = createGenre();
-		genre.setId(id);
-		return genre;
 	}
 
 }

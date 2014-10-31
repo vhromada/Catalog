@@ -123,9 +123,7 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#add(Serie)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Serie serie = objectGenerator.generate(Serie.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 
 		serieService.add(serie);
 
@@ -140,9 +138,7 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#add(Serie)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Serie serie = objectGenerator.generate(Serie.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 		final String keyList = "series";
 		final String keyItem = "serie" + (SERIES_COUNT + 1);
 		serieCache.put(keyList, new ArrayList<>());
@@ -163,7 +159,7 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#update(Serie)}. */
 	@Test
 	public void testUpdate() {
-		final Serie serie = SpringEntitiesUtils.updateSerie(SpringUtils.getSerie(entityManager, 1), objectGenerator);
+		final Serie serie = SpringEntitiesUtils.updateSerie(1, objectGenerator, entityManager);
 
 		serieService.update(serie);
 
@@ -176,9 +172,7 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#remove(Serie)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Serie serie = objectGenerator.generate(Serie.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 		entityManager.persist(serie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 
@@ -309,7 +303,7 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#exists(Serie)} with not existing serie. */
 	@Test
 	public void testExistsWithNotExistingSerie() {
-		final Serie serie = objectGenerator.generate(Serie.class);
+		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 		serie.setId(Integer.MAX_VALUE);
 		final String key = "serie" + Integer.MAX_VALUE;
 

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.SerieDAO;
@@ -71,9 +70,7 @@ public class SerieDAOImplSpringTest {
 	/** Test method for {@link SerieDAO#add(Serie)}. */
 	@Test
 	public void testAdd() {
-		final Serie serie = objectGenerator.generate(Serie.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 
 		serieDAO.add(serie);
 
@@ -88,8 +85,7 @@ public class SerieDAOImplSpringTest {
 	/** Test method for {@link SerieDAO#update(Serie)}. */
 	@Test
 	public void testUpdate() {
-		final Serie serie = SpringEntitiesUtils.updateSerie(SpringUtils.getSerie(entityManager, 1), objectGenerator);
-		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Serie serie = SpringEntitiesUtils.updateSerie(1, objectGenerator, entityManager);
 
 		serieDAO.update(serie);
 
@@ -101,9 +97,7 @@ public class SerieDAOImplSpringTest {
 	/** Test method for {@link SerieDAO#remove(Serie)}. */
 	@Test
 	public void testRemove() {
-		final Serie serie = objectGenerator.generate(Serie.class);
-		serie.setId(null);
-		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 		entityManager.persist(serie);
 		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 

@@ -234,27 +234,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns serie with updated fields.
-	 *
-	 * @param serie           serie
-	 * @param objectGenerator object generator
-	 * @return serie with updated fields
-	 */
-	@Deprecated
-	public static Serie updateSerie(final Serie serie, final ObjectGenerator objectGenerator) {
-		serie.setCzechName(objectGenerator.generate(String.class));
-		serie.setOriginalName(objectGenerator.generate(String.class));
-		serie.setCsfd(objectGenerator.generate(String.class));
-		serie.setImdbCode(objectGenerator.generate(Integer.class));
-		serie.setWikiEn(objectGenerator.generate(String.class));
-		serie.setWikiCz(objectGenerator.generate(String.class));
-		serie.setPicture(objectGenerator.generate(String.class));
-		serie.setNote(objectGenerator.generate(String.class));
-		serie.setPosition(objectGenerator.generate(Integer.class));
-		return serie;
-	}
-
-	/**
 	 * Returns seasons.
 	 *
 	 * @param serie index of serie

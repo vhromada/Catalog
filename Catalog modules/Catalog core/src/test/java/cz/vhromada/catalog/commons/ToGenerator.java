@@ -2,29 +2,19 @@ package cz.vhromada.catalog.commons;
 
 import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
 import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
-import static cz.vhromada.catalog.commons.TestConstants.CSFD;
-import static cz.vhromada.catalog.commons.TestConstants.CZECH_NAME;
 import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.IMDB;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
 import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NOTE;
 import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
-import static cz.vhromada.catalog.commons.TestConstants.ORIGINAL_NAME;
-import static cz.vhromada.catalog.commons.TestConstants.PICTURE;
 import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
 import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
 import static cz.vhromada.catalog.commons.TestConstants.TITLE;
 import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
@@ -448,56 +438,6 @@ public final class ToGenerator {
 		}
 
 		return genre;
-	}
-
-	/**
-	 * Returns new TO for serie.
-	 *
-	 * @return new TO for serie
-	 */
-	@Deprecated
-	public static SerieTO createSerie() {
-		final SerieTO serie = new SerieTO();
-		serie.setCzechName(CZECH_NAME);
-		serie.setOriginalName(ORIGINAL_NAME);
-		serie.setCsfd(CSFD);
-		serie.setImdbCode(IMDB);
-		serie.setWikiEn(WIKIPEDIA_EN);
-		serie.setWikiCz(WIKIPEDIA_CZ);
-		serie.setPicture(PICTURE);
-		serie.setSeasonsCount(INNER_COUNT);
-		serie.setEpisodesCount(INNER_INNER_COUNT);
-		serie.setTotalLength(TOTAL_LENGTH);
-		serie.setNote(NOTE);
-		serie.setPosition(POSITION);
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
-		return serie;
-	}
-
-	/**
-	 * Returns new TO for genre with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for genre with specified ID
-	 */
-	@Deprecated
-	private static GenreTO createGenre(final Integer id) {
-		final GenreTO genre = new GenreTO();
-		genre.setId(id);
-		return genre;
-	}
-
-	/**
-	 * Returns new TO for serie with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for serie with specified ID
-	 */
-	@Deprecated
-	public static SerieTO createSerie(final Integer id) {
-		final SerieTO serie = createSerie();
-		serie.setId(id);
-		return serie;
 	}
 
 	/**

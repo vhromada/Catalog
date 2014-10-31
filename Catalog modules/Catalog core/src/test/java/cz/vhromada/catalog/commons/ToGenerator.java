@@ -1,16 +1,38 @@
 package cz.vhromada.catalog.commons;
 
+import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
+import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
+import static cz.vhromada.catalog.commons.TestConstants.CSFD;
+import static cz.vhromada.catalog.commons.TestConstants.CZECH_NAME;
+import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.IMDB;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
+import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
+import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
+import static cz.vhromada.catalog.commons.TestConstants.MEDIA_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.NAME;
+import static cz.vhromada.catalog.commons.TestConstants.NOTE;
+import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
+import static cz.vhromada.catalog.commons.TestConstants.ORIGINAL_NAME;
+import static cz.vhromada.catalog.commons.TestConstants.PICTURE;
+import static cz.vhromada.catalog.commons.TestConstants.POSITION;
 import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
+import static cz.vhromada.catalog.commons.TestConstants.TITLE;
+import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
+import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
+import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
-import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.to.MusicTO;
-import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.facade.to.SongTO;
@@ -72,7 +94,19 @@ public final class ToGenerator {
 	 */
 	@Deprecated
 	public static SerieTO createSerie() {
-		final SerieTO serie = SpringToUtils.updateSerie(new SerieTO());
+		final SerieTO serie = new SerieTO();
+		serie.setCzechName(CZECH_NAME);
+		serie.setOriginalName(ORIGINAL_NAME);
+		serie.setCsfd(CSFD);
+		serie.setImdbCode(IMDB);
+		serie.setWikiEn(WIKIPEDIA_EN);
+		serie.setWikiCz(WIKIPEDIA_CZ);
+		serie.setPicture(PICTURE);
+		serie.setSeasonsCount(INNER_COUNT);
+		serie.setEpisodesCount(INNER_INNER_COUNT);
+		serie.setTotalLength(TOTAL_LENGTH);
+		serie.setNote(NOTE);
+		serie.setPosition(POSITION);
 		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
 		return serie;
 	}
@@ -110,7 +144,18 @@ public final class ToGenerator {
 	 */
 	@Deprecated
 	public static SeasonTO createSeason() {
-		return SpringToUtils.updateSeason(new SeasonTO());
+		final SeasonTO season = new SeasonTO();
+		season.setNumber(NUMBER);
+		season.setStartYear(START_YEAR);
+		season.setEndYear(END_YEAR);
+		season.setLanguage(LANGUAGE);
+		season.setSubtitles(SUBTITLES);
+		season.setEpisodesCount(INNER_COUNT);
+		season.setTotalLength(TOTAL_LENGTH);
+		season.setNote(NOTE);
+		season.setPosition(POSITION);
+
+		return season;
 	}
 
 	/**
@@ -160,7 +205,14 @@ public final class ToGenerator {
 	 */
 	@Deprecated
 	public static EpisodeTO createEpisode() {
-		return SpringToUtils.updateEpisode(new EpisodeTO());
+		final EpisodeTO episode = new EpisodeTO();
+		episode.setNumber(NUMBER);
+		episode.setName(NAME);
+		episode.setLength(LENGTH);
+		episode.setNote(NOTE);
+		episode.setPosition(POSITION);
+
+		return episode;
 	}
 
 	/**
@@ -204,36 +256,23 @@ public final class ToGenerator {
 	}
 
 	/**
-	 * Returns new TO for game.
-	 *
-	 * @return new TO for game
-	 */
-	@Deprecated
-	public static GameTO createGame() {
-		return SpringToUtils.updateGame(new GameTO());
-	}
-
-	/**
-	 * Returns new TO for game with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for game with specified ID
-	 */
-	@Deprecated
-	public static GameTO createGame(final Integer id) {
-		final GameTO game = createGame();
-		game.setId(id);
-		return game;
-	}
-
-	/**
 	 * Returns new TO for music.
 	 *
 	 * @return new TO for music
 	 */
 	@Deprecated
 	public static MusicTO createMusic() {
-		return SpringToUtils.updateMusic(new MusicTO());
+		final MusicTO music = new MusicTO();
+		music.setName(NAME);
+		music.setWikiEn(WIKIPEDIA_EN);
+		music.setWikiCz(WIKIPEDIA_CZ);
+		music.setMediaCount(MEDIA_COUNT);
+		music.setSongsCount(INNER_COUNT);
+		music.setTotalLength(TOTAL_LENGTH);
+		music.setNote(NOTE);
+		music.setPosition(POSITION);
+
+		return music;
 	}
 
 	/**
@@ -256,7 +295,13 @@ public final class ToGenerator {
 	 */
 	@Deprecated
 	public static SongTO createSong() {
-		return SpringToUtils.updateSong(new SongTO());
+		final SongTO song = new SongTO();
+		song.setName(NAME);
+		song.setLength(LENGTH);
+		song.setNote(NOTE);
+		song.setPosition(POSITION);
+
+		return song;
 	}
 
 	/**
@@ -300,36 +345,19 @@ public final class ToGenerator {
 	}
 
 	/**
-	 * Returns new TO for program.
-	 *
-	 * @return new TO for program
-	 */
-	@Deprecated
-	public static ProgramTO createProgram() {
-		return SpringToUtils.updateProgram(new ProgramTO());
-	}
-
-	/**
-	 * Returns new TO for program with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for program with specified ID
-	 */
-	@Deprecated
-	public static ProgramTO createProgram(final Integer id) {
-		final ProgramTO program = createProgram();
-		program.setId(id);
-		return program;
-	}
-
-	/**
 	 * Returns new TO for book category.
 	 *
 	 * @return new TO for book category
 	 */
 	@Deprecated
 	public static BookCategoryTO createBookCategory() {
-		return SpringToUtils.updateBookCategory(new BookCategoryTO());
+		final BookCategoryTO bookCategory = new BookCategoryTO();
+		bookCategory.setName(NAME);
+		bookCategory.setBooksCount(INNER_COUNT);
+		bookCategory.setNote(NOTE);
+		bookCategory.setPosition(POSITION);
+
+		return bookCategory;
 	}
 
 	/**
@@ -351,7 +379,15 @@ public final class ToGenerator {
 	 */
 	@Deprecated
 	public static BookTO createBook() {
-		return SpringToUtils.updateBook(new BookTO());
+		final BookTO book = new BookTO();
+		book.setAuthor(AUTHOR);
+		book.setTitle(TITLE);
+		book.setLanguages(LANGUAGES);
+		book.setCategory(CATEGORY);
+		book.setNote(NOTE);
+		book.setPosition(POSITION);
+
+		return book;
 	}
 
 	/**

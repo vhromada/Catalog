@@ -13,35 +13,6 @@ import static cz.vhromada.catalog.commons.SpringUtils.PROGRAMS_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SONGS_PER_MUSIC_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
-import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
-import static cz.vhromada.catalog.commons.TestConstants.CRACK;
-import static cz.vhromada.catalog.commons.TestConstants.CSFD;
-import static cz.vhromada.catalog.commons.TestConstants.CZECH_NAME;
-import static cz.vhromada.catalog.commons.TestConstants.EDITOR;
-import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.IMDB;
-import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
-import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
-import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.MEDIA_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.NAME;
-import static cz.vhromada.catalog.commons.TestConstants.NOTE;
-import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
-import static cz.vhromada.catalog.commons.TestConstants.ORIGINAL_NAME;
-import static cz.vhromada.catalog.commons.TestConstants.OTHER_DATA;
-import static cz.vhromada.catalog.commons.TestConstants.PATCH;
-import static cz.vhromada.catalog.commons.TestConstants.PICTURE;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.SAVES;
-import static cz.vhromada.catalog.commons.TestConstants.SERIAL_KEY;
-import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
-import static cz.vhromada.catalog.commons.TestConstants.TITLE;
-import static cz.vhromada.catalog.commons.TestConstants.TRAINER;
-import static cz.vhromada.catalog.commons.TestConstants.TRAINER_DATA;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -245,26 +216,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns serie with updated fields.
-	 *
-	 * @param serie serie
-	 * @return serie with updated fields
-	 */
-	@Deprecated
-	public static Serie updateSerie(final Serie serie) {
-		serie.setCzechName(CZECH_NAME);
-		serie.setOriginalName(ORIGINAL_NAME);
-		serie.setCsfd(CSFD);
-		serie.setImdbCode(IMDB);
-		serie.setWikiEn(WIKIPEDIA_EN);
-		serie.setWikiCz(WIKIPEDIA_CZ);
-		serie.setPicture(PICTURE);
-		serie.setNote(NOTE);
-		serie.setPosition(POSITION);
-		return serie;
-	}
-
-	/**
 	 * Returns seasons.
 	 *
 	 * @param serie index of serie
@@ -337,24 +288,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns season with updated fields.
-	 *
-	 * @param season season
-	 * @return season with updated fields
-	 */
-	@Deprecated
-	public static Season updateSeason(final Season season) {
-		season.setNumber(NUMBER);
-		season.setStartYear(START_YEAR);
-		season.setEndYear(END_YEAR);
-		season.setLanguage(LANGUAGE);
-		season.setSubtitles(SUBTITLES);
-		season.setNote(NOTE);
-		season.setPosition(POSITION);
-		return season;
-	}
-
-	/**
 	 * Returns episodes.
 	 *
 	 * @param serie  index of serie
@@ -403,22 +336,6 @@ public final class SpringEntitiesUtils {
 		episode.setLength(objectGenerator.generate(Integer.class));
 		episode.setNote(objectGenerator.generate(String.class));
 		episode.setPosition(objectGenerator.generate(Integer.class));
-		return episode;
-	}
-
-	/**
-	 * Returns episode with updated fields.
-	 *
-	 * @param episode episode
-	 * @return episode with updated fields
-	 */
-	@Deprecated
-	public static Episode updateEpisode(final Episode episode) {
-		episode.setNumber(NUMBER);
-		episode.setName(NAME);
-		episode.setLength(LENGTH);
-		episode.setNote(NOTE);
-		episode.setPosition(POSITION);
 		return episode;
 	}
 
@@ -488,31 +405,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns game with updated fields.
-	 *
-	 * @param game game
-	 * @return game with updated fields
-	 */
-	@Deprecated
-	public static Game updateGame(final Game game) {
-		game.setName(NAME);
-		game.setWikiEn(WIKIPEDIA_EN);
-		game.setWikiCz(WIKIPEDIA_CZ);
-		game.setMediaCount(MEDIA_COUNT);
-		game.setCrack(CRACK);
-		game.setSerialKey(SERIAL_KEY);
-		game.setPatch(PATCH);
-		game.setTrainer(TRAINER);
-		game.setTrainerData(TRAINER_DATA);
-		game.setEditor(EDITOR);
-		game.setSaves(SAVES);
-		game.setOtherData(OTHER_DATA);
-		game.setNote(NOTE);
-		game.setPosition(POSITION);
-		return game;
-	}
-
-	/**
 	 * Returns music.
 	 *
 	 * @return music
@@ -562,23 +454,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns music with updated fields.
-	 *
-	 * @param music music
-	 * @return music with updated fields
-	 */
-	@Deprecated
-	public static Music updateMusic(final Music music) {
-		music.setName(NAME);
-		music.setWikiEn(WIKIPEDIA_EN);
-		music.setWikiCz(WIKIPEDIA_CZ);
-		music.setMediaCount(MEDIA_COUNT);
-		music.setNote(NOTE);
-		music.setPosition(POSITION);
-		return music;
-	}
-
-	/**
 	 * Returns songs.
 	 *
 	 * @param music index of music
@@ -623,21 +498,6 @@ public final class SpringEntitiesUtils {
 		song.setLength(objectGenerator.generate(Integer.class));
 		song.setNote(objectGenerator.generate(String.class));
 		song.setPosition(objectGenerator.generate(Integer.class));
-		return song;
-	}
-
-	/**
-	 * Returns song with updated fields.
-	 *
-	 * @param song song
-	 * @return song with updated fields
-	 */
-	@Deprecated
-	public static Song updateSong(final Song song) {
-		song.setName(NAME);
-		song.setLength(LENGTH);
-		song.setNote(NOTE);
-		song.setPosition(POSITION);
 		return song;
 	}
 
@@ -697,26 +557,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns program with updated fields.
-	 *
-	 * @param program program
-	 * @return program with updated fields
-	 */
-	@Deprecated
-	public static Program updateProgram(final Program program) {
-		program.setName(NAME);
-		program.setWikiEn(WIKIPEDIA_EN);
-		program.setWikiCz(WIKIPEDIA_CZ);
-		program.setMediaCount(MEDIA_COUNT);
-		program.setCrack(CRACK);
-		program.setSerialKey(SERIAL_KEY);
-		program.setOtherData(OTHER_DATA);
-		program.setNote(NOTE);
-		program.setPosition(POSITION);
-		return program;
-	}
-
-	/**
 	 * Returns book categories.
 	 *
 	 * @return book categories
@@ -756,20 +596,6 @@ public final class SpringEntitiesUtils {
 		bookCategory.setName(objectGenerator.generate(String.class));
 		bookCategory.setNote(objectGenerator.generate(String.class));
 		bookCategory.setPosition(objectGenerator.generate(Integer.class));
-		return bookCategory;
-	}
-
-	/**
-	 * Returns book category with updated fields.
-	 *
-	 * @param bookCategory book category
-	 * @return book category with updated fields
-	 */
-	@Deprecated
-	public static BookCategory updateBookCategory(final BookCategory bookCategory) {
-		bookCategory.setName(NAME);
-		bookCategory.setNote(NOTE);
-		bookCategory.setPosition(POSITION);
 		return bookCategory;
 	}
 
@@ -837,23 +663,6 @@ public final class SpringEntitiesUtils {
 		book.setCategory(objectGenerator.generate(String.class));
 		book.setNote(objectGenerator.generate(String.class));
 		book.setPosition(objectGenerator.generate(Integer.class));
-		return book;
-	}
-
-	/**
-	 * Returns book with updated fields.
-	 *
-	 * @param book book
-	 * @return book with updated fields
-	 */
-	@Deprecated
-	public static Book updateBook(final Book book) {
-		book.setAuthor(AUTHOR);
-		book.setTitle(TITLE);
-		book.setLanguages(LANGUAGES);
-		book.setCategory(CATEGORY);
-		book.setNote(NOTE);
-		book.setPosition(POSITION);
 		return book;
 	}
 

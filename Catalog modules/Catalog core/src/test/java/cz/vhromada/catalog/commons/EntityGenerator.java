@@ -1,16 +1,33 @@
 package cz.vhromada.catalog.commons;
 
+import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
+import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
+import static cz.vhromada.catalog.commons.TestConstants.CSFD;
+import static cz.vhromada.catalog.commons.TestConstants.CZECH_NAME;
+import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.IMDB;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
+import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
+import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
+import static cz.vhromada.catalog.commons.TestConstants.NOTE;
+import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
+import static cz.vhromada.catalog.commons.TestConstants.ORIGINAL_NAME;
+import static cz.vhromada.catalog.commons.TestConstants.PICTURE;
+import static cz.vhromada.catalog.commons.TestConstants.POSITION;
 import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
+import static cz.vhromada.catalog.commons.TestConstants.TITLE;
+import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
+import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.entities.Episode;
-import cz.vhromada.catalog.dao.entities.Game;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Music;
-import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.entities.Song;
@@ -28,24 +45,11 @@ public final class EntityGenerator {
 	}
 
 	/**
-	 * Returns new serie.
-	 *
-	 * @return new serie
-	 */
-	public static Serie createSerie() {
-		final Serie serie = SpringEntitiesUtils.updateSerie(new Serie());
-		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
-		return serie;
-	}
-
-
-	/**
 	 * Returns new genre with specified ID.
 	 *
 	 * @param id ID
 	 * @return new genre with specified ID
 	 */
-	@Deprecated
 	private static Genre createGenre(final Integer id) {
 		final Genre genre = new Genre();
 		genre.setName(NAME);
@@ -60,42 +64,19 @@ public final class EntityGenerator {
 	 * @return new serie with specified ID
 	 */
 	public static Serie createSerie(final Integer id) {
-		final Serie serie = createSerie();
+		final Serie serie = new Serie();
+		serie.setCzechName(CZECH_NAME);
+		serie.setOriginalName(ORIGINAL_NAME);
+		serie.setCsfd(CSFD);
+		serie.setImdbCode(IMDB);
+		serie.setWikiEn(WIKIPEDIA_EN);
+		serie.setWikiCz(WIKIPEDIA_CZ);
+		serie.setPicture(PICTURE);
+		serie.setNote(NOTE);
+		serie.setPosition(POSITION);
+		serie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
 		serie.setId(id);
 		return serie;
-	}
-
-	/**
-	 * Returns new season.
-	 *
-	 * @return new season
-	 */
-	public static Season createSeason() {
-		return SpringEntitiesUtils.updateSeason(new Season());
-	}
-
-	/**
-	 * Returns new season with specified ID.
-	 *
-	 * @param id ID
-	 * @return new season with specified ID
-	 */
-	public static Season createSeason(final Integer id) {
-		final Season season = createSeason();
-		season.setId(id);
-		return season;
-	}
-
-	/**
-	 * Returns new season with specified serie.
-	 *
-	 * @param serie serie
-	 * @return new season with specified serie
-	 */
-	public static Season createSeason(final Serie serie) {
-		final Season season = createSeason();
-		season.setSerie(serie);
-		return season;
 	}
 
 	/**
@@ -106,42 +87,17 @@ public final class EntityGenerator {
 	 * @return new season with specified ID and serie
 	 */
 	public static Season createSeason(final Integer id, final Serie serie) {
-		final Season season = createSeason(serie);
+		final Season season = new Season();
+		season.setNumber(NUMBER);
+		season.setStartYear(START_YEAR);
+		season.setEndYear(END_YEAR);
+		season.setLanguage(LANGUAGE);
+		season.setSubtitles(SUBTITLES);
+		season.setNote(NOTE);
+		season.setPosition(POSITION);
+		season.setSerie(serie);
 		season.setId(id);
 		return season;
-	}
-
-	/**
-	 * Creates and returns new episode.
-	 *
-	 * @return new episode
-	 */
-	public static Episode createEpisode() {
-		return SpringEntitiesUtils.updateEpisode(new Episode());
-	}
-
-	/**
-	 * Creates and returns new episode with specified ID.
-	 *
-	 * @param id ID
-	 * @return new episode with specified ID
-	 */
-	public static Episode createEpisode(final Integer id) {
-		final Episode episode = createEpisode();
-		episode.setId(id);
-		return episode;
-	}
-
-	/**
-	 * Creates and returns new episode with specified season.
-	 *
-	 * @param season season
-	 * @return new episode with specified season
-	 */
-	public static Episode createEpisode(final Season season) {
-		final Episode episode = createEpisode();
-		episode.setSeason(season);
-		return episode;
 	}
 
 	/**
@@ -152,84 +108,15 @@ public final class EntityGenerator {
 	 * @return new episode with specified ID and season
 	 */
 	public static Episode createEpisode(final Integer id, final Season season) {
-		final Episode episode = createEpisode(season);
+		final Episode episode = new Episode();
+		episode.setNumber(NUMBER);
+		episode.setName(NAME);
+		episode.setLength(LENGTH);
+		episode.setNote(NOTE);
+		episode.setPosition(POSITION);
+		episode.setSeason(season);
 		episode.setId(id);
 		return episode;
-	}
-
-	/**
-	 * Returns new game.
-	 *
-	 * @return new game
-	 */
-	public static Game createGame() {
-		return SpringEntitiesUtils.updateGame(new Game());
-	}
-
-	/**
-	 * Returns new game with specified ID.
-	 *
-	 * @param id ID
-	 * @return new game with specified ID
-	 */
-	public static Game createGame(final Integer id) {
-		final Game game = createGame();
-		game.setId(id);
-		return game;
-	}
-
-	/**
-	 * Returns new music.
-	 *
-	 * @return new music
-	 */
-	public static Music createMusic() {
-		return SpringEntitiesUtils.updateMusic(new Music());
-	}
-
-	/**
-	 * Returns new music with specified ID.
-	 *
-	 * @param id ID
-	 * @return new music with specified ID
-	 */
-	public static Music createMusic(final Integer id) {
-		final Music music = createMusic();
-		music.setId(id);
-		return music;
-	}
-
-	/**
-	 * Returns new song.
-	 *
-	 * @return new song
-	 */
-	public static Song createSong() {
-		return SpringEntitiesUtils.updateSong(new Song());
-	}
-
-	/**
-	 * Returns new song with specified ID.
-	 *
-	 * @param id ID
-	 * @return new song with specified ID
-	 */
-	public static Song createSong(final Integer id) {
-		final Song song = createSong();
-		song.setId(id);
-		return song;
-	}
-
-	/**
-	 * Returns new song with specified music.
-	 *
-	 * @param music music
-	 * @return new song with specified music
-	 */
-	public static Song createSong(final Music music) {
-		final Song song = createSong();
-		song.setMusic(music);
-		return song;
 	}
 
 	/**
@@ -240,83 +127,14 @@ public final class EntityGenerator {
 	 * @return new song with specified ID and music
 	 */
 	public static Song createSong(final Integer id, final Music music) {
-		final Song song = createSong(music);
+		final Song song = new Song();
+		song.setName(NAME);
+		song.setLength(LENGTH);
+		song.setNote(NOTE);
+		song.setPosition(POSITION);
+		song.setMusic(music);
 		song.setId(id);
 		return song;
-	}
-
-	/**
-	 * Returns new program.
-	 *
-	 * @return new program
-	 */
-	public static Program createProgram() {
-		return SpringEntitiesUtils.updateProgram(new Program());
-	}
-
-	/**
-	 * Returns new program with specified ID.
-	 *
-	 * @param id ID
-	 * @return new program with specified ID
-	 */
-	public static Program createProgram(final Integer id) {
-		final Program program = createProgram();
-		program.setId(id);
-		return program;
-	}
-
-	/**
-	 * Returns new book category.
-	 *
-	 * @return new book category
-	 */
-	public static BookCategory createBookCategory() {
-		return SpringEntitiesUtils.updateBookCategory(new BookCategory());
-	}
-
-	/**
-	 * Returns new book category with specified ID.
-	 *
-	 * @return new book category with specified ID
-	 */
-	public static BookCategory createBookCategory(final Integer id) {
-		final BookCategory bookCategory = createBookCategory();
-		bookCategory.setId(id);
-		return bookCategory;
-	}
-
-	/**
-	 * Returns new book.
-	 *
-	 * @return new book
-	 */
-	public static Book createBook() {
-		return SpringEntitiesUtils.updateBook(new Book());
-	}
-
-	/**
-	 * Returns new book with specified ID.
-	 *
-	 * @param id ID
-	 * @return new book with specified ID
-	 */
-	public static Book createBook(final Integer id) {
-		final Book book = createBook();
-		book.setId(id);
-		return book;
-	}
-
-	/**
-	 * Returns new book with specified book category.
-	 *
-	 * @param bookCategory bookCategory
-	 * @return new book with specified book category
-	 */
-	public static Book createBook(final BookCategory bookCategory) {
-		final Book book = createBook();
-		book.setBookCategory(bookCategory);
-		return book;
 	}
 
 	/**
@@ -327,7 +145,14 @@ public final class EntityGenerator {
 	 * @return new book with specified ID and book category
 	 */
 	public static Book createBook(final Integer id, final BookCategory bookCategory) {
-		final Book book = createBook(bookCategory);
+		final Book book = new Book();
+		book.setAuthor(AUTHOR);
+		book.setTitle(TITLE);
+		book.setLanguages(LANGUAGES);
+		book.setCategory(CATEGORY);
+		book.setNote(NOTE);
+		book.setPosition(POSITION);
+		book.setBookCategory(bookCategory);
 		book.setId(id);
 		return book;
 	}

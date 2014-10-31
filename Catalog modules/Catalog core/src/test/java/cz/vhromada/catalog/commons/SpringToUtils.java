@@ -13,38 +13,6 @@ import static cz.vhromada.catalog.commons.SpringUtils.PROGRAMS_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SONGS_PER_MUSIC_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
-import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
-import static cz.vhromada.catalog.commons.TestConstants.CRACK;
-import static cz.vhromada.catalog.commons.TestConstants.CSFD;
-import static cz.vhromada.catalog.commons.TestConstants.CZECH_NAME;
-import static cz.vhromada.catalog.commons.TestConstants.EDITOR;
-import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.IMDB;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
-import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
-import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.MEDIA_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.NAME;
-import static cz.vhromada.catalog.commons.TestConstants.NOTE;
-import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
-import static cz.vhromada.catalog.commons.TestConstants.ORIGINAL_NAME;
-import static cz.vhromada.catalog.commons.TestConstants.OTHER_DATA;
-import static cz.vhromada.catalog.commons.TestConstants.PATCH;
-import static cz.vhromada.catalog.commons.TestConstants.PICTURE;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.SAVES;
-import static cz.vhromada.catalog.commons.TestConstants.SERIAL_KEY;
-import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
-import static cz.vhromada.catalog.commons.TestConstants.TITLE;
-import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.TRAINER;
-import static cz.vhromada.catalog.commons.TestConstants.TRAINER_DATA;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
-import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -219,29 +187,6 @@ public final class SpringToUtils {
 	}
 
 	/**
-	 * Returns TO for serie with updated fields.
-	 *
-	 * @param serie TO for serie
-	 * @return TO for serie with updated fields
-	 */
-	@Deprecated
-	public static SerieTO updateSerie(final SerieTO serie) {
-		serie.setCzechName(CZECH_NAME);
-		serie.setOriginalName(ORIGINAL_NAME);
-		serie.setCsfd(CSFD);
-		serie.setImdbCode(IMDB);
-		serie.setWikiEn(WIKIPEDIA_EN);
-		serie.setWikiCz(WIKIPEDIA_CZ);
-		serie.setPicture(PICTURE);
-		serie.setSeasonsCount(INNER_COUNT);
-		serie.setEpisodesCount(INNER_INNER_COUNT);
-		serie.setTotalLength(TOTAL_LENGTH);
-		serie.setNote(NOTE);
-		serie.setPosition(POSITION);
-		return serie;
-	}
-
-	/**
 	 * Returns seasons.
 	 *
 	 * @param serie index of TO for serie
@@ -298,26 +243,6 @@ public final class SpringToUtils {
 	}
 
 	/**
-	 * Returns TO for season with updated fields.
-	 *
-	 * @param season TO for season
-	 * @return TO for season with updated fields
-	 */
-	@Deprecated
-	public static SeasonTO updateSeason(final SeasonTO season) {
-		season.setNumber(NUMBER);
-		season.setStartYear(START_YEAR);
-		season.setEndYear(END_YEAR);
-		season.setLanguage(LANGUAGE);
-		season.setSubtitles(SUBTITLES);
-		season.setEpisodesCount(INNER_COUNT);
-		season.setTotalLength(TOTAL_LENGTH);
-		season.setNote(NOTE);
-		season.setPosition(POSITION);
-		return season;
-	}
-
-	/**
 	 * Returns episodes.
 	 *
 	 * @param serie  index of TO for serie
@@ -350,22 +275,6 @@ public final class SpringToUtils {
 		episode.setPosition(episodeIndex - 1);
 		episode.setSeason(getSeason(serieIndex, seasonIndex));
 
-		return episode;
-	}
-
-	/**
-	 * Returns TO for episode with updated fields.
-	 *
-	 * @param episode TO for episode
-	 * @return TO for episode with updated fields
-	 */
-	@Deprecated
-	public static EpisodeTO updateEpisode(final EpisodeTO episode) {
-		episode.setNumber(NUMBER);
-		episode.setName(NAME);
-		episode.setLength(LENGTH);
-		episode.setNote(NOTE);
-		episode.setPosition(POSITION);
 		return episode;
 	}
 
@@ -410,41 +319,16 @@ public final class SpringToUtils {
 	}
 
 	/**
-	 * Returns TO for game with updated fields.
-	 *
-	 * @param game TO for game
-	 * @return TO for game with updated fields
-	 */
-	@Deprecated
-	public static GameTO updateGame(final GameTO game) {
-		game.setName(NAME);
-		game.setWikiEn(WIKIPEDIA_EN);
-		game.setWikiCz(WIKIPEDIA_CZ);
-		game.setMediaCount(MEDIA_COUNT);
-		game.setCrack(CRACK);
-		game.setSerialKey(SERIAL_KEY);
-		game.setPatch(PATCH);
-		game.setTrainer(TRAINER);
-		game.setTrainerData(TRAINER_DATA);
-		game.setEditor(EDITOR);
-		game.setSaves(SAVES);
-		game.setOtherData(OTHER_DATA);
-		game.setNote(NOTE);
-		game.setPosition(POSITION);
-		return game;
-	}
-
-	/**
 	 * Returns music.
 	 *
 	 * @return music
 	 */
 	public static List<MusicTO> getMusic() {
-		final List<MusicTO> musics = new ArrayList<>();
+		final List<MusicTO> music = new ArrayList<>();
 		for (int i = 0; i < MUSIC_COUNT; i++) {
-			musics.add(getMusic(i + 1));
+			music.add(getMusic(i + 1));
 		}
-		return musics;
+		return music;
 	}
 
 	/**
@@ -465,25 +349,6 @@ public final class SpringToUtils {
 		music.setNote(index == 2 ? "Music 2 note" : "");
 		music.setPosition(index - 1);
 
-		return music;
-	}
-
-	/**
-	 * Returns TO for music with updated fields.
-	 *
-	 * @param music TO for music
-	 * @return TO for music with updated fields
-	 */
-	@Deprecated
-	public static MusicTO updateMusic(final MusicTO music) {
-		music.setName(NAME);
-		music.setWikiEn(WIKIPEDIA_EN);
-		music.setWikiCz(WIKIPEDIA_CZ);
-		music.setMediaCount(MEDIA_COUNT);
-		music.setSongsCount(INNER_COUNT);
-		music.setTotalLength(TOTAL_LENGTH);
-		music.setNote(NOTE);
-		music.setPosition(POSITION);
 		return music;
 	}
 
@@ -517,21 +382,6 @@ public final class SpringToUtils {
 		song.setPosition(songIndex - 1);
 		song.setMusic(getMusic(musicIndex));
 
-		return song;
-	}
-
-	/**
-	 * Returns TO for song with updated fields.
-	 *
-	 * @param song TO for song
-	 * @return TO for song with updated fields
-	 */
-	@Deprecated
-	public static SongTO updateSong(final SongTO song) {
-		song.setName(NAME);
-		song.setLength(LENGTH);
-		song.setNote(NOTE);
-		song.setPosition(POSITION);
 		return song;
 	}
 
@@ -571,26 +421,6 @@ public final class SpringToUtils {
 	}
 
 	/**
-	 * Returns TO for program with updated fields.
-	 *
-	 * @param program TO for program
-	 * @return TO for program with updated fields
-	 */
-	@Deprecated
-	public static ProgramTO updateProgram(final ProgramTO program) {
-		program.setName(NAME);
-		program.setWikiEn(WIKIPEDIA_EN);
-		program.setWikiCz(WIKIPEDIA_CZ);
-		program.setMediaCount(MEDIA_COUNT);
-		program.setCrack(CRACK);
-		program.setSerialKey(SERIAL_KEY);
-		program.setOtherData(OTHER_DATA);
-		program.setNote(NOTE);
-		program.setPosition(POSITION);
-		return program;
-	}
-
-	/**
 	 * Returns book categories.
 	 *
 	 * @return book categories
@@ -617,21 +447,6 @@ public final class SpringToUtils {
 		bookCategory.setNote(index == 1 ? "Book category 1 note" : "");
 		bookCategory.setPosition(index - 1);
 
-		return bookCategory;
-	}
-
-	/**
-	 * Returns TO for book category with updated fields.
-	 *
-	 * @param bookCategory TO for book category
-	 * @return TO for book category with updated fields
-	 */
-	@Deprecated
-	public static BookCategoryTO updateBookCategory(final BookCategoryTO bookCategory) {
-		bookCategory.setName(NAME);
-		bookCategory.setBooksCount(INNER_COUNT);
-		bookCategory.setNote(NOTE);
-		bookCategory.setPosition(POSITION);
 		return bookCategory;
 	}
 
@@ -682,23 +497,6 @@ public final class SpringToUtils {
 		}
 		book.setLanguages(languages);
 
-		return book;
-	}
-
-	/**
-	 * Returns TO for book with updated fields.
-	 *
-	 * @param book TO for book
-	 * @return TO for book with updated fields
-	 */
-	@Deprecated
-	public static BookTO updateBook(final BookTO book) {
-		book.setAuthor(AUTHOR);
-		book.setTitle(TITLE);
-		book.setLanguages(LANGUAGES);
-		book.setCategory(CATEGORY);
-		book.setNote(NOTE);
-		book.setPosition(POSITION);
 		return book;
 	}
 

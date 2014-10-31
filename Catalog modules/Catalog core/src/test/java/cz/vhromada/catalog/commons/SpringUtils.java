@@ -106,7 +106,7 @@ public final class SpringUtils {
 	 * Returns movie.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            movie id
+	 * @param id            movie ID
 	 * @return movie
 	 */
 	public static Movie getMovie(final EntityManager entityManager, final int id) {
@@ -127,7 +127,7 @@ public final class SpringUtils {
 	 * Returns serie.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            serie id
+	 * @param id            serie ID
 	 * @return serie
 	 */
 	public static Serie getSerie(final EntityManager entityManager, final int id) {
@@ -148,7 +148,7 @@ public final class SpringUtils {
 	 * Returns season.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            season id
+	 * @param id            season ID
 	 * @return season
 	 */
 	public static Season getSeason(final EntityManager entityManager, final int id) {
@@ -169,7 +169,7 @@ public final class SpringUtils {
 	 * Returns episode.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            episode id
+	 * @param id            episode ID
 	 * @return episode
 	 */
 	public static Episode getEpisode(final EntityManager entityManager, final int id) {
@@ -190,7 +190,7 @@ public final class SpringUtils {
 	 * Returns game.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            game id
+	 * @param id            game ID
 	 * @return game
 	 */
 	public static Game getGame(final EntityManager entityManager, final int id) {
@@ -211,7 +211,7 @@ public final class SpringUtils {
 	 * Returns music.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            music id
+	 * @param id            music ID
 	 * @return music
 	 */
 	public static Music getMusic(final EntityManager entityManager, final int id) {
@@ -232,7 +232,7 @@ public final class SpringUtils {
 	 * Returns song.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            song id
+	 * @param id            song ID
 	 * @return song
 	 */
 	public static Song getSong(final EntityManager entityManager, final int id) {
@@ -253,7 +253,7 @@ public final class SpringUtils {
 	 * Returns program.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            program id
+	 * @param id            program ID
 	 * @return program
 	 */
 	public static Program getProgram(final EntityManager entityManager, final int id) {
@@ -274,7 +274,7 @@ public final class SpringUtils {
 	 * Returns book category.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            book category id
+	 * @param id            book category ID
 	 * @return book category
 	 */
 	public static BookCategory getBookCategory(final EntityManager entityManager, final int id) {
@@ -295,7 +295,7 @@ public final class SpringUtils {
 	 * Returns book.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            book id
+	 * @param id            book ID
 	 * @return book
 	 */
 	public static Book getBook(final EntityManager entityManager, final int id) {
@@ -316,7 +316,7 @@ public final class SpringUtils {
 	 * Returns genre.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            genre id
+	 * @param id            genre ID
 	 * @return genre
 	 */
 	public static Genre getGenre(final EntityManager entityManager, final int id) {
@@ -337,7 +337,7 @@ public final class SpringUtils {
 	 * Returns medium.
 	 *
 	 * @param entityManager entity manager
-	 * @param id            medium id
+	 * @param id            medium ID
 	 * @return medium
 	 */
 	public static Medium getMedium(final EntityManager entityManager, final int id) {

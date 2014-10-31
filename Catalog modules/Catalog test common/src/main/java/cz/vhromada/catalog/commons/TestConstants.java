@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Vladimir Hromada
  */
+@Deprecated
 public final class TestConstants {
 
 	/** ID */

@@ -8,8 +8,6 @@ import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Game;
 import cz.vhromada.catalog.dao.entities.Genre;
-import cz.vhromada.catalog.dao.entities.Medium;
-import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.dao.entities.Season;
@@ -26,30 +24,6 @@ public final class EntityGenerator {
 
 	/** Creates a new instance of EntityGenerator. */
 	private EntityGenerator() {
-	}
-
-	/**
-	 * Returns new movie.
-	 *
-	 * @return new movie
-	 */
-	public static Movie createMovie() {
-		final Movie movie = SpringEntitiesUtils.updateMovie(new Movie());
-		movie.setMedia(CollectionUtils.newList(createMedium(INNER_ID), createMedium(SECONDARY_INNER_ID)));
-		movie.setGenres(CollectionUtils.newList(createGenre(INNER_ID), createGenre(SECONDARY_INNER_ID)));
-		return movie;
-	}
-
-	/**
-	 * Returns new movie with specified ID.
-	 *
-	 * @param id ID
-	 * @return new movie with specified ID
-	 */
-	public static Movie createMovie(final Integer id) {
-		final Movie movie = createMovie();
-		movie.setId(id);
-		return movie;
 	}
 
 	/**
@@ -361,27 +335,6 @@ public final class EntityGenerator {
 		final Genre genre = createGenre();
 		genre.setId(id);
 		return genre;
-	}
-
-	/**
-	 * Returns new medium.
-	 *
-	 * @return new medium
-	 */
-	public static Medium createMedium() {
-		return SpringEntitiesUtils.updateMedium(new Medium());
-	}
-
-	/**
-	 * Returns new medium with specified ID.
-	 *
-	 * @param id ID
-	 * @return new medium with specified ID
-	 */
-	public static Medium createMedium(final Integer id) {
-		final Medium medium = createMedium();
-		medium.setId(id);
-		return medium;
 	}
 
 }

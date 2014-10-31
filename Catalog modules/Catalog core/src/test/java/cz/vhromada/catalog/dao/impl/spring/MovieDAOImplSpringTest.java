@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.MovieDAO;
@@ -17,7 +16,6 @@ import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.impl.MovieDAOImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,13 +75,7 @@ public class MovieDAOImplSpringTest {
 	/** Test method for {@link MovieDAO#add(Movie)}. */
 	@Test
 	public void testAdd() {
-		final Movie movie = objectGenerator.generate(Movie.class);
-		movie.setId(null);
-		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
-		movie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
-		for (Medium medium : movie.getMedia()) {
-			medium.setId(null);
-		}
+		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
 
 		movieDAO.add(movie);
 
@@ -98,7 +90,7 @@ public class MovieDAOImplSpringTest {
 	/** Test method for {@link MovieDAO#update(Movie)} with no media change. */
 	@Test
 	public void testUpdateWithNoMediaChange() {
-		final Movie movie = SpringEntitiesUtils.updateMovie(SpringUtils.getMovie(entityManager, 1), objectGenerator);
+		final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
 
 		movieDAO.update(movie);
 
@@ -110,11 +102,9 @@ public class MovieDAOImplSpringTest {
 	/** Test method for {@link MovieDAO#update(Movie)} with added medium. */
 	@Test
 	public void testUpdateWithAddedMedium() {
-		final Movie movie = SpringEntitiesUtils.updateMovie(SpringUtils.getMovie(entityManager, 1), objectGenerator);
+		final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
 		final List<Medium> media = movie.getMedia();
-		final Medium medium = objectGenerator.generate(Medium.class);
-		medium.setId(null);
-		media.add(medium);
+		media.add(SpringEntitiesUtils.newMedium(objectGenerator));
 		movie.setMedia(media);
 
 		movieDAO.update(movie);
@@ -127,7 +117,7 @@ public class MovieDAOImplSpringTest {
 	/** Test method for {@link MovieDAO#update(Movie)} with removed medium. */
 	@Test
 	public void testUpdateWithRemovedMedium() {
-		final Movie movie = SpringEntitiesUtils.updateMovie(SpringUtils.getMovie(entityManager, 1), objectGenerator);
+		final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
 		movie.setMedia(new ArrayList<Medium>());
 
 		movieDAO.update(movie);

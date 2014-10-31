@@ -21,7 +21,6 @@ import cz.vhromada.catalog.service.MovieService;
 import cz.vhromada.catalog.service.impl.MovieServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -123,13 +122,7 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#add(Movie)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Movie movie = objectGenerator.generate(Movie.class);
-		movie.setId(null);
-		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
-		movie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
-		for (Medium medium : movie.getMedia()) {
-			medium.setId(null);
-		}
+		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
 
 		movieService.add(movie);
 
@@ -145,13 +138,7 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#add(Movie)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Movie movie = objectGenerator.generate(Movie.class);
-		movie.setId(null);
-		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
-		movie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
-		for (Medium medium : movie.getMedia()) {
-			medium.setId(null);
-		}
+		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
 		final String keyList = "movies";
 		final String keyItem = "movie" + (MOVIES_COUNT + 1);
 		movieCache.put(keyList, new ArrayList<>());
@@ -173,7 +160,7 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#update(Movie)}. */
 	@Test
 	public void testUpdate() {
-		final Movie movie = SpringEntitiesUtils.updateMovie(SpringUtils.getMovie(entityManager, 1), objectGenerator);
+		final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
 
 		movieService.update(movie);
 
@@ -187,12 +174,8 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#remove(Movie)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Movie movie = objectGenerator.generate(Movie.class);
-		movie.setId(null);
-		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
-		movie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
 		for (Medium medium : movie.getMedia()) {
-			medium.setId(null);
 			entityManager.persist(medium);
 		}
 		entityManager.persist(movie);
@@ -213,12 +196,8 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#remove(Movie)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Movie movie = objectGenerator.generate(Movie.class);
-		movie.setId(null);
-		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
-		movie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
 		for (Medium medium : movie.getMedia()) {
-			medium.setId(null);
 			entityManager.persist(medium);
 		}
 		entityManager.persist(movie);

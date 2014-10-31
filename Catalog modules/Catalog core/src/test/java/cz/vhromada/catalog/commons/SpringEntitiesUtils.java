@@ -42,10 +42,11 @@ import static cz.vhromada.catalog.commons.TestConstants.TRAINER;
 import static cz.vhromada.catalog.commons.TestConstants.TRAINER_DATA;
 import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_CZ;
 import static cz.vhromada.catalog.commons.TestConstants.WIKIPEDIA_EN;
-import static cz.vhromada.catalog.commons.TestConstants.YEAR;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
@@ -138,13 +139,34 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
+	 * Returns new movie.
+	 *
+	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
+	 * @return new movie
+	 */
+	public static Movie newMovie(final ObjectGenerator objectGenerator, final EntityManager entityManager) {
+		final Movie movie = objectGenerator.generate(Movie.class);
+		movie.setId(null);
+		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
+		movie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
+		for (Medium medium : movie.getMedia()) {
+			medium.setId(null);
+		}
+
+		return movie;
+	}
+
+	/**
 	 * Returns movie with updated fields.
 	 *
-	 * @param movie           movie
+	 * @param id              movie ID
 	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
 	 * @return movie with updated fields
 	 */
-	public static Movie updateMovie(final Movie movie, final ObjectGenerator objectGenerator) {
+	public static Movie updateMovie(final int id, final ObjectGenerator objectGenerator, final EntityManager entityManager) {
+		final Movie movie = SpringUtils.getMovie(entityManager, id);
 		movie.setCzechName(objectGenerator.generate(String.class));
 		movie.setOriginalName(objectGenerator.generate(String.class));
 		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
@@ -157,29 +179,7 @@ public final class SpringEntitiesUtils {
 		movie.setPicture(objectGenerator.generate(String.class));
 		movie.setNote(objectGenerator.generate(String.class));
 		movie.setPosition(objectGenerator.generate(Integer.class));
-		return movie;
-	}
 
-	/**
-	 * Returns movie with updated fields.
-	 *
-	 * @param movie movie
-	 * @return movie with updated fields
-	 */
-	@Deprecated
-	public static Movie updateMovie(final Movie movie) {
-		movie.setCzechName(CZECH_NAME);
-		movie.setOriginalName(ORIGINAL_NAME);
-		movie.setYear(YEAR);
-		movie.setLanguage(LANGUAGE);
-		movie.setSubtitles(SUBTITLES);
-		movie.setCsfd(CSFD);
-		movie.setImdbCode(IMDB);
-		movie.setWikiEn(WIKIPEDIA_EN);
-		movie.setWikiCz(WIKIPEDIA_CZ);
-		movie.setPicture(PICTURE);
-		movie.setNote(NOTE);
-		movie.setPosition(POSITION);
 		return movie;
 	}
 
@@ -937,15 +937,15 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns medium with updated fields.
+	 * Returns new medium.
 	 *
-	 * @param medium medium
-	 * @return medium with updated fields
+	 * @param objectGenerator object generator
+	 * @return new medium
 	 */
-	@Deprecated
-	public static Medium updateMedium(final Medium medium) {
-		medium.setNumber(NUMBER);
-		medium.setLength(LENGTH);
+	public static Medium newMedium(final ObjectGenerator objectGenerator) {
+		final Medium medium = objectGenerator.generate(Medium.class);
+		medium.setId(null);
+
 		return medium;
 	}
 

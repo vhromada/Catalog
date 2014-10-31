@@ -62,6 +62,8 @@ import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.facade.to.SongTO;
+import cz.vhromada.generator.ObjectGenerator;
+import org.joda.time.DateTime;
 
 /**
  * A class represents utility class for TO for Spring framework.
@@ -134,6 +136,42 @@ public final class SpringToUtils {
 		movie.setSubtitles(subtitles);
 		movie.setMedia(media);
 		movie.setGenres(genres);
+
+		return movie;
+	}
+
+	/**
+	 * Returns new TO for movie.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for movie
+	 */
+	public static MovieTO newMovie(final ObjectGenerator objectGenerator) {
+		return newMovie(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for movie with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for movie  with ID
+	 */
+	public static MovieTO newMovieWithId(final ObjectGenerator objectGenerator) {
+		return newMovie(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for movie with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              movie ID
+	 * @return new TO for movie with specified ID
+	 */
+	public static MovieTO newMovie(final ObjectGenerator objectGenerator, final Integer id) {
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(id);
+		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
+		movie.setGenres(CollectionUtils.newList(SpringToUtils.getGenre(4)));
 
 		return movie;
 	}
@@ -713,6 +751,40 @@ public final class SpringToUtils {
 		final GenreTO genre = new GenreTO();
 		genre.setId(index);
 		genre.setName("Genre " + index + " name");
+
+		return genre;
+	}
+
+	/**
+	 * Returns new TO for genre.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for genre
+	 */
+	public static GenreTO newGenre(final ObjectGenerator objectGenerator) {
+		return newGenre(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for genre with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for genre  with ID
+	 */
+	public static GenreTO newGenreWithId(final ObjectGenerator objectGenerator) {
+		return newGenre(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for genre with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              genre ID
+	 * @return new TO for genre with specified ID
+	 */
+	private static GenreTO newGenre(final ObjectGenerator objectGenerator, final Integer id) {
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(id);
 
 		return genre;
 	}

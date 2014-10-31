@@ -23,6 +23,15 @@ public abstract class ObjectGeneratorTest {
 	}
 
 	/**
+	 * Returns object generator.
+	 *
+	 * @return object generator
+	 */
+	protected static ObjectGenerator getObjectGenerator() {
+		return objectGenerator;
+	}
+
+	/**
 	 * Returns generated object.
 	 *
 	 * @param clazz class of generated object

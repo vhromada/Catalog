@@ -187,6 +187,41 @@ public final class SpringToUtils {
 	}
 
 	/**
+	 * Returns new TO for serie.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for serie
+	 */
+	public static SerieTO newSerie(final ObjectGenerator objectGenerator) {
+		return newSerie(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for serie with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for serie  with ID
+	 */
+	public static SerieTO newSerieWithId(final ObjectGenerator objectGenerator) {
+		return newSerie(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for serie with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              serie ID
+	 * @return new TO for serie with specified ID
+	 */
+	public static SerieTO newSerie(final ObjectGenerator objectGenerator, final Integer id) {
+		final SerieTO serie = objectGenerator.generate(SerieTO.class);
+		serie.setId(id);
+		serie.setGenres(CollectionUtils.newList(SpringToUtils.getGenre(4)));
+
+		return serie;
+	}
+
+	/**
 	 * Returns seasons.
 	 *
 	 * @param serie index of TO for serie
@@ -243,6 +278,42 @@ public final class SpringToUtils {
 	}
 
 	/**
+	 * Returns new TO for season.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for season
+	 */
+	public static SeasonTO newSeason(final ObjectGenerator objectGenerator) {
+		return newSeason(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for season with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for season  with ID
+	 */
+	public static SeasonTO newSeasonWithId(final ObjectGenerator objectGenerator) {
+		return newSeason(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for season with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              season ID
+	 * @return new TO for season with specified ID
+	 */
+	public static SeasonTO newSeason(final ObjectGenerator objectGenerator, final Integer id) {
+		final SeasonTO season = objectGenerator.generate(SeasonTO.class);
+		season.setId(id);
+		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
+
+		return season;
+	}
+
+	/**
 	 * Returns episodes.
 	 *
 	 * @param serie  index of TO for serie
@@ -274,6 +345,40 @@ public final class SpringToUtils {
 		episode.setNote(episodeIndex == 2 ? "Serie " + serieIndex + " Season " + seasonIndex + " Episode 2 note" : "");
 		episode.setPosition(episodeIndex - 1);
 		episode.setSeason(getSeason(serieIndex, seasonIndex));
+
+		return episode;
+	}
+
+	/**
+	 * Returns new TO for episode.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for episode
+	 */
+	public static EpisodeTO newEpisode(final ObjectGenerator objectGenerator) {
+		return newEpisode(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for episode with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for episode  with ID
+	 */
+	public static EpisodeTO newEpisodeWithId(final ObjectGenerator objectGenerator) {
+		return newEpisode(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for episode with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              episode ID
+	 * @return new TO for episode with specified ID
+	 */
+	public static EpisodeTO newEpisode(final ObjectGenerator objectGenerator, final Integer id) {
+		final EpisodeTO episode = objectGenerator.generate(EpisodeTO.class);
+		episode.setId(id);
 
 		return episode;
 	}
@@ -387,6 +492,40 @@ public final class SpringToUtils {
 	}
 
 	/**
+	 * Returns new TO for music.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for music
+	 */
+	public static MusicTO newMusic(final ObjectGenerator objectGenerator) {
+		return newMusic(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for music with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for music  with ID
+	 */
+	public static MusicTO newMusicWithId(final ObjectGenerator objectGenerator) {
+		return newMusic(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for music with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              music ID
+	 * @return new TO for music with specified ID
+	 */
+	public static MusicTO newMusic(final ObjectGenerator objectGenerator, final Integer id) {
+		final MusicTO music = objectGenerator.generate(MusicTO.class);
+		music.setId(id);
+
+		return music;
+	}
+
+	/**
 	 * Returns songs.
 	 *
 	 * @param music index of TO for music
@@ -415,6 +554,40 @@ public final class SpringToUtils {
 		song.setNote(songIndex == 2 ? "Music " + musicIndex + " Song 2 note" : "");
 		song.setPosition(songIndex - 1);
 		song.setMusic(getMusic(musicIndex));
+
+		return song;
+	}
+
+	/**
+	 * Returns new TO for song.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for song
+	 */
+	public static SongTO newSong(final ObjectGenerator objectGenerator) {
+		return newSong(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for song with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for song  with ID
+	 */
+	public static SongTO newSongWithId(final ObjectGenerator objectGenerator) {
+		return newSong(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for song with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              song ID
+	 * @return new TO for song with specified ID
+	 */
+	public static SongTO newSong(final ObjectGenerator objectGenerator, final Integer id) {
+		final SongTO song = objectGenerator.generate(SongTO.class);
+		song.setId(id);
 
 		return song;
 	}
@@ -455,6 +628,40 @@ public final class SpringToUtils {
 	}
 
 	/**
+	 * Returns new TO for program.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for program
+	 */
+	public static ProgramTO newProgram(final ObjectGenerator objectGenerator) {
+		return newProgram(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for program with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for program  with ID
+	 */
+	public static ProgramTO newProgramWithId(final ObjectGenerator objectGenerator) {
+		return newProgram(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for program with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              program ID
+	 * @return new TO for program with specified ID
+	 */
+	public static ProgramTO newProgram(final ObjectGenerator objectGenerator, final Integer id) {
+		final ProgramTO program = objectGenerator.generate(ProgramTO.class);
+		program.setId(id);
+
+		return program;
+	}
+
+	/**
 	 * Returns book categories.
 	 *
 	 * @return book categories
@@ -480,6 +687,40 @@ public final class SpringToUtils {
 		bookCategory.setBooksCount(BOOKS_PER_BOOK_CATEGORY_COUNT);
 		bookCategory.setNote(index == 1 ? "Book category 1 note" : "");
 		bookCategory.setPosition(index - 1);
+
+		return bookCategory;
+	}
+
+	/**
+	 * Returns new TO for book category.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for book category
+	 */
+	public static BookCategoryTO newBookCategory(final ObjectGenerator objectGenerator) {
+		return newBookCategory(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for book category with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for boo category  with ID
+	 */
+	public static BookCategoryTO newBookCategoryWithId(final ObjectGenerator objectGenerator) {
+		return newBookCategory(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for book category with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              book category ID
+	 * @return new TO for book category with specified ID
+	 */
+	public static BookCategoryTO newBookCategory(final ObjectGenerator objectGenerator, final Integer id) {
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(id);
 
 		return bookCategory;
 	}
@@ -530,6 +771,40 @@ public final class SpringToUtils {
 				throw new IllegalArgumentException("Bad book index");
 		}
 		book.setLanguages(languages);
+
+		return book;
+	}
+
+	/**
+	 * Returns new TO for book.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for book
+	 */
+	public static BookTO newBook(final ObjectGenerator objectGenerator) {
+		return newBook(objectGenerator, null);
+	}
+
+	/**
+	 * Returns new TO for book with ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @return new TO for book  with ID
+	 */
+	public static BookTO newBookWithId(final ObjectGenerator objectGenerator) {
+		return newBook(objectGenerator, objectGenerator.generate(Integer.class));
+	}
+
+	/**
+	 * Returns new TO for book with specified ID.
+	 *
+	 * @param objectGenerator object generator
+	 * @param id              book ID
+	 * @return new TO for book with specified ID
+	 */
+	public static BookTO newBook(final ObjectGenerator objectGenerator, final Integer id) {
+		final BookTO book = objectGenerator.generate(BookTO.class);
+		book.setId(id);
 
 		return book;
 	}

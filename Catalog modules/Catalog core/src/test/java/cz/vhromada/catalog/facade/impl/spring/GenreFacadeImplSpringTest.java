@@ -1,9 +1,6 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
 import static cz.vhromada.catalog.commons.SpringUtils.GENRES_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.NAME_1;
-import static cz.vhromada.catalog.commons.TestConstants.NAME_2;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -13,11 +10,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
-import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Movie;
@@ -26,6 +21,7 @@ import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.impl.GenreFacadeImpl;
 import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -57,6 +53,10 @@ public class GenreFacadeImplSpringTest {
 	/** Instance of {@link GenreFacade} */
 	@Autowired
 	private GenreFacade genreFacade;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Initializes database. */
 	@Before
@@ -109,8 +109,8 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#add(GenreTO)}. */
 	@Test
 	public void testAdd() {
-		final GenreTO genre = ToGenerator.createGenre();
-		final Genre expectedGenre = EntityGenerator.createGenre(GENRES_COUNT + 1);
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(null);
 
 		genreFacade.add(genre);
 
@@ -118,7 +118,6 @@ public class GenreFacadeImplSpringTest {
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, genre.getId());
 		final Genre addedGenre = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
 		DeepAsserts.assertEquals(genre, addedGenre);
-		DeepAsserts.assertEquals(expectedGenre, addedGenre);
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 	}
 
@@ -131,13 +130,14 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#add(GenreTO)} with genre with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithGenreWithNotNullId() {
-		genreFacade.add(ToGenerator.createGenre(Integer.MAX_VALUE));
+		genreFacade.add(objectGenerator.generate(GenreTO.class));
 	}
 
 	/** Test method for {@link GenreFacade#add(GenreTO)} with genre with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithGenreWithNullName() {
-		final GenreTO genre = ToGenerator.createGenre();
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(null);
 		genre.setName(null);
 
 		genreFacade.add(genre);
@@ -146,7 +146,8 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#add(GenreTO)} with genre with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithGenreWithEmptyName() {
-		final GenreTO genre = ToGenerator.createGenre();
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(null);
 		genre.setName("");
 
 		genreFacade.add(genre);
@@ -155,16 +156,14 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#add(List)}. */
 	@Test
 	public void testAddList() {
-		final List<String> genres = CollectionUtils.newList(NAME_1, NAME_2);
-		final Genre expectedGenre1 = EntityGenerator.createGenre(GENRES_COUNT + 1);
-		expectedGenre1.setName(NAME_1);
-		final Genre expectedGenre2 = EntityGenerator.createGenre(GENRES_COUNT + 2);
-		expectedGenre2.setName(NAME_2);
+		final List<String> names = CollectionUtils.newList(objectGenerator.generate(String.class), objectGenerator.generate(String.class));
 
-		genreFacade.add(genres);
+		genreFacade.add(names);
 
-		DeepAsserts.assertEquals(SpringUtils.getGenre(entityManager, GENRES_COUNT + 1), expectedGenre1);
-		DeepAsserts.assertEquals(SpringUtils.getGenre(entityManager, GENRES_COUNT + 2), expectedGenre2);
+		final Genre addedGenre1 = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
+		final Genre addedGenre2 = SpringUtils.getGenre(entityManager, GENRES_COUNT + 2);
+		DeepAsserts.assertEquals(createGenre(GENRES_COUNT + 1, names.get(0)), addedGenre1);
+		DeepAsserts.assertEquals(createGenre(GENRES_COUNT + 2, names.get(1)), addedGenre2);
 		DeepAsserts.assertEquals(GENRES_COUNT + 2, SpringUtils.getGenresCount(entityManager));
 	}
 
@@ -177,20 +176,19 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#add(List)} with list of genre names with null value. */
 	@Test(expected = ValidationException.class)
 	public void testAddListWithGenreWithGenreNamesWithNull() {
-		genreFacade.add(CollectionUtils.newList(NAME_1, null));
+		genreFacade.add(CollectionUtils.newList(objectGenerator.generate(String.class), null));
 	}
 
 	/** Test method for {@link GenreFacade#update(GenreTO)}. */
 	@Test
 	public void testUpdate() {
-		final GenreTO genre = ToGenerator.createGenre(1);
-		final Genre expectedGenre = EntityGenerator.createGenre(1);
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(1);
 
 		genreFacade.update(genre);
 
 		final Genre updatedGenre = SpringUtils.getGenre(entityManager, 1);
 		DeepAsserts.assertEquals(genre, updatedGenre);
-		DeepAsserts.assertEquals(expectedGenre, updatedGenre);
 		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
 
@@ -203,13 +201,16 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#update(GenreTO)} with genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenreWithNullId() {
-		genreFacade.update(ToGenerator.createGenre());
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(null);
+
+		genreFacade.update(genre);
 	}
 
 	/** Test method for {@link GenreFacade#update(GenreTO)} with genre with null name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenreWithNullName() {
-		final GenreTO genre = ToGenerator.createGenre(PRIMARY_ID);
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
 		genre.setName(null);
 
 		genreFacade.update(genre);
@@ -218,8 +219,8 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#update(GenreTO)} with genre with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenreWithEmptyName() {
-		final GenreTO genre = ToGenerator.createGenre(PRIMARY_ID);
-		genre.setName(null);
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setName("");
 
 		genreFacade.update(genre);
 	}
@@ -227,17 +228,23 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#update(GenreTO)} with genre with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithGenreWithBadId() {
-		genreFacade.update(ToGenerator.createGenre(Integer.MAX_VALUE));
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(Integer.MAX_VALUE);
+
+		genreFacade.update(genre);
 	}
 
 	/** Test method for {@link GenreFacade#remove(GenreTO)}. */
 	@Test
 	public void testRemove() {
-		final Genre genre = EntityGenerator.createGenre();
+		final Genre genre = objectGenerator.generate(Genre.class);
+		genre.setId(null);
+		final GenreTO genreTO = objectGenerator.generate(GenreTO.class);
 		SpringUtils.persist(transactionManager, entityManager, genre);
 		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		genreTO.setId(genre.getId());
 
-		genreFacade.remove(ToGenerator.createGenre(genre.getId()));
+		genreFacade.remove(genreTO);
 
 		assertNull(SpringUtils.getGenre(entityManager, genre.getId()));
 		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
@@ -252,22 +259,30 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#remove(GenreTO)} with genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testRemoveWithGenreWithNullId() {
-		genreFacade.remove(ToGenerator.createGenre());
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(null);
+
+		genreFacade.remove(genre);
 	}
 
 	/** Test method for {@link GenreFacade#remove(GenreTO)} with genre with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testRemoveWithGenreWithBadId() {
-		genreFacade.remove(ToGenerator.createGenre(Integer.MAX_VALUE));
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(Integer.MAX_VALUE);
+
+		genreFacade.remove(genre);
 	}
 
 	/** Test method for {@link GenreFacade#duplicate(GenreTO)}. */
 	@Test
 	public void testDuplicate() {
+		final GenreTO genreTO = objectGenerator.generate(GenreTO.class);
+		genreTO.setId(GENRES_COUNT);
 		final Genre genre = SpringEntitiesUtils.getGenre(GENRES_COUNT);
 		genre.setId(GENRES_COUNT + 1);
 
-		genreFacade.duplicate(ToGenerator.createGenre(GENRES_COUNT));
+		genreFacade.duplicate(genreTO);
 
 		final Genre duplicatedGenre = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
 		DeepAsserts.assertEquals(genre, duplicatedGenre);
@@ -283,23 +298,33 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#duplicate(GenreTO)} with genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testDuplicateWithGenreWithNullId() {
-		genreFacade.duplicate(ToGenerator.createGenre());
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(null);
+
+		genreFacade.duplicate(genre);
 	}
 
 	/** Test method for {@link GenreFacade#duplicate(GenreTO)} with genre with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testDuplicateWithGenreWithBadId() {
-		genreFacade.duplicate(ToGenerator.createGenre(Integer.MAX_VALUE));
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(Integer.MAX_VALUE);
+
+		genreFacade.duplicate(genre);
 	}
 
 	/** Test method for {@link GenreFacade#exists(GenreTO)} with existing genre. */
 	@Test
 	public void testExists() {
 		for (int i = 1; i <= GENRES_COUNT; i++) {
-			assertTrue(genreFacade.exists(ToGenerator.createGenre(i)));
+			final GenreTO genre = objectGenerator.generate(GenreTO.class);
+			genre.setId(i);
+			assertTrue(genreFacade.exists(genre));
 		}
 
-		assertFalse(genreFacade.exists(ToGenerator.createGenre(Integer.MAX_VALUE)));
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(Integer.MAX_VALUE);
+		assertFalse(genreFacade.exists(genre));
 
 		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
@@ -313,7 +338,24 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#exists(GenreTO)} with genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testExistsWithGenreWithNullId() {
-		genreFacade.exists(ToGenerator.createGenre());
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(null);
+
+		genreFacade.exists(genre);
+	}
+
+	/**
+	 * Returns new TO for genre.
+	 *
+	 * @param id   ID
+	 * @param name name
+	 * @return new TO for genre
+	 */
+	private GenreTO createGenre(final int id, final String name) {
+		final GenreTO genre = objectGenerator.generate(GenreTO.class);
+		genre.setId(id);
+		genre.setName(name);
+		return genre;
 	}
 
 }

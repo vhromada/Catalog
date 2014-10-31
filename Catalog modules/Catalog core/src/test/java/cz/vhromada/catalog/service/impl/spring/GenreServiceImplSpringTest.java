@@ -169,7 +169,7 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#add(List)}. */
 	@Test
 	public void testAddList() {
-		final List<String> names = CollectionUtils.newList("1", "2");
+		final List<String> names = CollectionUtils.newList(objectGenerator.generate(String.class), objectGenerator.generate(String.class));
 
 		genreService.add(names);
 

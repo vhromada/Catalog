@@ -2,23 +2,21 @@ package cz.vhromada.catalog.facade.impl.spring;
 
 import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.BOOK_CATEGORIES_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
-import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.facade.BookCategoryFacade;
 import cz.vhromada.catalog.facade.impl.BookCategoryFacadeImpl;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -50,6 +48,10 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Instance of {@link BookCategoryFacade} */
 	@Autowired
 	private BookCategoryFacade bookCategoryFacade;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Initializes database. */
 	@Before
@@ -106,9 +108,8 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#add(BookCategoryTO)}. */
 	@Test
 	public void testAdd() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
-		final BookCategory expectedBookCategory = EntityGenerator.createBookCategory(BOOK_CATEGORIES_COUNT + 1);
-		expectedBookCategory.setPosition(BOOK_CATEGORIES_COUNT);
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 
 		bookCategoryFacade.add(bookCategory);
 
@@ -116,7 +117,6 @@ public class BookCategoryFacadeImplSpringTest {
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, bookCategory.getId());
 		final BookCategory addedBookCategory = SpringUtils.getBookCategory(entityManager, BOOK_CATEGORIES_COUNT + 1);
 		DeepAsserts.assertEquals(bookCategory, addedBookCategory, "booksCount");
-		DeepAsserts.assertEquals(expectedBookCategory, addedBookCategory);
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
 	}
 
@@ -129,13 +129,17 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with book category with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookCategoryWithNotNullId() {
-		bookCategoryFacade.add(ToGenerator.createBookCategory(Integer.MAX_VALUE));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(Integer.MAX_VALUE);
+
+		bookCategoryFacade.add(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with book category with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookCategoryWithNullName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setName(null);
 
 		bookCategoryFacade.add(bookCategory);
@@ -144,7 +148,8 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with book category with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookCategoryWithEmptyName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setName("");
 
 		bookCategoryFacade.add(bookCategory);
@@ -153,7 +158,8 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with book category with negative count of books. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookCategoryWithNotNegativeBooksCount() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setBooksCount(-1);
 
 		bookCategoryFacade.add(bookCategory);
@@ -162,7 +168,8 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with book category with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBookCategoryWithNullNote() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory();
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
 		bookCategory.setNote(null);
 
 		bookCategoryFacade.add(bookCategory);
@@ -171,14 +178,13 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#update(BookCategoryTO)}. */
 	@Test
 	public void testUpdate() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(1);
-		final BookCategory expectedBookCategory = EntityGenerator.createBookCategory(1);
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(1);
 
 		bookCategoryFacade.update(bookCategory);
 
 		final BookCategory updatedBookCategory = SpringUtils.getBookCategory(entityManager, 1);
 		DeepAsserts.assertEquals(bookCategory, updatedBookCategory, "booksCount");
-		DeepAsserts.assertEquals(expectedBookCategory, updatedBookCategory);
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
 	}
 
@@ -191,13 +197,16 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookCategoryWithNullId() {
-		bookCategoryFacade.update(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryFacade.update(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with book category with null name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookCategoryWithNullName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
 		bookCategory.setName(null);
 
 		bookCategoryFacade.update(bookCategory);
@@ -206,7 +215,7 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with book category with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookCategoryWithEmptyName() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
 		bookCategory.setName(null);
 
 		bookCategoryFacade.update(bookCategory);
@@ -215,7 +224,7 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with book category with negative count of books. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookCategoryWithNotNegativeBooksCount() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
 		bookCategory.setBooksCount(-1);
 
 		bookCategoryFacade.update(bookCategory);
@@ -224,7 +233,7 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with book category with null note. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBookCategoryWithNullNote() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(PRIMARY_ID);
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
 		bookCategory.setNote(null);
 
 		bookCategoryFacade.update(bookCategory);
@@ -233,13 +242,19 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with book category with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithBookCategoryWithBadId() {
-		bookCategoryFacade.update(ToGenerator.createBookCategory(Integer.MAX_VALUE));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(Integer.MAX_VALUE);
+
+		bookCategoryFacade.update(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)}. */
 	@Test
 	public void testRemove() {
-		bookCategoryFacade.remove(ToGenerator.createBookCategory(1));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(1);
+
+		bookCategoryFacade.remove(bookCategory);
 
 		assertNull(SpringUtils.getBookCategory(entityManager, 1));
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT - 1, SpringUtils.getBookCategoriesCount(entityManager));
@@ -254,22 +269,30 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testRemoveWithBookCategoryWithNullId() {
-		bookCategoryFacade.remove(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryFacade.remove(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with book category with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testRemoveWithBookCategoryWithBadId() {
-		bookCategoryFacade.remove(ToGenerator.createBookCategory(Integer.MAX_VALUE));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(Integer.MAX_VALUE);
+
+		bookCategoryFacade.remove(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)}. */
 	@Test
 	public void testDuplicate() {
+		final BookCategoryTO bookCategoryTO = objectGenerator.generate(BookCategoryTO.class);
+		bookCategoryTO.setId(BOOK_CATEGORIES_COUNT);
 		final BookCategory bookCategory = SpringEntitiesUtils.getBookCategory(BOOK_CATEGORIES_COUNT);
 		bookCategory.setId(BOOK_CATEGORIES_COUNT + 1);
 
-		bookCategoryFacade.duplicate(ToGenerator.createBookCategory(BOOK_CATEGORIES_COUNT));
+		bookCategoryFacade.duplicate(bookCategoryTO);
 
 		final BookCategory duplicatedBookCategory = SpringUtils.getBookCategory(entityManager, BOOK_CATEGORIES_COUNT + 1);
 		DeepAsserts.assertEquals(bookCategory, duplicatedBookCategory);
@@ -285,24 +308,32 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testDuplicateWithBookCategoryWithNullId() {
-		bookCategoryFacade.duplicate(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryFacade.duplicate(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with book category with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testDuplicateWithBookCategoryWithBadId() {
-		bookCategoryFacade.duplicate(ToGenerator.createBookCategory(Integer.MAX_VALUE));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(Integer.MAX_VALUE);
+
+		bookCategoryFacade.duplicate(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)}. */
 	@Test
 	public void testMoveUp() {
+		final BookCategoryTO bookCategoryTO = objectGenerator.generate(BookCategoryTO.class);
+		bookCategoryTO.setId(2);
 		final BookCategory bookCategory1 = SpringEntitiesUtils.getBookCategory(1);
 		bookCategory1.setPosition(1);
 		final BookCategory bookCategory2 = SpringEntitiesUtils.getBookCategory(2);
 		bookCategory2.setPosition(0);
 
-		bookCategoryFacade.moveUp(ToGenerator.createBookCategory(2));
+		bookCategoryFacade.moveUp(bookCategoryTO);
 		DeepAsserts.assertEquals(bookCategory1, SpringUtils.getBookCategory(entityManager, 1));
 		DeepAsserts.assertEquals(bookCategory2, SpringUtils.getBookCategory(entityManager, 2));
 		for (int i = 3; i <= BOOK_CATEGORIES_COUNT; i++) {
@@ -320,31 +351,41 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithBookCategoryWithNullId() {
-		bookCategoryFacade.moveUp(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryFacade.moveUp(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithNotMoveableArgument() {
-		bookCategoryFacade.moveUp(ToGenerator.createBookCategory(1));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(1);
+
+		bookCategoryFacade.moveUp(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveUpWithBadId() {
-		bookCategoryFacade.moveUp(ToGenerator.createBookCategory(Integer.MAX_VALUE));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(Integer.MAX_VALUE);
+
+		bookCategoryFacade.moveUp(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)}. */
 	@Test
 	public void testMoveDown() {
-		final BookCategoryTO bookCategory = ToGenerator.createBookCategory(1);
+		final BookCategoryTO bookCategoryTO = objectGenerator.generate(BookCategoryTO.class);
+		bookCategoryTO.setId(1);
 		final BookCategory bookCategory1 = SpringEntitiesUtils.getBookCategory(1);
 		bookCategory1.setPosition(1);
 		final BookCategory bookCategory2 = SpringEntitiesUtils.getBookCategory(2);
 		bookCategory2.setPosition(0);
 
-		bookCategoryFacade.moveDown(bookCategory);
+		bookCategoryFacade.moveDown(bookCategoryTO);
 		DeepAsserts.assertEquals(bookCategory1, SpringUtils.getBookCategory(entityManager, 1));
 		DeepAsserts.assertEquals(bookCategory2, SpringUtils.getBookCategory(entityManager, 2));
 		for (int i = 3; i <= BOOK_CATEGORIES_COUNT; i++) {
@@ -362,29 +403,42 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithBookCategoryWithNullId() {
-		bookCategoryFacade.moveDown(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryFacade.moveDown(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		bookCategoryFacade.moveDown(ToGenerator.createBookCategory(BOOK_CATEGORIES_COUNT));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(BOOK_CATEGORIES_COUNT);
+
+		bookCategoryFacade.moveDown(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveDownWithBadId() {
-		bookCategoryFacade.moveDown(ToGenerator.createBookCategory(Integer.MAX_VALUE));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(Integer.MAX_VALUE);
+
+		bookCategoryFacade.moveDown(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with existing bookCategory. */
 	@Test
 	public void testExists() {
 		for (int i = 1; i <= BOOK_CATEGORIES_COUNT; i++) {
-			assertTrue(bookCategoryFacade.exists(ToGenerator.createBookCategory(i)));
+			final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+			bookCategory.setId(i);
+			assertTrue(bookCategoryFacade.exists(bookCategory));
 		}
 
-		assertFalse(bookCategoryFacade.exists(ToGenerator.createBookCategory(Integer.MAX_VALUE)));
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(Integer.MAX_VALUE);
+		assertFalse(bookCategoryFacade.exists(bookCategory));
 
 		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
 	}
@@ -398,7 +452,10 @@ public class BookCategoryFacadeImplSpringTest {
 	/** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testExistsWithBookCategoryWithNullId() {
-		bookCategoryFacade.exists(ToGenerator.createBookCategory());
+		final BookCategoryTO bookCategory = objectGenerator.generate(BookCategoryTO.class);
+		bookCategory.setId(null);
+
+		bookCategoryFacade.exists(bookCategory);
 	}
 
 	/** Test method for {@link BookCategoryFacade#updatePositions()}. */

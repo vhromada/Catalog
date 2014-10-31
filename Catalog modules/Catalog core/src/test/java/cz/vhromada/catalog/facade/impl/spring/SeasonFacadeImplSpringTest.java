@@ -31,6 +31,7 @@ import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.impl.SeasonFacadeImpl;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -49,6 +50,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
+//TODO vhromada 31.10.2014: implement object generator
 public class SeasonFacadeImplSpringTest {
 
 	/** Instance of {@link EntityManager} */
@@ -62,6 +64,10 @@ public class SeasonFacadeImplSpringTest {
 	/** Instance of (@link SeasonFacade} */
 	@Autowired
 	private SeasonFacade seasonFacade;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Initializes database. */
 	@Before

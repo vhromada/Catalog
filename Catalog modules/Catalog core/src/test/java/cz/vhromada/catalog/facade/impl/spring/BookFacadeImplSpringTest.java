@@ -23,6 +23,7 @@ import cz.vhromada.catalog.facade.BookFacade;
 import cz.vhromada.catalog.facade.impl.BookFacadeImpl;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -41,6 +42,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
+//TODO vhromada 31.10.2014: implement object generator
 public class BookFacadeImplSpringTest {
 
 	/** Instance of {@link EntityManager} */
@@ -54,6 +56,10 @@ public class BookFacadeImplSpringTest {
 	/** Instance of (@link BookFacade} */
 	@Autowired
 	private BookFacade bookFacade;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Initializes database. */
 	@Before

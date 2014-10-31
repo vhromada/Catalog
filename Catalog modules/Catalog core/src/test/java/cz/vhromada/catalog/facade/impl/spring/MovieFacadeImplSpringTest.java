@@ -8,9 +8,7 @@ import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
 import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
 import static cz.vhromada.catalog.commons.TestConstants.BAD_SUBTITLES;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.MEDIA;
 import static cz.vhromada.catalog.commons.TestConstants.MEDIUM_1;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
 import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -19,7 +17,6 @@ import static org.junit.Assert.assertTrue;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
@@ -31,9 +28,11 @@ import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.impl.MovieFacadeImpl;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +48,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
+//TODO vhromada 31.10.2014: implement object generator
 public class MovieFacadeImplSpringTest {
 
 	/** Instance of {@link EntityManager} */
@@ -62,6 +62,10 @@ public class MovieFacadeImplSpringTest {
 	/** Instance of {@link MovieFacade} */
 	@Autowired
 	private MovieFacade movieFacade;
+
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
 
 	/** Initializes database. */
 	@Before
@@ -115,16 +119,10 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)}. */
 	@Test
 	public void testAdd() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
+		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
 		movie.setGenres(CollectionUtils.newList(SpringToUtils.getGenre(4)));
-		final Movie expectedMovie = EntityGenerator.createMovie(MOVIES_COUNT + 1);
-		for (Medium medium : expectedMovie.getMedia()) {
-			medium.setId(MEDIA_COUNT + expectedMovie.getMedia().indexOf(medium) + 1);
-			medium.setNumber(expectedMovie.getMedia().indexOf(medium) + 1);
-			medium.setLength(MEDIA.get(expectedMovie.getMedia().indexOf(medium)));
-		}
-		expectedMovie.setPosition(MOVIES_COUNT);
-		expectedMovie.setGenres(CollectionUtils.newList(SpringEntitiesUtils.getGenre(4)));
 
 		movieFacade.add(movie);
 
@@ -136,7 +134,6 @@ public class MovieFacadeImplSpringTest {
 		for (int i = 0; i < movie.getMedia().size(); i++) {
 			DeepAsserts.assertEquals(movie.getMedia().get(i), addedMovie.getMedia().get(i).getLength());
 		}
-		DeepAsserts.assertEquals(expectedMovie, addedMovie);
 		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
 	}
 
@@ -149,13 +146,17 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMovieWithNotNullId() {
-		movieFacade.add(ToGenerator.createMovie(Integer.MAX_VALUE));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(Integer.MAX_VALUE);
+
+		movieFacade.add(movie);
 	}
 
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null czech name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullCzechName() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setCzechName(null);
 
 		movieFacade.add(movie);
@@ -164,7 +165,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with empty string as czech name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEmptyCzechName() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setCzechName("");
 
 		movieFacade.add(movie);
@@ -173,7 +175,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null original name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullOriginalName() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setOriginalName(null);
 
 		movieFacade.add(movie);
@@ -182,7 +185,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with empty string as original name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEmptyOriginalName() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setOriginalName("");
 
 		movieFacade.add(movie);
@@ -191,7 +195,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with bad minimum year. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimumYear() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setYear(BAD_MIN_YEAR);
 
 		movieFacade.add(movie);
@@ -200,7 +205,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with bad maximum year. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximumYear() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setYear(BAD_MAX_YEAR);
 
 		movieFacade.add(movie);
@@ -209,7 +215,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null language. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullLanguage() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setLanguage(null);
 
 		movieFacade.add(movie);
@@ -218,7 +225,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null subtitles. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullSubtitles() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setSubtitles(null);
 
 		movieFacade.add(movie);
@@ -227,7 +235,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with subtitles with null value. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadSubtitles() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setSubtitles(BAD_SUBTITLES);
 
 		movieFacade.add(movie);
@@ -236,7 +245,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null media. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullMedia() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setMedia(null);
 
 		movieFacade.add(movie);
@@ -245,7 +255,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with media with null value. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMedia() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setMedia(CollectionUtils.newList(MEDIUM_1, null));
 
 		movieFacade.add(movie);
@@ -254,7 +265,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with media with negative value as medium. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithMediaWithBadMedium() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setMedia(CollectionUtils.newList(MEDIUM_1, -1));
 
 		movieFacade.add(movie);
@@ -263,7 +275,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null URL to ČSFD page about movie. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullCsfd() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setCsfd(null);
 
 		movieFacade.add(movie);
@@ -272,7 +285,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with bad minimal IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimalImdb() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setImdbCode(BAD_MIN_IMDB_CODE);
 
 		movieFacade.add(movie);
@@ -281,7 +295,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with bad divider IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadDividerImdb() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setImdbCode(0);
 
 		movieFacade.add(movie);
@@ -290,7 +305,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with bad maximal IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximalImdb() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setImdbCode(BAD_MAX_IMDB_CODE);
 
 		movieFacade.add(movie);
@@ -299,7 +315,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null URL to english Wikipedia page about movie. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullWikiEn() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setWikiEn(null);
 
 		movieFacade.add(movie);
@@ -308,7 +325,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null URL to czech Wikipedia page about movie. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullWikiCz() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setWikiCz(null);
 
 		movieFacade.add(movie);
@@ -317,7 +335,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null path to file with movie's picture. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullPicture() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setPicture(null);
 		movieFacade.add(movie);
 	}
@@ -325,7 +344,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullNote() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setNote(null);
 
 		movieFacade.add(movie);
@@ -334,7 +354,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with null genres. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithNullGenres() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setGenres(null);
 
 		movieFacade.add(movie);
@@ -343,7 +364,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with genres with null value. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadGenres() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), null));
 
 		movieFacade.add(movie);
@@ -352,7 +374,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with genres with genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithGenresWithGenreWithNullId() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		movie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), ToGenerator.createGenre()));
 
 		movieFacade.add(movie);
@@ -361,7 +384,8 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with movie with genres with genre with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithGenresWithGenreWithNullName() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
 		final GenreTO badGenre = ToGenerator.createGenre(SECONDARY_INNER_ID);
 		badGenre.setName(null);
 		movie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), badGenre));
@@ -374,13 +398,6 @@ public class MovieFacadeImplSpringTest {
 	public void testUpdate() {
 		final MovieTO movie = ToGenerator.createMovie(1);
 		movie.setGenres(CollectionUtils.newList(SpringToUtils.getGenre(4)));
-		final Movie expectedMovie = EntityGenerator.createMovie(1);
-		for (Medium medium : expectedMovie.getMedia()) {
-			medium.setId(MEDIA_COUNT + expectedMovie.getMedia().indexOf(medium) + 1);
-			medium.setNumber(expectedMovie.getMedia().indexOf(medium) + 1);
-			medium.setLength(MEDIA.get(expectedMovie.getMedia().indexOf(medium)));
-		}
-		expectedMovie.setGenres(CollectionUtils.newList(SpringEntitiesUtils.getGenre(4)));
 
 		movieFacade.update(movie);
 
@@ -390,7 +407,6 @@ public class MovieFacadeImplSpringTest {
 		for (int i = 0; i < movie.getMedia().size(); i++) {
 			DeepAsserts.assertEquals(movie.getMedia().get(i), updatedMovie.getMedia().get(i).getLength());
 		}
-		DeepAsserts.assertEquals(expectedMovie, updatedMovie);
 		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
@@ -403,13 +419,16 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMovieWithNullId() {
-		movieFacade.update(ToGenerator.createMovie());
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
+
+		movieFacade.update(movie);
 	}
 
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null czech name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullCzechName() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setCzechName(null);
 
 		movieFacade.update(movie);
@@ -418,7 +437,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with empty string as czech name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEmptyCzechName() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setCzechName("");
 
 		movieFacade.update(movie);
@@ -427,7 +446,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null original name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullOriginalName() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setOriginalName(null);
 
 		movieFacade.update(movie);
@@ -436,7 +455,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with empty string as original name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEmptyOriginalName() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setOriginalName("");
 
 		movieFacade.update(movie);
@@ -445,7 +464,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with bad minimum year. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMinimumYear() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setYear(BAD_MIN_YEAR);
 
 		movieFacade.update(movie);
@@ -454,7 +473,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with bad maximum year. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMaximumYear() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setYear(BAD_MAX_YEAR);
 
 		movieFacade.update(movie);
@@ -463,7 +482,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null language. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullLanguage() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setLanguage(null);
 
 		movieFacade.update(movie);
@@ -472,7 +491,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null subtitles. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullSubtitles() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setSubtitles(null);
 
 		movieFacade.update(movie);
@@ -481,7 +500,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with subtitles with null value. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadSubtitles() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setSubtitles(BAD_SUBTITLES);
 
 		movieFacade.update(movie);
@@ -490,7 +509,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null media. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullMedia() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setMedia(null);
 
 		movieFacade.update(movie);
@@ -499,7 +518,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with media with null value. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMedia() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setMedia(CollectionUtils.newList(MEDIUM_1, null));
 
 		movieFacade.update(movie);
@@ -508,7 +527,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with media with negative value as medium. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithMediaWithBadMedium() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setMedia(CollectionUtils.newList(MEDIUM_1, -1));
 
 		movieFacade.update(movie);
@@ -517,7 +536,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null URL to ČSFD page about movie. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullCsfd() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setCsfd(null);
 
 		movieFacade.update(movie);
@@ -526,7 +545,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with bad minimal IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMinimalImdb() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setImdbCode(BAD_MIN_IMDB_CODE);
 
 		movieFacade.update(movie);
@@ -535,7 +554,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with bad divider IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadDividerImdb() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setImdbCode(0);
 
 		movieFacade.update(movie);
@@ -544,7 +563,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with bad maximal IMDB code. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMaximalImdb() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setImdbCode(BAD_MAX_IMDB_CODE);
 
 		movieFacade.update(movie);
@@ -553,7 +572,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null URL to english Wikipedia page about movie. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullWikiEn() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setWikiEn(null);
 
 		movieFacade.update(movie);
@@ -562,7 +581,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null URL to czech Wikipedia page about movie. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullWikiCz() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setWikiCz(null);
 
 		movieFacade.update(movie);
@@ -571,7 +590,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null path to file with movie's picture. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullPicture() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setPicture(null);
 
 		movieFacade.update(movie);
@@ -580,7 +599,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null note. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullNote() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setNote(null);
 
 		movieFacade.update(movie);
@@ -589,7 +608,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with null genres. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNullGenres() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setGenres(null);
 
 		movieFacade.update(movie);
@@ -598,7 +617,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with genres with null value. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadGenres() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), null));
 
 		movieFacade.update(movie);
@@ -607,7 +626,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with genres with genre with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenresWithGenreWithNullId() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		movie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), ToGenerator.createGenre()));
 
 		movieFacade.update(movie);
@@ -616,7 +635,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with genres with genre with null name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithGenresWithGenreWithNullName() {
-		final MovieTO movie = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
 		final GenreTO badGenre = ToGenerator.createGenre(SECONDARY_INNER_ID);
 		badGenre.setName(null);
 		movie.setGenres(CollectionUtils.newList(ToGenerator.createGenre(INNER_ID), badGenre));
@@ -627,13 +646,20 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with movie with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithMovieWithBadId() {
-		movieFacade.update(ToGenerator.createMovie(Integer.MAX_VALUE));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(Integer.MAX_VALUE);
+		movie.setYear(objectGenerator.generate(DateTime.class).getYear());
+
+		movieFacade.update(movie);
 	}
 
 	/** Test method for {@link MovieFacade#remove(MovieTO)}. */
 	@Test
 	public void testRemove() {
-		movieFacade.remove(ToGenerator.createMovie(1));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(1);
+
+		movieFacade.remove(movie);
 
 		assertNull(SpringUtils.getMovie(entityManager, 1));
 		DeepAsserts.assertEquals(MOVIES_COUNT - 1, SpringUtils.getMoviesCount(entityManager));
@@ -648,25 +674,33 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#remove(MovieTO)} with movie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testRemoveWithMovieWithNullId() {
-		movieFacade.remove(ToGenerator.createMovie());
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
+
+		movieFacade.remove(movie);
 	}
 
 	/** Test method for {@link MovieFacade#remove(MovieTO)} with movie with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testRemoveWithMovieWithBadId() {
-		movieFacade.remove(ToGenerator.createMovie(Integer.MAX_VALUE));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(Integer.MAX_VALUE);
+
+		movieFacade.remove(movie);
 	}
 
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)}. */
 	@Test
 	public void testDuplicate() {
+		final MovieTO movieTO = objectGenerator.generate(MovieTO.class);
+		movieTO.setId(MOVIES_COUNT);
 		final Movie movie = SpringEntitiesUtils.getMovie(MOVIES_COUNT);
 		movie.setId(MOVIES_COUNT + 1);
 		for (Medium medium : movie.getMedia()) {
 			medium.setId(MEDIA_COUNT + movie.getMedia().indexOf(medium) + 1);
 		}
 
-		movieFacade.duplicate(ToGenerator.createMovie(MOVIES_COUNT));
+		movieFacade.duplicate(movieTO);
 
 		final Movie duplicatedMovie = SpringUtils.getMovie(entityManager, MOVIES_COUNT + 1);
 		DeepAsserts.assertEquals(movie, duplicatedMovie);
@@ -682,24 +716,32 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)} with movie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testDuplicateWithMovieWithNullId() {
-		movieFacade.duplicate(ToGenerator.createMovie());
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
+
+		movieFacade.duplicate(movie);
 	}
 
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)} with movie with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testDuplicateWithMovieWithBadId() {
-		movieFacade.duplicate(ToGenerator.createMovie(Integer.MAX_VALUE));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(Integer.MAX_VALUE);
+
+		movieFacade.duplicate(movie);
 	}
 
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)}. */
 	@Test
 	public void testMoveUp() {
+		final MovieTO movieTO = objectGenerator.generate(MovieTO.class);
+		movieTO.setId(2);
 		final Movie movie1 = SpringEntitiesUtils.getMovie(1);
 		movie1.setPosition(1);
 		final Movie movie2 = SpringEntitiesUtils.getMovie(2);
 		movie2.setPosition(0);
 
-		movieFacade.moveUp(ToGenerator.createMovie(2));
+		movieFacade.moveUp(movieTO);
 		DeepAsserts.assertEquals(movie1, SpringUtils.getMovie(entityManager, 1));
 		DeepAsserts.assertEquals(movie2, SpringUtils.getMovie(entityManager, 2));
 		for (int i = 3; i <= MOVIES_COUNT; i++) {
@@ -717,31 +759,41 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with movie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithMovieWithNullId() {
-		movieFacade.moveUp(ToGenerator.createMovie());
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
+
+		movieFacade.moveUp(movie);
 	}
 
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveUpWithNotMoveableArgument() {
-		movieFacade.moveUp(ToGenerator.createMovie(1));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(1);
+
+		movieFacade.moveUp(movie);
 	}
 
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveUpWithBadId() {
-		movieFacade.moveUp(ToGenerator.createMovie(Integer.MAX_VALUE));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(Integer.MAX_VALUE);
+
+		movieFacade.moveUp(movie);
 	}
 
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)}. */
 	@Test
 	public void testMoveDown() {
-		final MovieTO movie = ToGenerator.createMovie(1);
+		final MovieTO movieTO = objectGenerator.generate(MovieTO.class);
+		movieTO.setId(1);
 		final Movie movie1 = SpringEntitiesUtils.getMovie(1);
 		movie1.setPosition(1);
 		final Movie movie2 = SpringEntitiesUtils.getMovie(2);
 		movie2.setPosition(0);
 
-		movieFacade.moveDown(movie);
+		movieFacade.moveDown(movieTO);
 		DeepAsserts.assertEquals(movie1, SpringUtils.getMovie(entityManager, 1));
 		DeepAsserts.assertEquals(movie2, SpringUtils.getMovie(entityManager, 2));
 		for (int i = 3; i <= MOVIES_COUNT; i++) {
@@ -759,29 +811,42 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with movie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithMovieWithNullId() {
-		movieFacade.moveDown(ToGenerator.createMovie());
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
+
+		movieFacade.moveDown(movie);
 	}
 
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		movieFacade.moveDown(ToGenerator.createMovie(MOVIES_COUNT));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(MOVIES_COUNT);
+
+		movieFacade.moveDown(movie);
 	}
 
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testMoveDownWithBadId() {
-		movieFacade.moveDown(ToGenerator.createMovie(Integer.MAX_VALUE));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(Integer.MAX_VALUE);
+
+		movieFacade.moveDown(movie);
 	}
 
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with existing movie. */
 	@Test
 	public void testExists() {
 		for (int i = 1; i <= MOVIES_COUNT; i++) {
-			assertTrue(movieFacade.exists(ToGenerator.createMovie(i)));
+			final MovieTO movie = objectGenerator.generate(MovieTO.class);
+			movie.setId(i);
+			assertTrue(movieFacade.exists(movie));
 		}
 
-		assertFalse(movieFacade.exists(ToGenerator.createMovie(Integer.MAX_VALUE)));
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(Integer.MAX_VALUE);
+		assertFalse(movieFacade.exists(movie));
 
 		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
@@ -795,7 +860,10 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with movie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testExistsWithMovieWithNullId() {
-		movieFacade.exists(ToGenerator.createMovie());
+		final MovieTO movie = objectGenerator.generate(MovieTO.class);
+		movie.setId(null);
+
+		movieFacade.exists(movie);
 	}
 
 	/** Test method for {@link MovieFacade#updatePositions()}. */

@@ -1,12 +1,11 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter;
 import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +27,14 @@ public class ProgramToProgramTOConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link ProgramToProgramTOConverter#convert(Program)}. */
 	@Test
 	public void testConvert() {
-		final Program program = EntityGenerator.createProgram(ID);
+		final Program program = objectGenerator.generate(Program.class);
 		final ProgramTO programTO = conversionService.convert(program, ProgramTO.class);
 		DeepAsserts.assertNotNull(programTO);
 		DeepAsserts.assertEquals(program, programTO, "additionalData");

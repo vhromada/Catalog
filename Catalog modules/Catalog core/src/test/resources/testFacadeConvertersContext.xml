@@ -7,6 +7,8 @@
 
 	<import resource="facadeConvertersContext.xml"/>
 
+	<import resource="testGeneratorContext.xml"/>
+
 	<context:component-scan base-package="cz.vhromada.catalog.facade.converters"/>
 
 </beans>

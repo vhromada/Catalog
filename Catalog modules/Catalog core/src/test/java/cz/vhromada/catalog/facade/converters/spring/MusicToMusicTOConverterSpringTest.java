@@ -1,12 +1,11 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.facade.converters.MusicToMusicTOConverter;
 import cz.vhromada.catalog.facade.to.MusicTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +27,14 @@ public class MusicToMusicTOConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link MusicToMusicTOConverter#convert(Music)}. */
 	@Test
 	public void testConvert() {
-		final Music music = EntityGenerator.createMusic(ID);
+		final Music music = objectGenerator.generate(Music.class);
 		final MusicTO musicTO = conversionService.convert(music, MusicTO.class);
 		DeepAsserts.assertNotNull(musicTO, "totalLength");
 		DeepAsserts.assertEquals(music, musicTO, "songsCount", "totalLength");

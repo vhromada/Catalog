@@ -1,13 +1,11 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.facade.converters.BookToBookTOConverter;
 import cz.vhromada.catalog.facade.to.BookTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +27,14 @@ public class BookToBookTOConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link BookToBookTOConverter#convert(Book)}. */
 	@Test
 	public void testConvert() {
-		final Book book = EntityGenerator.createBook(ID, EntityGenerator.createBookCategory(INNER_ID));
+		final Book book = objectGenerator.generate(Book.class);
 		final BookTO bookTO = conversionService.convert(book, BookTO.class);
 		DeepAsserts.assertNotNull(bookTO);
 		DeepAsserts.assertEquals(book, bookTO, "booksCount");

@@ -1,13 +1,11 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.facade.converters.SeasonToSeasonTOConverter;
 import cz.vhromada.catalog.facade.to.SeasonTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +27,14 @@ public class SeasonToSeasonTOConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link SeasonToSeasonTOConverter#convert(Season)}. */
 	@Test
 	public void testConvert() {
-		final Season season = EntityGenerator.createSeason(ID, EntityGenerator.createSerie(INNER_ID));
+		final Season season = objectGenerator.generate(Season.class);
 		final SeasonTO seasonTO = conversionService.convert(season, SeasonTO.class);
 		DeepAsserts.assertNotNull(seasonTO, "totalLength");
 		DeepAsserts.assertEquals(season, seasonTO, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");

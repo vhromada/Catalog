@@ -1,12 +1,11 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Game;
 import cz.vhromada.catalog.facade.converters.GameTOToGameConverter;
 import cz.vhromada.catalog.facade.to.GameTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +27,14 @@ public class GameTOToGameConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link GameTOToGameConverter#convert(GameTO)}. */
 	@Test
 	public void testConvert() {
-		final GameTO gameTO = ToGenerator.createGame(ID);
+		final GameTO gameTO = objectGenerator.generate(GameTO.class);
 		final Game game = conversionService.convert(gameTO, Game.class);
 		DeepAsserts.assertNotNull(game);
 		DeepAsserts.assertEquals(gameTO, game, "additionalData");

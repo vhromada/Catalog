@@ -1,12 +1,11 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter;
 import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +27,14 @@ public class GenreToGenreTOConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link GenreToGenreTOConverter#convert(Genre)}. */
 	@Test
 	public void testConvert() {
-		final Genre genre = EntityGenerator.createGenre(ID);
+		final Genre genre = objectGenerator.generate(Genre.class);
 		final GenreTO genreTO = conversionService.convert(genre, GenreTO.class);
 		DeepAsserts.assertNotNull(genreTO);
 		DeepAsserts.assertEquals(genre, genreTO);

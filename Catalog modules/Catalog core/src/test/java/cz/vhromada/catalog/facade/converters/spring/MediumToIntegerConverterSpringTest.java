@@ -2,9 +2,9 @@ package cz.vhromada.catalog.facade.converters.spring;
 
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.EntityGenerator;
 import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.catalog.facade.converters.MediumToIntegerConverter;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +26,14 @@ public class MediumToIntegerConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link MediumToIntegerConverter#convert(Medium)}. */
 	@Test
 	public void testConvert() {
-		final Medium medium = EntityGenerator.createMedium();
+		final Medium medium = objectGenerator.generate(Medium.class);
 		final Integer length = conversionService.convert(medium, Integer.class);
 		DeepAsserts.assertNotNull(length);
 		DeepAsserts.assertEquals(medium.getLength(), length);

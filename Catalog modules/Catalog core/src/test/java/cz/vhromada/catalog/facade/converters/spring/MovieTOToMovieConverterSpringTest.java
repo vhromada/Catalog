@@ -1,12 +1,11 @@
 package cz.vhromada.catalog.facade.converters.spring;
 
-import static cz.vhromada.catalog.commons.TestConstants.ID;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.facade.converters.MovieTOToMovieConverter;
 import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +27,14 @@ public class MovieTOToMovieConverterSpringTest {
 	@Autowired
 	private ConversionService conversionService;
 
+	/** Instance of {@link ObjectGenerator} */
+	@Autowired
+	private ObjectGenerator objectGenerator;
+
 	/** Test method for {@link MovieTOToMovieConverter#convert(MovieTO)}. */
 	@Test
 	public void testConvert() {
-		final MovieTO movieTO = ToGenerator.createMovie(ID);
+		final MovieTO movieTO = objectGenerator.generate(MovieTO.class);
 		final Movie movie = conversionService.convert(movieTO, Movie.class);
 		DeepAsserts.assertNotNull(movie);
 		DeepAsserts.assertEquals(movieTO, movie, "subtitlesAsString", "media", "totalLength", "genresAsString");

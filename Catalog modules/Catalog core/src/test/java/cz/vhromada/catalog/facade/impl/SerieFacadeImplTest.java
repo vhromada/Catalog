@@ -1,13 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ADD_ID;
-import static cz.vhromada.catalog.commons.TestConstants.ADD_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_INNER_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -28,9 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Season;
@@ -63,7 +54,7 @@ import org.springframework.core.convert.ConversionService;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SerieFacadeImplTest {
+public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SerieService} */
 	@Mock
@@ -92,54 +83,6 @@ public class SerieFacadeImplTest {
 	/** Instance of {@link SerieFacade} */
 	@InjectMocks
 	private SerieFacade serieFacade = new SerieFacadeImpl();
-
-	/** Test method for {@link SerieFacadeImpl#getSerieService()} and {@link SerieFacadeImpl#setSerieService(SerieService)}. */
-	@Test
-	public void testSerieService() {
-		final SerieFacadeImpl serieFacade = new SerieFacadeImpl();
-		serieFacade.setSerieService(serieService);
-		DeepAsserts.assertEquals(serieService, serieFacade.getSerieService());
-	}
-
-	/** Test method for {@link SerieFacadeImpl#getSeasonService()} and {@link SerieFacadeImpl#setSeasonService(SeasonService)}. */
-	@Test
-	public void testSeasonService() {
-		final SerieFacadeImpl serieFacade = new SerieFacadeImpl();
-		serieFacade.setSeasonService(seasonService);
-		DeepAsserts.assertEquals(seasonService, serieFacade.getSeasonService());
-	}
-
-	/** Test method for {@link SerieFacadeImpl#getEpisodeService()} and {@link SerieFacadeImpl#setEpisodeService(EpisodeService)}. */
-	@Test
-	public void testEpisodeService() {
-		final SerieFacadeImpl serieFacade = new SerieFacadeImpl();
-		serieFacade.setEpisodeService(episodeService);
-		DeepAsserts.assertEquals(episodeService, serieFacade.getEpisodeService());
-	}
-
-	/** Test method for {@link SerieFacadeImpl#getGenreService()} and {@link SerieFacadeImpl#setGenreService(GenreService)}}. */
-	@Test
-	public void testGenreService() {
-		final SerieFacadeImpl serieFacade = new SerieFacadeImpl();
-		serieFacade.setGenreService(genreService);
-		DeepAsserts.assertEquals(genreService, serieFacade.getGenreService());
-	}
-
-	/** Test method for {@link SerieFacadeImpl#getConversionService()} and {@link SerieFacadeImpl#setConversionService(ConversionService)}. */
-	@Test
-	public void testConversionService() {
-		final SerieFacadeImpl serieFacade = new SerieFacadeImpl();
-		serieFacade.setConversionService(conversionService);
-		DeepAsserts.assertEquals(conversionService, serieFacade.getConversionService());
-	}
-
-	/** Test method for {@link SerieFacadeImpl#getSerieTOValidator()} and {@link SerieFacadeImpl#setSerieTOValidator(SerieTOValidator)}. */
-	@Test
-	public void testSerieTOValidator() {
-		final SerieFacadeImpl serieFacade = new SerieFacadeImpl();
-		serieFacade.setSerieTOValidator(serieTOValidator);
-		DeepAsserts.assertEquals(serieTOValidator, serieFacade.getSerieTOValidator());
-	}
 
 	/** Test method for {@link SerieFacade#newData()}. */
 	@Test
@@ -176,20 +119,20 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#getSeries()}. */
 	@Test
 	public void testGetSeries() {
-		final List<Serie> series = CollectionUtils.newList(EntityGenerator.createSerie(PRIMARY_ID), EntityGenerator.createSerie(SECONDARY_ID));
-		final List<SerieTO> seriesList = CollectionUtils.newList(ToGenerator.createSerie(PRIMARY_ID), ToGenerator.createSerie(SECONDARY_ID));
+		final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
+		final List<SerieTO> seriesList = CollectionUtils.newList(generate(SerieTO.class), generate(SerieTO.class));
 		final List<Season> seasons = new ArrayList<>();
 		final List<Episode> episodes = new ArrayList<>();
-		for (int i = 0; i < INNER_COUNT; i++) {
-			seasons.add(EntityGenerator.createSeason(i));
+		for (int i = 0; i < 5; i++) {
+			seasons.add(generate(Season.class));
 		}
-		for (int i = 0; i < INNER_INNER_COUNT / INNER_COUNT; i++) {
-			episodes.add(EntityGenerator.createEpisode(i));
+		for (int i = 0; i < 10; i++) {
+			episodes.add(generate(Episode.class));
 		}
 		when(serieService.getSeries()).thenReturn(series);
 		when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-		when(episodeService.getTotalLengthBySeason(any(Season.class))).thenReturn(new Time(LENGTH * INNER_INNER_COUNT / INNER_COUNT));
+		when(episodeService.getTotalLengthBySeason(any(Season.class))).thenReturn(generate(Time.class));
 		for (int i = 0; i < series.size(); i++) {
 			final Serie serie = series.get(i);
 			when(conversionService.convert(serie, SerieTO.class)).thenReturn(seriesList.get(i));
@@ -257,25 +200,25 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#getSerie(Integer)} with existing serie. */
 	@Test
 	public void testGetSerieWithExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		final List<Season> seasons = new ArrayList<>();
 		final List<Episode> episodes = new ArrayList<>();
-		for (int i = 0; i < INNER_COUNT; i++) {
-			seasons.add(EntityGenerator.createSeason(i));
+		for (int i = 0; i < 5; i++) {
+			seasons.add(generate(Season.class));
 		}
-		for (int i = 0; i < INNER_INNER_COUNT / INNER_COUNT; i++) {
-			episodes.add(EntityGenerator.createEpisode(i));
+		for (int i = 0; i < 10; i++) {
+			episodes.add(generate(Episode.class));
 		}
 		when(serieService.getSerie(anyInt())).thenReturn(serie);
 		when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
 		when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-		when(episodeService.getTotalLengthBySeason(any(Season.class))).thenReturn(new Time(LENGTH * INNER_INNER_COUNT / INNER_COUNT));
+		when(episodeService.getTotalLengthBySeason(any(Season.class))).thenReturn(generate(Time.class));
 		when(conversionService.convert(any(Serie.class), eq(SerieTO.class))).thenReturn(serieTO);
 
-		DeepAsserts.assertEquals(serieTO, serieFacade.getSerie(PRIMARY_ID));
+		DeepAsserts.assertEquals(serieTO, serieFacade.getSerie(serieTO.getId()));
 
-		verify(serieService).getSerie(PRIMARY_ID);
+		verify(serieService).getSerie(serieTO.getId());
 		verify(conversionService).convert(serie, SerieTO.class);
 		verify(seasonService).findSeasonsBySerie(serie);
 		for (Season season : seasons) {
@@ -361,15 +304,19 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)}. */
 	@Test
 	public void testAdd() {
-		final Serie serie = EntityGenerator.createSerie();
-		final SerieTO serieTO = ToGenerator.createSerie();
-		doAnswer(setSerieIdAndPosition(ADD_ID, ADD_POSITION)).when(serieService).add(any(Serie.class));
+		final Serie serie = generate(Serie.class);
+		serie.setId(null);
+		final SerieTO serieTO = generate(SerieTO.class);
+		serieTO.setId(null);
+		final int id = generate(Integer.class);
+		final int position = generate(Integer.class);
+		doAnswer(setSerieIdAndPosition(id, position)).when(serieService).add(any(Serie.class));
 		when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
 		serieFacade.add(serieTO);
-		DeepAsserts.assertEquals(ADD_ID, serie.getId());
-		DeepAsserts.assertEquals(ADD_POSITION, serie.getPosition());
+		DeepAsserts.assertEquals(id, serie.getId());
+		DeepAsserts.assertEquals(position, serie.getPosition());
 
 		verify(serieService).add(serie);
 		for (GenreTO genre : serieTO.getGenres()) {
@@ -428,7 +375,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with argument with bad data. */
 	@Test
 	public void testAddWithBadArgument() {
-		final SerieTO serie = ToGenerator.createSerie();
+		final SerieTO serie = generate(SerieTO.class);
+		serie.setId(null);
 		doThrow(ValidationException.class).when(serieTOValidator).validateNewSerieTO(any(SerieTO.class));
 
 		try {
@@ -446,8 +394,10 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with service tier not setting ID. */
 	@Test
 	public void testAddWithNotServiceTierSettingID() {
-		final Serie serie = EntityGenerator.createSerie();
-		final SerieTO serieTO = ToGenerator.createSerie();
+		final Serie serie = generate(Serie.class);
+		serie.setId(null);
+		final SerieTO serieTO = generate(SerieTO.class);
+		serieTO.setId(null);
 		when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
@@ -470,7 +420,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#add(SerieTO)} with exception in service tier. */
 	@Test
 	public void testAddWithServiceTierException() {
-		final SerieTO serie = ToGenerator.createSerie();
+		final SerieTO serie = generate(SerieTO.class);
+		serie.setId(null);
 		doThrow(ServiceOperationException.class).when(genreService).getGenre(anyInt());
 
 		try {
@@ -489,8 +440,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#update(SerieTO)}. */
 	@Test
 	public void testUpdate() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.exists(any(Serie.class))).thenReturn(true);
 		when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
@@ -555,7 +506,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#update(SerieTO)} with argument with bad data. */
 	@Test
 	public void testUpdateWithBadArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ValidationException.class).when(serieTOValidator).validateExistingSerieTO(any(SerieTO.class));
 
 		try {
@@ -573,8 +524,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#update(SerieTO)} with not existing argument. */
 	@Test
 	public void testUpdateWithNotExistingArgument() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
-		final SerieTO serieTO = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.exists(any(Serie.class))).thenReturn(false);
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
@@ -594,8 +545,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#update(SerieTO)} with exception in service tier. */
 	@Test
 	public void testUpdateWithServiceTierException() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
-		final SerieTO serieTO = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		doThrow(ServiceOperationException.class).when(serieService).exists(any(Serie.class));
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
@@ -616,13 +567,13 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#remove(SerieTO)}. */
 	@Test
 	public void testRemove() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(serie);
 
 		serieFacade.remove(serieTO);
 
-		verify(serieService).getSerie(PRIMARY_ID);
+		verify(serieService).getSerie(serieTO.getId());
 		verify(serieService).remove(serie);
 		verify(serieTOValidator).validateSerieTOWithId(serieTO);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
@@ -662,7 +613,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#remove(SerieTO)} with argument with bad data. */
 	@Test
 	public void testRemoveWithBadArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ValidationException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
 
 		try {
@@ -680,7 +631,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#remove(SerieTO)} with not existing argument. */
 	@Test
 	public void testRemoveWithNotExistingArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(null);
 
 		try {
@@ -690,7 +641,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -698,7 +649,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#remove(SerieTO)} with exception in service tier. */
 	@Test
 	public void testRemoveWithServiceTierException() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ServiceOperationException.class).when(serieService).getSerie(anyInt());
 
 		try {
@@ -708,7 +659,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -716,13 +667,13 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(serie);
 
 		serieFacade.duplicate(serieTO);
 
-		verify(serieService).getSerie(PRIMARY_ID);
+		verify(serieService).getSerie(serieTO.getId());
 		verify(serieService).duplicate(serie);
 		verify(serieTOValidator).validateSerieTOWithId(serieTO);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
@@ -762,7 +713,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)} with argument with bad data. */
 	@Test
 	public void testDuplicateWithBadArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ValidationException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
 
 		try {
@@ -780,7 +731,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)} with not existing argument. */
 	@Test
 	public void testDuplicateWithNotExistingArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(null);
 
 		try {
@@ -790,7 +741,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -798,7 +749,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)} with exception in service tier. */
 	@Test
 	public void testDuplicateWithServiceTierException() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ServiceOperationException.class).when(serieService).getSerie(anyInt());
 
 		try {
@@ -808,7 +759,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -816,15 +767,15 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)}. */
 	@Test
 	public void testMoveUp() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		final List<Serie> series = CollectionUtils.newList(mock(Serie.class), serie);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(serie);
 		when(serieService.getSeries()).thenReturn(series);
 
 		serieFacade.moveUp(serieTO);
 
-		verify(serieService).getSerie(PRIMARY_ID);
+		verify(serieService).getSerie(serieTO.getId());
 		verify(serieService).getSeries();
 		verify(serieService).moveUp(serie);
 		verify(serieTOValidator).validateSerieTOWithId(serieTO);
@@ -865,7 +816,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with argument with bad data. */
 	@Test
 	public void testMoveUpWithBadArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ValidationException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
 
 		try {
@@ -883,7 +834,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with not existing argument. */
 	@Test
 	public void testMoveUpWithNotExistingArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(null);
 
 		try {
@@ -893,7 +844,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -901,9 +852,9 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with not moveable argument. */
 	@Test
 	public void testMoveUpWithNotMoveableArgument() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		final List<Serie> series = CollectionUtils.newList(serie, mock(Serie.class));
-		final SerieTO serieTO = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(serie);
 		when(serieService.getSeries()).thenReturn(series);
 
@@ -914,7 +865,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serieTO.getId());
 		verify(serieService).getSeries();
 		verify(serieTOValidator).validateSerieTOWithId(serieTO);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
@@ -923,7 +874,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with exception in service tier. */
 	@Test
 	public void testMoveUpWithServiceTierException() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ServiceOperationException.class).when(serieService).getSerie(anyInt());
 
 		try {
@@ -933,7 +884,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -941,15 +892,15 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)}. */
 	@Test
 	public void testMoveDown() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
 		final List<Serie> series = CollectionUtils.newList(serie, mock(Serie.class));
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(serie);
 		when(serieService.getSeries()).thenReturn(series);
 
 		serieFacade.moveDown(serieTO);
 
-		verify(serieService).getSerie(PRIMARY_ID);
+		verify(serieService).getSerie(serieTO.getId());
 		verify(serieService).getSeries();
 		verify(serieService).moveDown(serie);
 		verify(serieTOValidator).validateSerieTOWithId(serieTO);
@@ -990,7 +941,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with argument with bad data. */
 	@Test
 	public void testMoveDownWithBadArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ValidationException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
 
 		try {
@@ -1008,7 +959,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with not existing argument. */
 	@Test
 	public void testMoveDownWithNotExistingArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(null);
 
 		try {
@@ -1018,7 +969,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -1026,9 +977,9 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with not moveable argument. */
 	@Test
 	public void testMoveDownWithNotMoveableArgument() {
-		final Serie serie = EntityGenerator.createSerie(Integer.MAX_VALUE);
+		final Serie serie = generate(Serie.class);
 		final List<Serie> series = CollectionUtils.newList(mock(Serie.class), serie);
-		final SerieTO serieTO = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.getSerie(anyInt())).thenReturn(serie);
 		when(serieService.getSeries()).thenReturn(series);
 
@@ -1039,7 +990,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serieTO.getId());
 		verify(serieService).getSeries();
 		verify(serieTOValidator).validateSerieTOWithId(serieTO);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
@@ -1048,7 +999,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with exception in service tier. */
 	@Test
 	public void testMoveDownWithServiceTierException() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ServiceOperationException.class).when(serieService).getSerie(anyInt());
 
 		try {
@@ -1058,7 +1009,7 @@ public class SerieFacadeImplTest {
 			// OK
 		}
 
-		verify(serieService).getSerie(Integer.MAX_VALUE);
+		verify(serieService).getSerie(serie.getId());
 		verify(serieTOValidator).validateSerieTOWithId(serie);
 		verifyNoMoreInteractions(serieService, serieTOValidator);
 	}
@@ -1066,8 +1017,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with existing serie. */
 	@Test
 	public void testExistsWithExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.exists(any(Serie.class))).thenReturn(true);
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
@@ -1082,8 +1033,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with not existing serie. */
 	@Test
 	public void testExistsWithNotExistingSerie() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		when(serieService.exists(any(Serie.class))).thenReturn(false);
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
@@ -1136,7 +1087,7 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with argument with bad data. */
 	@Test
 	public void testExistsWithBadArgument() {
-		final SerieTO serie = ToGenerator.createSerie(Integer.MAX_VALUE);
+		final SerieTO serie = generate(SerieTO.class);
 		doThrow(ValidationException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
 
 		try {
@@ -1154,8 +1105,8 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with exception in service tier. */
 	@Test
 	public void testExistsWithServiceTierException() {
-		final Serie serie = EntityGenerator.createSerie(PRIMARY_ID);
-		final SerieTO serieTO = ToGenerator.createSerie(PRIMARY_ID);
+		final Serie serie = generate(Serie.class);
+		final SerieTO serieTO = generate(SerieTO.class);
 		doThrow(ServiceOperationException.class).when(serieService).exists(any(Serie.class));
 		when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
@@ -1207,9 +1158,10 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#getTotalLength()}. */
 	@Test
 	public void testGetTotalLength() {
-		when(serieService.getTotalLength()).thenReturn(TOTAL_LENGTH);
+		final Time length = generate(Time.class);
+		when(serieService.getTotalLength()).thenReturn(length);
 
-		DeepAsserts.assertEquals(TOTAL_LENGTH, serieFacade.getTotalLength());
+		DeepAsserts.assertEquals(length, serieFacade.getTotalLength());
 
 		verify(serieService).getTotalLength();
 		verifyNoMoreInteractions(serieService);
@@ -1241,9 +1193,10 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#getSeasonsCount()}. */
 	@Test
 	public void testGetSeasonsCount() {
-		when(serieService.getSeasonsCount()).thenReturn(INNER_COUNT);
+		final int count = generate(Integer.class);
+		when(serieService.getSeasonsCount()).thenReturn(count);
 
-		DeepAsserts.assertEquals(INNER_COUNT, serieFacade.getSeasonsCount());
+		DeepAsserts.assertEquals(count, serieFacade.getSeasonsCount());
 
 		verify(serieService).getSeasonsCount();
 		verifyNoMoreInteractions(serieService);
@@ -1275,9 +1228,10 @@ public class SerieFacadeImplTest {
 	/** Test method for {@link SerieFacade#getEpisodesCount()}. */
 	@Test
 	public void testGetEpisodesCount() {
-		when(serieService.getEpisodesCount()).thenReturn(INNER_INNER_COUNT);
+		final int count = generate(Integer.class);
+		when(serieService.getEpisodesCount()).thenReturn(count);
 
-		DeepAsserts.assertEquals(INNER_INNER_COUNT, serieFacade.getEpisodesCount());
+		DeepAsserts.assertEquals(count, serieFacade.getEpisodesCount());
 
 		verify(serieService).getEpisodesCount();
 		verifyNoMoreInteractions(serieService);

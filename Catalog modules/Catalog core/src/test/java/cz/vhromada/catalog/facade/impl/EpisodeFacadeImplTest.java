@@ -1,10 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ADD_ID;
-import static cz.vhromada.catalog.commons.TestConstants.ADD_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -23,8 +18,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
@@ -54,7 +48,7 @@ import org.springframework.core.convert.ConversionService;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EpisodeFacadeImplTest {
+public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link SeasonService} */
 	@Mock
@@ -80,58 +74,17 @@ public class EpisodeFacadeImplTest {
 	@InjectMocks
 	private EpisodeFacade episodeFacade = new EpisodeFacadeImpl();
 
-	/** Test method for {@link EpisodeFacadeImpl#getSeasonService()} and {@link EpisodeFacadeImpl#setSeasonService(SeasonService)}. */
-	@Test
-	public void testSeasonService() {
-		final EpisodeFacadeImpl episodeFacade = new EpisodeFacadeImpl();
-		episodeFacade.setSeasonService(seasonService);
-		DeepAsserts.assertEquals(seasonService, episodeFacade.getSeasonService());
-	}
-
-	/** Test method for {@link EpisodeFacadeImpl#getEpisodeService()} and {@link EpisodeFacadeImpl#setEpisodeService(EpisodeService)}. */
-	@Test
-	public void testEpisodeService() {
-		final EpisodeFacadeImpl episodeFacade = new EpisodeFacadeImpl();
-		episodeFacade.setEpisodeService(episodeService);
-		DeepAsserts.assertEquals(episodeService, episodeFacade.getEpisodeService());
-	}
-
-	/** Test method for {@link EpisodeFacadeImpl#getConversionService()} and {@link EpisodeFacadeImpl#setConversionService(ConversionService)}. */
-	@Test
-	public void testConversionService() {
-		final EpisodeFacadeImpl episodeFacade = new EpisodeFacadeImpl();
-		episodeFacade.setConversionService(conversionService);
-		DeepAsserts.assertEquals(conversionService, episodeFacade.getConversionService());
-	}
-
-	/** Test method for {@link EpisodeFacadeImpl#getSeasonTOValidator()} and {@link EpisodeFacadeImpl#setSeasonTOValidator(SeasonTOValidator)}. */
-	@Test
-	public void testSeasonTOValidator() {
-		final EpisodeFacadeImpl episodeFacade = new EpisodeFacadeImpl();
-		episodeFacade.setSeasonTOValidator(seasonTOValidator);
-		DeepAsserts.assertEquals(seasonTOValidator, episodeFacade.getSeasonTOValidator());
-	}
-
-	/** Test method for {@link EpisodeFacadeImpl#getEpisodeTOValidator()} and {@link EpisodeFacadeImpl#setEpisodeTOValidator(EpisodeTOValidator)}. */
-	@Test
-	public void testEpisodeTOValidator() {
-		final EpisodeTOValidator episodeTOValidator = mock(EpisodeTOValidator.class);
-		final EpisodeFacadeImpl episodeFacade = new EpisodeFacadeImpl();
-		episodeFacade.setEpisodeTOValidator(episodeTOValidator);
-		DeepAsserts.assertEquals(episodeTOValidator, episodeFacade.getEpisodeTOValidator());
-	}
-
 	/** Test method for {@link EpisodeFacade#getEpisode(Integer)} with existing episode. */
 	@Test
 	public void testGetEpisodeWithExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, EntityGenerator.createSeason(INNER_ID));
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(INNER_ID));
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(episode);
 		when(conversionService.convert(any(Episode.class), eq(EpisodeTO.class))).thenReturn(episodeTO);
 
-		DeepAsserts.assertEquals(episodeTO, episodeFacade.getEpisode(PRIMARY_ID));
+		DeepAsserts.assertEquals(episodeTO, episodeFacade.getEpisode(episodeTO.getId()));
 
-		verify(episodeService).getEpisode(PRIMARY_ID);
+		verify(episodeService).getEpisode(episodeTO.getId());
 		verify(conversionService).convert(episode, EpisodeTO.class);
 		verifyNoMoreInteractions(episodeService, conversionService);
 	}
@@ -196,19 +149,22 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)}. */
 	@Test
 	public void testAdd() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode = EntityGenerator.createEpisode(season);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID));
-		when(seasonService.getSeason(anyInt())).thenReturn(season);
-		doAnswer(setEpisodeIdAndPosition(ADD_ID, ADD_POSITION)).when(episodeService).add(any(Episode.class));
+		final Episode episode = generate(Episode.class);
+		episode.setId(null);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
+		episodeTO.setId(null);
+		final int id = generate(Integer.class);
+		final int position = generate(Integer.class);
+		when(seasonService.getSeason(anyInt())).thenReturn(generate(Season.class));
+		doAnswer(setEpisodeIdAndPosition(id, position)).when(episodeService).add(any(Episode.class));
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
 		episodeFacade.add(episodeTO);
 
-		DeepAsserts.assertEquals(ADD_ID, episode.getId());
-		DeepAsserts.assertEquals(ADD_POSITION, episode.getPosition());
+		DeepAsserts.assertEquals(id, episode.getId());
+		DeepAsserts.assertEquals(position, episode.getPosition());
 
-		verify(seasonService).getSeason(INNER_ID);
+		verify(seasonService).getSeason(episodeTO.getSeason().getId());
 		verify(episodeService).add(episode);
 		verify(episodeTOValidator).validateNewEpisodeTO(episodeTO);
 		verify(conversionService).convert(episodeTO, Episode.class);
@@ -263,7 +219,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with argument with bad data. */
 	@Test
 	public void testAddWithBadArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode();
+		final EpisodeTO episode = generate(EpisodeTO.class);
+		episode.setId(null);
 		doThrow(ValidationException.class).when(episodeTOValidator).validateNewEpisodeTO(any(EpisodeTO.class));
 
 		try {
@@ -281,8 +238,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with not existing argument. */
 	@Test
 	public void testAddWithNotExistingArgument() {
-		final SeasonTO season = ToGenerator.createSeason(Integer.MAX_VALUE);
-		final EpisodeTO episode = ToGenerator.createEpisode(season);
+		final EpisodeTO episode = generate(EpisodeTO.class);
+		episode.setId(null);
 		when(seasonService.getSeason(anyInt())).thenReturn(null);
 
 		try {
@@ -292,7 +249,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(seasonService).getSeason(Integer.MAX_VALUE);
+		verify(seasonService).getSeason(episode.getSeason().getId());
 		verify(episodeTOValidator).validateNewEpisodeTO(episode);
 		verifyNoMoreInteractions(seasonService, episodeTOValidator);
 		verifyZeroInteractions(episodeService, conversionService);
@@ -301,10 +258,11 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with service tier not setting ID. */
 	@Test
 	public void testAddWithNotServiceTierSettingID() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode = EntityGenerator.createEpisode(season);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID));
-		when(seasonService.getSeason(anyInt())).thenReturn(season);
+		final Episode episode = generate(Episode.class);
+		episode.setId(null);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
+		episodeTO.setId(null);
+		when(seasonService.getSeason(anyInt())).thenReturn(generate(Season.class));
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
 		try {
@@ -314,7 +272,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(seasonService).getSeason(INNER_ID);
+		verify(seasonService).getSeason(episodeTO.getSeason().getId());
 		verify(episodeService).add(episode);
 		verify(conversionService).convert(episodeTO, Episode.class);
 		verify(episodeTOValidator).validateNewEpisodeTO(episodeTO);
@@ -324,7 +282,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with exception in service tier. */
 	@Test
 	public void testAddWithServiceTierException() {
-		final EpisodeTO episode = ToGenerator.createEpisode(ToGenerator.createSeason(Integer.MAX_VALUE));
+		final EpisodeTO episode = generate(EpisodeTO.class);
+		episode.setId(null);
 		doThrow(ServiceOperationException.class).when(seasonService).getSeason(anyInt());
 
 		try {
@@ -334,7 +293,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(seasonService).getSeason(Integer.MAX_VALUE);
+		verify(seasonService).getSeason(episode.getSeason().getId());
 		verify(episodeTOValidator).validateNewEpisodeTO(episode);
 		verifyNoMoreInteractions(seasonService, episodeTOValidator);
 		verifyZeroInteractions(episodeService, conversionService);
@@ -343,16 +302,15 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)}. */
 	@Test
 	public void testUpdate() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, season);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(INNER_ID));
-		when(seasonService.getSeason(anyInt())).thenReturn(season);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
+		when(seasonService.getSeason(anyInt())).thenReturn(generate(Season.class));
 		when(episodeService.exists(any(Episode.class))).thenReturn(true);
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
 		episodeFacade.update(episodeTO);
 
-		verify(seasonService).getSeason(INNER_ID);
+		verify(seasonService).getSeason(episodeTO.getSeason().getId());
 		verify(episodeService).exists(episode);
 		verify(episodeService).update(episode);
 		verify(conversionService).convert(episodeTO, Episode.class);
@@ -408,7 +366,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with argument with bad data. */
 	@Test
 	public void testUpdateWithBadArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ValidationException.class).when(episodeTOValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
 
 		try {
@@ -426,8 +384,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with not existing argument. */
 	@Test
 	public void testUpdateWithNotExistingArgument() {
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.exists(any(Episode.class))).thenReturn(false);
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
@@ -448,8 +406,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with exception in service tier. */
 	@Test
 	public void testUpdateWithServiceTierException() {
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		doThrow(ServiceOperationException.class).when(episodeService).exists(any(Episode.class));
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
@@ -470,13 +428,13 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#remove(EpisodeTO)}. */
 	@Test
 	public void testRemove() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(episode);
 
 		episodeFacade.remove(episodeTO);
 
-		verify(episodeService).getEpisode(PRIMARY_ID);
+		verify(episodeService).getEpisode(episodeTO.getId());
 		verify(episodeService).remove(episode);
 		verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
@@ -516,7 +474,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with argument with bad data. */
 	@Test
 	public void testRemoveWithBadArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
 		try {
@@ -534,7 +492,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with not existing argument. */
 	@Test
 	public void testRemoveWithNotExistingArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(null);
 
 		try {
@@ -544,7 +502,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -552,7 +510,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with exception in service tier. */
 	@Test
 	public void testRemoveWithServiceTierException() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ServiceOperationException.class).when(episodeService).getEpisode(anyInt());
 
 		try {
@@ -562,7 +520,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -570,13 +528,13 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(episode);
 
 		episodeFacade.duplicate(episodeTO);
 
-		verify(episodeService).getEpisode(PRIMARY_ID);
+		verify(episodeService).getEpisode(episodeTO.getId());
 		verify(episodeService).duplicate(episode);
 		verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
@@ -616,7 +574,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with argument with bad data. */
 	@Test
 	public void testDuplicateWithBadArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
 		try {
@@ -634,7 +592,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with not existing argument. */
 	@Test
 	public void testDuplicateWithNotExistingArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(null);
 
 		try {
@@ -644,7 +602,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -652,7 +610,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with exception in service tier. */
 	@Test
 	public void testDuplicateWithServiceTierException() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ServiceOperationException.class).when(episodeService).getEpisode(anyInt());
 
 		try {
@@ -662,7 +620,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -670,17 +628,16 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)}. */
 	@Test
 	public void testMoveUp() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, season);
+		final Episode episode = generate(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), episode);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(episode);
 		when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 
 		episodeFacade.moveUp(episodeTO);
 
-		verify(episodeService).getEpisode(PRIMARY_ID);
-		verify(episodeService).findEpisodesBySeason(season);
+		verify(episodeService).getEpisode(episodeTO.getId());
+		verify(episodeService).findEpisodesBySeason(episode.getSeason());
 		verify(episodeService).moveUp(episode);
 		verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
@@ -720,7 +677,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with argument with bad data. */
 	@Test
 	public void testMoveUpWithBadArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
 		try {
@@ -738,7 +695,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not existing argument. */
 	@Test
 	public void testMoveUpWithNotExistingArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(null);
 
 		try {
@@ -748,7 +705,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -756,10 +713,9 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not moveable argument. */
 	@Test
 	public void testMoveUpWithNotMoveableArgument() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE, season);
+		final Episode episode = generate(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(episode, mock(Episode.class));
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(episode);
 		when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 
@@ -770,8 +726,8 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
-		verify(episodeService).findEpisodesBySeason(season);
+		verify(episodeService).getEpisode(episodeTO.getId());
+		verify(episodeService).findEpisodesBySeason(episode.getSeason());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -779,7 +735,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with exception in service tier. */
 	@Test
 	public void testMoveUpWithServiceTierException() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ServiceOperationException.class).when(episodeService).getEpisode(anyInt());
 
 		try {
@@ -789,7 +745,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -797,17 +753,16 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)}. */
 	@Test
 	public void testMoveDown() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID, season);
+		final Episode episode = generate(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(episode, mock(Episode.class));
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(episode);
 		when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 
 		episodeFacade.moveDown(episodeTO);
 
-		verify(episodeService).getEpisode(PRIMARY_ID);
-		verify(episodeService).findEpisodesBySeason(season);
+		verify(episodeService).getEpisode(episodeTO.getId());
+		verify(episodeService).findEpisodesBySeason(episode.getSeason());
 		verify(episodeService).moveDown(episode);
 		verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
@@ -847,7 +802,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with argument with bad data. */
 	@Test
 	public void testMoveDownWithBadArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
 		try {
@@ -865,7 +820,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not existing argument. */
 	@Test
 	public void testMoveDownWithNotExistingArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(null);
 
 		try {
@@ -875,7 +830,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -883,10 +838,9 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not moveable argument. */
 	@Test
 	public void testMoveDownWithNotMoveableArgument() {
-		final Season season = EntityGenerator.createSeason(INNER_ID);
-		final Episode episode = EntityGenerator.createEpisode(Integer.MAX_VALUE, season);
+		final Episode episode = generate(Episode.class);
 		final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), episode);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.getEpisode(anyInt())).thenReturn(episode);
 		when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 
@@ -897,8 +851,8 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
-		verify(episodeService).findEpisodesBySeason(season);
+		verify(episodeService).getEpisode(episodeTO.getId());
+		verify(episodeService).findEpisodesBySeason(episode.getSeason());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -906,7 +860,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with exception in service tier. */
 	@Test
 	public void testMoveDownWithServiceTierException() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ServiceOperationException.class).when(episodeService).getEpisode(anyInt());
 
 		try {
@@ -916,7 +870,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(episodeService).getEpisode(Integer.MAX_VALUE);
+		verify(episodeService).getEpisode(episode.getId());
 		verify(episodeTOValidator).validateEpisodeTOWithId(episode);
 		verifyNoMoreInteractions(episodeService, episodeTOValidator);
 	}
@@ -924,8 +878,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with existing episode. */
 	@Test
 	public void testExistsWithExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.exists(any(Episode.class))).thenReturn(true);
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
@@ -940,8 +894,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with not existing episode. */
 	@Test
 	public void testExistsWithNotExistingEpisode() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		when(episodeService.exists(any(Episode.class))).thenReturn(false);
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
@@ -994,7 +948,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with argument with bad data. */
 	@Test
 	public void testExistsWithBadArgument() {
-		final EpisodeTO episode = ToGenerator.createEpisode(Integer.MAX_VALUE);
+		final EpisodeTO episode = generate(EpisodeTO.class);
 		doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
 		try {
@@ -1012,8 +966,8 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with exception in service tier. */
 	@Test
 	public void testExistsWithServiceTierException() {
-		final Episode episode = EntityGenerator.createEpisode(PRIMARY_ID);
-		final EpisodeTO episodeTO = ToGenerator.createEpisode(PRIMARY_ID);
+		final Episode episode = generate(Episode.class);
+		final EpisodeTO episodeTO = generate(EpisodeTO.class);
 		doThrow(ServiceOperationException.class).when(episodeService).exists(any(Episode.class));
 		when(conversionService.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episode);
 
@@ -1033,12 +987,10 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)}. */
 	@Test
 	public void testFindEpisodesBySeason() {
-		final Season season = EntityGenerator.createSeason(PRIMARY_ID);
-		final List<Episode> episodes = CollectionUtils.newList(EntityGenerator.createEpisode(INNER_ID, season),
-				EntityGenerator.createEpisode(SECONDARY_INNER_ID, season));
-		final SeasonTO seasonTO = ToGenerator.createSeason(PRIMARY_ID);
-		final List<EpisodeTO> episodesList = CollectionUtils.newList(ToGenerator.createEpisode(INNER_ID, seasonTO),
-				ToGenerator.createEpisode(SECONDARY_INNER_ID, seasonTO));
+		final Season season = generate(Season.class);
+		final List<Episode> episodes = CollectionUtils.newList(generate(Episode.class), generate(Episode.class));
+		final SeasonTO seasonTO = generate(SeasonTO.class);
+		final List<EpisodeTO> episodesList = CollectionUtils.newList(generate(EpisodeTO.class), generate(EpisodeTO.class));
 		when(seasonService.getSeason(anyInt())).thenReturn(season);
 		when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
 		for (int i = 0; i < episodes.size(); i++) {
@@ -1048,7 +1000,7 @@ public class EpisodeFacadeImplTest {
 
 		DeepAsserts.assertEquals(episodesList, episodeFacade.findEpisodesBySeason(seasonTO));
 
-		verify(seasonService).getSeason(PRIMARY_ID);
+		verify(seasonService).getSeason(seasonTO.getId());
 		verify(episodeService).findEpisodesBySeason(season);
 		for (Episode episode : episodes) {
 			verify(conversionService).convert(episode, EpisodeTO.class);
@@ -1105,7 +1057,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with argument with bad data. */
 	@Test
 	public void testFindEpisodesBySeasonWithBadArgument() {
-		final SeasonTO season = ToGenerator.createSeason(Integer.MAX_VALUE);
+		final SeasonTO season = generate(SeasonTO.class);
 		doThrow(ValidationException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
 		try {
@@ -1123,7 +1075,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not existing argument. */
 	@Test
 	public void testFindEpisodesBySeasonWithNotExistingArgument() {
-		final SeasonTO season = ToGenerator.createSeason(Integer.MAX_VALUE);
+		final SeasonTO season = generate(SeasonTO.class);
 		when(seasonService.getSeason(anyInt())).thenReturn(null);
 
 		try {
@@ -1133,7 +1085,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(seasonService).getSeason(Integer.MAX_VALUE);
+		verify(seasonService).getSeason(season.getId());
 		verify(seasonTOValidator).validateSeasonTOWithId(season);
 		verifyNoMoreInteractions(seasonService, seasonTOValidator);
 		verifyZeroInteractions(episodeService, conversionService);
@@ -1142,7 +1094,7 @@ public class EpisodeFacadeImplTest {
 	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with exception in service tier. */
 	@Test
 	public void testFindEpisodesBySeasonWithServiceTierException() {
-		final SeasonTO season = ToGenerator.createSeason(Integer.MAX_VALUE);
+		final SeasonTO season = generate(SeasonTO.class);
 		doThrow(ServiceOperationException.class).when(seasonService).getSeason(anyInt());
 
 		try {
@@ -1152,7 +1104,7 @@ public class EpisodeFacadeImplTest {
 			// OK
 		}
 
-		verify(seasonService).getSeason(Integer.MAX_VALUE);
+		verify(seasonService).getSeason(season.getId());
 		verify(seasonTOValidator).validateSeasonTOWithId(season);
 		verifyNoMoreInteractions(seasonService, seasonTOValidator);
 		verifyZeroInteractions(episodeService, conversionService);

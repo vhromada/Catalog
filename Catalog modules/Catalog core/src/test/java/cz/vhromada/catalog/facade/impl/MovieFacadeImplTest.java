@@ -1,11 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ADD_ID;
-import static cz.vhromada.catalog.commons.TestConstants.ADD_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -24,8 +18,8 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
@@ -54,7 +48,7 @@ import org.springframework.core.convert.ConversionService;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MovieFacadeImplTest {
+public class MovieFacadeImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link MovieService} */
 	@Mock
@@ -75,38 +69,6 @@ public class MovieFacadeImplTest {
 	/** Instance of {@link MovieFacade} */
 	@InjectMocks
 	private MovieFacade movieFacade = new MovieFacadeImpl();
-
-	/** Test method for {@link MovieFacadeImpl#getMovieService()} and {@link MovieFacadeImpl#setMovieService(MovieService)}. */
-	@Test
-	public void testMovieService() {
-		final MovieFacadeImpl movieFacade = new MovieFacadeImpl();
-		movieFacade.setMovieService(movieService);
-		DeepAsserts.assertEquals(movieService, movieFacade.getMovieService());
-	}
-
-	/** Test method for {@link MovieFacadeImpl#getGenreService()} and {@link MovieFacadeImpl#setGenreService(GenreService)}}. */
-	@Test
-	public void testGenreService() {
-		final MovieFacadeImpl movieFacade = new MovieFacadeImpl();
-		movieFacade.setGenreService(genreService);
-		DeepAsserts.assertEquals(genreService, movieFacade.getGenreService());
-	}
-
-	/** Test method for {@link MovieFacadeImpl#getConversionService()} and {@link MovieFacadeImpl#setConversionService(ConversionService)}. */
-	@Test
-	public void testConversionService() {
-		final MovieFacadeImpl movieFacade = new MovieFacadeImpl();
-		movieFacade.setConversionService(conversionService);
-		DeepAsserts.assertEquals(conversionService, movieFacade.getConversionService());
-	}
-
-	/** Test method for {@link MovieFacadeImpl#getMovieTOValidator()} and {@link MovieFacadeImpl#setMovieTOValidator(MovieTOValidator)}. */
-	@Test
-	public void testMovieTOValidator() {
-		final MovieFacadeImpl movieFacade = new MovieFacadeImpl();
-		movieFacade.setMovieTOValidator(movieTOValidator);
-		DeepAsserts.assertEquals(movieTOValidator, movieFacade.getMovieTOValidator());
-	}
 
 	/** Test method for {@link MovieFacade#newData()}. */
 	@Test
@@ -143,8 +105,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#getMovies()}. */
 	@Test
 	public void testGetMovies() {
-		final List<Movie> movies = CollectionUtils.newList(EntityGenerator.createMovie(PRIMARY_ID), EntityGenerator.createMovie(SECONDARY_ID));
-		final List<MovieTO> moviesList = CollectionUtils.newList(ToGenerator.createMovie(PRIMARY_ID), ToGenerator.createMovie(SECONDARY_ID));
+		final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
+		final List<MovieTO> moviesList = CollectionUtils.newList(generate(MovieTO.class), generate(MovieTO.class));
 		when(movieService.getMovies()).thenReturn(movies);
 		for (int i = 0; i < movies.size(); i++) {
 			final Movie movie = movies.get(i);
@@ -194,14 +156,14 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#getMovie(Integer)} with existing movie. */
 	@Test
 	public void testGetMovieWithExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(movie);
 		when(conversionService.convert(any(Movie.class), eq(MovieTO.class))).thenReturn(movieTO);
 
-		DeepAsserts.assertEquals(movieTO, movieFacade.getMovie(PRIMARY_ID));
+		DeepAsserts.assertEquals(movieTO, movieFacade.getMovie(movieTO.getId()));
 
-		verify(movieService).getMovie(PRIMARY_ID);
+		verify(movieService).getMovie(movieTO.getId());
 		verify(conversionService).convert(movie, MovieTO.class);
 		verify(conversionService).convert(movie, MovieTO.class);
 		verifyNoMoreInteractions(movieService, conversionService);
@@ -267,15 +229,19 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)}. */
 	@Test
 	public void testAdd() {
-		final Movie movie = EntityGenerator.createMovie();
-		final MovieTO movieTO = ToGenerator.createMovie();
-		doAnswer(setMovieIdAndPosition(ADD_ID, ADD_POSITION)).when(movieService).add(any(Movie.class));
+		final Movie movie = generate(Movie.class);
+		movie.setId(null);
+		final MovieTO movieTO = generate(MovieTO.class);
+		movieTO.setId(null);
+		final int id = generate(Integer.class);
+		final int position = generate(Integer.class);
+		doAnswer(setMovieIdAndPosition(id, position)).when(movieService).add(any(Movie.class));
 		when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
 
 		movieFacade.add(movieTO);
-		DeepAsserts.assertEquals(ADD_ID, movie.getId());
-		DeepAsserts.assertEquals(ADD_POSITION, movie.getPosition());
+		DeepAsserts.assertEquals(id, movie.getId());
+		DeepAsserts.assertEquals(position, movie.getPosition());
 
 		verify(movieService).add(movie);
 		for (GenreTO genre : movieTO.getGenres()) {
@@ -334,7 +300,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with argument with bad data. */
 	@Test
 	public void testAddWithBadArgument() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = generate(MovieTO.class);
+		movie.setId(null);
 		doThrow(ValidationException.class).when(movieTOValidator).validateNewMovieTO(any(MovieTO.class));
 
 		try {
@@ -352,8 +319,10 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with service tier not setting ID. */
 	@Test
 	public void testAddWithNotServiceTierSettingID() {
-		final Movie movie = EntityGenerator.createMovie();
-		final MovieTO movieTO = ToGenerator.createMovie();
+		final Movie movie = generate(Movie.class);
+		movie.setId(null);
+		final MovieTO movieTO = generate(MovieTO.class);
+		movieTO.setId(null);
 		when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
 
@@ -376,7 +345,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#add(MovieTO)} with exception in service tier. */
 	@Test
 	public void testAddWithServiceTierException() {
-		final MovieTO movie = ToGenerator.createMovie();
+		final MovieTO movie = generate(MovieTO.class);
+		movie.setId(null);
 		doThrow(ServiceOperationException.class).when(genreService).getGenre(anyInt());
 
 		try {
@@ -395,8 +365,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)}. */
 	@Test
 	public void testUpdate() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.exists(any(Movie.class))).thenReturn(true);
 		when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
@@ -461,7 +431,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with argument with bad data. */
 	@Test
 	public void testUpdateWithBadArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ValidationException.class).when(movieTOValidator).validateExistingMovieTO(any(MovieTO.class));
 
 		try {
@@ -479,8 +449,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with not existing argument. */
 	@Test
 	public void testUpdateWithNotExistingArgument() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
-		final MovieTO movieTO = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.exists(any(Movie.class))).thenReturn(false);
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
 
@@ -500,8 +470,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#update(MovieTO)} with exception in service tier. */
 	@Test
 	public void testUpdateWithServiceTierException() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
-		final MovieTO movieTO = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		doThrow(ServiceOperationException.class).when(movieService).exists(any(Movie.class));
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
 
@@ -522,13 +492,13 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#remove(MovieTO)}. */
 	@Test
 	public void testRemove() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(movie);
 
 		movieFacade.remove(movieTO);
 
-		verify(movieService).getMovie(PRIMARY_ID);
+		verify(movieService).getMovie(movieTO.getId());
 		verify(movieService).remove(movie);
 		verify(movieTOValidator).validateMovieTOWithId(movieTO);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
@@ -568,7 +538,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#remove(MovieTO)} with argument with bad data. */
 	@Test
 	public void testRemoveWithBadArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
 
 		try {
@@ -586,7 +556,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#remove(MovieTO)} with not existing argument. */
 	@Test
 	public void testRemoveWithNotExistingArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(null);
 
 		try {
@@ -596,7 +566,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -604,7 +574,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#remove(MovieTO)} with exception in service tier. */
 	@Test
 	public void testRemoveWithServiceTierException() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
 
 		try {
@@ -614,7 +584,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -622,13 +592,13 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(movie);
 
 		movieFacade.duplicate(movieTO);
 
-		verify(movieService).getMovie(PRIMARY_ID);
+		verify(movieService).getMovie(movieTO.getId());
 		verify(movieService).duplicate(movie);
 		verify(movieTOValidator).validateMovieTOWithId(movieTO);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
@@ -668,7 +638,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)} with argument with bad data. */
 	@Test
 	public void testDuplicateWithBadArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
 
 		try {
@@ -686,7 +656,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)} with not existing argument. */
 	@Test
 	public void testDuplicateWithNotExistingArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(null);
 
 		try {
@@ -696,7 +666,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -704,7 +674,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)} with exception in service tier. */
 	@Test
 	public void testDuplicateWithServiceTierException() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
 
 		try {
@@ -714,7 +684,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -722,15 +692,15 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)}. */
 	@Test
 	public void testMoveUp() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), movie);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(movie);
 		when(movieService.getMovies()).thenReturn(movies);
 
 		movieFacade.moveUp(movieTO);
 
-		verify(movieService).getMovie(PRIMARY_ID);
+		verify(movieService).getMovie(movieTO.getId());
 		verify(movieService).getMovies();
 		verify(movieService).moveUp(movie);
 		verify(movieTOValidator).validateMovieTOWithId(movieTO);
@@ -771,7 +741,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with argument with bad data. */
 	@Test
 	public void testMoveUpWithBadArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
 
 		try {
@@ -789,7 +759,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with not existing argument. */
 	@Test
 	public void testMoveUpWithNotExistingArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(null);
 
 		try {
@@ -799,7 +769,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -807,9 +777,9 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with not moveable argument. */
 	@Test
 	public void testMoveUpWithNotMoveableArgument() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
 		final List<Movie> movies = CollectionUtils.newList(movie, mock(Movie.class));
-		final MovieTO movieTO = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(movie);
 		when(movieService.getMovies()).thenReturn(movies);
 
@@ -820,7 +790,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movieTO.getId());
 		verify(movieService).getMovies();
 		verify(movieTOValidator).validateMovieTOWithId(movieTO);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
@@ -829,7 +799,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with exception in service tier. */
 	@Test
 	public void testMoveUpWithServiceTierException() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
 
 		try {
@@ -839,7 +809,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -847,15 +817,15 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)}. */
 	@Test
 	public void testMoveDown() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
 		final List<Movie> movies = CollectionUtils.newList(movie, mock(Movie.class));
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(movie);
 		when(movieService.getMovies()).thenReturn(movies);
 
 		movieFacade.moveDown(movieTO);
 
-		verify(movieService).getMovie(PRIMARY_ID);
+		verify(movieService).getMovie(movieTO.getId());
 		verify(movieService).getMovies();
 		verify(movieService).moveDown(movie);
 		verify(movieTOValidator).validateMovieTOWithId(movieTO);
@@ -896,7 +866,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with argument with bad data. */
 	@Test
 	public void testMoveDownWithBadArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
 
 		try {
@@ -914,7 +884,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with not existing argument. */
 	@Test
 	public void testMoveDownWithNotExistingArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(null);
 
 		try {
@@ -924,7 +894,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -932,9 +902,9 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with not moveable argument. */
 	@Test
 	public void testMoveDownWithNotMoveableArgument() {
-		final Movie movie = EntityGenerator.createMovie(Integer.MAX_VALUE);
+		final Movie movie = generate(Movie.class);
 		final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), movie);
-		final MovieTO movieTO = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.getMovie(anyInt())).thenReturn(movie);
 		when(movieService.getMovies()).thenReturn(movies);
 
@@ -945,7 +915,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movieTO.getId());
 		verify(movieService).getMovies();
 		verify(movieTOValidator).validateMovieTOWithId(movieTO);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
@@ -954,7 +924,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with exception in service tier. */
 	@Test
 	public void testMoveDownWithServiceTierException() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
 
 		try {
@@ -964,7 +934,7 @@ public class MovieFacadeImplTest {
 			// OK
 		}
 
-		verify(movieService).getMovie(Integer.MAX_VALUE);
+		verify(movieService).getMovie(movie.getId());
 		verify(movieTOValidator).validateMovieTOWithId(movie);
 		verifyNoMoreInteractions(movieService, movieTOValidator);
 	}
@@ -972,8 +942,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with existing movie. */
 	@Test
 	public void testExistsWithExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.exists(any(Movie.class))).thenReturn(true);
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
 
@@ -988,8 +958,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with not existing movie. */
 	@Test
 	public void testExistsWithNotExistingMovie() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		when(movieService.exists(any(Movie.class))).thenReturn(false);
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
 
@@ -1042,7 +1012,7 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with argument with bad data. */
 	@Test
 	public void testExistsWithBadArgument() {
-		final MovieTO movie = ToGenerator.createMovie(Integer.MAX_VALUE);
+		final MovieTO movie = generate(MovieTO.class);
 		doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
 
 		try {
@@ -1060,8 +1030,8 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with exception in service tier. */
 	@Test
 	public void testExistsWithServiceTierException() {
-		final Movie movie = EntityGenerator.createMovie(PRIMARY_ID);
-		final MovieTO movieTO = ToGenerator.createMovie(PRIMARY_ID);
+		final Movie movie = generate(Movie.class);
+		final MovieTO movieTO = generate(MovieTO.class);
 		doThrow(ServiceOperationException.class).when(movieService).exists(any(Movie.class));
 		when(conversionService.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
 
@@ -1113,9 +1083,10 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#getTotalMediaCount()}. */
 	@Test
 	public void testGetTotalMediaCount() {
-		when(movieService.getTotalMediaCount()).thenReturn(COUNT);
+		final int count = generate(Integer.class);
+		when(movieService.getTotalMediaCount()).thenReturn(count);
 
-		DeepAsserts.assertEquals(COUNT, movieFacade.getTotalMediaCount());
+		DeepAsserts.assertEquals(count, movieFacade.getTotalMediaCount());
 
 		verify(movieService).getTotalMediaCount();
 		verifyNoMoreInteractions(movieService);
@@ -1147,9 +1118,10 @@ public class MovieFacadeImplTest {
 	/** Test method for {@link MovieFacade#getTotalLength()}. */
 	@Test
 	public void testGetTotalLength() {
-		when(movieService.getTotalLength()).thenReturn(TOTAL_LENGTH);
+		final Time length = generate(Time.class);
+		when(movieService.getTotalLength()).thenReturn(length);
 
-		DeepAsserts.assertEquals(TOTAL_LENGTH, movieFacade.getTotalLength());
+		DeepAsserts.assertEquals(length, movieFacade.getTotalLength());
 
 		verify(movieService).getTotalLength();
 		verifyNoMoreInteractions(movieService);

@@ -1,10 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.ADD_ID;
-import static cz.vhromada.catalog.commons.TestConstants.ADD_POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
-import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
-import static cz.vhromada.catalog.commons.TestConstants.SECONDARY_INNER_ID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -23,8 +18,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EntityGenerator;
-import cz.vhromada.catalog.commons.ToGenerator;
+import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.facade.SongFacade;
@@ -54,7 +48,7 @@ import org.springframework.core.convert.ConversionService;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SongFacadeImplTest {
+public class SongFacadeImplTest extends ObjectGeneratorTest {
 
 	/** Instance of {@link MusicService} */
 	@Mock
@@ -80,58 +74,17 @@ public class SongFacadeImplTest {
 	@InjectMocks
 	private SongFacade songFacade = new SongFacadeImpl();
 
-	/** Test method for {@link SongFacadeImpl#getMusicService()} and {@link SongFacadeImpl#setMusicService(MusicService)}. */
-	@Test
-	public void testMusicService() {
-		final SongFacadeImpl songFacade = new SongFacadeImpl();
-		songFacade.setMusicService(musicService);
-		DeepAsserts.assertEquals(musicService, songFacade.getMusicService());
-	}
-
-	/** Test method for {@link SongFacadeImpl#getSongService()} and {@link SongFacadeImpl#setSongService(SongService)}. */
-	@Test
-	public void testSongService() {
-		final SongFacadeImpl songFacade = new SongFacadeImpl();
-		songFacade.setSongService(songService);
-		DeepAsserts.assertEquals(songService, songFacade.getSongService());
-	}
-
-	/** Test method for {@link SongFacadeImpl#getConversionService()} and {@link SongFacadeImpl#setConversionService(ConversionService)}. */
-	@Test
-	public void testConversionService() {
-		final SongFacadeImpl songFacade = new SongFacadeImpl();
-		songFacade.setConversionService(conversionService);
-		DeepAsserts.assertEquals(conversionService, songFacade.getConversionService());
-	}
-
-	/** Test method for {@link SongFacadeImpl#getMusicTOValidator()} and {@link SongFacadeImpl#setMusicTOValidator(MusicTOValidator)}. */
-	@Test
-	public void testMusicTOValidator() {
-		final SongFacadeImpl songFacade = new SongFacadeImpl();
-		songFacade.setMusicTOValidator(musicTOValidator);
-		DeepAsserts.assertEquals(musicTOValidator, songFacade.getMusicTOValidator());
-	}
-
-	/** Test method for {@link SongFacadeImpl#getSongTOValidator()} and {@link SongFacadeImpl#setSongTOValidator(SongTOValidator)}. */
-	@Test
-	public void testSongTOValidator() {
-		final SongTOValidator songTOValidator = mock(SongTOValidator.class);
-		final SongFacadeImpl songFacade = new SongFacadeImpl();
-		songFacade.setSongTOValidator(songTOValidator);
-		DeepAsserts.assertEquals(songTOValidator, songFacade.getSongTOValidator());
-	}
-
 	/** Test method for {@link SongFacade#getSong(Integer)} with existing song. */
 	@Test
 	public void testGetSongWithExistingSong() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID, EntityGenerator.createMusic(INNER_ID));
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic(INNER_ID));
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(song);
 		when(conversionService.convert(any(Song.class), eq(SongTO.class))).thenReturn(songTO);
 
-		DeepAsserts.assertEquals(songTO, songFacade.getSong(PRIMARY_ID));
+		DeepAsserts.assertEquals(songTO, songFacade.getSong(songTO.getId()));
 
-		verify(songService).getSong(PRIMARY_ID);
+		verify(songService).getSong(songTO.getId());
 		verify(conversionService).convert(song, SongTO.class);
 		verifyNoMoreInteractions(songService, conversionService);
 	}
@@ -196,19 +149,22 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#add(SongTO)}. */
 	@Test
 	public void testAdd() {
-		final Music music = EntityGenerator.createMusic(INNER_ID);
-		final Song song = EntityGenerator.createSong(music);
-		final SongTO songTO = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
-		when(musicService.getMusic(anyInt())).thenReturn(music);
-		doAnswer(setSongIdAndPosition(ADD_ID, ADD_POSITION)).when(songService).add(any(Song.class));
+		final Song song = generate(Song.class);
+		song.setId(null);
+		final SongTO songTO = generate(SongTO.class);
+		songTO.setId(null);
+		final int id = generate(Integer.class);
+		final int position = generate(Integer.class);
+		when(musicService.getMusic(anyInt())).thenReturn(generate(Music.class));
+		doAnswer(setSongIdAndPosition(id, position)).when(songService).add(any(Song.class));
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
 		songFacade.add(songTO);
 
-		DeepAsserts.assertEquals(ADD_ID, song.getId());
-		DeepAsserts.assertEquals(ADD_POSITION, song.getPosition());
+		DeepAsserts.assertEquals(id, song.getId());
+		DeepAsserts.assertEquals(position, song.getPosition());
 
-		verify(musicService).getMusic(INNER_ID);
+		verify(musicService).getMusic(songTO.getMusic().getId());
 		verify(songService).add(song);
 		verify(conversionService).convert(songTO, Song.class);
 		verify(songTOValidator).validateNewSongTO(songTO);
@@ -263,7 +219,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with argument with bad data. */
 	@Test
 	public void testAddWithBadArgument() {
-		final SongTO song = ToGenerator.createSong();
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
 		doThrow(ValidationException.class).when(songTOValidator).validateNewSongTO(any(SongTO.class));
 
 		try {
@@ -281,8 +238,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with not existing argument. */
 	@Test
 	public void testAddWithNotExistingArgument() {
-		final MusicTO music = ToGenerator.createMusic(Integer.MAX_VALUE);
-		final SongTO song = ToGenerator.createSong(music);
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
 		when(musicService.getMusic(anyInt())).thenReturn(null);
 
 		try {
@@ -292,7 +249,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(musicService).getMusic(Integer.MAX_VALUE);
+		verify(musicService).getMusic(song.getMusic().getId());
 		verify(songTOValidator).validateNewSongTO(song);
 		verifyNoMoreInteractions(musicService, songTOValidator);
 		verifyZeroInteractions(songService, conversionService);
@@ -301,10 +258,11 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with service tier not setting ID. */
 	@Test
 	public void testAddWithNotServiceTierSettingID() {
-		final Music music = EntityGenerator.createMusic(INNER_ID);
-		final Song song = EntityGenerator.createSong(music);
-		final SongTO songTO = ToGenerator.createSong(ToGenerator.createMusic(INNER_ID));
-		when(musicService.getMusic(anyInt())).thenReturn(music);
+		final Song song = generate(Song.class);
+		song.setId(null);
+		final SongTO songTO = generate(SongTO.class);
+		songTO.setId(null);
+		when(musicService.getMusic(anyInt())).thenReturn(generate(Music.class));
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
 		try {
@@ -314,7 +272,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(musicService).getMusic(INNER_ID);
+		verify(musicService).getMusic(songTO.getMusic().getId());
 		verify(songService).add(song);
 		verify(conversionService).convert(songTO, Song.class);
 		verify(songTOValidator).validateNewSongTO(songTO);
@@ -324,7 +282,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#add(SongTO)} with exception in service tier. */
 	@Test
 	public void testAddWithServiceTierException() {
-		final SongTO song = ToGenerator.createSong(ToGenerator.createMusic(Integer.MAX_VALUE));
+		final SongTO song = generate(SongTO.class);
+		song.setId(null);
 		doThrow(ServiceOperationException.class).when(musicService).getMusic(anyInt());
 
 		try {
@@ -334,7 +293,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(musicService).getMusic(Integer.MAX_VALUE);
+		verify(musicService).getMusic(song.getMusic().getId());
 		verify(songTOValidator).validateNewSongTO(song);
 		verifyNoMoreInteractions(musicService, songTOValidator);
 		verifyZeroInteractions(songService, conversionService);
@@ -343,16 +302,15 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#update(SongTO)}. */
 	@Test
 	public void testUpdate() {
-		final Music music = EntityGenerator.createMusic(INNER_ID);
-		final Song song = EntityGenerator.createSong(PRIMARY_ID, music);
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID, ToGenerator.createMusic(INNER_ID));
-		when(musicService.getMusic(anyInt())).thenReturn(music);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
+		when(musicService.getMusic(anyInt())).thenReturn(generate(Music.class));
 		when(songService.exists(any(Song.class))).thenReturn(true);
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
 		songFacade.update(songTO);
 
-		verify(musicService).getMusic(INNER_ID);
+		verify(musicService).getMusic(songTO.getMusic().getId());
 		verify(songService).exists(song);
 		verify(songService).update(song);
 		verify(conversionService).convert(songTO, Song.class);
@@ -408,7 +366,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with argument with bad data. */
 	@Test
 	public void testUpdateWithBadArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ValidationException.class).when(songTOValidator).validateExistingSongTO(any(SongTO.class));
 
 		try {
@@ -426,8 +384,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with not existing argument. */
 	@Test
 	public void testUpdateWithNotExistingArgument() {
-		final Song song = EntityGenerator.createSong(Integer.MAX_VALUE);
-		final SongTO songTO = ToGenerator.createSong(Integer.MAX_VALUE);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.exists(any(Song.class))).thenReturn(false);
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
@@ -448,8 +406,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#update(SongTO)} with exception in service tier. */
 	@Test
 	public void testUpdateWithServiceTierException() {
-		final Song song = EntityGenerator.createSong(Integer.MAX_VALUE);
-		final SongTO songTO = ToGenerator.createSong(Integer.MAX_VALUE);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		doThrow(ServiceOperationException.class).when(songService).exists(any(Song.class));
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
@@ -470,13 +428,13 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#remove(SongTO)}. */
 	@Test
 	public void testRemove() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(song);
 
 		songFacade.remove(songTO);
 
-		verify(songService).getSong(PRIMARY_ID);
+		verify(songService).getSong(songTO.getId());
 		verify(songService).remove(song);
 		verify(songTOValidator).validateSongTOWithId(songTO);
 		verifyNoMoreInteractions(songService, songTOValidator);
@@ -516,7 +474,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#remove(SongTO)} with argument with bad data. */
 	@Test
 	public void testRemoveWithBadArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ValidationException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
 
 		try {
@@ -534,7 +492,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#remove(SongTO)} with not existing argument. */
 	@Test
 	public void testRemoveWithNotExistingArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(null);
 
 		try {
@@ -544,7 +502,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -552,7 +510,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#remove(SongTO)} with exception in service tier. */
 	@Test
 	public void testRemoveWithServiceTierException() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ServiceOperationException.class).when(songService).getSong(anyInt());
 
 		try {
@@ -562,7 +520,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -570,13 +528,13 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#duplicate(SongTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(song);
 
 		songFacade.duplicate(songTO);
 
-		verify(songService).getSong(PRIMARY_ID);
+		verify(songService).getSong(songTO.getId());
 		verify(songService).duplicate(song);
 		verify(songTOValidator).validateSongTOWithId(songTO);
 		verifyNoMoreInteractions(songService, songTOValidator);
@@ -616,7 +574,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#duplicate(SongTO)} with argument with bad data. */
 	@Test
 	public void testDuplicateWithBadArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ValidationException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
 
 		try {
@@ -634,7 +592,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#duplicate(SongTO)} with not existing argument. */
 	@Test
 	public void testDuplicateWithNotExistingArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(null);
 
 		try {
@@ -644,7 +602,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -652,7 +610,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#duplicate(SongTO)} with exception in service tier. */
 	@Test
 	public void testDuplicateWithServiceTierException() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ServiceOperationException.class).when(songService).getSong(anyInt());
 
 		try {
@@ -662,7 +620,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -670,17 +628,16 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveUp(SongTO)}. */
 	@Test
 	public void testMoveUp() {
-		final Music music = EntityGenerator.createMusic(INNER_ID);
-		final Song song = EntityGenerator.createSong(PRIMARY_ID, music);
+		final Song song = generate(Song.class);
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), song);
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(song);
 		when(songService.findSongsByMusic(any(Music.class))).thenReturn(songs);
 
 		songFacade.moveUp(songTO);
 
-		verify(songService).getSong(PRIMARY_ID);
-		verify(songService).findSongsByMusic(music);
+		verify(songService).getSong(songTO.getId());
+		verify(songService).findSongsByMusic(song.getMusic());
 		verify(songService).moveUp(song);
 		verify(songTOValidator).validateSongTOWithId(songTO);
 		verifyNoMoreInteractions(songService, songTOValidator);
@@ -720,7 +677,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveUp(SongTO)} with argument with bad data. */
 	@Test
 	public void testMoveUpWithBadArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ValidationException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
 
 		try {
@@ -738,7 +695,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveUp(SongTO)} with not existing argument. */
 	@Test
 	public void testMoveUpWithNotExistingArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(null);
 
 		try {
@@ -748,7 +705,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -756,10 +713,9 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveUp(SongTO)} with not moveable argument. */
 	@Test
 	public void testMoveUpWithNotMoveableArgument() {
-		final Music music = EntityGenerator.createMusic(INNER_ID);
-		final Song song = EntityGenerator.createSong(Integer.MAX_VALUE, music);
+		final Song song = generate(Song.class);
 		final List<Song> songs = CollectionUtils.newList(song, mock(Song.class));
-		final SongTO songTO = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(song);
 		when(songService.findSongsByMusic(any(Music.class))).thenReturn(songs);
 
@@ -770,8 +726,8 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
-		verify(songService).findSongsByMusic(music);
+		verify(songService).getSong(songTO.getId());
+		verify(songService).findSongsByMusic(song.getMusic());
 		verify(songTOValidator).validateSongTOWithId(songTO);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -779,7 +735,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveUp(SongTO)} with exception in service tier. */
 	@Test
 	public void testMoveUpWithServiceTierException() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ServiceOperationException.class).when(songService).getSong(anyInt());
 
 		try {
@@ -789,7 +745,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -797,17 +753,16 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveDown(SongTO)}. */
 	@Test
 	public void testMoveDown() {
-		final Music music = EntityGenerator.createMusic(INNER_ID);
-		final Song song = EntityGenerator.createSong(PRIMARY_ID, music);
+		final Song song = generate(Song.class);
 		final List<Song> songs = CollectionUtils.newList(song, mock(Song.class));
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(song);
 		when(songService.findSongsByMusic(any(Music.class))).thenReturn(songs);
 
 		songFacade.moveDown(songTO);
 
-		verify(songService).getSong(PRIMARY_ID);
-		verify(songService).findSongsByMusic(music);
+		verify(songService).getSong(songTO.getId());
+		verify(songService).findSongsByMusic(song.getMusic());
 		verify(songService).moveDown(song);
 		verify(songTOValidator).validateSongTOWithId(songTO);
 		verifyNoMoreInteractions(songService, songTOValidator);
@@ -847,7 +802,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveDown(SongTO)} with argument with bad data. */
 	@Test
 	public void testMoveDownWithBadArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ValidationException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
 
 		try {
@@ -865,7 +820,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveDown(SongTO)} with not existing argument. */
 	@Test
 	public void testMoveDownWithNotExistingArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(null);
 
 		try {
@@ -875,7 +830,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -883,10 +838,9 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveDown(SongTO)} with not moveable argument. */
 	@Test
 	public void testMoveDownWithNotMoveableArgument() {
-		final Music music = EntityGenerator.createMusic(INNER_ID);
-		final Song song = EntityGenerator.createSong(Integer.MAX_VALUE, music);
+		final Song song = generate(Song.class);
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), song);
-		final SongTO songTO = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.getSong(anyInt())).thenReturn(song);
 		when(songService.findSongsByMusic(any(Music.class))).thenReturn(songs);
 
@@ -897,8 +851,8 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
-		verify(songService).findSongsByMusic(music);
+		verify(songService).getSong(songTO.getId());
+		verify(songService).findSongsByMusic(song.getMusic());
 		verify(songTOValidator).validateSongTOWithId(songTO);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -906,7 +860,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#moveDown(SongTO)} with exception in service tier. */
 	@Test
 	public void testMoveDownWithServiceTierException() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ServiceOperationException.class).when(songService).getSong(anyInt());
 
 		try {
@@ -916,7 +870,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(songService).getSong(Integer.MAX_VALUE);
+		verify(songService).getSong(song.getId());
 		verify(songTOValidator).validateSongTOWithId(song);
 		verifyNoMoreInteractions(songService, songTOValidator);
 	}
@@ -924,8 +878,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#exists(SongTO)} with existing song. */
 	@Test
 	public void testExistsWithExistingSong() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.exists(any(Song.class))).thenReturn(true);
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
@@ -940,8 +894,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#exists(SongTO)} with not existing song. */
 	@Test
 	public void testExistsWithNotExistingSong() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		when(songService.exists(any(Song.class))).thenReturn(false);
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
@@ -994,7 +948,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#exists(SongTO)} with argument with bad data. */
 	@Test
 	public void testExistsWithBadArgument() {
-		final SongTO song = ToGenerator.createSong(Integer.MAX_VALUE);
+		final SongTO song = generate(SongTO.class);
 		doThrow(ValidationException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
 
 		try {
@@ -1012,8 +966,8 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#exists(SongTO)} with exception in service tier. */
 	@Test
 	public void testExistsWithServiceTierException() {
-		final Song song = EntityGenerator.createSong(PRIMARY_ID);
-		final SongTO songTO = ToGenerator.createSong(PRIMARY_ID);
+		final Song song = generate(Song.class);
+		final SongTO songTO = generate(SongTO.class);
 		doThrow(ServiceOperationException.class).when(songService).exists(any(Song.class));
 		when(conversionService.convert(any(SongTO.class), eq(Song.class))).thenReturn(song);
 
@@ -1033,10 +987,10 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)}. */
 	@Test
 	public void testFindSongsByMusic() {
-		final Music music = EntityGenerator.createMusic(PRIMARY_ID);
-		final List<Song> songs = CollectionUtils.newList(EntityGenerator.createSong(INNER_ID, music), EntityGenerator.createSong(SECONDARY_INNER_ID, music));
-		final MusicTO musicTO = ToGenerator.createMusic(PRIMARY_ID);
-		final List<SongTO> songsList = CollectionUtils.newList(ToGenerator.createSong(INNER_ID, musicTO), ToGenerator.createSong(SECONDARY_INNER_ID, musicTO));
+		final Music music = generate(Music.class);
+		final List<Song> songs = CollectionUtils.newList(generate(Song.class), generate(Song.class));
+		final MusicTO musicTO = generate(MusicTO.class);
+		final List<SongTO> songsList = CollectionUtils.newList(generate(SongTO.class), generate(SongTO.class));
 		when(musicService.getMusic(anyInt())).thenReturn(music);
 		when(songService.findSongsByMusic(any(Music.class))).thenReturn(songs);
 		for (int i = 0; i < songs.size(); i++) {
@@ -1046,7 +1000,7 @@ public class SongFacadeImplTest {
 
 		DeepAsserts.assertEquals(songsList, songFacade.findSongsByMusic(musicTO));
 
-		verify(musicService).getMusic(PRIMARY_ID);
+		verify(musicService).getMusic(musicTO.getId());
 		verify(songService).findSongsByMusic(music);
 		for (Song song : songs) {
 			verify(conversionService).convert(song, SongTO.class);
@@ -1103,7 +1057,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with argument with bad data. */
 	@Test
 	public void testFindSongsByMusicWithBadArgument() {
-		final MusicTO music = ToGenerator.createMusic(Integer.MAX_VALUE);
+		final MusicTO music = generate(MusicTO.class);
 		doThrow(ValidationException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
 
 		try {
@@ -1121,7 +1075,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with not existing argument. */
 	@Test
 	public void testFindSongsByMusicWithNotExistingArgument() {
-		final MusicTO music = ToGenerator.createMusic(Integer.MAX_VALUE);
+		final MusicTO music = generate(MusicTO.class);
 		when(musicService.getMusic(anyInt())).thenReturn(null);
 
 		try {
@@ -1131,7 +1085,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(musicService).getMusic(Integer.MAX_VALUE);
+		verify(musicService).getMusic(music.getId());
 		verify(musicTOValidator).validateMusicTOWithId(music);
 		verifyNoMoreInteractions(musicService, musicTOValidator);
 		verifyZeroInteractions(songService, conversionService);
@@ -1140,7 +1094,7 @@ public class SongFacadeImplTest {
 	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with exception in service tier. */
 	@Test
 	public void testFindSongsByMusicWithServiceTierException() {
-		final MusicTO music = ToGenerator.createMusic(Integer.MAX_VALUE);
+		final MusicTO music = generate(MusicTO.class);
 		doThrow(ServiceOperationException.class).when(musicService).getMusic(anyInt());
 
 		try {
@@ -1150,7 +1104,7 @@ public class SongFacadeImplTest {
 			// OK
 		}
 
-		verify(musicService).getMusic(Integer.MAX_VALUE);
+		verify(musicService).getMusic(music.getId());
 		verify(musicTOValidator).validateMusicTOWithId(music);
 		verifyNoMoreInteractions(musicService, musicTOValidator);
 		verifyZeroInteractions(songService, conversionService);

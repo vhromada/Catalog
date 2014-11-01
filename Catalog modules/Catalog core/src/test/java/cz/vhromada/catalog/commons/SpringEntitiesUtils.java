@@ -609,11 +609,13 @@ public final class SpringEntitiesUtils {
 	 * Returns new song.
 	 *
 	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
 	 * @return new song
 	 */
-	public static Song newSong(final ObjectGenerator objectGenerator) {
+	public static Song newSong(final ObjectGenerator objectGenerator, final EntityManager entityManager) {
 		final Song song = objectGenerator.generate(Song.class);
 		song.setId(null);
+		song.setMusic(SpringUtils.getMusic(entityManager, 1));
 
 		return song;
 	}

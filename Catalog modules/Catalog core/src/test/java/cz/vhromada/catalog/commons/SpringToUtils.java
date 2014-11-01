@@ -588,6 +588,7 @@ public final class SpringToUtils {
 	public static SongTO newSong(final ObjectGenerator objectGenerator, final Integer id) {
 		final SongTO song = objectGenerator.generate(SongTO.class);
 		song.setId(id);
+		song.setMusic(SpringToUtils.getMusic(1));
 
 		return song;
 	}

@@ -17,10 +17,8 @@ import static cz.vhromada.catalog.commons.TestConstants.TITLE;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.entities.Episode;
-import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
-import cz.vhromada.catalog.dao.entities.Song;
 
 /**
  * A class represents entity generators.
@@ -72,24 +70,6 @@ public final class EntityGenerator {
 		episode.setSeason(season);
 		episode.setId(id);
 		return episode;
-	}
-
-	/**
-	 * Returns new song with specified ID and music.
-	 *
-	 * @param id    ID
-	 * @param music music
-	 * @return new song with specified ID and music
-	 */
-	public static Song createSong(final Integer id, final Music music) {
-		final Song song = new Song();
-		song.setName(NAME);
-		song.setLength(LENGTH);
-		song.setNote(NOTE);
-		song.setPosition(POSITION);
-		song.setMusic(music);
-		song.setId(id);
-		return song;
 	}
 
 	/**

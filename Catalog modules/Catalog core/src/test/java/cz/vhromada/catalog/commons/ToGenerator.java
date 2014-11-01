@@ -559,62 +559,6 @@ public final class ToGenerator {
 	}
 
 	/**
-	 * Returns new TO for song.
-	 *
-	 * @return new TO for song
-	 */
-	@Deprecated
-	public static SongTO createSong() {
-		final SongTO song = new SongTO();
-		song.setName(NAME);
-		song.setLength(LENGTH);
-		song.setNote(NOTE);
-		song.setPosition(POSITION);
-
-		return song;
-	}
-
-	/**
-	 * Returns new TO for song with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for song with specified ID
-	 */
-	@Deprecated
-	public static SongTO createSong(final Integer id) {
-		final SongTO song = createSong();
-		song.setId(id);
-		return song;
-	}
-
-	/**
-	 * Returns new TO for song with specified music.
-	 *
-	 * @param music TO for music
-	 * @return new TO for song with specified music
-	 */
-	@Deprecated
-	public static SongTO createSong(final MusicTO music) {
-		final SongTO song = createSong();
-		song.setMusic(music);
-		return song;
-	}
-
-	/**
-	 * Returns new TO for song with specified ID and music.
-	 *
-	 * @param id    ID
-	 * @param music TO for music
-	 * @return new TO for song with specified ID and music
-	 */
-	@Deprecated
-	public static SongTO createSong(final Integer id, final MusicTO music) {
-		final SongTO song = createSong(music);
-		song.setId(id);
-		return song;
-	}
-
-	/**
 	 * Returns new TO for book.
 	 *
 	 * @return new TO for book

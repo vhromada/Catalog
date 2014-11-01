@@ -67,9 +67,6 @@ public final class TestConstants {
 	/** Length */
 	public static final int LENGTH = 10;
 
-	/** Count of media */
-	public static final int MEDIA_COUNT = 4;
-
 	/** Author */
 	public static final String AUTHOR = "Author";
 

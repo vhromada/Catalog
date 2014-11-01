@@ -68,9 +68,7 @@ public class SongDAOImplSpringTest {
 	/** Test method for {@link SongDAO#add(Song)}. */
 	@Test
 	public void testAdd() {
-		final Song song = objectGenerator.generate(Song.class);
-		song.setId(null);
-		song.setMusic(SpringUtils.getMusic(entityManager, 1));
+		final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
 
 		songDAO.add(song);
 
@@ -85,7 +83,7 @@ public class SongDAOImplSpringTest {
 	/** Test method for {@link SongDAO#update(Song)}. */
 	@Test
 	public void testUpdate() {
-		final Song song = SpringEntitiesUtils.updateSong(SpringUtils.getSong(entityManager, 1), objectGenerator);
+		final Song song = SpringEntitiesUtils.updateSong(1, objectGenerator, entityManager);
 
 		songDAO.update(song);
 

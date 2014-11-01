@@ -1,10 +1,7 @@
 package cz.vhromada.catalog.commons;
 
-import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
-import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
 import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
-import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
 import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NOTE;
@@ -12,10 +9,7 @@ import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
 import static cz.vhromada.catalog.commons.TestConstants.POSITION;
 import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
 import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
-import static cz.vhromada.catalog.commons.TestConstants.TITLE;
 
-import cz.vhromada.catalog.dao.entities.Book;
-import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
@@ -70,26 +64,6 @@ public final class EntityGenerator {
 		episode.setSeason(season);
 		episode.setId(id);
 		return episode;
-	}
-
-	/**
-	 * Returns new book with specified ID and book category.
-	 *
-	 * @param id           ID
-	 * @param bookCategory bookCategory
-	 * @return new book with specified ID and book category
-	 */
-	public static Book createBook(final Integer id, final BookCategory bookCategory) {
-		final Book book = new Book();
-		book.setAuthor(AUTHOR);
-		book.setTitle(TITLE);
-		book.setLanguages(LANGUAGES);
-		book.setCategory(CATEGORY);
-		book.setNote(NOTE);
-		book.setPosition(POSITION);
-		book.setBookCategory(bookCategory);
-		book.setId(id);
-		return book;
 	}
 
 }

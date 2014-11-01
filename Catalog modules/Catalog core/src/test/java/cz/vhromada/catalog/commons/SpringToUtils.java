@@ -309,6 +309,7 @@ public final class SpringToUtils {
 		season.setId(id);
 		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
 		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setSerie(SpringToUtils.getSerie(1));
 
 		return season;
 	}
@@ -379,6 +380,7 @@ public final class SpringToUtils {
 	public static EpisodeTO newEpisode(final ObjectGenerator objectGenerator, final Integer id) {
 		final EpisodeTO episode = objectGenerator.generate(EpisodeTO.class);
 		episode.setId(id);
+		episode.setSeason(SpringToUtils.getSeason(1, 1));
 
 		return episode;
 	}
@@ -806,6 +808,7 @@ public final class SpringToUtils {
 	public static BookTO newBook(final ObjectGenerator objectGenerator, final Integer id) {
 		final BookTO book = objectGenerator.generate(BookTO.class);
 		book.setId(id);
+		book.setBookCategory(SpringToUtils.getBookCategory(1));
 
 		return book;
 	}

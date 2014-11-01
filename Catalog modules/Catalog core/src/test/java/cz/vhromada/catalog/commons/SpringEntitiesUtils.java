@@ -291,13 +291,15 @@ public final class SpringEntitiesUtils {
 	 * Returns new season.
 	 *
 	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
 	 * @return new season
 	 */
-	public static Season newSeason(final ObjectGenerator objectGenerator) {
+	public static Season newSeason(final ObjectGenerator objectGenerator, final EntityManager entityManager) {
 		final Season season = objectGenerator.generate(Season.class);
 		season.setId(null);
 		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
 		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
+		season.setSerie(SpringUtils.getSerie(entityManager, 1));
 
 		return season;
 	}
@@ -381,11 +383,13 @@ public final class SpringEntitiesUtils {
 	 * Returns new episode.
 	 *
 	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
 	 * @return new episode
 	 */
-	public static Episode newEpisode(final ObjectGenerator objectGenerator) {
+	public static Episode newEpisode(final ObjectGenerator objectGenerator, final EntityManager entityManager) {
 		final Episode episode = objectGenerator.generate(Episode.class);
 		episode.setId(null);
+		episode.setSeason(SpringUtils.getSeason(entityManager, 1));
 
 		return episode;
 	}
@@ -639,22 +643,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns song with updated fields.
-	 *
-	 * @param song            song
-	 * @param objectGenerator object generator
-	 * @return song with updated fields
-	 */
-	@Deprecated
-	public static Song updateSong(final Song song, final ObjectGenerator objectGenerator) {
-		song.setName(objectGenerator.generate(String.class));
-		song.setLength(objectGenerator.generate(Integer.class));
-		song.setNote(objectGenerator.generate(String.class));
-		song.setPosition(objectGenerator.generate(Integer.class));
-		return song;
-	}
-
-	/**
 	 * Returns programs.
 	 *
 	 * @return programs
@@ -838,11 +826,13 @@ public final class SpringEntitiesUtils {
 	 * Returns new book.
 	 *
 	 * @param objectGenerator object generator
+	 * @param entityManager   entity manager
 	 * @return new book
 	 */
-	public static Book newBook(final ObjectGenerator objectGenerator) {
+	public static Book newBook(final ObjectGenerator objectGenerator, final EntityManager entityManager) {
 		final Book book = objectGenerator.generate(Book.class);
 		book.setId(null);
+		book.setBookCategory(SpringUtils.getBookCategory(entityManager, 1));
 
 		return book;
 	}
@@ -864,24 +854,6 @@ public final class SpringEntitiesUtils {
 		book.setNote(objectGenerator.generate(String.class));
 		book.setPosition(objectGenerator.generate(Integer.class));
 
-		return book;
-	}
-
-	/**
-	 * Returns book with updated fields.
-	 *
-	 * @param book            book
-	 * @param objectGenerator object generator
-	 * @return book with updated fields
-	 */
-	@Deprecated
-	public static Book updateBook(final Book book, final ObjectGenerator objectGenerator) {
-		book.setAuthor(objectGenerator.generate(String.class));
-		book.setTitle(objectGenerator.generate(String.class));
-		book.setLanguages(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
-		book.setCategory(objectGenerator.generate(String.class));
-		book.setNote(objectGenerator.generate(String.class));
-		book.setPosition(objectGenerator.generate(Integer.class));
 		return book;
 	}
 

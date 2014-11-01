@@ -68,9 +68,7 @@ public class BookDAOImplSpringTest {
 	/** Test method for {@link BookDAO#add(Book)}. */
 	@Test
 	public void testAdd() {
-		final Book book = objectGenerator.generate(Book.class);
-		book.setId(null);
-		book.setBookCategory(SpringUtils.getBookCategory(entityManager, 1));
+		final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
 
 		bookDAO.add(book);
 
@@ -85,7 +83,7 @@ public class BookDAOImplSpringTest {
 	/** Test method for {@link BookDAO#update(Book)}. */
 	@Test
 	public void testUpdate() {
-		final Book book = SpringEntitiesUtils.updateBook(SpringUtils.getBook(entityManager, 1), objectGenerator);
+		final Book book = SpringEntitiesUtils.updateBook(1, objectGenerator, entityManager);
 
 		bookDAO.update(book);
 

@@ -1,8 +1,9 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.BAD_LANGUAGES;
-
+import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.validators.BookTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -34,14 +35,13 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithNotNullId() {
-		bookTOValidator.validateNewBookTO(generate(BookTO.class));
+		bookTOValidator.validateNewBookTO(ToGenerator.newBookWithId(getObjectGenerator()));
 	}
 
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null author. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithNullAuthor() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setAuthor(null);
 
 		bookTOValidator.validateNewBookTO(book);
@@ -50,8 +50,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with empty string as author. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithEmptyAuthor() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setAuthor("");
 
 		bookTOValidator.validateNewBookTO(book);
@@ -60,8 +59,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null title. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithNullTitle() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setTitle(null);
 
 		bookTOValidator.validateNewBookTO(book);
@@ -70,8 +68,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with empty string as title. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithEmptyTitle() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setTitle("");
 
 		bookTOValidator.validateNewBookTO(book);
@@ -80,8 +77,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null languages. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithNullLanguages() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setLanguages(null);
 
 		bookTOValidator.validateNewBookTO(book);
@@ -90,9 +86,8 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with languages with null value. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithBadLanguages() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
-		book.setLanguages(BAD_LANGUAGES);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
+		book.setLanguages(CollectionUtils.newList(generate(Language.class), null));
 
 		bookTOValidator.validateNewBookTO(book);
 	}
@@ -100,8 +95,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null category. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithNullCategory() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setCategory(null);
 
 		bookTOValidator.validateNewBookTO(book);
@@ -110,8 +104,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with empty string as category. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithEmptyCategory() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setCategory("");
 
 		bookTOValidator.validateNewBookTO(book);
@@ -120,8 +113,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithNullNote() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setNote(null);
 
 		bookTOValidator.validateNewBookTO(book);
@@ -130,8 +122,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null TO for book category. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookWithNullBookCategory() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.setBookCategory(null);
 
 		bookTOValidator.validateNewBookTO(book);
@@ -140,8 +131,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with TO for book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookWithBookCategoryWithNullId() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
+		final BookTO book = ToGenerator.newBook(getObjectGenerator());
 		book.getBookCategory().setId(null);
 
 		bookTOValidator.validateNewBookTO(book);
@@ -156,16 +146,13 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateNewBookTOWithNullId() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
-
-		bookTOValidator.validateExistingBookTO(book);
+		bookTOValidator.validateExistingBookTO(ToGenerator.newBook(getObjectGenerator()));
 	}
 
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null author. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithNullAuthor() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setAuthor(null);
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -174,7 +161,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with empty string as author. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithEmptyAuthor() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setAuthor("");
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -183,7 +170,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null title. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithNullTitle() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setTitle(null);
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -192,7 +179,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with empty string as title. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithEmptyTitle() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setTitle("");
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -201,7 +188,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null languages. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithNullLanguages() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setLanguages(null);
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -210,8 +197,8 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with languages with null value. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithBadLanguages() {
-		final BookTO book = generate(BookTO.class);
-		book.setLanguages(BAD_LANGUAGES);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
+		book.setLanguages(CollectionUtils.newList(generate(Language.class), null));
 
 		bookTOValidator.validateExistingBookTO(book);
 	}
@@ -219,7 +206,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null category. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithNullCategory() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setCategory(null);
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -228,7 +215,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with empty string as category. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithEmptyCategory() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setCategory("");
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -237,7 +224,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null note. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookTOWithNullNote() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setNote(null);
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -246,7 +233,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null TO for book category. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookWithNullBookCategory() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.setBookCategory(null);
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -255,7 +242,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with TO for book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingBookWithBookCategoryWithNullId() {
-		final BookTO book = generate(BookTO.class);
+		final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
 		book.getBookCategory().setId(null);
 
 		bookTOValidator.validateExistingBookTO(book);
@@ -270,10 +257,7 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
 	/** Test method for {@link BookTOValidator#validateBookTOWithId(BookTO)} with TO for book with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testValidateBookTOWithIdWithNullId() {
-		final BookTO book = generate(BookTO.class);
-		book.setId(null);
-
-		bookTOValidator.validateBookTOWithId(book);
+		bookTOValidator.validateBookTOWithId(ToGenerator.newBook(getObjectGenerator()));
 	}
 
 }

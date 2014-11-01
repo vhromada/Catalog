@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.commons;
 
-import static cz.vhromada.catalog.commons.TestConstants.AUTHOR;
-import static cz.vhromada.catalog.commons.TestConstants.CATEGORY;
 import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
-import static cz.vhromada.catalog.commons.TestConstants.LANGUAGES;
 import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NOTE;
@@ -13,7 +10,6 @@ import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
 import static cz.vhromada.catalog.commons.TestConstants.POSITION;
 import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
 import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
-import static cz.vhromada.catalog.commons.TestConstants.TITLE;
 import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
 
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
@@ -556,64 +552,6 @@ public final class ToGenerator {
 		final EpisodeTO episode = createEpisode(season);
 		episode.setId(id);
 		return episode;
-	}
-
-	/**
-	 * Returns new TO for book.
-	 *
-	 * @return new TO for book
-	 */
-	@Deprecated
-	public static BookTO createBook() {
-		final BookTO book = new BookTO();
-		book.setAuthor(AUTHOR);
-		book.setTitle(TITLE);
-		book.setLanguages(LANGUAGES);
-		book.setCategory(CATEGORY);
-		book.setNote(NOTE);
-		book.setPosition(POSITION);
-
-		return book;
-	}
-
-	/**
-	 * Returns new TO for book with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for book with specified ID
-	 */
-	@Deprecated
-	public static BookTO createBook(final Integer id) {
-		final BookTO book = createBook();
-		book.setId(id);
-		return book;
-	}
-
-	/**
-	 * Returns new TO for book with specified book category.
-	 *
-	 * @param bookCategory TO for book category
-	 * @return new TO for book with specified book category
-	 */
-	@Deprecated
-	public static BookTO createBook(final BookCategoryTO bookCategory) {
-		final BookTO book = createBook();
-		book.setBookCategory(bookCategory);
-		return book;
-	}
-
-	/**
-	 * Returns new TO for book with specified ID and book category.
-	 *
-	 * @param id           ID
-	 * @param bookCategory TO for book category
-	 * @return new TO for book with specified ID and book category
-	 */
-	@Deprecated
-	public static BookTO createBook(final Integer id, final BookCategoryTO bookCategory) {
-		final BookTO book = createBook(bookCategory);
-		book.setId(id);
-		return book;
 	}
 
 }

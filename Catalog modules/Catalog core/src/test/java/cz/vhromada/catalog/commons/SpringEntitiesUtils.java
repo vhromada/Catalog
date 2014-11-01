@@ -396,23 +396,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns episode with updated fields.
-	 *
-	 * @param episode         episode
-	 * @param objectGenerator object generator
-	 * @return episode with updated fields
-	 */
-	@Deprecated
-	public static Episode updateEpisode(final Episode episode, final ObjectGenerator objectGenerator) {
-		episode.setNumber(objectGenerator.generate(Integer.class));
-		episode.setName(objectGenerator.generate(String.class));
-		episode.setLength(objectGenerator.generate(Integer.class));
-		episode.setNote(objectGenerator.generate(String.class));
-		episode.setPosition(objectGenerator.generate(Integer.class));
-		return episode;
-	}
-
-	/**
 	 * Returns games.
 	 *
 	 * @return games

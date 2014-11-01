@@ -1,11 +1,5 @@
 package cz.vhromada.catalog.commons;
 
-import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
-import static cz.vhromada.catalog.commons.TestConstants.NAME;
-import static cz.vhromada.catalog.commons.TestConstants.NOTE;
-import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
-import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
@@ -428,63 +422,6 @@ public final class ToGenerator {
 		}
 
 		return genre;
-	}
-
-	/**
-	 * Creates and returns new TO for episode.
-	 *
-	 * @return new TO for episode
-	 */
-	@Deprecated
-	public static EpisodeTO createEpisode() {
-		final EpisodeTO episode = new EpisodeTO();
-		episode.setNumber(NUMBER);
-		episode.setName(NAME);
-		episode.setLength(LENGTH);
-		episode.setNote(NOTE);
-		episode.setPosition(POSITION);
-
-		return episode;
-	}
-
-	/**
-	 * Creates and returns new TO for episode with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for episode with specified ID
-	 */
-	@Deprecated
-	public static EpisodeTO createEpisode(final Integer id) {
-		final EpisodeTO episode = createEpisode();
-		episode.setId(id);
-		return episode;
-	}
-
-	/**
-	 * Creates and returns new TO for episode with specified season.
-	 *
-	 * @param season TO for season
-	 * @return new TO for episode with specified season
-	 */
-	@Deprecated
-	public static EpisodeTO createEpisode(final SeasonTO season) {
-		final EpisodeTO episode = createEpisode();
-		episode.setSeason(season);
-		return episode;
-	}
-
-	/**
-	 * Creates and returns new TO for episode with specified ID and season.
-	 *
-	 * @param id     ID
-	 * @param season TO for season
-	 * @return new TO for episode with specified ID and season
-	 */
-	@Deprecated
-	public static EpisodeTO createEpisode(final Integer id, final SeasonTO season) {
-		final EpisodeTO episode = createEpisode(season);
-		episode.setId(id);
-		return episode;
 	}
 
 }

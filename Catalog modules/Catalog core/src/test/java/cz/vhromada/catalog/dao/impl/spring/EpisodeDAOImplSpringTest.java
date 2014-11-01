@@ -71,9 +71,7 @@ public class EpisodeDAOImplSpringTest {
 	/** Test method for {@link EpisodeDAO#add(Episode)}. */
 	@Test
 	public void testAdd() {
-		final Episode episode = objectGenerator.generate(Episode.class);
-		episode.setId(null);
-		episode.setSeason(SpringUtils.getSeason(entityManager, 1));
+		final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
 
 		episodeDAO.add(episode);
 
@@ -88,7 +86,7 @@ public class EpisodeDAOImplSpringTest {
 	/** Test method for {@link EpisodeDAO#update(Episode)}. */
 	@Test
 	public void testUpdate() {
-		final Episode episode = SpringEntitiesUtils.updateEpisode(SpringUtils.getEpisode(entityManager, 1), objectGenerator);
+		final Episode episode = SpringEntitiesUtils.updateEpisode(1, objectGenerator, entityManager);
 
 		episodeDAO.update(episode);
 

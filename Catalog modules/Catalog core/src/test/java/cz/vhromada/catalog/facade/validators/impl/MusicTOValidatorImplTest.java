@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TC.NEGATIVE_TIME;
+import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
 
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.ToGenerator;

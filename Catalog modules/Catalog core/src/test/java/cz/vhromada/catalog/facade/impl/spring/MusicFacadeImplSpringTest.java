@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade.impl.spring;
 
 import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SONGS_COUNT;
-import static cz.vhromada.catalog.commons.TC.NEGATIVE_TIME;
+import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

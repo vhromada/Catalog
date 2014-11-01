@@ -106,9 +106,7 @@ public class EpisodeServiceImplSpringTest {
 	/** Test method for {@link EpisodeService#add(Episode)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Episode episode = objectGenerator.generate(Episode.class);
-		episode.setId(null);
-		episode.setSeason(SpringUtils.getSeason(entityManager, 1));
+		final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
 
 		episodeService.add(episode);
 
@@ -123,11 +121,8 @@ public class EpisodeServiceImplSpringTest {
 	/** Test method for {@link EpisodeService#add(Episode)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Season season = SpringUtils.getSeason(entityManager, 1);
-		final Episode episode = objectGenerator.generate(Episode.class);
-		episode.setId(null);
-		episode.setSeason(season);
-		final String keyList = "episodes" + season.getId();
+		final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
+		final String keyList = "episodes" + episode.getSeason().getId();
 		final String keyItem = "episode" + (EPISODES_COUNT + 1);
 		serieCache.put(keyList, new ArrayList<>());
 		serieCache.put(keyItem, null);
@@ -147,7 +142,7 @@ public class EpisodeServiceImplSpringTest {
 	/** Test method for {@link EpisodeService#update(Episode)}. */
 	@Test
 	public void testUpdate() {
-		final Episode episode = SpringEntitiesUtils.updateEpisode(SpringUtils.getEpisode(entityManager, 1), objectGenerator);
+		final Episode episode = SpringEntitiesUtils.updateEpisode(1, objectGenerator, entityManager);
 
 		episodeService.update(episode);
 
@@ -160,9 +155,7 @@ public class EpisodeServiceImplSpringTest {
 	/** Test method for {@link EpisodeService#remove(Episode)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Episode episode = objectGenerator.generate(Episode.class);
-		episode.setId(null);
-		episode.setSeason(SpringUtils.getSeason(entityManager, 1));
+		final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
 		entityManager.persist(episode);
 		DeepAsserts.assertEquals(EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
 
@@ -176,9 +169,7 @@ public class EpisodeServiceImplSpringTest {
 	/** Test method for {@link EpisodeService#remove(Episode)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Episode episode = objectGenerator.generate(Episode.class);
-		episode.setId(null);
-		episode.setSeason(SpringUtils.getSeason(entityManager, 1));
+		final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
 		entityManager.persist(episode);
 		DeepAsserts.assertEquals(EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
 		final String key = "episodes" + episode.getSeason().getId();
@@ -314,7 +305,7 @@ public class EpisodeServiceImplSpringTest {
 	/** Test method for {@link EpisodeService#exists(Episode)} with not existing episode. */
 	@Test
 	public void testExistsWithNotExistingEpisode() {
-		final Episode episode = objectGenerator.generate(Episode.class);
+		final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
 		episode.setId(Integer.MAX_VALUE);
 		final String key = "episode" + Integer.MAX_VALUE;
 

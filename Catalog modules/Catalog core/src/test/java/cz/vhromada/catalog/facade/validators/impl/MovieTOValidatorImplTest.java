@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TC.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TC.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.commons.TC.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TC.BAD_MIN_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
 import static org.mockito.Mockito.mock;
 
 import cz.vhromada.catalog.commons.CollectionUtils;

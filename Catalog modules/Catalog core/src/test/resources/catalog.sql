@@ -38,7 +38,7 @@ CREATE TABLE movies (
   imdb_code INTEGER NOT NULL CONSTRAINT movies_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
   wiki_en VARCHAR(100) NOT NULL,
   wiki_cz VARCHAR(100) NOT NULL,
-  picture VARCHAR(10) NOT NULL,
+  picture VARCHAR(20) NOT NULL,
   note VARCHAR(100) NOT NULL,
   position INTEGER NOT NULL CONSTRAINT movies_position_ck CHECK (position >= 0)
 );
@@ -66,7 +66,7 @@ CREATE TABLE series (
   imdb_code INTEGER NOT NULL CONSTRAINT series_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
   wiki_en VARCHAR(100) NOT NULL,
   wiki_cz VARCHAR(100) NOT NULL,
-  picture VARCHAR(10) NOT NULL,
+  picture VARCHAR(20) NOT NULL,
   note VARCHAR(100) NOT NULL,
   position INTEGER NOT NULL CONSTRAINT series_position_ck CHECK (position >= 0)
 );

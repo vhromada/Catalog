@@ -2,10 +2,10 @@ package cz.vhromada.catalog.facade.impl.spring;
 
 import static cz.vhromada.catalog.commons.SpringUtils.MEDIA_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.MOVIES_COUNT;
-import static cz.vhromada.catalog.commons.TC.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TC.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.commons.TC.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TC.BAD_MIN_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
+import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

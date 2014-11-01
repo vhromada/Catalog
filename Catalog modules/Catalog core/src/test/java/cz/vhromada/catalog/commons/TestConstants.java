@@ -1,56 +1,44 @@
 package cz.vhromada.catalog.commons;
 
-import java.util.List;
+import java.lang.reflect.Field;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class represents constants for tests.
  *
  * @author Vladimir Hromada
  */
-@Deprecated
 public final class TestConstants {
 
-	/** Language */
-	public static final Language LANGUAGE = Language.FR;
+	/** Bad minimal year */
+	public static final int BAD_MIN_YEAR = Constants.MIN_YEAR - 1;
 
-	/** Subtitles */
-	public static final List<Language> SUBTITLES = CollectionUtils.newList(Language.CZ, Language.EN);
+	/** Bad maximal year */
+	public static final int BAD_MAX_YEAR = Constants.CURRENT_YEAR + 1;
 
-	/** IMDB code */
-	public static final int IMDB = 653;
+	/** Bad minimum IMDB code */
+	public static final int BAD_MIN_IMDB_CODE = -2;
 
-	/** Note */
-	public static final String NOTE = "Note";
+	/** Bad maximum IMDB code */
+	public static final int BAD_MAX_IMDB_CODE = Constants.MAX_IMDB_CODE + 1;
 
-	/** Position */
-	public static final int POSITION = 44;
+	/** Negative time */
+	public static final Time NEGATIVE_TIME = new Time(0);
 
-	/** Number */
-	public static final int NUMBER = 5;
+	/** Logger */
+	private static final Logger logger = LoggerFactory.getLogger(TestConstants.class);
 
-	/** Starting year */
-	public static final int START_YEAR = 2000;
-
-	/** Ending year */
-	public static final int END_YEAR = 2001;
-
-	/** Name */
-	public static final String NAME = "Name";
-
-	/** Length */
-	public static final int LENGTH = 10;
-
-	/** Primary ID */
-	public static final int PRIMARY_ID = 1;
-
-	/** Inner ID */
-	public static final int INNER_ID = 11;
-
-	/** Inner count */
-	public static final int INNER_COUNT = 5;
-
-	/** Total length */
-	public static final Time TOTAL_LENGTH = new Time(500);
+	static {
+		try {
+			Field length = Time.class.getDeclaredField("length");
+			length.setAccessible(true);
+			length.setInt(NEGATIVE_TIME, -1);
+		} catch (IllegalAccessException | NoSuchFieldException ex) {
+			logger.error("Time with negative length can't be created.", ex);
+		}
+	}
 
 	/** Creates a new instance of TestConstants. */
 	private TestConstants() {

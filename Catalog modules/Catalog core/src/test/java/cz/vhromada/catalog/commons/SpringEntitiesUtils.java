@@ -326,24 +326,6 @@ public final class SpringEntitiesUtils {
 	}
 
 	/**
-	 * Returns season with updated fields.
-	 *
-	 * @param season          season
-	 * @param objectGenerator object generator
-	 * @return season with updated fields
-	 */
-	public static Season updateSeason(final Season season, final ObjectGenerator objectGenerator) {
-		season.setNumber(objectGenerator.generate(Integer.class));
-		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setLanguage(objectGenerator.generate(Language.class));
-		season.setSubtitles(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
-		season.setNote(objectGenerator.generate(String.class));
-		season.setPosition(objectGenerator.generate(Integer.class));
-		return season;
-	}
-
-	/**
 	 * Returns episodes.
 	 *
 	 * @param serie  index of serie

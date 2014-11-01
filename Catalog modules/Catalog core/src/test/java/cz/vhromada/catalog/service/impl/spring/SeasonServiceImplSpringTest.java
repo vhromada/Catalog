@@ -21,7 +21,6 @@ import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.impl.SeasonServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,11 +100,7 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#add(Season)} with empty cache. */
 	@Test
 	public void testAddWithEmptyCache() {
-		final Season season = objectGenerator.generate(Season.class);
-		season.setId(null);
-		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setSerie(SpringUtils.getSerie(entityManager, 1));
+		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
 
 		seasonService.add(season);
 
@@ -120,13 +115,8 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#add(Season)} with not empty cache. */
 	@Test
 	public void testAddWithNotEmptyCache() {
-		final Serie serie = SpringUtils.getSerie(entityManager, 1);
-		final Season season = objectGenerator.generate(Season.class);
-		season.setId(null);
-		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setSerie(serie);
-		final String keyList = "seasons" + serie.getId();
+		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
+		final String keyList = "seasons" + season.getSerie().getId();
 		final String keyItem = "season" + (SEASONS_COUNT + 1);
 		serieCache.put(keyList, new ArrayList<>());
 		serieCache.put(keyItem, null);
@@ -146,7 +136,7 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#update(Season)}. */
 	@Test
 	public void testUpdate() {
-		final Season season = SpringEntitiesUtils.updateSeason(SpringUtils.getSeason(entityManager, 1), objectGenerator);
+		final Season season = SpringEntitiesUtils.updateSeason(1, objectGenerator, entityManager);
 
 		seasonService.update(season);
 
@@ -159,11 +149,7 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#remove(Season)} with empty cache. */
 	@Test
 	public void testRemoveWithEmptyCache() {
-		final Season season = objectGenerator.generate(Season.class);
-		season.setId(null);
-		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setSerie(SpringUtils.getSerie(entityManager, 1));
+		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
 		entityManager.persist(season);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 
@@ -177,11 +163,7 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#remove(Season)} with not empty cache. */
 	@Test
 	public void testRemoveWithNotEmptyCache() {
-		final Season season = objectGenerator.generate(Season.class);
-		season.setId(null);
-		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setSerie(SpringUtils.getSerie(entityManager, 1));
+		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
 		entityManager.persist(season);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 		final String key = "seasons" + season.getSerie().getId();
@@ -308,7 +290,7 @@ public class SeasonServiceImplSpringTest {
 	/** Test method for {@link SeasonService#exists(Season)} with not existing season. */
 	@Test
 	public void testExistsWithNotExistingSeason() {
-		final Season season = objectGenerator.generate(Season.class);
+		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
 		season.setId(Integer.MAX_VALUE);
 		final String key = "season" + Integer.MAX_VALUE;
 

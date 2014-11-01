@@ -15,7 +15,6 @@ import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.impl.SeasonDAOImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,11 +68,7 @@ public class SeasonDAOImplSpringTest {
 	/** Test method for {@link SeasonDAO#add(Season)}. */
 	@Test
 	public void testAdd() {
-		final Season season = objectGenerator.generate(Season.class);
-		season.setId(null);
-		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setSerie(SpringUtils.getSerie(entityManager, 1));
+		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
 
 		seasonDAO.add(season);
 
@@ -88,7 +83,7 @@ public class SeasonDAOImplSpringTest {
 	/** Test method for {@link SeasonDAO#update(Season)}. */
 	@Test
 	public void testUpdate() {
-		final Season season = SpringEntitiesUtils.updateSeason(SpringUtils.getSeason(entityManager, 1), objectGenerator);
+		final Season season = SpringEntitiesUtils.updateSeason(1, objectGenerator, entityManager);
 
 		seasonDAO.update(season);
 
@@ -100,11 +95,7 @@ public class SeasonDAOImplSpringTest {
 	/** Test method for {@link SeasonDAO#remove(Season)}. */
 	@Test
 	public void testRemove() {
-		final Season season = objectGenerator.generate(Season.class);
-		season.setId(null);
-		season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-		season.setSerie(SpringUtils.getSerie(entityManager, 1));
+		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
 		entityManager.persist(season);
 		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 

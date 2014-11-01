@@ -6,8 +6,17 @@ import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SERIE_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
 import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
+import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
 import static cz.vhromada.catalog.commons.TestConstants.INNER_ID;
+import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
+import static cz.vhromada.catalog.commons.TestConstants.NOTE;
+import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
+import static cz.vhromada.catalog.commons.TestConstants.POSITION;
 import static cz.vhromada.catalog.commons.TestConstants.PRIMARY_ID;
+import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
+import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
+import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -143,13 +152,13 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with not null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEpisodeWithNotNullId() {
-		episodeFacade.add(ToGenerator.createEpisode(Integer.MAX_VALUE, ToGenerator.createSeason(INNER_ID)));
+		episodeFacade.add(ToGenerator.createEpisode(Integer.MAX_VALUE, createSeason(INNER_ID)));
 	}
 
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with not positive number of episode. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEpisodeWithNotPositiveNumber() {
-		final EpisodeTO episode = ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(createSeason(INNER_ID));
 		episode.setNumber(0);
 
 		episodeFacade.add(episode);
@@ -158,7 +167,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with null name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEpisodeWithNullName() {
-		final EpisodeTO episode = ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(createSeason(INNER_ID));
 		episode.setName(null);
 
 		episodeFacade.add(episode);
@@ -167,7 +176,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEpisodeWithEmptyName() {
-		final EpisodeTO episode = ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(createSeason(INNER_ID));
 		episode.setName("");
 
 		episodeFacade.add(episode);
@@ -176,7 +185,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with negative length. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEpisodeWithNegativeLength() {
-		final EpisodeTO episode = ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(createSeason(INNER_ID));
 		episode.setLength(-1);
 
 		episodeFacade.add(episode);
@@ -185,7 +194,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with null note. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEpisodeWithNullNote() {
-		final EpisodeTO episode = ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(createSeason(INNER_ID));
 		episode.setNote(null);
 
 		episodeFacade.add(episode);
@@ -200,13 +209,13 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with TO for season with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testAddWithEpisodeWithSeasonWithNullId() {
-		episodeFacade.add(ToGenerator.createEpisode(ToGenerator.createSeason()));
+		episodeFacade.add(ToGenerator.createEpisode(createSeason()));
 	}
 
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with episode with not existing season. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testAddWithEpisodeWithNotExistingSeason() {
-		episodeFacade.add(ToGenerator.createEpisode(ToGenerator.createSeason(Integer.MAX_VALUE)));
+		episodeFacade.add(ToGenerator.createEpisode(createSeason(Integer.MAX_VALUE)));
 	}
 
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)}. */
@@ -232,13 +241,13 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with episode with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEpisodeWithNullId() {
-		episodeFacade.update(ToGenerator.createEpisode(ToGenerator.createSeason(INNER_ID)));
+		episodeFacade.update(ToGenerator.createEpisode(createSeason(INNER_ID)));
 	}
 
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with episode with not positive number of episode. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEpisodeWithNotPositiveNumber() {
-		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, createSeason(INNER_ID));
 		episode.setNumber(0);
 
 		episodeFacade.update(episode);
@@ -247,7 +256,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with episode with null name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEpisodeWithNullName() {
-		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, createSeason(INNER_ID));
 		episode.setName(null);
 
 		episodeFacade.update(episode);
@@ -256,7 +265,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with episode with empty string as name. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEpisodeWithEmptyName() {
-		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, createSeason(INNER_ID));
 		episode.setName(null);
 
 		episodeFacade.update(episode);
@@ -265,7 +274,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with episode with negative length. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEpisodeWithNegativeLength() {
-		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, createSeason(INNER_ID));
 		episode.setLength(-1);
 
 		episodeFacade.update(episode);
@@ -274,7 +283,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with episode with null note. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEpisodeWithNullNote() {
-		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(INNER_ID));
+		final EpisodeTO episode = ToGenerator.createEpisode(PRIMARY_ID, createSeason(INNER_ID));
 		episode.setNote(null);
 
 		episodeFacade.update(episode);
@@ -289,19 +298,19 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with episode with null TO for season. */
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithEpisodeWithSeasonWithNullId() {
-		episodeFacade.update(ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason()));
+		episodeFacade.update(ToGenerator.createEpisode(PRIMARY_ID, createSeason()));
 	}
 
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithBadId() {
-		episodeFacade.update(ToGenerator.createEpisode(Integer.MAX_VALUE, ToGenerator.createSeason(INNER_ID)));
+		episodeFacade.update(ToGenerator.createEpisode(Integer.MAX_VALUE, createSeason(INNER_ID)));
 	}
 
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with not existing season. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testUpdateWithNotExistingSeason() {
-		episodeFacade.update(ToGenerator.createEpisode(PRIMARY_ID, ToGenerator.createSeason(Integer.MAX_VALUE)));
+		episodeFacade.update(ToGenerator.createEpisode(PRIMARY_ID, createSeason(Integer.MAX_VALUE)));
 	}
 
 	/** Test method for {@link EpisodeFacade#remove(EpisodeTO)}. */
@@ -480,7 +489,7 @@ public class EpisodeFacadeImplSpringTest {
 		for (int i = 0; i < SEASONS_COUNT; i++) {
 			final int serieNumber = i / SEASONS_PER_SERIE_COUNT + 1;
 			final int seasonNumber = i % SEASONS_PER_SERIE_COUNT + 1;
-			DeepAsserts.assertEquals(SpringToUtils.getEpisodes(serieNumber, seasonNumber), episodeFacade.findEpisodesBySeason(ToGenerator.createSeason(i + 1)),
+			DeepAsserts.assertEquals(SpringToUtils.getEpisodes(serieNumber, seasonNumber), episodeFacade.findEpisodesBySeason(createSeason(i + 1)),
 					"seasonsCount", "episodesCount", "totalLength");
 		}
 		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
@@ -495,13 +504,47 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with season with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testFindEpisodesBySeasonWithNullId() {
-		episodeFacade.findEpisodesBySeason(ToGenerator.createSeason());
+		episodeFacade.findEpisodesBySeason(createSeason());
 	}
 
 	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testFindEpisodesBySeasonWithBadId() {
-		episodeFacade.findEpisodesBySeason(ToGenerator.createSeason(Integer.MAX_VALUE));
+		episodeFacade.findEpisodesBySeason(createSeason(Integer.MAX_VALUE));
+	}
+
+	/**
+	 * Returns new TO for season.
+	 *
+	 * @return new TO for season
+	 */
+	@Deprecated
+	private static SeasonTO createSeason() {
+		final SeasonTO season = new SeasonTO();
+		season.setNumber(NUMBER);
+		season.setStartYear(START_YEAR);
+		season.setEndYear(END_YEAR);
+		season.setLanguage(LANGUAGE);
+		season.setSubtitles(SUBTITLES);
+		season.setEpisodesCount(INNER_COUNT);
+		season.setTotalLength(TOTAL_LENGTH);
+		season.setNote(NOTE);
+		season.setPosition(POSITION);
+
+		return season;
+	}
+
+	/**
+	 * Returns new TO for season with specified ID.
+	 *
+	 * @param id ID
+	 * @return new TO for season with specified ID
+	 */
+	@Deprecated
+	private static SeasonTO createSeason(final Integer id) {
+		final SeasonTO season = createSeason();
+		season.setId(id);
+		return season;
 	}
 
 }

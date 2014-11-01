@@ -9,6 +9,9 @@
 		<property name="startingYear">
 			<utils:constant static-field="cz.vhromada.catalog.commons.Constants.MIN_YEAR"/>
 		</property>
+		<property name="endingYear">
+			<utils:constant static-field="cz.vhromada.catalog.commons.Constants.CURRENT_YEAR"/>
+		</property>
 		<property name="rules">
 			<list>
 				<bean class="cz.vhromada.catalog.commons.TimeRule"/>

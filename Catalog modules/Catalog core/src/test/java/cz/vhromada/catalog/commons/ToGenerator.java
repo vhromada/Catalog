@@ -1,16 +1,10 @@
 package cz.vhromada.catalog.commons;
 
-import static cz.vhromada.catalog.commons.TestConstants.END_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.INNER_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.LANGUAGE;
 import static cz.vhromada.catalog.commons.TestConstants.LENGTH;
 import static cz.vhromada.catalog.commons.TestConstants.NAME;
 import static cz.vhromada.catalog.commons.TestConstants.NOTE;
 import static cz.vhromada.catalog.commons.TestConstants.NUMBER;
 import static cz.vhromada.catalog.commons.TestConstants.POSITION;
-import static cz.vhromada.catalog.commons.TestConstants.START_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.SUBTITLES;
-import static cz.vhromada.catalog.commons.TestConstants.TOTAL_LENGTH;
 
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
@@ -434,67 +428,6 @@ public final class ToGenerator {
 		}
 
 		return genre;
-	}
-
-	/**
-	 * Returns new TO for season.
-	 *
-	 * @return new TO for season
-	 */
-	@Deprecated
-	public static SeasonTO createSeason() {
-		final SeasonTO season = new SeasonTO();
-		season.setNumber(NUMBER);
-		season.setStartYear(START_YEAR);
-		season.setEndYear(END_YEAR);
-		season.setLanguage(LANGUAGE);
-		season.setSubtitles(SUBTITLES);
-		season.setEpisodesCount(INNER_COUNT);
-		season.setTotalLength(TOTAL_LENGTH);
-		season.setNote(NOTE);
-		season.setPosition(POSITION);
-
-		return season;
-	}
-
-	/**
-	 * Returns new TO for season with specified ID.
-	 *
-	 * @param id ID
-	 * @return new TO for season with specified ID
-	 */
-	@Deprecated
-	public static SeasonTO createSeason(final Integer id) {
-		final SeasonTO season = createSeason();
-		season.setId(id);
-		return season;
-	}
-
-	/**
-	 * Returns new TO for season with specified serie.
-	 *
-	 * @param serie TO for serie
-	 * @return new TO for season with specified serie
-	 */
-	@Deprecated
-	public static SeasonTO createSeason(final SerieTO serie) {
-		final SeasonTO season = createSeason();
-		season.setSerie(serie);
-		return season;
-	}
-
-	/**
-	 * Returns new TO for season with specified ID and serie.
-	 *
-	 * @param id    ID
-	 * @param serie TO for serie
-	 * @return new TO for season with specified ID and serie
-	 */
-	@Deprecated
-	public static SeasonTO createSeason(final Integer id, final SerieTO serie) {
-		final SeasonTO season = createSeason(serie);
-		season.setId(id);
-		return season;
 	}
 
 	/**

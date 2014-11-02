@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimpleCorsFilter implements Filter {
 
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-		HttpServletResponse response = (HttpServletResponse) res;
+	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
+		final HttpServletResponse response = (HttpServletResponse) res;
 		response.setHeader("Access-Control-Allow-Origin", "http://localhost:8000"); //allow calls from the same domain or that specified
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 		response.setHeader("Access-Control-Max-Age", "3600");
@@ -31,7 +31,7 @@ public class SimpleCorsFilter implements Filter {
 		chain.doFilter(req, res);
 	}
 
-	public void init(FilterConfig filterConfig) {
+	public void init(final FilterConfig filterConfig) {
 	}
 
 	public void destroy() {

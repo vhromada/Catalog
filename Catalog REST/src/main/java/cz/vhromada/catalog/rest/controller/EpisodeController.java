@@ -3,8 +3,6 @@ package cz.vhromada.catalog.rest.controller;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -49,14 +47,16 @@ public class EpisodeController extends JsonController {
 	 * @param seasonId season ID
 	 * @param episode  episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or length of episode is negative value
 	 *                                  or note is null
 	 *                                  or season is null
 	 *                                  or season ID is null
-	 * @throws RecordNotFoundException  if season doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if season doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
@@ -72,14 +72,16 @@ public class EpisodeController extends JsonController {
 	 * @param seasonId season ID
 	 * @param episode  new value of episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or length of episode is negative value
 	 *                                  or note is null
 	 *                                  or season is null
 	 *                                  or season ID is null
-	 * @throws RecordNotFoundException  if episode doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if episode doesn't exist in data storage
 	 *                                  or season doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -96,8 +98,10 @@ public class EpisodeController extends JsonController {
 	 * @param seasonId season ID
 	 * @param episode  episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if episode doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if episode doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -113,8 +117,10 @@ public class EpisodeController extends JsonController {
 	 * @param seasonId season ID
 	 * @param episode  episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if episode doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if episode doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -130,9 +136,11 @@ public class EpisodeController extends JsonController {
 	 * @param seasonId season ID
 	 * @param episode  episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or episode can't be moved up
-	 * @throws RecordNotFoundException  if episode doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if episode doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -148,9 +156,11 @@ public class EpisodeController extends JsonController {
 	 * @param seasonId season ID
 	 * @param episode  episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or episode can't be moved down
-	 * @throws RecordNotFoundException  if episode doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if episode doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -167,7 +177,8 @@ public class EpisodeController extends JsonController {
 	 * @param episode  episode
 	 * @return true if episode exists
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
@@ -183,8 +194,10 @@ public class EpisodeController extends JsonController {
 	 * @param seasonId season ID
 	 * @return list of episodes for specified season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if season doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if season doesn't exist in data storage
 	 */
 	@RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
 	@ResponseBody

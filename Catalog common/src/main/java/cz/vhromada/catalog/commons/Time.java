@@ -1,9 +1,5 @@
 package cz.vhromada.catalog.commons;
 
-import static cz.vhromada.catalog.commons.Time.TimeData.HOUR;
-import static cz.vhromada.catalog.commons.Time.TimeData.MINUTE;
-import static cz.vhromada.catalog.commons.Time.TimeData.SECOND;
-
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
@@ -29,6 +25,12 @@ public final class Time implements Serializable {
 	/** Count of seconds in minute */
 	private static final int MINUTE_SECONDS = 60;
 
+	/** Minimum minutes or seconds */
+	private static final int MIN_TIME = 0;
+
+	/** Maximum minutes or seconds */
+	private static final int MAX_TIME = 59;
+
 	/** Time in seconds */
 	private final int length;
 
@@ -46,10 +48,10 @@ public final class Time implements Serializable {
 
 		this.length = length;
 		this.data = new EnumMap<>(TimeData.class);
-		this.data.put(HOUR, length / HOUR_SECONDS);
+		this.data.put(TimeData.HOUR, length / HOUR_SECONDS);
 		final int temp = length % HOUR_SECONDS;
-		this.data.put(MINUTE, temp / MINUTE_SECONDS);
-		this.data.put(SECOND, temp % MINUTE_SECONDS);
+		this.data.put(TimeData.MINUTE, temp / MINUTE_SECONDS);
+		this.data.put(TimeData.SECOND, temp % MINUTE_SECONDS);
 	}
 
 	/**
@@ -64,14 +66,14 @@ public final class Time implements Serializable {
 	 */
 	public Time(final int hours, final int minutes, final int seconds) {
 		Validators.validateArgumentNotNegativeNumber(hours, "Hours");
-		Validators.validateArgumentRange(minutes, 0, 59, "Minutes");
-		Validators.validateArgumentRange(seconds, 0, 59, "Seconds");
+		Validators.validateArgumentRange(minutes, MIN_TIME, MAX_TIME, "Minutes");
+		Validators.validateArgumentRange(seconds, MIN_TIME, MAX_TIME, "Seconds");
 
 		this.length = hours * HOUR_SECONDS + minutes * MINUTE_SECONDS + seconds;
 		this.data = new EnumMap<>(TimeData.class);
-		this.data.put(HOUR, hours);
-		this.data.put(MINUTE, minutes);
-		this.data.put(SECOND, seconds);
+		this.data.put(TimeData.HOUR, hours);
+		this.data.put(TimeData.MINUTE, minutes);
+		this.data.put(TimeData.SECOND, seconds);
 	}
 
 	/**
@@ -118,12 +120,12 @@ public final class Time implements Serializable {
 
 	@Override
 	public String toString() {
-		final int days = data.get(HOUR) / DAY_HOURS;
-		final int hours = data.get(HOUR) % DAY_HOURS;
+		final int days = data.get(TimeData.HOUR) / DAY_HOURS;
+		final int hours = data.get(TimeData.HOUR) % DAY_HOURS;
 		if (days > 0) {
-			return String.format("%d:%02d:%02d:%02d", days, hours, data.get(MINUTE), data.get(SECOND));
+			return String.format("%d:%02d:%02d:%02d", days, hours, data.get(TimeData.MINUTE), data.get(TimeData.SECOND));
 		}
-		return String.format("%d:%02d:%02d", hours, data.get(MINUTE), data.get(SECOND));
+		return String.format("%d:%02d:%02d", hours, data.get(TimeData.MINUTE), data.get(TimeData.SECOND));
 	}
 
 	/**

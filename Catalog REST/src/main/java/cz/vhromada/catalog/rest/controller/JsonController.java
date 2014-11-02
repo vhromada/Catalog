@@ -17,7 +17,7 @@ public class JsonController implements InitializingBean {
 	private Genson genson;
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		genson = new GensonBuilder().create();
 	}
 

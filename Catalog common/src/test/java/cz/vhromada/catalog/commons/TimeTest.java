@@ -36,6 +36,9 @@ public class TimeTest {
 	/** Length - seconds */
 	private static final int SECONDS = 26;
 
+	/** Bad maximum minutes or seconds */
+	private static final int BAD_MAX_TIME = 60;
+
 	/** Instance of {@link Time} */
 	private Time timeLength;
 
@@ -70,7 +73,7 @@ public class TimeTest {
 	/** Test method for {@link Time#Time(int)} with bad minutes. */
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithBadMinutes() {
-		new Time(HOURS, 60, SECONDS);
+		new Time(HOURS, BAD_MAX_TIME, SECONDS);
 	}
 
 	/** Test method for {@link Time#Time(int)} with negative seconds. */
@@ -82,7 +85,7 @@ public class TimeTest {
 	/** Test method for {@link Time#Time(int)} with bad seconds. */
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithBadSeconds() {
-		new Time(HOURS, MINUTES, 60);
+		new Time(HOURS, MINUTES, BAD_MAX_TIME);
 	}
 
 	/** Test method for {@link Time#getLength()}. */

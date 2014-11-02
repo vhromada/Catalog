@@ -1,12 +1,9 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
-
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
@@ -55,7 +52,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSeasonTOWithBadMinimumStartYear() {
 		final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-		season.setStartYear(BAD_MIN_YEAR);
+		season.setStartYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonTOValidator.validateNewSeasonTO(season);
 	}
@@ -64,7 +61,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSeasonTOWithBadMaximumStartYear() {
 		final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-		season.setStartYear(BAD_MAX_YEAR);
+		season.setStartYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonTOValidator.validateNewSeasonTO(season);
 	}
@@ -73,7 +70,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSeasonTOWithBadMinimumEndYear() {
 		final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-		season.setEndYear(BAD_MIN_YEAR);
+		season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonTOValidator.validateNewSeasonTO(season);
 	}
@@ -82,7 +79,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSeasonTOWithBadMaximumEndYear() {
 		final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-		season.setEndYear(BAD_MAX_YEAR);
+		season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonTOValidator.validateNewSeasonTO(season);
 	}
@@ -145,7 +142,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSeasonTOWithNegativeTotalLength() {
 		final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-		season.setTotalLength(NEGATIVE_TIME);
+		season.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		seasonTOValidator.validateNewSeasonTO(season);
 	}
@@ -202,7 +199,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSeasonTOWithBadMinimumStartYear() {
 		final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-		season.setStartYear(BAD_MIN_YEAR);
+		season.setStartYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonTOValidator.validateExistingSeasonTO(season);
 	}
@@ -211,7 +208,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSeasonTOWithBadMaximumStartYear() {
 		final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-		season.setStartYear(BAD_MAX_YEAR);
+		season.setStartYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonTOValidator.validateExistingSeasonTO(season);
 	}
@@ -220,7 +217,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSeasonTOWithBadMinimumEndYear() {
 		final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-		season.setEndYear(BAD_MIN_YEAR);
+		season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonTOValidator.validateExistingSeasonTO(season);
 	}
@@ -229,7 +226,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSeasonTOWithBadMaximumEndYear() {
 		final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-		season.setEndYear(BAD_MAX_YEAR);
+		season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonTOValidator.validateExistingSeasonTO(season);
 	}
@@ -292,7 +289,7 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSeasonTOWithNegativeTotalLength() {
 		final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-		season.setTotalLength(NEGATIVE_TIME);
+		season.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		seasonTOValidator.validateExistingSeasonTO(season);
 	}

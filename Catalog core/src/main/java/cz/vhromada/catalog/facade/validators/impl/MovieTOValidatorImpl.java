@@ -6,7 +6,6 @@ import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.catalog.facade.validators.MovieTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,8 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
 	 *
 	 * @throws IllegalStateException    if validator for TO for genre isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewMovieTO(final MovieTO movie) {
@@ -58,7 +58,8 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
 	 *
 	 * @throws IllegalStateException    if validator for TO for genre isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingMovieTO(final MovieTO movie) {
@@ -70,7 +71,8 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateMovieTOWithId(final MovieTO movie) {
@@ -84,7 +86,8 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
 	 * @param movie validating TO for movie
 	 * @throws IllegalStateException    if validator for TO for genre isn't set
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if czech name is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
 	 *                                  or original name is empty string
@@ -117,10 +120,11 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
 		Validators.validateNotNull(movie.getLanguage(), "Language");
 		Validators.validateNotNull(movie.getSubtitles(), "Subtitles");
 		Validators.validateCollectionNotContainNull(movie.getSubtitles(), "Subtitles");
-		Validators.validateNotNull(movie.getMedia(), "Media");
-		Validators.validateCollectionNotContainNull(movie.getMedia(), "Media");
+		final String mediaField = "Media";
+		Validators.validateNotNull(movie.getMedia(), mediaField);
+		Validators.validateCollectionNotContainNull(movie.getMedia(), mediaField);
 		for (Integer medium : movie.getMedia()) {
-			Validators.validateNotNegativeNumber(medium, "Media");
+			Validators.validateNotNegativeNumber(medium, mediaField);
 		}
 		Validators.validateNotNull(movie.getCsfd(), "URL to ČSFD page about movie");
 		CatalogValidators.validateImdbCode(movie.getImdbCode(), "IMDB code");

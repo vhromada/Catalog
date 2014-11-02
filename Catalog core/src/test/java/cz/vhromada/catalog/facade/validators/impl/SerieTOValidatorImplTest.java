@@ -1,12 +1,10 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
 import static org.mockito.Mockito.mock;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
@@ -101,7 +99,7 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSerieTOWithBadMinimalImdb() {
 		final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
-		serie.setImdbCode(BAD_MIN_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		serieTOValidator.validateNewSerieTO(serie);
 	}
@@ -119,7 +117,7 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSerieTOWithBadMaximalImdb() {
 		final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
-		serie.setImdbCode(BAD_MAX_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		serieTOValidator.validateNewSerieTO(serie);
 	}
@@ -181,7 +179,7 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewSerieTOWithNegativeTotalLength() {
 		final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
-		serie.setTotalLength(NEGATIVE_TIME);
+		serie.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		serieTOValidator.validateNewSerieTO(serie);
 	}
@@ -292,7 +290,7 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSerieTOWithBadMinimalImdb() {
 		final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
-		serie.setImdbCode(BAD_MIN_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		serieTOValidator.validateExistingSerieTO(serie);
 	}
@@ -310,7 +308,7 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSerieTOWithBadMaximalImdb() {
 		final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
-		serie.setImdbCode(BAD_MAX_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		serieTOValidator.validateExistingSerieTO(serie);
 	}
@@ -373,7 +371,7 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingSerieTOWithNegativeTotalLength() {
 		final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
-		serie.setTotalLength(NEGATIVE_TIME);
+		serie.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		serieTOValidator.validateExistingSerieTO(serie);
 	}

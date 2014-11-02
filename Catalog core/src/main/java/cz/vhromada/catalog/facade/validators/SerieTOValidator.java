@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators;
 
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents validator for TO for serie.
@@ -15,7 +14,8 @@ public interface SerieTOValidator {
 	 *
 	 * @param serie validating TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -43,7 +43,8 @@ public interface SerieTOValidator {
 	 *
 	 * @param serie validating TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -71,7 +72,8 @@ public interface SerieTOValidator {
 	 *
 	 * @param serie validating TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	void validateSerieTOWithId(SerieTO serie);
 

@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators;
 
 import cz.vhromada.catalog.facade.to.EpisodeTO;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents validator for TO for episode.
@@ -15,7 +14,8 @@ public interface EpisodeTOValidator {
 	 *
 	 * @param episode validating TO for episode
 	 * @throws IllegalArgumentException if TO for episode is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or number of episode isn't positive number
 	 *                                  or name is null
 	 *                                  or name is empty string
@@ -31,7 +31,8 @@ public interface EpisodeTOValidator {
 	 *
 	 * @param episode validating TO for episode
 	 * @throws IllegalArgumentException if TO for episode is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or number of episode isn't positive number
 	 *                                  or name is null
 	 *                                  or name is empty string
@@ -47,7 +48,8 @@ public interface EpisodeTOValidator {
 	 *
 	 * @param episode validating TO for episode
 	 * @throws IllegalArgumentException if TO for episode is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	void validateEpisodeTOWithId(EpisodeTO episode);
 

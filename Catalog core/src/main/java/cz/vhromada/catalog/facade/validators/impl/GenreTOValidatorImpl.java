@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,8 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewGenreTO(final GenreTO genre) {
@@ -30,7 +30,8 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingGenreTO(final GenreTO genre) {
@@ -42,7 +43,8 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateGenreTOWithId(final GenreTO genre) {
@@ -55,7 +57,8 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
 	 *
 	 * @param genre validating TO for genre
 	 * @throws IllegalArgumentException if TO for genre is null
-	 * @throws ValidationException      if name is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if name is null
 	 *                                  or name is empty string
 	 */
 	private void validateGenreTO(final GenreTO genre) {

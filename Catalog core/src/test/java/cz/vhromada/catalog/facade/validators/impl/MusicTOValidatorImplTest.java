@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
-
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
@@ -105,7 +104,7 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewMusicTOWithNegativeTotalLength() {
 		final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
-		music.setTotalLength(NEGATIVE_TIME);
+		music.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		musicTOValidator.validateNewMusicTO(music);
 	}
@@ -204,7 +203,7 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingMusicTOWithNegativeTotalLength() {
 		final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
-		music.setTotalLength(NEGATIVE_TIME);
+		music.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		musicTOValidator.validateExistingMusicTO(music);
 	}

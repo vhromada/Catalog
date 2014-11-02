@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators;
 
 import cz.vhromada.catalog.facade.to.SongTO;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents validator for TO for song.
@@ -15,7 +14,8 @@ public interface SongTOValidator {
 	 *
 	 * @param song validating TO for song
 	 * @throws IllegalArgumentException if TO for song is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or length of song is negative value
@@ -30,7 +30,8 @@ public interface SongTOValidator {
 	 *
 	 * @param song validating TO for song
 	 * @throws IllegalArgumentException if TO for song is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or length of song is negative value
@@ -45,7 +46,8 @@ public interface SongTOValidator {
 	 *
 	 * @param song validating TO for song
 	 * @throws IllegalArgumentException if TO for song is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	void validateSongTOWithId(SongTO song);
 

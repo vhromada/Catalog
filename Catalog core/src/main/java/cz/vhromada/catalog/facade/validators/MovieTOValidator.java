@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators;
 
 import cz.vhromada.catalog.facade.to.MovieTO;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents validator for TO for movie.
@@ -15,7 +14,8 @@ public interface MovieTOValidator {
 	 *
 	 * @param movie validating TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -45,7 +45,8 @@ public interface MovieTOValidator {
 	 *
 	 * @param movie validating TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -75,7 +76,8 @@ public interface MovieTOValidator {
 	 *
 	 * @param movie validating TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	void validateMovieTOWithId(MovieTO movie);
 

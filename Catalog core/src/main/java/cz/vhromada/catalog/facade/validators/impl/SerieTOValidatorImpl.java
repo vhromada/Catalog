@@ -6,7 +6,6 @@ import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.catalog.facade.validators.SerieTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,8 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
 	 *
 	 * @throws IllegalStateException    if validator for TO for genre isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewSerieTO(final SerieTO serie) {
@@ -58,7 +58,8 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
 	 *
 	 * @throws IllegalStateException    if validator for TO for genre isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingSerieTO(final SerieTO serie) {
@@ -70,7 +71,8 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateSerieTOWithId(final SerieTO serie) {
@@ -84,7 +86,8 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
 	 * @param serie validating TO for serie
 	 * @throws IllegalStateException    if validator for TO for genre isn't set
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if czech name is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
 	 *                                  or original name is empty string

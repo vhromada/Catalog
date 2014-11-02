@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewProgramTO(final ProgramTO program) {
@@ -30,7 +30,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingProgramTO(final ProgramTO program) {
@@ -42,7 +43,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateProgramTOWithId(final ProgramTO program) {
@@ -55,7 +57,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
 	 *
 	 * @param program TO for program
 	 * @throws IllegalArgumentException if TO for program is null
-	 * @throws ValidationException      if name is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about program is null
 	 *                                  or URL to czech Wikipedia page about program is null

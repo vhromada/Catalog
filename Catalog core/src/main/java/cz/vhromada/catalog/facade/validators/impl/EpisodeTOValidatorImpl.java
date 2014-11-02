@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.validators.EpisodeTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,8 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewEpisodeTO(final EpisodeTO episode) {
@@ -30,7 +30,8 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingEpisodeTO(final EpisodeTO episode) {
@@ -42,7 +43,8 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateEpisodeTOWithId(final EpisodeTO episode) {
@@ -55,7 +57,8 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
 	 *
 	 * @param episode validating TO for episode
 	 * @throws IllegalArgumentException if TO for episode is null
-	 * @throws ValidationException      if number of episode isn't positive number
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if number of episode isn't positive number
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or length of episode is negative value

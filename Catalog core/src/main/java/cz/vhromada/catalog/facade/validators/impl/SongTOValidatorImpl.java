@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.catalog.facade.validators.SongTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewSongTO(final SongTO song) {
@@ -30,7 +30,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingSongTO(final SongTO song) {
@@ -42,7 +43,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateSongTOWithId(final SongTO song) {
@@ -55,7 +57,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
 	 *
 	 * @param song validating TO for song
 	 * @throws IllegalArgumentException if TO for song is null
-	 * @throws ValidationException      if name is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if name is null
 	 *                                  or name is empty string
 	 *                                  or length of song is negative value
 	 *                                  or note is null

@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewMusicTO(final MusicTO music) {
@@ -30,7 +30,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingMusicTO(final MusicTO music) {
@@ -42,7 +43,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateMusicTOWithId(final MusicTO music) {
@@ -55,7 +57,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
 	 *
 	 * @param music validating TO for music
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if name is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about music is null
 	 *                                  or URL to czech Wikipedia page about music is null

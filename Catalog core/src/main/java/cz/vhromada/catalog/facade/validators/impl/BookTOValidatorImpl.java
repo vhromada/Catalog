@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.validators.BookTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewBookTO(final BookTO book) {
@@ -30,7 +30,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingBookTO(final BookTO book) {
@@ -42,7 +43,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateBookTOWithId(final BookTO book) {
@@ -55,7 +57,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
 	 *
 	 * @param book validating TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if author is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if author is null
 	 *                                  or author is empty string
 	 *                                  or title is null
 	 *                                  or title is empty string

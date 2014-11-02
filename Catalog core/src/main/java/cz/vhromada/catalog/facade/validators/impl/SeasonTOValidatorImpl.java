@@ -4,7 +4,6 @@ import cz.vhromada.catalog.commons.CatalogValidators;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +18,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateNewSeasonTO(final SeasonTO season) {
@@ -31,7 +31,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateExistingSeasonTO(final SeasonTO season) {
@@ -43,7 +44,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
 	 * {@inheritDoc}
 	 *
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 */
 	@Override
 	public void validateSeasonTOWithId(final SeasonTO season) {
@@ -56,7 +58,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
 	 *
 	 * @param season validating TO for season
 	 * @throws IllegalArgumentException if TO for season is null
-	 * @throws ValidationException      if number of season isn't positive number
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if number of season isn't positive number
 	 *                                  or starting year isn't between 1940 and current year
 	 *                                  or ending year isn't between 1940 and current year
 	 *                                  or starting year is greater than ending year

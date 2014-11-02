@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators;
 
 import cz.vhromada.catalog.facade.to.BookTO;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents validator for TO for book.
@@ -15,7 +14,8 @@ public interface BookTOValidator {
 	 *
 	 * @param book validating TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or author is null
 	 *                                  or author is empty string
 	 *                                  or title is null
@@ -35,7 +35,8 @@ public interface BookTOValidator {
 	 *
 	 * @param book validating TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or author is null
 	 *                                  or author is empty string
 	 *                                  or title is null
@@ -55,7 +56,8 @@ public interface BookTOValidator {
 	 *
 	 * @param book validating TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	void validateBookTOWithId(BookTO book);
 

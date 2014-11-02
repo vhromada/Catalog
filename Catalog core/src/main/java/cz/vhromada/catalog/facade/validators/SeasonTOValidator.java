@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators;
 
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents validator for TO for season.
@@ -15,7 +14,8 @@ public interface SeasonTOValidator {
 	 *
 	 * @param season validating TO for season
 	 * @throws IllegalArgumentException if TO for season is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or number of season isn't positive number
 	 *                                  or starting year isn't between 1940 and current year
 	 *                                  or ending year isn't between 1940 and current year
@@ -37,7 +37,8 @@ public interface SeasonTOValidator {
 	 *
 	 * @param season validating TO for season
 	 * @throws IllegalArgumentException if TO for season is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or number of season isn't positive number
 	 *                                  or starting year isn't between 1940 and current year
 	 *                                  or ending year isn't between 1940 and current year
@@ -59,7 +60,8 @@ public interface SeasonTOValidator {
 	 *
 	 * @param season validating TO for season
 	 * @throws IllegalArgumentException if TO for season is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	void validateSeasonTOWithId(SeasonTO season);
 

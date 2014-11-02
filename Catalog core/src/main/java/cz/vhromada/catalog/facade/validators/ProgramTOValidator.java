@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators;
 
 import cz.vhromada.catalog.facade.to.ProgramTO;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents validator for TO for program.
@@ -15,7 +14,8 @@ public interface ProgramTOValidator {
 	 *
 	 * @param program validating TO for program
 	 * @throws IllegalArgumentException if TO for program is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about program is null
@@ -31,7 +31,8 @@ public interface ProgramTOValidator {
 	 *
 	 * @param program validating TO for program
 	 * @throws IllegalArgumentException if TO for program is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about program is null
@@ -47,7 +48,8 @@ public interface ProgramTOValidator {
 	 *
 	 * @param program validating TO for program
 	 * @throws IllegalArgumentException if TO for program is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	void validateProgramTOWithId(ProgramTO program);
 

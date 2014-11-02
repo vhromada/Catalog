@@ -1,20 +1,15 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
 import static org.mockito.Mockito.mock;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
-import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.catalog.facade.validators.MovieTOValidator;
-import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,15 +30,6 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 		final MovieTOValidatorImpl movieValidator = new MovieTOValidatorImpl();
 		movieValidator.setGenreTOValidator(new GenreTOValidatorImpl());
 		movieTOValidator = movieValidator;
-	}
-
-	/** Test method for {@link MovieTOValidatorImpl#getGenreTOValidator()} and {@link MovieTOValidatorImpl#setGenreTOValidator(GenreTOValidator)}. */
-	@Test
-	public void testGenreValidator() {
-		final GenreTOValidator genreTOValidator = mock(GenreTOValidator.class);
-		final MovieTOValidatorImpl movieTOValidator = new MovieTOValidatorImpl();
-		movieTOValidator.setGenreTOValidator(genreTOValidator);
-		DeepAsserts.assertEquals(genreTOValidator, movieTOValidator.getGenreTOValidator());
 	}
 
 	/** Test method for {@link MovieTOValidator#validateNewMovieTO(MovieTO)} with not set validator for TO for genre. */
@@ -105,7 +91,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewMovieTOWithBadMinimumYear() {
 		final MovieTO movie = ToGenerator.newMovie(getObjectGenerator());
-		movie.setYear(BAD_MIN_YEAR);
+		movie.setYear(TestConstants.BAD_MIN_YEAR);
 
 		movieTOValidator.validateNewMovieTO(movie);
 	}
@@ -114,7 +100,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewMovieTOWithBadMaximumYear() {
 		final MovieTO movie = ToGenerator.newMovie(getObjectGenerator());
-		movie.setYear(BAD_MAX_YEAR);
+		movie.setYear(TestConstants.BAD_MAX_YEAR);
 
 		movieTOValidator.validateNewMovieTO(movie);
 	}
@@ -186,7 +172,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewMovieTOWithBadMinimalImdb() {
 		final MovieTO movie = ToGenerator.newMovie(getObjectGenerator());
-		movie.setImdbCode(BAD_MIN_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		movieTOValidator.validateNewMovieTO(movie);
 	}
@@ -204,7 +190,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateNewMovieTOWithBadMaximalImdb() {
 		final MovieTO movie = ToGenerator.newMovie(getObjectGenerator());
-		movie.setImdbCode(BAD_MAX_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		movieTOValidator.validateNewMovieTO(movie);
 	}
@@ -341,7 +327,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingMovieTOWithBadMinimumYear() {
 		final MovieTO movie = ToGenerator.newMovieWithId(getObjectGenerator());
-		movie.setYear(BAD_MIN_YEAR);
+		movie.setYear(TestConstants.BAD_MIN_YEAR);
 
 		movieTOValidator.validateExistingMovieTO(movie);
 	}
@@ -350,7 +336,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingMovieTOWithBadMaximumYear() {
 		final MovieTO movie = ToGenerator.newMovieWithId(getObjectGenerator());
-		movie.setYear(BAD_MAX_YEAR);
+		movie.setYear(TestConstants.BAD_MAX_YEAR);
 
 		movieTOValidator.validateExistingMovieTO(movie);
 	}
@@ -422,7 +408,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingMovieTOWithBadMinimalImdb() {
 		final MovieTO movie = ToGenerator.newMovieWithId(getObjectGenerator());
-		movie.setImdbCode(BAD_MIN_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		movieTOValidator.validateExistingMovieTO(movie);
 	}
@@ -440,7 +426,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
 	@Test(expected = ValidationException.class)
 	public void testValidateExistingMovieTOWithBadMaximalImdb() {
 		final MovieTO movie = ToGenerator.newMovieWithId(getObjectGenerator());
-		movie.setImdbCode(BAD_MAX_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		movieTOValidator.validateExistingMovieTO(movie);
 	}

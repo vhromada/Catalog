@@ -2,6 +2,8 @@ package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -59,8 +61,7 @@ public class ProgramController extends JsonController {
 	 *
 	 * @param program program
 	 * @throws IllegalArgumentException if program is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID isn't null
+	 * @throws ValidationException      if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about program is null
@@ -80,8 +81,7 @@ public class ProgramController extends JsonController {
 	 *
 	 * @param program new value of program
 	 * @throws IllegalArgumentException if program is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about program is null
@@ -89,8 +89,7 @@ public class ProgramController extends JsonController {
 	 *                                  or count of media isn't positive number
 	 *                                  or other data is null
 	 *                                  or note is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if program doesn't exist in data storage
+	 * @throws RecordNotFoundException  if program doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
@@ -103,10 +102,8 @@ public class ProgramController extends JsonController {
 	 *
 	 * @param program program
 	 * @throws IllegalArgumentException if program is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if program doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if program doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -119,10 +116,8 @@ public class ProgramController extends JsonController {
 	 *
 	 * @param program program
 	 * @throws IllegalArgumentException if program is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if program doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if program doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -135,11 +130,9 @@ public class ProgramController extends JsonController {
 	 *
 	 * @param program program
 	 * @throws IllegalArgumentException if program is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or program can't be moved up
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if program doesn't exist in data storage
+	 * @throws RecordNotFoundException  if program doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -152,11 +145,9 @@ public class ProgramController extends JsonController {
 	 *
 	 * @param program program
 	 * @throws IllegalArgumentException if program is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or program can't be moved down
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if program doesn't exist in data storage
+	 * @throws RecordNotFoundException  if program doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -170,8 +161,7 @@ public class ProgramController extends JsonController {
 	 * @param program program
 	 * @return true if program exists
 	 * @throws IllegalArgumentException if program is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody

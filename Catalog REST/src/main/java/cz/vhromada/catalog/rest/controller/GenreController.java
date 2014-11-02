@@ -2,6 +2,8 @@ package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -59,8 +61,7 @@ public class GenreController extends JsonController {
 	 *
 	 * @param genre genre
 	 * @throws IllegalArgumentException if genre is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID isn't null
+	 * @throws ValidationException      if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 */
@@ -75,8 +76,7 @@ public class GenreController extends JsonController {
 	 *
 	 * @param genre genre
 	 * @throws IllegalArgumentException if list of genre names is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if list of genre names contains null value
+	 * @throws ValidationException      if list of genre names contains null value
 	 */
 	@RequestMapping(value = "/addList", method = RequestMethod.POST)
 	@ResponseBody
@@ -89,12 +89,10 @@ public class GenreController extends JsonController {
 	 *
 	 * @param genre new value of genre
 	 * @throws IllegalArgumentException if genre is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if genre doesn't exist in data storage
+	 * @throws RecordNotFoundException  if genre doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
@@ -107,10 +105,8 @@ public class GenreController extends JsonController {
 	 *
 	 * @param genre genre
 	 * @throws IllegalArgumentException if genre is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if genre doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if genre doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -123,10 +119,8 @@ public class GenreController extends JsonController {
 	 *
 	 * @param genre genre
 	 * @throws IllegalArgumentException if genre is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if genre doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if genre doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -140,8 +134,7 @@ public class GenreController extends JsonController {
 	 * @param genre genre
 	 * @return true if genre exists
 	 * @throws IllegalArgumentException if genre is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody

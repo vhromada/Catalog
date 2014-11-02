@@ -2,6 +2,8 @@ package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -59,8 +61,7 @@ public class MovieController extends JsonController {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID isn't null
+	 * @throws ValidationException      if ID isn't null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -83,8 +84,7 @@ public class MovieController extends JsonController {
 	 *                                  or genre ID is null
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if genre doesn't exist in data storage
+	 * @throws RecordNotFoundException  if genre doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
@@ -97,8 +97,7 @@ public class MovieController extends JsonController {
 	 *
 	 * @param movie new value of movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -121,8 +120,7 @@ public class MovieController extends JsonController {
 	 *                                  or genre ID is null
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if movie doesn't exist in data storage
+	 * @throws RecordNotFoundException  if movie doesn't exist in data storage
 	 *                                  or genre doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -136,10 +134,8 @@ public class MovieController extends JsonController {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if movie doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if movie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -152,10 +148,8 @@ public class MovieController extends JsonController {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if movie doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if movie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -168,11 +162,9 @@ public class MovieController extends JsonController {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or movie can't be moved up
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if movie doesn't exist in data storage
+	 * @throws RecordNotFoundException  if movie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -185,11 +177,9 @@ public class MovieController extends JsonController {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or movie can't be moved down
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if movie doesn't exist in data storage
+	 * @throws RecordNotFoundException  if movie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -203,8 +193,7 @@ public class MovieController extends JsonController {
 	 * @param movie movie
 	 * @return true if movie exists
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody

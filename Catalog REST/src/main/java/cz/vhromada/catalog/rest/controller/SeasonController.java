@@ -3,6 +3,8 @@ package cz.vhromada.catalog.rest.controller;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -44,8 +46,7 @@ public class SeasonController extends JsonController {
 	 * @param serieId serie ID
 	 * @param season  season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID isn't null
+	 * @throws ValidationException      if ID isn't null
 	 *                                  or number of season isn't positive number
 	 *                                  or starting year isn't between 1940 and current year
 	 *                                  or ending year isn't between 1940 and current year
@@ -59,8 +60,7 @@ public class SeasonController extends JsonController {
 	 *                                  or note is null
 	 *                                  or serie is null
 	 *                                  or serie ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if serie doesn't exist in data storage
+	 * @throws RecordNotFoundException  if serie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
@@ -74,8 +74,7 @@ public class SeasonController extends JsonController {
 	 * @param serieId serie ID
 	 * @param season  new value of season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or number of season isn't positive number
 	 *                                  or starting year isn't between 1940 and current year
 	 *                                  or ending year isn't between 1940 and current year
@@ -89,8 +88,7 @@ public class SeasonController extends JsonController {
 	 *                                  or note is null
 	 *                                  or serie is null
 	 *                                  or serie ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if season doesn't exist in data storage
+	 * @throws RecordNotFoundException  if season doesn't exist in data storage
 	 *                                  or serie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -105,10 +103,8 @@ public class SeasonController extends JsonController {
 	 * @param serieId serie ID
 	 * @param season  season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if season doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if season doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -122,10 +118,8 @@ public class SeasonController extends JsonController {
 	 * @param serieId serie ID
 	 * @param season  season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if season doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if season doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -139,11 +133,9 @@ public class SeasonController extends JsonController {
 	 * @param serieId serie ID
 	 * @param season  season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or season can't be moved up
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if season doesn't exist in data storage
+	 * @throws RecordNotFoundException  if season doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -157,11 +149,9 @@ public class SeasonController extends JsonController {
 	 * @param serieId serie ID
 	 * @param season  season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or season can't be moved down
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if season doesn't exist in data storage
+	 * @throws RecordNotFoundException  if season doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -176,8 +166,7 @@ public class SeasonController extends JsonController {
 	 * @param season  season
 	 * @return true if season exists
 	 * @throws IllegalArgumentException if season is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
@@ -191,10 +180,8 @@ public class SeasonController extends JsonController {
 	 * @param serieId serie ID
 	 * @return list of seasons for specified serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if serie doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if serie doesn't exist in data storage
 	 */
 	@RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
 	@ResponseBody

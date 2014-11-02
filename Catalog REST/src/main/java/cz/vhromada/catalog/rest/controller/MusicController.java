@@ -2,6 +2,8 @@ package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -59,8 +61,7 @@ public class MusicController extends JsonController {
 	 *
 	 * @param music music
 	 * @throws IllegalArgumentException if music is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID isn't null
+	 * @throws ValidationException      if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about music is null
@@ -82,8 +83,7 @@ public class MusicController extends JsonController {
 	 *
 	 * @param music new value of music
 	 * @throws IllegalArgumentException if music is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about music is null
@@ -93,8 +93,7 @@ public class MusicController extends JsonController {
 	 *                                  or total length of songs is null
 	 *                                  or total length of songs is negative number
 	 *                                  or note is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if music doesn't exist in data storage
+	 * @throws RecordNotFoundException  if music doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
@@ -107,10 +106,8 @@ public class MusicController extends JsonController {
 	 *
 	 * @param music music
 	 * @throws IllegalArgumentException if music is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if music doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if music doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -123,10 +120,8 @@ public class MusicController extends JsonController {
 	 *
 	 * @param music music
 	 * @throws IllegalArgumentException if music is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if music doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if music doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -139,11 +134,9 @@ public class MusicController extends JsonController {
 	 *
 	 * @param music music
 	 * @throws IllegalArgumentException if music is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or music can't be moved up
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if music doesn't exist in data storage
+	 * @throws RecordNotFoundException  if music doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -156,11 +149,9 @@ public class MusicController extends JsonController {
 	 *
 	 * @param music music
 	 * @throws IllegalArgumentException if music is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or music can't be moved down
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if music doesn't exist in data storage
+	 * @throws RecordNotFoundException  if music doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -174,8 +165,7 @@ public class MusicController extends JsonController {
 	 * @param music music
 	 * @return true if music exists
 	 * @throws IllegalArgumentException if music is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody

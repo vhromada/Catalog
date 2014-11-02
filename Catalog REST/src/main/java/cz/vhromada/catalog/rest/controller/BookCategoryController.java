@@ -2,6 +2,8 @@ package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.facade.BookCategoryFacade;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -59,8 +61,7 @@ public class BookCategoryController extends JsonController {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID isn't null
+	 * @throws ValidationException      if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or count of books is negative number
@@ -77,14 +78,12 @@ public class BookCategoryController extends JsonController {
 	 *
 	 * @param bookCategory new value of book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or count of books is negative number
 	 *                                  or note is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book category doesn't exist in data storage
+	 * @throws RecordNotFoundException  if book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
@@ -97,10 +96,8 @@ public class BookCategoryController extends JsonController {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book category doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -113,10 +110,8 @@ public class BookCategoryController extends JsonController {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book category doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -129,11 +124,9 @@ public class BookCategoryController extends JsonController {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or book category can't be moved up
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book category doesn't exist in data storage
+	 * @throws RecordNotFoundException  if book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -146,11 +139,9 @@ public class BookCategoryController extends JsonController {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or book category can't be moved down
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book category doesn't exist in data storage
+	 * @throws RecordNotFoundException  if book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -164,8 +155,7 @@ public class BookCategoryController extends JsonController {
 	 * @param bookCategory book category
 	 * @return true if book category exists
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody

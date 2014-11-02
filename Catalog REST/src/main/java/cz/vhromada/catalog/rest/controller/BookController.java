@@ -3,6 +3,8 @@ package cz.vhromada.catalog.rest.controller;
 import cz.vhromada.catalog.facade.BookFacade;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -45,8 +47,7 @@ public class BookController extends JsonController {
 	 * @param bookCategoryId book category ID
 	 * @param book           book
 	 * @throws IllegalArgumentException if book is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID isn't null
+	 * @throws ValidationException      if ID isn't null
 	 *                                  or author is null
 	 *                                  or author is empty string
 	 *                                  or title is null
@@ -58,8 +59,7 @@ public class BookController extends JsonController {
 	 *                                  or note is null
 	 *                                  or book category is null
 	 *                                  or book category ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book category doesn't exist in data storage
+	 * @throws RecordNotFoundException  if book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
@@ -73,8 +73,7 @@ public class BookController extends JsonController {
 	 * @param bookCategoryId book category ID
 	 * @param book           new value of book
 	 * @throws IllegalArgumentException if book is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or author is null
 	 *                                  or author is empty string
 	 *                                  or title is null
@@ -86,8 +85,7 @@ public class BookController extends JsonController {
 	 *                                  or note is null
 	 *                                  or book category is null
 	 *                                  or book category ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book doesn't exist in data storage
+	 * @throws RecordNotFoundException  if book doesn't exist in data storage
 	 *                                  or book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -102,10 +100,8 @@ public class BookController extends JsonController {
 	 * @param bookCategoryId book category ID
 	 * @param book           book
 	 * @throws IllegalArgumentException if book is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if book doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -119,10 +115,8 @@ public class BookController extends JsonController {
 	 * @param bookCategoryId book category ID
 	 * @param book           book
 	 * @throws IllegalArgumentException if book is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if book doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -136,11 +130,9 @@ public class BookController extends JsonController {
 	 * @param bookCategoryId book category ID
 	 * @param book           book
 	 * @throws IllegalArgumentException if book is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or book can't be moved up
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book doesn't exist in data storage
+	 * @throws RecordNotFoundException  if book doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -154,11 +146,9 @@ public class BookController extends JsonController {
 	 * @param bookCategoryId book category ID
 	 * @param book           book
 	 * @throws IllegalArgumentException if book is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 *                                  or book can't be moved down
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book doesn't exist in data storage
+	 * @throws RecordNotFoundException  if book doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -173,8 +163,7 @@ public class BookController extends JsonController {
 	 * @param book           book
 	 * @return true if book exists
 	 * @throws IllegalArgumentException if book is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
+	 * @throws ValidationException      if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody
@@ -188,10 +177,8 @@ public class BookController extends JsonController {
 	 * @param bookCategoryId book category ID
 	 * @return list of books for specified book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if ID is null
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  if book category doesn't exist in data storage
+	 * @throws ValidationException      if ID is null
+	 * @throws RecordNotFoundException  if book category doesn't exist in data storage
 	 */
 	@RequestMapping(value = { "", "/", "list" }, method = RequestMethod.GET)
 	@ResponseBody

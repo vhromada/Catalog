@@ -53,7 +53,7 @@ public class SeasonTOTest {
 		final Language subtitles1 = objectGenerator.generate(Language.class);
 		final Language subtitles2 = objectGenerator.generate(Language.class);
 		final Language subtitles3 = objectGenerator.generate(Language.class);
-		final String subtitleDivider = "/";
+		final String subtitleDivider = " / ";
 
 		DeepAsserts.assertEquals("", season.getSubtitlesAsString());
 

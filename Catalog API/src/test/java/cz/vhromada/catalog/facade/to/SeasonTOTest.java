@@ -53,6 +53,7 @@ public class SeasonTOTest {
 		final Language subtitles1 = objectGenerator.generate(Language.class);
 		final Language subtitles2 = objectGenerator.generate(Language.class);
 		final Language subtitles3 = objectGenerator.generate(Language.class);
+		final String subtitleDivider = "/";
 
 		DeepAsserts.assertEquals("", season.getSubtitlesAsString());
 
@@ -60,10 +61,10 @@ public class SeasonTOTest {
 		DeepAsserts.assertEquals(subtitles1.toString(), season.getSubtitlesAsString());
 
 		season.setSubtitles(CollectionUtils.newList(subtitles1, subtitles2));
-		DeepAsserts.assertEquals(subtitles1 + " / " + subtitles2, season.getSubtitlesAsString());
+		DeepAsserts.assertEquals(subtitles1 + subtitleDivider + subtitles2, season.getSubtitlesAsString());
 
 		season.setSubtitles(CollectionUtils.newList(subtitles1, subtitles2, subtitles3));
-		DeepAsserts.assertEquals(subtitles1 + " / " + subtitles2 + " / " + subtitles3, season.getSubtitlesAsString());
+		DeepAsserts.assertEquals(subtitles1 + subtitleDivider + subtitles2 + subtitleDivider + subtitles3, season.getSubtitlesAsString());
 	}
 
 }

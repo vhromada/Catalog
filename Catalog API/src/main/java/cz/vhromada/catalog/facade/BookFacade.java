@@ -2,11 +2,8 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents facade for books.
@@ -21,7 +18,8 @@ public interface BookFacade {
 	 * @param id ID
 	 * @return TO for book with ID or null if there isn't such TO for book
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	BookTO getBook(Integer id);
 
@@ -30,7 +28,8 @@ public interface BookFacade {
 	 *
 	 * @param book TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or author is null
 	 *                                  or author is empty string
 	 *                                  or title is null
@@ -42,8 +41,10 @@ public interface BookFacade {
 	 *                                  or note is null
 	 *                                  or TO for book category is null
 	 *                                  or TO for book category ID is null
-	 * @throws RecordNotFoundException  if TO for book category doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for book category doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void add(BookTO book);
 
@@ -52,7 +53,8 @@ public interface BookFacade {
 	 *
 	 * @param book new value of TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or author is null
 	 *                                  or author is empty string
 	 *                                  or title is null
@@ -64,9 +66,11 @@ public interface BookFacade {
 	 *                                  or note is null
 	 *                                  or TO for book category is null
 	 *                                  or TO for book category ID is null
-	 * @throws RecordNotFoundException  if TO for book doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for book doesn't exist in data storage
 	 *                                  or TO for book category doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void update(BookTO book);
 
@@ -75,9 +79,12 @@ public interface BookFacade {
 	 *
 	 * @param book TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for book doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for book doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void remove(BookTO book);
 
@@ -86,9 +93,12 @@ public interface BookFacade {
 	 *
 	 * @param book TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for book doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for book doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void duplicate(BookTO book);
 
@@ -97,10 +107,13 @@ public interface BookFacade {
 	 *
 	 * @param book TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for book can't be moved up
-	 * @throws RecordNotFoundException  if TO for book doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for book doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveUp(BookTO book);
 
@@ -109,10 +122,13 @@ public interface BookFacade {
 	 *
 	 * @param book TO for book
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for book can't be moved down
-	 * @throws RecordNotFoundException  if TO for book doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for book doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveDown(BookTO book);
 
@@ -122,8 +138,10 @@ public interface BookFacade {
 	 * @param book TO for book
 	 * @return true if TO for book exists
 	 * @throws IllegalArgumentException if TO for book is null
-	 * @throws ValidationException      if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	boolean exists(BookTO book);
 
@@ -133,9 +151,12 @@ public interface BookFacade {
 	 * @param bookCategory TO for book category
 	 * @return list of TO for books for specified TO for book category
 	 * @throws IllegalArgumentException if TO for book category is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for book category doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for book category doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	List<BookTO> findBooksByBookCategory(BookCategoryTO bookCategory);
 

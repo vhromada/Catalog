@@ -3,10 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.MusicTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents facade for music.
@@ -18,7 +15,8 @@ public interface MusicFacade {
 	/**
 	 * Creates new data.
 	 *
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	void newData();
 
@@ -26,7 +24,8 @@ public interface MusicFacade {
 	 * Returns list of TO for music.
 	 *
 	 * @return list of TO for music
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	List<MusicTO> getMusic();
 
@@ -36,7 +35,8 @@ public interface MusicFacade {
 	 * @param id ID
 	 * @return TO for music with ID or null if there isn't such TO for music
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	MusicTO getMusic(Integer id);
 
@@ -45,7 +45,8 @@ public interface MusicFacade {
 	 *
 	 * @param music TO for music
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about music is null
@@ -55,7 +56,8 @@ public interface MusicFacade {
 	 *                                  or total length of songs is null
 	 *                                  or total length of songs is negative number
 	 *                                  or note is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void add(MusicTO music);
 
@@ -64,7 +66,8 @@ public interface MusicFacade {
 	 *
 	 * @param music new value of TO for music
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about music is null
@@ -74,8 +77,10 @@ public interface MusicFacade {
 	 *                                  or total length of songs is null
 	 *                                  or total length of songs is negative number
 	 *                                  or note is null
-	 * @throws RecordNotFoundException  if TO for music doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for music doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void update(MusicTO music);
 
@@ -84,9 +89,12 @@ public interface MusicFacade {
 	 *
 	 * @param music TO for music
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for music doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for music doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void remove(MusicTO music);
 
@@ -95,9 +103,12 @@ public interface MusicFacade {
 	 *
 	 * @param music TO for music
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for music doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for music doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void duplicate(MusicTO music);
 
@@ -106,10 +117,13 @@ public interface MusicFacade {
 	 *
 	 * @param music TO for music
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for music can't be moved up
-	 * @throws RecordNotFoundException  if TO for music doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for music doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveUp(MusicTO music);
 
@@ -118,10 +132,13 @@ public interface MusicFacade {
 	 *
 	 * @param music TO for music
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for music can't be moved down
-	 * @throws RecordNotFoundException  if TO for music doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for music doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveDown(MusicTO music);
 
@@ -131,15 +148,18 @@ public interface MusicFacade {
 	 * @param music TO for music
 	 * @return true if TO for music exists
 	 * @throws IllegalArgumentException if TO for music is null
-	 * @throws ValidationException      if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	boolean exists(MusicTO music);
 
 	/**
 	 * Updates positions.
 	 *
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	void updatePositions();
 
@@ -147,7 +167,8 @@ public interface MusicFacade {
 	 * Returns total count of media.
 	 *
 	 * @return total count of media
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	int getTotalMediaCount();
 
@@ -155,7 +176,8 @@ public interface MusicFacade {
 	 * Returns total length of all songs.
 	 *
 	 * @return total length of all songs
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	Time getTotalLength();
 
@@ -163,7 +185,8 @@ public interface MusicFacade {
 	 * Returns count of songs from all music.
 	 *
 	 * @return count of songs from all music
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	int getSongsCount();
 

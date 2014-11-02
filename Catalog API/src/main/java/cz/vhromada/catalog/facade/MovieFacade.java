@@ -3,10 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.MovieTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents facade for movies.
@@ -18,7 +15,8 @@ public interface MovieFacade {
 	/**
 	 * Creates new data.
 	 *
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	void newData();
 
@@ -26,7 +24,8 @@ public interface MovieFacade {
 	 * Returns list of TO for movie.
 	 *
 	 * @return list of TO for movie
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	List<MovieTO> getMovies();
 
@@ -36,7 +35,8 @@ public interface MovieFacade {
 	 * @param id ID
 	 * @return TO for movie with ID or null if there isn't such TO for movie
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	MovieTO getMovie(Integer id);
 
@@ -45,7 +45,8 @@ public interface MovieFacade {
 	 *
 	 * @param movie TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -68,8 +69,10 @@ public interface MovieFacade {
 	 *                                  or genre ID is null
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
-	 * @throws RecordNotFoundException  if TO for genre doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for genre doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void add(MovieTO movie);
 
@@ -78,7 +81,8 @@ public interface MovieFacade {
 	 *
 	 * @param movie new value of TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -101,9 +105,11 @@ public interface MovieFacade {
 	 *                                  or genre ID is null
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
-	 * @throws RecordNotFoundException  if TO for movie doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for movie doesn't exist in data storage
 	 *                                  or TO for genre doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void update(MovieTO movie);
 
@@ -112,9 +118,12 @@ public interface MovieFacade {
 	 *
 	 * @param movie TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for movie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for movie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void remove(MovieTO movie);
 
@@ -123,9 +132,12 @@ public interface MovieFacade {
 	 *
 	 * @param movie TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for movie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for movie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void duplicate(MovieTO movie);
 
@@ -134,10 +146,13 @@ public interface MovieFacade {
 	 *
 	 * @param movie TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for movie can't be moved up
-	 * @throws RecordNotFoundException  if TO for movie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for movie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveUp(MovieTO movie);
 
@@ -146,10 +161,13 @@ public interface MovieFacade {
 	 *
 	 * @param movie TO for movie
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for movie can't be moved down
-	 * @throws RecordNotFoundException  if TO for movie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for movie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveDown(MovieTO movie);
 
@@ -159,15 +177,18 @@ public interface MovieFacade {
 	 * @param movie TO for movie
 	 * @return true if TO for movie exists
 	 * @throws IllegalArgumentException if TO for movie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	boolean exists(MovieTO movie);
 
 	/**
 	 * Updates positions.
 	 *
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	void updatePositions();
 
@@ -175,7 +196,8 @@ public interface MovieFacade {
 	 * Returns total count of media.
 	 *
 	 * @return total count of media
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	int getTotalMediaCount();
 
@@ -183,7 +205,8 @@ public interface MovieFacade {
 	 * Returns total length of all movies.
 	 *
 	 * @return total length of all movies
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	Time getTotalLength();
 

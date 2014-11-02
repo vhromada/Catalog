@@ -177,8 +177,8 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
 			return "";
 		}
 		final StringBuilder subtitlesString = new StringBuilder();
-		for (Language language : subtitles) {
-			subtitlesString.append(language);
+		for (Language subtitle : subtitles) {
+			subtitlesString.append(subtitle);
 			subtitlesString.append(" / ");
 		}
 		return subtitlesString.substring(0, subtitlesString.length() - 3);

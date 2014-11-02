@@ -39,6 +39,7 @@ public class MovieTOTest {
 		final Language subtitles1 = objectGenerator.generate(Language.class);
 		final Language subtitles2 = objectGenerator.generate(Language.class);
 		final Language subtitles3 = objectGenerator.generate(Language.class);
+		final String subtitleDivider = "/";
 
 		DeepAsserts.assertEquals("", movie.getSubtitlesAsString());
 
@@ -46,10 +47,10 @@ public class MovieTOTest {
 		DeepAsserts.assertEquals(subtitles1.toString(), movie.getSubtitlesAsString());
 
 		movie.setSubtitles(CollectionUtils.newList(subtitles1, subtitles2));
-		DeepAsserts.assertEquals(subtitles1 + " / " + subtitles2, movie.getSubtitlesAsString());
+		DeepAsserts.assertEquals(subtitles1 + subtitleDivider + subtitles2, movie.getSubtitlesAsString());
 
 		movie.setSubtitles(CollectionUtils.newList(subtitles1, subtitles2, subtitles3));
-		DeepAsserts.assertEquals(subtitles1 + " / " + subtitles2 + " / " + subtitles3, movie.getSubtitlesAsString());
+		DeepAsserts.assertEquals(subtitles1 + subtitleDivider + subtitles2 + subtitleDivider + subtitles3, movie.getSubtitlesAsString());
 	}
 
 	/** Test method for {@link MovieTO#getTotalLength()}. */

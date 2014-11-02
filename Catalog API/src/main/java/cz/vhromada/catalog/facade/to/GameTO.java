@@ -303,48 +303,12 @@ public class GameTO implements Comparable<GameTO>, Serializable {
 		if (crack) {
 			result.append("Crack");
 		}
-		if (serialKey) {
-			if (result.length() == 0) {
-				result.append("Serial key");
-			} else {
-				result.append(", serial key");
-			}
-		}
-		if (patch) {
-			if (result.length() == 0) {
-				result.append("Patch");
-			} else {
-				result.append(", patch");
-			}
-		}
-		if (trainer) {
-			if (result.length() == 0) {
-				result.append("Trainer");
-			} else {
-				result.append(", trainer");
-			}
-		}
-		if (trainerData) {
-			if (result.length() == 0) {
-				result.append("Data for trainer");
-			} else {
-				result.append(", data for trainer");
-			}
-		}
-		if (editor) {
-			if (result.length() == 0) {
-				result.append("Editor");
-			} else {
-				result.append(", editor");
-			}
-		}
-		if (saves) {
-			if (result.length() == 0) {
-				result.append("Saves");
-			} else {
-				result.append(", saves");
-			}
-		}
+		addToResult(result, serialKey, "serial key");
+		addToResult(result, patch, "patch");
+		addToResult(result, trainer, "trainer");
+		addToResult(result, trainerData, "data for trainer");
+		addToResult(result, editor, "editor");
+		addToResult(result, saves, "saves");
 		if (otherData != null && !otherData.isEmpty()) {
 			if (result.length() != 0) {
 				result.append(", ");
@@ -353,6 +317,18 @@ public class GameTO implements Comparable<GameTO>, Serializable {
 		}
 
 		return result.toString();
+	}
+
+	private void addToResult(final StringBuilder result, final boolean value, final String string) {
+		if (value) {
+			if (result.length() == 0) {
+				result.append(string.substring(0, 1).toUpperCase());
+				result.append(string.substring(1));
+			} else {
+				result.append(", ");
+				result.append(string);
+			}
+		}
 	}
 
 	/**

@@ -2,10 +2,7 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.GenreTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents facade for genres.
@@ -17,7 +14,8 @@ public interface GenreFacade {
 	/**
 	 * Creates new data.
 	 *
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	void newData();
 
@@ -25,7 +23,8 @@ public interface GenreFacade {
 	 * Returns list of TO for genre.
 	 *
 	 * @return list of TO for genre
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	List<GenreTO> getGenres();
 
@@ -35,7 +34,8 @@ public interface GenreFacade {
 	 * @param id ID
 	 * @return TO for genre with ID or null if there isn't such TO for genre
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	GenreTO getGenre(Integer id);
 
@@ -44,10 +44,12 @@ public interface GenreFacade {
 	 *
 	 * @param genre TO for genre
 	 * @throws IllegalArgumentException if TO for genre is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void add(GenreTO genre);
 
@@ -56,8 +58,10 @@ public interface GenreFacade {
 	 *
 	 * @param genres list of genre names
 	 * @throws IllegalArgumentException if list of genre names is null
-	 * @throws ValidationException      if list of genre names contains null value
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if list of genre names contains null value
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void add(List<String> genres);
 
@@ -66,11 +70,14 @@ public interface GenreFacade {
 	 *
 	 * @param genre new value of TO for genre
 	 * @throws IllegalArgumentException if TO for genre is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
-	 * @throws RecordNotFoundException  if TO for genre doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for genre doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void update(GenreTO genre);
 
@@ -79,9 +86,12 @@ public interface GenreFacade {
 	 *
 	 * @param genre TO for genre
 	 * @throws IllegalArgumentException if TO for genre is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for genre doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for genre doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void remove(GenreTO genre);
 
@@ -90,9 +100,12 @@ public interface GenreFacade {
 	 *
 	 * @param genre TO for genre
 	 * @throws IllegalArgumentException if TO for genre is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for genre doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for genre doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void duplicate(GenreTO genre);
 
@@ -102,8 +115,10 @@ public interface GenreFacade {
 	 * @param genre TO for genre
 	 * @return true if TO for genre exists
 	 * @throws IllegalArgumentException if TO for genre is null
-	 * @throws ValidationException      if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	boolean exists(GenreTO genre);
 

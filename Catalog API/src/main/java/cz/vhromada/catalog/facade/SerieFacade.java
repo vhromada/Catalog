@@ -3,10 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents facade for series.
@@ -18,7 +15,8 @@ public interface SerieFacade {
 	/**
 	 * Creates new data.
 	 *
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	void newData();
 
@@ -26,7 +24,8 @@ public interface SerieFacade {
 	 * Returns list of TO for serie.
 	 *
 	 * @return list of TO for serie
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	List<SerieTO> getSeries();
 
@@ -36,7 +35,8 @@ public interface SerieFacade {
 	 * @param id ID
 	 * @return TO for serie with ID or null if there isn't such TO for serie
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	SerieTO getSerie(Integer id);
 
@@ -45,7 +45,8 @@ public interface SerieFacade {
 	 *
 	 * @param serieTO TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -65,8 +66,10 @@ public interface SerieFacade {
 	 *                                  or genre ID is null
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
-	 * @throws RecordNotFoundException  if TO for genre doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for genre doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void add(SerieTO serieTO);
 
@@ -75,7 +78,8 @@ public interface SerieFacade {
 	 *
 	 * @param serieTO new value of TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -95,9 +99,11 @@ public interface SerieFacade {
 	 *                                  or genre ID is null
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
-	 * @throws RecordNotFoundException  if TO for serie doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for serie doesn't exist in data storage
 	 *                                  or TO for genre doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void update(SerieTO serieTO);
 
@@ -106,9 +112,12 @@ public interface SerieFacade {
 	 *
 	 * @param serieTO TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for serie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for serie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void remove(SerieTO serieTO);
 
@@ -117,9 +126,12 @@ public interface SerieFacade {
 	 *
 	 * @param serieTO TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if TO for serie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for serie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void duplicate(SerieTO serieTO);
 
@@ -128,10 +140,13 @@ public interface SerieFacade {
 	 *
 	 * @param serieTO TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for serie can't be moved up
-	 * @throws RecordNotFoundException  if TO for serie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for serie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveUp(SerieTO serieTO);
 
@@ -140,10 +155,13 @@ public interface SerieFacade {
 	 *
 	 * @param serieTO TO for serie
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or TO for serie can't be moved down
-	 * @throws RecordNotFoundException  if TO for serie doesn't exist in data storage
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if TO for serie doesn't exist in data storage
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	void moveDown(SerieTO serieTO);
 
@@ -153,15 +171,18 @@ public interface SerieFacade {
 	 * @param serieTO TO for serie
 	 * @return true if TO for serie exists
 	 * @throws IllegalArgumentException if TO for serie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *                                  if there was error in working with service tier
 	 */
 	boolean exists(SerieTO serieTO);
 
 	/**
 	 * Updates positions.
 	 *
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	void updatePositions();
 
@@ -169,7 +190,8 @@ public interface SerieFacade {
 	 * Returns total length of all series.
 	 *
 	 * @return total length of all series
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	Time getTotalLength();
 
@@ -177,7 +199,8 @@ public interface SerieFacade {
 	 * Returns count of seasons from all series.
 	 *
 	 * @return count of seasons from all series
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	int getSeasonsCount();
 
@@ -185,7 +208,8 @@ public interface SerieFacade {
 	 * Returns count of episodes from all series.
 	 *
 	 * @return count of episodes from all series
-	 * @throws FacadeOperationException if there was error in working with service tier
+	 * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
+	 *          if there was error in working with service tier
 	 */
 	int getEpisodesCount();
 

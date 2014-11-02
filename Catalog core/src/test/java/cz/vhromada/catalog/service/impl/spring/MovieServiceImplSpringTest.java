@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.service.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.MEDIA_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.MOVIES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +16,6 @@ import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.service.MovieService;
-import cz.vhromada.catalog.service.impl.MovieServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -32,7 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link MovieServiceImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.service.impl.MovieServiceImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -40,6 +37,12 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testServiceContext.xml")
 @Transactional
 public class MovieServiceImplSpringTest {
+
+	/** Cache key for list of movies */
+	private static final String MOVIES_CACHE_KEY = "movies";
+
+	/** Cache key for movie */
+	private static final String MOVIE_CACHE_KEY = "movie";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -79,11 +82,11 @@ public class MovieServiceImplSpringTest {
 	@Test
 	public void testGetMovies() {
 		final List<Movie> movies = SpringEntitiesUtils.getMovies();
-		final String key = "movies";
+		final String key = MOVIES_CACHE_KEY;
 
 		DeepAsserts.assertEquals(movies, movieService.getMovies());
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, key, movies);
 	}
@@ -92,17 +95,17 @@ public class MovieServiceImplSpringTest {
 	@Test
 	public void testGetMovieWithExistingMovie() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
-			keys.add("movie" + i);
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
+			keys.add(MOVIE_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), movieService.getMovie(i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(movieCache));
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			SpringUtils.assertCacheValue(movieCache, keys.get(i - 1), SpringEntitiesUtils.getMovie(i));
 		}
 	}
@@ -110,11 +113,11 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#getMovie(Integer)} with not existing movie. */
 	@Test
 	public void testGetMovieWithNotExistingMovie() {
-		final String key = "movie" + Integer.MAX_VALUE;
+		final String key = MOVIE_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertNull(movieService.getMovie(Integer.MAX_VALUE));
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, key, null);
 	}
@@ -127,11 +130,11 @@ public class MovieServiceImplSpringTest {
 		movieService.add(movie);
 
 		DeepAsserts.assertNotNull(movie.getId());
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, movie.getId());
-		final Movie addedMovie = SpringUtils.getMovie(entityManager, MOVIES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, movie.getId());
+		final Movie addedMovie = SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT + 1);
 		DeepAsserts.assertEquals(movie, addedMovie);
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
 	}
 
@@ -139,19 +142,19 @@ public class MovieServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
-		final String keyList = "movies";
-		final String keyItem = "movie" + (MOVIES_COUNT + 1);
+		final String keyList = MOVIES_CACHE_KEY;
+		final String keyItem = MOVIE_CACHE_KEY + (SpringUtils.MOVIES_COUNT + 1);
 		movieCache.put(keyList, new ArrayList<>());
 		movieCache.put(keyItem, null);
 
 		movieService.add(movie);
 
 		DeepAsserts.assertNotNull(movie.getId());
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, movie.getId());
-		final Movie addedMovie = SpringUtils.getMovie(entityManager, MOVIES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, movie.getId());
+		final Movie addedMovie = SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT + 1);
 		DeepAsserts.assertEquals(movie, addedMovie);
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, keyList, CollectionUtils.newList(movie));
 		SpringUtils.assertCacheValue(movieCache, keyItem, movie);
@@ -166,8 +169,8 @@ public class MovieServiceImplSpringTest {
 
 		final Movie updatedMovie = SpringUtils.getMovie(entityManager, 1);
 		DeepAsserts.assertEquals(movie, updatedMovie);
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
 	}
 
@@ -179,8 +182,8 @@ public class MovieServiceImplSpringTest {
 			entityManager.persist(medium);
 		}
 		entityManager.persist(movie);
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
 
 		movieService.remove(movie);
 
@@ -188,8 +191,8 @@ public class MovieServiceImplSpringTest {
 		for (Medium medium : movie.getMedia()) {
 			assertNull(SpringUtils.getMedium(entityManager, medium.getId()));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
 	}
 
@@ -201,9 +204,9 @@ public class MovieServiceImplSpringTest {
 			entityManager.persist(medium);
 		}
 		entityManager.persist(movie);
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
-		final String key = "movies";
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT + movie.getMedia().size(), SpringUtils.getMediaCount(entityManager));
+		final String key = MOVIES_CACHE_KEY;
 		final List<Movie> cacheMovies = new ArrayList<>();
 		cacheMovies.add(movie);
 		movieCache.put(key, cacheMovies);
@@ -214,8 +217,8 @@ public class MovieServiceImplSpringTest {
 		for (Medium medium : movie.getMedia()) {
 			assertNull(SpringUtils.getMedium(entityManager, medium.getId()));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, key, new ArrayList<>());
 	}
@@ -225,19 +228,19 @@ public class MovieServiceImplSpringTest {
 	public void testDuplicateWithEmptyCache() {
 		final Movie movie = SpringUtils.getMovie(entityManager, 3);
 		final Movie expectedMovie = SpringEntitiesUtils.getMovie(3);
-		expectedMovie.setId(MOVIES_COUNT + 1);
+		expectedMovie.setId(SpringUtils.MOVIES_COUNT + 1);
 		for (Medium medium : expectedMovie.getMedia()) {
-			medium.setId(MEDIA_COUNT + expectedMovie.getMedia().indexOf(medium) + 1);
+			medium.setId(SpringUtils.MEDIA_COUNT + expectedMovie.getMedia().indexOf(medium) + 1);
 		}
 
 		movieService.duplicate(movie);
 
-		DeepAsserts.assertEquals(expectedMovie, SpringUtils.getMovie(entityManager, MOVIES_COUNT + 1));
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		DeepAsserts.assertEquals(expectedMovie, SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT + 1));
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT + 2, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT + 2, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
 	}
 
@@ -246,23 +249,23 @@ public class MovieServiceImplSpringTest {
 	public void testDuplicateWithNotEmptyCache() {
 		final Movie movie = SpringUtils.getMovie(entityManager, 3);
 		final Movie expectedMovie = SpringEntitiesUtils.getMovie(3);
-		expectedMovie.setId(MOVIES_COUNT + 1);
+		expectedMovie.setId(SpringUtils.MOVIES_COUNT + 1);
 		for (Medium medium : expectedMovie.getMedia()) {
-			medium.setId(MEDIA_COUNT + expectedMovie.getMedia().indexOf(medium) + 1);
+			medium.setId(SpringUtils.MEDIA_COUNT + expectedMovie.getMedia().indexOf(medium) + 1);
 		}
-		final String keyList = "movies";
-		final String keyItem = "movie" + (MOVIES_COUNT + 1);
+		final String keyList = MOVIES_CACHE_KEY;
+		final String keyItem = MOVIE_CACHE_KEY + (SpringUtils.MOVIES_COUNT + 1);
 		movieCache.put(keyList, new ArrayList<>());
 		movieCache.put(keyItem, null);
 
 		movieService.duplicate(movie);
 
-		DeepAsserts.assertEquals(expectedMovie, SpringUtils.getMovie(entityManager, MOVIES_COUNT + 1));
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		DeepAsserts.assertEquals(expectedMovie, SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT + 1));
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT + 2, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT + 2, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, keyList, CollectionUtils.newList(expectedMovie));
 		SpringUtils.assertCacheValue(movieCache, keyItem, expectedMovie);
@@ -281,11 +284,11 @@ public class MovieServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedMovie1, SpringUtils.getMovie(entityManager, 1));
 		DeepAsserts.assertEquals(expectedMovie2, SpringUtils.getMovie(entityManager, 2));
-		for (int i = 3; i <= MOVIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
 	}
 
@@ -302,11 +305,11 @@ public class MovieServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedMovie1, SpringUtils.getMovie(entityManager, 1));
 		DeepAsserts.assertEquals(expectedMovie2, SpringUtils.getMovie(entityManager, 2));
-		for (int i = 3; i <= MOVIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
 	}
 
@@ -314,17 +317,17 @@ public class MovieServiceImplSpringTest {
 	@Test
 	public void testExistsWithExistingMovie() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
-			keys.add("movie" + i);
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
+			keys.add(MOVIE_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			assertTrue(movieService.exists(SpringEntitiesUtils.getMovie(i)));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(movieCache));
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			SpringUtils.assertCacheValue(movieCache, keys.get(i - 1), SpringEntitiesUtils.getMovie(i));
 		}
 	}
@@ -334,11 +337,11 @@ public class MovieServiceImplSpringTest {
 	public void testExistsWithNotExistingMovie() {
 		final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
 		movie.setId(Integer.MAX_VALUE);
-		final String key = "movie" + Integer.MAX_VALUE;
+		final String key = MOVIE_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertFalse(movieService.exists(movie));
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, key, null);
 	}
@@ -346,28 +349,28 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#updatePositions()}. */
 	@Test
 	public void testUpdatePositions() {
-		final Movie movie = SpringUtils.getMovie(entityManager, MOVIES_COUNT);
+		final Movie movie = SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT);
 		movie.setPosition(5000);
 		entityManager.merge(movie);
 
 		movieService.updatePositions();
 
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
 	}
 
 	/** Test method for {@link MovieService#getTotalMediaCount()}. */
 	@Test
 	public void testGetTotalMediaCount() {
-		final String key = "movies";
+		final String key = MOVIES_CACHE_KEY;
 
 		DeepAsserts.assertEquals(4, movieService.getTotalMediaCount());
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, key, SpringEntitiesUtils.getMovies());
 	}
@@ -375,11 +378,11 @@ public class MovieServiceImplSpringTest {
 	/** Test method for {@link MovieService#getTotalLength()}. */
 	@Test
 	public void testGetTotalLength() {
-		final String key = "movies";
+		final String key = MOVIES_CACHE_KEY;
 
 		DeepAsserts.assertEquals(new Time(1000), movieService.getTotalLength());
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
-		DeepAsserts.assertEquals(MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, SpringUtils.getMediaCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(movieCache));
 		SpringUtils.assertCacheValue(movieCache, key, SpringEntitiesUtils.getMovies());
 	}

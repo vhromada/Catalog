@@ -45,6 +45,12 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class MovieServiceImplTest extends ObjectGeneratorTest {
 
+	/** Cache key for list of movies */
+	private static final String MOVIES_CACHE_KEY = "movies";
+
+	/** Cache key for movie */
+	private static final String MOVIE_CACHE_KEY = "movie";
+
 	/** Instance of {@link MovieDAO} */
 	@Mock
 	private MovieDAO movieDAO;
@@ -68,7 +74,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		for (Movie movie : movies) {
 			verify(movieDAO).remove(movie);
 		}
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -86,7 +92,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		for (Movie movie : movies) {
 			verify(movieDAO).remove(movie);
 		}
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -119,7 +125,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -131,7 +137,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(movies, movieService.getMovies());
 
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -146,8 +152,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(movies, movieService.getMovies());
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
-		verify(movieCache).put("movies", movies);
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).put(MOVIES_CACHE_KEY, movies);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -179,7 +185,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -191,7 +197,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(movie, movieService.getMovie(movie.getId()));
 
-		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -204,7 +210,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		assertNull(movieService.getMovie(movie.getId()));
 
-		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -219,8 +225,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(movie, movieService.getMovie(movie.getId()));
 
 		verify(movieDAO).getMovie(movie.getId());
-		verify(movieCache).get("movie" + movie.getId());
-		verify(movieCache).put("movie" + movie.getId(), movie);
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
+		verify(movieCache).put(MOVIE_CACHE_KEY + movie.getId(), movie);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -234,8 +240,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		assertNull(movieService.getMovie(movie.getId()));
 
 		verify(movieDAO).getMovie(movie.getId());
-		verify(movieCache).get("movie" + movie.getId());
-		verify(movieCache).put("movie" + movie.getId(), null);
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
+		verify(movieCache).put(MOVIE_CACHE_KEY + movie.getId(), null);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -280,7 +286,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovie(Integer.MAX_VALUE);
-		verify(movieCache).get("movie" + Integer.MAX_VALUE);
+		verify(movieCache).get(MOVIE_CACHE_KEY + Integer.MAX_VALUE);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -296,10 +302,10 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		movieService.add(movie);
 
 		verify(movieDAO).add(movie);
-		verify(movieCache).get("movies");
-		verify(movieCache).get("movie" + movie.getId());
-		verify(movieCache).put("movies", moviesList);
-		verify(movieCache).put("movie" + movie.getId(), movie);
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
+		verify(movieCache).put(MOVIES_CACHE_KEY, moviesList);
+		verify(movieCache).put(MOVIE_CACHE_KEY + movie.getId(), movie);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -312,8 +318,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		movieService.add(movie);
 
 		verify(movieDAO).add(movie);
-		verify(movieCache).get("movies");
-		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -426,14 +432,14 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), mock(Movie.class));
 		final List<Movie> moviesList = new ArrayList<>(movies);
 		moviesList.add(movie);
-		when(movieCache.get("movies")).thenReturn(new SimpleValueWrapper(moviesList));
-		when(movieCache.get("movie" + movie.getId())).thenReturn(new SimpleValueWrapper(movie));
+		when(movieCache.get(MOVIES_CACHE_KEY)).thenReturn(new SimpleValueWrapper(moviesList));
+		when(movieCache.get(MOVIE_CACHE_KEY + movie.getId())).thenReturn(new SimpleValueWrapper(movie));
 
 		movieService.remove(movie);
 
 		verify(movieDAO).remove(movie);
-		verify(movieCache).get("movies");
-		verify(movieCache).put("movies", movies);
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).put(MOVIES_CACHE_KEY, movies);
 		verify(movieCache).evict(movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -447,7 +453,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		movieService.remove(movie);
 
 		verify(movieDAO).remove(movie);
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).evict(movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -506,10 +512,10 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		verify(movieDAO).add(any(Movie.class));
 		verify(movieDAO).update(any(Movie.class));
-		verify(movieCache).get("movies");
-		verify(movieCache).get("movie" + null);
-		verify(movieCache).put(eq("movies"), anyListOf(Movie.class));
-		verify(movieCache).put(eq("movie" + null), any(Movie.class));
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).get(MOVIE_CACHE_KEY + null);
+		verify(movieCache).put(eq(MOVIES_CACHE_KEY), anyListOf(Movie.class));
+		verify(movieCache).put(eq(MOVIE_CACHE_KEY + null), any(Movie.class));
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -522,8 +528,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		verify(movieDAO).add(any(Movie.class));
 		verify(movieDAO).update(any(Movie.class));
-		verify(movieCache).get("movies");
-		verify(movieCache).get("movie" + null);
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).get(MOVIE_CACHE_KEY + null);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -587,7 +593,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -610,7 +616,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -656,7 +662,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -676,7 +682,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -699,7 +705,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		verify(movieDAO).update(movie1);
 		verify(movieDAO).update(movie2);
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -745,7 +751,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -757,7 +763,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		assertTrue(movieService.exists(movie));
 
-		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -770,7 +776,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		assertFalse(movieService.exists(movie));
 
-		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
 		verifyNoMoreInteractions(movieCache);
 		verifyZeroInteractions(movieDAO);
 	}
@@ -785,8 +791,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		assertTrue(movieService.exists(movie));
 
 		verify(movieDAO).getMovie(movie.getId());
-		verify(movieCache).get("movie" + movie.getId());
-		verify(movieCache).put("movie" + movie.getId(), movie);
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
+		verify(movieCache).put(MOVIE_CACHE_KEY + movie.getId(), movie);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -800,8 +806,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		assertFalse(movieService.exists(movie));
 
 		verify(movieDAO).getMovie(movie.getId());
-		verify(movieCache).get("movie" + movie.getId());
-		verify(movieCache).put("movie" + movie.getId(), null);
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
+		verify(movieCache).put(MOVIE_CACHE_KEY + movie.getId(), null);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -847,7 +853,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovie(movie.getId());
-		verify(movieCache).get("movie" + movie.getId());
+		verify(movieCache).get(MOVIE_CACHE_KEY + movie.getId());
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -864,7 +870,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 			DeepAsserts.assertEquals(i, movie.getPosition());
 			verify(movieDAO).update(movie);
 		}
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -884,7 +890,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 			DeepAsserts.assertEquals(i, movie.getPosition());
 			verify(movieDAO).update(movie);
 		}
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movieCache).clear();
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
@@ -917,7 +923,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -935,7 +941,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(6, movieService.getTotalMediaCount());
 
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movie1).getMedia();
 		verify(movie2).getMedia();
 		verify(movie3).getMedia();
@@ -959,8 +965,8 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(6, movieService.getTotalMediaCount());
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
-		verify(movieCache).put("movies", movies);
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).put(MOVIES_CACHE_KEY, movies);
 		verify(movie1).getMedia();
 		verify(movie2).getMedia();
 		verify(movie3).getMedia();
@@ -995,7 +1001,7 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieDAO, movieCache);
 	}
 
@@ -1012,20 +1018,22 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		final Medium medium5 = mock(Medium.class);
 		final Medium medium6 = mock(Medium.class);
 		final List<Movie> movies = CollectionUtils.newList(movie1, movie2, movie3);
+		final int[] lengths = getLengths();
+		final int totalLength = getTotalLength(lengths);
 		when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(movies));
 		when(movie1.getMedia()).thenReturn(CollectionUtils.newList(medium1));
 		when(movie2.getMedia()).thenReturn(CollectionUtils.newList(medium2, medium3));
 		when(movie3.getMedia()).thenReturn(CollectionUtils.newList(medium4, medium5, medium6));
-		when(medium1.getLength()).thenReturn(1);
-		when(medium2.getLength()).thenReturn(2);
-		when(medium3.getLength()).thenReturn(3);
-		when(medium4.getLength()).thenReturn(4);
-		when(medium5.getLength()).thenReturn(5);
-		when(medium6.getLength()).thenReturn(6);
+		when(medium1.getLength()).thenReturn(lengths[0]);
+		when(medium2.getLength()).thenReturn(lengths[1]);
+		when(medium3.getLength()).thenReturn(lengths[2]);
+		when(medium4.getLength()).thenReturn(lengths[3]);
+		when(medium5.getLength()).thenReturn(lengths[4]);
+		when(medium6.getLength()).thenReturn(lengths[5]);
 
-		DeepAsserts.assertEquals(new Time(21), movieService.getTotalLength());
+		DeepAsserts.assertEquals(new Time(totalLength), movieService.getTotalLength());
 
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verify(movie1).getMedia();
 		verify(movie2).getMedia();
 		verify(movie3).getMedia();
@@ -1046,23 +1054,25 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		final Medium medium5 = mock(Medium.class);
 		final Medium medium6 = mock(Medium.class);
 		final List<Movie> movies = CollectionUtils.newList(movie1, movie2, movie3);
+		final int[] lengths = getLengths();
+		final int totalLength = getTotalLength(lengths);
 		when(movieDAO.getMovies()).thenReturn(movies);
 		when(movieCache.get(anyString())).thenReturn(null);
 		when(movie1.getMedia()).thenReturn(CollectionUtils.newList(medium1));
 		when(movie2.getMedia()).thenReturn(CollectionUtils.newList(medium2, medium3));
 		when(movie3.getMedia()).thenReturn(CollectionUtils.newList(medium4, medium5, medium6));
-		when(medium1.getLength()).thenReturn(1);
-		when(medium2.getLength()).thenReturn(2);
-		when(medium3.getLength()).thenReturn(3);
-		when(medium4.getLength()).thenReturn(4);
-		when(medium5.getLength()).thenReturn(5);
-		when(medium6.getLength()).thenReturn(6);
+		when(medium1.getLength()).thenReturn(lengths[0]);
+		when(medium2.getLength()).thenReturn(lengths[1]);
+		when(medium3.getLength()).thenReturn(lengths[2]);
+		when(medium4.getLength()).thenReturn(lengths[3]);
+		when(medium5.getLength()).thenReturn(lengths[4]);
+		when(medium6.getLength()).thenReturn(lengths[5]);
 
-		DeepAsserts.assertEquals(new Time(21), movieService.getTotalLength());
+		DeepAsserts.assertEquals(new Time(totalLength), movieService.getTotalLength());
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
-		verify(movieCache).put("movies", movies);
+		verify(movieCache).get(MOVIES_CACHE_KEY);
+		verify(movieCache).put(MOVIES_CACHE_KEY, movies);
 		verify(movie1).getMedia();
 		verify(movie2).getMedia();
 		verify(movie3).getMedia();
@@ -1097,8 +1107,29 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(movieDAO).getMovies();
-		verify(movieCache).get("movies");
+		verify(movieCache).get(MOVIES_CACHE_KEY);
 		verifyNoMoreInteractions(movieDAO, movieCache);
+	}
+
+	private int[] getLengths() {
+		final int[] lengths = new int[6];
+		int totalLength = 0;
+		for (int i = 0; i < 6; i++) {
+			final int length = generate(Integer.class);
+			lengths[i] = length;
+			totalLength += length;
+		}
+
+		return lengths;
+	}
+
+	private int getTotalLength(final int[] lengths) {
+		int totalLength = 0;
+		for (int length : lengths) {
+			totalLength += length;
+		}
+
+		return totalLength;
 	}
 
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 
 /**
  * An interface represents service for episodes.
@@ -19,8 +18,9 @@ public interface EpisodeService {
 	 *
 	 * @param id ID
 	 * @return episode with ID or null if there isn't such episode
-	 * @throws IllegalArgumentException  if ID is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if ID is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	Episode getEpisode(Integer id);
 
@@ -28,8 +28,9 @@ public interface EpisodeService {
 	 * Adds episode. Sets new ID and position.
 	 *
 	 * @param episode episode
-	 * @throws IllegalArgumentException  if episode is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if episode is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void add(Episode episode);
 
@@ -37,8 +38,9 @@ public interface EpisodeService {
 	 * Updates episode.
 	 *
 	 * @param episode new value of episode
-	 * @throws IllegalArgumentException  if episode is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if episode is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void update(Episode episode);
 
@@ -46,8 +48,9 @@ public interface EpisodeService {
 	 * Removes episode.
 	 *
 	 * @param episode episode
-	 * @throws IllegalArgumentException  if episode is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if episode is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void remove(Episode episode);
 
@@ -55,8 +58,9 @@ public interface EpisodeService {
 	 * Duplicates episode.
 	 *
 	 * @param episode episode
-	 * @throws IllegalArgumentException  if episode is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if episode is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void duplicate(Episode episode);
 
@@ -64,8 +68,9 @@ public interface EpisodeService {
 	 * Moves episode in list one position up.
 	 *
 	 * @param episode episode
-	 * @throws IllegalArgumentException  if episode is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if episode is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveUp(Episode episode);
 
@@ -73,8 +78,9 @@ public interface EpisodeService {
 	 * Moves episode in list one position down.
 	 *
 	 * @param episode episode
-	 * @throws IllegalArgumentException  if episode is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if episode is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveDown(Episode episode);
 
@@ -83,8 +89,9 @@ public interface EpisodeService {
 	 *
 	 * @param episode episode
 	 * @return true if episode exists
-	 * @throws IllegalArgumentException  if episode is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if episode is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	boolean exists(Episode episode);
 
@@ -93,8 +100,9 @@ public interface EpisodeService {
 	 *
 	 * @param season season
 	 * @return list of episode for specified season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error with working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error with working with DAO tier
 	 */
 	List<Episode> findEpisodesBySeason(Season season);
 
@@ -103,8 +111,9 @@ public interface EpisodeService {
 	 *
 	 * @param season season
 	 * @return total length of episodes for specified season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error with working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error with working with DAO tier
 	 */
 	Time getTotalLengthBySeason(Season season);
 

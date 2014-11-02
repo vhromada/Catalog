@@ -21,6 +21,27 @@ import org.springframework.stereotype.Component;
 @Component("gameService")
 public class GameServiceImpl extends AbstractService<Game> implements GameService {
 
+	/** DAO for games field */
+	private static final String GAME_DAO_FIELD = "DAO for games";
+
+	/** Cache for games field */
+	private static final String GAME_CACHE_FIELD = "Cache for games";
+
+	/** Game argument */
+	private static final String GAME_ARGUMENT = "Game";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link ServiceOperationException} */
+	private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
+
+	/** Cache key for list of games */
+	private static final String GAMES_CACHE_KEY = "games";
+
+	/** Cache key for game */
+	private static final String GAME_CACHE_KEY = "game";
+
 	/** DAO for games */
 	@Autowired
 	private GameDAO gameDAO;
@@ -74,8 +95,8 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void newData() {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
 
 		try {
 			for (Game game : getCachedGames(false)) {
@@ -83,7 +104,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 			}
 			gameCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -96,13 +117,13 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public List<Game> getGames() {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
 
 		try {
 			return getCachedGames(true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -116,14 +137,14 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public Game getGame(final Integer id) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return getCachedGame(id);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -137,16 +158,16 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void add(final Game game) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			gameDAO.add(game);
-			addObjectToListCache(gameCache, "games", game);
-			addObjectToCache(gameCache, "game" + game.getId(), game);
+			addObjectToListCache(gameCache, GAMES_CACHE_KEY, game);
+			addObjectToCache(gameCache, GAME_CACHE_KEY + game.getId(), game);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -160,15 +181,15 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void update(final Game game) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			gameDAO.update(game);
 			gameCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -182,16 +203,16 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void remove(final Game game) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			gameDAO.remove(game);
-			removeObjectFromCache(gameCache, "games", game);
+			removeObjectFromCache(gameCache, GAMES_CACHE_KEY, game);
 			gameCache.evict(game.getId());
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -205,9 +226,9 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void duplicate(final Game game) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			final Game newGame = new Game();
@@ -229,7 +250,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 			gameDAO.update(newGame);
 			gameCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -243,9 +264,9 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void moveUp(final Game game) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			final List<Game> games = getCachedGames(false);
@@ -255,7 +276,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 			gameDAO.update(otherGame);
 			gameCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -269,9 +290,9 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void moveDown(final Game game) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			final List<Game> games = getCachedGames(false);
@@ -281,7 +302,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 			gameDAO.update(otherGame);
 			gameCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -295,14 +316,14 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public boolean exists(final Game game) {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			return getCachedGame(game.getId()) != null;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -316,8 +337,8 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public void updatePositions() {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
 
 		try {
 			final List<Game> games = getCachedGames(false);
@@ -328,7 +349,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 			}
 			gameCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -342,8 +363,8 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 */
 	@Override
 	public int getTotalMediaCount() {
-		Validators.validateFieldNotNull(gameDAO, "DAO for games");
-		Validators.validateFieldNotNull(gameCache, "Cache for games");
+		Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
+		Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
 
 		try {
 			int sum = 0;
@@ -352,7 +373,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 			}
 			return sum;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -373,7 +394,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 * @return list of games
 	 */
 	private List<Game> getCachedGames(final boolean cached) {
-		return getCachedObjects(gameCache, "games", cached);
+		return getCachedObjects(gameCache, GAMES_CACHE_KEY, cached);
 	}
 
 	/**
@@ -383,7 +404,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
 	 * @return game with ID or null if there isn't such game
 	 */
 	private Game getCachedGame(final Integer id) {
-		return getCachedObject(gameCache, "game", id, true);
+		return getCachedObject(gameCache, GAME_CACHE_KEY, id, true);
 	}
 
 	/**

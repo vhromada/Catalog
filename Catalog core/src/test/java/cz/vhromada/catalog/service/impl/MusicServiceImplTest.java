@@ -45,6 +45,15 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class MusicServiceImplTest extends ObjectGeneratorTest {
 
+	/** Cache key for list of music */
+	private static final String MUSIC_LIST_CACHE_KEY = "music";
+
+	/** Cache key for music */
+	private static final String MUSIC_CACHE_KEY = "musicItem";
+
+	/** Cache key for list of songs */
+	private static final String SONGS_CACHE_KEY = "songs";
+
 	/** Instance of {@link MusicDAO} */
 	@Mock
 	private MusicDAO musicDAO;
@@ -66,21 +75,21 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 	public void testNewDataWithCachedData() {
 		final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
 		final List<Song> songs = CollectionUtils.newList(mock(Song.class), mock(Song.class));
-		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(musicList));
+		when(musicCache.get(MUSIC_LIST_CACHE_KEY)).thenReturn(new SimpleValueWrapper(musicList));
 		for (Music music : musicList) {
-			when(musicCache.get("songs" + music.getId())).thenReturn(new SimpleValueWrapper(songs));
+			when(musicCache.get(SONGS_CACHE_KEY + music.getId())).thenReturn(new SimpleValueWrapper(songs));
 		}
 
 		musicService.newData();
 
 		for (Music music : musicList) {
 			verify(musicDAO).remove(music);
-			verify(musicCache).get("songs" + music.getId());
+			verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		}
 		for (Song song : songs) {
 			verify(songDAO, times(musicList.size())).remove(song);
 		}
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -100,12 +109,12 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		for (Music music : musicList) {
 			verify(musicDAO).remove(music);
 			verify(songDAO).findSongsByMusic(music);
-			verify(musicCache).get("songs" + music.getId());
+			verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		}
 		for (Song song : songs) {
 			verify(songDAO, times(musicList.size())).remove(song);
 		}
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -145,7 +154,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 		verifyZeroInteractions(songDAO);
 	}
@@ -158,7 +167,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(music, musicService.getMusic());
 
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -173,8 +182,8 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(music, musicService.getMusic());
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
-		verify(musicCache).put("music", music);
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).put(MUSIC_LIST_CACHE_KEY, music);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -206,7 +215,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -218,7 +227,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(music, musicService.getMusic(music.getId()));
 
-		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -231,7 +240,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		assertNull(musicService.getMusic(music.getId()));
 
-		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -246,8 +255,8 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(music, musicService.getMusic(music.getId()));
 
 		verify(musicDAO).getMusic(music.getId());
-		verify(musicCache).get("music" + music.getId());
-		verify(musicCache).put("music" + music.getId(), music);
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
+		verify(musicCache).put(MUSIC_CACHE_KEY + music.getId(), music);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -261,8 +270,8 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		assertNull(musicService.getMusic(music.getId()));
 
 		verify(musicDAO).getMusic(music.getId());
-		verify(musicCache).get("music" + music.getId());
-		verify(musicCache).put("music" + music.getId(), null);
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
+		verify(musicCache).put(MUSIC_CACHE_KEY + music.getId(), null);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -307,7 +316,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic(Integer.MAX_VALUE);
-		verify(musicCache).get("music" + Integer.MAX_VALUE);
+		verify(musicCache).get(MUSIC_CACHE_KEY + Integer.MAX_VALUE);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -323,10 +332,10 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		musicService.add(music);
 
 		verify(musicDAO).add(music);
-		verify(musicCache).get("music");
-		verify(musicCache).get("music" + music.getId());
-		verify(musicCache).put("music", addedMusicList);
-		verify(musicCache).put("music" + music.getId(), music);
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
+		verify(musicCache).put(MUSIC_LIST_CACHE_KEY, addedMusicList);
+		verify(musicCache).put(MUSIC_CACHE_KEY + music.getId(), music);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -339,8 +348,8 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		musicService.add(music);
 
 		verify(musicDAO).add(music);
-		verify(musicCache).get("music" + music.getId());
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -459,7 +468,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		for (Song song : songs) {
 			verify(songDAO).remove(song);
 		}
-		verify(musicCache).get("songs" + music.getId());
+		verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -479,7 +488,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		for (Song song : songs) {
 			verify(songDAO).remove(song);
 		}
-		verify(musicCache).get("songs" + music.getId());
+		verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -533,7 +542,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(songDAO).findSongsByMusic(music);
-		verify(musicCache).get("songs" + music.getId());
+		verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		verifyNoMoreInteractions(songDAO, musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -551,7 +560,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		verify(musicDAO).update(any(Music.class));
 		verify(songDAO, times(songs.size())).add(any(Song.class));
 		verify(songDAO, times(songs.size())).update(any(Song.class));
-		verify(musicCache).get("songs" + music.getId());
+		verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -571,7 +580,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		verify(songDAO).findSongsByMusic(music);
 		verify(songDAO, times(songs.size())).add(any(Song.class));
 		verify(songDAO, times(songs.size())).update(any(Song.class));
-		verify(musicCache).get("songs" + music.getId());
+		verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -643,7 +652,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
@@ -666,7 +675,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
@@ -712,7 +721,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -732,7 +741,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
@@ -755,7 +764,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		verify(musicDAO).update(music1);
 		verify(musicDAO).update(music2);
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
@@ -801,7 +810,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -813,7 +822,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		assertTrue(musicService.exists(music));
 
-		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -826,7 +835,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		assertFalse(musicService.exists(music));
 
-		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO);
 	}
@@ -841,8 +850,8 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		assertTrue(musicService.exists(music));
 
 		verify(musicDAO).getMusic(music.getId());
-		verify(musicCache).get("music" + music.getId());
-		verify(musicCache).put("music" + music.getId(), music);
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
+		verify(musicCache).put(MUSIC_CACHE_KEY + music.getId(), music);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -856,8 +865,8 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		assertFalse(musicService.exists(music));
 
 		verify(musicDAO).getMusic(music.getId());
-		verify(musicCache).get("music" + music.getId());
-		verify(musicCache).put("music" + music.getId(), null);
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
+		verify(musicCache).put(MUSIC_CACHE_KEY + music.getId(), null);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -903,7 +912,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic(music.getId());
-		verify(musicCache).get("music" + music.getId());
+		verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -912,9 +921,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 	public void testUpdatePositionsWithCachedData() {
 		final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
 		final List<Song> songs = CollectionUtils.newList(generate(Song.class), generate(Song.class));
-		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(musicList));
+		when(musicCache.get(MUSIC_LIST_CACHE_KEY)).thenReturn(new SimpleValueWrapper(musicList));
 		for (Music music : musicList) {
-			when(musicCache.get("songs" + music.getId())).thenReturn(new SimpleValueWrapper(songs));
+			when(musicCache.get(SONGS_CACHE_KEY + music.getId())).thenReturn(new SimpleValueWrapper(songs));
 		}
 
 		musicService.updatePositions();
@@ -923,14 +932,14 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 			final Music music = musicList.get(i);
 			DeepAsserts.assertEquals(i, music.getPosition());
 			verify(musicDAO).update(music);
-			verify(musicCache).get("songs" + music.getId());
+			verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		}
 		for (int i = 0; i < songs.size(); i++) {
 			final Song song = songs.get(i);
 			DeepAsserts.assertEquals(i, song.getPosition());
 			verify(songDAO, times(musicList.size())).update(song);
 		}
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -952,14 +961,14 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 			DeepAsserts.assertEquals(i, music.getPosition());
 			verify(musicDAO).update(music);
 			verify(songDAO).findSongsByMusic(music);
-			verify(musicCache).get("songs" + music.getId());
+			verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
 		}
 		for (int i = 0; i < songs.size(); i++) {
 			final Song song = songs.get(i);
 			DeepAsserts.assertEquals(i, song.getPosition());
 			verify(songDAO, times(musicList.size())).update(song);
 		}
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(musicCache).clear();
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
@@ -999,7 +1008,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 		verifyZeroInteractions(songDAO);
 	}
@@ -1018,7 +1027,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(6, musicService.getTotalMediaCount());
 
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verify(music1).getMediaCount();
 		verify(music2).getMediaCount();
 		verify(music3).getMediaCount();
@@ -1042,8 +1051,8 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(6, musicService.getTotalMediaCount());
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
-		verify(musicCache).put("music", musicList);
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).put(MUSIC_LIST_CACHE_KEY, musicList);
 		verify(music1).getMediaCount();
 		verify(music2).getMediaCount();
 		verify(music3).getMediaCount();
@@ -1078,7 +1087,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 	}
 
@@ -1093,18 +1102,25 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		final Song song3 = mock(Song.class);
 		final List<Song> songs1 = CollectionUtils.newList(song1);
 		final List<Song> songs2 = CollectionUtils.newList(song2, song3);
-		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(music));
-		when(musicCache.get("songs" + music1.getId())).thenReturn(new SimpleValueWrapper(songs1));
-		when(musicCache.get("songs" + music2.getId())).thenReturn(new SimpleValueWrapper(songs2));
-		when(song1.getLength()).thenReturn(100);
-		when(song2.getLength()).thenReturn(200);
-		when(song3.getLength()).thenReturn(300);
+		final int[] lengths = new int[3];
+		int totalLength = 0;
+		for (int i = 0; i < 3; i++) {
+			final int length = generate(Integer.class);
+			lengths[i] = length;
+			totalLength += length;
+		}
+		when(musicCache.get(MUSIC_LIST_CACHE_KEY)).thenReturn(new SimpleValueWrapper(music));
+		when(musicCache.get(SONGS_CACHE_KEY + music1.getId())).thenReturn(new SimpleValueWrapper(songs1));
+		when(musicCache.get(SONGS_CACHE_KEY + music2.getId())).thenReturn(new SimpleValueWrapper(songs2));
+		when(song1.getLength()).thenReturn(lengths[0]);
+		when(song2.getLength()).thenReturn(lengths[1]);
+		when(song3.getLength()).thenReturn(lengths[2]);
 
-		DeepAsserts.assertEquals(new Time(600), musicService.getTotalLength());
+		DeepAsserts.assertEquals(new Time(totalLength), musicService.getTotalLength());
 
-		verify(musicCache).get("music");
-		verify(musicCache).get("songs" + music1.getId());
-		verify(musicCache).get("songs" + music2.getId());
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).get(SONGS_CACHE_KEY + music1.getId());
+		verify(musicCache).get(SONGS_CACHE_KEY + music2.getId());
 		verify(song1).getLength();
 		verify(song2).getLength();
 		verify(song3).getLength();
@@ -1123,25 +1139,32 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		final Song song3 = mock(Song.class);
 		final List<Song> songs1 = CollectionUtils.newList(song1);
 		final List<Song> songs2 = CollectionUtils.newList(song2, song3);
+		final int[] lengths = new int[3];
+		int totalLength = 0;
+		for (int i = 0; i < 3; i++) {
+			final int length = generate(Integer.class);
+			lengths[i] = length;
+			totalLength += length;
+		}
 		when(musicDAO.getMusic()).thenReturn(music);
 		when(songDAO.findSongsByMusic(music1)).thenReturn(songs1);
 		when(songDAO.findSongsByMusic(music2)).thenReturn(songs2);
 		when(musicCache.get(anyString())).thenReturn(null);
-		when(song1.getLength()).thenReturn(100);
-		when(song2.getLength()).thenReturn(200);
-		when(song3.getLength()).thenReturn(300);
+		when(song1.getLength()).thenReturn(lengths[0]);
+		when(song2.getLength()).thenReturn(lengths[1]);
+		when(song3.getLength()).thenReturn(lengths[2]);
 
-		DeepAsserts.assertEquals(new Time(600), musicService.getTotalLength());
+		DeepAsserts.assertEquals(new Time(totalLength), musicService.getTotalLength());
 
 		verify(musicDAO).getMusic();
 		verify(songDAO).findSongsByMusic(music1);
 		verify(songDAO).findSongsByMusic(music2);
-		verify(musicCache).get("music");
-		verify(musicCache).put("music", music);
-		verify(musicCache).get("songs" + music1.getId());
-		verify(musicCache).put("songs" + music1.getId(), songs1);
-		verify(musicCache).get("songs" + music2.getId());
-		verify(musicCache).put("songs" + music2.getId(), songs2);
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).put(MUSIC_LIST_CACHE_KEY, music);
+		verify(musicCache).get(SONGS_CACHE_KEY + music1.getId());
+		verify(musicCache).put(SONGS_CACHE_KEY + music1.getId(), songs1);
+		verify(musicCache).get(SONGS_CACHE_KEY + music2.getId());
+		verify(musicCache).put(SONGS_CACHE_KEY + music2.getId(), songs2);
 		verify(song1).getLength();
 		verify(song2).getLength();
 		verify(song3).getLength();
@@ -1183,7 +1206,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 		verifyZeroInteractions(songDAO);
 	}
@@ -1196,15 +1219,15 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		final List<Music> music = CollectionUtils.newList(music1, music2);
 		final List<Song> songs1 = CollectionUtils.newList(mock(Song.class));
 		final List<Song> songs2 = CollectionUtils.newList(mock(Song.class), mock(Song.class));
-		when(musicCache.get("music")).thenReturn(new SimpleValueWrapper(music));
-		when(musicCache.get("songs" + music1.getId())).thenReturn(new SimpleValueWrapper(songs1));
-		when(musicCache.get("songs" + music2.getId())).thenReturn(new SimpleValueWrapper(songs2));
+		when(musicCache.get(MUSIC_LIST_CACHE_KEY)).thenReturn(new SimpleValueWrapper(music));
+		when(musicCache.get(SONGS_CACHE_KEY + music1.getId())).thenReturn(new SimpleValueWrapper(songs1));
+		when(musicCache.get(SONGS_CACHE_KEY + music2.getId())).thenReturn(new SimpleValueWrapper(songs2));
 
 		DeepAsserts.assertEquals(songs1.size() + songs2.size(), musicService.getSongsCount());
 
-		verify(musicCache).get("music");
-		verify(musicCache).get("songs" + music1.getId());
-		verify(musicCache).get("songs" + music2.getId());
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).get(SONGS_CACHE_KEY + music1.getId());
+		verify(musicCache).get(SONGS_CACHE_KEY + music2.getId());
 		verifyNoMoreInteractions(musicCache);
 		verifyZeroInteractions(musicDAO, songDAO);
 	}
@@ -1227,12 +1250,12 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		verify(musicDAO).getMusic();
 		verify(songDAO).findSongsByMusic(music1);
 		verify(songDAO).findSongsByMusic(music2);
-		verify(musicCache).get("music");
-		verify(musicCache).put("music", music);
-		verify(musicCache).get("songs" + music1.getId());
-		verify(musicCache).put("songs" + music1.getId(), songs1);
-		verify(musicCache).get("songs" + music2.getId());
-		verify(musicCache).put("songs" + music2.getId(), songs2);
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
+		verify(musicCache).put(MUSIC_LIST_CACHE_KEY, music);
+		verify(musicCache).get(SONGS_CACHE_KEY + music1.getId());
+		verify(musicCache).put(SONGS_CACHE_KEY + music1.getId(), songs1);
+		verify(musicCache).get(SONGS_CACHE_KEY + music2.getId());
+		verify(musicCache).put(SONGS_CACHE_KEY + music2.getId(), songs2);
 		verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
 	}
 
@@ -1271,7 +1294,7 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(musicDAO).getMusic();
-		verify(musicCache).get("music");
+		verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
 		verifyNoMoreInteractions(musicDAO, musicCache);
 		verifyZeroInteractions(songDAO);
 	}

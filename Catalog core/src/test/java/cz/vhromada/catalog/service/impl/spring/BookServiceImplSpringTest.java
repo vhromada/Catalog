@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.service.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.BOOK_CATEGORIES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +15,6 @@ import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.service.BookService;
-import cz.vhromada.catalog.service.impl.BookServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -32,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link BookServiceImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.service.impl.BookServiceImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -40,6 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testServiceContext.xml")
 @Transactional
 public class BookServiceImplSpringTest {
+
+	/** Cache key for list of books */
+	private static final String BOOKS_CACHE_KEY = "books";
+
+	/** Cache key for book */
+	private static final String BOOK_CACHE_KEY = "book";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -68,20 +70,20 @@ public class BookServiceImplSpringTest {
 	@Test
 	public void testGetBookWithExistingBook() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= BOOKS_COUNT; i++) {
-			keys.add("book" + i);
+		for (int i = 1; i <= SpringUtils.BOOKS_COUNT; i++) {
+			keys.add(BOOK_CACHE_KEY + i);
 		}
 
-		for (int i = 0; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber), bookService.getBook(i + 1));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(bookCache));
-		for (int i = 0; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			SpringUtils.assertCacheValue(bookCache, keys.get(i), SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber));
 		}
 	}
@@ -89,10 +91,10 @@ public class BookServiceImplSpringTest {
 	/** Test method for {@link BookService#getBook(Integer)} with not existing book. */
 	@Test
 	public void testGetBookWithNotExistingBook() {
-		final String key = "book" + Integer.MAX_VALUE;
+		final String key = BOOK_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertNull(bookService.getBook(Integer.MAX_VALUE));
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(bookCache));
 		SpringUtils.assertCacheValue(bookCache, key, null);
 	}
@@ -105,10 +107,10 @@ public class BookServiceImplSpringTest {
 		bookService.add(book);
 
 		DeepAsserts.assertNotNull(book.getId());
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, book.getId());
-		final Book addedBook = SpringUtils.getBook(entityManager, BOOKS_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, book.getId());
+		final Book addedBook = SpringUtils.getBook(entityManager, SpringUtils.BOOKS_COUNT + 1);
 		DeepAsserts.assertEquals(book, addedBook);
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
 	}
 
@@ -116,18 +118,18 @@ public class BookServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
-		final String keyList = "books" + book.getBookCategory().getId();
-		final String keyItem = "book" + (BOOKS_COUNT + 1);
+		final String keyList = BOOKS_CACHE_KEY + book.getBookCategory().getId();
+		final String keyItem = BOOK_CACHE_KEY + (SpringUtils.BOOKS_COUNT + 1);
 		bookCache.put(keyList, new ArrayList<>());
 		bookCache.put(keyItem, null);
 
 		bookService.add(book);
 
 		DeepAsserts.assertNotNull(book.getId());
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, book.getId());
-		final Book addedBook = SpringUtils.getBook(entityManager, BOOKS_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, book.getId());
+		final Book addedBook = SpringUtils.getBook(entityManager, SpringUtils.BOOKS_COUNT + 1);
 		DeepAsserts.assertEquals(book, addedBook);
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(bookCache));
 		SpringUtils.assertCacheValue(bookCache, keyList, CollectionUtils.newList(book));
 		SpringUtils.assertCacheValue(bookCache, keyItem, book);
@@ -142,7 +144,7 @@ public class BookServiceImplSpringTest {
 
 		final Book updatedBook = SpringUtils.getBook(entityManager, 1);
 		DeepAsserts.assertEquals(book, updatedBook);
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
 	}
 
@@ -151,12 +153,12 @@ public class BookServiceImplSpringTest {
 	public void testRemoveWithEmptyCache() {
 		final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
 		entityManager.persist(book);
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 
 		bookService.remove(book);
 
 		assertNull(SpringUtils.getBook(entityManager, book.getId()));
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
 	}
 
@@ -165,8 +167,8 @@ public class BookServiceImplSpringTest {
 	public void testRemoveWithNotEmptyCache() {
 		final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
 		entityManager.persist(book);
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
-		final String key = "books" + book.getBookCategory().getId();
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		final String key = BOOKS_CACHE_KEY + book.getBookCategory().getId();
 		final List<Book> cacheBooks = new ArrayList<>();
 		cacheBooks.add(book);
 		bookCache.put(key, cacheBooks);
@@ -174,7 +176,7 @@ public class BookServiceImplSpringTest {
 		bookService.remove(book);
 
 		assertNull(SpringUtils.getBook(entityManager, book.getId()));
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(bookCache));
 		SpringUtils.assertCacheValue(bookCache, key, new ArrayList<>());
 	}
@@ -184,17 +186,17 @@ public class BookServiceImplSpringTest {
 	public void testDuplicateWithEmptyCache() {
 		final Book book = SpringUtils.getBook(entityManager, 3);
 		final Book expectedBook = SpringEntitiesUtils.getBook(1, 3);
-		expectedBook.setId(BOOKS_COUNT + 1);
+		expectedBook.setId(SpringUtils.BOOKS_COUNT + 1);
 
 		bookService.duplicate(book);
 
-		DeepAsserts.assertEquals(expectedBook, SpringUtils.getBook(entityManager, BOOKS_COUNT + 1));
-		for (int i = 0; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		DeepAsserts.assertEquals(expectedBook, SpringUtils.getBook(entityManager, SpringUtils.BOOKS_COUNT + 1));
+		for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber), SpringUtils.getBook(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
 	}
 
@@ -203,21 +205,21 @@ public class BookServiceImplSpringTest {
 	public void testDuplicateWithNotEmptyCache() {
 		final Book book = SpringUtils.getBook(entityManager, 3);
 		final Book expectedBook = SpringEntitiesUtils.getBook(1, 3);
-		expectedBook.setId(BOOKS_COUNT + 1);
-		final String keyList = "books" + book.getBookCategory().getId();
-		final String keyItem = "book" + (BOOKS_COUNT + 1);
+		expectedBook.setId(SpringUtils.BOOKS_COUNT + 1);
+		final String keyList = BOOKS_CACHE_KEY + book.getBookCategory().getId();
+		final String keyItem = BOOK_CACHE_KEY + (SpringUtils.BOOKS_COUNT + 1);
 		bookCache.put(keyList, new ArrayList<>());
 		bookCache.put(keyItem, null);
 
 		bookService.duplicate(book);
 
-		DeepAsserts.assertEquals(expectedBook, SpringUtils.getBook(entityManager, BOOKS_COUNT + 1));
-		for (int i = 0; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		DeepAsserts.assertEquals(expectedBook, SpringUtils.getBook(entityManager, SpringUtils.BOOKS_COUNT + 1));
+		for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber), SpringUtils.getBook(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(bookCache));
 		SpringUtils.assertCacheValue(bookCache, keyList, CollectionUtils.newList(expectedBook));
 		SpringUtils.assertCacheValue(bookCache, keyItem, expectedBook);
@@ -236,12 +238,12 @@ public class BookServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedBook1, SpringUtils.getBook(entityManager, 1));
 		DeepAsserts.assertEquals(expectedBook2, SpringUtils.getBook(entityManager, 2));
-		for (int i = 2; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 2; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber), SpringUtils.getBook(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
 	}
 
@@ -258,12 +260,12 @@ public class BookServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedBook1, SpringUtils.getBook(entityManager, 1));
 		DeepAsserts.assertEquals(expectedBook2, SpringUtils.getBook(entityManager, 2));
-		for (int i = 2; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 2; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber), SpringUtils.getBook(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
 	}
 
@@ -272,20 +274,20 @@ public class BookServiceImplSpringTest {
 	@Test
 	public void testExistsWithExistingBook() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= BOOKS_COUNT; i++) {
-			keys.add("book" + i);
+		for (int i = 1; i <= SpringUtils.BOOKS_COUNT; i++) {
+			keys.add(BOOK_CACHE_KEY + i);
 		}
 
-		for (int i = 0; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			assertTrue(bookService.exists(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber)));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(bookCache));
-		for (int i = 0; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			SpringUtils.assertCacheValue(bookCache, keys.get(i), SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber));
 		}
 	}
@@ -295,10 +297,10 @@ public class BookServiceImplSpringTest {
 	public void testExistsWithNotExistingBook() {
 		final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
 		book.setId(Integer.MAX_VALUE);
-		final String key = "book" + Integer.MAX_VALUE;
+		final String key = BOOK_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertFalse(bookService.exists(book));
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(bookCache));
 		SpringUtils.assertCacheValue(bookCache, key, null);
 	}
@@ -307,17 +309,17 @@ public class BookServiceImplSpringTest {
 	@Test
 	public void testFindBooksByBookCategory() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= BOOK_CATEGORIES_COUNT; i++) {
-			keys.add("books" + i);
+		for (int i = 1; i <= SpringUtils.BOOK_CATEGORIES_COUNT; i++) {
+			keys.add(BOOKS_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= BOOK_CATEGORIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.BOOK_CATEGORIES_COUNT; i++) {
 			final BookCategory bookCategory = SpringUtils.getBookCategory(entityManager, i);
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBooks(i), bookService.findBooksByBookCategory(bookCategory));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(bookCache));
-		for (int i = 0; i < BOOK_CATEGORIES_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.BOOK_CATEGORIES_COUNT; i++) {
 			SpringUtils.assertCacheValue(bookCache, keys.get(i), SpringEntitiesUtils.getBooks(i + 1));
 		}
 	}

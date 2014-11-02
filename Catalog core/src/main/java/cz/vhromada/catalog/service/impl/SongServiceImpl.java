@@ -21,6 +21,21 @@ import org.springframework.stereotype.Component;
 @Component("songService")
 public class SongServiceImpl extends AbstractMusicService implements SongService {
 
+	/** DAO for songs field */
+	private static final String SONG_DAO_FIELD = "DAO for songs";
+
+	/** Music argument */
+	private static final String MUSIC_ARGUMENT = "Music";
+
+	/** Song argument */
+	private static final String SONG_ARGUMENT = "Song";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link ServiceOperationException} */
+	private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
+
 	/** DAO for songs */
 	@Autowired
 	private SongDAO songDAO;
@@ -53,14 +68,14 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public Song getSong(final Integer id) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return getCachedSong(id);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -74,15 +89,15 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public void add(final Song song) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			songDAO.add(song);
 			addSongToCache(song);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -96,15 +111,15 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public void update(final Song song) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			songDAO.update(song);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -118,15 +133,15 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public void remove(final Song song) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			songDAO.remove(song);
 			removeSongFromCache(song);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -140,9 +155,9 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public void duplicate(final Song song) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			final Song newSong = new Song();
@@ -155,7 +170,7 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 			songDAO.update(newSong);
 			addSongToCache(newSong);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -169,9 +184,9 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public void moveUp(final Song song) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			final List<Song> songs = getCachedSongs(song.getMusic(), false);
@@ -181,7 +196,7 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 			songDAO.update(otherSong);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -195,9 +210,9 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public void moveDown(final Song song) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			final List<Song> songs = getCachedSongs(song.getMusic(), false);
@@ -207,7 +222,7 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 			songDAO.update(otherSong);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -222,14 +237,14 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public boolean exists(final Song song) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			return getCachedSong(song.getId()) != null;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -243,14 +258,14 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public List<Song> findSongsByMusic(final Music music) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(music, "Music");
+		Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
 		try {
 			return getCachedSongs(music, true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -264,9 +279,9 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 	 */
 	@Override
 	public Time getTotalLengthByMusic(final Music music) {
-		Validators.validateFieldNotNull(songDAO, "DAO for songs");
+		Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
 		validateMusicCacheNotNull();
-		Validators.validateArgumentNotNull(music, "Music");
+		Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
 		try {
 			int sum = 0;
@@ -275,7 +290,7 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 			}
 			return new Time(sum);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

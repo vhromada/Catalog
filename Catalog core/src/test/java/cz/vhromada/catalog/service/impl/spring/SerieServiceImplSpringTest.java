@@ -1,10 +1,5 @@
 package cz.vhromada.catalog.service.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SEASON_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -20,7 +15,6 @@ import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.service.SerieService;
-import cz.vhromada.catalog.service.impl.SerieServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -34,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link SerieServiceImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.service.impl.SerieServiceImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -42,6 +36,18 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testServiceContext.xml")
 @Transactional
 public class SerieServiceImplSpringTest {
+
+	/** Cache key for list of series */
+	private static final String SERIES_CACHE_KEY = "series";
+
+	/** Cache key for book serie */
+	private static final String SERIE_CACHE_KEY = "serie";
+
+	/** Cache key for list of seasons */
+	private static final String SEASONS_CACHE_KEY = "seasons";
+
+	/** Cache key for list of episodes */
+	private static final String EPISODES_CACHE_KEY = "episodes";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -83,10 +89,10 @@ public class SerieServiceImplSpringTest {
 	@Test
 	public void testGetSeries() {
 		final List<Serie> series = SpringEntitiesUtils.getSeries();
-		final String key = "series";
+		final String key = SERIES_CACHE_KEY;
 
 		DeepAsserts.assertEquals(series, serieService.getSeries());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, key, series);
 	}
@@ -95,16 +101,16 @@ public class SerieServiceImplSpringTest {
 	@Test
 	public void testGetSerieWithExistingSerie() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= SERIES_COUNT; i++) {
-			keys.add("serie" + i);
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+			keys.add(SERIE_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), serieService.getSerie(i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			SpringUtils.assertCacheValue(serieCache, keys.get(i - 1), SpringEntitiesUtils.getSerie(i));
 		}
 	}
@@ -112,10 +118,10 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#getSerie(Integer)} with not existing serie. */
 	@Test
 	public void testGetSerieWithNotExistingSerie() {
-		final String key = "serie" + Integer.MAX_VALUE;
+		final String key = SERIE_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertNull(serieService.getSerie(Integer.MAX_VALUE));
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, key, null);
 	}
@@ -128,10 +134,10 @@ public class SerieServiceImplSpringTest {
 		serieService.add(serie);
 
 		DeepAsserts.assertNotNull(serie.getId());
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, serie.getId());
-		final Serie addedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, serie.getId());
+		final Serie addedSerie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, addedSerie);
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -139,18 +145,18 @@ public class SerieServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
-		final String keyList = "series";
-		final String keyItem = "serie" + (SERIES_COUNT + 1);
+		final String keyList = SERIES_CACHE_KEY;
+		final String keyItem = SERIE_CACHE_KEY + (SpringUtils.SERIES_COUNT + 1);
 		serieCache.put(keyList, new ArrayList<>());
 		serieCache.put(keyItem, null);
 
 		serieService.add(serie);
 
 		DeepAsserts.assertNotNull(serie.getId());
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, serie.getId());
-		final Serie addedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, serie.getId());
+		final Serie addedSerie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, addedSerie);
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, keyList, CollectionUtils.newList(serie));
 		SpringUtils.assertCacheValue(serieCache, keyItem, serie);
@@ -165,7 +171,7 @@ public class SerieServiceImplSpringTest {
 
 		final Serie updatedSerie = SpringUtils.getSerie(entityManager, 1);
 		DeepAsserts.assertEquals(serie, updatedSerie);
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -174,12 +180,12 @@ public class SerieServiceImplSpringTest {
 	public void testRemoveWithEmptyCache() {
 		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 		entityManager.persist(serie);
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 
 		serieService.remove(serie);
 
 		assertNull(SpringUtils.getSerie(entityManager, serie.getId()));
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -190,8 +196,8 @@ public class SerieServiceImplSpringTest {
 		serie.setId(null);
 		serie.setGenres(CollectionUtils.newList(SpringUtils.getGenre(entityManager, 4)));
 		entityManager.persist(serie);
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
-		final String key = "series";
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		final String key = SERIES_CACHE_KEY;
 		final List<Serie> cacheSeries = new ArrayList<>();
 		cacheSeries.add(serie);
 		serieCache.put(key, cacheSeries);
@@ -199,7 +205,7 @@ public class SerieServiceImplSpringTest {
 		serieService.remove(serie);
 
 		assertNull(SpringUtils.getSerie(entityManager, serie.getId()));
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -208,15 +214,15 @@ public class SerieServiceImplSpringTest {
 	public void testDuplicateWithEmptyCache() {
 		final Serie serie = SpringUtils.getSerie(entityManager, 3);
 		final Serie expectedSerie = SpringEntitiesUtils.getSerie(3);
-		expectedSerie.setId(SERIES_COUNT + 1);
+		expectedSerie.setId(SpringUtils.SERIES_COUNT + 1);
 
 		serieService.duplicate(serie);
 
-		DeepAsserts.assertEquals(expectedSerie, SpringUtils.getSerie(entityManager, SERIES_COUNT + 1));
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		DeepAsserts.assertEquals(expectedSerie, SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1));
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -225,19 +231,19 @@ public class SerieServiceImplSpringTest {
 	public void testDuplicateWithNotEmptyCache() {
 		final Serie serie = SpringUtils.getSerie(entityManager, 3);
 		final Serie expectedSerie = SpringEntitiesUtils.getSerie(3);
-		expectedSerie.setId(SERIES_COUNT + 1);
-		final String keyList = "series";
-		final String keyItem = "serie" + (SERIES_COUNT + 1);
+		expectedSerie.setId(SpringUtils.SERIES_COUNT + 1);
+		final String keyList = SERIES_CACHE_KEY;
+		final String keyItem = SERIE_CACHE_KEY + (SpringUtils.SERIES_COUNT + 1);
 		serieCache.put(keyList, new ArrayList<>());
 		serieCache.put(keyItem, null);
 
 		serieService.duplicate(serie);
 
-		DeepAsserts.assertEquals(expectedSerie, SpringUtils.getSerie(entityManager, SERIES_COUNT + 1));
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		DeepAsserts.assertEquals(expectedSerie, SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1));
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -254,10 +260,10 @@ public class SerieServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedSerie1, SpringUtils.getSerie(entityManager, 1));
 		DeepAsserts.assertEquals(expectedSerie2, SpringUtils.getSerie(entityManager, 2));
-		for (int i = 3; i <= SERIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -274,10 +280,10 @@ public class SerieServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedSerie1, SpringUtils.getSerie(entityManager, 1));
 		DeepAsserts.assertEquals(expectedSerie2, SpringUtils.getSerie(entityManager, 2));
-		for (int i = 3; i <= SERIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
@@ -286,16 +292,16 @@ public class SerieServiceImplSpringTest {
 	@Test
 	public void testExistsWithExistingSerie() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= SERIES_COUNT; i++) {
-			keys.add("serie" + i);
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+			keys.add(SERIE_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			assertTrue(serieService.exists(SpringEntitiesUtils.getSerie(i)));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			SpringUtils.assertCacheValue(serieCache, keys.get(i - 1), SpringEntitiesUtils.getSerie(i));
 		}
 	}
@@ -305,10 +311,10 @@ public class SerieServiceImplSpringTest {
 	public void testExistsWithNotExistingSerie() {
 		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 		serie.setId(Integer.MAX_VALUE);
-		final String key = "serie" + Integer.MAX_VALUE;
+		final String key = SERIE_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertFalse(serieService.exists(serie));
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, key, null);
 	}
@@ -316,48 +322,49 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#updatePositions()}. */
 	@Test
 	public void testUpdatePositions() {
-		final Serie serie = SpringUtils.getSerie(entityManager, SERIES_COUNT);
+		final Serie serie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT);
 		serie.setPosition(5000);
 		entityManager.merge(serie);
 
 		serieService.updatePositions();
 
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
 	}
 
 	/** Test method for {@link SerieService#getTotalLength()}. */
 	@Test
 	public void testGetTotalLength() {
-		final String keyList = "series";
+		final String keyList = SERIES_CACHE_KEY;
 		final List<String> seasonKeyItems = new ArrayList<>();
-		final int seasonsCount = SEASONS_COUNT / SERIES_COUNT;
+		final int seasonsCount = SpringUtils.SEASONS_COUNT / SpringUtils.SERIES_COUNT;
 		for (int i = 1; i <= seasonsCount; i++) {
-			seasonKeyItems.add("seasons" + i);
+			seasonKeyItems.add(SEASONS_CACHE_KEY + i);
 		}
 		final List<String> episodeKeyItems = new ArrayList<>();
-		final int episodesCount = EPISODES_COUNT / EPISODES_PER_SEASON_COUNT;
+		final int episodesCount = SpringUtils.EPISODES_COUNT / SpringUtils.EPISODES_PER_SEASON_COUNT;
 		for (int i = 1; i <= episodesCount; i++) {
-			episodeKeyItems.add("episodes" + i);
+			episodeKeyItems.add(EPISODES_CACHE_KEY + i);
 		}
 		final List<String> keys = new ArrayList<>();
 		keys.add(keyList);
 		keys.addAll(seasonKeyItems);
 		keys.addAll(episodeKeyItems);
+		final Time length = new Time(1998);
 
-		DeepAsserts.assertEquals(new Time(1998), serieService.getTotalLength());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(length, serieService.getTotalLength());
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, keyList, SpringEntitiesUtils.getSeries());
 		for (int i = 1; i <= seasonsCount; i++) {
 			SpringUtils.assertCacheValue(serieCache, seasonKeyItems.get(i - 1), SpringEntitiesUtils.getSeasons(i));
 		}
 		for (int i = 0; i < episodesCount; i++) {
-			final int serieNumber = i / SEASONS_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % SEASONS_PER_SERIE_COUNT + 1;
+			final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
 			SpringUtils.assertCacheValue(serieCache, episodeKeyItems.get(i), SpringEntitiesUtils.getEpisodes(serieNumber, seasonNumber));
 		}
 	}
@@ -365,18 +372,18 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#getSeasonsCount()}. */
 	@Test
 	public void testGetSeasonsCount() {
-		final String keyList = "series";
+		final String keyList = SERIES_CACHE_KEY;
 		final List<String> keyItems = new ArrayList<>();
-		final int count = SEASONS_COUNT / SERIES_COUNT;
+		final int count = SpringUtils.SEASONS_COUNT / SpringUtils.SERIES_COUNT;
 		for (int i = 1; i <= count; i++) {
-			keyItems.add("seasons" + i);
+			keyItems.add(SEASONS_CACHE_KEY + i);
 		}
 		final List<String> keys = new ArrayList<>();
 		keys.add(keyList);
 		keys.addAll(keyItems);
 
-		DeepAsserts.assertEquals(SEASONS_COUNT, serieService.getSeasonsCount());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, serieService.getSeasonsCount());
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, keyList, SpringEntitiesUtils.getSeries());
 		for (int i = 1; i <= count; i++) {
@@ -387,32 +394,32 @@ public class SerieServiceImplSpringTest {
 	/** Test method for {@link SerieService#getEpisodesCount()}. */
 	@Test
 	public void testGetEpisodesCount() {
-		final String keyList = "series";
+		final String keyList = SERIES_CACHE_KEY;
 		final List<String> seasonKeyItems = new ArrayList<>();
-		final int seasonsCount = SEASONS_COUNT / SERIES_COUNT;
+		final int seasonsCount = SpringUtils.SEASONS_COUNT / SpringUtils.SERIES_COUNT;
 		for (int i = 1; i <= seasonsCount; i++) {
-			seasonKeyItems.add("seasons" + i);
+			seasonKeyItems.add(SEASONS_CACHE_KEY + i);
 		}
 		final List<String> episodeKeyItems = new ArrayList<>();
-		final int episodesCount = EPISODES_COUNT / EPISODES_PER_SEASON_COUNT;
+		final int episodesCount = SpringUtils.EPISODES_COUNT / SpringUtils.EPISODES_PER_SEASON_COUNT;
 		for (int i = 1; i <= episodesCount; i++) {
-			episodeKeyItems.add("episodes" + i);
+			episodeKeyItems.add(EPISODES_CACHE_KEY + i);
 		}
 		final List<String> keys = new ArrayList<>();
 		keys.add(keyList);
 		keys.addAll(seasonKeyItems);
 		keys.addAll(episodeKeyItems);
 
-		DeepAsserts.assertEquals(EPISODES_COUNT, serieService.getEpisodesCount());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, serieService.getEpisodesCount());
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
 		SpringUtils.assertCacheValue(serieCache, keyList, SpringEntitiesUtils.getSeries());
 		for (int i = 1; i <= seasonsCount; i++) {
 			SpringUtils.assertCacheValue(serieCache, seasonKeyItems.get(i - 1), SpringEntitiesUtils.getSeasons(i));
 		}
 		for (int i = 0; i < episodesCount; i++) {
-			final int serieNumber = i / SEASONS_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % SEASONS_PER_SERIE_COUNT + 1;
+			final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
 			SpringUtils.assertCacheValue(serieCache, episodeKeyItems.get(i), SpringEntitiesUtils.getEpisodes(serieNumber, seasonNumber));
 		}
 	}

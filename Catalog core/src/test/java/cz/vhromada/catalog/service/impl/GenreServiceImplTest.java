@@ -42,6 +42,12 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class GenreServiceImplTest extends ObjectGeneratorTest {
 
+	/** Cache key for list of genres */
+	private static final String GENRES_CACHE_KEY = "genres";
+
+	/** Cache key for genre */
+	private static final String GENRE_CACHE_KEY = "genre";
+
 	/** Instance of {@link GenreDAO} */
 	@Mock
 	private GenreDAO genreDAO;
@@ -69,7 +75,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		for (Genre genre : genres) {
 			verify(genreDAO).remove(genre);
 		}
-		verify(genreCache).get("genres");
+		verify(genreCache).get(GENRES_CACHE_KEY);
 		verify(genreCache).clear();
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
@@ -87,7 +93,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		for (Genre genre : genres) {
 			verify(genreDAO).remove(genre);
 		}
-		verify(genreCache).get("genres");
+		verify(genreCache).get(GENRES_CACHE_KEY);
 		verify(genreCache).clear();
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
@@ -120,7 +126,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(genreDAO).getGenres();
-		verify(genreCache).get("genres");
+		verify(genreCache).get(GENRES_CACHE_KEY);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -132,7 +138,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(genres, genreService.getGenres());
 
-		verify(genreCache).get("genres");
+		verify(genreCache).get(GENRES_CACHE_KEY);
 		verifyNoMoreInteractions(genreCache);
 		verifyZeroInteractions(genreDAO);
 	}
@@ -147,8 +153,8 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(genres, genreService.getGenres());
 
 		verify(genreDAO).getGenres();
-		verify(genreCache).get("genres");
-		verify(genreCache).put("genres", genres);
+		verify(genreCache).get(GENRES_CACHE_KEY);
+		verify(genreCache).put(GENRES_CACHE_KEY, genres);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -180,7 +186,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(genreDAO).getGenres();
-		verify(genreCache).get("genres");
+		verify(genreCache).get(GENRES_CACHE_KEY);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -192,7 +198,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(genre, genreService.getGenre(genre.getId()));
 
-		verify(genreCache).get("genre" + genre.getId());
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
 		verifyNoMoreInteractions(genreCache);
 		verifyZeroInteractions(genreDAO);
 	}
@@ -205,7 +211,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 
 		assertNull(genreService.getGenre(id));
 
-		verify(genreCache).get("genre" + id);
+		verify(genreCache).get(GENRE_CACHE_KEY + id);
 		verifyNoMoreInteractions(genreCache);
 		verifyZeroInteractions(genreDAO);
 	}
@@ -220,8 +226,8 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(genre, genreService.getGenre(genre.getId()));
 
 		verify(genreDAO).getGenre(genre.getId());
-		verify(genreCache).get("genre" + genre.getId());
-		verify(genreCache).put("genre" + genre.getId(), genre);
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
+		verify(genreCache).put(GENRE_CACHE_KEY + genre.getId(), genre);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -235,8 +241,8 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		assertNull(genreService.getGenre(id));
 
 		verify(genreDAO).getGenre(id);
-		verify(genreCache).get("genre" + id);
-		verify(genreCache).put("genre" + id, null);
+		verify(genreCache).get(GENRE_CACHE_KEY + id);
+		verify(genreCache).put(GENRE_CACHE_KEY + id, null);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -281,7 +287,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(genreDAO).getGenre(Integer.MAX_VALUE);
-		verify(genreCache).get("genre" + Integer.MAX_VALUE);
+		verify(genreCache).get(GENRE_CACHE_KEY + Integer.MAX_VALUE);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -297,10 +303,10 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		genreService.add(genre);
 
 		verify(genreDAO).add(genre);
-		verify(genreCache).get("genres");
-		verify(genreCache).get("genre" + genre.getId());
-		verify(genreCache).put("genres", genresList);
-		verify(genreCache).put("genre" + genre.getId(), genre);
+		verify(genreCache).get(GENRES_CACHE_KEY);
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
+		verify(genreCache).put(GENRES_CACHE_KEY, genresList);
+		verify(genreCache).put(GENRE_CACHE_KEY + genre.getId(), genre);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -313,8 +319,8 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		genreService.add(genre);
 
 		verify(genreDAO).add(genre);
-		verify(genreCache).get("genres");
-		verify(genreCache).get("genre" + genre.getId());
+		verify(genreCache).get(GENRES_CACHE_KEY);
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -393,7 +399,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 	@Test
 	public void testAddListWithNullArgument() {
 		try {
-			@SuppressWarnings("unchecked")
 			final List<String> names = null;
 			genreService.add(names);
 			fail("Can't add genres with null argument.");
@@ -490,8 +495,8 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		genreService.remove(genre);
 
 		verify(genreDAO).remove(genre);
-		verify(genreCache).get("genres");
-		verify(genreCache).put("genres", genres);
+		verify(genreCache).get(GENRES_CACHE_KEY);
+		verify(genreCache).put(GENRES_CACHE_KEY, genres);
 		verify(genreCache).evict(genre.getId());
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
@@ -505,7 +510,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		genreService.remove(genre);
 
 		verify(genreDAO).remove(genre);
-		verify(genreCache).get("genres");
+		verify(genreCache).get(GENRES_CACHE_KEY);
 		verify(genreCache).evict(genre.getId());
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
@@ -563,7 +568,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 
 		assertTrue(genreService.exists(genre));
 
-		verify(genreCache).get("genre" + genre.getId());
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
 		verifyNoMoreInteractions(genreCache);
 		verifyZeroInteractions(genreDAO);
 	}
@@ -576,7 +581,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 
 		assertFalse(genreService.exists(genre));
 
-		verify(genreCache).get("genre" + genre.getId());
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
 		verifyNoMoreInteractions(genreCache);
 		verifyZeroInteractions(genreDAO);
 	}
@@ -591,8 +596,8 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		assertTrue(genreService.exists(genre));
 
 		verify(genreDAO).getGenre(genre.getId());
-		verify(genreCache).get("genre" + genre.getId());
-		verify(genreCache).put("genre" + genre.getId(), genre);
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
+		verify(genreCache).put(GENRE_CACHE_KEY + genre.getId(), genre);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -606,8 +611,8 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		assertFalse(genreService.exists(genre));
 
 		verify(genreDAO).getGenre(genre.getId());
-		verify(genreCache).get("genre" + genre.getId());
-		verify(genreCache).put("genre" + genre.getId(), null);
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
+		verify(genreCache).put(GENRE_CACHE_KEY + genre.getId(), null);
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 
@@ -653,7 +658,7 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(genreDAO).getGenre(genre.getId());
-		verify(genreCache).get("genre" + genre.getId());
+		verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
 		verifyNoMoreInteractions(genreDAO, genreCache);
 	}
 

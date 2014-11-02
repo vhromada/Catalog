@@ -3,7 +3,6 @@ package cz.vhromada.catalog.service;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.BookCategory;
-import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 
 /**
  * An interface represents service for book categories.
@@ -15,7 +14,8 @@ public interface BookCategoryService {
 	/**
 	 * Creates new data.
 	 *
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	void newData();
 
@@ -23,7 +23,8 @@ public interface BookCategoryService {
 	 * Returns list of book categories.
 	 *
 	 * @return list of book categories
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	List<BookCategory> getBookCategories();
 
@@ -32,8 +33,9 @@ public interface BookCategoryService {
 	 *
 	 * @param id ID
 	 * @return book category with ID or null if there isn't such book category
-	 * @throws IllegalArgumentException  if ID is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if ID is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	BookCategory getBookCategory(Integer id);
 
@@ -41,8 +43,9 @@ public interface BookCategoryService {
 	 * Adds book category. Sets new ID and position.
 	 *
 	 * @param bookCategory book category
-	 * @throws IllegalArgumentException  if book category is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if book category is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void add(BookCategory bookCategory);
 
@@ -50,8 +53,9 @@ public interface BookCategoryService {
 	 * Updates book category.
 	 *
 	 * @param bookCategory new value of book category
-	 * @throws IllegalArgumentException  if book category is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if book category is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void update(BookCategory bookCategory);
 
@@ -59,8 +63,9 @@ public interface BookCategoryService {
 	 * Removes book category.
 	 *
 	 * @param bookCategory book category
-	 * @throws IllegalArgumentException  if book category is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if book category is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void remove(BookCategory bookCategory);
 
@@ -68,8 +73,9 @@ public interface BookCategoryService {
 	 * Duplicates book category.
 	 *
 	 * @param bookCategory book category
-	 * @throws IllegalArgumentException  if book category is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if book category is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void duplicate(BookCategory bookCategory);
 
@@ -77,8 +83,9 @@ public interface BookCategoryService {
 	 * Moves book category in list one position up.
 	 *
 	 * @param bookCategory book category
-	 * @throws IllegalArgumentException  if book category is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if book category is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveUp(BookCategory bookCategory);
 
@@ -86,8 +93,9 @@ public interface BookCategoryService {
 	 * Moves book category in list one position down.
 	 *
 	 * @param bookCategory book category
-	 * @throws IllegalArgumentException  if book category is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if book category is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveDown(BookCategory bookCategory);
 
@@ -96,15 +104,17 @@ public interface BookCategoryService {
 	 *
 	 * @param bookCategory book category
 	 * @return true if book category exists
-	 * @throws IllegalArgumentException  if book category is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if book category is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	boolean exists(BookCategory bookCategory);
 
 	/**
 	 * Updates positions.
 	 *
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	void updatePositions();
 
@@ -112,7 +122,8 @@ public interface BookCategoryService {
 	 * Returns count of books from all book categories.
 	 *
 	 * @return count of books from all book categories
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	int getBooksCount();
 

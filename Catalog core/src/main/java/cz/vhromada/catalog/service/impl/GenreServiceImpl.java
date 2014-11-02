@@ -21,6 +21,30 @@ import org.springframework.stereotype.Component;
 @Component("genreService")
 public class GenreServiceImpl extends AbstractService<Genre> implements GenreService {
 
+	/** DAO for genres field */
+	private static final String GENRE_DAO_FIELD = "DAO for genres";
+
+	/** Cache for genres field */
+	private static final String GENRE_CACHE_FIELD = "Cache for genres";
+
+	/** Genre argument */
+	private static final String GENRE_ARGUMENT = "Genre";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Genre names argument */
+	private static final String GENRE_NAMES_ARGUMENT = "List of genre names";
+
+	/** Message for {@link ServiceOperationException} */
+	private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
+
+	/** Cache key for list of genres */
+	private static final String GENRES_CACHE_KEY = "genres";
+
+	/** Cache key for genre */
+	private static final String GENRE_CACHE_KEY = "genre";
+
 	/** DAO for genres */
 	@Autowired
 	private GenreDAO genreDAO;
@@ -74,8 +98,8 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public void newData() {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
 
 		try {
 			for (Genre genre : getCachedGenres(false)) {
@@ -83,7 +107,7 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 			}
 			genreCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -96,13 +120,13 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public List<Genre> getGenres() {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
 
 		try {
 			return getCachedGenres(true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -116,14 +140,14 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public Genre getGenre(final Integer id) {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return getCachedGenre(id);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -137,16 +161,16 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public void add(final Genre genre) {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
-		Validators.validateArgumentNotNull(genre, "Genre");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
 		try {
 			genreDAO.add(genre);
-			addObjectToListCache(genreCache, "genres", genre);
-			addObjectToCache(genreCache, "genre" + genre.getId(), genre);
+			addObjectToListCache(genreCache, GENRES_CACHE_KEY, genre);
+			addObjectToCache(genreCache, GENRE_CACHE_KEY + genre.getId(), genre);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -160,9 +184,9 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public void add(final List<String> genres) {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
-		Validators.validateArgumentNotNull(genres, "List of genre names");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(genres, GENRE_NAMES_ARGUMENT);
 
 		try {
 			for (String genre : genres) {
@@ -172,7 +196,7 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 			}
 			genreCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -186,15 +210,15 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public void update(final Genre genre) {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
-		Validators.validateArgumentNotNull(genre, "Genre");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
 		try {
 			genreDAO.update(genre);
 			genreCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -208,16 +232,16 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public void remove(final Genre genre) {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
-		Validators.validateArgumentNotNull(genre, "Genre");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
 		try {
 			genreDAO.remove(genre);
-			removeObjectFromCache(genreCache, "genres", genre);
+			removeObjectFromCache(genreCache, GENRES_CACHE_KEY, genre);
 			genreCache.evict(genre.getId());
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -231,14 +255,14 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 */
 	@Override
 	public boolean exists(final Genre genre) {
-		Validators.validateFieldNotNull(genreDAO, "DAO for genres");
-		Validators.validateFieldNotNull(genreCache, "Cache for genres");
-		Validators.validateArgumentNotNull(genre, "Genre");
+		Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
+		Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
 		try {
 			return getCachedGenre(genre.getId()) != null;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -259,7 +283,7 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 * @return list of genres
 	 */
 	private List<Genre> getCachedGenres(final boolean cached) {
-		return getCachedObjects(genreCache, "genres", cached);
+		return getCachedObjects(genreCache, GENRES_CACHE_KEY, cached);
 	}
 
 	/**
@@ -269,7 +293,7 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
 	 * @return genre with ID or null if there isn't such genre
 	 */
 	private Genre getCachedGenre(final Integer id) {
-		return getCachedObject(genreCache, "genre", id, true);
+		return getCachedObject(genreCache, GENRE_CACHE_KEY, id, true);
 	}
 
 }

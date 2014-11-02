@@ -4,7 +4,6 @@ import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Music;
-import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 
 /**
  * An interface represents service for music.
@@ -16,7 +15,8 @@ public interface MusicService {
 	/**
 	 * Creates new data.
 	 *
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	void newData();
 
@@ -24,7 +24,8 @@ public interface MusicService {
 	 * Returns list of music.
 	 *
 	 * @return list of music
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	List<Music> getMusic();
 
@@ -33,8 +34,9 @@ public interface MusicService {
 	 *
 	 * @param id ID
 	 * @return music with ID or null if there isn't such music
-	 * @throws IllegalArgumentException  if ID is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if ID is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	Music getMusic(Integer id);
 
@@ -42,8 +44,9 @@ public interface MusicService {
 	 * Adds music. Sets new ID and position.
 	 *
 	 * @param music music
-	 * @throws IllegalArgumentException  if music is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if music is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void add(Music music);
 
@@ -51,8 +54,9 @@ public interface MusicService {
 	 * Updates music.
 	 *
 	 * @param music new value of music
-	 * @throws IllegalArgumentException  if music is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if music is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void update(Music music);
 
@@ -60,8 +64,9 @@ public interface MusicService {
 	 * Removes music.
 	 *
 	 * @param music music
-	 * @throws IllegalArgumentException  if music is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if music is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void remove(Music music);
 
@@ -69,8 +74,9 @@ public interface MusicService {
 	 * Duplicates music.
 	 *
 	 * @param music music
-	 * @throws IllegalArgumentException  if music is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if music is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void duplicate(Music music);
 
@@ -78,8 +84,9 @@ public interface MusicService {
 	 * Moves music in list one position up.
 	 *
 	 * @param music music
-	 * @throws IllegalArgumentException  if music is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if music is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveUp(Music music);
 
@@ -87,8 +94,9 @@ public interface MusicService {
 	 * Moves music in list one position down.
 	 *
 	 * @param music music
-	 * @throws IllegalArgumentException  if music is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if music is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveDown(Music music);
 
@@ -97,15 +105,17 @@ public interface MusicService {
 	 *
 	 * @param music music
 	 * @return true if music exists
-	 * @throws IllegalArgumentException  if music is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if music is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	boolean exists(Music music);
 
 	/**
 	 * Updates positions.
 	 *
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	void updatePositions();
 
@@ -113,7 +123,8 @@ public interface MusicService {
 	 * Returns total count of media.
 	 *
 	 * @return total count of media
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	int getTotalMediaCount();
 
@@ -121,7 +132,8 @@ public interface MusicService {
 	 * Returns total length of all songs.
 	 *
 	 * @return total length of all songs
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	Time getTotalLength();
 
@@ -129,7 +141,8 @@ public interface MusicService {
 	 * Returns count of songs from all music.
 	 *
 	 * @return count of songs from all music
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *          if there was error in working with DAO tier
 	 */
 	int getSongsCount();
 

@@ -22,6 +22,21 @@ import org.springframework.stereotype.Component;
 @Component("episodeService")
 public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeService {
 
+	/** DAO for episodes field */
+	private static final String EPISODE_DAO_FIELD = "DAO for episodes";
+
+	/** Season argument */
+	private static final String SEASON_ARGUMENT = "Season";
+
+	/** Episode argument */
+	private static final String EPISODE_ARGUMENT = "Episode";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link ServiceOperationException} */
+	private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
+
 	/** DAO for episodes */
 	@Autowired
 	private EpisodeDAO episodeDAO;
@@ -54,14 +69,14 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public Episode getEpisode(final Integer id) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return getCachedEpisode(id);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -75,15 +90,15 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public void add(final Episode episode) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			episodeDAO.add(episode);
 			addEpisodeToCache(episode);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -97,15 +112,15 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public void update(final Episode episode) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			episodeDAO.update(episode);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -119,15 +134,15 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public void remove(final Episode episode) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			episodeDAO.remove(episode);
 			removeEpisodeFromCache(episode);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -141,9 +156,9 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public void duplicate(final Episode episode) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			final Episode newEpisode = new Episode();
@@ -157,7 +172,7 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 			episodeDAO.update(newEpisode);
 			addEpisodeToCache(newEpisode);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -171,9 +186,9 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public void moveUp(final Episode episode) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			final List<Episode> episodes = getCachedEpisodes(episode.getSeason(), false);
@@ -183,7 +198,7 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 			episodeDAO.update(otherEpisode);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -197,9 +212,9 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public void moveDown(final Episode episode) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			final List<Episode> episodes = getCachedEpisodes(episode.getSeason(), false);
@@ -209,7 +224,7 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 			episodeDAO.update(otherEpisode);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -223,14 +238,14 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public boolean exists(final Episode episode) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			return getCachedEpisode(episode.getId()) != null;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -244,14 +259,14 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public List<Episode> findEpisodesBySeason(final Season season) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(season, "Season");
+		Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
 		try {
 			return getCachedEpisodes(season, true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -265,9 +280,9 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 	 */
 	@Override
 	public Time getTotalLengthBySeason(final Season season) {
-		Validators.validateFieldNotNull(episodeDAO, "DAO for episodes");
+		Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
 		validateSerieCacheNotNull();
-		Validators.validateArgumentNotNull(season, "Season");
+		Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
 		try {
 			int sum = 0;
@@ -276,7 +291,7 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 			}
 			return new Time(sum);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

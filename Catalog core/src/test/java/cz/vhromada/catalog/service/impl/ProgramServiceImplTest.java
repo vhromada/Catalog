@@ -41,6 +41,12 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
+	/** Cache key for list of programs */
+	private static final String PROGRAMS_CACHE_KEY = "programs";
+
+	/** Cache key for program */
+	private static final String PROGRAM_CACHE_KEY = "program";
+
 	/** Instance of {@link ProgramDAO} */
 	@Mock
 	private ProgramDAO programDAO;
@@ -64,7 +70,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		for (Program program : programs) {
 			verify(programDAO).remove(program);
 		}
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -82,7 +88,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		for (Program program : programs) {
 			verify(programDAO).remove(program);
 		}
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -115,7 +121,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -127,7 +133,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(programs, programService.getPrograms());
 
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verifyNoMoreInteractions(programCache);
 		verifyZeroInteractions(programDAO);
 	}
@@ -142,8 +148,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(programs, programService.getPrograms());
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
-		verify(programCache).put("programs", programs);
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
+		verify(programCache).put(PROGRAMS_CACHE_KEY, programs);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -175,7 +181,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -187,7 +193,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(program, programService.getProgram(program.getId()));
 
-		verify(programCache).get("program" + program.getId());
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
 		verifyNoMoreInteractions(programCache);
 		verifyZeroInteractions(programDAO);
 	}
@@ -200,7 +206,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		assertNull(programService.getProgram(id));
 
-		verify(programCache).get("program" + id);
+		verify(programCache).get(PROGRAM_CACHE_KEY + id);
 		verifyNoMoreInteractions(programCache);
 		verifyZeroInteractions(programDAO);
 	}
@@ -215,8 +221,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(program, programService.getProgram(program.getId()));
 
 		verify(programDAO).getProgram(program.getId());
-		verify(programCache).get("program" + program.getId());
-		verify(programCache).put("program" + program.getId(), program);
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
+		verify(programCache).put(PROGRAM_CACHE_KEY + program.getId(), program);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -230,8 +236,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		assertNull(programService.getProgram(id));
 
 		verify(programDAO).getProgram(id);
-		verify(programCache).get("program" + id);
-		verify(programCache).put("program" + id, null);
+		verify(programCache).get(PROGRAM_CACHE_KEY + id);
+		verify(programCache).put(PROGRAM_CACHE_KEY + id, null);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -276,7 +282,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getProgram(Integer.MAX_VALUE);
-		verify(programCache).get("program" + Integer.MAX_VALUE);
+		verify(programCache).get(PROGRAM_CACHE_KEY + Integer.MAX_VALUE);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -292,10 +298,10 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		programService.add(program);
 
 		verify(programDAO).add(program);
-		verify(programCache).get("programs");
-		verify(programCache).get("program" + program.getId());
-		verify(programCache).put("programs", programsList);
-		verify(programCache).put("program" + program.getId(), program);
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
+		verify(programCache).put(PROGRAMS_CACHE_KEY, programsList);
+		verify(programCache).put(PROGRAM_CACHE_KEY + program.getId(), program);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -308,8 +314,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		programService.add(program);
 
 		verify(programDAO).add(program);
-		verify(programCache).get("programs");
-		verify(programCache).get("program" + program.getId());
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -427,8 +433,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		programService.remove(program);
 
 		verify(programDAO).remove(program);
-		verify(programCache).get("programs");
-		verify(programCache).put("programs", programs);
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
+		verify(programCache).put(PROGRAMS_CACHE_KEY, programs);
 		verify(programCache).evict(program.getId());
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -442,7 +448,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		programService.remove(program);
 
 		verify(programDAO).remove(program);
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).evict(program.getId());
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -563,7 +569,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		verify(programDAO).update(program1);
 		verify(programDAO).update(program2);
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -586,7 +592,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		verify(programDAO).update(program1);
 		verify(programDAO).update(program2);
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -632,7 +638,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -652,7 +658,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		verify(programDAO).update(program1);
 		verify(programDAO).update(program2);
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -675,7 +681,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		verify(programDAO).update(program1);
 		verify(programDAO).update(program2);
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -721,7 +727,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -733,7 +739,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		assertTrue(programService.exists(program));
 
-		verify(programCache).get("program" + program.getId());
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
 		verifyNoMoreInteractions(programCache);
 		verifyZeroInteractions(programDAO);
 	}
@@ -746,7 +752,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		assertFalse(programService.exists(program));
 
-		verify(programCache).get("program" + program.getId());
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
 		verifyNoMoreInteractions(programCache);
 		verifyZeroInteractions(programDAO);
 	}
@@ -761,8 +767,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		assertTrue(programService.exists(program));
 
 		verify(programDAO).getProgram(program.getId());
-		verify(programCache).get("program" + program.getId());
-		verify(programCache).put("program" + program.getId(), program);
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
+		verify(programCache).put(PROGRAM_CACHE_KEY + program.getId(), program);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -776,8 +782,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		assertFalse(programService.exists(program));
 
 		verify(programDAO).getProgram(program.getId());
-		verify(programCache).get("program" + program.getId());
-		verify(programCache).put("program" + program.getId(), null);
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
+		verify(programCache).put(PROGRAM_CACHE_KEY + program.getId(), null);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -823,7 +829,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getProgram(program.getId());
-		verify(programCache).get("program" + program.getId());
+		verify(programCache).get(PROGRAM_CACHE_KEY + program.getId());
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -840,7 +846,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 			DeepAsserts.assertEquals(i, program.getPosition());
 			verify(programDAO).update(program);
 		}
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -860,7 +866,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 			DeepAsserts.assertEquals(i, program.getPosition());
 			verify(programDAO).update(program);
 		}
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(programCache).clear();
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
@@ -893,7 +899,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 
@@ -911,7 +917,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(6, programService.getTotalMediaCount());
 
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verify(program1).getMediaCount();
 		verify(program2).getMediaCount();
 		verify(program3).getMediaCount();
@@ -935,8 +941,8 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(6, programService.getTotalMediaCount());
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
-		verify(programCache).put("programs", programs);
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
+		verify(programCache).put(PROGRAMS_CACHE_KEY, programs);
 		verify(program1).getMediaCount();
 		verify(program2).getMediaCount();
 		verify(program3).getMediaCount();
@@ -971,7 +977,7 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(programDAO).getPrograms();
-		verify(programCache).get("programs");
+		verify(programCache).get(PROGRAMS_CACHE_KEY);
 		verifyNoMoreInteractions(programDAO, programCache);
 	}
 

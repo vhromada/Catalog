@@ -15,6 +15,21 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractMusicService extends AbstractInnerService<Music, Song> {
 
+	/** Cache for music field */
+	private static final String MUSIC_CACHE_FIELD = "Cache for music";
+
+	/** Cache key for list of music */
+	private static final String MUSIC_LIST_CACHE_KEY = "music";
+
+	/** Cache key for music */
+	private static final String MUSIC_CACHE_KEY = "musicItem";
+
+	/** Cache key for list of songs */
+	private static final String SONGS_CACHE_KEY = "songs";
+
+	/** Cache key for song */
+	private static final String SONG_CACHE_KEY = "song";
+
 	/** Cache for music */
 	@Value("#{cacheManager.getCache('musicCache')}")
 	private Cache musicCache;
@@ -43,7 +58,7 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @throws IllegalStateException if cache for music is null
 	 */
 	protected void validateMusicCacheNotNull() {
-		Validators.validateFieldNotNull(musicCache, "Cache for music");
+		Validators.validateFieldNotNull(musicCache, MUSIC_CACHE_FIELD);
 	}
 
 	/** Remove all mappings from the cache for music. */
@@ -58,7 +73,7 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @return list of categories
 	 */
 	protected List<Music> getCachedMusic(final boolean cached) {
-		return getCachedObjects(musicCache, "music", cached);
+		return getCachedObjects(musicCache, MUSIC_LIST_CACHE_KEY, cached);
 	}
 
 	/**
@@ -69,7 +84,7 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @return list of songs for specified music
 	 */
 	protected List<Song> getCachedSongs(final Music music, final boolean cached) {
-		return getCachedInnerObjects(musicCache, "songs" + music.getId(), cached, music);
+		return getCachedInnerObjects(musicCache, SONGS_CACHE_KEY + music.getId(), cached, music);
 	}
 
 	/**
@@ -79,7 +94,7 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @return music with ID or null if there isn't such song
 	 */
 	protected Music getCachedMusic(final Integer id) {
-		return getCachedObject(musicCache, "music", id, true);
+		return getCachedObject(musicCache, MUSIC_CACHE_KEY, id, true);
 	}
 
 	/**
@@ -89,7 +104,7 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @return song with ID or null if there isn't such song
 	 */
 	protected Song getCachedSong(final Integer id) {
-		return getCachedInnerObject(musicCache, "song", id);
+		return getCachedInnerObject(musicCache, SONG_CACHE_KEY, id);
 	}
 
 	/**
@@ -98,8 +113,8 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @param music music
 	 */
 	protected void addMusicToCache(final Music music) {
-		addObjectToListCache(musicCache, "music", music);
-		addObjectToCache(musicCache, "music" + music.getId(), music);
+		addObjectToListCache(musicCache, MUSIC_LIST_CACHE_KEY, music);
+		addObjectToCache(musicCache, MUSIC_CACHE_KEY + music.getId(), music);
 	}
 
 	/**
@@ -108,8 +123,8 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @param song song
 	 */
 	protected void addSongToCache(final Song song) {
-		addInnerObjectToListCache(musicCache, "songs" + song.getMusic().getId(), song);
-		addInnerObjectToCache(musicCache, "song" + song.getId(), song);
+		addInnerObjectToListCache(musicCache, SONGS_CACHE_KEY + song.getMusic().getId(), song);
+		addInnerObjectToCache(musicCache, SONG_CACHE_KEY + song.getId(), song);
 	}
 
 	/**
@@ -118,8 +133,8 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
 	 * @param song song
 	 */
 	protected void removeSongFromCache(final Song song) {
-		removeInnerObjectFromCache(musicCache, "songs" + song.getMusic().getId(), song);
-		musicCache.evict("song" + song.getId());
+		removeInnerObjectFromCache(musicCache, SONGS_CACHE_KEY + song.getMusic().getId(), song);
+		musicCache.evict(SONG_CACHE_KEY + song.getId());
 	}
 
 	@Override

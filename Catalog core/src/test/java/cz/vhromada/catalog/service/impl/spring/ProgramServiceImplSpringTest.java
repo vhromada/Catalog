@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.service.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.PROGRAMS_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +14,6 @@ import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.service.ProgramService;
-import cz.vhromada.catalog.service.impl.ProgramServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -29,7 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link ProgramServiceImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.service.impl.ProgramServiceImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -37,6 +35,12 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testServiceContext.xml")
 @Transactional
 public class ProgramServiceImplSpringTest {
+
+	/** Cache key for list of programs */
+	private static final String PROGRAMS_CACHE_KEY = "programs";
+
+	/** Cache key for program */
+	private static final String PROGRAM_CACHE_KEY = "program";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -74,10 +78,10 @@ public class ProgramServiceImplSpringTest {
 	@Test
 	public void testGetPrograms() {
 		final List<Program> programs = SpringEntitiesUtils.getPrograms();
-		final String key = "programs";
+		final String key = PROGRAMS_CACHE_KEY;
 
 		DeepAsserts.assertEquals(programs, programService.getPrograms());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, key, programs);
 	}
@@ -86,16 +90,16 @@ public class ProgramServiceImplSpringTest {
 	@Test
 	public void testGetProgramWithExistingProgram() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
-			keys.add("program" + i);
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
+			keys.add(PROGRAM_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), programService.getProgram(i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(programCache));
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			SpringUtils.assertCacheValue(programCache, keys.get(i - 1), SpringEntitiesUtils.getProgram(i));
 		}
 	}
@@ -103,10 +107,10 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#getProgram(Integer)} with not existing program. */
 	@Test
 	public void testGetProgramWithNotExistingProgram() {
-		final String key = "program" + Integer.MAX_VALUE;
+		final String key = PROGRAM_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertNull(programService.getProgram(Integer.MAX_VALUE));
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, key, null);
 	}
@@ -119,10 +123,10 @@ public class ProgramServiceImplSpringTest {
 		programService.add(program);
 
 		DeepAsserts.assertNotNull(program.getId());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, program.getId());
-		final Program addedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, program.getId());
+		final Program addedProgram = SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, addedProgram);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
 
@@ -130,18 +134,18 @@ public class ProgramServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
-		final String keyList = "programs";
-		final String keyItem = "program" + (PROGRAMS_COUNT + 1);
+		final String keyList = PROGRAMS_CACHE_KEY;
+		final String keyItem = PROGRAM_CACHE_KEY + (SpringUtils.PROGRAMS_COUNT + 1);
 		programCache.put(keyList, new ArrayList<>());
 		programCache.put(keyItem, null);
 
 		programService.add(program);
 
 		DeepAsserts.assertNotNull(program.getId());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, program.getId());
-		final Program addedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, program.getId());
+		final Program addedProgram = SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, addedProgram);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, keyList, CollectionUtils.newList(program));
 		SpringUtils.assertCacheValue(programCache, keyItem, program);
@@ -156,7 +160,7 @@ public class ProgramServiceImplSpringTest {
 
 		final Program updatedProgram = SpringUtils.getProgram(entityManager, 1);
 		DeepAsserts.assertEquals(program, updatedProgram);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
 
@@ -165,12 +169,12 @@ public class ProgramServiceImplSpringTest {
 	public void testRemoveWithEmptyCache() {
 		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 		entityManager.persist(program);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 
 		programService.remove(program);
 
 		assertNull(SpringUtils.getProgram(entityManager, program.getId()));
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
 
@@ -179,8 +183,8 @@ public class ProgramServiceImplSpringTest {
 	public void testRemoveWithNotEmptyCache() {
 		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 		entityManager.persist(program);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
-		final String key = "programs";
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		final String key = PROGRAMS_CACHE_KEY;
 		final List<Program> cachePrograms = new ArrayList<>();
 		cachePrograms.add(program);
 		programCache.put(key, cachePrograms);
@@ -188,7 +192,7 @@ public class ProgramServiceImplSpringTest {
 		programService.remove(program);
 
 		assertNull(SpringUtils.getProgram(entityManager, program.getId()));
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, key, new ArrayList<>());
 	}
@@ -198,15 +202,15 @@ public class ProgramServiceImplSpringTest {
 	public void testDuplicate() {
 		final Program program = SpringUtils.getProgram(entityManager, 3);
 		final Program expectedProgram = SpringEntitiesUtils.getProgram(3);
-		expectedProgram.setId(PROGRAMS_COUNT + 1);
+		expectedProgram.setId(SpringUtils.PROGRAMS_COUNT + 1);
 
 		programService.duplicate(program);
 
-		DeepAsserts.assertEquals(expectedProgram, SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1));
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		DeepAsserts.assertEquals(expectedProgram, SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT + 1));
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), SpringUtils.getProgram(entityManager, i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
 
@@ -223,10 +227,10 @@ public class ProgramServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedProgram1, SpringUtils.getProgram(entityManager, 1));
 		DeepAsserts.assertEquals(expectedProgram2, SpringUtils.getProgram(entityManager, 2));
-		for (int i = 3; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), SpringUtils.getProgram(entityManager, i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
 
@@ -243,10 +247,10 @@ public class ProgramServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedProgram1, SpringUtils.getProgram(entityManager, 1));
 		DeepAsserts.assertEquals(expectedProgram2, SpringUtils.getProgram(entityManager, 2));
-		for (int i = 3; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), SpringUtils.getProgram(entityManager, i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
 
@@ -255,16 +259,16 @@ public class ProgramServiceImplSpringTest {
 	@Test
 	public void testExistsWithExistingProgram() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
-			keys.add("program" + i);
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
+			keys.add(PROGRAM_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			assertTrue(programService.exists(SpringEntitiesUtils.getProgram(i)));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(programCache));
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			SpringUtils.assertCacheValue(programCache, keys.get(i - 1), SpringEntitiesUtils.getProgram(i));
 		}
 	}
@@ -274,10 +278,10 @@ public class ProgramServiceImplSpringTest {
 	public void testExistsWithNotExistingProgram() {
 		final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
 		program.setId(Integer.MAX_VALUE);
-		final String key = "program" + Integer.MAX_VALUE;
+		final String key = PROGRAM_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertFalse(programService.exists(program));
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, key, null);
 	}
@@ -285,26 +289,27 @@ public class ProgramServiceImplSpringTest {
 	/** Test method for {@link ProgramService#updatePositions()}. */
 	@Test
 	public void testUpdatePositions() {
-		final Program program = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT);
+		final Program program = SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT);
 		program.setPosition(5000);
 		entityManager.merge(program);
 
 		programService.updatePositions();
 
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), SpringUtils.getProgram(entityManager, i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
 	}
 
 	/** Test method for {@link ProgramService#getTotalMediaCount()}. */
 	@Test
 	public void testGetTotalMediaCount() {
-		final String key = "programs";
+		final String key = PROGRAMS_CACHE_KEY;
+		final int mediaCount = 600;
 
-		DeepAsserts.assertEquals(600, programService.getTotalMediaCount());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(mediaCount, programService.getTotalMediaCount());
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(programCache));
 		SpringUtils.assertCacheValue(programCache, key, SpringEntitiesUtils.getPrograms());
 	}

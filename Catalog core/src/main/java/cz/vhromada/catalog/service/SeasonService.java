@@ -4,7 +4,6 @@ import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
-import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 
 /**
  * An interface represents service for series.
@@ -18,8 +17,9 @@ public interface SeasonService {
 	 *
 	 * @param id ID
 	 * @return season with ID or null if there isn't such season
-	 * @throws IllegalArgumentException  if ID is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if ID is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	Season getSeason(Integer id);
 
@@ -27,8 +27,9 @@ public interface SeasonService {
 	 * Adds season. Sets new ID and position.
 	 *
 	 * @param season season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void add(Season season);
 
@@ -36,8 +37,9 @@ public interface SeasonService {
 	 * Updates season.
 	 *
 	 * @param season new value of season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void update(Season season);
 
@@ -45,8 +47,9 @@ public interface SeasonService {
 	 * Removes season.
 	 *
 	 * @param season season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void remove(Season season);
 
@@ -54,8 +57,9 @@ public interface SeasonService {
 	 * Duplicates season.
 	 *
 	 * @param season season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void duplicate(Season season);
 
@@ -63,8 +67,9 @@ public interface SeasonService {
 	 * Moves season in list one position up.
 	 *
 	 * @param season season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveUp(Season season);
 
@@ -72,8 +77,9 @@ public interface SeasonService {
 	 * Moves season in list one position down.
 	 *
 	 * @param season season
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	void moveDown(Season season);
 
@@ -82,8 +88,9 @@ public interface SeasonService {
 	 *
 	 * @param season season
 	 * @return true if season exists
-	 * @throws IllegalArgumentException  if season is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if season is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	boolean exists(Season season);
 
@@ -92,8 +99,9 @@ public interface SeasonService {
 	 *
 	 * @param serie serie
 	 * @return list of seasons for specified serie
-	 * @throws IllegalArgumentException  if serie is null
-	 * @throws ServiceOperationException if there was error in working with DAO tier
+	 * @throws IllegalArgumentException if serie is null
+	 * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
+	 *                                  if there was error in working with DAO tier
 	 */
 	List<Season> findSeasonsBySerie(Serie serie);
 

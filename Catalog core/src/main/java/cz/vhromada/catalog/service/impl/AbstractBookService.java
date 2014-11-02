@@ -15,6 +15,21 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractBookService extends AbstractInnerService<BookCategory, Book> {
 
+	/** Cache for books field */
+	private static final String BOOK_CACHE_FIELD = "Cache for books";
+
+	/** Cache key for list of book categories */
+	private static final String BOOK_CATEGORIES_CACHE_KEY = "bookCategories";
+
+	/** Cache key for book category */
+	private static final String BOOK_CATEGORY_CACHE_KEY = "bookCategory";
+
+	/** Cache key for list of books */
+	private static final String BOOKS_CACHE_KEY = "books";
+
+	/** Cache key for book */
+	private static final String BOOK_CACHE_KEY = "book";
+
 	/** Cache for books */
 	@Value("#{cacheManager.getCache('bookCache')}")
 	private Cache bookCache;
@@ -43,7 +58,7 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @throws IllegalStateException if cache for books is null
 	 */
 	protected void validateBookCacheNotNull() {
-		Validators.validateFieldNotNull(bookCache, "Cache for books");
+		Validators.validateFieldNotNull(bookCache, BOOK_CACHE_FIELD);
 	}
 
 	/** Remove all mappings from the cache for books. */
@@ -58,7 +73,7 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @return list of categories
 	 */
 	protected List<BookCategory> getCachedBookCategories(final boolean cached) {
-		return getCachedObjects(bookCache, "bookCategories", cached);
+		return getCachedObjects(bookCache, BOOK_CATEGORIES_CACHE_KEY, cached);
 	}
 
 	/**
@@ -69,7 +84,7 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @return list of books for specified book category
 	 */
 	protected List<Book> getCachedBooks(final BookCategory bookCategory, final boolean cached) {
-		return getCachedInnerObjects(bookCache, "books" + bookCategory.getId(), cached, bookCategory);
+		return getCachedInnerObjects(bookCache, BOOKS_CACHE_KEY + bookCategory.getId(), cached, bookCategory);
 	}
 
 	/**
@@ -79,7 +94,7 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @return book category with ID or null if there isn't such book category
 	 */
 	protected BookCategory getCachedBookCategory(final Integer id) {
-		return getCachedObject(bookCache, "bookCategory", id, true);
+		return getCachedObject(bookCache, BOOK_CATEGORY_CACHE_KEY, id, true);
 	}
 
 	/**
@@ -89,7 +104,7 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @return book with ID or null if there isn't such book
 	 */
 	protected Book getCachedBook(final Integer id) {
-		return getCachedInnerObject(bookCache, "book", id);
+		return getCachedInnerObject(bookCache, BOOK_CACHE_KEY, id);
 	}
 
 	/**
@@ -98,8 +113,8 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @param bookCategory book category
 	 */
 	protected void addBookCategoryToCache(final BookCategory bookCategory) {
-		addObjectToListCache(bookCache, "bookCategories", bookCategory);
-		addObjectToCache(bookCache, "bookCategory" + bookCategory.getId(), bookCategory);
+		addObjectToListCache(bookCache, BOOK_CATEGORIES_CACHE_KEY, bookCategory);
+		addObjectToCache(bookCache, BOOK_CATEGORY_CACHE_KEY + bookCategory.getId(), bookCategory);
 	}
 
 	/**
@@ -108,8 +123,8 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @param book book
 	 */
 	protected void addBookToCache(final Book book) {
-		addInnerObjectToListCache(bookCache, "books" + book.getBookCategory().getId(), book);
-		addInnerObjectToCache(bookCache, "book" + book.getId(), book);
+		addInnerObjectToListCache(bookCache, BOOKS_CACHE_KEY + book.getBookCategory().getId(), book);
+		addInnerObjectToCache(bookCache, BOOK_CACHE_KEY + book.getId(), book);
 	}
 
 	/**
@@ -118,8 +133,8 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
 	 * @param book book
 	 */
 	protected void removeBookFromCache(final Book book) {
-		removeInnerObjectFromCache(bookCache, "books" + book.getBookCategory().getId(), book);
-		bookCache.evict("book" + book.getId());
+		removeInnerObjectFromCache(bookCache, BOOKS_CACHE_KEY + book.getBookCategory().getId(), book);
+		bookCache.evict(BOOK_CACHE_KEY + book.getId());
 	}
 
 	@Override

@@ -21,6 +21,27 @@ import org.springframework.stereotype.Component;
 @Component("programService")
 public class ProgramServiceImpl extends AbstractService<Program> implements ProgramService {
 
+	/** DAO for programs field */
+	private static final String PROGRAM_DAO_FIELD = "DAO for programs";
+
+	/** Cache for programs field */
+	private static final String PROGRAM_CACHE_FIELD = "Cache for programs";
+
+	/** Program argument */
+	private static final String PROGRAM_ARGUMENT = "Program";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link ServiceOperationException} */
+	private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
+
+	/** Cache key for list of programs */
+	private static final String PROGRAMS_CACHE_KEY = "programs";
+
+	/** Cache key for program */
+	private static final String PROGRAM_CACHE_KEY = "program";
+
 	/** DAO for programs */
 	@Autowired
 	private ProgramDAO programDAO;
@@ -74,8 +95,8 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void newData() {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
 
 		try {
 			for (Program program : getCachedPrograms(false)) {
@@ -83,7 +104,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 			}
 			programCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -96,13 +117,13 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public List<Program> getPrograms() {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
 
 		try {
 			return getCachedPrograms(true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -116,14 +137,14 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public Program getProgram(final Integer id) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return getCachedProgram(id);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -137,16 +158,16 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void add(final Program program) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			programDAO.add(program);
-			addObjectToListCache(programCache, "programs", program);
-			addObjectToCache(programCache, "program" + program.getId(), program);
+			addObjectToListCache(programCache, PROGRAMS_CACHE_KEY, program);
+			addObjectToCache(programCache, PROGRAM_CACHE_KEY + program.getId(), program);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -160,15 +181,15 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void update(final Program program) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			programDAO.update(program);
 			programCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -182,16 +203,16 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void remove(final Program program) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			programDAO.remove(program);
-			removeObjectFromCache(programCache, "programs", program);
+			removeObjectFromCache(programCache, PROGRAMS_CACHE_KEY, program);
 			programCache.evict(program.getId());
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -205,9 +226,9 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void duplicate(final Program program) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			final Program newProgram = new Program();
@@ -224,7 +245,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 			programDAO.update(newProgram);
 			programCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -238,9 +259,9 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void moveUp(final Program program) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			final List<Program> programs = getCachedPrograms(false);
@@ -250,7 +271,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 			programDAO.update(otherProgram);
 			programCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -264,9 +285,9 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void moveDown(final Program program) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			final List<Program> programs = getCachedPrograms(false);
@@ -276,7 +297,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 			programDAO.update(otherProgram);
 			programCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -290,14 +311,14 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public boolean exists(final Program program) {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			return getCachedProgram(program.getId()) != null;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -311,8 +332,8 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public void updatePositions() {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
 
 		try {
 			final List<Program> programs = getCachedPrograms(false);
@@ -323,7 +344,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 			}
 			programCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -337,8 +358,8 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 */
 	@Override
 	public int getTotalMediaCount() {
-		Validators.validateFieldNotNull(programDAO, "DAO for programs");
-		Validators.validateFieldNotNull(programCache, "Cache for programs");
+		Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
+		Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
 
 		try {
 			int sum = 0;
@@ -347,7 +368,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 			}
 			return sum;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -368,7 +389,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 * @return list of programs
 	 */
 	private List<Program> getCachedPrograms(final boolean cached) {
-		return getCachedObjects(programCache, "programs", cached);
+		return getCachedObjects(programCache, PROGRAMS_CACHE_KEY, cached);
 	}
 
 	/**
@@ -378,7 +399,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
 	 * @return program with ID or null if there isn't such program
 	 */
 	private Program getCachedProgram(final Integer id) {
-		return getCachedObject(programCache, "program", id, true);
+		return getCachedObject(programCache, PROGRAM_CACHE_KEY, id, true);
 	}
 
 	/**

@@ -24,6 +24,27 @@ import org.springframework.stereotype.Component;
 @Component("movieService")
 public class MovieServiceImpl extends AbstractService<Movie> implements MovieService {
 
+	/** DAO for movies field */
+	private static final String MOVIE_DAO_FIELD = "DAO for movies";
+
+	/** Cache for movies field */
+	private static final String MOVIE_CACHE_FIELD = "Cache for movies";
+
+	/** Movie argument */
+	private static final String MOVIE_ARGUMENT = "Movie";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link ServiceOperationException} */
+	private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
+
+	/** Cache key for list of movies */
+	private static final String MOVIES_CACHE_KEY = "movies";
+
+	/** Cache key for movie */
+	private static final String MOVIE_CACHE_KEY = "movie";
+
 	/** DAO for movies */
 	@Autowired
 	private MovieDAO movieDAO;
@@ -78,8 +99,8 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void newData() {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
 
 		try {
 			for (Movie movie : getCachedMovies(false)) {
@@ -87,7 +108,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 			}
 			movieCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -100,13 +121,13 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public List<Movie> getMovies() {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
 
 		try {
 			return getCachedMovies(true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -120,14 +141,14 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public Movie getMovie(final Integer id) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return getCachedMovie(id, true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -141,15 +162,15 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void add(final Movie movie) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(movie, "Movie");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
 		try {
 			movieDAO.add(movie);
 			addMovieToCache(movie);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -163,15 +184,15 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void update(final Movie movie) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(movie, "Movie");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
 		try {
 			movieDAO.update(movie);
 			movieCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -185,16 +206,16 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void remove(final Movie movie) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(movie, "Movie");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
 		try {
 			movieDAO.remove(movie);
-			removeObjectFromCache(movieCache, "movies", movie);
+			removeObjectFromCache(movieCache, MOVIES_CACHE_KEY, movie);
 			movieCache.evict(movie.getId());
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -208,9 +229,9 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void duplicate(final Movie movie) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(movie, "Movie");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
 		try {
 			final Movie newMovie = new Movie();
@@ -232,7 +253,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 			movieDAO.update(newMovie);
 			addMovieToCache(newMovie);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -246,9 +267,9 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void moveUp(final Movie movie) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(movie, "Movie");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
 		try {
 			final List<Movie> movies = getCachedMovies(false);
@@ -258,7 +279,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 			movieDAO.update(otherMovie);
 			movieCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -272,9 +293,9 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void moveDown(final Movie movie) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(movie, "Movie");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
 		try {
 			final List<Movie> movies = getCachedMovies(false);
@@ -284,7 +305,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 			movieDAO.update(otherMovie);
 			movieCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -298,14 +319,14 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public boolean exists(final Movie movie) {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
-		Validators.validateArgumentNotNull(movie, "Movie");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
+		Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
 		try {
 			return getCachedMovie(movie.getId(), true) != null;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -319,8 +340,8 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public void updatePositions() {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
 
 		try {
 			final List<Movie> movies = getCachedMovies(false);
@@ -331,7 +352,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 			}
 			movieCache.clear();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -345,8 +366,8 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public int getTotalMediaCount() {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
 
 		try {
 			final List<Movie> movies = getCachedMovies(true);
@@ -356,7 +377,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 			}
 			return sum;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -370,8 +391,8 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 */
 	@Override
 	public Time getTotalLength() {
-		Validators.validateFieldNotNull(movieDAO, "DAO for movies");
-		Validators.validateFieldNotNull(movieCache, "Cache for movies");
+		Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
+		Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
 
 		try {
 			final List<Movie> movies = getCachedMovies(true);
@@ -383,7 +404,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 			}
 			return new Time(sum);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -404,7 +425,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 * @return list of movies
 	 */
 	private List<Movie> getCachedMovies(final boolean cached) {
-		return getCachedObjects(movieCache, "movies", cached);
+		return getCachedObjects(movieCache, MOVIES_CACHE_KEY, cached);
 	}
 
 	/**
@@ -415,7 +436,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 * @return movie with ID or null if there isn't such movie
 	 */
 	private Movie getCachedMovie(final Integer id, final boolean cached) {
-		return getCachedObject(movieCache, "movie", id, cached);
+		return getCachedObject(movieCache, MOVIE_CACHE_KEY, id, cached);
 	}
 
 	/**
@@ -441,8 +462,8 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
 	 * @param movie movie
 	 */
 	private void addMovieToCache(final Movie movie) {
-		addObjectToListCache(movieCache, "movies", movie);
-		addObjectToCache(movieCache, "movie" + movie.getId(), movie);
+		addObjectToListCache(movieCache, MOVIES_CACHE_KEY, movie);
+		addObjectToCache(movieCache, MOVIE_CACHE_KEY + movie.getId(), movie);
 	}
 
 	/**

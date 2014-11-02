@@ -45,6 +45,15 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
+	/** Cache key for list of seasons */
+	private static final String SEASONS_CACHE_KEY = "seasons";
+
+	/** Cache key for season */
+	private static final String SEASON_CACHE_KEY = "season";
+
+	/** Cache key for list of episodes */
+	private static final String EPISODES_CACHE_KEY = "episodes";
+
 	/** Instance of {@link SeasonDAO} */
 	@Mock
 	private SeasonDAO seasonDAO;
@@ -69,7 +78,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(season, seasonService.getSeason(season.getId()));
 
-		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -82,7 +91,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 		assertNull(seasonService.getSeason(season.getId()));
 
-		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -97,8 +106,8 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(season, seasonService.getSeason(season.getId()));
 
 		verify(seasonDAO).getSeason(season.getId());
-		verify(serieCache).get("season" + season.getId());
-		verify(serieCache).put("season" + season.getId(), season);
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
+		verify(serieCache).put(SEASON_CACHE_KEY + season.getId(), season);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -112,8 +121,8 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		assertNull(seasonService.getSeason(season.getId()));
 
 		verify(seasonDAO).getSeason(season.getId());
-		verify(serieCache).get("season" + season.getId());
-		verify(serieCache).put("season" + season.getId(), null);
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
+		verify(serieCache).put(SEASON_CACHE_KEY + season.getId(), null);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -158,7 +167,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(seasonDAO).getSeason(Integer.MAX_VALUE);
-		verify(serieCache).get("season" + Integer.MAX_VALUE);
+		verify(serieCache).get(SEASON_CACHE_KEY + Integer.MAX_VALUE);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -174,10 +183,10 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		seasonService.add(season);
 
 		verify(seasonDAO).add(season);
-		verify(serieCache).get("seasons" + season.getSerie().getId());
-		verify(serieCache).get("season" + season.getId());
-		verify(serieCache).put("seasons" + season.getSerie().getId(), seasonsList);
-		verify(serieCache).put("season" + season.getId(), season);
+		verify(serieCache).get(SEASONS_CACHE_KEY + season.getSerie().getId());
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
+		verify(serieCache).put(SEASONS_CACHE_KEY + season.getSerie().getId(), seasonsList);
+		verify(serieCache).put(SEASON_CACHE_KEY + season.getId(), season);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -190,8 +199,8 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		seasonService.add(season);
 
 		verify(seasonDAO).add(season);
-		verify(serieCache).get("seasons" + season.getSerie().getId());
-		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + season.getSerie().getId());
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -310,7 +319,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		for (Episode episode : episodes) {
 			verify(episodeDAO).remove(episode);
 		}
-		verify(serieCache).get("episodes" + season.getId());
+		verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -330,7 +339,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		for (Episode episode : episodes) {
 			verify(episodeDAO).remove(episode);
 		}
-		verify(serieCache).get("episodes" + season.getId());
+		verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -384,7 +393,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(episodeDAO).findEpisodesBySeason(season);
-		verify(serieCache).get("episodes" + season.getId());
+		verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 		verifyZeroInteractions(episodeDAO);
 	}
@@ -402,7 +411,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		verify(seasonDAO).update(any(Season.class));
 		verify(episodeDAO, times(episodes.size())).add(any(Episode.class));
 		verify(episodeDAO, times(episodes.size())).update(any(Episode.class));
-		verify(serieCache).get("episodes" + season.getId());
+		verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -422,7 +431,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		verify(episodeDAO).findEpisodesBySeason(season);
 		verify(episodeDAO, times(episodes.size())).add(any(Episode.class));
 		verify(episodeDAO, times(episodes.size())).update(any(Episode.class));
-		verify(serieCache).get("episodes" + season.getId());
+		verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
 	}
@@ -497,7 +506,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -523,7 +532,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -572,7 +581,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -595,7 +604,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -621,7 +630,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		verify(seasonDAO).update(season1);
 		verify(seasonDAO).update(season2);
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verify(serieCache).clear();
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
@@ -670,7 +679,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -682,7 +691,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 		assertTrue(seasonService.exists(season));
 
-		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -695,7 +704,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 		assertFalse(seasonService.exists(season));
 
-		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -710,8 +719,8 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		assertTrue(seasonService.exists(season));
 
 		verify(seasonDAO).getSeason(season.getId());
-		verify(serieCache).get("season" + season.getId());
-		verify(serieCache).put("season" + season.getId(), season);
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
+		verify(serieCache).put(SEASON_CACHE_KEY + season.getId(), season);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -725,8 +734,8 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		assertFalse(seasonService.exists(season));
 
 		verify(seasonDAO).getSeason(season.getId());
-		verify(serieCache).get("season" + season.getId());
-		verify(serieCache).put("season" + season.getId(), null);
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
+		verify(serieCache).put(SEASON_CACHE_KEY + season.getId(), null);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -772,7 +781,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(seasonDAO).getSeason(season.getId());
-		verify(serieCache).get("season" + season.getId());
+		verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -785,7 +794,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(seasons, seasonService.findSeasonsBySerie(serie));
 
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verifyNoMoreInteractions(serieCache);
 		verifyZeroInteractions(seasonDAO);
 	}
@@ -801,8 +810,8 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(seasons, seasonService.findSeasonsBySerie(serie));
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + serie.getId());
-		verify(serieCache).put("seasons" + serie.getId(), seasons);
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
+		verify(serieCache).put(SEASONS_CACHE_KEY + serie.getId(), seasons);
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 
@@ -848,7 +857,7 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(seasonDAO).findSeasonsBySerie(serie);
-		verify(serieCache).get("seasons" + serie.getId());
+		verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
 		verifyNoMoreInteractions(seasonDAO, serieCache);
 	}
 

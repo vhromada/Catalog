@@ -16,6 +16,27 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractSerieService extends AbstractInnerService<Serie, Season> {
 
+	/** Cache for series field */
+	private static final String SERIE_CACHE_FIELD = "Cache for series";
+
+	/** Cache key for list of series */
+	private static final String SERIES_CACHE_KEY = "series";
+
+	/** Cache key for book serie */
+	private static final String SERIE_CACHE_KEY = "serie";
+
+	/** Cache key for list of seasons */
+	private static final String SEASONS_CACHE_KEY = "seasons";
+
+	/** Cache key for season */
+	private static final String SEASON_CACHE_KEY = "season";
+
+	/** Cache key for list of episodes */
+	private static final String EPISODES_CACHE_KEY = "episodes";
+
+	/** Cache key for episode */
+	private static final String EPISODE_CACHE_KEY = "episode";
+
 	/** Cache for series */
 	@Value("#{cacheManager.getCache('serieCache')}")
 	private Cache serieCache;
@@ -44,7 +65,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @throws IllegalStateException if cache for series is null
 	 */
 	protected void validateSerieCacheNotNull() {
-		Validators.validateFieldNotNull(serieCache, "Cache for series");
+		Validators.validateFieldNotNull(serieCache, SERIE_CACHE_FIELD);
 	}
 
 	/** Remove all mappings from the cache for series. */
@@ -59,7 +80,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @return list of series
 	 */
 	protected List<Serie> getCachedSeries(final boolean cached) {
-		return getCachedObjects(serieCache, "series", cached);
+		return getCachedObjects(serieCache, SERIES_CACHE_KEY, cached);
 	}
 
 	/**
@@ -70,7 +91,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @return list of seasons for specified serie
 	 */
 	protected List<Season> getCachedSeasons(final Serie serie, final boolean cached) {
-		return getCachedInnerObjects(serieCache, "seasons" + serie.getId(), cached, serie);
+		return getCachedInnerObjects(serieCache, SEASONS_CACHE_KEY + serie.getId(), cached, serie);
 	}
 
 	/**
@@ -81,7 +102,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @return list of episodes for specified season
 	 */
 	protected List<Episode> getCachedEpisodes(final Season season, final boolean cached) {
-		final String key = "episodes" + season.getId();
+		final String key = EPISODES_CACHE_KEY + season.getId();
 		final CacheValue<List<Episode>> cachedData = getObjectFromCache(serieCache, key);
 		if (cachedData == null) {
 			final List<Episode> data = getDAOEpisodes(season);
@@ -100,7 +121,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @return serie with ID or null if there isn't such serie
 	 */
 	protected Serie getCachedSerie(final Integer id) {
-		return getCachedObject(serieCache, "serie", id, true);
+		return getCachedObject(serieCache, SERIE_CACHE_KEY, id, true);
 	}
 
 	/**
@@ -110,7 +131,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @return season with ID or null if there isn't such season
 	 */
 	protected Season getCachedSeason(final Integer id) {
-		return getCachedInnerObject(serieCache, "season", id);
+		return getCachedInnerObject(serieCache, SEASON_CACHE_KEY, id);
 	}
 
 	/**
@@ -120,7 +141,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @return episode with ID or null if there isn't such episode
 	 */
 	protected Episode getCachedEpisode(final Integer id) {
-		final String key = "episode" + id;
+		final String key = EPISODE_CACHE_KEY + id;
 		final CacheValue<Episode> cachedData = getObjectFromCache(serieCache, key);
 		if (cachedData == null) {
 			final Episode data = getDAOEpisode(id);
@@ -136,8 +157,8 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @param serie serie
 	 */
 	protected void addSerieToCache(final Serie serie) {
-		addObjectToListCache(serieCache, "series", serie);
-		addObjectToCache(serieCache, "serie" + serie.getId(), serie);
+		addObjectToListCache(serieCache, SERIES_CACHE_KEY, serie);
+		addObjectToCache(serieCache, SERIE_CACHE_KEY + serie.getId(), serie);
 	}
 
 	/**
@@ -146,8 +167,8 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @param season season
 	 */
 	protected void addSeasonToCache(final Season season) {
-		addInnerObjectToListCache(serieCache, "seasons" + season.getSerie().getId(), season);
-		addInnerObjectToCache(serieCache, "season" + season.getId(), season);
+		addInnerObjectToListCache(serieCache, SEASONS_CACHE_KEY + season.getSerie().getId(), season);
+		addInnerObjectToCache(serieCache, SEASON_CACHE_KEY + season.getId(), season);
 	}
 
 	/**
@@ -156,14 +177,14 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @param episode episode
 	 */
 	protected void addEpisodeToCache(final Episode episode) {
-		final String keyList = "episodes" + episode.getSeason().getId();
+		final String keyList = EPISODES_CACHE_KEY + episode.getSeason().getId();
 		final CacheValue<List<Episode>> cacheDataList = getObjectFromCache(serieCache, keyList);
 		if (cacheDataList != null) {
 			final List<Episode> data = cacheDataList.getValue();
 			data.add(episode);
 			serieCache.put(keyList, data);
 		}
-		final String keyItem = "episode" + episode.getId();
+		final String keyItem = EPISODE_CACHE_KEY + episode.getId();
 		final CacheValue<Episode> cacheData = getObjectFromCache(serieCache, keyItem);
 		if (cacheData != null) {
 			serieCache.put(keyItem, episode);
@@ -176,14 +197,14 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
 	 * @param episode episode
 	 */
 	protected void removeEpisodeFromCache(final Episode episode) {
-		final String key = "episodes" + episode.getSeason().getId();
+		final String key = EPISODES_CACHE_KEY + episode.getSeason().getId();
 		final CacheValue<List<Episode>> cacheData = getObjectFromCache(serieCache, key);
 		if (cacheData != null) {
 			final List<Episode> data = cacheData.getValue();
 			data.remove(episode);
 			serieCache.put(key, data);
 		}
-		serieCache.evict("episode" + episode.getId());
+		serieCache.evict(EPISODE_CACHE_KEY + episode.getId());
 	}
 
 	@Override

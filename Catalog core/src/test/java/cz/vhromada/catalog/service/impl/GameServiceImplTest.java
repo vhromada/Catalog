@@ -41,6 +41,12 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class GameServiceImplTest extends ObjectGeneratorTest {
 
+	/** Cache key for list of games */
+	private static final String GAMES_CACHE_KEY = "games";
+
+	/** Cache key for game */
+	private static final String GAME_CACHE_KEY = "game";
+
 	/** Instance of {@link GameDAO} */
 	@Mock
 	private GameDAO gameDAO;
@@ -64,7 +70,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		for (Game game : games) {
 			verify(gameDAO).remove(game);
 		}
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -82,7 +88,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		for (Game game : games) {
 			verify(gameDAO).remove(game);
 		}
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -115,7 +121,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -127,7 +133,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(games, gameService.getGames());
 
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -142,8 +148,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(games, gameService.getGames());
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
-		verify(gameCache).put("games", games);
+		verify(gameCache).get(GAMES_CACHE_KEY);
+		verify(gameCache).put(GAMES_CACHE_KEY, games);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -175,7 +181,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -187,7 +193,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(game, gameService.getGame(game.getId()));
 
-		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -200,7 +206,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		assertNull(gameService.getGame(id));
 
-		verify(gameCache).get("game" + id);
+		verify(gameCache).get(GAME_CACHE_KEY + id);
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -215,8 +221,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(game, gameService.getGame(game.getId()));
 
 		verify(gameDAO).getGame(game.getId());
-		verify(gameCache).get("game" + game.getId());
-		verify(gameCache).put("game" + game.getId(), game);
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
+		verify(gameCache).put(GAME_CACHE_KEY + game.getId(), game);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -230,8 +236,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		assertNull(gameService.getGame(id));
 
 		verify(gameDAO).getGame(id);
-		verify(gameCache).get("game" + id);
-		verify(gameCache).put("game" + id, null);
+		verify(gameCache).get(GAME_CACHE_KEY + id);
+		verify(gameCache).put(GAME_CACHE_KEY + id, null);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -276,7 +282,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGame(Integer.MAX_VALUE);
-		verify(gameCache).get("game" + Integer.MAX_VALUE);
+		verify(gameCache).get(GAME_CACHE_KEY + Integer.MAX_VALUE);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -292,10 +298,10 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		gameService.add(game);
 
 		verify(gameDAO).add(game);
-		verify(gameCache).get("games");
-		verify(gameCache).get("game" + game.getId());
-		verify(gameCache).put("games", gamesList);
-		verify(gameCache).put("game" + game.getId(), game);
+		verify(gameCache).get(GAMES_CACHE_KEY);
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
+		verify(gameCache).put(GAMES_CACHE_KEY, gamesList);
+		verify(gameCache).put(GAME_CACHE_KEY + game.getId(), game);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -308,8 +314,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		gameService.add(game);
 
 		verify(gameDAO).add(game);
-		verify(gameCache).get("games");
-		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).get(GAMES_CACHE_KEY);
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -427,8 +433,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		gameService.remove(game);
 
 		verify(gameDAO).remove(game);
-		verify(gameCache).get("games");
-		verify(gameCache).put("games", games);
+		verify(gameCache).get(GAMES_CACHE_KEY);
+		verify(gameCache).put(GAMES_CACHE_KEY, games);
 		verify(gameCache).evict(game.getId());
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -442,7 +448,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		gameService.remove(game);
 
 		verify(gameDAO).remove(game);
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).evict(game.getId());
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -563,7 +569,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -586,7 +592,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -632,7 +638,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -652,7 +658,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -675,7 +681,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		verify(gameDAO).update(game1);
 		verify(gameDAO).update(game2);
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -721,7 +727,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -733,7 +739,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		assertTrue(gameService.exists(game));
 
-		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -746,7 +752,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		assertFalse(gameService.exists(game));
 
-		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
 		verifyNoMoreInteractions(gameCache);
 		verifyZeroInteractions(gameDAO);
 	}
@@ -761,8 +767,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		assertTrue(gameService.exists(game));
 
 		verify(gameDAO).getGame(game.getId());
-		verify(gameCache).get("game" + game.getId());
-		verify(gameCache).put("game" + game.getId(), game);
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
+		verify(gameCache).put(GAME_CACHE_KEY + game.getId(), game);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -776,8 +782,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		assertFalse(gameService.exists(game));
 
 		verify(gameDAO).getGame(game.getId());
-		verify(gameCache).get("game" + game.getId());
-		verify(gameCache).put("game" + game.getId(), null);
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
+		verify(gameCache).put(GAME_CACHE_KEY + game.getId(), null);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -823,7 +829,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGame(game.getId());
-		verify(gameCache).get("game" + game.getId());
+		verify(gameCache).get(GAME_CACHE_KEY + game.getId());
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -840,7 +846,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 			DeepAsserts.assertEquals(i, game.getPosition());
 			verify(gameDAO).update(game);
 		}
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -860,7 +866,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 			DeepAsserts.assertEquals(i, game.getPosition());
 			verify(gameDAO).update(game);
 		}
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(gameCache).clear();
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
@@ -893,7 +899,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 
@@ -911,7 +917,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(6, gameService.getTotalMediaCount());
 
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verify(game1).getMediaCount();
 		verify(game2).getMediaCount();
 		verify(game3).getMediaCount();
@@ -935,8 +941,8 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(6, gameService.getTotalMediaCount());
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
-		verify(gameCache).put("games", games);
+		verify(gameCache).get(GAMES_CACHE_KEY);
+		verify(gameCache).put(GAMES_CACHE_KEY, games);
 		verify(game1).getMediaCount();
 		verify(game2).getMediaCount();
 		verify(game3).getMediaCount();
@@ -971,7 +977,7 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(gameDAO).getGames();
-		verify(gameCache).get("games");
+		verify(gameCache).get(GAMES_CACHE_KEY);
 		verifyNoMoreInteractions(gameDAO, gameCache);
 	}
 

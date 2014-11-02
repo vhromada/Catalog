@@ -1,10 +1,5 @@
 package cz.vhromada.catalog.service.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.GENRES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.MOVIES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +14,6 @@ import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.service.GenreService;
-import cz.vhromada.catalog.service.impl.GenreServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -33,7 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link GenreServiceImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.service.impl.GenreServiceImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -41,6 +35,12 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testServiceContext.xml")
 @Transactional
 public class GenreServiceImplSpringTest {
+
+	/** Cache key for list of genres */
+	private static final String GENRES_CACHE_KEY = "genres";
+
+	/** Cache key for genre */
+	private static final String GENRE_CACHE_KEY = "genre";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -68,16 +68,16 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#newData()}. */
 	@Test
 	public void testNewData() {
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			entityManager.remove(SpringUtils.getMovie(entityManager, i));
 		}
-		for (int i = 1; i <= EPISODES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.EPISODES_COUNT; i++) {
 			entityManager.remove(SpringUtils.getEpisode(entityManager, i));
 		}
-		for (int i = 1; i <= SEASONS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SEASONS_COUNT; i++) {
 			entityManager.remove(SpringUtils.getSeason(entityManager, i));
 		}
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			entityManager.remove(SpringUtils.getSerie(entityManager, i));
 		}
 
@@ -91,10 +91,10 @@ public class GenreServiceImplSpringTest {
 	@Test
 	public void testGetGenres() {
 		final List<Genre> genres = SpringEntitiesUtils.getGenres();
-		final String key = "genres";
+		final String key = GENRES_CACHE_KEY;
 
 		DeepAsserts.assertEquals(genres, genreService.getGenres());
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(genreCache));
 		SpringUtils.assertCacheValue(genreCache, key, genres);
 	}
@@ -103,16 +103,16 @@ public class GenreServiceImplSpringTest {
 	@Test
 	public void testGetGenreWithExistingGenre() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= GENRES_COUNT; i++) {
-			keys.add("genre" + i);
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
+			keys.add(GENRE_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= GENRES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getGenre(i), genreService.getGenre(i));
 		}
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(genreCache));
-		for (int i = 1; i <= GENRES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
 			SpringUtils.assertCacheValue(genreCache, keys.get(i - 1), SpringEntitiesUtils.getGenre(i));
 		}
 	}
@@ -120,10 +120,10 @@ public class GenreServiceImplSpringTest {
 	/** Test method for {@link GenreService#getGenre(Integer)} with not existing genre. */
 	@Test
 	public void testGetGenreWithNotExistingGenre() {
-		final String key = "genre" + Integer.MAX_VALUE;
+		final String key = GENRE_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertNull(genreService.getGenre(Integer.MAX_VALUE));
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(genreCache));
 		SpringUtils.assertCacheValue(genreCache, key, null);
 	}
@@ -136,10 +136,10 @@ public class GenreServiceImplSpringTest {
 		genreService.add(genre);
 
 		DeepAsserts.assertNotNull(genre.getId());
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, genre.getId());
-		final Genre addedGenre = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, genre.getId());
+		final Genre addedGenre = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 1);
 		DeepAsserts.assertEquals(genre, addedGenre);
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
 	}
 
@@ -147,18 +147,18 @@ public class GenreServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
-		final String keyList = "genres";
-		final String keyItem = "genre" + (GENRES_COUNT + 1);
+		final String keyList = GENRES_CACHE_KEY;
+		final String keyItem = GENRE_CACHE_KEY + (SpringUtils.GENRES_COUNT + 1);
 		genreCache.put(keyList, new ArrayList<>());
 		genreCache.put(keyItem, null);
 
 		genreService.add(genre);
 
 		DeepAsserts.assertNotNull(genre.getId());
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, genre.getId());
-		final Genre addedGenre = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, genre.getId());
+		final Genre addedGenre = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 1);
 		DeepAsserts.assertEquals(genre, addedGenre);
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(genreCache));
 		SpringUtils.assertCacheValue(genreCache, keyList, CollectionUtils.newList(genre));
 		SpringUtils.assertCacheValue(genreCache, keyItem, genre);
@@ -171,11 +171,11 @@ public class GenreServiceImplSpringTest {
 
 		genreService.add(names);
 
-		final Genre addedGenre1 = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
-		final Genre addedGenre2 = SpringUtils.getGenre(entityManager, GENRES_COUNT + 2);
-		DeepAsserts.assertEquals(createGenre(GENRES_COUNT + 1, names.get(0)), addedGenre1);
-		DeepAsserts.assertEquals(createGenre(GENRES_COUNT + 2, names.get(1)), addedGenre2);
-		DeepAsserts.assertEquals(GENRES_COUNT + 2, SpringUtils.getGenresCount(entityManager));
+		final Genre addedGenre1 = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 1);
+		final Genre addedGenre2 = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 2);
+		DeepAsserts.assertEquals(createGenre(SpringUtils.GENRES_COUNT + 1, names.get(0)), addedGenre1);
+		DeepAsserts.assertEquals(createGenre(SpringUtils.GENRES_COUNT + 2, names.get(1)), addedGenre2);
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 2, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
 	}
 
@@ -188,7 +188,7 @@ public class GenreServiceImplSpringTest {
 
 		final Genre updatedGenre = SpringUtils.getGenre(entityManager, 1);
 		DeepAsserts.assertEquals(genre, updatedGenre);
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
 	}
 
@@ -197,12 +197,12 @@ public class GenreServiceImplSpringTest {
 	public void testRemoveWithEmptyCache() {
 		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		entityManager.persist(genre);
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 
 		genreService.remove(genre);
 
 		assertNull(SpringUtils.getGenre(entityManager, genre.getId()));
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
 	}
 
@@ -211,8 +211,8 @@ public class GenreServiceImplSpringTest {
 	public void testRemoveWithNotEmptyCache() {
 		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		entityManager.persist(genre);
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
-		final String key = "genres";
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		final String key = GENRES_CACHE_KEY;
 		final List<Genre> cacheGenres = new ArrayList<>();
 		cacheGenres.add(genre);
 		genreCache.put(key, cacheGenres);
@@ -220,7 +220,7 @@ public class GenreServiceImplSpringTest {
 		genreService.remove(genre);
 
 		assertNull(SpringUtils.getGenre(entityManager, genre.getId()));
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(genreCache));
 		SpringUtils.assertCacheValue(genreCache, key, new ArrayList<>());
 	}
@@ -229,16 +229,16 @@ public class GenreServiceImplSpringTest {
 	@Test
 	public void testExistsWithExistingGenre() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= GENRES_COUNT; i++) {
-			keys.add("genre" + i);
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
+			keys.add(GENRE_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= GENRES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
 			assertTrue(genreService.exists(SpringEntitiesUtils.getGenre(i)));
 		}
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(genreCache));
-		for (int i = 1; i <= GENRES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
 			SpringUtils.assertCacheValue(genreCache, keys.get(i - 1), SpringEntitiesUtils.getGenre(i));
 		}
 	}
@@ -248,10 +248,10 @@ public class GenreServiceImplSpringTest {
 	public void testExistsWithNotExistingGenre() {
 		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		genre.setId(Integer.MAX_VALUE);
-		final String key = "genre" + Integer.MAX_VALUE;
+		final String key = GENRE_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertFalse(genreService.exists(genre));
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(genreCache));
 		SpringUtils.assertCacheValue(genreCache, key, null);
 	}

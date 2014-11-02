@@ -21,6 +21,21 @@ import org.springframework.stereotype.Component;
 @Component("bookService")
 public class BookServiceImpl extends AbstractBookService implements BookService {
 
+	/** DAO for books field */
+	private static final String BOOK_DAO_FIELD = "DAO for books";
+
+	/** Book category argument */
+	private static final String BOOK_CATEGORY_ARGUMENT = "Book category";
+
+	/** Book argument */
+	private static final String BOOK_ARGUMENT = "Book";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link ServiceOperationException} */
+	private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
+
 	/** DAO for books */
 	@Autowired
 	private BookDAO bookDAO;
@@ -53,14 +68,14 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public Book getBook(final Integer id) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return getCachedBook(id);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -74,15 +89,15 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public void add(final Book book) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(book, "Book");
+		Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
 		try {
 			bookDAO.add(book);
 			addBookToCache(book);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -96,15 +111,15 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public void update(final Book book) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(book, "Book");
+		Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
 		try {
 			bookDAO.update(book);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -118,15 +133,15 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public void remove(final Book book) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(book, "Book");
+		Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
 		try {
 			bookDAO.remove(book);
 			removeBookFromCache(book);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -140,9 +155,9 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public void duplicate(final Book book) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(book, "Book");
+		Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
 		try {
 			final Book newBook = new Book();
@@ -157,7 +172,7 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 			bookDAO.update(newBook);
 			addBookToCache(newBook);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -171,9 +186,9 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public void moveUp(final Book book) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(book, "Book");
+		Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
 		try {
 			final List<Book> books = getCachedBooks(book.getBookCategory(), false);
@@ -183,7 +198,7 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 			bookDAO.update(otherBook);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -197,9 +212,9 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public void moveDown(final Book book) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(book, "Book");
+		Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
 		try {
 			final List<Book> books = getCachedBooks(book.getBookCategory(), false);
@@ -209,7 +224,7 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 			bookDAO.update(otherBook);
 			clearCache();
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -224,14 +239,14 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public boolean exists(final Book book) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(book, "Book");
+		Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
 		try {
 			return getCachedBook(book.getId()) != null;
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -245,14 +260,14 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 	 */
 	@Override
 	public List<Book> findBooksByBookCategory(final BookCategory bookCategory) {
-		Validators.validateFieldNotNull(bookDAO, "DAO for books");
+		Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
 		validateBookCacheNotNull();
-		Validators.validateArgumentNotNull(bookCategory, "BookCategory");
+		Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_ARGUMENT);
 
 		try {
 			return getCachedBooks(bookCategory, true);
 		} catch (final DataStorageException ex) {
-			throw new ServiceOperationException("Error in working with DAO tier.", ex);
+			throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

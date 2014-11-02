@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.service.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SONGS_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -17,7 +15,6 @@ import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.service.MusicService;
-import cz.vhromada.catalog.service.impl.MusicServiceImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -31,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link MusicServiceImpl}.
+ * A class represents test for class {@link cz.vhromada.catalog.service.impl.MusicServiceImpl}.
  *
  * @author Vladimir Hromada
  */
@@ -39,6 +36,15 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testServiceContext.xml")
 @Transactional
 public class MusicServiceImplSpringTest {
+
+	/** Cache key for list of music */
+	private static final String MUSIC_LIST_CACHE_KEY = "music";
+
+	/** Cache key for music */
+	private static final String MUSIC_CACHE_KEY = "musicItem";
+
+	/** Cache key for list of songs */
+	private static final String SONGS_CACHE_KEY = "songs";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -78,10 +84,10 @@ public class MusicServiceImplSpringTest {
 	@Test
 	public void testGetMusic() {
 		final List<Music> music = SpringEntitiesUtils.getMusic();
-		final String key = "music";
+		final String key = MUSIC_LIST_CACHE_KEY;
 
 		DeepAsserts.assertEquals(music, musicService.getMusic());
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, key, music);
 	}
@@ -90,16 +96,16 @@ public class MusicServiceImplSpringTest {
 	@Test
 	public void testGetMusicByIdWithExistingMusic() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
-			keys.add("music" + i);
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
+			keys.add(MUSIC_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(i), musicService.getMusic(i));
 		}
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(musicCache));
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			SpringUtils.assertCacheValue(musicCache, keys.get(i - 1), SpringEntitiesUtils.getMusic(i));
 		}
 	}
@@ -107,10 +113,10 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#getMusic(Integer)} with not existing music. */
 	@Test
 	public void testGetMusicByIdWithNotExistingMusic() {
-		final String key = "music" + Integer.MAX_VALUE;
+		final String key = MUSIC_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertNull(musicService.getMusic(Integer.MAX_VALUE));
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, key, null);
 	}
@@ -123,10 +129,10 @@ public class MusicServiceImplSpringTest {
 		musicService.add(music);
 
 		DeepAsserts.assertNotNull(music.getId());
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, music.getId());
-		final Music addedMusic = SpringUtils.getMusic(entityManager, MUSIC_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, music.getId());
+		final Music addedMusic = SpringUtils.getMusic(entityManager, SpringUtils.MUSIC_COUNT + 1);
 		DeepAsserts.assertEquals(music, addedMusic);
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -134,18 +140,18 @@ public class MusicServiceImplSpringTest {
 	@Test
 	public void testAddWithNotEmptyCache() {
 		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
-		final String keyList = "music";
-		final String keyItem = "music" + (MUSIC_COUNT + 1);
+		final String keyList = MUSIC_LIST_CACHE_KEY;
+		final String keyItem = MUSIC_CACHE_KEY + (SpringUtils.MUSIC_COUNT + 1);
 		musicCache.put(keyList, new ArrayList<>());
 		musicCache.put(keyItem, null);
 
 		musicService.add(music);
 
 		DeepAsserts.assertNotNull(music.getId());
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, music.getId());
-		final Music addedMusic = SpringUtils.getMusic(entityManager, MUSIC_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, music.getId());
+		final Music addedMusic = SpringUtils.getMusic(entityManager, SpringUtils.MUSIC_COUNT + 1);
 		DeepAsserts.assertEquals(music, addedMusic);
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, keyList, CollectionUtils.newList(music));
 		SpringUtils.assertCacheValue(musicCache, keyItem, music);
@@ -160,7 +166,7 @@ public class MusicServiceImplSpringTest {
 
 		final Music updatedMusic = SpringUtils.getMusic(entityManager, 1);
 		DeepAsserts.assertEquals(music, updatedMusic);
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -169,12 +175,12 @@ public class MusicServiceImplSpringTest {
 	public void testRemoveWithEmptyCache() {
 		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		entityManager.persist(music);
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 
 		musicService.remove(music);
 
 		assertNull(SpringUtils.getMusic(entityManager, music.getId()));
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -183,8 +189,8 @@ public class MusicServiceImplSpringTest {
 	public void testRemoveWithNotEmptyCache() {
 		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		entityManager.persist(music);
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
-		final String key = "music";
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		final String key = MUSIC_LIST_CACHE_KEY;
 		final List<Music> cacheMusic = new ArrayList<>();
 		cacheMusic.add(music);
 		musicCache.put(key, cacheMusic);
@@ -192,7 +198,7 @@ public class MusicServiceImplSpringTest {
 		musicService.remove(music);
 
 		assertNull(SpringUtils.getMusic(entityManager, music.getId()));
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -201,15 +207,15 @@ public class MusicServiceImplSpringTest {
 	public void testDuplicateWithEmptyCache() {
 		final Music music = SpringUtils.getMusic(entityManager, 3);
 		final Music expectedMusic = SpringEntitiesUtils.getMusic(3);
-		expectedMusic.setId(MUSIC_COUNT + 1);
+		expectedMusic.setId(SpringUtils.MUSIC_COUNT + 1);
 
 		musicService.duplicate(music);
 
-		DeepAsserts.assertEquals(expectedMusic, SpringUtils.getMusic(entityManager, MUSIC_COUNT + 1));
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		DeepAsserts.assertEquals(expectedMusic, SpringUtils.getMusic(entityManager, SpringUtils.MUSIC_COUNT + 1));
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(i), SpringUtils.getMusic(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -218,19 +224,19 @@ public class MusicServiceImplSpringTest {
 	public void testDuplicateWithNotEmptyCache() {
 		final Music music = SpringUtils.getMusic(entityManager, 3);
 		final Music expectedMusic = SpringEntitiesUtils.getMusic(3);
-		expectedMusic.setId(MUSIC_COUNT + 1);
-		final String keyList = "music";
-		final String keyItem = "music" + (MUSIC_COUNT + 1);
+		expectedMusic.setId(SpringUtils.MUSIC_COUNT + 1);
+		final String keyList = MUSIC_LIST_CACHE_KEY;
+		final String keyItem = MUSIC_CACHE_KEY + (SpringUtils.MUSIC_COUNT + 1);
 		musicCache.put(keyList, new ArrayList<>());
 		musicCache.put(keyItem, null);
 
 		musicService.duplicate(music);
 
-		DeepAsserts.assertEquals(expectedMusic, SpringUtils.getMusic(entityManager, MUSIC_COUNT + 1));
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		DeepAsserts.assertEquals(expectedMusic, SpringUtils.getMusic(entityManager, SpringUtils.MUSIC_COUNT + 1));
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(i), SpringUtils.getMusic(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -247,10 +253,10 @@ public class MusicServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedMusic1, SpringUtils.getMusic(entityManager, 1));
 		DeepAsserts.assertEquals(expectedMusic2, SpringUtils.getMusic(entityManager, 2));
-		for (int i = 3; i <= MUSIC_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.MUSIC_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(i), SpringUtils.getMusic(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -267,10 +273,10 @@ public class MusicServiceImplSpringTest {
 
 		DeepAsserts.assertEquals(expectedMusic1, SpringUtils.getMusic(entityManager, 1));
 		DeepAsserts.assertEquals(expectedMusic2, SpringUtils.getMusic(entityManager, 2));
-		for (int i = 3; i <= MUSIC_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.MUSIC_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(i), SpringUtils.getMusic(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -279,16 +285,16 @@ public class MusicServiceImplSpringTest {
 	@Test
 	public void testExistsWithExistingMusic() {
 		final List<String> keys = new ArrayList<>();
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
-			keys.add("music" + i);
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
+			keys.add(MUSIC_CACHE_KEY + i);
 		}
 
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			assertTrue(musicService.exists(SpringEntitiesUtils.getMusic(i)));
 		}
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(musicCache));
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			SpringUtils.assertCacheValue(musicCache, keys.get(i - 1), SpringEntitiesUtils.getMusic(i));
 		}
 	}
@@ -298,10 +304,10 @@ public class MusicServiceImplSpringTest {
 	public void testExistsWithNotExistingMusic() {
 		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		music.setId(Integer.MAX_VALUE);
-		final String key = "music" + Integer.MAX_VALUE;
+		final String key = MUSIC_CACHE_KEY + Integer.MAX_VALUE;
 
 		assertFalse(musicService.exists(music));
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, key, null);
 	}
@@ -309,16 +315,16 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#updatePositions()}. */
 	@Test
 	public void testUpdatePositions() {
-		final Music music = SpringUtils.getMusic(entityManager, MUSIC_COUNT);
+		final Music music = SpringUtils.getMusic(entityManager, SpringUtils.MUSIC_COUNT);
 		music.setPosition(5000);
 		entityManager.merge(music);
 
 		musicService.updatePositions();
 
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(i), SpringUtils.getMusic(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
 	}
 
@@ -326,10 +332,11 @@ public class MusicServiceImplSpringTest {
 	@Test
 	public void testGetTotalMediaCount() {
 		final List<Music> music = SpringEntitiesUtils.getMusic();
-		final String key = "music";
+		final String key = MUSIC_LIST_CACHE_KEY;
+		final int mediaCount = 60;
 
-		DeepAsserts.assertEquals(60, musicService.getTotalMediaCount());
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(mediaCount, musicService.getTotalMediaCount());
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, key, music);
 	}
@@ -337,18 +344,19 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#getTotalLength()}. */
 	@Test
 	public void testGetTotalLength() {
-		final String keyList = "music";
+		final String keyList = MUSIC_LIST_CACHE_KEY;
 		final List<String> keyItems = new ArrayList<>();
-		final int count = SONGS_COUNT / MUSIC_COUNT;
+		final int count = SpringUtils.SONGS_COUNT / SpringUtils.MUSIC_COUNT;
 		for (int i = 1; i <= count; i++) {
-			keyItems.add("songs" + i);
+			keyItems.add(SONGS_CACHE_KEY + i);
 		}
 		final List<String> keys = new ArrayList<>();
 		keys.add(keyList);
 		keys.addAll(keyItems);
+		final Time length = new Time(666);
 
-		DeepAsserts.assertEquals(new Time(666), musicService.getTotalLength());
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(length, musicService.getTotalLength());
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, keyList, SpringEntitiesUtils.getMusic());
 		for (int i = 1; i <= count; i++) {
@@ -359,18 +367,18 @@ public class MusicServiceImplSpringTest {
 	/** Test method for {@link MusicService#getSongsCount()}. */
 	@Test
 	public void testGetSongsCount() {
-		final String keyList = "music";
+		final String keyList = MUSIC_LIST_CACHE_KEY;
 		final List<String> keyItems = new ArrayList<>();
-		final int count = SONGS_COUNT / MUSIC_COUNT;
+		final int count = SpringUtils.SONGS_COUNT / SpringUtils.MUSIC_COUNT;
 		for (int i = 1; i <= count; i++) {
-			keyItems.add("songs" + i);
+			keyItems.add(SONGS_CACHE_KEY + i);
 		}
 		final List<String> keys = new ArrayList<>();
 		keys.add(keyList);
 		keys.addAll(keyItems);
 
-		DeepAsserts.assertEquals(SONGS_COUNT, musicService.getSongsCount());
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, musicService.getSongsCount());
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 		DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(musicCache));
 		SpringUtils.assertCacheValue(musicCache, keyList, SpringEntitiesUtils.getMusic());
 		for (int i = 1; i <= count; i++) {

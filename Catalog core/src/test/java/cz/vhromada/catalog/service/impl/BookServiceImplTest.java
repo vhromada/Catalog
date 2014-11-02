@@ -44,6 +44,12 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceImplTest extends ObjectGeneratorTest {
 
+	/** Cache key for list of books */
+	private static final String BOOKS_CACHE_KEY = "books";
+
+	/** Cache key for book */
+	private static final String BOOK_CACHE_KEY = "book";
+
 	/** Instance of {@link BookDAO} */
 	@Mock
 	private BookDAO bookDAO;
@@ -64,7 +70,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(book, bookService.getBook(book.getId()));
 
-		verify(bookCache).get("book" + book.getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookDAO);
 	}
@@ -77,7 +83,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		assertNull(bookService.getBook(book.getId()));
 
-		verify(bookCache).get("book" + book.getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookDAO);
 	}
@@ -92,8 +98,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(book, bookService.getBook(book.getId()));
 
 		verify(bookDAO).getBook(book.getId());
-		verify(bookCache).get("book" + book.getId());
-		verify(bookCache).put("book" + book.getId(), book);
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
+		verify(bookCache).put(BOOK_CACHE_KEY + book.getId(), book);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -107,8 +113,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		assertNull(bookService.getBook(book.getId()));
 
 		verify(bookDAO).getBook(book.getId());
-		verify(bookCache).get("book" + book.getId());
-		verify(bookCache).put("book" + book.getId(), null);
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
+		verify(bookCache).put(BOOK_CACHE_KEY + book.getId(), null);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -153,7 +159,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(bookDAO).getBook(Integer.MAX_VALUE);
-		verify(bookCache).get("book" + Integer.MAX_VALUE);
+		verify(bookCache).get(BOOK_CACHE_KEY + Integer.MAX_VALUE);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -169,10 +175,10 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		bookService.add(book);
 
 		verify(bookDAO).add(book);
-		verify(bookCache).get("books" + book.getBookCategory().getId());
-		verify(bookCache).get("book" + book.getId());
-		verify(bookCache).put("books" + book.getBookCategory().getId(), booksList);
-		verify(bookCache).put("book" + book.getId(), book);
+		verify(bookCache).get(BOOKS_CACHE_KEY + book.getBookCategory().getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
+		verify(bookCache).put(BOOKS_CACHE_KEY + book.getBookCategory().getId(), booksList);
+		verify(bookCache).put(BOOK_CACHE_KEY + book.getId(), book);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -185,8 +191,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		bookService.add(book);
 
 		verify(bookDAO).add(book);
-		verify(bookCache).get("books" + book.getBookCategory().getId());
-		verify(bookCache).get("book" + book.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + book.getBookCategory().getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -304,9 +310,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		bookService.remove(book);
 
 		verify(bookDAO).remove(book);
-		verify(bookCache).get("books" + book.getBookCategory().getId());
-		verify(bookCache).put("books" + book.getBookCategory().getId(), books);
-		verify(bookCache).evict("book" + book.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + book.getBookCategory().getId());
+		verify(bookCache).put(BOOKS_CACHE_KEY + book.getBookCategory().getId(), books);
+		verify(bookCache).evict(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -319,8 +325,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		bookService.remove(book);
 
 		verify(bookDAO).remove(book);
-		verify(bookCache).get("books" + book.getBookCategory().getId());
-		verify(bookCache).evict("book" + book.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + book.getBookCategory().getId());
+		verify(bookCache).evict(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -379,10 +385,10 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		verify(bookDAO).add(any(Book.class));
 		verify(bookDAO).update(any(Book.class));
-		verify(bookCache).get("books" + book.getBookCategory().getId());
-		verify(bookCache).get("book" + null);
-		verify(bookCache).put(eq("books" + book.getBookCategory().getId()), anyListOf(Book.class));
-		verify(bookCache).put(eq("book" + null), any(Book.class));
+		verify(bookCache).get(BOOKS_CACHE_KEY + book.getBookCategory().getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + null);
+		verify(bookCache).put(eq(BOOKS_CACHE_KEY + book.getBookCategory().getId()), anyListOf(Book.class));
+		verify(bookCache).put(eq(BOOK_CACHE_KEY + null), any(Book.class));
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -396,8 +402,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		verify(bookDAO).add(any(Book.class));
 		verify(bookDAO).update(any(Book.class));
-		verify(bookCache).get("books" + book.getBookCategory().getId());
-		verify(bookCache).get("book" + null);
+		verify(bookCache).get(BOOKS_CACHE_KEY + book.getBookCategory().getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + null);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -464,7 +470,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		verify(bookDAO).update(book1);
 		verify(bookDAO).update(book2);
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
@@ -490,7 +496,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		verify(bookDAO).update(book1);
 		verify(bookDAO).update(book2);
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
@@ -539,7 +545,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -562,7 +568,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		verify(bookDAO).update(book1);
 		verify(bookDAO).update(book2);
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
@@ -588,7 +594,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		verify(bookDAO).update(book1);
 		verify(bookDAO).update(book2);
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verify(bookCache).clear();
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
@@ -637,7 +643,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -649,7 +655,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		assertTrue(bookService.exists(book));
 
-		verify(bookCache).get("book" + book.getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookDAO);
 	}
@@ -662,7 +668,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		assertFalse(bookService.exists(book));
 
-		verify(bookCache).get("book" + book.getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookDAO);
 	}
@@ -677,8 +683,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		assertTrue(bookService.exists(book));
 
 		verify(bookDAO).getBook(book.getId());
-		verify(bookCache).get("book" + book.getId());
-		verify(bookCache).put("book" + book.getId(), book);
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
+		verify(bookCache).put(BOOK_CACHE_KEY + book.getId(), book);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -692,8 +698,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		assertFalse(bookService.exists(book));
 
 		verify(bookDAO).getBook(book.getId());
-		verify(bookCache).get("book" + book.getId());
-		verify(bookCache).put("book" + book.getId(), null);
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
+		verify(bookCache).put(BOOK_CACHE_KEY + book.getId(), null);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -739,7 +745,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(bookDAO).getBook(book.getId());
-		verify(bookCache).get("book" + book.getId());
+		verify(bookCache).get(BOOK_CACHE_KEY + book.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -752,7 +758,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 
 		DeepAsserts.assertEquals(books, bookService.findBooksByBookCategory(bookCategory));
 
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verifyNoMoreInteractions(bookCache);
 		verifyZeroInteractions(bookDAO);
 	}
@@ -768,8 +774,8 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		DeepAsserts.assertEquals(books, bookService.findBooksByBookCategory(bookCategory));
 
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
-		verify(bookCache).get("books" + bookCategory.getId());
-		verify(bookCache).put("books" + bookCategory.getId(), books);
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
+		verify(bookCache).put(BOOKS_CACHE_KEY + bookCategory.getId(), books);
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 
@@ -815,7 +821,7 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
 		}
 
 		verify(bookDAO).findBooksByBookCategory(bookCategory);
-		verify(bookCache).get("books" + bookCategory.getId());
+		verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
 		verifyNoMoreInteractions(bookDAO, bookCache);
 	}
 

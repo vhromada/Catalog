@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.dao.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.BOOK_CATEGORIES_COUNT;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
@@ -9,7 +8,6 @@ import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.BookCategoryDAO;
 import cz.vhromada.catalog.dao.entities.BookCategory;
-import cz.vhromada.catalog.dao.impl.BookCategoryDAOImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -21,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link BookCategoryDAOImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.dao.impl.BookCategoryDAOImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -52,19 +50,19 @@ public class BookCategoryDAOImplSpringTest {
 	@Test
 	public void testGetBookCategories() {
 		DeepAsserts.assertEquals(SpringEntitiesUtils.getBookCategories(), bookCategoryDAO.getBookCategories());
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
 	}
 
 	/** Test method for {@link BookCategoryDAO#getBookCategory(Integer)}. */
 	@Test
 	public void testGetBookCategory() {
-		for (int i = 1; i <= BOOK_CATEGORIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.BOOK_CATEGORIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBookCategory(i), bookCategoryDAO.getBookCategory(i));
 		}
 
 		assertNull(bookCategoryDAO.getBookCategory(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
 	}
 
 	/** Test method for {@link BookCategoryDAO#add(BookCategory)}. */
@@ -75,11 +73,11 @@ public class BookCategoryDAOImplSpringTest {
 		bookCategoryDAO.add(bookCategory);
 
 		DeepAsserts.assertNotNull(bookCategory.getId());
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, bookCategory.getId());
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT, bookCategory.getPosition());
-		final BookCategory addedBookCategory = SpringUtils.getBookCategory(entityManager, BOOK_CATEGORIES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT + 1, bookCategory.getId());
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT, bookCategory.getPosition());
+		final BookCategory addedBookCategory = SpringUtils.getBookCategory(entityManager, SpringUtils.BOOK_CATEGORIES_COUNT + 1);
 		DeepAsserts.assertEquals(bookCategory, addedBookCategory);
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
 	}
 
 	/** Test method for {@link BookCategoryDAO#update(BookCategory)}. */
@@ -91,7 +89,7 @@ public class BookCategoryDAOImplSpringTest {
 
 		final BookCategory updatedBookCategory = SpringUtils.getBookCategory(entityManager, 1);
 		DeepAsserts.assertEquals(bookCategory, updatedBookCategory);
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
 	}
 
 	/** Test method for {@link BookCategoryDAO#remove(BookCategory)}. */
@@ -99,12 +97,12 @@ public class BookCategoryDAOImplSpringTest {
 	public void testRemove() {
 		final BookCategory bookCategory = SpringEntitiesUtils.newBookCategory(objectGenerator);
 		entityManager.persist(bookCategory);
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT + 1, SpringUtils.getBookCategoriesCount(entityManager));
 
 		bookCategoryDAO.remove(bookCategory);
 
 		assertNull(SpringUtils.getBookCategory(entityManager, bookCategory.getId()));
-		DeepAsserts.assertEquals(BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOK_CATEGORIES_COUNT, SpringUtils.getBookCategoriesCount(entityManager));
 	}
 
 }

@@ -3,7 +3,6 @@ package cz.vhromada.catalog.dao;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.BookCategory;
-import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 
 /**
  * An interface represents DAO for book categories.
@@ -16,7 +15,8 @@ public interface BookCategoryDAO {
 	 * Returns list of book categories.
 	 *
 	 * @return list of book categories
-	 * @throws DataStorageException if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *          if there was error with working with data storage
 	 */
 	List<BookCategory> getBookCategories();
 
@@ -26,7 +26,8 @@ public interface BookCategoryDAO {
 	 * @param id ID
 	 * @return book category with ID or null if there isn't such book category
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	BookCategory getBookCategory(Integer id);
 
@@ -35,7 +36,8 @@ public interface BookCategoryDAO {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void add(BookCategory bookCategory);
 
@@ -44,7 +46,8 @@ public interface BookCategoryDAO {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void update(BookCategory bookCategory);
 
@@ -53,7 +56,8 @@ public interface BookCategoryDAO {
 	 *
 	 * @param bookCategory book category
 	 * @throws IllegalArgumentException if book category is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void remove(BookCategory bookCategory);
 

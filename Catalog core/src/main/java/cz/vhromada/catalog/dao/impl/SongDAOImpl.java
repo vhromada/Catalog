@@ -22,6 +22,21 @@ import org.springframework.stereotype.Component;
 @Component("songDAO")
 public class SongDAOImpl implements SongDAO {
 
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Music argument */
+	private static final String MUSIC_ARGUMENT = "Music";
+
+	/** Song argument */
+	private static final String SONG_ARGUMENT = "Song";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+
 	/** Entity manager */
 	@Autowired
 	private EntityManager entityManager;
@@ -53,13 +68,13 @@ public class SongDAOImpl implements SongDAO {
 	 */
 	@Override
 	public Song getSong(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(Song.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -73,15 +88,15 @@ public class SongDAOImpl implements SongDAO {
 	 */
 	@Override
 	public void add(final Song song) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			entityManager.persist(song);
 			song.setPosition(song.getId() - 1);
 			entityManager.merge(song);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -94,13 +109,13 @@ public class SongDAOImpl implements SongDAO {
 	 */
 	@Override
 	public void update(final Song song) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			entityManager.merge(song);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -113,8 +128,8 @@ public class SongDAOImpl implements SongDAO {
 	 */
 	@Override
 	public void remove(final Song song) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(song, "Song");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
 		try {
 			if (entityManager.contains(song)) {
@@ -123,7 +138,7 @@ public class SongDAOImpl implements SongDAO {
 				entityManager.remove(entityManager.getReference(Song.class, song.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -136,15 +151,15 @@ public class SongDAOImpl implements SongDAO {
 	 */
 	@Override
 	public List<Song> findSongsByMusic(final Music music) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(music, "Music");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
 		try {
 			final TypedQuery<Song> query = entityManager.createNamedQuery(Song.FIND_BY_MUSIC, Song.class);
 			query.setParameter("music", music.getId());
 			return query.getResultList();
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

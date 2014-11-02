@@ -4,9 +4,6 @@ import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.exceptions.DataStorageException;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 /**
  * An interface represents DAO for episodes.
@@ -21,7 +18,8 @@ public interface EpisodeDAO {
 	 * @param id ID
 	 * @return episode with ID or null if there isn't such episode
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	Episode getEpisode(Integer id);
 
@@ -30,7 +28,8 @@ public interface EpisodeDAO {
 	 *
 	 * @param episode episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void add(Episode episode);
 
@@ -39,7 +38,8 @@ public interface EpisodeDAO {
 	 *
 	 * @param episode episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void update(Episode episode);
 
@@ -48,7 +48,8 @@ public interface EpisodeDAO {
 	 *
 	 * @param episode episode
 	 * @throws IllegalArgumentException if episode is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void remove(Episode episode);
 
@@ -58,9 +59,8 @@ public interface EpisodeDAO {
 	 * @param season season
 	 * @return list of episodes for specified season
 	 * @throws IllegalArgumentException if season is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if season doesn't exist in data storage
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	List<Episode> findEpisodesBySeason(Season season);
 

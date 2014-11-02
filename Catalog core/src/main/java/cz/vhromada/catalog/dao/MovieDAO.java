@@ -3,7 +3,6 @@ package cz.vhromada.catalog.dao;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Movie;
-import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 
 /**
  * An interface represents DAO for movies.
@@ -16,7 +15,8 @@ public interface MovieDAO {
 	 * Returns list of movies.
 	 *
 	 * @return list of movies
-	 * @throws DataStorageException if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *          if there was error with working with data storage
 	 */
 	List<Movie> getMovies();
 
@@ -26,7 +26,8 @@ public interface MovieDAO {
 	 * @param id ID
 	 * @return movie with ID or null if there isn't such movie
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	Movie getMovie(Integer id);
 
@@ -35,7 +36,8 @@ public interface MovieDAO {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void add(Movie movie);
 
@@ -44,7 +46,8 @@ public interface MovieDAO {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void update(Movie movie);
 
@@ -53,7 +56,8 @@ public interface MovieDAO {
 	 *
 	 * @param movie movie
 	 * @throws IllegalArgumentException if movie is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void remove(Movie movie);
 

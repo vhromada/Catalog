@@ -21,6 +21,18 @@ import org.springframework.stereotype.Component;
 @Component("gameDAO")
 public class GameDAOImpl implements GameDAO {
 
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Game argument */
+	private static final String GAME_ARGUMENT = "Game";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+
 	/** Entity manager */
 	@Autowired
 	private EntityManager entityManager;
@@ -51,12 +63,12 @@ public class GameDAOImpl implements GameDAO {
 	 */
 	@Override
 	public List<Game> getGames() {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
 
 		try {
 			return new ArrayList<>(entityManager.createNamedQuery(Game.SELECT_GAMES, Game.class).getResultList());
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -69,13 +81,13 @@ public class GameDAOImpl implements GameDAO {
 	 */
 	@Override
 	public Game getGame(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(Game.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -88,15 +100,15 @@ public class GameDAOImpl implements GameDAO {
 	 */
 	@Override
 	public void add(final Game game) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			entityManager.persist(game);
 			game.setPosition(game.getId() - 1);
 			entityManager.merge(game);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -109,13 +121,13 @@ public class GameDAOImpl implements GameDAO {
 	 */
 	@Override
 	public void update(final Game game) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			entityManager.merge(game);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -128,8 +140,8 @@ public class GameDAOImpl implements GameDAO {
 	 */
 	@Override
 	public void remove(final Game game) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(game, "Game");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
 		try {
 			if (entityManager.contains(game)) {
@@ -138,7 +150,7 @@ public class GameDAOImpl implements GameDAO {
 				entityManager.remove(entityManager.getReference(Game.class, game.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

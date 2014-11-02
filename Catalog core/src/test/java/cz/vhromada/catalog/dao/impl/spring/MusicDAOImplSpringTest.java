@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.dao.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
@@ -9,7 +8,6 @@ import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.MusicDAO;
 import cz.vhromada.catalog.dao.entities.Music;
-import cz.vhromada.catalog.dao.impl.MusicDAOImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -21,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link MusicDAOImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.dao.impl.MusicDAOImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -52,19 +50,19 @@ public class MusicDAOImplSpringTest {
 	@Test
 	public void testGetMusic() {
 		DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(), musicDAO.getMusic());
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 	}
 
 	/** Test method for {@link MusicDAO#getMusic(Integer)}. */
 	@Test
 	public void testGetMusicById() {
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(i), musicDAO.getMusic(i));
 		}
 
 		assertNull(musicDAO.getMusic(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 	}
 
 	/** Test method for {@link MusicDAO#add(Music)}. */
@@ -75,11 +73,11 @@ public class MusicDAOImplSpringTest {
 		musicDAO.add(music);
 
 		DeepAsserts.assertNotNull(music.getId());
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, music.getId());
-		DeepAsserts.assertEquals(MUSIC_COUNT, music.getPosition());
-		final Music addedMusic = SpringUtils.getMusic(entityManager, MUSIC_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, music.getId());
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, music.getPosition());
+		final Music addedMusic = SpringUtils.getMusic(entityManager, SpringUtils.MUSIC_COUNT + 1);
 		DeepAsserts.assertEquals(music, addedMusic);
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 	}
 
 	/** Test method for {@link MusicDAO#update(Music)}. */
@@ -91,7 +89,7 @@ public class MusicDAOImplSpringTest {
 
 		final Music updatedMusic = SpringUtils.getMusic(entityManager, 1);
 		DeepAsserts.assertEquals(music, updatedMusic);
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 	}
 
 	/** Test method for {@link MusicDAO#remove(Music)}. */
@@ -99,12 +97,12 @@ public class MusicDAOImplSpringTest {
 	public void testRemove() {
 		final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
 		entityManager.persist(music);
-		DeepAsserts.assertEquals(MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
 
 		musicDAO.remove(music);
 
 		assertNull(SpringUtils.getMusic(entityManager, music.getId()));
-		DeepAsserts.assertEquals(MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
 	}
 
 }

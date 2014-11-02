@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.dao.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.GAMES_COUNT;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
@@ -9,7 +8,6 @@ import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.GameDAO;
 import cz.vhromada.catalog.dao.entities.Game;
-import cz.vhromada.catalog.dao.impl.GameDAOImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -21,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link GameDAOImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.dao.impl.GameDAOImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -52,19 +50,19 @@ public class GameDAOImplSpringTest {
 	@Test
 	public void testGetGames() {
 		DeepAsserts.assertEquals(SpringEntitiesUtils.getGames(), gameDAO.getGames());
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameDAO#getGame(Integer)}. */
 	@Test
 	public void testGetGame() {
-		for (int i = 1; i <= GAMES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GAMES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getGame(i), gameDAO.getGame(i));
 		}
 
 		assertNull(gameDAO.getGame(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameDAO#add(Game)}. */
@@ -75,11 +73,11 @@ public class GameDAOImplSpringTest {
 		gameDAO.add(game);
 
 		DeepAsserts.assertNotNull(game.getId());
-		DeepAsserts.assertEquals(GAMES_COUNT + 1, game.getId());
-		DeepAsserts.assertEquals(GAMES_COUNT, game.getPosition());
-		final Game addedGame = SpringUtils.getGame(entityManager, GAMES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, game.getId());
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, game.getPosition());
+		final Game addedGame = SpringUtils.getGame(entityManager, SpringUtils.GAMES_COUNT + 1);
 		DeepAsserts.assertEquals(game, addedGame);
-		DeepAsserts.assertEquals(GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameDAO#update(Game)}. */
@@ -91,7 +89,7 @@ public class GameDAOImplSpringTest {
 
 		final Game updatedGame = SpringUtils.getGame(entityManager, 1);
 		DeepAsserts.assertEquals(game, updatedGame);
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameDAO#remove(Game)}. */
@@ -100,7 +98,7 @@ public class GameDAOImplSpringTest {
 		gameDAO.remove(SpringUtils.getGame(entityManager, 1));
 
 		assertNull(SpringUtils.getGame(entityManager, 1));
-		DeepAsserts.assertEquals(GAMES_COUNT - 1, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT - 1, SpringUtils.getGamesCount(entityManager));
 	}
 
 }

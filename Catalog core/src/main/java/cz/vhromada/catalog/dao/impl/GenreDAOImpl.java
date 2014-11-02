@@ -10,7 +10,6 @@ import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.ReferenceIntegrityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +20,18 @@ import org.springframework.stereotype.Component;
  */
 @Component("genreDAO")
 public class GenreDAOImpl implements GenreDAO {
+
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Genre argument */
+	private static final String GENRE_ARGUMENT = "Genre";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
 	/** Entity manager */
 	@Autowired
@@ -52,12 +63,12 @@ public class GenreDAOImpl implements GenreDAO {
 	 */
 	@Override
 	public List<Genre> getGenres() {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
 
 		try {
 			return new ArrayList<>(entityManager.createNamedQuery(Genre.SELECT_GENRES, Genre.class).getResultList());
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -70,13 +81,13 @@ public class GenreDAOImpl implements GenreDAO {
 	 */
 	@Override
 	public Genre getGenre(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(Genre.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -89,13 +100,13 @@ public class GenreDAOImpl implements GenreDAO {
 	 */
 	@Override
 	public void add(final Genre genre) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(genre, "Genre");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
 		try {
 			entityManager.persist(genre);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -108,28 +119,27 @@ public class GenreDAOImpl implements GenreDAO {
 	 */
 	@Override
 	public void update(final Genre genre) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(genre, "Genre");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
 		try {
 			entityManager.merge(genre);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @throws IllegalStateException       if entity manager isn't set
-	 * @throws IllegalArgumentException    {@inheritDoc}
-	 * @throws ReferenceIntegrityException {@inheritDoc}
-	 * @throws DataStorageException        {@inheritDoc}
+	 * @throws IllegalStateException    if entity manager isn't set
+	 * @throws IllegalArgumentException {@inheritDoc}
+	 * @throws DataStorageException     {@inheritDoc}
 	 */
 	@Override
 	public void remove(final Genre genre) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(genre, "Genre");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
 		try {
 			if (entityManager.contains(genre)) {
@@ -138,7 +148,7 @@ public class GenreDAOImpl implements GenreDAO {
 				entityManager.remove(entityManager.getReference(Genre.class, genre.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

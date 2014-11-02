@@ -3,7 +3,6 @@ package cz.vhromada.catalog.dao;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Serie;
-import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 
 /**
  * An interface represents DAO for series.
@@ -16,7 +15,8 @@ public interface SerieDAO {
 	 * Returns list of series.
 	 *
 	 * @return list of series
-	 * @throws DataStorageException if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *          if there was error with working with data storage
 	 */
 	List<Serie> getSeries();
 
@@ -26,7 +26,8 @@ public interface SerieDAO {
 	 * @param id ID
 	 * @return serie with ID or null if there isn't such serie
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	Serie getSerie(Integer id);
 
@@ -35,7 +36,8 @@ public interface SerieDAO {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void add(Serie serie);
 
@@ -44,7 +46,8 @@ public interface SerieDAO {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void update(Serie serie);
 
@@ -53,7 +56,8 @@ public interface SerieDAO {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void remove(Serie serie);
 

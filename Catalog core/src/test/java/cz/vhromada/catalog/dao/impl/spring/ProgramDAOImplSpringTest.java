@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.dao.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.PROGRAMS_COUNT;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
@@ -9,7 +8,6 @@ import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.ProgramDAO;
 import cz.vhromada.catalog.dao.entities.Program;
-import cz.vhromada.catalog.dao.impl.ProgramDAOImpl;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Before;
@@ -21,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link ProgramDAOImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.dao.impl.ProgramDAOImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -52,19 +50,19 @@ public class ProgramDAOImplSpringTest {
 	@Test
 	public void testGetPrograms() {
 		DeepAsserts.assertEquals(SpringEntitiesUtils.getPrograms(), programDAO.getPrograms());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramDAO#getProgram(Integer)}. */
 	@Test
 	public void testGetProgram() {
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), programDAO.getProgram(i));
 		}
 
 		assertNull(programDAO.getProgram(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramDAO#add(Program)}. */
@@ -75,11 +73,11 @@ public class ProgramDAOImplSpringTest {
 		programDAO.add(program);
 
 		DeepAsserts.assertNotNull(program.getId());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, program.getId());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, program.getPosition());
-		final Program addedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, program.getId());
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, program.getPosition());
+		final Program addedProgram = SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, addedProgram);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramDAO#update(Program)}. */
@@ -91,7 +89,7 @@ public class ProgramDAOImplSpringTest {
 
 		final Program updatedProgram = SpringUtils.getProgram(entityManager, 1);
 		DeepAsserts.assertEquals(program, updatedProgram);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramDAO#remove(Program)}. */
@@ -100,7 +98,7 @@ public class ProgramDAOImplSpringTest {
 		programDAO.remove(SpringUtils.getProgram(entityManager, 1));
 
 		assertNull(SpringUtils.getProgram(entityManager, 1));
-		DeepAsserts.assertEquals(PROGRAMS_COUNT - 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT - 1, SpringUtils.getProgramsCount(entityManager));
 	}
 
 }

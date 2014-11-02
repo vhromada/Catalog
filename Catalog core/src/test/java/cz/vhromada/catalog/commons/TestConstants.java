@@ -32,7 +32,7 @@ public final class TestConstants {
 
 	static {
 		try {
-			Field length = Time.class.getDeclaredField("length");
+			final Field length = Time.class.getDeclaredField("length");
 			length.setAccessible(true);
 			length.setInt(NEGATIVE_TIME, -1);
 		} catch (IllegalAccessException | NoSuchFieldException ex) {

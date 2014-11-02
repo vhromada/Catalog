@@ -21,6 +21,18 @@ import org.springframework.stereotype.Component;
 @Component("bookCategoryDAO")
 public class BookCategoryDAOImpl implements BookCategoryDAO {
 
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Book category argument */
+	private static final String BOOK_CATEGORY_ARGUMENT = "Book category";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+
 	/** Entity manager */
 	@Autowired
 	private EntityManager entityManager;
@@ -51,12 +63,12 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
 	 */
 	@Override
 	public List<BookCategory> getBookCategories() {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
 
 		try {
 			return new ArrayList<>(entityManager.createNamedQuery(BookCategory.SELECT_BOOK_CATEGORIES, BookCategory.class).getResultList());
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -69,13 +81,13 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
 	 */
 	@Override
 	public BookCategory getBookCategory(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(BookCategory.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -88,15 +100,15 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
 	 */
 	@Override
 	public void add(final BookCategory bookCategory) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(bookCategory, "Book category");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_ARGUMENT);
 
 		try {
 			entityManager.persist(bookCategory);
 			bookCategory.setPosition(bookCategory.getId() - 1);
 			entityManager.merge(bookCategory);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -109,13 +121,13 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
 	 */
 	@Override
 	public void update(final BookCategory bookCategory) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(bookCategory, "Book category");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_ARGUMENT);
 
 		try {
 			entityManager.merge(bookCategory);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -128,8 +140,8 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
 	 */
 	@Override
 	public void remove(final BookCategory bookCategory) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(bookCategory, "Book category");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_ARGUMENT);
 
 		try {
 			if (entityManager.contains(bookCategory)) {
@@ -138,7 +150,7 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
 				entityManager.remove(entityManager.getReference(BookCategory.class, bookCategory.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

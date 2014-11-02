@@ -21,6 +21,18 @@ import org.springframework.stereotype.Component;
 @Component("musicDAO")
 public class MusicDAOImpl implements MusicDAO {
 
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Music argument */
+	private static final String MUSIC_ARGUMENT = "Music";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+
 	/** Entity manager */
 	@Autowired
 	private EntityManager entityManager;
@@ -51,12 +63,12 @@ public class MusicDAOImpl implements MusicDAO {
 	 */
 	@Override
 	public List<Music> getMusic() {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
 
 		try {
 			return new ArrayList<>(entityManager.createNamedQuery(Music.SELECT_MUSIC, Music.class).getResultList());
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -69,13 +81,13 @@ public class MusicDAOImpl implements MusicDAO {
 	 */
 	@Override
 	public Music getMusic(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(Music.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -89,15 +101,15 @@ public class MusicDAOImpl implements MusicDAO {
 	 */
 	@Override
 	public void add(final Music music) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(music, "Music");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
 		try {
 			entityManager.persist(music);
 			music.setPosition(music.getId() - 1);
 			entityManager.merge(music);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -110,13 +122,13 @@ public class MusicDAOImpl implements MusicDAO {
 	 */
 	@Override
 	public void update(final Music music) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(music, "Music");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
 		try {
 			entityManager.merge(music);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -129,8 +141,8 @@ public class MusicDAOImpl implements MusicDAO {
 	 */
 	@Override
 	public void remove(final Music music) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(music, "Music");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
 		try {
 			if (entityManager.contains(music)) {
@@ -139,7 +151,7 @@ public class MusicDAOImpl implements MusicDAO {
 				entityManager.remove(entityManager.getReference(Music.class, music.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

@@ -21,6 +21,18 @@ import org.springframework.stereotype.Component;
 @Component("serieDAO")
 public class SerieDAOImpl implements SerieDAO {
 
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Serie argument */
+	private static final String SERIE_ARGUMENT = "Serie";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+
 	/** Entity manager */
 	@Autowired
 	private EntityManager entityManager;
@@ -51,12 +63,12 @@ public class SerieDAOImpl implements SerieDAO {
 	 */
 	@Override
 	public List<Serie> getSeries() {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
 
 		try {
 			return new ArrayList<>(entityManager.createNamedQuery(Serie.SELECT_SERIES, Serie.class).getResultList());
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -69,13 +81,13 @@ public class SerieDAOImpl implements SerieDAO {
 	 */
 	@Override
 	public Serie getSerie(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(Serie.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -88,15 +100,15 @@ public class SerieDAOImpl implements SerieDAO {
 	 */
 	@Override
 	public void add(final Serie serie) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(serie, "Serie");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
 
 		try {
 			entityManager.persist(serie);
 			serie.setPosition(serie.getId() - 1);
 			entityManager.merge(serie);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -109,13 +121,13 @@ public class SerieDAOImpl implements SerieDAO {
 	 */
 	@Override
 	public void update(final Serie serie) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(serie, "Serie");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
 
 		try {
 			entityManager.merge(serie);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -128,8 +140,8 @@ public class SerieDAOImpl implements SerieDAO {
 	 */
 	@Override
 	public void remove(final Serie serie) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(serie, "Serie");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
 
 		try {
 			if (entityManager.contains(serie)) {
@@ -138,7 +150,7 @@ public class SerieDAOImpl implements SerieDAO {
 				entityManager.remove(entityManager.getReference(Serie.class, serie.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

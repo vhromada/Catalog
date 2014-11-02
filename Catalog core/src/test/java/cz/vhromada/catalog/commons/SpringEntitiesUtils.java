@@ -1,19 +1,5 @@
 package cz.vhromada.catalog.commons;
 
-import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.BOOK_CATEGORIES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SEASON_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.GAMES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.GENRES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.LENGTH_MULTIPLIERS;
-import static cz.vhromada.catalog.commons.SpringUtils.MOVIES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.PROGRAMS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SONGS_PER_MUSIC_COUNT;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +38,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Movie> getMovies() {
 		final List<Movie> movies = new ArrayList<>();
-		for (int i = 0; i < MOVIES_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.MOVIES_COUNT; i++) {
 			movies.add(getMovie(i + 1));
 		}
 		return movies;
@@ -161,7 +147,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Serie> getSeries() {
 		final List<Serie> series = new ArrayList<>();
-		for (int i = 0; i < SERIES_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.SERIES_COUNT; i++) {
 			series.add(getSerie(i + 1));
 		}
 		return series;
@@ -241,7 +227,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Season> getSeasons(final int serie) {
 		final List<Season> seasons = new ArrayList<>();
-		for (int i = 0; i < SEASONS_PER_SERIE_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.SEASONS_PER_SERIE_COUNT; i++) {
 			seasons.add(getSeason(serie, i + 1));
 		}
 		return seasons;
@@ -256,7 +242,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static Season getSeason(final int serieIndex, final int seasonIndex) {
 		final Season season = new Season();
-		season.setId((serieIndex - 1) * SEASONS_PER_SERIE_COUNT + seasonIndex);
+		season.setId((serieIndex - 1) * SpringUtils.SEASONS_PER_SERIE_COUNT + seasonIndex);
 		season.setNumber(seasonIndex);
 		season.setStartYear(1980 + seasonIndex);
 		season.setEndYear(seasonIndex == 3 ? 1984 : 1982);
@@ -334,7 +320,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Episode> getEpisodes(final int serie, final int season) {
 		final List<Episode> episodes = new ArrayList<>();
-		for (int i = 0; i < EPISODES_PER_SEASON_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.EPISODES_PER_SEASON_COUNT; i++) {
 			episodes.add(getEpisode(serie, season, i + 1));
 		}
 		return episodes;
@@ -350,10 +336,10 @@ public final class SpringEntitiesUtils {
 	 */
 	public static Episode getEpisode(final int serieIndex, final int seasonIndex, final int episodeIndex) {
 		final Episode episode = new Episode();
-		episode.setId((serieIndex - 1) * EPISODES_PER_SERIE_COUNT + (seasonIndex - 1) * EPISODES_PER_SEASON_COUNT + episodeIndex);
+		episode.setId((serieIndex - 1) * SpringUtils.EPISODES_PER_SERIE_COUNT + (seasonIndex - 1) * SpringUtils.EPISODES_PER_SEASON_COUNT + episodeIndex);
 		episode.setNumber(episodeIndex);
 		episode.setName("Serie " + serieIndex + " Season " + seasonIndex + " Episode " + episodeIndex);
-		episode.setLength(episodeIndex * LENGTH_MULTIPLIERS[seasonIndex - 1]);
+		episode.setLength(episodeIndex * SpringUtils.LENGTH_MULTIPLIERS[seasonIndex - 1]);
 		episode.setNote(episodeIndex == 2 ? "Serie " + serieIndex + " Season " + seasonIndex + " Episode 2 note" : "");
 		episode.setPosition(episodeIndex - 1);
 		episode.setSeason(getSeason(serieIndex, seasonIndex));
@@ -402,7 +388,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Game> getGames() {
 		final List<Game> games = new ArrayList<>();
-		for (int i = 0; i < GAMES_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.GAMES_COUNT; i++) {
 			games.add(getGame(i + 1));
 		}
 		return games;
@@ -483,7 +469,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Music> getMusic() {
 		final List<Music> musics = new ArrayList<>();
-		for (int i = 0; i < MUSIC_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.MUSIC_COUNT; i++) {
 			musics.add(getMusic(i + 1));
 		}
 		return musics;
@@ -549,7 +535,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Song> getSongs(final int music) {
 		final List<Song> songs = new ArrayList<>();
-		for (int i = 0; i < SONGS_PER_MUSIC_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.SONGS_PER_MUSIC_COUNT; i++) {
 			songs.add(getSong(music, i + 1));
 		}
 		return songs;
@@ -564,9 +550,9 @@ public final class SpringEntitiesUtils {
 	 */
 	public static Song getSong(final int musicIndex, final int songIndex) {
 		final Song song = new Song();
-		song.setId((musicIndex - 1) * SONGS_PER_MUSIC_COUNT + songIndex);
+		song.setId((musicIndex - 1) * SpringUtils.SONGS_PER_MUSIC_COUNT + songIndex);
 		song.setName("Music " + musicIndex + " Song " + songIndex);
-		song.setLength(songIndex * LENGTH_MULTIPLIERS[musicIndex - 1]);
+		song.setLength(songIndex * SpringUtils.LENGTH_MULTIPLIERS[musicIndex - 1]);
 		song.setNote(songIndex == 2 ? "Music " + musicIndex + " Song 2 note" : "");
 		song.setPosition(songIndex - 1);
 		song.setMusic(getMusic(musicIndex));
@@ -614,7 +600,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Program> getPrograms() {
 		final List<Program> programs = new ArrayList<>();
-		for (int i = 0; i < PROGRAMS_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.PROGRAMS_COUNT; i++) {
 			programs.add(getProgram(i + 1));
 		}
 		return programs;
@@ -685,7 +671,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<BookCategory> getBookCategories() {
 		final List<BookCategory> programs = new ArrayList<>();
-		for (int i = 0; i < BOOK_CATEGORIES_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.BOOK_CATEGORIES_COUNT; i++) {
 			programs.add(getBookCategory(i + 1));
 		}
 		return programs;
@@ -745,7 +731,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Book> getBooks(final int bookCategory) {
 		final List<Book> books = new ArrayList<>();
-		for (int i = 0; i < BOOKS_PER_BOOK_CATEGORY_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT; i++) {
 			books.add(getBook(bookCategory, i + 1));
 		}
 		return books;
@@ -760,7 +746,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static Book getBook(final int bookCategoryIndex, final int bookIndex) {
 		final Book book = new Book();
-		book.setId((bookCategoryIndex - 1) * BOOKS_PER_BOOK_CATEGORY_COUNT + bookIndex);
+		book.setId((bookCategoryIndex - 1) * SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + bookIndex);
 		book.setAuthor("Book category " + bookCategoryIndex + " Book " + bookIndex + " author");
 		book.setTitle("Book category " + bookCategoryIndex + " Book " + bookIndex + " title");
 		book.setCategory("Book category " + bookCategoryIndex + " Book " + bookIndex + " category");
@@ -829,7 +815,7 @@ public final class SpringEntitiesUtils {
 	 */
 	public static List<Genre> getGenres() {
 		final List<Genre> genres = new ArrayList<>();
-		for (int i = 0; i < GENRES_COUNT; i++) {
+		for (int i = 0; i < SpringUtils.GENRES_COUNT; i++) {
 			genres.add(getGenre(i + 1));
 		}
 		return genres;

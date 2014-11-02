@@ -4,7 +4,6 @@ import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
-import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 
 /**
  * An interface represents DAO for songs.
@@ -19,7 +18,8 @@ public interface SongDAO {
 	 * @param id ID
 	 * @return song with ID or null if there isn't such song
 	 * @throws IllegalArgumentException if ID is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	Song getSong(Integer id);
 
@@ -28,7 +28,8 @@ public interface SongDAO {
 	 *
 	 * @param song song
 	 * @throws IllegalArgumentException if song is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void add(Song song);
 
@@ -37,7 +38,8 @@ public interface SongDAO {
 	 *
 	 * @param song song
 	 * @throws IllegalArgumentException if song is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void update(Song song);
 
@@ -46,7 +48,8 @@ public interface SongDAO {
 	 *
 	 * @param song song
 	 * @throws IllegalArgumentException if song is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	void remove(Song song);
 
@@ -56,7 +59,8 @@ public interface SongDAO {
 	 * @param music music
 	 * @return list of songs for specified music
 	 * @throws IllegalArgumentException if music is null
-	 * @throws DataStorageException     if there was error with working with data storage
+	 * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
+	 *                                  if there was error with working with data storage
 	 */
 	List<Song> findSongsByMusic(Music music);
 

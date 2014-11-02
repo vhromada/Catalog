@@ -22,6 +22,21 @@ import org.springframework.stereotype.Component;
 @Component("episodeDAO")
 public class EpisodeDAOImpl implements EpisodeDAO {
 
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Season argument */
+	private static final String SEASON_ARGUMENT = "Season";
+
+	/** Episode argument */
+	private static final String EPISODE_ARGUMENT = "Episode";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+
 	/** Entity manager */
 	@Autowired
 	private EntityManager entityManager;
@@ -53,13 +68,13 @@ public class EpisodeDAOImpl implements EpisodeDAO {
 	 */
 	@Override
 	public Episode getEpisode(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(Episode.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -72,15 +87,15 @@ public class EpisodeDAOImpl implements EpisodeDAO {
 	 */
 	@Override
 	public void add(final Episode episode) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			entityManager.persist(episode);
 			episode.setPosition(episode.getId() - 1);
 			entityManager.merge(episode);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -93,13 +108,13 @@ public class EpisodeDAOImpl implements EpisodeDAO {
 	 */
 	@Override
 	public void update(final Episode episode) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			entityManager.merge(episode);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -112,8 +127,8 @@ public class EpisodeDAOImpl implements EpisodeDAO {
 	 */
 	@Override
 	public void remove(final Episode episode) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(episode, "Episode");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
 		try {
 			if (entityManager.contains(episode)) {
@@ -122,7 +137,7 @@ public class EpisodeDAOImpl implements EpisodeDAO {
 				entityManager.remove(entityManager.getReference(Episode.class, episode.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -135,15 +150,15 @@ public class EpisodeDAOImpl implements EpisodeDAO {
 	 */
 	@Override
 	public List<Episode> findEpisodesBySeason(final Season season) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(season, "Season");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
 		try {
 			final TypedQuery<Episode> query = entityManager.createNamedQuery(Episode.FIND_BY_SEASON, Episode.class);
 			query.setParameter("season", season.getId());
 			return query.getResultList();
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

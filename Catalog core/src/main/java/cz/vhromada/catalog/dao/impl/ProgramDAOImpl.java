@@ -21,6 +21,18 @@ import org.springframework.stereotype.Component;
 @Component("programDAO")
 public class ProgramDAOImpl implements ProgramDAO {
 
+	/** Entity manager field */
+	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+
+	/** Program argument */
+	private static final String PROGRAM_ARGUMENT = "Program";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link DataStorageException} */
+	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+
 	/** Entity manager */
 	@Autowired
 	private EntityManager entityManager;
@@ -51,12 +63,12 @@ public class ProgramDAOImpl implements ProgramDAO {
 	 */
 	@Override
 	public List<Program> getPrograms() {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
 
 		try {
 			return new ArrayList<>(entityManager.createNamedQuery(Program.SELECT_PROGRAMS, Program.class).getResultList());
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -69,13 +81,13 @@ public class ProgramDAOImpl implements ProgramDAO {
 	 */
 	@Override
 	public Program getProgram(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return entityManager.find(Program.class, id);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -88,15 +100,15 @@ public class ProgramDAOImpl implements ProgramDAO {
 	 */
 	@Override
 	public void add(final Program program) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			entityManager.persist(program);
 			program.setPosition(program.getId() - 1);
 			entityManager.merge(program);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -109,13 +121,13 @@ public class ProgramDAOImpl implements ProgramDAO {
 	 */
 	@Override
 	public void update(final Program program) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			entityManager.merge(program);
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -128,8 +140,8 @@ public class ProgramDAOImpl implements ProgramDAO {
 	 */
 	@Override
 	public void remove(final Program program) {
-		Validators.validateFieldNotNull(entityManager, "Entity manager");
-		Validators.validateArgumentNotNull(program, "Program");
+		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+		Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
 		try {
 			if (entityManager.contains(program)) {
@@ -138,7 +150,7 @@ public class ProgramDAOImpl implements ProgramDAO {
 				entityManager.remove(entityManager.getReference(Program.class, program.getId()));
 			}
 		} catch (final PersistenceException ex) {
-			throw new DataStorageException("Error in working with ORM.", ex);
+			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

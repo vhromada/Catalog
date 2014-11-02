@@ -2,8 +2,6 @@ package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.facade.to.GameTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -61,7 +59,8 @@ public class GameController extends JsonController {
 	 *
 	 * @param game game
 	 * @throws IllegalArgumentException if game is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about game is null
@@ -81,7 +80,8 @@ public class GameController extends JsonController {
 	 *
 	 * @param game new value of game
 	 * @throws IllegalArgumentException if game is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or name is null
 	 *                                  or name is empty string
 	 *                                  or URL to english Wikipedia page about game is null
@@ -89,7 +89,8 @@ public class GameController extends JsonController {
 	 *                                  or count of media isn't positive number
 	 *                                  or other data is null
 	 *                                  or note is null
-	 * @throws RecordNotFoundException  if game doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if game doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
@@ -102,8 +103,10 @@ public class GameController extends JsonController {
 	 *
 	 * @param game game
 	 * @throws IllegalArgumentException if game is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if game doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if game doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -116,8 +119,10 @@ public class GameController extends JsonController {
 	 *
 	 * @param game game
 	 * @throws IllegalArgumentException if game is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if game doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if game doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -130,9 +135,11 @@ public class GameController extends JsonController {
 	 *
 	 * @param game game
 	 * @throws IllegalArgumentException if game is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or game can't be moved up
-	 * @throws RecordNotFoundException  if game doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if game doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -145,9 +152,11 @@ public class GameController extends JsonController {
 	 *
 	 * @param game game
 	 * @throws IllegalArgumentException if game is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or game can't be moved down
-	 * @throws RecordNotFoundException  if game doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if game doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -161,7 +170,8 @@ public class GameController extends JsonController {
 	 * @param game game
 	 * @return true if game exists
 	 * @throws IllegalArgumentException if game is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody

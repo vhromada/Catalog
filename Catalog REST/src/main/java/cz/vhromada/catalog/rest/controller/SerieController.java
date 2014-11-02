@@ -2,8 +2,6 @@ package cz.vhromada.catalog.rest.controller;
 
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -61,7 +59,8 @@ public class SerieController extends JsonController {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws ValidationException      if ID isn't null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID isn't null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -81,7 +80,8 @@ public class SerieController extends JsonController {
 	 *                                  or genre ID is null
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
-	 * @throws RecordNotFoundException  if genre doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if genre doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
@@ -94,7 +94,8 @@ public class SerieController extends JsonController {
 	 *
 	 * @param serie new value of serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or czech name is null
 	 *                                  or czech name is empty string
 	 *                                  or original name is null
@@ -115,7 +116,8 @@ public class SerieController extends JsonController {
 	 *                                  or genre name is null
 	 *                                  or genre name is empty string
 	 *                                  or genre name is empty string
-	 * @throws RecordNotFoundException  if serie doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if serie doesn't exist in data storage
 	 *                                  or genre doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -129,8 +131,10 @@ public class SerieController extends JsonController {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if serie doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if serie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
@@ -143,8 +147,10 @@ public class SerieController extends JsonController {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws ValidationException      if ID is null
-	 * @throws RecordNotFoundException  if serie doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if serie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/duplicate", method = RequestMethod.POST)
 	@ResponseBody
@@ -157,9 +163,11 @@ public class SerieController extends JsonController {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or serie can't be moved up
-	 * @throws RecordNotFoundException  if serie doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if serie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveUp", method = RequestMethod.POST)
 	@ResponseBody
@@ -172,9 +180,11 @@ public class SerieController extends JsonController {
 	 *
 	 * @param serie serie
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 *                                  or serie can't be moved down
-	 * @throws RecordNotFoundException  if serie doesn't exist in data storage
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  if serie doesn't exist in data storage
 	 */
 	@RequestMapping(value = "/moveDown", method = RequestMethod.POST)
 	@ResponseBody
@@ -188,7 +198,8 @@ public class SerieController extends JsonController {
 	 * @param serie serie
 	 * @return true if serie exists
 	 * @throws IllegalArgumentException if serie is null
-	 * @throws ValidationException      if ID is null
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  if ID is null
 	 */
 	@RequestMapping(value = "/exists", method = RequestMethod.GET)
 	@ResponseBody

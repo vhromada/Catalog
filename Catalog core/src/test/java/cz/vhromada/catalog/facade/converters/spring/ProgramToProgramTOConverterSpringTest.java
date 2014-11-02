@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.converters.spring;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.dao.entities.Program;
-import cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for class {@link ProgramToProgramTOConverter} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -31,7 +30,7 @@ public class ProgramToProgramTOConverterSpringTest {
 	@Autowired
 	private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link ProgramToProgramTOConverter#convert(Program)}. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter#convert(Program)}. */
 	@Test
 	public void testConvert() {
 		final Program program = objectGenerator.generate(Program.class);
@@ -40,7 +39,7 @@ public class ProgramToProgramTOConverterSpringTest {
 		DeepAsserts.assertEquals(program, programTO, "additionalData");
 	}
 
-	/** Test method for {@link ProgramToProgramTOConverter#convert(Program)} with null argument. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter#convert(Program)} with null argument. */
 	@Test
 	public void testConvertWithNullArgument() {
 		assertNull(conversionService.convert(null, ProgramTO.class));

@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.converters.spring;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.dao.entities.Game;
-import cz.vhromada.catalog.facade.converters.GameTOToGameConverter;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for class {@link GameTOToGameConverter} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.converters.GameTOToGameConverter} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -31,7 +30,7 @@ public class GameTOToGameConverterSpringTest {
 	@Autowired
 	private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link GameTOToGameConverter#convert(GameTO)}. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.GameTOToGameConverter#convert(GameTO)}. */
 	@Test
 	public void testConvert() {
 		final GameTO gameTO = objectGenerator.generate(GameTO.class);
@@ -40,7 +39,7 @@ public class GameTOToGameConverterSpringTest {
 		DeepAsserts.assertEquals(gameTO, game, "additionalData");
 	}
 
-	/** Test method for {@link GameTOToGameConverter#convert(GameTO)} with null argument. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.GameTOToGameConverter#convert(GameTO)} with null argument. */
 	@Test
 	public void testConvertWithNullArgument() {
 		assertNull(conversionService.convert(null, Game.class));

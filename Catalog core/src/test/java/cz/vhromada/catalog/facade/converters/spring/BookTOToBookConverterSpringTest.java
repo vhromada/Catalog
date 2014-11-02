@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.converters.spring;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.dao.entities.Book;
-import cz.vhromada.catalog.facade.converters.BookTOToBookConverter;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for class {@link BookTOToBookConverter} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.converters.BookTOToBookConverter} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -31,7 +30,7 @@ public class BookTOToBookConverterSpringTest {
 	@Autowired
 	private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link BookTOToBookConverter#convert(BookTO)}. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.BookTOToBookConverter#convert(BookTO)}. */
 	@Test
 	public void testConvert() {
 		final BookTO bookTO = objectGenerator.generate(BookTO.class);
@@ -40,7 +39,7 @@ public class BookTOToBookConverterSpringTest {
 		DeepAsserts.assertEquals(bookTO, book, "booksCount");
 	}
 
-	/** Test method for {@link BookTOToBookConverter#convert(BookTO)} with null argument. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.BookTOToBookConverter#convert(BookTO)} with null argument. */
 	@Test
 	public void testConvertWithNullArgument() {
 		assertNull(conversionService.convert(null, Book.class));

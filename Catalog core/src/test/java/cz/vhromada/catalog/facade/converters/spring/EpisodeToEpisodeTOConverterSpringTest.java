@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.converters.spring;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.dao.entities.Episode;
-import cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for class {@link EpisodeToEpisodeTOConverter} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -31,7 +30,7 @@ public class EpisodeToEpisodeTOConverterSpringTest {
 	@Autowired
 	private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link EpisodeToEpisodeTOConverter#convert(Episode)}. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter#convert(Episode)}. */
 	@Test
 	public void testConvert() {
 		final Episode episode = objectGenerator.generate(Episode.class);
@@ -40,7 +39,7 @@ public class EpisodeToEpisodeTOConverterSpringTest {
 		DeepAsserts.assertEquals(episode, episodeTO, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
 	}
 
-	/** Test method for {@link EpisodeToEpisodeTOConverter#convert(Episode)} with null argument. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter#convert(Episode)} with null argument. */
 	@Test
 	public void testConvertWithNullArgument() {
 		assertNull(conversionService.convert(null, EpisodeTO.class));

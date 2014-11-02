@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.converters.spring;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.dao.entities.Medium;
-import cz.vhromada.catalog.facade.converters.MediumToIntegerConverter;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import org.junit.Test;
@@ -14,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for class {@link MediumToIntegerConverter} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.converters.MediumToIntegerConverter} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -30,7 +29,7 @@ public class MediumToIntegerConverterSpringTest {
 	@Autowired
 	private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link MediumToIntegerConverter#convert(Medium)}. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.MediumToIntegerConverter#convert(Medium)}. */
 	@Test
 	public void testConvert() {
 		final Medium medium = objectGenerator.generate(Medium.class);
@@ -39,7 +38,7 @@ public class MediumToIntegerConverterSpringTest {
 		DeepAsserts.assertEquals(medium.getLength(), length);
 	}
 
-	/** Test method for {@link MediumToIntegerConverter#convert(Medium)} with null argument. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.MediumToIntegerConverter#convert(Medium)} with null argument. */
 	@Test
 	public void testConvertWithNullArgument() {
 		assertNull(conversionService.convert((Medium) null, Integer.class));

@@ -3,7 +3,6 @@ package cz.vhromada.catalog.facade.converters.spring;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.dao.entities.Genre;
-import cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -15,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for class {@link GenreToGenreTOConverter} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -31,7 +30,7 @@ public class GenreToGenreTOConverterSpringTest {
 	@Autowired
 	private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link GenreToGenreTOConverter#convert(Genre)}. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter#convert(Genre)}. */
 	@Test
 	public void testConvert() {
 		final Genre genre = objectGenerator.generate(Genre.class);
@@ -40,7 +39,7 @@ public class GenreToGenreTOConverterSpringTest {
 		DeepAsserts.assertEquals(genre, genreTO);
 	}
 
-	/** Test method for {@link GenreToGenreTOConverter#convert(Genre)} with null argument. */
+	/** Test method for {@link cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter#convert(Genre)} with null argument. */
 	@Test
 	public void testConvertWithNullArgument() {
 		assertNull(conversionService.convert(null, GenreTO.class));

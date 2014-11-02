@@ -95,18 +95,7 @@ public class MovieTOToMovieConverter implements Converter<MovieTO, Movie> {
 		movie.setPicture(source.getPicture());
 		movie.setNote(source.getNote());
 		movie.setPosition(source.getPosition());
-		final List<Medium> media = new ArrayList<>();
-		if (source.getMedia() != null) {
-			for (int i = 0; i < source.getMedia().size(); i++) {
-				final int length = source.getMedia().get(i);
-				final Medium medium = mediumConverter.convert(length);
-				if (medium != null) {
-					medium.setNumber(i + 1);
-				}
-				media.add(medium);
-			}
-		}
-		movie.setMedia(media);
+		movie.setMedia(convertMedia(source.getMedia()));
 		final List<Genre> genres = new ArrayList<>();
 		if (source.getGenres() != null) {
 			for (GenreTO genre : source.getGenres()) {
@@ -115,6 +104,28 @@ public class MovieTOToMovieConverter implements Converter<MovieTO, Movie> {
 		}
 		movie.setGenres(genres);
 		return movie;
+	}
+
+	/**
+	 * Returns converted media.
+	 *
+	 * @param source converting media
+	 * @return converted media
+	 */
+	private List<Medium> convertMedia(final List<Integer> source) {
+		final List<Medium> media = new ArrayList<>();
+		if (source != null) {
+			for (int i = 0; i < source.size(); i++) {
+				final int length = source.get(i);
+				final Medium medium = mediumConverter.convert(length);
+				if (medium != null) {
+					medium.setNumber(i + 1);
+				}
+				media.add(medium);
+			}
+		}
+
+		return media;
 	}
 
 }

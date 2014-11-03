@@ -141,14 +141,14 @@
 			<dependency>
 				<groupId>cz.vhromada.test</groupId>
 				<artifactId>deep-assert</artifactId>
-				<version>1.0.0</version>
+				<version>1.0.1</version>
 				<scope>test</scope>
 			</dependency>
 			<!--Object generator-->
 			<dependency>
 				<groupId>cz.vhromada.generator</groupId>
 				<artifactId>object-generator</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 				<scope>test</scope>
 			</dependency>
 			<!--Mockito-->

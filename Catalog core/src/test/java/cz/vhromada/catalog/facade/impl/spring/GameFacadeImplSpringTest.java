@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.GAMES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +11,6 @@ import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Game;
 import cz.vhromada.catalog.facade.GameFacade;
-import cz.vhromada.catalog.facade.impl.GameFacadeImpl;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -27,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link GameFacadeImpl}.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.GameFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
@@ -74,19 +72,19 @@ public class GameFacadeImplSpringTest {
 	@Test
 	public void testGetGames() {
 		DeepAsserts.assertEquals(SpringToUtils.getGames(), gameFacade.getGames());
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#getGame(Integer)}. */
 	@Test
 	public void testGetGame() {
-		for (int i = 1; i <= GAMES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GAMES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringToUtils.getGame(i), gameFacade.getGame(i));
 		}
 
 		assertNull(gameFacade.getGame(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#getGame(Integer)} with null argument. */
@@ -103,10 +101,10 @@ public class GameFacadeImplSpringTest {
 		gameFacade.add(game);
 
 		DeepAsserts.assertNotNull(game.getId());
-		DeepAsserts.assertEquals(GAMES_COUNT + 1, game.getId());
-		final Game addedGame = SpringUtils.getGame(entityManager, GAMES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, game.getId());
+		final Game addedGame = SpringUtils.getGame(entityManager, SpringUtils.GAMES_COUNT + 1);
 		DeepAsserts.assertEquals(game, addedGame, "additionalData");
-		DeepAsserts.assertEquals(GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#add(GameTO)} with null argument. */
@@ -193,7 +191,7 @@ public class GameFacadeImplSpringTest {
 
 		final Game updatedGame = SpringUtils.getGame(entityManager, 1);
 		DeepAsserts.assertEquals(game, updatedGame, "additionalData");
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#update(GameTO)} with null argument. */
@@ -283,7 +281,7 @@ public class GameFacadeImplSpringTest {
 		gameFacade.remove(SpringToUtils.newGame(objectGenerator, 1));
 
 		assertNull(SpringUtils.getGame(entityManager, 1));
-		DeepAsserts.assertEquals(GAMES_COUNT - 1, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT - 1, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#remove(GameTO)} with null argument. */
@@ -307,14 +305,14 @@ public class GameFacadeImplSpringTest {
 	/** Test method for {@link GameFacade#duplicate(GameTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Game game = SpringEntitiesUtils.getGame(GAMES_COUNT);
-		game.setId(GAMES_COUNT + 1);
+		final Game game = SpringEntitiesUtils.getGame(SpringUtils.GAMES_COUNT);
+		game.setId(SpringUtils.GAMES_COUNT + 1);
 
-		gameFacade.duplicate(SpringToUtils.newGame(objectGenerator, GAMES_COUNT));
+		gameFacade.duplicate(SpringToUtils.newGame(objectGenerator, SpringUtils.GAMES_COUNT));
 
-		final Game duplicatedGame = SpringUtils.getGame(entityManager, GAMES_COUNT + 1);
+		final Game duplicatedGame = SpringUtils.getGame(entityManager, SpringUtils.GAMES_COUNT + 1);
 		DeepAsserts.assertEquals(game, duplicatedGame);
-		DeepAsserts.assertEquals(GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#duplicate(GameTO)} with null argument. */
@@ -346,10 +344,10 @@ public class GameFacadeImplSpringTest {
 		gameFacade.moveUp(SpringToUtils.newGame(objectGenerator, 2));
 		DeepAsserts.assertEquals(game1, SpringUtils.getGame(entityManager, 1));
 		DeepAsserts.assertEquals(game2, SpringUtils.getGame(entityManager, 2));
-		for (int i = 3; i <= GAMES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.GAMES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getGame(i), SpringUtils.getGame(entityManager, i));
 		}
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#moveUp(GameTO)} with null argument. */
@@ -387,10 +385,10 @@ public class GameFacadeImplSpringTest {
 		gameFacade.moveDown(SpringToUtils.newGame(objectGenerator, 1));
 		DeepAsserts.assertEquals(game1, SpringUtils.getGame(entityManager, 1));
 		DeepAsserts.assertEquals(game2, SpringUtils.getGame(entityManager, 2));
-		for (int i = 3; i <= GAMES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.GAMES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getGame(i), SpringUtils.getGame(entityManager, i));
 		}
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#moveDown(GameTO)} with null argument. */
@@ -408,7 +406,7 @@ public class GameFacadeImplSpringTest {
 	/** Test method for {@link GameFacade#moveDown(GameTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		gameFacade.moveDown(SpringToUtils.newGame(objectGenerator, GAMES_COUNT));
+		gameFacade.moveDown(SpringToUtils.newGame(objectGenerator, SpringUtils.GAMES_COUNT));
 	}
 
 	/** Test method for {@link GameFacade#moveDown(GameTO)} with bad ID. */
@@ -420,13 +418,13 @@ public class GameFacadeImplSpringTest {
 	/** Test method for {@link GameFacade#exists(GameTO)} with existing game. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= GAMES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GAMES_COUNT; i++) {
 			assertTrue(gameFacade.exists(SpringToUtils.newGame(objectGenerator, i)));
 		}
 
 		assertFalse(gameFacade.exists(SpringToUtils.newGame(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#exists(GameTO)} with null argument. */
@@ -446,17 +444,17 @@ public class GameFacadeImplSpringTest {
 	public void testUpdatePositions() {
 		gameFacade.updatePositions();
 
-		for (int i = 1; i <= GAMES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GAMES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getGame(i), SpringUtils.getGame(entityManager, i));
 		}
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 	/** Test method for {@link GameFacade#getTotalMediaCount()}. */
 	@Test
 	public void testGetTotalMediaCount() {
 		DeepAsserts.assertEquals(6, gameFacade.getTotalMediaCount());
-		DeepAsserts.assertEquals(GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
 	}
 
 }

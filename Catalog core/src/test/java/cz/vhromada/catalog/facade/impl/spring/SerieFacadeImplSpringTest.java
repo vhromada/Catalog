@@ -1,12 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -17,12 +10,12 @@ import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
+import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.SerieFacade;
-import cz.vhromada.catalog.facade.impl.SerieFacadeImpl;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.generator.ObjectGenerator;
@@ -38,7 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link SerieFacadeImpl}.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.SerieFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
@@ -75,14 +68,14 @@ public class SerieFacadeImplSpringTest {
 			serie.setId(null);
 			SpringUtils.persist(transactionManager, entityManager, serie);
 		}
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			for (Season season : SpringEntitiesUtils.getSeasons(i)) {
 				season.setId(null);
 				SpringUtils.persist(transactionManager, entityManager, season);
 			}
 		}
-		for (int i = 1; i <= SERIES_COUNT; i++) {
-			for (int j = 1; j <= SEASONS_PER_SERIE_COUNT; j++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+			for (int j = 1; j <= SpringUtils.SEASONS_PER_SERIE_COUNT; j++) {
 				for (Episode episode : SpringEntitiesUtils.getEpisodes(i, j)) {
 					episode.setId(null);
 					SpringUtils.persist(transactionManager, entityManager, episode);
@@ -103,19 +96,19 @@ public class SerieFacadeImplSpringTest {
 	@Test
 	public void testGetSeries() {
 		DeepAsserts.assertEquals(SpringToUtils.getSeries(), serieFacade.getSeries());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#getSerie(Integer)}. */
 	@Test
 	public void testGetSerie() {
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringToUtils.getSerie(i), serieFacade.getSerie(i));
 		}
 
 		assertNull(serieFacade.getSerie(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#getSerie(Integer)} with null argument. */
@@ -132,10 +125,10 @@ public class SerieFacadeImplSpringTest {
 		serieFacade.add(serie);
 
 		DeepAsserts.assertNotNull(serie.getId());
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, serie.getId());
-		final Serie addedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, serie.getId());
+		final Serie addedSerie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, addedSerie, "seasonsCount", "episodesCount", "totalLength", "genresAsString");
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#add(SerieTO)} with null argument. */
@@ -199,7 +192,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimalImdb() {
 		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
-		serie.setImdbCode(BAD_MIN_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		serieFacade.add(serie);
 	}
@@ -217,7 +210,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximalImdb() {
 		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
-		serie.setImdbCode(BAD_MAX_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		serieFacade.add(serie);
 	}
@@ -280,7 +273,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithNegativeTotalLength() {
 		final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
-		serie.setTotalLength(NEGATIVE_TIME);
+		serie.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		serieFacade.add(serie);
 	}
@@ -342,7 +335,7 @@ public class SerieFacadeImplSpringTest {
 
 		final Serie updatedSerie = SpringUtils.getSerie(entityManager, 1);
 		DeepAsserts.assertEquals(serie, updatedSerie, "seasonsCount", "episodesCount", "totalLength", "genresAsString");
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#update(SerieTO)} with null argument. */
@@ -406,7 +399,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMinimalImdb() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setImdbCode(BAD_MIN_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		serieFacade.update(serie);
 	}
@@ -424,7 +417,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMaximalImdb() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setImdbCode(BAD_MAX_IMDB_CODE);
+		serie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		serieFacade.update(serie);
 	}
@@ -487,7 +480,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNegativeTotalLength() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setTotalLength(NEGATIVE_TIME);
+		serie.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		serieFacade.update(serie);
 	}
@@ -554,7 +547,7 @@ public class SerieFacadeImplSpringTest {
 		serieFacade.remove(SpringToUtils.newSerie(objectGenerator, 1));
 
 		assertNull(SpringUtils.getSerie(entityManager, 1));
-		DeepAsserts.assertEquals(SERIES_COUNT - 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT - 1, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#remove(SerieTO)} with null argument. */
@@ -578,14 +571,14 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Serie serie = SpringEntitiesUtils.getSerie(SERIES_COUNT);
-		serie.setId(SERIES_COUNT + 1);
+		final Serie serie = SpringEntitiesUtils.getSerie(SpringUtils.SERIES_COUNT);
+		serie.setId(SpringUtils.SERIES_COUNT + 1);
 
-		serieFacade.duplicate(SpringToUtils.newSerie(objectGenerator, SERIES_COUNT));
+		serieFacade.duplicate(SpringToUtils.newSerie(objectGenerator, SpringUtils.SERIES_COUNT));
 
-		final Serie duplicatedSerie = SpringUtils.getSerie(entityManager, SERIES_COUNT + 1);
+		final Serie duplicatedSerie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1);
 		DeepAsserts.assertEquals(serie, duplicatedSerie);
-		DeepAsserts.assertEquals(SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#duplicate(SerieTO)} with null argument. */
@@ -617,10 +610,10 @@ public class SerieFacadeImplSpringTest {
 		serieFacade.moveUp(SpringToUtils.newSerie(objectGenerator, 2));
 		DeepAsserts.assertEquals(serie1, SpringUtils.getSerie(entityManager, 1));
 		DeepAsserts.assertEquals(serie2, SpringUtils.getSerie(entityManager, 2));
-		for (int i = 3; i <= SERIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#moveUp(SerieTO)} with null argument. */
@@ -658,10 +651,10 @@ public class SerieFacadeImplSpringTest {
 		serieFacade.moveDown(SpringToUtils.newSerie(objectGenerator, 1));
 		DeepAsserts.assertEquals(serie1, SpringUtils.getSerie(entityManager, 1));
 		DeepAsserts.assertEquals(serie2, SpringUtils.getSerie(entityManager, 2));
-		for (int i = 3; i <= SERIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#moveDown(SerieTO)} with null argument. */
@@ -680,7 +673,7 @@ public class SerieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
 		final SerieTO serie = objectGenerator.generate(SerieTO.class);
-		serie.setId(SERIES_COUNT);
+		serie.setId(SpringUtils.SERIES_COUNT);
 
 		serieFacade.moveDown(serie);
 	}
@@ -694,13 +687,13 @@ public class SerieFacadeImplSpringTest {
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with existing serie. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			assertTrue(serieFacade.exists(SpringToUtils.newSerie(objectGenerator, i)));
 		}
 
 		assertFalse(serieFacade.exists(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#exists(SerieTO)} with null argument. */
@@ -720,31 +713,33 @@ public class SerieFacadeImplSpringTest {
 	public void testUpdatePositions() {
 		serieFacade.updatePositions();
 
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), SpringUtils.getSerie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#getTotalLength()}. */
 	@Test
 	public void testGetTotalLength() {
-		DeepAsserts.assertEquals(new Time(1998), serieFacade.getTotalLength());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		final Time length = new Time(1998);
+
+		DeepAsserts.assertEquals(length, serieFacade.getTotalLength());
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#getSeasonsCount()}. */
 	@Test
 	public void testGetSeasonsCount() {
-		DeepAsserts.assertEquals(SEASONS_COUNT, serieFacade.getSeasonsCount());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, serieFacade.getSeasonsCount());
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 	/** Test method for {@link SerieFacade#getEpisodesCount()}. */
 	@Test
 	public void testGetEpisodesCount() {
-		DeepAsserts.assertEquals(EPISODES_COUNT, serieFacade.getEpisodesCount());
-		DeepAsserts.assertEquals(SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, serieFacade.getEpisodesCount());
+		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
 	}
 
 }

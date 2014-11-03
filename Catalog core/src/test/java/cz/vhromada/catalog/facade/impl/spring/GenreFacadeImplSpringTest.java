@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.GENRES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +18,6 @@ import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.catalog.facade.impl.GenreFacadeImpl;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -34,7 +32,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link GenreFacadeImpl}.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.GenreFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
@@ -85,19 +83,19 @@ public class GenreFacadeImplSpringTest {
 	@Test
 	public void testGetGenres() {
 		DeepAsserts.assertEquals(SpringToUtils.getGenres(), genreFacade.getGenres());
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#getGenre(Integer)}. */
 	@Test
 	public void testGetGenre() {
-		for (int i = 1; i <= GENRES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringToUtils.getGenre(i), genreFacade.getGenre(i));
 		}
 
 		assertNull(genreFacade.getGenre(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#getGenre(Integer)} with null argument. */
@@ -114,10 +112,10 @@ public class GenreFacadeImplSpringTest {
 		genreFacade.add(genre);
 
 		DeepAsserts.assertNotNull(genre.getId());
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, genre.getId());
-		final Genre addedGenre = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, genre.getId());
+		final Genre addedGenre = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 1);
 		DeepAsserts.assertEquals(genre, addedGenre);
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#add(GenreTO)} with null argument. */
@@ -157,11 +155,11 @@ public class GenreFacadeImplSpringTest {
 
 		genreFacade.add(names);
 
-		final Genre addedGenre1 = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
-		final Genre addedGenre2 = SpringUtils.getGenre(entityManager, GENRES_COUNT + 2);
-		DeepAsserts.assertEquals(createGenre(GENRES_COUNT + 1, names.get(0)), addedGenre1);
-		DeepAsserts.assertEquals(createGenre(GENRES_COUNT + 2, names.get(1)), addedGenre2);
-		DeepAsserts.assertEquals(GENRES_COUNT + 2, SpringUtils.getGenresCount(entityManager));
+		final Genre addedGenre1 = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 1);
+		final Genre addedGenre2 = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 2);
+		DeepAsserts.assertEquals(createGenre(SpringUtils.GENRES_COUNT + 1, names.get(0)), addedGenre1);
+		DeepAsserts.assertEquals(createGenre(SpringUtils.GENRES_COUNT + 2, names.get(1)), addedGenre2);
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 2, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#add(GenreTO)} with null argument. */
@@ -185,7 +183,7 @@ public class GenreFacadeImplSpringTest {
 
 		final Genre updatedGenre = SpringUtils.getGenre(entityManager, 1);
 		DeepAsserts.assertEquals(genre, updatedGenre);
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#update(GenreTO)} with null argument. */
@@ -229,12 +227,12 @@ public class GenreFacadeImplSpringTest {
 	public void testRemove() {
 		final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
 		SpringUtils.persist(transactionManager, entityManager, genre);
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 
 		genreFacade.remove(SpringToUtils.newGenre(objectGenerator, genre.getId()));
 
 		assertNull(SpringUtils.getGenre(entityManager, genre.getId()));
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#remove(GenreTO)} with null argument. */
@@ -258,14 +256,14 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#duplicate(GenreTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Genre genre = SpringEntitiesUtils.getGenre(GENRES_COUNT);
-		genre.setId(GENRES_COUNT + 1);
+		final Genre genre = SpringEntitiesUtils.getGenre(SpringUtils.GENRES_COUNT);
+		genre.setId(SpringUtils.GENRES_COUNT + 1);
 
-		genreFacade.duplicate(SpringToUtils.newGenre(objectGenerator, GENRES_COUNT));
+		genreFacade.duplicate(SpringToUtils.newGenre(objectGenerator, SpringUtils.GENRES_COUNT));
 
-		final Genre duplicatedGenre = SpringUtils.getGenre(entityManager, GENRES_COUNT + 1);
+		final Genre duplicatedGenre = SpringUtils.getGenre(entityManager, SpringUtils.GENRES_COUNT + 1);
 		DeepAsserts.assertEquals(genre, duplicatedGenre);
-		DeepAsserts.assertEquals(GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT + 1, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#duplicate(GenreTO)} with null argument. */
@@ -289,13 +287,13 @@ public class GenreFacadeImplSpringTest {
 	/** Test method for {@link GenreFacade#exists(GenreTO)} with existing genre. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= GENRES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.GENRES_COUNT; i++) {
 			assertTrue(genreFacade.exists(SpringToUtils.newGenre(objectGenerator, i)));
 		}
 
 		assertFalse(genreFacade.exists(SpringToUtils.newGenre(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.GENRES_COUNT, SpringUtils.getGenresCount(entityManager));
 	}
 
 	/** Test method for {@link GenreFacade#exists(GenreTO)} with null argument. */

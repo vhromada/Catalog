@@ -1,11 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.MEDIA_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.MOVIES_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_IMDB_CODE;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -17,11 +11,11 @@ import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
+import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
-import cz.vhromada.catalog.facade.impl.MovieFacadeImpl;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.generator.ObjectGenerator;
@@ -37,7 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link MovieFacadeImpl}.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.MovieFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
@@ -89,19 +83,19 @@ public class MovieFacadeImplSpringTest {
 	@Test
 	public void testGetMovies() {
 		DeepAsserts.assertEquals(SpringToUtils.getMovies(), movieFacade.getMovies());
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#getMovie(Integer)}. */
 	@Test
 	public void testGetMovie() {
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringToUtils.getMovie(i), movieFacade.getMovie(i));
 		}
 
 		assertNull(movieFacade.getMovie(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#getMovie(Integer)} with null argument. */
@@ -118,14 +112,14 @@ public class MovieFacadeImplSpringTest {
 		movieFacade.add(movie);
 
 		DeepAsserts.assertNotNull(movie.getId());
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, movie.getId());
-		final Movie addedMovie = SpringUtils.getMovie(entityManager, MOVIES_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, movie.getId());
+		final Movie addedMovie = SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT + 1);
 		DeepAsserts.assertEquals(movie, addedMovie, "subtitlesAsString", "media", "totalLength", "genresAsString");
 		DeepAsserts.assertEquals(movie.getMedia().size(), addedMovie.getMedia().size());
 		for (int i = 0; i < movie.getMedia().size(); i++) {
 			DeepAsserts.assertEquals(movie.getMedia().get(i), addedMovie.getMedia().get(i).getLength());
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#add(MovieTO)} with null argument. */
@@ -180,7 +174,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimumYear() {
 		final MovieTO movie = SpringToUtils.newMovie(objectGenerator);
-		movie.setYear(BAD_MIN_YEAR);
+		movie.setYear(TestConstants.BAD_MIN_YEAR);
 
 		movieFacade.add(movie);
 	}
@@ -189,7 +183,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximumYear() {
 		final MovieTO movie = SpringToUtils.newMovie(objectGenerator);
-		movie.setYear(BAD_MAX_YEAR);
+		movie.setYear(TestConstants.BAD_MAX_YEAR);
 
 		movieFacade.add(movie);
 	}
@@ -261,7 +255,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimalImdb() {
 		final MovieTO movie = SpringToUtils.newMovie(objectGenerator);
-		movie.setImdbCode(BAD_MIN_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		movieFacade.add(movie);
 	}
@@ -279,7 +273,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximalImdb() {
 		final MovieTO movie = SpringToUtils.newMovie(objectGenerator);
-		movie.setImdbCode(BAD_MAX_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		movieFacade.add(movie);
 	}
@@ -371,7 +365,7 @@ public class MovieFacadeImplSpringTest {
 		for (int i = 0; i < movie.getMedia().size(); i++) {
 			DeepAsserts.assertEquals(movie.getMedia().get(i), updatedMovie.getMedia().get(i).getLength());
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#update(MovieTO)} with null argument. */
@@ -426,7 +420,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMinimumYear() {
 		final MovieTO movie = SpringToUtils.newMovieWithId(objectGenerator);
-		movie.setYear(BAD_MIN_YEAR);
+		movie.setYear(TestConstants.BAD_MIN_YEAR);
 
 		movieFacade.update(movie);
 	}
@@ -435,7 +429,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMaximumYear() {
 		final MovieTO movie = SpringToUtils.newMovieWithId(objectGenerator);
-		movie.setYear(BAD_MAX_YEAR);
+		movie.setYear(TestConstants.BAD_MAX_YEAR);
 
 		movieFacade.update(movie);
 	}
@@ -507,7 +501,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMinimalImdb() {
 		final MovieTO movie = SpringToUtils.newMovieWithId(objectGenerator);
-		movie.setImdbCode(BAD_MIN_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
 		movieFacade.update(movie);
 	}
@@ -525,7 +519,7 @@ public class MovieFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMaximalImdb() {
 		final MovieTO movie = SpringToUtils.newMovieWithId(objectGenerator);
-		movie.setImdbCode(BAD_MAX_IMDB_CODE);
+		movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
 		movieFacade.update(movie);
 	}
@@ -616,7 +610,7 @@ public class MovieFacadeImplSpringTest {
 		movieFacade.remove(SpringToUtils.newMovie(objectGenerator, 1));
 
 		assertNull(SpringUtils.getMovie(entityManager, 1));
-		DeepAsserts.assertEquals(MOVIES_COUNT - 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT - 1, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#remove(MovieTO)} with null argument. */
@@ -640,17 +634,17 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Movie movie = SpringEntitiesUtils.getMovie(MOVIES_COUNT);
-		movie.setId(MOVIES_COUNT + 1);
+		final Movie movie = SpringEntitiesUtils.getMovie(SpringUtils.MOVIES_COUNT);
+		movie.setId(SpringUtils.MOVIES_COUNT + 1);
 		for (Medium medium : movie.getMedia()) {
-			medium.setId(MEDIA_COUNT + movie.getMedia().indexOf(medium) + 1);
+			medium.setId(SpringUtils.MEDIA_COUNT + movie.getMedia().indexOf(medium) + 1);
 		}
 
-		movieFacade.duplicate(SpringToUtils.newMovie(objectGenerator, MOVIES_COUNT));
+		movieFacade.duplicate(SpringToUtils.newMovie(objectGenerator, SpringUtils.MOVIES_COUNT));
 
-		final Movie duplicatedMovie = SpringUtils.getMovie(entityManager, MOVIES_COUNT + 1);
+		final Movie duplicatedMovie = SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT + 1);
 		DeepAsserts.assertEquals(movie, duplicatedMovie);
-		DeepAsserts.assertEquals(MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#duplicate(MovieTO)} with null argument. */
@@ -682,10 +676,10 @@ public class MovieFacadeImplSpringTest {
 		movieFacade.moveUp(SpringToUtils.newMovie(objectGenerator, 2));
 		DeepAsserts.assertEquals(movie1, SpringUtils.getMovie(entityManager, 1));
 		DeepAsserts.assertEquals(movie2, SpringUtils.getMovie(entityManager, 2));
-		for (int i = 3; i <= MOVIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#moveUp(MovieTO)} with null argument. */
@@ -723,10 +717,10 @@ public class MovieFacadeImplSpringTest {
 		movieFacade.moveDown(SpringToUtils.newMovie(objectGenerator, 1));
 		DeepAsserts.assertEquals(movie1, SpringUtils.getMovie(entityManager, 1));
 		DeepAsserts.assertEquals(movie2, SpringUtils.getMovie(entityManager, 2));
-		for (int i = 3; i <= MOVIES_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with null argument. */
@@ -744,7 +738,7 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		movieFacade.moveDown(SpringToUtils.newMovie(objectGenerator, MOVIES_COUNT));
+		movieFacade.moveDown(SpringToUtils.newMovie(objectGenerator, SpringUtils.MOVIES_COUNT));
 	}
 
 	/** Test method for {@link MovieFacade#moveDown(MovieTO)} with bad ID. */
@@ -756,13 +750,13 @@ public class MovieFacadeImplSpringTest {
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with existing movie. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			assertTrue(movieFacade.exists(SpringToUtils.newMovie(objectGenerator, i)));
 		}
 
 		assertFalse(movieFacade.exists(SpringToUtils.newMovie(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#exists(MovieTO)} with null argument. */
@@ -782,24 +776,24 @@ public class MovieFacadeImplSpringTest {
 	public void testUpdatePositions() {
 		movieFacade.updatePositions();
 
-		for (int i = 1; i <= MOVIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getMovie(i), SpringUtils.getMovie(entityManager, i));
 		}
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#getTotalMediaCount()}. */
 	@Test
 	public void testGetTotalMediaCount() {
-		DeepAsserts.assertEquals(MEDIA_COUNT, movieFacade.getTotalMediaCount());
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MEDIA_COUNT, movieFacade.getTotalMediaCount());
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 	/** Test method for {@link MovieFacade#getTotalLength()}. */
 	@Test
 	public void testGetTotalLength() {
 		DeepAsserts.assertEquals(new Time(1000), movieFacade.getTotalLength());
-		DeepAsserts.assertEquals(MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
 	}
 
 }

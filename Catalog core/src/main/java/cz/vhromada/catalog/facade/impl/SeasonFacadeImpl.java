@@ -17,8 +17,6 @@ import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
@@ -33,6 +31,42 @@ import org.springframework.transaction.annotation.Transactional;
 @Component("seasonFacade")
 @Transactional
 public class SeasonFacadeImpl implements SeasonFacade {
+
+	/** Service for series field */
+	private static final String SERIE_SERVICE_FIELD = "Service for series";
+
+	/** Service for seasons field */
+	private static final String SEASON_SERVICE_FIELD = "Service for seasons";
+
+	/** Service for episodes field */
+	private static final String EPISODE_SERVICE_FIELD = "Service for episodes";
+
+	/** Conversion service field */
+	private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+
+	/** Validator for TO for serie field */
+	private static final String SERIE_TO_VALIDATOR_FIELD = "Validator for TO for serie";
+
+	/** Validator for TO for season field */
+	private static final String SEASON_TO_VALIDATOR_FIELD = "Validator for TO for season";
+
+	/** Season argument */
+	private static final String SEASON_ARGUMENT = "season";
+
+	/** TO for serie argument */
+	private static final String SERIE_TO_ARGUMENT = "TO for serie";
+
+	/** TO for season argument */
+	private static final String SEASON_TO_ARGUMENT = "TO for season";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link FacadeOperationException} */
+	private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
+
+	/** Message for not setting ID */
+	private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
 	/** Service for series */
 	@Autowired
@@ -179,15 +213,15 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	@Override
 	@Transactional(readOnly = true)
 	public SeasonTO getSeason(final Integer id) {
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(episodeService, "Service for episodes");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return convertSeasonToSeasonTO(seasonService.getSeason(id));
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -199,31 +233,33 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 *                                  or conversion service isn't set
 	 *                                  or validator for TO for season isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void add(final SeasonTO season) {
-		Validators.validateFieldNotNull(serieService, "Service for series");
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateFieldNotNull(seasonTOValidator, "Validator for TO for season");
+		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
 		seasonTOValidator.validateNewSeasonTO(season);
 		try {
 			final Serie serie = serieService.getSerie(season.getSerie().getId());
-			Validators.validateExists(serie, "TO for serie");
+			Validators.validateExists(serie, SERIE_TO_ARGUMENT);
 
 			final Season seasonEntity = conversionService.convert(season, Season.class);
 			seasonEntity.setSerie(serie);
 			seasonService.add(seasonEntity);
 			if (seasonEntity.getId() == null) {
-				throw new FacadeOperationException("Service tier doesn't set ID.");
+				throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
 			}
 			season.setId(seasonEntity.getId());
 			season.setPosition(seasonEntity.getPosition());
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -235,27 +271,29 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 *                                  or conversion service isn't set
 	 *                                  or validator for TO for season isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void update(final SeasonTO season) {
-		Validators.validateFieldNotNull(serieService, "Service for series");
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateFieldNotNull(seasonTOValidator, "Validator for TO for season");
+		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
 		seasonTOValidator.validateExistingSeasonTO(season);
 		try {
 			final Season seasonEntity = conversionService.convert(season, Season.class);
-			Validators.validateExists(seasonService.exists(seasonEntity), "TO for season");
+			Validators.validateExists(seasonService.exists(seasonEntity), SEASON_TO_ARGUMENT);
 			final Serie serie = serieService.getSerie(season.getSerie().getId());
-			Validators.validateExists(serie, "TO for serie");
+			Validators.validateExists(serie, SERIE_TO_ARGUMENT);
 
 			seasonEntity.setSerie(serie);
 			seasonService.update(seasonEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -265,22 +303,24 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 * @throws IllegalStateException    if service for seasons isn't set
 	 *                                  or validator for TO for season isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void remove(final SeasonTO season) {
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(seasonTOValidator, "Validator for TO for season");
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
 		seasonTOValidator.validateSeasonTOWithId(season);
 		try {
 			final Season seasonEntity = seasonService.getSeason(season.getId());
-			Validators.validateExists(seasonEntity, "TO for season");
+			Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
 
 			seasonService.remove(seasonEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -290,22 +330,24 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 * @throws IllegalStateException    if service for seasons isn't set
 	 *                                  or validator for TO for season isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void duplicate(final SeasonTO season) {
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(seasonTOValidator, "Validator for TO for season");
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
 		seasonTOValidator.validateSeasonTOWithId(season);
 		try {
 			final Season oldSeason = seasonService.getSeason(season.getId());
-			Validators.validateExists(oldSeason, "TO for season");
+			Validators.validateExists(oldSeason, SEASON_TO_ARGUMENT);
 
 			seasonService.duplicate(oldSeason);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -315,24 +357,26 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 * @throws IllegalStateException    if service for seasons isn't set
 	 *                                  or validator for TO for season isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void moveUp(final SeasonTO season) {
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(seasonTOValidator, "Validator for TO for season");
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
 		seasonTOValidator.validateSeasonTOWithId(season);
 		try {
 			final Season seasonEntity = seasonService.getSeason(season.getId());
-			Validators.validateExists(seasonEntity, "TO for season");
+			Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
 			final List<Season> seasons = seasonService.findSeasonsBySerie(seasonEntity.getSerie());
-			Validators.validateMoveUp(seasons, seasonEntity, "season");
+			Validators.validateMoveUp(seasons, seasonEntity, SEASON_ARGUMENT);
 
 			seasonService.moveUp(seasonEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -342,24 +386,26 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 * @throws IllegalStateException    if service for seasons isn't set
 	 *                                  or validator for TO for season isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void moveDown(final SeasonTO season) {
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(seasonTOValidator, "Validator for TO for season");
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
 		seasonTOValidator.validateSeasonTOWithId(season);
 		try {
 			final Season seasonEntity = seasonService.getSeason(season.getId());
-			Validators.validateExists(seasonEntity, "TO for season");
+			Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
 			final List<Season> seasons = seasonService.findSeasonsBySerie(seasonEntity.getSerie());
-			Validators.validateMoveDown(seasons, seasonEntity, "season");
+			Validators.validateMoveDown(seasons, seasonEntity, SEASON_ARGUMENT);
 
 			seasonService.moveDown(seasonEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -370,21 +416,22 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 *                                  or conversion service isn't set
 	 *                                  or validator for TO for season isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	@Transactional(readOnly = true)
 	public boolean exists(final SeasonTO season) {
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateFieldNotNull(seasonTOValidator, "Validator for TO for season");
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
 		seasonTOValidator.validateSeasonTOWithId(season);
 		try {
 
 			return seasonService.exists(conversionService.convert(season, Season.class));
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -397,22 +444,24 @@ public class SeasonFacadeImpl implements SeasonFacade {
 	 *                                  or conversion service isn't set
 	 *                                  or validator for TO for serie isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	@Transactional(readOnly = true)
 	public List<SeasonTO> findSeasonsBySerie(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, "Service for series");
-		Validators.validateFieldNotNull(seasonService, "Service for seasons");
-		Validators.validateFieldNotNull(episodeService, "Service for episodes");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateFieldNotNull(serieTOValidator, "Validator for TO for serie");
+		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+		Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
 		serieTOValidator.validateSerieTOWithId(serie);
 		try {
 			final Serie serieEntity = serieService.getSerie(serie.getId());
-			Validators.validateExists(serieEntity, "TO for serie");
+			Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
 
 			final List<SeasonTO> seasons = new ArrayList<>();
 			for (Season season : seasonService.findSeasonsBySerie(serieEntity)) {
@@ -421,7 +470,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
 			Collections.sort(seasons);
 			return seasons;
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

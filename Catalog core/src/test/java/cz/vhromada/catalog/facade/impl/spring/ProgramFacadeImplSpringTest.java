@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.PROGRAMS_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +11,6 @@ import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.catalog.facade.impl.ProgramFacadeImpl;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -27,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link ProgramFacadeImpl}.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.ProgramFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
@@ -74,19 +72,19 @@ public class ProgramFacadeImplSpringTest {
 	@Test
 	public void testGetPrograms() {
 		DeepAsserts.assertEquals(SpringToUtils.getPrograms(), programFacade.getPrograms());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#getProgram(Integer)}. */
 	@Test
 	public void testGetProgram() {
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringToUtils.getProgram(i), programFacade.getProgram(i));
 		}
 
 		assertNull(programFacade.getProgram(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#getProgram(Integer)} with null argument. */
@@ -103,10 +101,10 @@ public class ProgramFacadeImplSpringTest {
 		programFacade.add(program);
 
 		DeepAsserts.assertNotNull(program.getId());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, program.getId());
-		final Program addedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, program.getId());
+		final Program addedProgram = SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, addedProgram, "additionalData");
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#add(ProgramTO)} with null argument. */
@@ -193,7 +191,7 @@ public class ProgramFacadeImplSpringTest {
 
 		final Program updatedProgram = SpringUtils.getProgram(entityManager, 1);
 		DeepAsserts.assertEquals(program, updatedProgram, "additionalData");
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#update(ProgramTO)} with null argument. */
@@ -283,7 +281,7 @@ public class ProgramFacadeImplSpringTest {
 		programFacade.remove(SpringToUtils.newProgram(objectGenerator, 1));
 
 		assertNull(SpringUtils.getProgram(entityManager, 1));
-		DeepAsserts.assertEquals(PROGRAMS_COUNT - 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT - 1, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#remove(ProgramTO)} with null argument. */
@@ -307,14 +305,14 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#duplicate(ProgramTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Program program = SpringEntitiesUtils.getProgram(PROGRAMS_COUNT);
-		program.setId(PROGRAMS_COUNT + 1);
+		final Program program = SpringEntitiesUtils.getProgram(SpringUtils.PROGRAMS_COUNT);
+		program.setId(SpringUtils.PROGRAMS_COUNT + 1);
 
-		programFacade.duplicate(SpringToUtils.newProgram(objectGenerator, PROGRAMS_COUNT));
+		programFacade.duplicate(SpringToUtils.newProgram(objectGenerator, SpringUtils.PROGRAMS_COUNT));
 
-		final Program duplicatedProgram = SpringUtils.getProgram(entityManager, PROGRAMS_COUNT + 1);
+		final Program duplicatedProgram = SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT + 1);
 		DeepAsserts.assertEquals(program, duplicatedProgram);
-		DeepAsserts.assertEquals(PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with null argument. */
@@ -346,10 +344,10 @@ public class ProgramFacadeImplSpringTest {
 		programFacade.moveUp(SpringToUtils.newProgram(objectGenerator, 2));
 		DeepAsserts.assertEquals(program1, SpringUtils.getProgram(entityManager, 1));
 		DeepAsserts.assertEquals(program2, SpringUtils.getProgram(entityManager, 2));
-		for (int i = 3; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), SpringUtils.getProgram(entityManager, i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with null argument. */
@@ -387,10 +385,10 @@ public class ProgramFacadeImplSpringTest {
 		programFacade.moveDown(SpringToUtils.newProgram(objectGenerator, 1));
 		DeepAsserts.assertEquals(program1, SpringUtils.getProgram(entityManager, 1));
 		DeepAsserts.assertEquals(program2, SpringUtils.getProgram(entityManager, 2));
-		for (int i = 3; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 3; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), SpringUtils.getProgram(entityManager, i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with null argument. */
@@ -408,7 +406,7 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		programFacade.moveDown(SpringToUtils.newProgram(objectGenerator, PROGRAMS_COUNT));
+		programFacade.moveDown(SpringToUtils.newProgram(objectGenerator, SpringUtils.PROGRAMS_COUNT));
 	}
 
 	/** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with bad ID. */
@@ -420,13 +418,13 @@ public class ProgramFacadeImplSpringTest {
 	/** Test method for {@link ProgramFacade#exists(ProgramTO)} with existing program. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			assertTrue(programFacade.exists(SpringToUtils.newProgram(objectGenerator, i)));
 		}
 
 		assertFalse(programFacade.exists(SpringToUtils.newProgram(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#exists(ProgramTO)} with null argument. */
@@ -446,17 +444,19 @@ public class ProgramFacadeImplSpringTest {
 	public void testUpdatePositions() {
 		programFacade.updatePositions();
 
-		for (int i = 1; i <= PROGRAMS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getProgram(i), SpringUtils.getProgram(entityManager, i));
 		}
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 	/** Test method for {@link ProgramFacade#getTotalMediaCount()}. */
 	@Test
 	public void testGetTotalMediaCount() {
-		DeepAsserts.assertEquals(600, programFacade.getTotalMediaCount());
-		DeepAsserts.assertEquals(PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
+		final int count = 600;
+
+		DeepAsserts.assertEquals(count, programFacade.getTotalMediaCount());
+		DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
 	}
 
 }

@@ -12,8 +12,6 @@ import cz.vhromada.catalog.service.BookCategoryService;
 import cz.vhromada.catalog.service.BookService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
@@ -28,6 +26,33 @@ import org.springframework.transaction.annotation.Transactional;
 @Component("bookCategoryFacade")
 @Transactional
 public class BookCategoryFacadeImpl implements BookCategoryFacade {
+
+	/** Service for book categories field */
+	private static final String BOOK_CATEGORY_SERVICE_FIELD = "Service for book categories";
+
+	/** Service for books field */
+	private static final String BOOK_SERVICE_FIELD = "Service for books";
+
+	/** Conversion service field */
+	private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+
+	/** Validator for TO for book category field */
+	private static final String BOOK_CATEGORY_TO_VALIDATOR_FIELD = "Validator for TO for book category";
+
+	/** Book category argument */
+	private static final String BOOK_CATEGORY_ARGUMENT = "book category";
+
+	/** TO for book category argument */
+	private static final String BOOK_CATEGORY_TO_ARGUMENT = "TO for book category";
+
+	/** ID argument */
+	private static final String ID_ARGUMENT = "ID";
+
+	/** Message for {@link FacadeOperationException} */
+	private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
+
+	/** Message for not setting ID */
+	private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
 	/** Service for book categories */
 	@Autowired
@@ -126,12 +151,12 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 */
 	@Override
 	public void newData() {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
 
 		try {
 			bookCategoryService.newData();
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -146,9 +171,9 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	@Override
 	@Transactional(readOnly = true)
 	public List<BookCategoryTO> getBookCategories() {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(bookService, "Service for book");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookService, BOOK_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
 
 		try {
 			final List<BookCategoryTO> bookCategories = new ArrayList<>();
@@ -157,7 +182,7 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 			}
 			return bookCategories;
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -173,15 +198,15 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	@Override
 	@Transactional(readOnly = true)
 	public BookCategoryTO getBookCategory(final Integer id) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(bookService, "Service for book");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateArgumentNotNull(id, "ID");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookService, BOOK_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
 		try {
 			return convertBookCategoryToBookCategoryTO(bookCategoryService.getBookCategory(id));
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -192,26 +217,27 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 *                                  or conversion service isn't set
 	 *                                  or validator for TO for book category isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void add(final BookCategoryTO bookCategory) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateFieldNotNull(bookCategoryTOValidator, "Validator for TO for book category");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
 		bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
 
 		try {
 			final BookCategory bookCategoryEntity = conversionService.convert(bookCategory, BookCategory.class);
 			bookCategoryService.add(bookCategoryEntity);
 			if (bookCategoryEntity.getId() == null) {
-				throw new FacadeOperationException("service tier doesn't set ID.");
+				throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
 			}
 			bookCategory.setId(bookCategoryEntity.getId());
 			bookCategory.setPosition(bookCategoryEntity.getPosition());
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -222,23 +248,25 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 *                                  or conversion service isn't set
 	 *                                  or validator for TO for book category isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void update(final BookCategoryTO bookCategory) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateFieldNotNull(bookCategoryTOValidator, "Validator for TO for book category");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
 		bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
 		try {
 			final BookCategory bookCategoryEntity = conversionService.convert(bookCategory, BookCategory.class);
-			Validators.validateExists(bookCategoryService.exists(bookCategoryEntity), "TO for book category");
+			Validators.validateExists(bookCategoryService.exists(bookCategoryEntity), BOOK_CATEGORY_TO_ARGUMENT);
 
 			bookCategoryService.update(bookCategoryEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -248,22 +276,24 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 * @throws IllegalStateException    if service for book categories isn't set
 	 *                                  or validator for TO for book category isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void remove(final BookCategoryTO bookCategory) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(bookCategoryTOValidator, "Validator for TO for book category");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
 		bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
 		try {
 			final BookCategory bookCategoryEntity = bookCategoryService.getBookCategory(bookCategory.getId());
-			Validators.validateExists(bookCategoryEntity, "TO for book category");
+			Validators.validateExists(bookCategoryEntity, BOOK_CATEGORY_TO_ARGUMENT);
 
 			bookCategoryService.remove(bookCategoryEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -273,22 +303,24 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 * @throws IllegalStateException    if service for book categories isn't set
 	 *                                  or validator for TO for book category isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void duplicate(final BookCategoryTO bookCategory) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(bookCategoryTOValidator, "Validator for TO for book category");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
 		bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
 		try {
 			final BookCategory oldBookCategory = bookCategoryService.getBookCategory(bookCategory.getId());
-			Validators.validateExists(oldBookCategory, "TO for book category");
+			Validators.validateExists(oldBookCategory, BOOK_CATEGORY_TO_ARGUMENT);
 
 			bookCategoryService.duplicate(oldBookCategory);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -298,24 +330,26 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 * @throws IllegalStateException    if service for book categories isn't set
 	 *                                  or validator for TO for book category isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void moveUp(final BookCategoryTO bookCategory) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(bookCategoryTOValidator, "Validator for TO for book category");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
 		bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
 		try {
 			final BookCategory bookCategoryEntity = bookCategoryService.getBookCategory(bookCategory.getId());
-			Validators.validateExists(bookCategoryEntity, "TO for book category");
+			Validators.validateExists(bookCategoryEntity, BOOK_CATEGORY_TO_ARGUMENT);
 			final List<BookCategory> bookCategories = bookCategoryService.getBookCategories();
-			Validators.validateMoveUp(bookCategories, bookCategoryEntity, "book category");
+			Validators.validateMoveUp(bookCategories, bookCategoryEntity, BOOK_CATEGORY_ARGUMENT);
 
 			bookCategoryService.moveUp(bookCategoryEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -325,24 +359,26 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 * @throws IllegalStateException    if service for book categories isn't set
 	 *                                  or validator for TO for book category isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
-	 * @throws RecordNotFoundException  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	public void moveDown(final BookCategoryTO bookCategory) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(bookCategoryTOValidator, "Validator for TO for book category");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
 		bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
 		try {
 			final BookCategory bookCategoryEntity = bookCategoryService.getBookCategory(bookCategory.getId());
-			Validators.validateExists(bookCategoryEntity, "TO for book category");
+			Validators.validateExists(bookCategoryEntity, BOOK_CATEGORY_TO_ARGUMENT);
 			final List<BookCategory> bookCategories = bookCategoryService.getBookCategories();
-			Validators.validateMoveDown(bookCategories, bookCategoryEntity, "book category");
+			Validators.validateMoveDown(bookCategories, bookCategoryEntity, BOOK_CATEGORY_ARGUMENT);
 
 			bookCategoryService.moveDown(bookCategoryEntity);
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -353,21 +389,22 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 *                                  or conversion service isn't set
 	 *                                  or validator for TO for book category isn't set
 	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws ValidationException      {@inheritDoc}
+	 * @throws cz.vhromada.validators.exceptions.ValidationException
+	 *                                  {@inheritDoc}
 	 * @throws FacadeOperationException {@inheritDoc}
 	 */
 	@Override
 	@Transactional(readOnly = true)
 	public boolean exists(final BookCategoryTO bookCategory) {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
-		Validators.validateFieldNotNull(conversionService, "Conversion service");
-		Validators.validateFieldNotNull(bookCategoryTOValidator, "Validator for TO for book category");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
+		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+		Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
 		bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
 		try {
 
 			return bookCategoryService.exists(conversionService.convert(bookCategory, BookCategory.class));
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -379,12 +416,12 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	 */
 	@Override
 	public void updatePositions() {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
 
 		try {
 			bookCategoryService.updatePositions();
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 
@@ -397,12 +434,12 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 	@Override
 	@Transactional(readOnly = true)
 	public int getBooksCount() {
-		Validators.validateFieldNotNull(bookCategoryService, "Service for book categories");
+		Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
 
 		try {
 			return bookCategoryService.getBooksCount();
 		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException("Error in working with service tier.", ex);
+			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
 		}
 	}
 

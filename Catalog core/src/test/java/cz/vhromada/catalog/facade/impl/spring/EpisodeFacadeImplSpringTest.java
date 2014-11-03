@@ -1,11 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SEASON_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.EPISODES_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -19,9 +13,7 @@ import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.EpisodeFacade;
-import cz.vhromada.catalog.facade.impl.EpisodeFacadeImpl;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
-import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -35,13 +27,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link EpisodeFacadeImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.EpisodeFacadeImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
 public class EpisodeFacadeImplSpringTest {
+
+	/** Year field */
+	private static final String YEAR_FIELD = "year";
+
+	/** Count of seasons field */
+	private static final String SEASONS_COUNT_FIELD = "seasonsCount";
+
+	/** Count of episodes field */
+	private static final String EPISODES_COUNT_FIELD = "episodesCount";
+
+	/** Total length field */
+	private static final String TOTAL_LENGTH_FIELD = "totalLength";
+
+	/** Subtitles as string method */
+	private static final String SUBTITLES_AS_STRING_METHOD = "subtitlesAsString";
+
+	/** Genres as string method */
+	private static final String GENRES_AS_STRING_METHOD = "genresAsString";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -72,14 +82,14 @@ public class EpisodeFacadeImplSpringTest {
 			serie.setId(null);
 			SpringUtils.persist(transactionManager, entityManager, serie);
 		}
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			for (Season season : SpringEntitiesUtils.getSeasons(i)) {
 				season.setId(null);
 				SpringUtils.persist(transactionManager, entityManager, season);
 			}
 		}
-		for (int i = 1; i <= SERIES_COUNT; i++) {
-			for (int j = 1; j <= SEASONS_PER_SERIE_COUNT; j++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+			for (int j = 1; j <= SpringUtils.SEASONS_PER_SERIE_COUNT; j++) {
 				for (Episode episode : SpringEntitiesUtils.getEpisodes(i, j)) {
 					episode.setId(null);
 					SpringUtils.persist(transactionManager, entityManager, episode);
@@ -91,18 +101,17 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#getEpisode(Integer)}. */
 	@Test
 	public void testGetEpisode() {
-		for (int i = 0; i < EPISODES_COUNT; i++) {
-			final int serieNumber = i / EPISODES_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % EPISODES_PER_SERIE_COUNT / EPISODES_PER_SEASON_COUNT + 1;
-			final int episodeNumber = i % EPISODES_PER_SEASON_COUNT + 1;
-			DeepAsserts.assertEquals(SpringToUtils.getEpisode(serieNumber, seasonNumber, episodeNumber), episodeFacade.getEpisode(i + 1), "totalLength",
-					"seasonsCount", "episodesCount");
-
+		for (int i = 0; i < SpringUtils.EPISODES_COUNT; i++) {
+			final int serieNumber = i / SpringUtils.EPISODES_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.EPISODES_PER_SERIE_COUNT / SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
+			final int episodeNumber = i % SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
+			DeepAsserts.assertEquals(SpringToUtils.getEpisode(serieNumber, seasonNumber, episodeNumber), episodeFacade.getEpisode(i + 1), SEASONS_COUNT_FIELD,
+					EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD);
 		}
 
 		assertNull(episodeFacade.getEpisode(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#getEpisode(Integer)} with null argument. */
@@ -119,11 +128,12 @@ public class EpisodeFacadeImplSpringTest {
 		episodeFacade.add(episode);
 
 		DeepAsserts.assertNotNull(episode.getId());
-		DeepAsserts.assertEquals(EPISODES_COUNT + 1, episode.getId());
-		DeepAsserts.assertEquals(EPISODES_COUNT, episode.getPosition());
-		final Episode addedEpisode = SpringUtils.getEpisode(entityManager, EPISODES_COUNT + 1);
-		DeepAsserts.assertEquals(episode, addedEpisode, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
-		DeepAsserts.assertEquals(EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT + 1, episode.getId());
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, episode.getPosition());
+		final Episode addedEpisode = SpringUtils.getEpisode(entityManager, SpringUtils.EPISODES_COUNT + 1);
+		DeepAsserts.assertEquals(episode, addedEpisode, YEAR_FIELD, TOTAL_LENGTH_FIELD, SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD, SUBTITLES_AS_STRING_METHOD,
+				GENRES_AS_STRING_METHOD);
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#add(EpisodeTO)} with null argument. */
@@ -218,8 +228,9 @@ public class EpisodeFacadeImplSpringTest {
 		episodeFacade.update(episode);
 
 		final Episode updatedEpisode = SpringUtils.getEpisode(entityManager, 1);
-		DeepAsserts.assertEquals(episode, updatedEpisode, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
-		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(episode, updatedEpisode, YEAR_FIELD, TOTAL_LENGTH_FIELD, SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD, SUBTITLES_AS_STRING_METHOD,
+				GENRES_AS_STRING_METHOD);
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#update(EpisodeTO)} with null argument. */
@@ -318,7 +329,7 @@ public class EpisodeFacadeImplSpringTest {
 		episodeFacade.remove(SpringToUtils.newEpisode(objectGenerator, 1));
 
 		assertNull(SpringUtils.getEpisode(entityManager, 1));
-		DeepAsserts.assertEquals(EPISODES_COUNT - 1, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT - 1, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with null argument. */
@@ -342,14 +353,15 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Episode episode = SpringEntitiesUtils.getEpisode(SERIES_COUNT, SEASONS_PER_SERIE_COUNT, EPISODES_PER_SEASON_COUNT);
-		episode.setId(EPISODES_COUNT + 1);
+		final Episode episode = SpringEntitiesUtils
+				.getEpisode(SpringUtils.SERIES_COUNT, SpringUtils.SEASONS_PER_SERIE_COUNT, SpringUtils.EPISODES_PER_SEASON_COUNT);
+		episode.setId(SpringUtils.EPISODES_COUNT + 1);
 
-		episodeFacade.duplicate(SpringToUtils.newEpisode(objectGenerator, EPISODES_COUNT));
+		episodeFacade.duplicate(SpringToUtils.newEpisode(objectGenerator, SpringUtils.EPISODES_COUNT));
 
-		final Episode duplicatedEpisode = SpringUtils.getEpisode(entityManager, EPISODES_COUNT + 1);
+		final Episode duplicatedEpisode = SpringUtils.getEpisode(entityManager, SpringUtils.EPISODES_COUNT + 1);
 		DeepAsserts.assertEquals(episode, duplicatedEpisode);
-		DeepAsserts.assertEquals(EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with null argument. */
@@ -381,13 +393,13 @@ public class EpisodeFacadeImplSpringTest {
 		episodeFacade.moveUp(SpringToUtils.newEpisode(objectGenerator, 2));
 		DeepAsserts.assertEquals(episode1, SpringUtils.getEpisode(entityManager, 1));
 		DeepAsserts.assertEquals(episode2, SpringUtils.getEpisode(entityManager, 2));
-		for (int i = 2; i < EPISODES_COUNT; i++) {
-			final int serieNumber = i / EPISODES_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % EPISODES_PER_SERIE_COUNT / EPISODES_PER_SEASON_COUNT + 1;
-			final int episodeNumber = i % EPISODES_PER_SEASON_COUNT + 1;
+		for (int i = 2; i < SpringUtils.EPISODES_COUNT; i++) {
+			final int serieNumber = i / SpringUtils.EPISODES_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.EPISODES_PER_SERIE_COUNT / SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
+			final int episodeNumber = i % SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getEpisode(serieNumber, seasonNumber, episodeNumber), SpringUtils.getEpisode(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with null argument. */
@@ -425,13 +437,13 @@ public class EpisodeFacadeImplSpringTest {
 		episodeFacade.moveDown(SpringToUtils.newEpisode(objectGenerator, 1));
 		DeepAsserts.assertEquals(episode1, SpringUtils.getEpisode(entityManager, 1));
 		DeepAsserts.assertEquals(episode2, SpringUtils.getEpisode(entityManager, 2));
-		for (int i = 2; i < EPISODES_COUNT; i++) {
-			final int serieNumber = i / EPISODES_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % EPISODES_PER_SERIE_COUNT / EPISODES_PER_SEASON_COUNT + 1;
-			final int episodeNumber = i % EPISODES_PER_SEASON_COUNT + 1;
+		for (int i = 2; i < SpringUtils.EPISODES_COUNT; i++) {
+			final int serieNumber = i / SpringUtils.EPISODES_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.EPISODES_PER_SERIE_COUNT / SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
+			final int episodeNumber = i % SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getEpisode(serieNumber, seasonNumber, episodeNumber), SpringUtils.getEpisode(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with null argument. */
@@ -449,7 +461,7 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		episodeFacade.moveDown(SpringToUtils.newEpisode(objectGenerator, EPISODES_COUNT));
+		episodeFacade.moveDown(SpringToUtils.newEpisode(objectGenerator, SpringUtils.EPISODES_COUNT));
 	}
 
 	/** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with bad ID. */
@@ -461,13 +473,13 @@ public class EpisodeFacadeImplSpringTest {
 	/** Test method for {@link EpisodeFacade#exists(EpisodeTO)}. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= EPISODES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.EPISODES_COUNT; i++) {
 			assertTrue(episodeFacade.exists(SpringToUtils.newEpisode(objectGenerator, i)));
 		}
 
 		assertFalse(episodeFacade.exists(SpringToUtils.newEpisode(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
 	}
 
 	/** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with null argument. */
@@ -482,31 +494,32 @@ public class EpisodeFacadeImplSpringTest {
 		episodeFacade.exists(SpringToUtils.newEpisode(objectGenerator));
 	}
 
-	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)}. */
+	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)}. */
 	@Test
 	public void testFindEpisodesBySeason() {
-		for (int i = 0; i < SEASONS_COUNT; i++) {
-			final int serieNumber = i / SEASONS_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % SEASONS_PER_SERIE_COUNT + 1;
+		for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
+			final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
 			DeepAsserts.assertEquals(SpringToUtils.getEpisodes(serieNumber, seasonNumber),
-					episodeFacade.findEpisodesBySeason(SpringToUtils.newSeason(objectGenerator, i + 1)), "seasonsCount", "episodesCount", "totalLength");
+					episodeFacade.findEpisodesBySeason(SpringToUtils.newSeason(objectGenerator, i + 1)), SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD,
+					TOTAL_LENGTH_FIELD);
 		}
-		DeepAsserts.assertEquals(EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
 	}
 
-	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with null argument. */
+	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)} with null argument. */
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindEpisodesBySeasonWithNullArgument() {
 		episodeFacade.findEpisodesBySeason(null);
 	}
 
-	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with season with null ID. */
+	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)} with season with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testFindEpisodesBySeasonWithNullId() {
 		episodeFacade.findEpisodesBySeason(SpringToUtils.newSeason(objectGenerator));
 	}
 
-	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with bad ID. */
+	/** Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testFindEpisodesBySeasonWithBadId() {
 		episodeFacade.findEpisodesBySeason(SpringToUtils.newSeason(objectGenerator, Integer.MAX_VALUE));

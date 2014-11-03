@@ -1,11 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SEASONS_PER_SERIE_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SERIES_COUNT;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MAX_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.BAD_MIN_YEAR;
-import static cz.vhromada.catalog.commons.TestConstants.NEGATIVE_TIME;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -19,13 +13,12 @@ import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
+import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.SeasonFacade;
-import cz.vhromada.catalog.facade.impl.SeasonFacadeImpl;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -39,13 +32,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link SeasonFacadeImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.SeasonFacadeImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
 public class SeasonFacadeImplSpringTest {
+
+	/** Year field */
+	private static final String YEAR_FIELD = "year";
+
+	/** Count of seasons field */
+	private static final String SEASONS_COUNT_FIELD = "seasonsCount";
+
+	/** Count of episodes field */
+	private static final String EPISODES_COUNT_FIELD = "episodesCount";
+
+	/** Total length field */
+	private static final String TOTAL_LENGTH_FIELD = "totalLength";
+
+	/** Subtitles as string method */
+	private static final String SUBTITLES_AS_STRING_METHOD = "subtitlesAsString";
+
+	/** Genres as string method */
+	private static final String GENRES_AS_STRING_METHOD = "genresAsString";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -76,14 +87,14 @@ public class SeasonFacadeImplSpringTest {
 			serie.setId(null);
 			SpringUtils.persist(transactionManager, entityManager, serie);
 		}
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			for (Season season : SpringEntitiesUtils.getSeasons(i)) {
 				season.setId(null);
 				SpringUtils.persist(transactionManager, entityManager, season);
 			}
 		}
-		for (int i = 1; i <= SERIES_COUNT; i++) {
-			for (int j = 1; j <= SEASONS_PER_SERIE_COUNT; j++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+			for (int j = 1; j <= SpringUtils.SEASONS_PER_SERIE_COUNT; j++) {
 				for (Episode episode : SpringEntitiesUtils.getEpisodes(i, j)) {
 					episode.setId(null);
 					SpringUtils.persist(transactionManager, entityManager, episode);
@@ -95,16 +106,16 @@ public class SeasonFacadeImplSpringTest {
 	/** Test method for {@link SeasonFacade#getSeason(Integer)}. */
 	@Test
 	public void testGetSeason() {
-		for (int i = 0; i < SEASONS_COUNT; i++) {
-			final int serieNumber = i / SEASONS_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % SEASONS_PER_SERIE_COUNT + 1;
-			DeepAsserts.assertEquals(SpringToUtils.getSeason(serieNumber, seasonNumber), seasonFacade.getSeason(i + 1), "seasonsCount", "episodesCount",
-					"totalLength");
+		for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
+			final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+			DeepAsserts.assertEquals(SpringToUtils.getSeason(serieNumber, seasonNumber), seasonFacade.getSeason(i + 1), SEASONS_COUNT_FIELD,
+					EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD);
 		}
 
 		assertNull(seasonFacade.getSeason(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#getSeason(Integer)} with null argument. */
@@ -121,11 +132,12 @@ public class SeasonFacadeImplSpringTest {
 		seasonFacade.add(season);
 
 		DeepAsserts.assertNotNull(season.getId());
-		DeepAsserts.assertEquals(SEASONS_COUNT + 1, season.getId());
-		DeepAsserts.assertEquals(SEASONS_COUNT, season.getPosition());
-		final Season addedSeason = SpringUtils.getSeason(entityManager, SEASONS_COUNT + 1);
-		DeepAsserts.assertEquals(season, addedSeason, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
-		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, season.getId());
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, season.getPosition());
+		final Season addedSeason = SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1);
+		DeepAsserts.assertEquals(season, addedSeason, YEAR_FIELD, SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD, SUBTITLES_AS_STRING_METHOD,
+				GENRES_AS_STRING_METHOD);
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#add(SeasonTO)} with null argument. */
@@ -153,7 +165,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimumStartYear() {
 		final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-		season.setStartYear(BAD_MIN_YEAR);
+		season.setStartYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonFacade.add(season);
 	}
@@ -162,7 +174,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximumStartYear() {
 		final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-		season.setStartYear(BAD_MAX_YEAR);
+		season.setStartYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonFacade.add(season);
 	}
@@ -171,7 +183,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMinimumEndYear() {
 		final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-		season.setEndYear(BAD_MIN_YEAR);
+		season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonFacade.add(season);
 	}
@@ -180,7 +192,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithBadMaximumEndYear() {
 		final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-		season.setEndYear(BAD_MAX_YEAR);
+		season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonFacade.add(season);
 	}
@@ -243,7 +255,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testAddWithNegativeTotalLength() {
 		final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-		season.setTotalLength(NEGATIVE_TIME);
+		season.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		seasonFacade.add(season);
 	}
@@ -292,8 +304,9 @@ public class SeasonFacadeImplSpringTest {
 		seasonFacade.update(season);
 
 		final Season updatedSeason = SpringUtils.getSeason(entityManager, 1);
-		DeepAsserts.assertEquals(season, updatedSeason, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
-		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(season, updatedSeason, YEAR_FIELD, SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD, SUBTITLES_AS_STRING_METHOD,
+				GENRES_AS_STRING_METHOD);
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#update(SeasonTO)} with null argument. */
@@ -321,7 +334,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMinimumStartYear() {
 		final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-		season.setStartYear(BAD_MIN_YEAR);
+		season.setStartYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonFacade.update(season);
 	}
@@ -330,7 +343,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMaximumStartYear() {
 		final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-		season.setStartYear(BAD_MAX_YEAR);
+		season.setStartYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonFacade.update(season);
 	}
@@ -339,7 +352,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMinimumEndYear() {
 		final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-		season.setEndYear(BAD_MIN_YEAR);
+		season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
 		seasonFacade.update(season);
 	}
@@ -348,7 +361,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithBadMaximumEndYear() {
 		final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-		season.setEndYear(BAD_MAX_YEAR);
+		season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
 		seasonFacade.update(season);
 	}
@@ -411,7 +424,7 @@ public class SeasonFacadeImplSpringTest {
 	@Test(expected = ValidationException.class)
 	public void testUpdateWithNegativeTotalLength() {
 		final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-		season.setTotalLength(NEGATIVE_TIME);
+		season.setTotalLength(TestConstants.NEGATIVE_TIME);
 
 		seasonFacade.update(season);
 	}
@@ -464,7 +477,7 @@ public class SeasonFacadeImplSpringTest {
 		seasonFacade.remove(SpringToUtils.newSeason(objectGenerator, 1));
 
 		assertNull(SpringUtils.getSeason(entityManager, 1));
-		DeepAsserts.assertEquals(SEASONS_COUNT - 1, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT - 1, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#remove(SeasonTO)} with null argument. */
@@ -488,14 +501,14 @@ public class SeasonFacadeImplSpringTest {
 	/** Test method for {@link SeasonFacade#duplicate(SeasonTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Season season = SpringEntitiesUtils.getSeason(SERIES_COUNT, SEASONS_PER_SERIE_COUNT);
-		season.setId(SEASONS_COUNT + 1);
+		final Season season = SpringEntitiesUtils.getSeason(SpringUtils.SERIES_COUNT, SpringUtils.SEASONS_PER_SERIE_COUNT);
+		season.setId(SpringUtils.SEASONS_COUNT + 1);
 
-		seasonFacade.duplicate(SpringToUtils.newSeason(objectGenerator, SEASONS_COUNT));
+		seasonFacade.duplicate(SpringToUtils.newSeason(objectGenerator, SpringUtils.SEASONS_COUNT));
 
-		final Season duplicatedSeason = SpringUtils.getSeason(entityManager, SEASONS_COUNT + 1);
+		final Season duplicatedSeason = SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1);
 		DeepAsserts.assertEquals(season, duplicatedSeason);
-		DeepAsserts.assertEquals(SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#duplicate(SeasonTO)} with null argument. */
@@ -527,12 +540,12 @@ public class SeasonFacadeImplSpringTest {
 		seasonFacade.moveUp(SpringToUtils.newSeason(objectGenerator, 2));
 		DeepAsserts.assertEquals(season1, SpringUtils.getSeason(entityManager, 1));
 		DeepAsserts.assertEquals(season2, SpringUtils.getSeason(entityManager, 2));
-		for (int i = 2; i < SEASONS_COUNT; i++) {
-			final int serieNumber = i / SEASONS_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % SEASONS_PER_SERIE_COUNT + 1;
+		for (int i = 2; i < SpringUtils.SEASONS_COUNT; i++) {
+			final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with null argument. */
@@ -570,12 +583,12 @@ public class SeasonFacadeImplSpringTest {
 		seasonFacade.moveDown(SpringToUtils.newSeason(objectGenerator, 1));
 		DeepAsserts.assertEquals(season1, SpringUtils.getSeason(entityManager, 1));
 		DeepAsserts.assertEquals(season2, SpringUtils.getSeason(entityManager, 2));
-		for (int i = 2; i < SEASONS_COUNT; i++) {
-			final int serieNumber = i / SEASONS_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % SEASONS_PER_SERIE_COUNT + 1;
+		for (int i = 2; i < SpringUtils.SEASONS_COUNT; i++) {
+			final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+			final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with null argument. */
@@ -593,7 +606,7 @@ public class SeasonFacadeImplSpringTest {
 	/** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		seasonFacade.moveDown(SpringToUtils.newSeason(objectGenerator, SEASONS_COUNT));
+		seasonFacade.moveDown(SpringToUtils.newSeason(objectGenerator, SpringUtils.SEASONS_COUNT));
 	}
 
 	/** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with bad ID. */
@@ -605,13 +618,13 @@ public class SeasonFacadeImplSpringTest {
 	/** Test method for {@link SeasonFacade#exists(SeasonTO)}. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= SEASONS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SEASONS_COUNT; i++) {
 			assertTrue(seasonFacade.exists(SpringToUtils.newSeason(objectGenerator, i)));
 		}
 
 		assertFalse(seasonFacade.exists(SpringToUtils.newSeason(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 	}
 
 	/** Test method for {@link SeasonFacade#exists(SeasonTO)} with null argument. */
@@ -626,34 +639,34 @@ public class SeasonFacadeImplSpringTest {
 		seasonFacade.exists(SpringToUtils.newSeason(objectGenerator));
 	}
 
-	/** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)}. */
+	/** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)}. */
 	@Test
 	public void testFindSeasonsBySerie() {
-		for (int i = 1; i <= SERIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
 			final List<SeasonTO> expectedSeasons = SpringToUtils.getSeasons(i);
 			final List<SeasonTO> actualSeasons = seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator, i));
-			DeepAsserts.assertEquals(expectedSeasons, actualSeasons, "seasonsCount", "episodesCount", "totalLength");
+			DeepAsserts.assertEquals(expectedSeasons, actualSeasons, SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD);
 			for (int j = 0; j < expectedSeasons.size(); j++) {
 				DeepAsserts.assertEquals(expectedSeasons.get(j).getEpisodesCount(), actualSeasons.get(j).getEpisodesCount());
 				DeepAsserts.assertEquals(expectedSeasons.get(j).getTotalLength(), actualSeasons.get(j).getTotalLength());
 			}
 		}
-		DeepAsserts.assertEquals(SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
 	}
 
-	/** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with null argument. */
+	/** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with null argument. */
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindSeasonsBySerieWithNullArgument() {
 		seasonFacade.findSeasonsBySerie(null);
 	}
 
-	/** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with serie with null ID. */
+	/** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with serie with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testFindSeasonsBySerieWithNullId() {
 		seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator));
 	}
 
-	/** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with bad ID. */
+	/** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testFindSeasonsBySerieWithBadId() {
 		seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE));

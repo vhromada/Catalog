@@ -1166,7 +1166,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
 		try {
 			musicFacade.getTotalLength();
-			fail("Can't get total media count with not thrown FacadeOperationException for service tier exception.");
+			fail("Can't get total length of all songs with not thrown FacadeOperationException for service tier exception.");
 		} catch (final FacadeOperationException ex) {
 			// OK
 		}
@@ -1201,7 +1201,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
 		try {
 			musicFacade.getSongsCount();
-			fail("Can't get total media count with not thrown FacadeOperationException for service tier exception.");
+			fail("Can't get count of songs from all music with not thrown FacadeOperationException for service tier exception.");
 		} catch (final FacadeOperationException ex) {
 			// OK
 		}

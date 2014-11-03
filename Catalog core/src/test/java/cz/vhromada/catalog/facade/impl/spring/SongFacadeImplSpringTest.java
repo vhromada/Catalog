@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.MUSIC_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SONGS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.SONGS_PER_MUSIC_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -15,8 +12,6 @@ import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.catalog.facade.impl.SongFacadeImpl;
-import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -31,13 +26,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link SongFacadeImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.SongFacadeImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
 public class SongFacadeImplSpringTest {
+
+	/** Count of songs */
+	private static final String SONGS_COUNT_FIELD = "songsCount";
+
+	/** Total length field */
+	private static final String TOTAL_LENGTH_FIELD = "totalLength";
 
 	/** Instance of {@link EntityManager} */
 	@Autowired
@@ -66,7 +67,7 @@ public class SongFacadeImplSpringTest {
 			music.setId(null);
 			SpringUtils.persist(transactionManager, entityManager, music);
 		}
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
 			for (Song song : SpringEntitiesUtils.getSongs(i)) {
 				song.setId(null);
 				SpringUtils.persist(transactionManager, entityManager, song);
@@ -77,15 +78,15 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#getSong(Integer)}. */
 	@Test
 	public void testGetSong() {
-		for (int i = 0; i < SONGS_COUNT; i++) {
-			final int musicNumber = i / SONGS_PER_MUSIC_COUNT + 1;
-			final int songNumber = i % SONGS_PER_MUSIC_COUNT + 1;
-			DeepAsserts.assertEquals(SpringToUtils.getSong(musicNumber, songNumber), songFacade.getSong(i + 1), "songsCount", "totalLength");
+		for (int i = 0; i < SpringUtils.SONGS_COUNT; i++) {
+			final int musicNumber = i / SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
+			final int songNumber = i % SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
+			DeepAsserts.assertEquals(SpringToUtils.getSong(musicNumber, songNumber), songFacade.getSong(i + 1), SONGS_COUNT_FIELD, TOTAL_LENGTH_FIELD);
 		}
 
 		assertNull(songFacade.getSong(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#getSong(Integer)} with null argument. */
@@ -102,11 +103,11 @@ public class SongFacadeImplSpringTest {
 		songFacade.add(song);
 
 		DeepAsserts.assertNotNull(song.getId());
-		DeepAsserts.assertEquals(SONGS_COUNT + 1, song.getId());
-		DeepAsserts.assertEquals(SONGS_COUNT, song.getPosition());
-		final Song addedSong = SpringUtils.getSong(entityManager, SONGS_COUNT + 1);
-		DeepAsserts.assertEquals(song, addedSong, "songsCount", "totalLength");
-		DeepAsserts.assertEquals(SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, song.getId());
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, song.getPosition());
+		final Song addedSong = SpringUtils.getSong(entityManager, SpringUtils.SONGS_COUNT + 1);
+		DeepAsserts.assertEquals(song, addedSong, SONGS_COUNT_FIELD, TOTAL_LENGTH_FIELD);
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#add(SongTO)} with null argument. */
@@ -192,8 +193,8 @@ public class SongFacadeImplSpringTest {
 		songFacade.update(song);
 
 		final Song updatedSong = SpringUtils.getSong(entityManager, 1);
-		DeepAsserts.assertEquals(song, updatedSong, "songsCount", "totalLength");
-		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(song, updatedSong, SONGS_COUNT_FIELD, TOTAL_LENGTH_FIELD);
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#update(SongTO)} with null argument. */
@@ -283,7 +284,7 @@ public class SongFacadeImplSpringTest {
 		songFacade.remove(SpringToUtils.newSong(objectGenerator, 1));
 
 		assertNull(SpringUtils.getSong(entityManager, 1));
-		DeepAsserts.assertEquals(SONGS_COUNT - 1, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT - 1, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#remove(SongTO)} with null argument. */
@@ -307,14 +308,14 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#duplicate(SongTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Song song = SpringEntitiesUtils.getSong(MUSIC_COUNT, SONGS_PER_MUSIC_COUNT);
-		song.setId(SONGS_COUNT + 1);
+		final Song song = SpringEntitiesUtils.getSong(SpringUtils.MUSIC_COUNT, SpringUtils.SONGS_PER_MUSIC_COUNT);
+		song.setId(SpringUtils.SONGS_COUNT + 1);
 
-		songFacade.duplicate(SpringToUtils.newSong(objectGenerator, SONGS_COUNT));
+		songFacade.duplicate(SpringToUtils.newSong(objectGenerator, SpringUtils.SONGS_COUNT));
 
-		final Song duplicatedSong = SpringUtils.getSong(entityManager, SONGS_COUNT + 1);
+		final Song duplicatedSong = SpringUtils.getSong(entityManager, SpringUtils.SONGS_COUNT + 1);
 		DeepAsserts.assertEquals(song, duplicatedSong);
-		DeepAsserts.assertEquals(SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#duplicate(SongTO)} with null argument. */
@@ -346,12 +347,12 @@ public class SongFacadeImplSpringTest {
 		songFacade.moveUp(SpringToUtils.newSong(objectGenerator, 2));
 		DeepAsserts.assertEquals(song1, SpringUtils.getSong(entityManager, 1));
 		DeepAsserts.assertEquals(song2, SpringUtils.getSong(entityManager, 2));
-		for (int i = 2; i < SONGS_COUNT; i++) {
-			final int musicNumber = i / SONGS_PER_MUSIC_COUNT + 1;
-			final int songNumber = i % SONGS_PER_MUSIC_COUNT + 1;
+		for (int i = 2; i < SpringUtils.SONGS_COUNT; i++) {
+			final int musicNumber = i / SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
+			final int songNumber = i % SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSong(musicNumber, songNumber), SpringUtils.getSong(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#moveUp(SongTO)} with null argument. */
@@ -389,12 +390,12 @@ public class SongFacadeImplSpringTest {
 		songFacade.moveDown(SpringToUtils.newSong(objectGenerator, 1));
 		DeepAsserts.assertEquals(song1, SpringUtils.getSong(entityManager, 1));
 		DeepAsserts.assertEquals(song2, SpringUtils.getSong(entityManager, 2));
-		for (int i = 2; i < SONGS_COUNT; i++) {
-			final int musicNumber = i / SONGS_PER_MUSIC_COUNT + 1;
-			final int songNumber = i % SONGS_PER_MUSIC_COUNT + 1;
+		for (int i = 2; i < SpringUtils.SONGS_COUNT; i++) {
+			final int musicNumber = i / SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
+			final int songNumber = i % SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getSong(musicNumber, songNumber), SpringUtils.getSong(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#moveDown(SongTO)} with null argument. */
@@ -412,7 +413,7 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#moveDown(SongTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		songFacade.moveDown(SpringToUtils.newSong(objectGenerator, SONGS_COUNT));
+		songFacade.moveDown(SpringToUtils.newSong(objectGenerator, SpringUtils.SONGS_COUNT));
 	}
 
 	/** Test method for {@link SongFacade#moveDown(SongTO)} with bad ID. */
@@ -424,13 +425,13 @@ public class SongFacadeImplSpringTest {
 	/** Test method for {@link SongFacade#exists(SongTO)}. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= SONGS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.SONGS_COUNT; i++) {
 			assertTrue(songFacade.exists(SpringToUtils.newSong(objectGenerator, i)));
 		}
 
 		assertFalse(songFacade.exists(SpringToUtils.newSong(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
 
 	/** Test method for {@link SongFacade#exists(SongTO)} with null argument. */
@@ -445,29 +446,29 @@ public class SongFacadeImplSpringTest {
 		songFacade.exists(SpringToUtils.newSong(objectGenerator));
 	}
 
-	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)}. */
+	/** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)}. */
 	@Test
 	public void testFindSongsByMusic() {
-		for (int i = 1; i <= MUSIC_COUNT; i++) {
-			DeepAsserts.assertEquals(SpringToUtils.getSongs(i), songFacade.findSongsByMusic(SpringToUtils.newMusic(objectGenerator, i)), "songsCount",
-					"totalLength");
+		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
+			DeepAsserts.assertEquals(SpringToUtils.getSongs(i), songFacade.findSongsByMusic(SpringToUtils.newMusic(objectGenerator, i)), SONGS_COUNT_FIELD,
+					TOTAL_LENGTH_FIELD);
 		}
-		DeepAsserts.assertEquals(SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
 	}
 
-	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with null argument. */
+	/** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with null argument. */
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindSongsByMusicWithNullArgument() {
 		songFacade.findSongsByMusic(null);
 	}
 
-	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with music with null ID. */
+	/** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with music with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testFindSongsByMusicWithNullId() {
 		songFacade.findSongsByMusic(SpringToUtils.newMusic(objectGenerator));
 	}
 
-	/** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with bad ID. */
+	/** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testFindSongsByMusicWithBadId() {
 		songFacade.findSongsByMusic(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE));

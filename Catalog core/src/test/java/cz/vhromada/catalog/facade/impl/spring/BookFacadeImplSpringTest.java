@@ -1,8 +1,5 @@
 package cz.vhromada.catalog.facade.impl.spring;
 
-import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT;
-import static cz.vhromada.catalog.commons.SpringUtils.BOOK_CATEGORIES_COUNT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -17,8 +14,6 @@ import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.facade.BookFacade;
-import cz.vhromada.catalog.facade.impl.BookFacadeImpl;
-import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -33,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * A class represents test for class {@link BookFacadeImpl} with Spring framework.
+ * A class represents test for class {@link cz.vhromada.catalog.facade.impl.BookFacadeImpl} with Spring framework.
  *
  * @author Vladimir Hromada
  */
@@ -68,7 +63,7 @@ public class BookFacadeImplSpringTest {
 			bookCategory.setId(null);
 			SpringUtils.persist(transactionManager, entityManager, bookCategory);
 		}
-		for (int i = 1; i <= BOOK_CATEGORIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.BOOK_CATEGORIES_COUNT; i++) {
 			for (Book book : SpringEntitiesUtils.getBooks(i)) {
 				book.setId(null);
 				SpringUtils.persist(transactionManager, entityManager, book);
@@ -79,15 +74,15 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#getBook(Integer)}. */
 	@Test
 	public void testGetBook() {
-		for (int i = 0; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringToUtils.getBook(bookCategoryNumber, bookNumber), bookFacade.getBook(i + 1), "booksCount");
 		}
 
 		assertNull(bookFacade.getBook(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#getBook(Integer)} with null argument. */
@@ -104,11 +99,11 @@ public class BookFacadeImplSpringTest {
 		bookFacade.add(book);
 
 		DeepAsserts.assertNotNull(book.getId());
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, book.getId());
-		DeepAsserts.assertEquals(BOOKS_COUNT, book.getPosition());
-		final Book addedBook = SpringUtils.getBook(entityManager, BOOKS_COUNT + 1);
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, book.getId());
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, book.getPosition());
+		final Book addedBook = SpringUtils.getBook(entityManager, SpringUtils.BOOKS_COUNT + 1);
 		DeepAsserts.assertEquals(book, addedBook, "booksCount");
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#add(BookTO)} with null argument. */
@@ -240,7 +235,7 @@ public class BookFacadeImplSpringTest {
 
 		final Book updatedBook = SpringUtils.getBook(entityManager, 1);
 		DeepAsserts.assertEquals(book, updatedBook, "booksCount");
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#update(BookTO)} with null argument. */
@@ -375,7 +370,7 @@ public class BookFacadeImplSpringTest {
 		bookFacade.remove(SpringToUtils.newBook(objectGenerator, 1));
 
 		assertNull(SpringUtils.getBook(entityManager, 1));
-		DeepAsserts.assertEquals(BOOKS_COUNT - 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT - 1, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#remove(BookTO)} with null argument. */
@@ -399,14 +394,14 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#duplicate(BookTO)}. */
 	@Test
 	public void testDuplicate() {
-		final Book book = SpringEntitiesUtils.getBook(BOOK_CATEGORIES_COUNT, BOOKS_PER_BOOK_CATEGORY_COUNT);
-		book.setId(BOOKS_COUNT + 1);
+		final Book book = SpringEntitiesUtils.getBook(SpringUtils.BOOK_CATEGORIES_COUNT, SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT);
+		book.setId(SpringUtils.BOOKS_COUNT + 1);
 
-		bookFacade.duplicate(SpringToUtils.newBook(objectGenerator, BOOKS_COUNT));
+		bookFacade.duplicate(SpringToUtils.newBook(objectGenerator, SpringUtils.BOOKS_COUNT));
 
-		final Book duplicatedBook = SpringUtils.getBook(entityManager, BOOKS_COUNT + 1);
+		final Book duplicatedBook = SpringUtils.getBook(entityManager, SpringUtils.BOOKS_COUNT + 1);
 		DeepAsserts.assertEquals(book, duplicatedBook);
-		DeepAsserts.assertEquals(BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#duplicate(BookTO)} with null argument. */
@@ -438,12 +433,12 @@ public class BookFacadeImplSpringTest {
 		bookFacade.moveUp(SpringToUtils.newBook(objectGenerator, 2));
 		DeepAsserts.assertEquals(book1, SpringUtils.getBook(entityManager, 1));
 		DeepAsserts.assertEquals(book2, SpringUtils.getBook(entityManager, 2));
-		for (int i = 2; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 2; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber), SpringUtils.getBook(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#moveUp(BookTO)} with null argument. */
@@ -481,12 +476,12 @@ public class BookFacadeImplSpringTest {
 		bookFacade.moveDown(SpringToUtils.newBook(objectGenerator, 1));
 		DeepAsserts.assertEquals(book1, SpringUtils.getBook(entityManager, 1));
 		DeepAsserts.assertEquals(book2, SpringUtils.getBook(entityManager, 2));
-		for (int i = 2; i < BOOKS_COUNT; i++) {
-			final int bookCategoryNumber = i / BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-			final int bookNumber = i % BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+		for (int i = 2; i < SpringUtils.BOOKS_COUNT; i++) {
+			final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
+			final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
 			DeepAsserts.assertEquals(SpringEntitiesUtils.getBook(bookCategoryNumber, bookNumber), SpringUtils.getBook(entityManager, i + 1));
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#moveDown(BookTO)} with null argument. */
@@ -504,7 +499,7 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#moveDown(BookTO)} with not moveable argument. */
 	@Test(expected = ValidationException.class)
 	public void testMoveDownWithNotMoveableArgument() {
-		bookFacade.moveDown(SpringToUtils.newBook(objectGenerator, BOOKS_COUNT));
+		bookFacade.moveDown(SpringToUtils.newBook(objectGenerator, SpringUtils.BOOKS_COUNT));
 	}
 
 	/** Test method for {@link BookFacade#moveDown(BookTO)} with bad ID. */
@@ -516,13 +511,13 @@ public class BookFacadeImplSpringTest {
 	/** Test method for {@link BookFacade#exists(BookTO)}. */
 	@Test
 	public void testExists() {
-		for (int i = 1; i <= BOOKS_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.BOOKS_COUNT; i++) {
 			assertTrue(bookFacade.exists(SpringToUtils.newBook(objectGenerator, i)));
 		}
 
 		assertFalse(bookFacade.exists(SpringToUtils.newBook(objectGenerator, Integer.MAX_VALUE)));
 
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
 
 	/** Test method for {@link BookFacade#exists(BookTO)} with null argument. */
@@ -537,29 +532,29 @@ public class BookFacadeImplSpringTest {
 		bookFacade.exists(SpringToUtils.newBook(objectGenerator));
 	}
 
-	/** Test method for {@link BookFacade#findBooksByBookCategory(BookCategoryTO)}. */
+	/** Test method for {@link BookFacade#findBooksByBookCategory(cz.vhromada.catalog.facade.to.BookCategoryTO)}. */
 	@Test
 	public void testFindBooksByBookCategory() {
-		for (int i = 1; i <= BOOK_CATEGORIES_COUNT; i++) {
+		for (int i = 1; i <= SpringUtils.BOOK_CATEGORIES_COUNT; i++) {
 			DeepAsserts.assertEquals(SpringToUtils.getBooks(i), bookFacade.findBooksByBookCategory(SpringToUtils.newBookCategory(objectGenerator, i)),
 					"booksCount");
 		}
-		DeepAsserts.assertEquals(BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
+		DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
 	}
 
-	/** Test method for {@link BookFacade#findBooksByBookCategory(BookCategoryTO)} with null argument. */
+	/** Test method for {@link BookFacade#findBooksByBookCategory(cz.vhromada.catalog.facade.to.BookCategoryTO)} with null argument. */
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindBooksByBookCategoryWithNullArgument() {
 		bookFacade.findBooksByBookCategory(null);
 	}
 
-	/** Test method for {@link BookFacade#findBooksByBookCategory(BookCategoryTO)} with book category with null ID. */
+	/** Test method for {@link BookFacade#findBooksByBookCategory(cz.vhromada.catalog.facade.to.BookCategoryTO)} with book category with null ID. */
 	@Test(expected = ValidationException.class)
 	public void testFindBooksByBookCategoryWithNullId() {
 		bookFacade.findBooksByBookCategory(SpringToUtils.newBookCategory(objectGenerator));
 	}
 
-	/** Test method for {@link BookFacade#findBooksByBookCategory(BookCategoryTO)} with bad ID. */
+	/** Test method for {@link BookFacade#findBooksByBookCategory(cz.vhromada.catalog.facade.to.BookCategoryTO)} with bad ID. */
 	@Test(expected = RecordNotFoundException.class)
 	public void testFindBooksByBookCategoryWithBadId() {
 		bookFacade.findBooksByBookCategory(SpringToUtils.newBookCategory(objectGenerator, Integer.MAX_VALUE));

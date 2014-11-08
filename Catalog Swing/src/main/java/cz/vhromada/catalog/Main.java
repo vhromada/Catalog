@@ -54,7 +54,7 @@ public final class Main {
 
 				});
 			} else {
-				logger.error("There isn't settings file (Settings.properties).");
+				logger.error("There isn't settings file ({}).", file.getAbsolutePath());
 				System.exit(1);
 			}
 		} catch (final IOException ex) {

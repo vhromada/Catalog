@@ -5,7 +5,7 @@ package cz.vhromada.catalog.commons;
  *
  * @author Vladimir Hromada
  */
-public final class SwingConstants {
+public final class CatalogSwingConstants {
 
 	/** Return status Cancel */
 	public static final int RET_CANCEL = 0;
@@ -97,8 +97,8 @@ public final class SwingConstants {
 	/** Vertical gap size between data components */
 	public static final int VERTICAL_DATA_GAP_SIZE = 2;
 
-	/** Creates a new instance of SwingConstants. */
-	private SwingConstants() {
+	/** Creates a new instance of CatalogSwingConstants. */
+	private CatalogSwingConstants() {
 	}
 
 }

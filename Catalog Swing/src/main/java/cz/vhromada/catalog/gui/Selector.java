@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.SwingConstants;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 
 /**
  * A class represents main screen for selecting options.
@@ -89,7 +89,7 @@ public class Selector extends JFrame {
 	 */
 	private GroupLayout.SequentialGroup createHorizontalLayout(final GroupLayout layout) {
 		final GroupLayout.ParallelGroup buttons = layout.createParallelGroup()
-				.addGap(SwingConstants.HORIZONTAL_BUTTON_GAP_SIZE)
+				.addGap(CatalogSwingConstants.HORIZONTAL_BUTTON_GAP_SIZE)
 				.addComponent(catalogButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, Short.MAX_VALUE)
 				.addComponent(exitButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, Short.MAX_VALUE);
 
@@ -108,9 +108,9 @@ public class Selector extends JFrame {
 	private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
 		return layout.createSequentialGroup()
 				.addGap(VERTICAL_GAP_SIZE)
-				.addComponent(catalogButton, SwingConstants.VERTICAL_BUTTON_SIZE, SwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
+				.addComponent(catalogButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
 				.addGap(VERTICAL_GAP_SIZE)
-				.addComponent(exitButton, SwingConstants.VERTICAL_BUTTON_SIZE, SwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
+				.addComponent(exitButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
 				.addGap(VERTICAL_GAP_SIZE);
 	}
 

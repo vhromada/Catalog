@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.gui;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
@@ -24,6 +25,15 @@ public class LoadingDialog extends JDialog {
 	/** SerialVersionUID */
 	private static final long serialVersionUID = 1L;
 
+	/** Horizontal label size */
+	private static final int HORIZONTAL_LABEL_SIZE = 130;
+
+	/** Vertical label size */
+	private static final int VERTICAL_LABEL_SIZE = 15;
+
+	/** Label with time passed. */
+	private JLabel progress = new JLabel("0 s");
+
 	/** Creates a new instance of LoadingDialog. */
 	public LoadingDialog() {
 		super(new JFrame(), "Loading", true);
@@ -31,52 +41,64 @@ public class LoadingDialog extends JDialog {
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
 
-		final JProgressBar progressBar = new JProgressBar(0, 5);
-		progressBar.setStringPainted(true);
-		final PropertyChangeListener progressListener = new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(final PropertyChangeEvent evt) {
-				if ("progress".equals(evt.getPropertyName())) {
-					progressBar.setValue((Integer) evt.getNewValue());
-				}
-			}
-
-		};
+		progress.setHorizontalAlignment(SwingConstants.CENTER);
 
 		final GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(progressBar));
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(progressBar));
+		layout.setHorizontalGroup(createHorizontalLayout(layout));
+		layout.setVerticalGroup(createVerticalLayout(layout));
 
 		pack();
 		setLocationRelativeTo(getRootPane());
 
 		final LoadingSwingWorker swingWorker = new LoadingSwingWorker();
-		swingWorker.addPropertyChangeListener(progressListener);
 		swingWorker.execute();
+	}
+
+	/**
+	 * Returns horizontal layout of components.
+	 *
+	 * @param layout layout
+	 * @return horizontal layout of components
+	 */
+	private GroupLayout.SequentialGroup createHorizontalLayout(final GroupLayout layout) {
+		return layout.createSequentialGroup().addComponent(progress, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, Short.MAX_VALUE);
+	}
+
+	/**
+	 * Returns vertical layout of components.
+	 *
+	 * @param layout layout
+	 * @return vertical layout of components
+	 */
+	private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
+		return layout.createSequentialGroup().addComponent(progress, VERTICAL_LABEL_SIZE, VERTICAL_LABEL_SIZE, Short.MAX_VALUE);
 	}
 
 	/** A class represents swing worker for loading data. */
 	private class LoadingSwingWorker extends SwingWorker<ConfigurableApplicationContext, Object> {
 
-		/**
-		 * Computes a result, or throws an exception if unable to do so.
-		 *
-		 * @return the computed result
-		 * @throws Exception if unable to compute a result
-		 */
+		private Timer timer;
+		private int time;
+
 		@Override
 		protected ConfigurableApplicationContext doInBackground() throws Exception {
-			final ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-			setProgress(1);
-			return context;
+			timer = new Timer(1000, new ActionListener() {
+
+				@Override
+				public void actionPerformed(final ActionEvent e) {
+					timerAction();
+				}
+
+			});
+			timer.start();
+			return new ClassPathXmlApplicationContext("applicationContext.xml");
 		}
 
-		/** Executed on the Event Dispatch Thread after the {@link #doInBackground()} method is finished. */
 		@Override
 		protected void done() {
 			try {
+				timer.stop();
 				ConfigurableApplicationContext context = get();
 				setVisible(false);
 				dispose();
@@ -85,6 +107,17 @@ public class LoadingDialog extends JDialog {
 				logger.error("Error in getting data from Swing Worker.", ex);
 				System.exit(2);
 			}
+		}
+
+		@Override
+		protected void process(final List<Object> chunks) {
+			progress.setText(chunks.get(chunks.size() - 1) + " s");
+		}
+
+		/** Performs action for timer. */
+		private void timerAction() {
+			time++;
+			publish(time);
 		}
 
 	}

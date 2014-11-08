@@ -1,0 +1,41 @@
+{
+  "name": "Catalog",
+  "version": "0.0.0",
+  "description": "JS application for catalog of movies, games, music, programs and books",
+  "author": "Vladimir Hromada",
+  "keywords": [
+    "React",
+    "Closure",
+    "Compiler",
+    "Este",
+    "Catalog"
+  ],
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://vhromada@bitbucket.org/vhromada/catalog.git"
+  },
+  "dependencies": {
+    "body-parser": "^1.0.1",
+    "compression": "^1.0.1",
+    "express": "^4.0.0",
+    "gulp": "^3.6.0",
+    "jsdom": "^1.0.0",
+    "method-override": "^2.0.2",
+    "react": "^0.12.0"
+  },
+  "devDependencies": {
+    "gulp-este": "^1.0.1",
+    "piping": "~0.1.6",
+    "run-sequence": "^1.0.0",
+    "yargs": "^1.2.1"
+  },
+  "scripts": {
+    "start": "node app/server",
+    "test": "gulp build --production"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}

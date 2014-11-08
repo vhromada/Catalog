@@ -78,7 +78,10 @@ public class LoadingDialog extends JDialog {
 	/** A class represents swing worker for loading data. */
 	private class LoadingSwingWorker extends SwingWorker<ConfigurableApplicationContext, Object> {
 
+		/** Timer */
 		private Timer timer;
+
+		/** Passed time */
 		private int time;
 
 		@Override
@@ -99,10 +102,9 @@ public class LoadingDialog extends JDialog {
 		protected void done() {
 			try {
 				timer.stop();
-				ConfigurableApplicationContext context = get();
 				setVisible(false);
 				dispose();
-				new Catalog(context).setVisible(true);
+				new Catalog(get()).setVisible(true);
 			} catch (final InterruptedException | ExecutionException ex) {
 				logger.error("Error in getting data from Swing Worker.", ex);
 				System.exit(2);

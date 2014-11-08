@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.gui;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -9,6 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import cz.vhromada.catalog.facade.BookCategoryFacade;
 import cz.vhromada.catalog.facade.GameFacade;
@@ -16,6 +17,8 @@ import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
+import cz.vhromada.catalog.gui.games.GamesPanel;
+import cz.vhromada.catalog.gui.programs.ProgramsPanel;
 import cz.vhromada.validators.Validators;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -28,6 +31,12 @@ public class Catalog extends JFrame {
 
 	/** SerialVersionUID */
 	private static final long serialVersionUID = 1L;
+
+	/** Horizontal component size */
+	private static final int HORIZONTAL_COMPONENT_SIZE = 400;
+
+	/** Vertical component size */
+	private static final int VERTICAL_COMPONENT_SIZE = 400;
 
 	/** Application context */
 	private ConfigurableApplicationContext context;
@@ -55,6 +64,15 @@ public class Catalog extends JFrame {
 
 	/** Menu item about */
 	private final JMenuItem aboutMenuItem = new JMenuItem("About", Pictures.getPicture("about"));
+
+	/** Tabbed pane */
+	private final JTabbedPane tabbedPane = new JTabbedPane();
+
+	/** Panel for games */
+	private GamesPanel gamesPanel;
+
+	/** Panel for programs */
+	private ProgramsPanel programsPanel;
 
 	/** Facade for movies */
 	private MovieFacade movieFacade;
@@ -108,6 +126,11 @@ public class Catalog extends JFrame {
 
 		});
 
+		gamesPanel = new GamesPanel(gameFacade);
+		programsPanel = new ProgramsPanel(programFacade);
+
+		initTabbedPane();
+
 		addWindowListener(new WindowAdapter() {
 
 			@Override
@@ -119,6 +142,9 @@ public class Catalog extends JFrame {
 
 		final GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(tabbedPane, HORIZONTAL_COMPONENT_SIZE, HORIZONTAL_COMPONENT_SIZE,
+				Short.MAX_VALUE));
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(tabbedPane, VERTICAL_COMPONENT_SIZE, VERTICAL_COMPONENT_SIZE, Short.MAX_VALUE));
 
 		pack();
 		setLocationRelativeTo(getRootPane());
@@ -191,8 +217,25 @@ public class Catalog extends JFrame {
 		});
 	}
 
+	/** Initializes tabbed pane. */
+	private void initTabbedPane() {
+		tabbedPane.addTab("Games", gamesPanel);
+		tabbedPane.addTab("Programs", programsPanel);
+		tabbedPane.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(final ChangeEvent e) {
+				gamesPanel.clearSelection();
+				programsPanel.clearSelection();
+			}
+
+		});
+	}
+
 	/** Performs action for button New. */
 	private void newAction() {
+		gamesPanel.newData();
+		programsPanel.newData();
 	}
 
 	/** Performs action for button Save. */
@@ -203,7 +246,7 @@ public class Catalog extends JFrame {
 	/** Performs action for button Selector. */
 	private void selectorAction() {
 		closing();
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
@@ -223,7 +266,7 @@ public class Catalog extends JFrame {
 
 	/** Performs action for button About. */
 	private void aboutAction() {
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
@@ -235,7 +278,7 @@ public class Catalog extends JFrame {
 
 	/** Closes form. */
 	private void closing() {
-		final boolean saved = true;
+		final boolean saved = gamesPanel.isSaved() && programsPanel.isSaved();
 		if (!saved) {
 			final int returnStatus = JOptionPane.showConfirmDialog(this, "Save data?", "", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (returnStatus == JOptionPane.YES_OPTION) {
@@ -253,6 +296,8 @@ public class Catalog extends JFrame {
 		musicFacade.updatePositions();
 		programFacade.updatePositions();
 		bookCategoryFacade.updatePositions();
+		gamesPanel.save();
+		programsPanel.save();
 	}
 
 }

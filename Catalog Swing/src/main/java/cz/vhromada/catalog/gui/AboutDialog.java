@@ -34,19 +34,19 @@ public class AboutDialog extends JDialog {
 	private static final int FONT_SIZE = 12;
 
 	/** Label for name */
-	private final JLabel nameLabel = new JLabel("Catalog", Pictures.getPicture("catalog"), SwingConstants.LEADING);
+	private JLabel nameLabel = new JLabel("Catalog", Pictures.getPicture("catalog"), SwingConstants.LEADING);
 
 	/** Label for version */
-	private final JLabel versionLabel = new JLabel("Version: 1.0.0");
+	private JLabel versionLabel = new JLabel("Version: 1.0.0");
 
 	/** Label for author */
-	private final JLabel authorLabel = new JLabel("Author: Vladim\u00EDr Hromada");
+	private JLabel authorLabel = new JLabel("Author: Vladim\u00EDr Hromada");
 
 	/** Label for copyrights */
-	private final JLabel rightsLabel = new JLabel("All rights reserved.");
+	private JLabel rightsLabel = new JLabel("All rights reserved.");
 
 	/** Button OK */
-	private final JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+	private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
 
 	/** Creates a new instance of AboutDialog. */
 	public AboutDialog() {

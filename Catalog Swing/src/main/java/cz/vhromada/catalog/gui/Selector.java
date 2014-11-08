@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.gui;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -69,7 +68,7 @@ public class Selector extends JFrame {
 
 	/** Performs action for button Catalog. */
 	private void catalogAction() {
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {

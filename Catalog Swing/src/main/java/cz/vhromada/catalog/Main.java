@@ -1,6 +1,5 @@
 package cz.vhromada.catalog;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -34,6 +33,9 @@ public final class Main {
 	 * @param args the command line arguments
 	 */
 	public static void main(final String... args) {
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
+		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
+
 		try {
 			final File file = new File("Settings.properties");
 			if (file.exists()) {
@@ -45,7 +47,7 @@ public final class Main {
 				if (os != null && "Windows".equals(os)) {
 					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 				}
-				EventQueue.invokeLater(new Runnable() {
+				SwingUtilities.invokeLater(new Runnable() {
 
 					@Override
 					public void run() {
@@ -62,6 +64,16 @@ public final class Main {
 		} catch (final ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
 			logger.error("Error in setting look and feel.", ex);
 		}
+	}
+
+	/** A class represents handler for uncaught exception. */
+	private static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+
+		@Override
+		public void uncaughtException(final Thread t, final Throwable e) {
+			logger.error("Exception in Catalog application.", e);
+		}
+
 	}
 
 }

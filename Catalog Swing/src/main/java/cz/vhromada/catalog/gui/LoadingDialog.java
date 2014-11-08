@@ -62,7 +62,7 @@ public class LoadingDialog extends JDialog {
 	 * @return horizontal layout of components
 	 */
 	private GroupLayout.SequentialGroup createHorizontalLayout(final GroupLayout layout) {
-		return layout.createSequentialGroup().addComponent(progress, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, Short.MAX_VALUE);
+		return layout.createSequentialGroup().addComponent(progress, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class LoadingDialog extends JDialog {
 	 * @return vertical layout of components
 	 */
 	private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
-		return layout.createSequentialGroup().addComponent(progress, VERTICAL_LABEL_SIZE, VERTICAL_LABEL_SIZE, Short.MAX_VALUE);
+		return layout.createSequentialGroup().addComponent(progress, VERTICAL_LABEL_SIZE, VERTICAL_LABEL_SIZE, VERTICAL_LABEL_SIZE);
 	}
 
 	/** A class represents swing worker for loading data. */

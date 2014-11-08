@@ -10,10 +10,9 @@ import java.util.Properties;
 
 import javax.swing.*;
 
+import cz.vhromada.catalog.gui.Selector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//import cz.vhromada.catalog.gui.Selector;
 
 /**
  * A class represents utility class with main method.
@@ -50,7 +49,7 @@ public final class Main {
 
 					@Override
 					public void run() {
-//						new Selector().setVisible(true);
+						new Selector().setVisible(true);
 					}
 
 				});

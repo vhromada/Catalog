@@ -75,7 +75,7 @@ public class Selector extends JFrame {
 				setVisible(false);
 				final LoadingDialog dialog = new LoadingDialog();
 				dialog.setVisible(true);
-				if (DialogResult.OK == dialog.getReturnStatus()) {
+				if (dialog.getReturnStatus() == DialogResult.OK) {
 					dispose();
 					new Catalog(dialog.getContext()).setVisible(true);
 				} else {

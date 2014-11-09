@@ -262,7 +262,7 @@ public class ProgramInfoDialog extends JDialog {
 		final GroupLayout.Group buttons = layout.createSequentialGroup()
 				.addGap(HORIZONTAL_BUTTON_GAP_SIZE)
 				.addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-				.addGap(HORIZONTAL_BUTTON_GAP_SIZE)
+				.addGap(54)
 				.addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
 				.addGap(HORIZONTAL_BUTTON_GAP_SIZE);
 

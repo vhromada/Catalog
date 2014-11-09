@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui.games;
+package cz.vhromada.catalog.gui.songs;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,19 +9,19 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import cz.vhromada.catalog.facade.GameFacade;
-import cz.vhromada.catalog.facade.to.GameTO;
+import cz.vhromada.catalog.facade.SongFacade;
+import cz.vhromada.catalog.facade.to.MusicTO;
+import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.Pictures;
-import cz.vhromada.catalog.gui.StatsTableCellRenderer;
 import cz.vhromada.validators.Validators;
 
 /**
- * A class represents panel with games' data.
+ * A class represents panel with songs' data.
  *
  * @author Vladimir Hromada
  */
-public class GamesPanel extends JPanel {
+public class SongsPanel extends JPanel {
 
 	/** SerialVersionUID */
 	private static final long serialVersionUID = 1L;
@@ -32,99 +32,72 @@ public class GamesPanel extends JPanel {
 	/** Vertical data component size */
 	private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
-	/** Vertical size for scroll pane for table with stats */
-	private static final int VERTICAL_STATS_SCROLL_PANE_SIZE = 45;
-
 	/** Popup menu */
 	private JPopupMenu popupMenu = new JPopupMenu();
 
-	/** Menu item for adding game */
+	/** Menu item for adding song */
 	private JMenuItem addPopupMenuItem = new JMenuItem("Add", Pictures.getPicture("add"));
 
-	/** Menu item for updating game */
+	/** Menu item for updating song */
 	private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Pictures.getPicture("update"));
 
-	/** Menu item for removing game */
+	/** Menu item for removing song */
 	private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Pictures.getPicture("remove"));
 
-	/** Menu item for duplicating game */
+	/** Menu item for duplicating song */
 	private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Pictures.getPicture("duplicate"));
 
-	/** Menu item for moving up game */
+	/** Menu item for moving up song */
 	private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Pictures.getPicture("up"));
 
-	/** Menu item for moving down game */
+	/** Menu item for moving down song */
 	private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Pictures.getPicture("down"));
 
-	/** List with games */
+	/** List with songs */
 	private JList<String> list = new JList<>();
 
-	/** ScrollPane for list with games */
+	/** ScrollPane for list with songs */
 	private JScrollPane listScrollPane = new JScrollPane(list);
 
-	/** Tabbed pane with game's data */
+	/** Tabbed pane with song's data */
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	/** Table with with games' stats */
-	private JTable statsTable = new JTable();
+	/** Facade for songs */
+	private SongFacade songFacade;
 
-	/** ScrollPane for table with games' stats */
-	private JScrollPane statsTableScrollPane = new JScrollPane(statsTable);
+	/** Data model for list with songs */
+	private SongsListDataModel songsListDataModel;
 
-	/** Facade for games */
-	private GameFacade gameFacade;
-
-	/** Data model for list with games */
-	private GamesListDataModel gamesListDataModel;
-
-	/** Data model for table with stats for games */
-	private GamesStatsTableDataModel gamesStatsTableDataModel;
-
-	/** True if data is saved */
-	private boolean saved;
+	/** TO for music */
+	private MusicTO music;
 
 	/**
-	 * Creates a new instance of GamesPanel.
+	 * Creates a new instance of SongsPanel.
 	 *
-	 * @param gameFacade facade for games
-	 * @throws IllegalArgumentException if facade for games is null
+	 * @param songFacade facade for songs
+	 * @param music      TO for music
+	 * @throws IllegalArgumentException if facade for songs is null
+	 *                                  or TO for music is null
 	 */
-	public GamesPanel(final GameFacade gameFacade) {
-		Validators.validateArgumentNotNull(gameFacade, "Facade for games");
+	public SongsPanel(final SongFacade songFacade, final MusicTO music) {
+		Validators.validateArgumentNotNull(songFacade, "Facade for songs");
+		Validators.validateArgumentNotNull(music, "TO for music");
 
-		this.gameFacade = gameFacade;
-		this.saved = true;
+		this.songFacade = songFacade;
+		this.music = music;
 		initComponents();
 	}
 
-	/** Creates new data. */
-	public void newData() {
-		gameFacade.newData();
-		gamesListDataModel.update();
-		list.clearSelection();
-		list.updateUI();
-		gamesStatsTableDataModel.update();
-		statsTable.updateUI();
-		saved = true;
-	}
-
-	/** Clears selection. */
-	public void clearSelection() {
-		list.clearSelection();
-	}
-
-	/** Saves. */
-	public void save() {
-		saved = true;
-	}
-
 	/**
-	 * Returns true if data is saved.
+	 * Sets a new value to TO for music.
 	 *
-	 * @return true if data is saved
+	 * @param music TO for music
+	 * @throws IllegalArgumentException if TO for music is null
 	 */
-	public boolean isSaved() {
-		return saved;
+	public void setMusicTO(final MusicTO music) {
+		Validators.validateArgumentNotNull(music, "TO for music");
+
+		this.music = music;
 	}
 
 	/** Initializes components. */
@@ -151,6 +124,7 @@ public class GamesPanel extends JPanel {
 			}
 
 		});
+
 
 		removePopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		removePopupMenuItem.setEnabled(false);
@@ -195,15 +169,9 @@ public class GamesPanel extends JPanel {
 			}
 
 		});
+		popupMenu.add(moveDownPopupMenuItem);
 
 		initList();
-
-		gamesStatsTableDataModel = new GamesStatsTableDataModel(gameFacade);
-		statsTable.setModel(gamesStatsTableDataModel);
-		statsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		statsTable.setEnabled(false);
-		statsTable.setRowSelectionAllowed(false);
-		statsTable.setDefaultRenderer(Integer.class, new StatsTableCellRenderer());
 
 		final GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
@@ -228,16 +196,16 @@ public class GamesPanel extends JPanel {
 
 			@Override
 			public void run() {
-				final GameInfoDialog dialog = new GameInfoDialog();
+				final SongInfoDialog dialog = new SongInfoDialog();
 				dialog.setVisible(true);
 				if (dialog.getReturnStatus() == DialogResult.OK) {
-					gameFacade.add(dialog.getGameTO());
-					gamesListDataModel.update();
+					final SongTO song = dialog.getSongTO();
+					song.setMusic(music);
+					songFacade.add(song);
+					songsListDataModel.update();
 					list.updateUI();
 					list.setSelectedIndex(list.getModel().getSize() - 1);
-					gamesStatsTableDataModel.update();
-					statsTable.updateUI();
-					saved = false;
+					firePropertyChange("update", false, true);
 				}
 			}
 
@@ -250,17 +218,16 @@ public class GamesPanel extends JPanel {
 
 			@Override
 			public void run() {
-				final GameInfoDialog dialog = new GameInfoDialog(gamesListDataModel.getGameAt(list.getSelectedIndex()));
+				final SongTO song = songsListDataModel.getSongAt(list.getSelectedIndex());
+				final SongInfoDialog dialog = new SongInfoDialog(song);
 				dialog.setVisible(true);
 				if (dialog.getReturnStatus() == DialogResult.OK) {
-					final GameTO game = dialog.getGameTO();
-					gameFacade.update(game);
-					gamesListDataModel.update();
+					SongTO updatedSongTO = dialog.getSongTO();
+					songFacade.update(updatedSongTO);
+					songsListDataModel.update();
 					list.updateUI();
-					((GameDataPanel) tabbedPane.getComponentAt(0)).updateGameTO(game);
-					gamesStatsTableDataModel.update();
-					statsTable.updateUI();
-					saved = false;
+					((SongDataPanel) tabbedPane.getComponentAt(0)).updateSongTO(updatedSongTO);
+					firePropertyChange("update", false, true);
 				}
 			}
 
@@ -269,51 +236,47 @@ public class GamesPanel extends JPanel {
 
 	/** Performs action for button Remove. */
 	private void removeAction() {
-		gameFacade.remove(gamesListDataModel.getGameAt(list.getSelectedIndex()));
-		gamesListDataModel.update();
+		songFacade.remove(songsListDataModel.getSongAt(list.getSelectedIndex()));
+		songsListDataModel.update();
 		list.updateUI();
 		list.clearSelection();
-		gamesStatsTableDataModel.update();
-		statsTable.updateUI();
-		saved = false;
+		firePropertyChange("update", false, true);
 	}
 
 	/** Performs action for button Duplicate. */
 	private void duplicateAction() {
 		final int index = list.getSelectedIndex();
-		gameFacade.duplicate(gamesListDataModel.getGameAt(index));
-		gamesListDataModel.update();
+		songFacade.duplicate(songsListDataModel.getSongAt(index));
+		songsListDataModel.update();
 		list.updateUI();
 		list.setSelectedIndex(index + 1);
-		gamesStatsTableDataModel.update();
-		statsTable.updateUI();
-		saved = false;
+		firePropertyChange("update", false, true);
 	}
 
 	/** Performs action for button MoveUp. */
 	private void moveUpAction() {
 		final int index = list.getSelectedIndex();
-		gameFacade.moveUp(gamesListDataModel.getGameAt(index));
-		gamesListDataModel.update();
+		songFacade.moveUp(songsListDataModel.getSongAt(index));
+		songsListDataModel.update();
 		list.updateUI();
 		list.setSelectedIndex(index - 1);
-		saved = false;
+		firePropertyChange("update", false, true);
 	}
 
 	/** Performs action for button MoveDown. */
 	private void moveDownAction() {
 		final int index = list.getSelectedIndex();
-		gameFacade.moveDown(gamesListDataModel.getGameAt(index));
-		gamesListDataModel.update();
+		songFacade.moveDown(songsListDataModel.getSongAt(index));
+		songsListDataModel.update();
 		list.updateUI();
 		list.setSelectedIndex(index + 1);
-		saved = false;
+		firePropertyChange("update", false, true);
 	}
 
 	/** Initializes list. */
 	private void initList() {
-		gamesListDataModel = new GamesListDataModel(gameFacade);
-		list.setModel(gamesListDataModel);
+		songsListDataModel = new SongsListDataModel(songFacade, music);
+		list.setModel(songsListDataModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setComponentPopupMenu(popupMenu);
 		list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -337,7 +300,8 @@ public class GamesPanel extends JPanel {
 		duplicatePopupMenuItem.setEnabled(validSelection);
 		tabbedPane.removeAll();
 		if (validSelection) {
-			tabbedPane.add("Data", new GameDataPanel(gamesListDataModel.getGameAt(selectedRow)));
+			final SongTO song = songsListDataModel.getSongAt(selectedRow);
+			tabbedPane.add("Data", new SongDataPanel(song));
 		}
 		if (isSelectedRow && selectedRow > 0) {
 			moveUpPopupMenuItem.setEnabled(true);
@@ -358,14 +322,10 @@ public class GamesPanel extends JPanel {
 	 * @return horizontal layout of components
 	 */
 	private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-		final GroupLayout.Group data = layout.createSequentialGroup()
+		return layout.createSequentialGroup()
 				.addComponent(listScrollPane, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE)
 				.addGap(5)
 				.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-
-		return layout.createParallelGroup()
-				.addGroup(data)
-				.addComponent(statsTableScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
 	}
 
 	/**
@@ -375,14 +335,9 @@ public class GamesPanel extends JPanel {
 	 * @return vertical layout of components
 	 */
 	private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-		final GroupLayout.Group data = layout.createParallelGroup()
+		return layout.createParallelGroup()
 				.addComponent(listScrollPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE)
 				.addComponent(tabbedPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE);
-
-		return layout.createSequentialGroup()
-				.addGroup(data)
-				.addGap(2)
-				.addComponent(statsTableScrollPane, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE);
 	}
 
 }

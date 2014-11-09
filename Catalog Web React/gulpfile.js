@@ -25,10 +25,6 @@ var paths = {
     'tmp/**/*.js',
     '!**/build/**'
   ],
-  unittest: [
-    'app/**/*_test.js',
-    'bower_components/este-library/este/**/*_test.js'
-  ],
   compiler: 'bower_components/closure-compiler/compiler.jar',
   externs: [
     'app/client/js/externs.js',
@@ -67,10 +63,6 @@ gulp.task('transpile', function (done) {
 
 gulp.task('deps', function () {
   return este.deps(paths.js);
-});
-
-gulp.task('unittest', function () {
-  return este.unitTest(dirs.googBaseJs, paths.unittest);
 });
 
 gulp.task('dicontainer', function () {
@@ -127,7 +119,6 @@ gulp.task('livereload-notify', function () {
 gulp.task('js', function (done) {
   return runSequence.apply(null, [
     este.shouldCreateDeps() ? 'deps' : void 0,
-    'unittest',
     'dicontainer',
     'concat-deps',
     args.production ? 'compile-clientapp' : void 0,

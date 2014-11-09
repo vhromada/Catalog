@@ -9,6 +9,7 @@ import javax.swing.*;
  *
  * @author Vladimir Hromada
  */
+@Deprecated
 public final class SwingUtils {
 
 	/** Creates a new instance of SwingUtils. */

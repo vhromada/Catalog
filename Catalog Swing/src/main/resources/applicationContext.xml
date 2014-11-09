@@ -12,7 +12,7 @@
 	<import resource="classpath:facadeContext.xml"/>
 
 	<bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
-		<property name="URL" value="jdbc:h2:db\Catalog;CIPHER=AES"/>
+		<property name="URL" value="jdbc:h2:db\Catalog;CIPHER=AES;TRACE_LEVEL_FILE=4"/>
 		<property name="user" value="Lavina"/>
 		<property name="password" value="stargate stargate"/>
 	</bean>

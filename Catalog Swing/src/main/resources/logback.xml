@@ -15,8 +15,7 @@
 	<logger name="org.springframework" level="warn"/>
 	<logger name="org.hibernate" level="warn"/>
 	<logger name="org.jboss" level="warn"/>
-	<logger name="org.h2" level="warn"/>
-	<logger name="nu.xom" level="warn"/>
+	<logger name="h2database" level="warn"/>
 	<logger name="org.slf4j" level="warn"/>
 	<logger name="ch.qos" level="warn"/>
 	<logger name="net.sf.ehcache" level="warn"/>

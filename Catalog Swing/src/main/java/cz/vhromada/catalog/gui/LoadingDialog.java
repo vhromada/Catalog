@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
+import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.validators.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -28,8 +30,11 @@ public class LoadingDialog extends JDialog {
 	/** Horizontal label size */
 	private static final int HORIZONTAL_LABEL_SIZE = 130;
 
-	/** Vertical label size */
-	private static final int VERTICAL_LABEL_SIZE = 15;
+	/** Return status */
+	private DialogResult returnStatus = DialogResult.CANCEL;
+
+	/** Application context */
+	private ConfigurableApplicationContext context;
 
 	/** Label with time passed. */
 	private JLabel progress = new JLabel("0 s");
@@ -56,6 +61,27 @@ public class LoadingDialog extends JDialog {
 	}
 
 	/**
+	 * Returns return status.
+	 *
+	 * @return return status
+	 */
+	public DialogResult getReturnStatus() {
+		return returnStatus;
+	}
+
+	/**
+	 * Returns application context.
+	 *
+	 * @return application context
+	 * @throws IllegalStateException if application context hasn't been set
+	 */
+	public ConfigurableApplicationContext getContext() {
+		Validators.validateFieldNotNull(context, "Application context");
+
+		return context;
+	}
+
+	/**
 	 * Returns horizontal layout of components.
 	 *
 	 * @param layout layout
@@ -72,7 +98,8 @@ public class LoadingDialog extends JDialog {
 	 * @return vertical layout of components
 	 */
 	private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
-		return layout.createSequentialGroup().addComponent(progress, VERTICAL_LABEL_SIZE, VERTICAL_LABEL_SIZE, VERTICAL_LABEL_SIZE);
+		return layout.createSequentialGroup().addComponent(progress, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+				CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
 	}
 
 	/** A class represents swing worker for loading data. */
@@ -102,12 +129,13 @@ public class LoadingDialog extends JDialog {
 		protected void done() {
 			try {
 				timer.stop();
+				context = get();
+				returnStatus = DialogResult.OK;
 				setVisible(false);
 				dispose();
-				new Catalog(get()).setVisible(true);
 			} catch (final InterruptedException | ExecutionException ex) {
 				logger.error("Error in getting data from Swing Worker.", ex);
-				System.exit(2);
+				System.exit(5);
 			}
 		}
 

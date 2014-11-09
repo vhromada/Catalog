@@ -9,10 +9,9 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
-import cz.vhromada.catalog.commons.SwingUtils;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.Pictures;
 import cz.vhromada.catalog.gui.StatsTableCellRenderer;
 import cz.vhromada.validators.Validators;
@@ -26,6 +25,15 @@ public class ProgramsPanel extends JPanel {
 
 	/** SerialVersionUID */
 	private static final long serialVersionUID = 1L;
+
+	/** Horizontal scroll pane size */
+	private static final int HORIZONTAL_SCROLL_PANE_SIZE = 300;
+
+	/** Vertical data component size */
+	private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
+
+	/** Vertical size for scroll pane for table with stats */
+	private static final int VERTICAL_STATS_SCROLL_PANE_SIZE = 45;
 
 	/** Popup menu */
 	private JPopupMenu popupMenu = new JPopupMenu();
@@ -199,8 +207,8 @@ public class ProgramsPanel extends JPanel {
 
 		final GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
-		layout.setHorizontalGroup(SwingUtils.createHorizontalLayout(layout, listScrollPane, tabbedPane, statsTableScrollPane));
-		layout.setVerticalGroup(SwingUtils.createVerticalLayout(layout, listScrollPane, tabbedPane, statsTableScrollPane));
+		layout.setHorizontalGroup(createHorizontalLayout(layout));
+		layout.setVerticalGroup(createVerticalLayout(layout));
 	}
 
 	/**
@@ -222,7 +230,7 @@ public class ProgramsPanel extends JPanel {
 			public void run() {
 				final ProgramInfoDialog dialog = new ProgramInfoDialog();
 				dialog.setVisible(true);
-				if (dialog.getReturnStatus() == CatalogSwingConstants.RET_OK) {
+				if (DialogResult.OK == dialog.getReturnStatus()) {
 					programFacade.add(dialog.getProgramTO());
 					programsListDataModel.update();
 					list.updateUI();
@@ -242,15 +250,14 @@ public class ProgramsPanel extends JPanel {
 
 			@Override
 			public void run() {
-				final int index = list.getSelectedIndex();
-				final ProgramInfoDialog dialog = new ProgramInfoDialog(programsListDataModel.getProgramAt(index));
+				final ProgramInfoDialog dialog = new ProgramInfoDialog(programsListDataModel.getProgramAt(list.getSelectedIndex()));
 				dialog.setVisible(true);
-				if (dialog.getReturnStatus() == CatalogSwingConstants.RET_OK) {
-					final ProgramTO programTO = dialog.getProgramTO();
-					programFacade.update(programTO);
+				if (DialogResult.OK == dialog.getReturnStatus()) {
+					final ProgramTO program = dialog.getProgramTO();
+					programFacade.update(program);
 					programsListDataModel.update();
 					list.updateUI();
-					((ProgramDataPanel) tabbedPane.getComponentAt(0)).updateProgramTO(programTO);
+					((ProgramDataPanel) tabbedPane.getComponentAt(0)).updateProgramTO(program);
 					programsStatsTableDataModel.update();
 					statsTable.updateUI();
 					saved = false;
@@ -342,6 +349,40 @@ public class ProgramsPanel extends JPanel {
 		} else {
 			moveDownPopupMenuItem.setEnabled(false);
 		}
+	}
+
+	/**
+	 * Returns horizontal layout of components.
+	 *
+	 * @param layout layout
+	 * @return horizontal layout of components
+	 */
+	private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
+		final GroupLayout.Group data = layout.createSequentialGroup()
+				.addComponent(listScrollPane, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE)
+				.addGap(5)
+				.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+
+		return layout.createParallelGroup()
+				.addGroup(data)
+				.addComponent(statsTableScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+	}
+
+	/**
+	 * Returns vertical layout of components.
+	 *
+	 * @param layout layout
+	 * @return vertical layout of components
+	 */
+	private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
+		final GroupLayout.Group data = layout.createParallelGroup()
+				.addComponent(listScrollPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE)
+				.addComponent(tabbedPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE);
+
+		return layout.createSequentialGroup()
+				.addGroup(data)
+				.addGap(2)
+				.addComponent(statsTableScrollPane, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE);
 	}
 
 }

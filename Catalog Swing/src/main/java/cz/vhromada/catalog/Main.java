@@ -57,12 +57,14 @@ public final class Main {
 				});
 			} else {
 				logger.error("There isn't settings file ({}).", file.getAbsolutePath());
-				System.exit(1);
+				System.exit(3);
 			}
 		} catch (final IOException ex) {
 			logger.error("Error in loading properties file.", ex);
+			System.exit(1);
 		} catch (final ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
 			logger.error("Error in setting look and feel.", ex);
+			System.exit(2);
 		}
 	}
 
@@ -72,6 +74,7 @@ public final class Main {
 		@Override
 		public void uncaughtException(final Thread t, final Throwable e) {
 			logger.error("Exception in Catalog application.", e);
+			System.exit(4);
 		}
 
 	}

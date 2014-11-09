@@ -5,6 +5,7 @@ package cz.vhromada.catalog.commons;
  *
  * @author Vladimir Hromada
  */
+@Deprecated
 public final class CatalogSwingConstants {
 
 	/** Return status Cancel */

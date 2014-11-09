@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.commons.CatalogSwingConstant2;
 
 /**
  * A class represents main screen for selecting options.
@@ -72,12 +72,18 @@ public class Selector extends JFrame {
 
 			@Override
 			public void run() {
-				new LoadingDialog().setVisible(true);
+				setVisible(false);
+				final LoadingDialog dialog = new LoadingDialog();
+				dialog.setVisible(true);
+				if (DialogResult.OK == dialog.getReturnStatus()) {
+					dispose();
+					new Catalog(dialog.getContext()).setVisible(true);
+				} else {
+					System.exit(0);
+				}
 			}
 
 		});
-		setVisible(false);
-		dispose();
 	}
 
 	/**
@@ -88,14 +94,13 @@ public class Selector extends JFrame {
 	 */
 	private GroupLayout.SequentialGroup createHorizontalLayout(final GroupLayout layout) {
 		final GroupLayout.ParallelGroup buttons = layout.createParallelGroup()
-				.addGap(CatalogSwingConstants.HORIZONTAL_BUTTON_GAP_SIZE)
 				.addComponent(catalogButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, Short.MAX_VALUE)
 				.addComponent(exitButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, Short.MAX_VALUE);
 
 		return layout.createSequentialGroup()
-				.addGap(HORIZONTAL_GAP_SIZE)
+				.addGap(0, HORIZONTAL_GAP_SIZE, Short.MAX_VALUE)
 				.addGroup(buttons)
-				.addGap(HORIZONTAL_GAP_SIZE);
+				.addGap(0, HORIZONTAL_GAP_SIZE, Short.MAX_VALUE);
 	}
 
 	/**
@@ -106,11 +111,11 @@ public class Selector extends JFrame {
 	 */
 	private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
 		return layout.createSequentialGroup()
-				.addGap(VERTICAL_GAP_SIZE)
-				.addComponent(catalogButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
-				.addGap(VERTICAL_GAP_SIZE)
-				.addComponent(exitButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
-				.addGap(VERTICAL_GAP_SIZE);
+				.addGap(0, VERTICAL_GAP_SIZE, Short.MAX_VALUE)
+				.addComponent(catalogButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
+				.addGap(0, VERTICAL_GAP_SIZE, Short.MAX_VALUE)
+				.addComponent(exitButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
+				.addGap(0, VERTICAL_GAP_SIZE, Short.MAX_VALUE);
 	}
 
 }

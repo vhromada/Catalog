@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
-import cz.vhromada.catalog.commons.SwingUtils;
+import cz.vhromada.catalog.commons.CatalogSwingConstant2;
 import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.InputValidator;
 import cz.vhromada.catalog.gui.Pictures;
 import cz.vhromada.validators.Validators;
@@ -22,11 +22,35 @@ public class ProgramInfoDialog extends JDialog {
 	/** SerialVersionUID */
 	private static final long serialVersionUID = 1L;
 
+	/** Horizontal component size */
+	private static final int HORIZONTAL_COMPONENT_SIZE = 310;
+
+	/** Horizontal label size in dialog */
+	private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
+
+	/** Horizontal data size in dialog */
+	private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
+
+	/** Horizontal button size */
+	private static final int HORIZONTAL_BUTTON_SIZE = 96;
+
+	/** Horizontal button gap size */
+	private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
+
+	/** Horizontal gap size */
+	private static final int HORIZONTAL_GAP_SIZE = 20;
+
+	/** Vertical gap size */
+	private static final int VERTICAL_GAP_SIZE = 10;
+
+	/** Vertical long gap size */
+	private static final int VERTICAL_LONG_GAP_SIZE = 20;
+
 	/** Return status */
-	private int returnStatus;
+	private DialogResult returnStatus = DialogResult.CANCEL;
 
 	/** TO for program */
-	private ProgramTO programTO;
+	private ProgramTO program;
 
 	/** Label for name */
 	private JLabel nameLabel = new JLabel("Name");
@@ -34,11 +58,17 @@ public class ProgramInfoDialog extends JDialog {
 	/** Text field for name */
 	private JTextField nameData = new JTextField();
 
-	/** Label for Wikipedia */
-	private JLabel wikiLabel = new JLabel("Wikipedia");
+	/** Label for czech Wikipedia */
+	private JLabel wikiCzLabel = new JLabel("Czech Wikipedia");
 
-	/** Text field for Wikipedia */
-	private JTextField wikiData = new JTextField();
+	/** Text field for czech Wikipedia */
+	private JTextField wikiCzData = new JTextField();
+
+	/** Label for english Wikipedia */
+	private JLabel wikiEnLabel = new JLabel("English Wikipedia");
+
+	/** Text field for english Wikipedia */
+	private JTextField wikiEnData = new JTextField();
 
 	/** Label for count of media */
 	private JLabel mediaCountLabel = new JLabel("Count of media");
@@ -80,22 +110,23 @@ public class ProgramInfoDialog extends JDialog {
 	/**
 	 * Creates a new instance of ProgramInfoDialog.
 	 *
-	 * @param programTO TO for program
+	 * @param program TO for program
 	 * @throws IllegalArgumentException if TO for program is null
 	 */
-	public ProgramInfoDialog(final ProgramTO programTO) {
+	public ProgramInfoDialog(final ProgramTO program) {
 		this("Update", "update");
 
-		Validators.validateArgumentNotNull(programTO, "TO for program");
+		Validators.validateArgumentNotNull(program, "TO for program");
 
-		this.programTO = programTO;
-		this.nameData.setText(programTO.getName());
-		this.wikiData.setText(programTO.getWikiCz());
-		this.mediaCountData.setValue(programTO.getMediaCount());
-		this.crackData.setSelected(programTO.hasCrack());
-		this.serialData.setSelected(programTO.hasSerialKey());
-		this.otherDataData.setText(programTO.getOtherData());
-		this.noteData.setText(programTO.getNote());
+		this.program = program;
+		this.nameData.setText(program.getName());
+		this.wikiCzData.setText(program.getWikiCz());
+		this.wikiEnData.setText(program.getWikiEn());
+		this.mediaCountData.setValue(program.getMediaCount());
+		this.crackData.setSelected(program.hasCrack());
+		this.serialData.setSelected(program.hasSerialKey());
+		this.otherDataData.setText(program.getOtherData());
+		this.noteData.setText(program.getNote());
 		this.okButton.requestFocusInWindow();
 	}
 
@@ -117,7 +148,7 @@ public class ProgramInfoDialog extends JDialog {
 	 *
 	 * @return return status
 	 */
-	public int getReturnStatus() {
+	public DialogResult getReturnStatus() {
 		return returnStatus;
 	}
 
@@ -128,9 +159,9 @@ public class ProgramInfoDialog extends JDialog {
 	 * @throws IllegalStateException if TO for program hasn't been set
 	 */
 	public ProgramTO getProgramTO() {
-		Validators.validateFieldNotNull(programTO, "TO for program");
+		Validators.validateFieldNotNull(program, "TO for program");
 
-		return programTO;
+		return program;
 	}
 
 	/** Initializes components. */
@@ -139,7 +170,8 @@ public class ProgramInfoDialog extends JDialog {
 		setResizable(false);
 
 		initLabelComponent(nameLabel, nameData);
-		initLabelComponent(wikiLabel, wikiData);
+		initLabelComponent(wikiCzLabel, wikiCzData);
+		initLabelComponent(wikiEnLabel, wikiEnData);
 		initLabelComponent(mediaCountLabel, mediaCountData);
 		initLabelComponent(otherDataLabel, otherDataData);
 		initLabelComponent(noteLabel, noteData);
@@ -194,24 +226,25 @@ public class ProgramInfoDialog extends JDialog {
 
 	/** Performs action for button OK. */
 	private void okAction() {
-		returnStatus = CatalogSwingConstants.RET_OK;
-		if (programTO == null) {
-			programTO = new ProgramTO();
+		returnStatus = DialogResult.OK;
+		if (program == null) {
+			program = new ProgramTO();
 		}
-		programTO.setName(nameData.getText());
-		programTO.setWikiEn(wikiData.getText());
-		programTO.setMediaCount((Integer) mediaCountData.getValue());
-		programTO.setCrack(crackData.isSelected());
-		programTO.setSerialKey(serialData.isSelected());
-		programTO.setOtherData(otherDataData.getText());
-		programTO.setNote(noteData.getText());
+		program.setName(nameData.getText());
+		program.setWikiCz(wikiCzData.getText());
+		program.setWikiEn(wikiEnData.getText());
+		program.setMediaCount((Integer) mediaCountData.getValue());
+		program.setCrack(crackData.isSelected());
+		program.setSerialKey(serialData.isSelected());
+		program.setOtherData(otherDataData.getText());
+		program.setNote(noteData.getText());
 		close();
 	}
 
 	/** Performs action for button Cancel. */
 	private void cancelAction() {
-		returnStatus = CatalogSwingConstants.RET_CANCEL;
-		programTO = null;
+		returnStatus = DialogResult.CANCEL;
+		program = null;
 		close();
 	}
 
@@ -222,15 +255,48 @@ public class ProgramInfoDialog extends JDialog {
 	 * @return horizontal layout of components
 	 */
 	private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-		return SwingUtils.createHorizontalDialogLayout(layout,
-				SwingUtils.createHorizontalComponents(layout, nameLabel, nameData),
-				SwingUtils.createHorizontalComponents(layout, wikiLabel, wikiData),
-				SwingUtils.createHorizontalComponents(layout, mediaCountLabel, mediaCountData),
-				SwingUtils.createHorizontalCheckBoxesComponents(layout, crackData, serialData),
-				SwingUtils.createHorizontalComponents(layout, otherDataLabel, otherDataData),
-				SwingUtils.createHorizontalComponents(layout, noteLabel, noteData),
-				SwingUtils.createHorizontalButtonComponents(layout, okButton, cancelButton));
+		final GroupLayout.Group checkBoxes = layout.createParallelGroup()
+				.addComponent(crackData, HORIZONTAL_COMPONENT_SIZE, HORIZONTAL_COMPONENT_SIZE, HORIZONTAL_COMPONENT_SIZE)
+				.addComponent(serialData, HORIZONTAL_COMPONENT_SIZE, HORIZONTAL_COMPONENT_SIZE, HORIZONTAL_COMPONENT_SIZE);
+
+		final GroupLayout.Group buttons = layout.createSequentialGroup()
+				.addGap(HORIZONTAL_BUTTON_GAP_SIZE)
+				.addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
+				.addGap(HORIZONTAL_BUTTON_GAP_SIZE)
+				.addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
+				.addGap(HORIZONTAL_BUTTON_GAP_SIZE);
+
+		final GroupLayout.Group componentsGroup = layout.createParallelGroup()
+				.addGroup(createHorizontalComponents(layout, nameLabel, nameData))
+				.addGroup(createHorizontalComponents(layout, wikiCzLabel, wikiCzData))
+				.addGroup(createHorizontalComponents(layout, wikiEnLabel, wikiEnData))
+				.addGroup(createHorizontalComponents(layout, mediaCountLabel, mediaCountData))
+				.addGroup(checkBoxes)
+				.addGroup(createHorizontalComponents(layout, otherDataLabel, otherDataData))
+				.addGroup(createHorizontalComponents(layout, noteLabel, noteData))
+				.addGroup(buttons);
+
+		return layout.createSequentialGroup()
+				.addGap(HORIZONTAL_GAP_SIZE)
+				.addGroup(componentsGroup)
+				.addGap(HORIZONTAL_GAP_SIZE);
 	}
+
+	/**
+	 * Returns horizontal layout for label component with data component.
+	 *
+	 * @param layout layout
+	 * @param label  label component
+	 * @param data   data component
+	 * @return horizontal layout for label component with data component
+	 */
+	private GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
+		return layout.createSequentialGroup()
+				.addComponent(label, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
+				.addGap(10)
+				.addComponent(data, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
+	}
+
 
 	/**
 	 * Returns vertical layout of components.
@@ -239,13 +305,54 @@ public class ProgramInfoDialog extends JDialog {
 	 * @return vertical layout of components
 	 */
 	private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-		return SwingUtils.createVerticalDialogLayout(layout, okButton, cancelButton,
-				SwingUtils.createVerticalComponents(layout, nameLabel, nameData),
-				SwingUtils.createVerticalComponents(layout, wikiLabel, wikiData),
-				SwingUtils.createVerticalComponents(layout, mediaCountLabel, mediaCountData),
-				SwingUtils.createVerticalSelectableComponents(layout, crackData, serialData),
-				SwingUtils.createVerticalComponents(layout, otherDataLabel, otherDataData),
-				SwingUtils.createVerticalComponents(layout, noteLabel, noteData));
+		final GroupLayout.Group checkBoxes = layout.createSequentialGroup()
+				.addComponent(crackData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+				.addGap(10)
+				.addComponent(serialData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+
+		final GroupLayout.Group buttons = layout.createParallelGroup()
+				.addComponent(okButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+						CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+				.addComponent(cancelButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+						CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
+
+		return layout.createSequentialGroup()
+				.addGap(VERTICAL_LONG_GAP_SIZE)
+				.addGroup(createVerticalComponents(layout, nameLabel, nameData))
+				.addGap(VERTICAL_GAP_SIZE)
+				.addGroup(createVerticalComponents(layout, wikiCzLabel, wikiCzData))
+				.addGap(VERTICAL_GAP_SIZE)
+				.addGroup(createVerticalComponents(layout, wikiEnLabel, wikiEnData))
+				.addGap(VERTICAL_GAP_SIZE)
+				.addGroup(createVerticalComponents(layout, mediaCountLabel, mediaCountData))
+				.addGap(VERTICAL_GAP_SIZE)
+				.addGroup(checkBoxes)
+				.addGap(VERTICAL_GAP_SIZE)
+				.addGroup(createVerticalComponents(layout, otherDataLabel, otherDataData))
+				.addGap(VERTICAL_GAP_SIZE)
+				.addGroup(createVerticalComponents(layout, noteLabel, noteData))
+				.addGap(VERTICAL_LONG_GAP_SIZE)
+				.addGroup(buttons)
+				.addGap(VERTICAL_LONG_GAP_SIZE);
+	}
+
+	/**
+	 * Returns vertical layout for label component with data component.
+	 *
+	 * @param layout layout
+	 * @param label  label component
+	 * @param data   data component
+	 * @return vertical layout for label component with data component
+	 */
+	private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
+		return layout.createParallelGroup()
+				.addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+				.addGap(VERTICAL_GAP_SIZE)
+				.addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
 	}
 
 	/**

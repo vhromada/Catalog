@@ -12,7 +12,7 @@ server.react.App = function () {
   var link = dom.link;
   var body = dom.body;
 
-  this.component = React.createClass({
+  this.component = React.createFactory(React.createClass({
     render: function () {
       return (
         <html lang='en'>
@@ -26,5 +26,5 @@ server.react.App = function () {
         </html>
       );
     }
-  });
+  }));
 };

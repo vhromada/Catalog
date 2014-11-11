@@ -13,14 +13,9 @@ server.main = function (config) {
       resolve: server.App,
       "with": {
         config: config,
-        express: require('express')
-      }
-    },
-    {
-      resolve: server.Middleware,
-      "with": {
-        bodyParser: require('body-parser'),
+        express: require('express'),
         compression: require('compression'),
+        bodyParser: require('body-parser'),
         methodOverride: require('method-override')
       }
     },

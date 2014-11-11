@@ -18,7 +18,7 @@ server.FrontPage = function (serverApp, app, clientData, isDev) {
  @return {string} HTML send to client
  */
 server.FrontPage.prototype.render = function () {
-  var appHtml = React.renderComponentToString(<this.app.component/>);
+  var appHtml = React.renderToString(<this.app.component/>);
   var scriptsHtml = this.getScriptsHtml();
   var bodyHtml = appHtml + scriptsHtml;
 

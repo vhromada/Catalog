@@ -9,7 +9,6 @@ goog.require('este.Storage');
  @extends {este.Storage}
  */
 app.Storage = function (dispatcher, routes) {
-  this.localStorage = localStorage;
   this.routes = routes;
   this.dispatcherId = dispatcher.register((function (_this) {
     return function (action, payload) {
@@ -35,6 +34,7 @@ app.Storage.prototype.init = function () {
 app.Storage.prototype.loadRoute_ = function (route, params) {
   switch (route) {
     case this.routes.home:
+    case this.routes.game:
       return this.ok();
     default:
       return this.notFound();

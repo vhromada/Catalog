@@ -2,17 +2,17 @@ goog.provide('app.react.App');
 
 /**
  @param {app.Routes} routes
- @param {app.react.Header} header
- @param {app.react.pages.Home} homePage
- @param {app.react.pages.Game} gamePage
+ @param {app.react.Menu} menu
+ @param {app.react.pages.Home} home
+ @param {app.react.pages.games.List} games
  @constructor
  */
-app.react.App = function (routes, header, homePage, gamePage) {
+app.react.App = function (routes, menu, home, games) {
   this.component = React.createFactory(React.createClass({
     render: function () {
       return (
         <div className="app">
-          <header.component/>
+          <menu.component/>
           {this.getActivePage()}
         </div>
       );
@@ -20,9 +20,9 @@ app.react.App = function (routes, header, homePage, gamePage) {
     getActivePage: function () {
       switch (routes.active) {
         case routes.home:
-          return <homePage.component/>;
-        case routes.game:
-          return <gamePage.component/>;
+          return <home.component/>;
+        case routes.games:
+          return <games.component/>;
       }
     }
   }));

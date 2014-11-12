@@ -34,7 +34,7 @@ app.Storage.prototype.init = function () {
 app.Storage.prototype.loadRoute_ = function (route, params) {
   switch (route) {
     case this.routes.home:
-    case this.routes.game:
+    case this.routes.games:
       return this.ok();
     default:
       return this.notFound();

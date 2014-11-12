@@ -1,0 +1,20 @@
+/**
+ @constructor
+ */
+function Game() {
+}
+Game.prototype.id;
+Game.prototype.name;
+Game.prototype.wikiEn;
+Game.prototype.wikiCz;
+Game.prototype.mediaCount;
+Game.prototype.crack;
+Game.prototype.serialKey;
+Game.prototype.patch;
+Game.prototype.trainer;
+Game.prototype.trainerData;
+Game.prototype.editor;
+Game.prototype.saves;
+Game.prototype.otherData;
+Game.prototype.note;
+Game.prototype.position;

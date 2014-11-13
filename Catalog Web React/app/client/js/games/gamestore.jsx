@@ -1,16 +1,17 @@
-goog.provide('app.games.Store');
+goog.provide('app.games.GameStore');
 
 goog.require('app.games.Game');
+goog.require('app.stores.Store');
 goog.require('goog.array');
-goog.require('goog.events.EventTarget');
 goog.require('goog.Promise');
 
 /**
+ @param {app.stores.StoreRegistry} registry
  @constructor
- @extends {goog.events.EventTarget}
+ @extends {app.stores.Store}
  */
-app.games.Store = function () {
-  goog.base(this);
+app.games.GameStore = function (registry) {
+  goog.base(this, registry);
 
   this.games = [
     app.games.Game.loadFromJson(
@@ -54,21 +55,17 @@ app.games.Store = function () {
   ];
 
   /**
-   @type {Array.<app.games.Game>}
+   @type {Array<app.games.Game>}
    */
   this.foundGames = [];
 };
 
-goog.inherits(app.games.Store, goog.events.EventTarget);
-
-app.games.Store.prototype.notify = function () {
-  this.dispatchEvent({type: 'change'});
-};
+goog.inherits(app.games.GameStore, app.stores.Store);
 
 /**
  @return {!goog.Promise}
  */
-app.games.Store.prototype.findAll = function () {
+app.games.GameStore.prototype.findAll = function () {
   var resolver = function (resolve, reject) {
     resolve(this.games);
   };
@@ -86,7 +83,7 @@ app.games.Store.prototype.findAll = function () {
  @param {number} id
  @return {app.games.Game}
  */
-app.games.Store.prototype.findById = function (id) {
+app.games.GameStore.prototype.findById = function (id) {
   return goog.array.find(this.games, function (game) {
     return game.id == id;
   });
@@ -95,7 +92,7 @@ app.games.Store.prototype.findById = function (id) {
 /**
  @param {app.games.Game} game
  */
-app.games.Store.prototype.add = function (game) {
+app.games.GameStore.prototype.add = function (game) {
   var lastGame = goog.array.peek(this.games);
   game.id = lastGame.id + 1;
   goog.array.insert(this.games, game);
@@ -105,7 +102,7 @@ app.games.Store.prototype.add = function (game) {
 /**
  @param {app.games.Game} game
  */
-app.games.Store.prototype.edit = function (game) {
+app.games.GameStore.prototype.edit = function (game) {
   var index = goog.array.findIndex(this.games, function (_game, index, games) {
     return game.id == _game.id;
   });
@@ -117,7 +114,7 @@ app.games.Store.prototype.edit = function (game) {
 /**
  @param {app.games.Game} game
  */
-app.games.Store.prototype.remove = function (game) {
+app.games.GameStore.prototype.remove = function (game) {
   goog.array.remove(this.games, game);
   this.notify();
 };

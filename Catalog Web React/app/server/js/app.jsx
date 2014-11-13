@@ -16,16 +16,16 @@ goog.require('goog.labs.userAgent.util');
 server.App = function (express, config, routes, frontPage, storage, compression, bodyParser, methodOverride) {
   var app = express();
 
-  app['use'](compression());
-  app['use'](bodyParser['json']());
-  app['use'](methodOverride());
+  app.use(compression());
+  app.use(bodyParser.json());
+  app.use(methodOverride());
 
   if (config['env']['development']) {
-    app['use']('/bower_components', express['static']('bower_components'));
-    app['use']('/app', express['static']('app'));
-    app['use']('/tmp', express['static']('tmp'));
+    app.use('/bower_components', express['static']('bower_components'));
+    app.use('/app', express['static']('app'));
+    app.use('/tmp', express['static']('tmp'));
   } else {
-    app['use']('/app', express["static"]('app'));
+    app.use('/app', express["static"]('app'));
   }
 
   var onError = function (route, reason) {

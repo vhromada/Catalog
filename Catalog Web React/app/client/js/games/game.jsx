@@ -1,5 +1,7 @@
 goog.provide('app.games.Game');
 
+goog.require('goog.string.StringBuffer');
+
 /**
  @constructor
  */
@@ -104,4 +106,46 @@ app.games.Game.loadFromJson = function (json) {
   game.position = json.position;
 
   return game;
+};
+
+/**
+ @returns {string}
+ */
+app.games.Game.prototype.getAdditionalData = function () {
+  var result = new goog.string.StringBuffer();
+  if (this.crack) {
+    result.append('Crack');
+  }
+  this.addToResult(result, this.serialKey, 'serial key');
+  this.addToResult(result, this.patch, 'patch');
+  this.addToResult(result, this.trainer, 'trainer');
+  this.addToResult(result, this.trainerData, 'data for trainer');
+  this.addToResult(result, this.editor, 'editor');
+  this.addToResult(result, this.saves, 'saves');
+  if (!goog.string.isEmptyOrWhitespaceSafe(this.otherData)) {
+    if (result.getLength() != 0) {
+      result.append(', ');
+    }
+    result.append(this.otherData);
+  }
+
+  return result.toString();
+};
+
+/**
+ @param {goog.string.StringBuffer} result
+ @param {boolean} value
+ @param {string} string
+ @private
+ */
+app.games.Game.prototype.addToResult = function (result, value, string) {
+  if (value) {
+    if (result.getLength() == 0) {
+      result.append(string.substring(0, 1).toUpperCase());
+      result.append(string.substring(1));
+    } else {
+      result.append(', ');
+      result.append(string);
+    }
+  }
 };

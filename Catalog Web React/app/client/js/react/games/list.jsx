@@ -1,13 +1,13 @@
 goog.provide('app.react.games.List');
 
 /**
- @param {app.games.Store} store
+ @param {app.games.GameStore} store
  @constructor
  */
 app.react.games.List = function (store) {
   this.component = React.createFactory(React.createClass({
     componentDidMount: function () {
-      store.findAll();
+      return store.findAll();
     },
     render: function () {
       var games = store.foundGames.map(
@@ -27,6 +27,7 @@ app.react.games.List = function (store) {
               <td>{game.editor ? 'true' : 'false'}</td>
               <td>{game.saves ? 'true' : 'false'}</td>
               <td>{game.otherData}</td>
+              <td>{game.getAdditionalData()}</td>
               <td>{game.note}</td>
               <td>{game.position}</td>
             </tr>
@@ -51,6 +52,7 @@ app.react.games.List = function (store) {
               <th>Editor</th>
               <th>Saves</th>
               <th>Other data</th>
+              <th>Additional data</th>
               <th>Note</th>
               <th>Position</th>
             </tr>

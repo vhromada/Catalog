@@ -1,6 +1,3 @@
-/**
- @constructor
- */
 function Game() {
 }
 Game.prototype.id;
@@ -18,3 +15,23 @@ Game.prototype.saves;
 Game.prototype.otherData;
 Game.prototype.note;
 Game.prototype.position;
+
+var expressjs = function () {
+}
+expressjs.prototype.body;
+expressjs.prototype.createServer;
+expressjs.prototype.end;
+expressjs.prototype.extended;
+expressjs.prototype.headers;
+expressjs.prototype.json;
+expressjs.prototype.listen;
+expressjs.prototype.location;
+expressjs.prototype.params;
+expressjs.prototype.query;
+expressjs.prototype.send;
+expressjs.prototype.setHeader;
+expressjs.prototype["static"];
+expressjs.prototype.status;
+expressjs.prototype.urlencoded;
+expressjs.prototype.use;
+expressjs.prototype.writeHead;

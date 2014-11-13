@@ -58,6 +58,11 @@ app.games.GameStore = function (registry) {
    @type {Array<app.games.Game>}
    */
   this.foundGames = [];
+
+  /**
+   @type {number}
+   */
+  this.mediaCount = 0;
 };
 
 goog.inherits(app.games.GameStore, app.stores.Store);
@@ -67,14 +72,22 @@ goog.inherits(app.games.GameStore, app.stores.Store);
  */
 app.games.GameStore.prototype.findAll = function () {
   var resolver = function (resolve, reject) {
-    resolve(this.games);
+    var games = this.games;
+    var count = 0;
+    goog.array.forEach(games, function (element, index, array) {
+      count += element.mediaCount;
+    });
+    var result = [games, count];
+    resolve(result);
   };
 
   var promise = new goog.Promise(resolver, this);
 
   return promise
-    .then(function (games) {
-      this.foundGames = games;
+    .then(function (result) {
+      this.foundGames = result[0];
+      this.count = result[0].length;
+      this.mediaCount = result[1];
       this.notify();
     }.bind(this));
 };
@@ -96,6 +109,7 @@ app.games.GameStore.prototype.add = function (game) {
   var lastGame = goog.array.peek(this.games);
   game.id = lastGame.id + 1;
   goog.array.insert(this.games, game);
+  this.mediaCount += game.mediaCount;
   this.notify();
 };
 
@@ -106,8 +120,10 @@ app.games.GameStore.prototype.edit = function (game) {
   var index = goog.array.findIndex(this.games, function (_game, index, games) {
     return game.id == _game.id;
   });
+  this.mediaCount -= this.games[index].mediaCount;
   goog.array.removeAt(this.games, index);
   goog.array.insertAt(this.games, game, index);
+  this.mediaCount += game.mediaCount;
   this.notify();
 };
 
@@ -116,5 +132,6 @@ app.games.GameStore.prototype.edit = function (game) {
  */
 app.games.GameStore.prototype.remove = function (game) {
   goog.array.remove(this.games, game);
+  this.mediaCount -= game.mediaCount;
   this.notify();
 };

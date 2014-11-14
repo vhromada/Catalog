@@ -11,7 +11,11 @@ app.react.games.List = function (store, wikipedia) {
       return store.findAll();
     },
     render: function () {
-      var games = store.foundGames.map(
+      var onDuplicateClick = function (id) {
+        store.duplicate(id);
+      };
+
+      var games = store.games.map(
         function (game) {
           return (
             <tr key={game.id}>
@@ -24,6 +28,9 @@ app.react.games.List = function (store, wikipedia) {
               </td>
               <td>
                 <wikipedia.component country={'cz'} url={game.wikiCz} text='Czech Wikipedia'/>
+              </td>
+              <td>
+                <button onClick={onDuplicateClick.bind(this, game.id)}>Duplicate</button>
               </td>
             </tr>
           )
@@ -38,6 +45,7 @@ app.react.games.List = function (store, wikipedia) {
               <th>Count of media</th>
               <th>Additional data</th>
               <th>Note</th>
+              <th></th>
               <th></th>
               <th></th>
             </tr>

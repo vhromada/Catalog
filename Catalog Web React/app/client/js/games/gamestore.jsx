@@ -13,7 +13,7 @@ goog.require('goog.Promise');
 app.games.GameStore = function (registry) {
   goog.base(this, registry);
 
-  this.games = [
+  this.jsonGames = [
     app.games.Game.loadFromJson(
       {
         id: 1,
@@ -72,7 +72,7 @@ app.games.GameStore = function (registry) {
   /**
    @type {Array.<app.games.Game>}
    */
-  this.foundGames = [];
+  this.games = [];
 
   /**
    @type {number}
@@ -86,10 +86,10 @@ goog.inherits(app.games.GameStore, app.stores.Store);
  @return {!goog.Promise}
  */
 app.games.GameStore.prototype.findAll = function () {
-  var resolver = function (resolve, reject) {
-    var games = this.games;
+  var resolver = function (resolve) {
+    var games = this.jsonGames;
     var count = 0;
-    goog.array.forEach(games, function (element, index, array) {
+    goog.array.forEach(games, function (element) {
       count += element.mediaCount;
     });
     var result = [games, count];
@@ -100,7 +100,7 @@ app.games.GameStore.prototype.findAll = function () {
 
   return promise
     .then(function (result) {
-      this.foundGames = result[0];
+      this.games = result[0];
       this.count = result[0].length;
       this.mediaCount = result[1];
       this.notify();
@@ -112,17 +112,14 @@ app.games.GameStore.prototype.findAll = function () {
  @return {app.games.Game}
  */
 app.games.GameStore.prototype.findById = function (id) {
-  return goog.array.find(this.games, function (game) {
-    return game.id == id;
-  });
+  return this.games[this.getIndex(id)];
 };
 
 /**
  @param {app.games.Game} game
  */
 app.games.GameStore.prototype.add = function (game) {
-  var lastGame = goog.array.peek(this.games);
-  game.id = lastGame.id + 1;
+  game.id = this.newId();
   goog.array.insert(this.games, game);
   this.mediaCount += game.mediaCount;
   this.notify();
@@ -132,12 +129,23 @@ app.games.GameStore.prototype.add = function (game) {
  @param {app.games.Game} game
  */
 app.games.GameStore.prototype.edit = function (game) {
-  var index = goog.array.findIndex(this.games, function (_game, index, games) {
-    return game.id == _game.id;
-  });
+  var index = this.getIndex(game.id);
   this.mediaCount -= this.games[index].mediaCount;
   goog.array.removeAt(this.games, index);
   goog.array.insertAt(this.games, game, index);
+  this.mediaCount += game.mediaCount;
+  this.notify();
+};
+
+/**
+ @param {number} id
+ */
+app.games.GameStore.prototype.duplicate = function (id) {
+  var index = this.getIndex(id);
+  var oldGame = this.games[index];
+  var game = app.games.Game.duplicate(oldGame);
+  game.id = this.newId();
+  goog.array.insertAt(this.games, game, index + 1);
   this.mediaCount += game.mediaCount;
   this.notify();
 };
@@ -149,4 +157,29 @@ app.games.GameStore.prototype.remove = function (game) {
   goog.array.remove(this.games, game);
   this.mediaCount -= game.mediaCount;
   this.notify();
+};
+
+/**
+ @returns {number}
+ @private
+ */
+app.games.GameStore.prototype.newId = function () {
+  var id = 0;
+  goog.array.forEach(this.games, function (element) {
+    if (element.id > id) {
+      id = element.id;
+    }
+  });
+  return id + 1;
+};
+
+/**
+ @param {number} id
+ @returns {number}
+ @private
+ */
+app.games.GameStore.prototype.getIndex = function (id) {
+  return goog.array.findIndex(this.games, function (_game) {
+    return id == _game.id;
+  });
 };

@@ -17,7 +17,7 @@ app.react.games.Stats = function (store) {
           </thead>
           <tbody>
             <tr>
-              <td>{store.foundGames.length}</td>
+              <td>{store.games.length}</td>
               <td>{store.mediaCount}</td>
             </tr>
           </tbody>

@@ -109,6 +109,31 @@ app.games.Game.loadFromJson = function (json) {
 };
 
 /**
+ @param {app.games.Game} game
+ @return {app.games.Game}
+ */
+app.games.Game.duplicate = function (game) {
+  var newGame = new app.games.Game();
+  newGame.id = game.id;
+  newGame.name = game.name;
+  newGame.wikiEn = game.wikiEn;
+  newGame.wikiCz = game.wikiCz;
+  newGame.mediaCount = game.mediaCount;
+  newGame.crack = game.crack;
+  newGame.serialKey = game.serialKey;
+  newGame.patch = game.patch;
+  newGame.trainer = game.trainer;
+  newGame.trainerData = game.trainerData;
+  newGame.editor = game.editor;
+  newGame.saves = game.saves;
+  newGame.otherData = game.otherData;
+  newGame.note = game.note;
+  newGame.position = game.position;
+
+  return newGame;
+};
+
+/**
  @returns {string}
  */
 app.games.Game.prototype.getAdditionalData = function () {

@@ -51,11 +51,26 @@ app.games.GameStore = function (registry) {
         note: 'Note 2',
         position: 1
       }
+    ),
+    app.games.Game.loadFromJson(
+      {
+        id: 3,
+        name: 'Game 3',
+        mediaCount: 1,
+        crack: false,
+        serialKey: false,
+        patch: false,
+        trainer: false,
+        trainerData: false,
+        editor: false,
+        saves: false,
+        position: 2
+      }
     )
   ];
 
   /**
-   @type {Array<app.games.Game>}
+   @type {Array.<app.games.Game>}
    */
   this.foundGames = [];
 

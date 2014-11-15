@@ -1,31 +1,32 @@
 goog.provide('app.react.games.List');
 
 /**
- * @param {app.games.GameStore} store
+ * @param {app.games.Store} store
  * @param {app.react.Wikipedia} wikipedia
  * @param {app.react.Move} move
+ * @param {app.Actions} actions
  * @constructor
  */
-app.react.games.List = function (store, wikipedia, move) {
+app.react.games.List = function (store, wikipedia, move, actions) {
   this.component = React.createFactory(React.createClass({
     componentDidMount: function () {
       return store.findAll();
     },
     render: function () {
       var onDuplicateClick = function (id) {
-        store.duplicate(id);
+        actions.gameDuplicate(id);
       };
 
       var onMoveUp = function (id) {
-        store.moveUp(id);
+        actions.gameMoveUp(id);
       };
 
       var onMoveDown = function (id) {
-        store.moveDown(id);
+        actions.gameMoveDown(id);
       };
 
       var onRemove = function (id) {
-        store.remove(id);
+        actions.gameRemove(id);
       };
 
       var games = store.games.map(

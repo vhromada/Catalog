@@ -15,10 +15,11 @@ app.routes.Store = function (actions, dispatcher, routes, router) {
   goog.base(this);
 
   this.actions = actions;
-  this.dispatcher = dispatcher;
+
   this.routes = routes;
   this.router = router;
-  this.dispatcher.register((function (_this) {
+
+  dispatcher.register((function (_this) {
     return function (action, payload) {
       switch (action) {
         case app.Actions.LOAD_ROUTE:

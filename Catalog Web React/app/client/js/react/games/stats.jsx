@@ -1,7 +1,7 @@
 goog.provide('app.react.games.Stats');
 
 /**
- * @param {app.games.GameStore} store
+ * @param {app.games.Store} store
  * @constructor
  */
 app.react.games.Stats = function (store) {

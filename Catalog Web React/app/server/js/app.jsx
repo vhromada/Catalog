@@ -3,15 +3,15 @@ goog.provide('server.App');
 goog.require('goog.labs.userAgent.util');
 
 /**
- @param {Function} express
- @param {Object} config
- @param {app.Routes} routes
- @param {server.FrontPage} frontPage
- @param {server.Storage} storage
- @param {Function} compression
- @param {Function} bodyParser
- @param {Function} methodOverride
- @constructor
+ * @param {Function} express
+ * @param {Object} config
+ * @param {app.Routes} routes
+ * @param {server.FrontPage} frontPage
+ * @param {server.Storage} storage
+ * @param {Function} compression
+ * @param {Function} bodyParser
+ * @param {Function} methodOverride
+ * @constructor
  */
 server.App = function (express, config, routes, frontPage, storage, compression, bodyParser, methodOverride) {
   var app = express();

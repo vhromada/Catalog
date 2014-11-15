@@ -1,7 +1,7 @@
 goog.provide('server.react.App');
 
 /**
- @constructor
+ * @constructor
  */
 server.react.App = function () {
   var dom = React.DOM;

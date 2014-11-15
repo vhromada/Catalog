@@ -3,7 +3,9 @@ goog.provide('server.main');
 goog.require('server.DiContainer');
 
 /**
- @param {Object} config
+ /**
+ * @param {Object} config
+ * @returns {server.App}
  */
 server.main = function (config) {
   var container = new server.DiContainer;

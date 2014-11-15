@@ -1,11 +1,11 @@
 goog.provide('server.FrontPage');
 
 /**
- @param {server.react.App} serverApp
- @param {app.react.App} app
- @param {Object} clientData
- @param {boolean} isDev
- @constructor
+ * @param {server.react.App} serverApp
+ * @param {app.react.App} app
+ * @param {Object} clientData
+ * @param {boolean} isDev
+ * @constructor
  */
 server.FrontPage = function (serverApp, app, clientData, isDev) {
   this.serverApp = serverApp;
@@ -15,7 +15,7 @@ server.FrontPage = function (serverApp, app, clientData, isDev) {
 };
 
 /**
- @return {string} HTML send to client
+ * @returns {string} HTML send to client
  */
 server.FrontPage.prototype.render = function () {
   var appHtml = React.renderToString(<this.app.component/>);
@@ -28,7 +28,7 @@ server.FrontPage.prototype.render = function () {
 };
 
 /**
- @return {string}
+ * @returns {string}
  */
 server.FrontPage.prototype.getScriptsHtml = function () {
   var scripts = ['/app/client/build/app.js'];

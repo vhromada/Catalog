@@ -12,6 +12,8 @@ goog.require('goog.net.HttpStatus');
  * @extends {este.Store}
  */
 app.routes.Store = function (actions, dispatcher, routes, router) {
+  goog.base(this);
+
   this.actions = actions;
   this.dispatcher = dispatcher;
   this.routes = routes;

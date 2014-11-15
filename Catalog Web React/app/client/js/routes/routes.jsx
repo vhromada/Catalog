@@ -7,6 +7,8 @@ goog.require('este.Routes');
  * @extends {este.Routes}
  */
 app.Routes = function () {
+  goog.base(this);
+
   this.home = this.route('/');
   this.games = this.route('/games');
 };

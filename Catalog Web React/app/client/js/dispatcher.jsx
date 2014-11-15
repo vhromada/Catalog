@@ -7,7 +7,7 @@ goog.require('este.Dispatcher');
  * @extends {este.Dispatcher}
  */
 app.Dispatcher = function () {
-  app.Dispatcher.superClass_.constructor.call(this);
+  goog.base(this);
 };
 
 goog.inherits(app.Dispatcher, este.Dispatcher);

@@ -1,8 +1,8 @@
 goog.provide('app.react.Menu');
 
 /**
- @param {app.Routes} routes
- @constructor
+ * @param {app.Routes} routes
+ * @constructor
  */
 app.react.Menu = function (routes) {
   this.component = React.createFactory(React.createClass({

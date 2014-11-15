@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "este-library": "git://github.com/steida/este-library.git#^7.0.0",
+    "este-library": "git://github.com/steida/este-library.git#~8.1.0",
     "bootstrap": "^3.2.0"
   }
 }

@@ -1,7 +1,7 @@
 goog.provide('app.react.Wikipedia');
 
 /**
- @constructor
+ * @constructor
  */
 app.react.Wikipedia = function () {
   this.component = React.createFactory(React.createClass({

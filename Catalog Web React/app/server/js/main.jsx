@@ -3,7 +3,6 @@ goog.provide('server.main');
 goog.require('server.DiContainer');
 
 /**
- /**
  * @param {Object} config
  * @returns {server.App}
  */

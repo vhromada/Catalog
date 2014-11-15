@@ -5,8 +5,8 @@ goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 
 /**
- @constructor
- @extends {goog.events.EventTarget}
+ * @constructor
+ * @extends {goog.events.EventTarget}
  */
 app.stores.StoreRegistry = function () {
   goog.base(this);

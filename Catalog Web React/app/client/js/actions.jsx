@@ -1,19 +1,20 @@
 goog.provide('app.Actions');
 
 /**
- @param {app.Dispatcher} dispatcher
- @constructor
+ * @param {app.Dispatcher} dispatcher
+ * @constructor
  */
 app.Actions = function (dispatcher) {
   this.dispatcher = dispatcher;
 };
 
 app.Actions.LOAD_ROUTE = 'load-route';
-app.Actions.SYNC_VIEW = 'sync-view';
+app.Actions.RENDER_APP = 'render-app';
 
 /**
- @param {este.Route} route
- @param {Object} params
+ * @param {este.Route} route
+ * @param {Object} params
+ * @returns {goog.Promise}
  */
 app.Actions.prototype.loadRoute = function (route, params) {
   return this.dispatcher.dispatch(app.Actions.LOAD_ROUTE, {
@@ -22,6 +23,9 @@ app.Actions.prototype.loadRoute = function (route, params) {
   });
 };
 
-app.Actions.prototype.syncView = function () {
-  return this.dispatcher.dispatch(app.Actions.SYNC_VIEW);
+/**
+ * @returns {goog.Promise}
+ */
+app.Actions.prototype.renderApp = function () {
+  return this.dispatcher.dispatch(app.Actions.RENDER_APP);
 };

@@ -6,13 +6,16 @@ goog.require('goog.array');
 goog.require('goog.Promise');
 
 /**
- @param {app.stores.StoreRegistry} registry
- @constructor
- @extends {app.stores.Store}
+ * @param {app.stores.StoreRegistry} registry
+ * @constructor
+ * @extends {app.stores.Store}
  */
 app.games.GameStore = function (registry) {
   goog.base(this, registry);
 
+  /**
+   * @type {Array}
+   */
   this.jsonGames = [
     app.games.Game.loadFromJson(
       {
@@ -70,12 +73,12 @@ app.games.GameStore = function (registry) {
   ];
 
   /**
-   @type {Array.<app.games.Game>}
+   * @type {Array.<app.games.Game>}
    */
   this.games = [];
 
   /**
-   @type {number}
+   * @type {number}
    */
   this.mediaCount = 0;
 };
@@ -83,7 +86,7 @@ app.games.GameStore = function (registry) {
 goog.inherits(app.games.GameStore, app.stores.Store);
 
 /**
- @return {!goog.Promise}
+ * @return {!goog.Promise}
  */
 app.games.GameStore.prototype.findAll = function () {
   var resolver = function (resolve) {
@@ -108,15 +111,15 @@ app.games.GameStore.prototype.findAll = function () {
 };
 
 /**
- @param {number} id
- @return {app.games.Game}
+ * @param {number} id
+ * @returns {app.games.Game}
  */
 app.games.GameStore.prototype.findById = function (id) {
   return this.games[this.getIndex(id)];
 };
 
 /**
- @param {app.games.Game} game
+ * @param {app.games.Game} game
  */
 app.games.GameStore.prototype.add = function (game) {
   game.id = this.newId();
@@ -126,7 +129,7 @@ app.games.GameStore.prototype.add = function (game) {
 };
 
 /**
- @param {app.games.Game} game
+ * @param {app.games.Game} game
  */
 app.games.GameStore.prototype.edit = function (game) {
   var index = this.getIndex(game.id);
@@ -138,7 +141,7 @@ app.games.GameStore.prototype.edit = function (game) {
 };
 
 /**
- @param {number} id
+ * @param {number} id
  */
 app.games.GameStore.prototype.duplicate = function (id) {
   var index = this.getIndex(id);
@@ -160,8 +163,8 @@ app.games.GameStore.prototype.remove = function (game) {
 };
 
 /**
- @returns {number}
- @private
+ * @returns {number}
+ * @private
  */
 app.games.GameStore.prototype.newId = function () {
   var id = 0;
@@ -174,9 +177,9 @@ app.games.GameStore.prototype.newId = function () {
 };
 
 /**
- @param {number} id
- @returns {number}
- @private
+ * @param {number} id
+ * @returns {number}
+ * @private
  */
 app.games.GameStore.prototype.getIndex = function (id) {
   return goog.array.findIndex(this.games, function (_game) {

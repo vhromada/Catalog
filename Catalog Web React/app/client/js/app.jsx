@@ -1,28 +1,24 @@
 goog.provide('App');
 
-goog.require('goog.async.throwException');
-
 /**
- @param {app.Actions} actions
- @param {app.FrontPage} frontPage
- @param {app.Routes} routes
- @param {app.Storage} storage
- @param {este.Router} router
- @constructor
+ * @param {Element} element
+ * @param {app.Dispatcher} dispatcher
+ * @param {app.react.App} reactApp
+ * @param {app.routes.Store} routesStore
+ * @param {app.stores.StoreRegistry} registry
+ * @constructor
  */
-var App = function (actions, frontPage, routes, storage, router) {
-  frontPage.init();
-  storage.init();
-
-  routes.addToEste(router, function (route, params) {
-    return actions.loadRoute(route, params).then(function () {
-      return routes.setActive(route, params);
-    }).thenCatch(function (reason) {
-      return routes.trySetErrorRoute(reason);
-    }).then(function () {
-      return actions.syncView();
-    });
+var App = function (element, dispatcher, reactApp, routesStore, registry) {
+  registry.listen('change', function () {
+    dispatcher.dispatch(app.Actions.RENDER_APP)
   });
 
-  router.start();
+  dispatcher.register(function (action, payload) {
+    switch (action) {
+      case app.Actions.RENDER_APP:
+        return React.render(<reactApp.component/>, element);
+    }
+  });
+
+  routesStore.start();
 };

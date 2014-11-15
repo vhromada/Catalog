@@ -1,7 +1,7 @@
 goog.provide('app.react.pages.Home');
 
 /**
- @constructor
+ * @constructor
  */
 app.react.pages.Home = function () {
   this.component = React.createFactory(React.createClass({

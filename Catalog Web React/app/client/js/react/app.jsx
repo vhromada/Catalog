@@ -1,11 +1,11 @@
 goog.provide('app.react.App');
 
 /**
- @param {app.Routes} routes
- @param {app.react.Menu} menu
- @param {app.react.pages.Home} home
- @param {app.react.pages.games.List} games
- @constructor
+ * @param {app.Routes} routes
+ * @param {app.react.Menu} menu
+ * @param {app.react.pages.Home} home
+ * @param {app.react.pages.games.List} games
+ * @constructor
  */
 app.react.App = function (routes, menu, home, games) {
   this.component = React.createFactory(React.createClass({

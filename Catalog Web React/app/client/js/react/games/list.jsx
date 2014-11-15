@@ -1,9 +1,9 @@
 goog.provide('app.react.games.List');
 
 /**
- @param {app.games.GameStore} store
- @param {app.react.Wikipedia} wikipedia
- @constructor
+ * @param {app.games.GameStore} store
+ * @param {app.react.Wikipedia} wikipedia
+ * @constructor
  */
 app.react.games.List = function (store, wikipedia) {
   this.component = React.createFactory(React.createClass({

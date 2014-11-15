@@ -3,89 +3,89 @@ goog.provide('app.games.Game');
 goog.require('goog.string.StringBuffer');
 
 /**
- @constructor
+ * @constructor
  */
 app.games.Game = function () {
 
   /**
-   @type {number}
+   * @type {number}
    */
   this.id;
 
   /**
-   @type {string}
+   * @type {string}
    */
   this.name;
 
   /**
-   @type {string}
+   * @type {string}
    */
   this.wikiEn;
 
   /**
-   @type {string}
+   * @type {string}
    */
   this.wikiCz;
 
   /**
-   @type {number}
+   * @type {number}
    */
   this.mediaCount;
 
   /**
-   @type {boolean}
+   * @type {boolean}
    */
   this.crack;
 
   /**
-   @type {boolean}
+   * @type {boolean}
    */
   this.serialKey;
 
   /**
-   @type {boolean}
+   * @type {boolean}
    */
   this.patch;
 
   /**
-   @type {boolean}
+   * @type {boolean}
    */
   this.trainer;
 
   /**
-   @type {boolean}
+   * @type {boolean}
    */
   this.trainerData;
 
   /**
-   @type {boolean}
+   * @type {boolean}
    */
   this.editor;
 
   /**
-   @type {boolean}
+   * @type {boolean}
    */
   this.saves;
 
   /**
-   @type {string}
+   * @type {string}
    */
   this.otherData;
 
   /**
-   @type {string}
+   * @type {string}
    */
   this.note;
 
   /**
-   @type {number}
+   * @type {number}
    */
   this.position;
 };
 
 /**
- @param {Object} json
- @return {app.games.Game}
+ * @param {Object} json
+ * @returns {app.games.Game}
  */
 app.games.Game.loadFromJson = function (json) {
   var game = new app.games.Game();
@@ -109,8 +109,8 @@ app.games.Game.loadFromJson = function (json) {
 };
 
 /**
- @param {app.games.Game} game
- @return {app.games.Game}
+ * @param {app.games.Game} game
+ * @returns {app.games.Game}
  */
 app.games.Game.duplicate = function (game) {
   var newGame = new app.games.Game();
@@ -134,7 +134,7 @@ app.games.Game.duplicate = function (game) {
 };
 
 /**
- @returns {string}
+ * @returns {string}
  */
 app.games.Game.prototype.getAdditionalData = function () {
   var result = new goog.string.StringBuffer();
@@ -158,10 +158,10 @@ app.games.Game.prototype.getAdditionalData = function () {
 };
 
 /**
- @param {goog.string.StringBuffer} result
- @param {boolean} value
- @param {string} string
- @private
+ * @param {goog.string.StringBuffer} result
+ * @param {boolean} value
+ * @param {string} string
+ * @private
  */
 app.games.Game.prototype.addToResult = function (result, value, string) {
   if (value) {

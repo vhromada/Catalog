@@ -1,8 +1,8 @@
 goog.provide('app.react.games.Stats');
 
 /**
- @param {app.games.GameStore} store
- @constructor
+ * @param {app.games.GameStore} store
+ * @constructor
  */
 app.react.games.Stats = function (store) {
   this.component = React.createFactory(React.createClass({

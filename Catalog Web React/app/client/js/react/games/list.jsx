@@ -17,11 +17,15 @@ app.react.games.List = function (store, wikipedia, move) {
       };
 
       var onMoveUp = function (id) {
-        alert('Up ' + id);
+        store.moveUp(id);
       };
 
       var onMoveDown = function (id) {
-        alert('Down ' + id);
+        store.moveDown(id);
+      };
+
+      var onRemove = function (id) {
+        store.remove(id);
       };
 
       var games = store.games.map(
@@ -47,6 +51,9 @@ app.react.games.List = function (store, wikipedia, move) {
               <td>
                 <move.component up={false} list={store.games} item={game} text='Move down' action={onMoveDown}/>
               </td>
+              <td>
+                <button onClick={onRemove.bind(this, game.id)}>Remove</button>
+              </td>
             </tr>
           )
         }
@@ -60,6 +67,7 @@ app.react.games.List = function (store, wikipedia, move) {
               <th>Count of media</th>
               <th>Additional data</th>
               <th>Note</th>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>

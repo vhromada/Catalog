@@ -111,14 +111,6 @@ app.games.GameStore.prototype.findAll = function () {
 };
 
 /**
- * @param {number} id
- * @returns {app.games.Game}
- */
-app.games.GameStore.prototype.findById = function (id) {
-  return this.games[this.getIndex(id)];
-};
-
-/**
  * @param {app.games.Game} game
  */
 app.games.GameStore.prototype.add = function (game) {
@@ -154,11 +146,30 @@ app.games.GameStore.prototype.duplicate = function (id) {
 };
 
 /**
- @param {app.games.Game} game
+ * @param {number} id
  */
-app.games.GameStore.prototype.remove = function (game) {
+app.games.GameStore.prototype.remove = function (id) {
+  var game = this.games[this.getIndex(id)];
   goog.array.remove(this.games, game);
   this.mediaCount -= game.mediaCount;
+  this.notify();
+};
+
+/**
+ * @param {number} id
+ */
+app.games.GameStore.prototype.moveUp = function (id) {
+  var index = this.getIndex(id);
+  this.switchPositions(index, index - 1);
+  this.notify();
+};
+
+/**
+ * @param {number} id
+ */
+app.games.GameStore.prototype.moveDown = function (id) {
+  var index = this.getIndex(id);
+  this.switchPositions(index, index + 1);
   this.notify();
 };
 
@@ -185,4 +196,15 @@ app.games.GameStore.prototype.getIndex = function (id) {
   return goog.array.findIndex(this.games, function (_game) {
     return id == _game.id;
   });
+};
+
+/**
+ * @param {number} index1
+ * @param {number} index2
+ * @private
+ */
+app.games.GameStore.prototype.switchPositions = function (index1, index2) {
+  var game = this.games[index1];
+  this.games[index1] = this.games[index2];
+  this.games[index2] = game;
 };

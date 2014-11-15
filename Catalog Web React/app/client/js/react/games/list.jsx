@@ -3,9 +3,10 @@ goog.provide('app.react.games.List');
 /**
  * @param {app.games.GameStore} store
  * @param {app.react.Wikipedia} wikipedia
+ * @param {app.react.Move} move
  * @constructor
  */
-app.react.games.List = function (store, wikipedia) {
+app.react.games.List = function (store, wikipedia, move) {
   this.component = React.createFactory(React.createClass({
     componentDidMount: function () {
       return store.findAll();
@@ -13,6 +14,14 @@ app.react.games.List = function (store, wikipedia) {
     render: function () {
       var onDuplicateClick = function (id) {
         store.duplicate(id);
+      };
+
+      var onMoveUp = function (id) {
+        alert('Up ' + id);
+      };
+
+      var onMoveDown = function (id) {
+        alert('Down ' + id);
       };
 
       var games = store.games.map(
@@ -32,6 +41,12 @@ app.react.games.List = function (store, wikipedia) {
               <td>
                 <button onClick={onDuplicateClick.bind(this, game.id)}>Duplicate</button>
               </td>
+              <td>
+                <move.component up={true} list={store.games} item={game} text='Move up' action={onMoveUp}/>
+              </td>
+              <td>
+                <move.component up={false} list={store.games} item={game} text='Move down' action={onMoveDown}/>
+              </td>
             </tr>
           )
         }
@@ -45,6 +60,8 @@ app.react.games.List = function (store, wikipedia) {
               <th>Count of media</th>
               <th>Additional data</th>
               <th>Note</th>
+              <th></th>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>

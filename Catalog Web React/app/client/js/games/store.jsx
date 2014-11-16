@@ -1,21 +1,17 @@
 goog.provide('app.games.Store');
 
 goog.require('app.games.Game');
-goog.require('app.stores.Store');
 goog.require('goog.array');
-goog.require('goog.Promise');
 
 /**
- * @param {app.stores.StoreRegistry} registry
  * @param {app.Dispatcher} dispatcher
  * @param {app.Actions} actions
+ * @param {app.Data} data
  * @constructor
- * @extends {app.stores.Store}
  */
-app.games.Store = function (registry, dispatcher, actions) {
-  goog.base(this, registry);
-
+app.games.Store = function (dispatcher, actions, data) {
   this.actions = actions;
+  this.data = data;
 
   dispatcher.register((function (_this) {
     return function (action, payload) {
@@ -33,65 +29,6 @@ app.games.Store = function (registry, dispatcher, actions) {
   })(this));
 
   /**
-   * @type {Array}
-   */
-  this.jsonGames = [
-    app.games.Game.loadFromJson(
-      {
-        id: 1,
-        name: 'Game 1',
-        wikiEn: 'Wiki EN 1',
-        wikiCz: 'Wiki CZ 1',
-        mediaCount: 1,
-        crack: true,
-        serialKey: true,
-        patch: true,
-        trainer: true,
-        trainerData: true,
-        editor: true,
-        saves: true,
-        otherData: 'Other data 1',
-        note: 'Note 1',
-        position: 0
-      }
-    ),
-    app.games.Game.loadFromJson(
-      {
-        id: 2,
-        name: 'Game 2',
-        wikiEn: 'Wiki EN 2',
-        wikiCz: 'Wiki CZ 2',
-        mediaCount: 2,
-        crack: true,
-        serialKey: false,
-        patch: false,
-        trainer: false,
-        trainerData: false,
-        editor: true,
-        saves: false,
-        otherData: 'Other data 2',
-        note: 'Note 2',
-        position: 1
-      }
-    ),
-    app.games.Game.loadFromJson(
-      {
-        id: 3,
-        name: 'Game 3',
-        mediaCount: 1,
-        crack: false,
-        serialKey: false,
-        patch: false,
-        trainer: false,
-        trainerData: false,
-        editor: false,
-        saves: false,
-        position: 2
-      }
-    )
-  ];
-
-  /**
    * @type {Array.<app.games.Game>}
    */
   this.games = [];
@@ -102,32 +39,19 @@ app.games.Store = function (registry, dispatcher, actions) {
   this.mediaCount = 0;
 };
 
-goog.inherits(app.games.Store, app.stores.Store);
-
 /**
- * @return {!goog.Promise}
+ * @returns {!goog.Promise}
  */
 app.games.Store.prototype.findAll = function () {
-  var resolver = function (resolve) {
-    var games = this.jsonGames;
-    var count = 0;
-    goog.array.forEach(games, function (element) {
-      count += element.mediaCount;
-    });
-    var result = [games, count];
-    resolve(result);
-  }.bind(this);
-
-  var promise = new goog.Promise(resolver, this);
-
-  return promise
-    .then(function (result) {
-      this.games = result[0];
-      this.count = result[0].length;
-      this.mediaCount = result[1];
-    }.bind(this)).then(function () {
-      this.actions.renderApp();
+  return this.data.getGames().then(function (games) {
+    this.games = games;
+    this.mediaCount = 0;
+    goog.array.forEach(this.games, function (element) {
+      this.mediaCount += element.mediaCount;
     }.bind(this));
+  }.bind(this)).then(function () {
+    this.actions.renderApp();
+  }.bind(this));
 };
 
 /**
@@ -137,7 +61,6 @@ app.games.Store.prototype.add = function (game) {
   game.id = this.newId();
   goog.array.insert(this.games, game);
   this.mediaCount += game.mediaCount;
-  this.notify();
 };
 
 /**
@@ -149,7 +72,6 @@ app.games.Store.prototype.edit = function (game) {
   goog.array.removeAt(this.games, index);
   goog.array.insertAt(this.games, game, index);
   this.mediaCount += game.mediaCount;
-  this.notify();
 };
 
 /**

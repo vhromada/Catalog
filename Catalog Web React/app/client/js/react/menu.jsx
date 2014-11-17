@@ -8,13 +8,18 @@ app.react.Menu = function (routes) {
   this.component = React.createFactory(React.createClass({
     render: function () {
       return (
-        <nav className="navbar navbar-default">
-          <div className="navbar-header">
-            <a className="navbar-brand" href={routes.home.url()}>Catalog</a>
-          </div>
-          <ul className="nav navbar-nav">
+        <nav>
+          <ul id="menu">
+            <li>
+              <a href={routes.home.url()}>Catalog</a>
+            </li>
             <li>
               <a href={routes.games.url()}>Games</a>
+              <ul>
+                <li>
+                  <a href={routes.games.url()}>All games</a>
+                </li>
+              </ul>
             </li>
           </ul>
         </nav>

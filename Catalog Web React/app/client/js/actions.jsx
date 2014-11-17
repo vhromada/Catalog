@@ -1,7 +1,7 @@
 goog.provide('app.Actions');
 
 /**
- * @param {app.Dispatcher} dispatcher
+ * @param {este.Dispatcher} dispatcher
  * @constructor
  */
 app.Actions = function (dispatcher) {

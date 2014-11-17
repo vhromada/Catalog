@@ -4,7 +4,7 @@ goog.require('app.games.Game');
 goog.require('goog.array');
 
 /**
- * @param {app.Dispatcher} dispatcher
+ * @param {este.Dispatcher} dispatcher
  * @param {app.Actions} actions
  * @param {app.Data} data
  * @constructor

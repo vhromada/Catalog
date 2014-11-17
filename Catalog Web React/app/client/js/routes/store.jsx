@@ -5,7 +5,7 @@ goog.require('goog.net.HttpStatus');
 
 /**
  * @param {app.Actions} actions
- * @param {app.Dispatcher} dispatcher
+ * @param {este.Dispatcher} dispatcher
  * @param {app.Routes} routes
  * @param {este.Router} router
  * @constructor

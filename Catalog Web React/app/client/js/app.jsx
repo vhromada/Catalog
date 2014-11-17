@@ -2,7 +2,7 @@ goog.provide('App');
 
 /**
  * @param {Element} element
- * @param {app.Dispatcher} dispatcher
+ * @param {este.Dispatcher} dispatcher
  * @param {app.react.App} reactApp
  * @param {app.routes.Store} routesStore
  * @constructor

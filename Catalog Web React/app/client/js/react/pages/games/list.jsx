@@ -9,6 +9,10 @@ goog.provide('app.react.pages.games.List');
 app.react.pages.games.List = function (list, stats, actions) {
   this.component = React.createFactory(React.createClass({
     render: function () {
+      var onNewData = function () {
+        actions.gameNewData();
+      };
+
       var onUpdatePositions = function () {
         actions.gameUpdatePositions();
       };
@@ -16,6 +20,7 @@ app.react.pages.games.List = function (list, stats, actions) {
       return (
         <div className="games">
           <header>Games</header>
+          <button onClick={onNewData().bind(this)}>New data</button>
           <button onClick={onUpdatePositions.bind(this)}>Update positions</button>
           <list.component/>
           <stats.component/>

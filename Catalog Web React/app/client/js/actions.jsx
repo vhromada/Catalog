@@ -11,6 +11,7 @@ app.Actions = function (dispatcher) {
 app.Actions.LOAD_ROUTE = 'load-route';
 app.Actions.RENDER_APP = 'render-app';
 
+app.Actions.GAME_NEW_DATA = 'game-new-data';
 app.Actions.GAME_DUPLICATE = 'game-duplicate';
 app.Actions.GAME_REMOVE = 'game-remove';
 app.Actions.GAME_MOVE_UP = 'game-move-up';
@@ -34,6 +35,15 @@ app.Actions.prototype.loadRoute = function (route, params) {
  */
 app.Actions.prototype.renderApp = function () {
   return this.dispatcher.dispatch(app.Actions.RENDER_APP);
+};
+
+/**
+ * @returns {goog.Promise}
+ */
+app.Actions.prototype.gameNewData = function () {
+  return this.dispatcher.dispatch(app.Actions.GAME_NEW_DATA).then(function () {
+    this.renderApp();
+  }.bind(this));
 };
 
 /**

@@ -16,6 +16,8 @@ app.games.Store = function (dispatcher, actions, data) {
   dispatcher.register((function (_this) {
     return function (action, payload) {
       switch (action) {
+        case app.Actions.GAME_NEW_DATA:
+          return _this.newData();
         case app.Actions.GAME_DUPLICATE:
           return _this.duplicate(payload.id);
         case app.Actions.GAME_REMOVE:
@@ -39,6 +41,10 @@ app.games.Store = function (dispatcher, actions, data) {
    * @type {number}
    */
   this.mediaCount = 0;
+};
+
+app.games.Store.prototype.newData = function () {
+  this.games = [];
 };
 
 /**

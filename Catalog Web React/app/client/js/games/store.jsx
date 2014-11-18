@@ -24,6 +24,8 @@ app.games.Store = function (dispatcher, actions, data) {
           return _this.moveUp(payload.id);
         case app.Actions.GAME_MOVE_DOWN:
           return _this.moveDown(payload.id);
+        case app.Actions.GAME_UPDATE_POSITIONS:
+          return _this.updatePositions();
       }
     };
   })(this));
@@ -109,6 +111,12 @@ app.games.Store.prototype.moveUp = function (id) {
 app.games.Store.prototype.moveDown = function (id) {
   var index = this.getIndex(id);
   this.switchPositions(index, index + 1);
+};
+
+app.games.Store.prototype.updatePositions = function () {
+  goog.array.forEach(this.games, function (element, index) {
+    element.position = index;
+  });
 };
 
 /**

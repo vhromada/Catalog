@@ -15,6 +15,7 @@ app.Actions.GAME_DUPLICATE = 'game-duplicate';
 app.Actions.GAME_REMOVE = 'game-remove';
 app.Actions.GAME_MOVE_UP = 'game-move-up';
 app.Actions.GAME_MOVE_DOWN = 'game-move-down';
+app.Actions.GAME_UPDATE_POSITIONS = 'game-update-positions';
 
 /**
  * @param {este.Route} route
@@ -83,3 +84,11 @@ app.Actions.prototype.gameMoveDown = function (id) {
   }.bind(this));
 };
 
+/**
+ * @returns {goog.Promise}
+ */
+app.Actions.prototype.gameUpdatePositions = function () {
+  return this.dispatcher.dispatch(app.Actions.GAME_UPDATE_POSITIONS).then(function () {
+    this.renderApp();
+  }.bind(this));
+};

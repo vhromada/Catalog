@@ -13,7 +13,7 @@ app.react.games.List = function (store, wikipedia, move, actions) {
       return store.findAll();
     },
     render: function () {
-      var onDuplicateClick = function (id) {
+      var onDuplicate = function (id) {
         actions.gameDuplicate(id);
       };
 
@@ -33,10 +33,12 @@ app.react.games.List = function (store, wikipedia, move, actions) {
         function (game) {
           return (
             <tr key={game.id}>
+              <td>{game.id}</td>
               <td>{game.name}</td>
               <td>{game.mediaCount}</td>
               <td>{game.getAdditionalData()}</td>
               <td>{game.note}</td>
+              <td>{game.position}</td>
               <td>
                 <wikipedia.component country={'en'} url={game.wikiEn} text='English Wikipedia'/>
               </td>
@@ -44,7 +46,7 @@ app.react.games.List = function (store, wikipedia, move, actions) {
                 <wikipedia.component country={'cz'} url={game.wikiCz} text='Czech Wikipedia'/>
               </td>
               <td>
-                <button onClick={onDuplicateClick.bind(this, game.id)}>Duplicate</button>
+                <button onClick={onDuplicate.bind(this, game.id)}>Duplicate</button>
               </td>
               <td>
                 <move.component up={true} list={store.games} item={game} text='Move up' action={onMoveUp}/>
@@ -64,10 +66,12 @@ app.react.games.List = function (store, wikipedia, move, actions) {
         <table className="table">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
               <th>Count of media</th>
               <th>Additional data</th>
               <th>Note</th>
+              <th>Position</th>
               <th></th>
               <th></th>
               <th></th>

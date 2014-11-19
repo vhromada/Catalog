@@ -20,7 +20,7 @@ app.react.pages.games.List = function (list, stats, actions) {
       return (
         <div className="games">
           <header>Games</header>
-          <button onClick={onNewData().bind(this)}>New data</button>
+          <button onClick={onNewData.bind(this)}>New data</button>
           <button onClick={onUpdatePositions.bind(this)}>Update positions</button>
           <list.component/>
           <stats.component/>

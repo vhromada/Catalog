@@ -46,7 +46,6 @@ app.games.Store = function (dispatcher, actions, data) {
 app.games.Store.prototype.newData = function () {
   goog.array.clear(this.games);
   this.mediaCount = 0;
-  c
 };
 
 /**

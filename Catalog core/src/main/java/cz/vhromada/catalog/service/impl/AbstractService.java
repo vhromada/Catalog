@@ -132,35 +132,4 @@ public abstract class AbstractService<T> {
         return new CacheValue<>(value);
     }
 
-    /**
-     * A class represents value in cache.
-     *
-     * @param <T> type of cached value
-     */
-    //TODO vhromada 22.11.2014: checkstyle
-    protected static class CacheValue<T> {
-
-        /** Value */
-        private T value;
-
-        /**
-         * Creates a new instance of CacheValue.
-         *
-         * @param value value
-         */
-        public CacheValue(final T value) {
-            this.value = value;
-        }
-
-        /**
-         * Returns value.
-         *
-         * @return value
-         */
-        public T getValue() {
-            return value;
-        }
-
-    }
-
 }

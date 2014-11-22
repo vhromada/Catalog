@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ MovieFacadeImplSpringTest.class, SerieFacadeImplSpringTest.class, SeasonFacadeImplSpringTest.class, EpisodeFacadeImplSpringTest.class,
-		GameFacadeImplSpringTest.class, MusicFacadeImplSpringTest.class, SongFacadeImplSpringTest.class, ProgramFacadeImplSpringTest.class,
-		BookCategoryFacadeImplSpringTest.class, BookFacadeImplSpringTest.class, GenreFacadeImplSpringTest.class })
+        GameFacadeImplSpringTest.class, MusicFacadeImplSpringTest.class, SongFacadeImplSpringTest.class, ProgramFacadeImplSpringTest.class,
+        BookCategoryFacadeImplSpringTest.class, BookFacadeImplSpringTest.class, GenreFacadeImplSpringTest.class })
 public class FacadeImplSpringSuite {
 }

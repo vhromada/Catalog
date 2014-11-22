@@ -22,19 +22,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimpleCorsFilter implements Filter {
 
-	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
-		final HttpServletResponse response = (HttpServletResponse) res;
-		response.setHeader("Access-Control-Allow-Origin", "http://localhost:8000"); //allow calls from the same domain or that specified
-		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
-		chain.doFilter(req, res);
-	}
+    @Override
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
+        final HttpServletResponse httpResponse = (HttpServletResponse) response;
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:8000"); //allow calls from the same domain or that specified
+        httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        httpResponse.setHeader("Access-Control-Max-Age", "3600");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        chain.doFilter(request, httpResponse);
+    }
 
-	public void init(final FilterConfig filterConfig) {
-	}
+    @Override
+    public void init(final FilterConfig filterConfig) {
+    }
 
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
 }

@@ -9,13 +9,13 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class StatsTableCellRenderer extends DefaultTableCellRenderer {
 
-	/** SerialVersionUID */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersionUID */
+    private static final long serialVersionUID = 1L;
 
-	/** Creates a new instance of StatsTableCellRenderer. */
-	public StatsTableCellRenderer() {
-		setVerticalAlignment(CENTER);
-		setHorizontalAlignment(CENTER);
-	}
+    /** Creates a new instance of StatsTableCellRenderer. */
+    public StatsTableCellRenderer() {
+        setVerticalAlignment(CENTER);
+        setHorizontalAlignment(CENTER);
+    }
 
 }

@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ MovieTOValidatorImplTest.class, SerieTOValidatorImplTest.class, SeasonTOValidatorImplTest.class, EpisodeTOValidatorImplTest.class,
-		GameTOValidatorImplTest.class, MusicTOValidatorImplTest.class, SongTOValidatorImplTest.class, ProgramTOValidatorImplTest.class,
-		BookTOValidatorImplTest.class })
+        GameTOValidatorImplTest.class, MusicTOValidatorImplTest.class, SongTOValidatorImplTest.class, ProgramTOValidatorImplTest.class,
+        BookTOValidatorImplTest.class })
 public class ValidatorsSuite {
 }

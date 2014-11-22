@@ -42,298 +42,298 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramDAOImplTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link EntityManager} */
-	@Mock
-	private EntityManager entityManager;
+    /** Instance of {@link EntityManager} */
+    @Mock
+    private EntityManager entityManager;
 
-	/** Query for programs */
-	@Mock
-	private TypedQuery<Program> programsQuery;
+    /** Query for programs */
+    @Mock
+    private TypedQuery<Program> programsQuery;
 
-	/** Instance of {@link ProgramDAO} */
-	@InjectMocks
-	private ProgramDAO programDAO = new ProgramDAOImpl();
+    /** Instance of {@link ProgramDAO} */
+    @InjectMocks
+    private ProgramDAO programDAO = new ProgramDAOImpl();
 
-	/** Test method for {@link ProgramDAO#getPrograms()}. */
-	@Test
-	public void testGetPrograms() {
-		final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
-		when(entityManager.createNamedQuery(anyString(), eq(Program.class))).thenReturn(programsQuery);
-		when(programsQuery.getResultList()).thenReturn(programs);
+    /** Test method for {@link ProgramDAO#getPrograms()}. */
+    @Test
+    public void testGetPrograms() {
+        final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
+        when(entityManager.createNamedQuery(anyString(), eq(Program.class))).thenReturn(programsQuery);
+        when(programsQuery.getResultList()).thenReturn(programs);
 
-		DeepAsserts.assertEquals(programs, programDAO.getPrograms());
+        DeepAsserts.assertEquals(programs, programDAO.getPrograms());
 
-		verify(entityManager).createNamedQuery(Program.SELECT_PROGRAMS, Program.class);
-		verify(programsQuery).getResultList();
-		verifyNoMoreInteractions(entityManager, programsQuery);
-	}
+        verify(entityManager).createNamedQuery(Program.SELECT_PROGRAMS, Program.class);
+        verify(programsQuery).getResultList();
+        verifyNoMoreInteractions(entityManager, programsQuery);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#getPrograms()} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testGetProgramsWithNotSetEntityManager() {
-		((ProgramDAOImpl) programDAO).setEntityManager(null);
-		programDAO.getPrograms();
-	}
+    /** Test method for {@link ProgramDAOImpl#getPrograms()} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testGetProgramsWithNotSetEntityManager() {
+        ((ProgramDAOImpl) programDAO).setEntityManager(null);
+        programDAO.getPrograms();
+    }
 
-	/** Test method for {@link ProgramDAOImpl#getPrograms()} with exception in persistence. */
-	@Test
-	public void testGetProgramsWithPersistenceException() {
-		doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Program.class));
+    /** Test method for {@link ProgramDAOImpl#getPrograms()} with exception in persistence. */
+    @Test
+    public void testGetProgramsWithPersistenceException() {
+        doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Program.class));
 
-		try {
-			programDAO.getPrograms();
-			fail("Can't get programs with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            programDAO.getPrograms();
+            fail("Can't get programs with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).createNamedQuery(Program.SELECT_PROGRAMS, Program.class);
-		verifyNoMoreInteractions(entityManager);
-		verifyZeroInteractions(programsQuery);
-	}
+        verify(entityManager).createNamedQuery(Program.SELECT_PROGRAMS, Program.class);
+        verifyNoMoreInteractions(entityManager);
+        verifyZeroInteractions(programsQuery);
+    }
 
-	/** Test method for {@link ProgramDAO#getProgram(Integer)} with existing program. */
-	@Test
-	public void testGetProgramWithExistingProgram() {
-		final int id = generate(Integer.class);
-		final Program program = mock(Program.class);
-		when(entityManager.find(eq(Program.class), anyInt())).thenReturn(program);
+    /** Test method for {@link ProgramDAO#getProgram(Integer)} with existing program. */
+    @Test
+    public void testGetProgramWithExistingProgram() {
+        final int id = generate(Integer.class);
+        final Program program = mock(Program.class);
+        when(entityManager.find(eq(Program.class), anyInt())).thenReturn(program);
 
-		DeepAsserts.assertEquals(program, programDAO.getProgram(id));
+        DeepAsserts.assertEquals(program, programDAO.getProgram(id));
 
-		verify(entityManager).find(Program.class, id);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(Program.class, id);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAO#getProgram(Integer)} with not existing program. */
-	@Test
-	public void testGetProgramWithNotExistingProgram() {
-		when(entityManager.find(eq(Program.class), anyInt())).thenReturn(null);
+    /** Test method for {@link ProgramDAO#getProgram(Integer)} with not existing program. */
+    @Test
+    public void testGetProgramWithNotExistingProgram() {
+        when(entityManager.find(eq(Program.class), anyInt())).thenReturn(null);
 
-		assertNull(programDAO.getProgram(Integer.MAX_VALUE));
+        assertNull(programDAO.getProgram(Integer.MAX_VALUE));
 
-		verify(entityManager).find(Program.class, Integer.MAX_VALUE);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(Program.class, Integer.MAX_VALUE);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#getProgram(Integer)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testGetProgramWithNotSetEntityManager() {
-		((ProgramDAOImpl) programDAO).setEntityManager(null);
-		programDAO.getProgram(Integer.MAX_VALUE);
-	}
+    /** Test method for {@link ProgramDAOImpl#getProgram(Integer)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testGetProgramWithNotSetEntityManager() {
+        ((ProgramDAOImpl) programDAO).setEntityManager(null);
+        programDAO.getProgram(Integer.MAX_VALUE);
+    }
 
-	/** Test method for {@link ProgramDAO#getProgram(Integer)} with null argument. */
-	@Test
-	public void testGetProgramWithNullArgument() {
-		try {
-			programDAO.getProgram(null);
-			fail("Can't get program with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link ProgramDAO#getProgram(Integer)} with null argument. */
+    @Test
+    public void testGetProgramWithNullArgument() {
+        try {
+            programDAO.getProgram(null);
+            fail("Can't get program with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#getProgram(Integer)} with exception in persistence. */
-	@Test
-	public void testGetProgramWithPersistenceException() {
-		doThrow(PersistenceException.class).when(entityManager).find(eq(Program.class), anyInt());
+    /** Test method for {@link ProgramDAOImpl#getProgram(Integer)} with exception in persistence. */
+    @Test
+    public void testGetProgramWithPersistenceException() {
+        doThrow(PersistenceException.class).when(entityManager).find(eq(Program.class), anyInt());
 
-		try {
-			programDAO.getProgram(Integer.MAX_VALUE);
-			fail("Can't get program with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            programDAO.getProgram(Integer.MAX_VALUE);
+            fail("Can't get program with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).find(Program.class, Integer.MAX_VALUE);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(Program.class, Integer.MAX_VALUE);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAO#add(Program)}. */
-	@Test
-	public void testAdd() {
-		final Program program = generate(Program.class);
-		final int id = generate(Integer.class);
-		doAnswer(setId(id)).when(entityManager).persist(any(Program.class));
+    /** Test method for {@link ProgramDAO#add(Program)}. */
+    @Test
+    public void testAdd() {
+        final Program program = generate(Program.class);
+        final int id = generate(Integer.class);
+        doAnswer(setId(id)).when(entityManager).persist(any(Program.class));
 
-		programDAO.add(program);
-		DeepAsserts.assertEquals(id, program.getId());
-		DeepAsserts.assertEquals(id - 1, program.getPosition());
+        programDAO.add(program);
+        DeepAsserts.assertEquals(id, program.getId());
+        DeepAsserts.assertEquals(id - 1, program.getPosition());
 
-		verify(entityManager).persist(program);
-		verify(entityManager).merge(program);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).persist(program);
+        verify(entityManager).merge(program);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#add(Program)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testAddWithNotSetEntityManager() {
-		((ProgramDAOImpl) programDAO).setEntityManager(null);
-		programDAO.add(mock(Program.class));
-	}
+    /** Test method for {@link ProgramDAOImpl#add(Program)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testAddWithNotSetEntityManager() {
+        ((ProgramDAOImpl) programDAO).setEntityManager(null);
+        programDAO.add(mock(Program.class));
+    }
 
-	/** Test method for {@link ProgramDAO#add(Program)} with null argument. */
-	@Test
-	public void testAddWithNullArgument() {
-		try {
-			programDAO.add(null);
-			fail("Can't add program with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link ProgramDAO#add(Program)} with null argument. */
+    @Test
+    public void testAddWithNullArgument() {
+        try {
+            programDAO.add(null);
+            fail("Can't add program with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#add(Program)} with exception in persistence. */
-	@Test
-	public void testAddWithPersistenceException() {
-		final Program program = generate(Program.class);
-		doThrow(PersistenceException.class).when(entityManager).persist(any(Program.class));
+    /** Test method for {@link ProgramDAOImpl#add(Program)} with exception in persistence. */
+    @Test
+    public void testAddWithPersistenceException() {
+        final Program program = generate(Program.class);
+        doThrow(PersistenceException.class).when(entityManager).persist(any(Program.class));
 
-		try {
-			programDAO.add(program);
-			fail("Can't add program with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            programDAO.add(program);
+            fail("Can't add program with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).persist(program);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).persist(program);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAO#update(Program)}. */
-	@Test
-	public void testUpdate() {
-		final Program program = generate(Program.class);
+    /** Test method for {@link ProgramDAO#update(Program)}. */
+    @Test
+    public void testUpdate() {
+        final Program program = generate(Program.class);
 
-		programDAO.update(program);
+        programDAO.update(program);
 
-		verify(entityManager).merge(program);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).merge(program);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#update(Program)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testUpdateWithNotSetEntityManager() {
-		((ProgramDAOImpl) programDAO).setEntityManager(null);
-		programDAO.update(mock(Program.class));
-	}
+    /** Test method for {@link ProgramDAOImpl#update(Program)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testUpdateWithNotSetEntityManager() {
+        ((ProgramDAOImpl) programDAO).setEntityManager(null);
+        programDAO.update(mock(Program.class));
+    }
 
-	/** Test method for {@link ProgramDAO#update(Program)} with null argument. */
-	@Test
-	public void testUpdateWithNullArgument() {
-		try {
-			programDAO.update(null);
-			fail("Can't update program with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link ProgramDAO#update(Program)} with null argument. */
+    @Test
+    public void testUpdateWithNullArgument() {
+        try {
+            programDAO.update(null);
+            fail("Can't update program with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#update(Program)} with exception in persistence. */
-	@Test
-	public void testUpdateWithPersistenceException() {
-		final Program program = generate(Program.class);
-		doThrow(PersistenceException.class).when(entityManager).merge(any(Program.class));
+    /** Test method for {@link ProgramDAOImpl#update(Program)} with exception in persistence. */
+    @Test
+    public void testUpdateWithPersistenceException() {
+        final Program program = generate(Program.class);
+        doThrow(PersistenceException.class).when(entityManager).merge(any(Program.class));
 
-		try {
-			programDAO.update(program);
-			fail("Can't update program with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            programDAO.update(program);
+            fail("Can't update program with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).merge(program);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).merge(program);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAO#remove(Program)} with managed program. */
-	@Test
-	public void testRemoveWithManagedProgram() {
-		final Program program = generate(Program.class);
-		when(entityManager.contains(any(Program.class))).thenReturn(true);
+    /** Test method for {@link ProgramDAO#remove(Program)} with managed program. */
+    @Test
+    public void testRemoveWithManagedProgram() {
+        final Program program = generate(Program.class);
+        when(entityManager.contains(any(Program.class))).thenReturn(true);
 
-		programDAO.remove(program);
+        programDAO.remove(program);
 
-		verify(entityManager).contains(program);
-		verify(entityManager).remove(program);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(program);
+        verify(entityManager).remove(program);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAO#remove(Program)} with not managed program. */
-	@Test
-	public void testRemoveWithNotManagedProgram() {
-		final Program program = generate(Program.class);
-		when(entityManager.contains(any(Program.class))).thenReturn(false);
-		when(entityManager.getReference(eq(Program.class), anyInt())).thenReturn(program);
+    /** Test method for {@link ProgramDAO#remove(Program)} with not managed program. */
+    @Test
+    public void testRemoveWithNotManagedProgram() {
+        final Program program = generate(Program.class);
+        when(entityManager.contains(any(Program.class))).thenReturn(false);
+        when(entityManager.getReference(eq(Program.class), anyInt())).thenReturn(program);
 
-		programDAO.remove(program);
+        programDAO.remove(program);
 
-		verify(entityManager).contains(program);
-		verify(entityManager).getReference(Program.class, program.getId());
-		verify(entityManager).remove(program);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(program);
+        verify(entityManager).getReference(Program.class, program.getId());
+        verify(entityManager).remove(program);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#remove(Program)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testRemoveWithNotSetEntityManager() {
-		((ProgramDAOImpl) programDAO).setEntityManager(null);
-		programDAO.remove(mock(Program.class));
-	}
+    /** Test method for {@link ProgramDAOImpl#remove(Program)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testRemoveWithNotSetEntityManager() {
+        ((ProgramDAOImpl) programDAO).setEntityManager(null);
+        programDAO.remove(mock(Program.class));
+    }
 
-	/** Test method for {@link ProgramDAO#remove(Program)} with null argument. */
-	@Test
-	public void testRemoveWithNullArgument() {
-		try {
-			programDAO.remove(null);
-			fail("Can't remove program with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link ProgramDAO#remove(Program)} with null argument. */
+    @Test
+    public void testRemoveWithNullArgument() {
+        try {
+            programDAO.remove(null);
+            fail("Can't remove program with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link ProgramDAOImpl#remove(Program)} with exception in persistence. */
-	@Test
-	public void testRemoveWithPersistenceException() {
-		final Program program = generate(Program.class);
-		doThrow(PersistenceException.class).when(entityManager).contains(any(Program.class));
+    /** Test method for {@link ProgramDAOImpl#remove(Program)} with exception in persistence. */
+    @Test
+    public void testRemoveWithPersistenceException() {
+        final Program program = generate(Program.class);
+        doThrow(PersistenceException.class).when(entityManager).contains(any(Program.class));
 
-		try {
-			programDAO.remove(program);
-			fail("Can't remove program with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            programDAO.remove(program);
+            fail("Can't remove program with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).contains(program);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(program);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/**
-	 * Sets ID.
-	 *
-	 * @param id ID
-	 * @return mocked answer
-	 */
-	private Answer<Void> setId(final Integer id) {
-		return new Answer<Void>() {
+    /**
+     * Sets ID.
+     *
+     * @param id ID
+     * @return mocked answer
+     */
+    private static Answer<Void> setId(final Integer id) {
+        return new Answer<Void>() {
 
-			@Override
-			public Void answer(final InvocationOnMock invocation) throws Throwable {
-				((Program) invocation.getArguments()[0]).setId(id);
-				return null;
-			}
+            @Override
+            public Void answer(final InvocationOnMock invocation) {
+                ((Program) invocation.getArguments()[0]).setId(id);
+                return null;
+            }
 
-		};
-	}
+        };
+    }
 
 }

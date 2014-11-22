@@ -16,28 +16,28 @@ import org.junit.Test;
  */
 public class GameToGameTOConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link GameToGameTOConverter} */
-	private GameToGameTOConverter converter;
+    /** Instance of {@link GameToGameTOConverter} */
+    private GameToGameTOConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new GameToGameTOConverter();
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new GameToGameTOConverter();
+    }
 
-	/** Test method for {@link GameToGameTOConverter#convert(Game)}. */
-	@Test
-	public void testConvert() {
-		final Game game = generate(Game.class);
-		final GameTO gameTO = converter.convert(game);
-		DeepAsserts.assertNotNull(gameTO);
-		DeepAsserts.assertEquals(game, gameTO, "additionalData");
-	}
+    /** Test method for {@link GameToGameTOConverter#convert(Game)}. */
+    @Test
+    public void testConvert() {
+        final Game game = generate(Game.class);
+        final GameTO gameTO = converter.convert(game);
+        DeepAsserts.assertNotNull(gameTO);
+        DeepAsserts.assertEquals(game, gameTO, "additionalData");
+    }
 
-	/** Test method for {@link GameToGameTOConverter#convert(Game)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link GameToGameTOConverter#convert(Game)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
 }

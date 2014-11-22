@@ -21,27 +21,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class IntegerToMediumConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.IntegerToMediumConverter#convert(Integer)}. */
-	@Test
-	public void testConvert() {
-		final int length = objectGenerator.generate(Integer.class);
-		final Medium medium = conversionService.convert(length, Medium.class);
-		DeepAsserts.assertNotNull(medium, "id");
-		DeepAsserts.assertEquals(length, medium.getLength());
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.IntegerToMediumConverter#convert(Integer)}. */
+    @Test
+    public void testConvert() {
+        final int length = objectGenerator.generate(Integer.class);
+        final Medium medium = conversionService.convert(length, Medium.class);
+        DeepAsserts.assertNotNull(medium, "id");
+        DeepAsserts.assertEquals(length, medium.getLength());
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.IntegerToMediumConverter#convert(Integer)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, Medium.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.IntegerToMediumConverter#convert(Integer)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, Medium.class));
+    }
 
 }

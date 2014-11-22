@@ -15,28 +15,28 @@ import org.junit.Test;
  */
 public class MediumToIntegerConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link MediumToIntegerConverter} */
-	private MediumToIntegerConverter converter;
+    /** Instance of {@link MediumToIntegerConverter} */
+    private MediumToIntegerConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new MediumToIntegerConverter();
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new MediumToIntegerConverter();
+    }
 
-	/** Test method for {@link MediumToIntegerConverter#convert(Medium)}. */
-	@Test
-	public void testConvert() {
-		final Medium medium = generate(Medium.class);
-		final Integer length = converter.convert(medium);
-		DeepAsserts.assertNotNull(length);
-		DeepAsserts.assertEquals(medium.getLength(), length);
-	}
+    /** Test method for {@link MediumToIntegerConverter#convert(Medium)}. */
+    @Test
+    public void testConvert() {
+        final Medium medium = generate(Medium.class);
+        final Integer length = converter.convert(medium);
+        DeepAsserts.assertNotNull(length);
+        DeepAsserts.assertEquals(medium.getLength(), length);
+    }
 
-	/** Test method for {@link MediumToIntegerConverter#convert(Medium)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link MediumToIntegerConverter#convert(Medium)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
 }

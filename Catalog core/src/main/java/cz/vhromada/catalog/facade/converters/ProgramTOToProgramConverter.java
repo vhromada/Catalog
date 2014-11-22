@@ -13,24 +13,24 @@ import org.springframework.stereotype.Component;
 @Component("programTOToProgramConverter")
 public class ProgramTOToProgramConverter implements Converter<ProgramTO, Program> {
 
-	@Override
-	public Program convert(final ProgramTO source) {
-		if (source == null) {
-			return null;
-		}
+    @Override
+    public Program convert(final ProgramTO source) {
+        if (source == null) {
+            return null;
+        }
 
-		final Program program = new Program();
-		program.setId(source.getId());
-		program.setName(source.getName());
-		program.setWikiEn(source.getWikiEn());
-		program.setWikiCz(source.getWikiCz());
-		program.setMediaCount(source.getMediaCount());
-		program.setCrack(source.hasCrack());
-		program.setSerialKey(source.hasSerialKey());
-		program.setOtherData(source.getOtherData());
-		program.setNote(source.getNote());
-		program.setPosition(source.getPosition());
-		return program;
-	}
+        final Program program = new Program();
+        program.setId(source.getId());
+        program.setName(source.getName());
+        program.setWikiEn(source.getWikiEn());
+        program.setWikiCz(source.getWikiCz());
+        program.setMediaCount(source.getMediaCount());
+        program.setCrack(source.hasCrack());
+        program.setSerialKey(source.hasSerialKey());
+        program.setOtherData(source.getOtherData());
+        program.setNote(source.getNote());
+        program.setPosition(source.getPosition());
+        return program;
+    }
 
 }

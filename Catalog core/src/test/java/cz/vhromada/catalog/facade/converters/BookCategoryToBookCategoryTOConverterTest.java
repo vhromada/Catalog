@@ -16,28 +16,28 @@ import org.junit.Test;
  */
 public class BookCategoryToBookCategoryTOConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link BookCategoryToBookCategoryTOConverter} */
-	private BookCategoryToBookCategoryTOConverter converter;
+    /** Instance of {@link BookCategoryToBookCategoryTOConverter} */
+    private BookCategoryToBookCategoryTOConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new BookCategoryToBookCategoryTOConverter();
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new BookCategoryToBookCategoryTOConverter();
+    }
 
-	/** Test method for {@link BookCategoryToBookCategoryTOConverter#convert(BookCategory)}. */
-	@Test
-	public void testConvert() {
-		final BookCategory bookCategory = generate(BookCategory.class);
-		final BookCategoryTO bookCategoryTO = converter.convert(bookCategory);
-		DeepAsserts.assertNotNull(bookCategoryTO);
-		DeepAsserts.assertEquals(bookCategory, bookCategoryTO, "booksCount");
-	}
+    /** Test method for {@link BookCategoryToBookCategoryTOConverter#convert(BookCategory)}. */
+    @Test
+    public void testConvert() {
+        final BookCategory bookCategory = generate(BookCategory.class);
+        final BookCategoryTO bookCategoryTO = converter.convert(bookCategory);
+        DeepAsserts.assertNotNull(bookCategoryTO);
+        DeepAsserts.assertEquals(bookCategory, bookCategoryTO, "booksCount");
+    }
 
-	/** Test method for {@link BookCategoryToBookCategoryTOConverter#convert(BookCategory)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link BookCategoryToBookCategoryTOConverter#convert(BookCategory)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
 }

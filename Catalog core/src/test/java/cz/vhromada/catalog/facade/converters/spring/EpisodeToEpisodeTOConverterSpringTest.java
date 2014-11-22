@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class EpisodeToEpisodeTOConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter#convert(Episode)}. */
-	@Test
-	public void testConvert() {
-		final Episode episode = objectGenerator.generate(Episode.class);
-		final EpisodeTO episodeTO = conversionService.convert(episode, EpisodeTO.class);
-		DeepAsserts.assertNotNull(episodeTO, "totalLength");
-		DeepAsserts.assertEquals(episode, episodeTO, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter#convert(Episode)}. */
+    @Test
+    public void testConvert() {
+        final Episode episode = objectGenerator.generate(Episode.class);
+        final EpisodeTO episodeTO = conversionService.convert(episode, EpisodeTO.class);
+        DeepAsserts.assertNotNull(episodeTO, "totalLength");
+        DeepAsserts.assertEquals(episode, episodeTO, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter#convert(Episode)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, EpisodeTO.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.EpisodeToEpisodeTOConverter#convert(Episode)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, EpisodeTO.class));
+    }
 
 }

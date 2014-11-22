@@ -19,97 +19,97 @@ import javax.persistence.Table;
 @Table(name = "media")
 public class Medium implements Serializable {
 
-	/** SerialVersionUID */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersionUID */
+    private static final long serialVersionUID = 1L;
 
-	/** Movie's ID */
-	@Id
-	@SequenceGenerator(name = "medium_generator", sequenceName = "media_sq", allocationSize = 0)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medium_generator")
-	private Integer id;
+    /** Movie's ID */
+    @Id
+    @SequenceGenerator(name = "medium_generator", sequenceName = "media_sq", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medium_generator")
+    private Integer id;
 
-	/** Medium */
-	@Column(name = "medium_number")
-	private int number;
+    /** Medium */
+    @Column(name = "medium_number")
+    private int number;
 
-	/** Length */
-	@Column(name = "medium_length")
-	private int length;
+    /** Length */
+    @Column(name = "medium_length")
+    private int length;
 
-	/**
-	 * Returns ID.
-	 *
-	 * @return ID
-	 */
-	public Integer getId() {
-		return id;
-	}
+    /**
+     * Returns ID.
+     *
+     * @return ID
+     */
+    public Integer getId() {
+        return id;
+    }
 
-	/**
-	 * Sets a new value to movie's ID.
-	 *
-	 * @param id new value
-	 */
-	public void setId(final Integer id) {
-		this.id = id;
-	}
+    /**
+     * Sets a new value to movie's ID.
+     *
+     * @param id new value
+     */
+    public void setId(final Integer id) {
+        this.id = id;
+    }
 
-	/**
-	 * Returns number.
-	 *
-	 * @return number
-	 */
-	public int getNumber() {
-		return number;
-	}
+    /**
+     * Returns number.
+     *
+     * @return number
+     */
+    public int getNumber() {
+        return number;
+    }
 
-	/**
-	 * Sets a new value to number.
-	 *
-	 * @param number new value
-	 */
-	public void setNumber(final int number) {
-		this.number = number;
-	}
+    /**
+     * Sets a new value to number.
+     *
+     * @param number new value
+     */
+    public void setNumber(final int number) {
+        this.number = number;
+    }
 
-	/**
-	 * Returns length.
-	 *
-	 * @return length
-	 */
-	public int getLength() {
-		return length;
-	}
+    /**
+     * Returns length.
+     *
+     * @return length
+     */
+    public int getLength() {
+        return length;
+    }
 
-	/**
-	 * Sets a new value to length.
-	 *
-	 * @param length new value
-	 */
-	public void setLength(final int length) {
-		this.length = length;
-	}
+    /**
+     * Sets a new value to length.
+     *
+     * @param length new value
+     */
+    public void setLength(final int length) {
+        this.length = length;
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !(obj instanceof Medium) || id == null) {
-			return false;
-		}
-		final Medium medium = (Medium) obj;
-		return id.equals(medium.id);
-	}
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof Medium) || id == null) {
+            return false;
+        }
+        final Medium medium = (Medium) obj;
+        return id.equals(medium.id);
+    }
 
-	@Override
-	public int hashCode() {
-		return id == null ? 0 : id.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return id == null ? 0 : id.hashCode();
+    }
 
-	@Override
-	public String toString() {
-		return String.format("Medium [id=%d, number=%d, length=%d]", id, number, length);
-	}
+    @Override
+    public String toString() {
+        return String.format("Medium [id=%d, number=%d, length=%d]", id, number, length);
+    }
 
 }

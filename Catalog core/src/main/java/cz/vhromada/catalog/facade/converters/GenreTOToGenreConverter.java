@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
 @Component("genreTOToGenreConverter")
 public class GenreTOToGenreConverter implements Converter<GenreTO, Genre> {
 
-	@Override
-	public Genre convert(final GenreTO source) {
-		if (source == null) {
-			return null;
-		}
+    @Override
+    public Genre convert(final GenreTO source) {
+        if (source == null) {
+            return null;
+        }
 
-		final Genre genre = new Genre();
-		genre.setId(source.getId());
-		genre.setName(source.getName());
-		return genre;
-	}
+        final Genre genre = new Genre();
+        genre.setId(source.getId());
+        genre.setName(source.getName());
+        return genre;
+    }
 
 }

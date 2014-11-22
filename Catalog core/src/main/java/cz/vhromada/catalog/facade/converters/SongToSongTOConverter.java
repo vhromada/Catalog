@@ -15,50 +15,50 @@ import org.springframework.stereotype.Component;
 @Component("songToSongTOConverter")
 public class SongToSongTOConverter implements Converter<Song, SongTO> {
 
-	/** Converter from entity music to TO for music */
-	@Autowired
-	private MusicToMusicTOConverter converter;
+    /** Converter from entity music to TO for music */
+    @Autowired
+    private MusicToMusicTOConverter converter;
 
-	/**
-	 * Returns converter from entity music to TO for music.
-	 *
-	 * @return converter from entity music to TO for music
-	 */
-	public MusicToMusicTOConverter getConverter() {
-		return converter;
-	}
+    /**
+     * Returns converter from entity music to TO for music.
+     *
+     * @return converter from entity music to TO for music
+     */
+    public MusicToMusicTOConverter getConverter() {
+        return converter;
+    }
 
-	/**
-	 * Sets a new value to converter from entity music to TO for music.
-	 *
-	 * @param converter new value
-	 */
-	public void setConverter(final MusicToMusicTOConverter converter) {
-		this.converter = converter;
-	}
+    /**
+     * Sets a new value to converter from entity music to TO for music.
+     *
+     * @param converter new value
+     */
+    public void setConverter(final MusicToMusicTOConverter converter) {
+        this.converter = converter;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws IllegalStateException    if converter from entity music to TO for music isn't set
-	 */
-	@Override
-	public SongTO convert(final Song source) {
-		Validators.validateFieldNotNull(converter, "Converter");
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws IllegalStateException    if converter from entity music to TO for music isn't set
+     */
+    @Override
+    public SongTO convert(final Song source) {
+        Validators.validateFieldNotNull(converter, "Converter");
 
-		if (source == null) {
-			return null;
-		}
+        if (source == null) {
+            return null;
+        }
 
-		final SongTO song = new SongTO();
-		song.setId(source.getId());
-		song.setName(source.getName());
-		song.setLength(source.getLength());
-		song.setNote(source.getNote());
-		song.setPosition(source.getPosition());
-		song.setMusic(converter.convert(source.getMusic()));
-		return song;
-	}
+        final SongTO song = new SongTO();
+        song.setId(source.getId());
+        song.setName(source.getName());
+        song.setLength(source.getLength());
+        song.setNote(source.getNote());
+        song.setPosition(source.getPosition());
+        song.setMusic(converter.convert(source.getMusic()));
+        return song;
+    }
 
 }

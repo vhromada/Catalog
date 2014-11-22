@@ -28,81 +28,81 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SerieDAOImplSpringTest {
 
-	/** Instance of {@link EntityManager} */
-	@Autowired
-	private EntityManager entityManager;
+    /** Instance of {@link EntityManager} */
+    @Autowired
+    private EntityManager entityManager;
 
-	/** Instance of {@link SerieDAO} */
-	@Autowired
-	private SerieDAO serieDAO;
+    /** Instance of {@link SerieDAO} */
+    @Autowired
+    private SerieDAO serieDAO;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Restarts sequence. */
-	@Before
-	public void setUp() {
-		entityManager.createNativeQuery("ALTER SEQUENCE series_sq RESTART WITH 4").executeUpdate();
-	}
+    /** Restarts sequence. */
+    @Before
+    public void setUp() {
+        entityManager.createNativeQuery("ALTER SEQUENCE series_sq RESTART WITH 4").executeUpdate();
+    }
 
-	/** Test method for {@link SerieDAO#getSeries()}. */
-	@Test
-	public void testGetSeries() {
-		DeepAsserts.assertEquals(SpringEntitiesUtils.getSeries(), serieDAO.getSeries());
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
-	}
+    /** Test method for {@link SerieDAO#getSeries()}. */
+    @Test
+    public void testGetSeries() {
+        DeepAsserts.assertEquals(SpringEntitiesUtils.getSeries(), serieDAO.getSeries());
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+    }
 
-	/** Test method for {@link SerieDAO#getSerie(Integer)}. */
-	@Test
-	public void testGetSerie() {
-		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
-			DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), serieDAO.getSerie(i));
-		}
+    /** Test method for {@link SerieDAO#getSerie(Integer)}. */
+    @Test
+    public void testGetSerie() {
+        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSerie(i), serieDAO.getSerie(i));
+        }
 
-		assertNull(serieDAO.getSerie(Integer.MAX_VALUE));
+        assertNull(serieDAO.getSerie(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
-	}
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+    }
 
-	/** Test method for {@link SerieDAO#add(Serie)}. */
-	@Test
-	public void testAdd() {
-		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
+    /** Test method for {@link SerieDAO#add(Serie)}. */
+    @Test
+    public void testAdd() {
+        final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
 
-		serieDAO.add(serie);
+        serieDAO.add(serie);
 
-		DeepAsserts.assertNotNull(serie.getId());
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, serie.getId());
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, serie.getPosition());
-		final Serie addedSerie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1);
-		DeepAsserts.assertEquals(serie, addedSerie);
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
-	}
+        DeepAsserts.assertNotNull(serie.getId());
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, serie.getId());
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, serie.getPosition());
+        final Serie addedSerie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT + 1);
+        DeepAsserts.assertEquals(serie, addedSerie);
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+    }
 
-	/** Test method for {@link SerieDAO#update(Serie)}. */
-	@Test
-	public void testUpdate() {
-		final Serie serie = SpringEntitiesUtils.updateSerie(1, objectGenerator, entityManager);
+    /** Test method for {@link SerieDAO#update(Serie)}. */
+    @Test
+    public void testUpdate() {
+        final Serie serie = SpringEntitiesUtils.updateSerie(1, objectGenerator, entityManager);
 
-		serieDAO.update(serie);
+        serieDAO.update(serie);
 
-		final Serie updatedSerie = SpringUtils.getSerie(entityManager, 1);
-		DeepAsserts.assertEquals(serie, updatedSerie);
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
-	}
+        final Serie updatedSerie = SpringUtils.getSerie(entityManager, 1);
+        DeepAsserts.assertEquals(serie, updatedSerie);
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+    }
 
-	/** Test method for {@link SerieDAO#remove(Serie)}. */
-	@Test
-	public void testRemove() {
-		final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
-		entityManager.persist(serie);
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
+    /** Test method for {@link SerieDAO#remove(Serie)}. */
+    @Test
+    public void testRemove() {
+        final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
+        entityManager.persist(serie);
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT + 1, SpringUtils.getSeriesCount(entityManager));
 
-		serieDAO.remove(serie);
+        serieDAO.remove(serie);
 
-		assertNull(SpringUtils.getSerie(entityManager, serie.getId()));
-		DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
-	}
+        assertNull(SpringUtils.getSerie(entityManager, serie.getId()));
+        DeepAsserts.assertEquals(SpringUtils.SERIES_COUNT, SpringUtils.getSeriesCount(entityManager));
+    }
 
 }

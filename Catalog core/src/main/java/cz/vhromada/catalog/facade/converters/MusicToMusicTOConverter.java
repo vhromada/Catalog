@@ -13,21 +13,21 @@ import org.springframework.stereotype.Component;
 @Component("musicToMusicTOConverter")
 public class MusicToMusicTOConverter implements Converter<Music, MusicTO> {
 
-	@Override
-	public MusicTO convert(final Music source) {
-		if (source == null) {
-			return null;
-		}
+    @Override
+    public MusicTO convert(final Music source) {
+        if (source == null) {
+            return null;
+        }
 
-		final MusicTO music = new MusicTO();
-		music.setId(source.getId());
-		music.setName(source.getName());
-		music.setWikiEn(source.getWikiEn());
-		music.setWikiCz(source.getWikiCz());
-		music.setMediaCount(source.getMediaCount());
-		music.setNote(source.getNote());
-		music.setPosition(source.getPosition());
-		return music;
-	}
+        final MusicTO music = new MusicTO();
+        music.setId(source.getId());
+        music.setName(source.getName());
+        music.setWikiEn(source.getWikiEn());
+        music.setWikiCz(source.getWikiCz());
+        music.setMediaCount(source.getMediaCount());
+        music.setNote(source.getNote());
+        music.setPosition(source.getPosition());
+        return music;
+    }
 
 }

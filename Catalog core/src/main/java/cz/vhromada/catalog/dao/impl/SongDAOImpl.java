@@ -22,145 +22,145 @@ import org.springframework.stereotype.Component;
 @Component("songDAO")
 public class SongDAOImpl implements SongDAO {
 
-	/** Entity manager field */
-	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+    /** Entity manager field */
+    private static final String ENTITY_MANAGER_FIELD = "Entity manager";
 
-	/** Music argument */
-	private static final String MUSIC_ARGUMENT = "Music";
+    /** Music argument */
+    private static final String MUSIC_ARGUMENT = "Music";
 
-	/** Song argument */
-	private static final String SONG_ARGUMENT = "Song";
+    /** Song argument */
+    private static final String SONG_ARGUMENT = "Song";
 
-	/** ID argument */
-	private static final String ID_ARGUMENT = "ID";
+    /** ID argument */
+    private static final String ID_ARGUMENT = "ID";
 
-	/** Message for {@link DataStorageException} */
-	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+    /** Message for {@link DataStorageException} */
+    private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
-	/** Entity manager */
-	@Autowired
-	private EntityManager entityManager;
+    /** Entity manager */
+    @Autowired
+    private EntityManager entityManager;
 
-	/**
-	 * Returns entity manager.
-	 *
-	 * @return entity manager
-	 */
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
+    /**
+     * Returns entity manager.
+     *
+     * @return entity manager
+     */
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 
-	/**
-	 * Sets a new value to entity manager.
-	 *
-	 * @param entityManager new value
-	 */
-	public void setEntityManager(final EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+    /**
+     * Sets a new value to entity manager.
+     *
+     * @param entityManager new value
+     */
+    public void setEntityManager(final EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public Song getSong(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public Song getSong(final Integer id) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
-		try {
-			return entityManager.find(Song.class, id);
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            return entityManager.find(Song.class, id);
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 *                                  or song's validator isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public void add(final Song song) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     *                                  or song's validator isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public void add(final Song song) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
-		try {
-			entityManager.persist(song);
-			song.setPosition(song.getId() - 1);
-			entityManager.merge(song);
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            entityManager.persist(song);
+            song.setPosition(song.getId() - 1);
+            entityManager.merge(song);
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public void update(final Song song) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public void update(final Song song) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
-		try {
-			entityManager.merge(song);
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            entityManager.merge(song);
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public void remove(final Song song) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public void remove(final Song song) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
-		try {
-			if (entityManager.contains(song)) {
-				entityManager.remove(song);
-			} else {
-				entityManager.remove(entityManager.getReference(Song.class, song.getId()));
-			}
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            if (entityManager.contains(song)) {
+                entityManager.remove(song);
+            } else {
+                entityManager.remove(entityManager.getReference(Song.class, song.getId()));
+            }
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public List<Song> findSongsByMusic(final Music music) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public List<Song> findSongsByMusic(final Music music) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
-		try {
-			final TypedQuery<Song> query = entityManager.createNamedQuery(Song.FIND_BY_MUSIC, Song.class);
-			query.setParameter("music", music.getId());
-			return query.getResultList();
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            final TypedQuery<Song> query = entityManager.createNamedQuery(Song.FIND_BY_MUSIC, Song.class);
+            query.setParameter("music", music.getId());
+            return query.getResultList();
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
 }

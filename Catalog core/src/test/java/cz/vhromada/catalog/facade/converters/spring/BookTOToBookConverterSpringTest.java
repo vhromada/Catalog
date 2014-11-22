@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class BookTOToBookConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.BookTOToBookConverter#convert(BookTO)}. */
-	@Test
-	public void testConvert() {
-		final BookTO bookTO = objectGenerator.generate(BookTO.class);
-		final Book book = conversionService.convert(bookTO, Book.class);
-		DeepAsserts.assertNotNull(book);
-		DeepAsserts.assertEquals(bookTO, book, "booksCount");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.BookTOToBookConverter#convert(BookTO)}. */
+    @Test
+    public void testConvert() {
+        final BookTO bookTO = objectGenerator.generate(BookTO.class);
+        final Book book = conversionService.convert(bookTO, Book.class);
+        DeepAsserts.assertNotNull(book);
+        DeepAsserts.assertEquals(bookTO, book, "booksCount");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.BookTOToBookConverter#convert(BookTO)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, Book.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.BookTOToBookConverter#convert(BookTO)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, Book.class));
+    }
 
 }

@@ -14,46 +14,47 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class JsonController implements InitializingBean {
 
-	private Genson genson;
+    private Genson genson;
 
-	@Override
-	public void afterPropertiesSet() {
-		genson = new GensonBuilder().create();
-	}
+    @Override
+    public void afterPropertiesSet() {
+        genson = new GensonBuilder().create();
+    }
 
-	/**
-	 * Serialize object to JSON.
-	 *
-	 * @param object object
-	 * @param <T>    type of object
-	 * @return serialized object in JSON
-	 */
-	protected <T> String serialize(final T object) {
-		return genson.serialize(object);
-	}
+    /**
+     * Serialize object to JSON.
+     *
+     * @param object object
+     * @param <T>    type of object
+     * @return serialized object in JSON
+     */
+    protected <T> String serialize(final T object) {
+        return genson.serialize(object);
+    }
 
-	/**
-	 * Deserialize object from JSON.
-	 *
-	 * @param json  object in JSON
-	 * @param clazz class of returned object
-	 * @param <T>   type of returned object
-	 * @return deserialized object from JSON
-	 */
-	protected <T> T deserialize(final String json, final Class<T> clazz) {
-		return genson.deserialize(json, clazz);
-	}
+    /**
+     * Deserialize object from JSON.
+     *
+     * @param json  object in JSON
+     * @param clazz class of returned object
+     * @param <T>   type of returned object
+     * @return deserialized object from JSON
+     */
+    protected <T> T deserialize(final String json, final Class<T> clazz) {
+        return genson.deserialize(json, clazz);
+    }
 
-	/**
-	 * Deserialize list of object from JSON.
-	 *
-	 * @param json list of object in JSON
-	 * @param <T>  type of returned object
-	 * @return deserialized list of object from JSON
-	 */
-	protected <T> List<T> deserializeList(final String json) {
-		return genson.deserialize(json, new GenericType<List<T>>() {
-		});
-	}
+    /**
+     * Deserialize list of object from JSON.
+     *
+     * @param json list of object in JSON
+     * @param <T>  type of returned object
+     * @return deserialized list of object from JSON
+     */
+    @SuppressWarnings("EmptyClass")
+    protected <T> List<T> deserializeList(final String json) {
+        return genson.deserialize(json, new GenericType<List<T>>() {
+        });
+    }
 
 }

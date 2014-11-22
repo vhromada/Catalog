@@ -16,28 +16,28 @@ import org.junit.Test;
  */
 public class MusicToMusicTOConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link MusicToMusicTOConverter} */
-	private MusicToMusicTOConverter converter;
+    /** Instance of {@link MusicToMusicTOConverter} */
+    private MusicToMusicTOConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new MusicToMusicTOConverter();
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new MusicToMusicTOConverter();
+    }
 
-	/** Test method for {@link MusicToMusicTOConverter#convert(Music)}. */
-	@Test
-	public void testConvert() {
-		final Music music = generate(Music.class);
-		final MusicTO musicTO = converter.convert(music);
-		DeepAsserts.assertNotNull(musicTO, "totalLength");
-		DeepAsserts.assertEquals(music, musicTO, "songsCount", "totalLength");
-	}
+    /** Test method for {@link MusicToMusicTOConverter#convert(Music)}. */
+    @Test
+    public void testConvert() {
+        final Music music = generate(Music.class);
+        final MusicTO musicTO = converter.convert(music);
+        DeepAsserts.assertNotNull(musicTO, "totalLength");
+        DeepAsserts.assertEquals(music, musicTO, "songsCount", "totalLength");
+    }
 
-	/** Test method for {@link MusicToMusicTOConverter#convert(Music)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link MusicToMusicTOConverter#convert(Music)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
 }

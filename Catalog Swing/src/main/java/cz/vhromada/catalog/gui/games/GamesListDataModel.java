@@ -15,62 +15,62 @@ import cz.vhromada.validators.Validators;
  */
 public class GamesListDataModel extends AbstractListModel<String> {
 
-	/** SerialVersionUID */
-	private static final long serialVersionUID = 1L;
+    /** SerialVersionUID */
+    private static final long serialVersionUID = 1L;
 
-	/** Facade for games */
-	private GameFacade gameFacade;
+    /** Facade for games */
+    private GameFacade gameFacade;
 
-	/** List of TO for game */
-	private List<GameTO> games;
+    /** List of TO for game */
+    private List<GameTO> games;
 
-	/**
-	 * Creates a new instance of GamesListDataModel.
-	 *
-	 * @param gameFacade facade for games
-	 * @throws IllegalArgumentException if facade for games is null
-	 */
-	public GamesListDataModel(final GameFacade gameFacade) {
-		Validators.validateArgumentNotNull(gameFacade, "Facade for games");
+    /**
+     * Creates a new instance of GamesListDataModel.
+     *
+     * @param gameFacade facade for games
+     * @throws IllegalArgumentException if facade for games is null
+     */
+    public GamesListDataModel(final GameFacade gameFacade) {
+        Validators.validateArgumentNotNull(gameFacade, "Facade for games");
 
-		this.gameFacade = gameFacade;
-		update();
-	}
+        this.gameFacade = gameFacade;
+        update();
+    }
 
-	/**
-	 * Returns the length of the list.
-	 *
-	 * @return the length of the list
-	 */
-	@Override
-	public int getSize() {
-		return games.size();
-	}
+    /**
+     * Returns the length of the list.
+     *
+     * @return the length of the list
+     */
+    @Override
+    public int getSize() {
+        return games.size();
+    }
 
-	/**
-	 * Returns the value at the specified index.
-	 *
-	 * @param index the requested index
-	 * @return the value at index
-	 */
-	@Override
-	public String getElementAt(final int index) {
-		return getGameAt(index).getName();
-	}
+    /**
+     * Returns the value at the specified index.
+     *
+     * @param index the requested index
+     * @return the value at index
+     */
+    @Override
+    public String getElementAt(final int index) {
+        return getGameAt(index).getName();
+    }
 
-	/**
-	 * Returns TO for game at the specified index.
-	 *
-	 * @param index the requested index
-	 * @return TO for game at index
-	 */
-	public GameTO getGameAt(final int index) {
-		return games.get(index);
-	}
+    /**
+     * Returns TO for game at the specified index.
+     *
+     * @param index the requested index
+     * @return TO for game at index
+     */
+    public GameTO getGameAt(final int index) {
+        return games.get(index);
+    }
 
-	/** Updates model. */
-	public final void update() {
-		games = gameFacade.getGames();
-	}
+    /** Updates model. */
+    public final void update() {
+        games = gameFacade.getGames();
+    }
 
 }

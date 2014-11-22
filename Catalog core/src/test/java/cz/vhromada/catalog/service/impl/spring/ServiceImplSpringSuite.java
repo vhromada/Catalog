@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ MovieServiceImplSpringTest.class, SerieServiceImplSpringTest.class, SeasonServiceImplSpringTest.class, EpisodeServiceImplSpringTest.class,
-		GameServiceImplSpringTest.class, MusicServiceImplSpringTest.class, SongServiceImplSpringTest.class, ProgramServiceImplSpringTest.class,
-		BookCategoryServiceImplSpringTest.class, BookServiceImplSpringTest.class, GenreServiceImplSpringTest.class })
+        GameServiceImplSpringTest.class, MusicServiceImplSpringTest.class, SongServiceImplSpringTest.class, ProgramServiceImplSpringTest.class,
+        BookCategoryServiceImplSpringTest.class, BookServiceImplSpringTest.class, GenreServiceImplSpringTest.class })
 public class ServiceImplSpringSuite {
 }

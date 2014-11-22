@@ -22,31 +22,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class MovieToMovieTOConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.MovieToMovieTOConverter#convert(Movie)}. */
-	@Test
-	public void testConvert() {
-		final Movie movie = objectGenerator.generate(Movie.class);
-		final MovieTO movieTO = conversionService.convert(movie, MovieTO.class);
-		DeepAsserts.assertNotNull(movieTO);
-		DeepAsserts.assertEquals(movie, movieTO, "subtitlesAsString", "media", "totalLength", "genresAsString");
-		DeepAsserts.assertEquals(movie.getMedia().size(), movieTO.getMedia().size());
-		for (int i = 0; i < movie.getMedia().size(); i++) {
-			DeepAsserts.assertEquals(movie.getMedia().get(i).getLength(), movieTO.getMedia().get(i));
-		}
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.MovieToMovieTOConverter#convert(Movie)}. */
+    @Test
+    public void testConvert() {
+        final Movie movie = objectGenerator.generate(Movie.class);
+        final MovieTO movieTO = conversionService.convert(movie, MovieTO.class);
+        DeepAsserts.assertNotNull(movieTO);
+        DeepAsserts.assertEquals(movie, movieTO, "subtitlesAsString", "media", "totalLength", "genresAsString");
+        DeepAsserts.assertEquals(movie.getMedia().size(), movieTO.getMedia().size());
+        for (int i = 0; i < movie.getMedia().size(); i++) {
+            DeepAsserts.assertEquals(movie.getMedia().get(i).getLength(), movieTO.getMedia().get(i));
+        }
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.MovieToMovieTOConverter#convert(Movie)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, MovieTO.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.MovieToMovieTOConverter#convert(Movie)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, MovieTO.class));
+    }
 
 }

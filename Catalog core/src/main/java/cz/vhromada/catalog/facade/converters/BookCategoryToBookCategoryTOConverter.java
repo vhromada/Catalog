@@ -13,18 +13,18 @@ import org.springframework.stereotype.Component;
 @Component("bookCategoryToBookCategoryTOConverter")
 public class BookCategoryToBookCategoryTOConverter implements Converter<BookCategory, BookCategoryTO> {
 
-	@Override
-	public BookCategoryTO convert(final BookCategory source) {
-		if (source == null) {
-			return null;
-		}
+    @Override
+    public BookCategoryTO convert(final BookCategory source) {
+        if (source == null) {
+            return null;
+        }
 
-		final BookCategoryTO bookCategory = new BookCategoryTO();
-		bookCategory.setId(source.getId());
-		bookCategory.setName(source.getName());
-		bookCategory.setNote(source.getNote());
-		bookCategory.setPosition(source.getPosition());
-		return bookCategory;
-	}
+        final BookCategoryTO bookCategory = new BookCategoryTO();
+        bookCategory.setId(source.getId());
+        bookCategory.setName(source.getName());
+        bookCategory.setNote(source.getNote());
+        bookCategory.setPosition(source.getPosition());
+        return bookCategory;
+    }
 
 }

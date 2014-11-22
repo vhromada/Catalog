@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class SeasonToSeasonTOConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.SeasonToSeasonTOConverter#convert(Season)}. */
-	@Test
-	public void testConvert() {
-		final Season season = objectGenerator.generate(Season.class);
-		final SeasonTO seasonTO = conversionService.convert(season, SeasonTO.class);
-		DeepAsserts.assertNotNull(seasonTO, "totalLength");
-		DeepAsserts.assertEquals(season, seasonTO, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.SeasonToSeasonTOConverter#convert(Season)}. */
+    @Test
+    public void testConvert() {
+        final Season season = objectGenerator.generate(Season.class);
+        final SeasonTO seasonTO = conversionService.convert(season, SeasonTO.class);
+        DeepAsserts.assertNotNull(seasonTO, "totalLength");
+        DeepAsserts.assertEquals(season, seasonTO, "year", "subtitlesAsString", "episodesCount", "totalLength", "seasonsCount", "genresAsString");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.SeasonToSeasonTOConverter#convert(Season)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, SeasonTO.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.SeasonToSeasonTOConverter#convert(Season)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, SeasonTO.class));
+    }
 
 }

@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class BookCategoryTOToBookCategoryConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.BookCategoryTOToBookCategoryConverter#convert(BookCategoryTO)}. */
-	@Test
-	public void testConvert() {
-		final BookCategoryTO bookCategoryTO = objectGenerator.generate(BookCategoryTO.class);
-		final BookCategory bookCategory = conversionService.convert(bookCategoryTO, BookCategory.class);
-		DeepAsserts.assertNotNull(bookCategory);
-		DeepAsserts.assertEquals(bookCategoryTO, bookCategory, "booksCount");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.BookCategoryTOToBookCategoryConverter#convert(BookCategoryTO)}. */
+    @Test
+    public void testConvert() {
+        final BookCategoryTO bookCategoryTO = objectGenerator.generate(BookCategoryTO.class);
+        final BookCategory bookCategory = conversionService.convert(bookCategoryTO, BookCategory.class);
+        DeepAsserts.assertNotNull(bookCategory);
+        DeepAsserts.assertEquals(bookCategoryTO, bookCategory, "booksCount");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.BookCategoryTOToBookCategoryConverter#convert(BookCategoryTO)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, BookCategory.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.BookCategoryTOToBookCategoryConverter#convert(BookCategoryTO)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, BookCategory.class));
+    }
 
 }

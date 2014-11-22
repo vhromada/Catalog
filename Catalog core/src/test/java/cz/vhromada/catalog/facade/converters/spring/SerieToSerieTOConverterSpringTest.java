@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class SerieToSerieTOConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.SerieToSerieTOConverter#convert(Serie)}. */
-	@Test
-	public void testConvert() {
-		final Serie serie = objectGenerator.generate(Serie.class);
-		final SerieTO serieTO = conversionService.convert(serie, SerieTO.class);
-		DeepAsserts.assertNotNull(serieTO, "totalLength");
-		DeepAsserts.assertEquals(serie, serieTO, "seasonsCount", "episodesCount", "totalLength", "genresAsString");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.SerieToSerieTOConverter#convert(Serie)}. */
+    @Test
+    public void testConvert() {
+        final Serie serie = objectGenerator.generate(Serie.class);
+        final SerieTO serieTO = conversionService.convert(serie, SerieTO.class);
+        DeepAsserts.assertNotNull(serieTO, "totalLength");
+        DeepAsserts.assertEquals(serie, serieTO, "seasonsCount", "episodesCount", "totalLength", "genresAsString");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.SerieToSerieTOConverter#convert(Serie)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, SerieTO.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.SerieToSerieTOConverter#convert(Serie)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, SerieTO.class));
+    }
 
 }

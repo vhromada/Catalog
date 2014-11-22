@@ -33,545 +33,545 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SerieFacadeImpl implements SerieFacade {
 
-	/** Service for series field */
-	private static final String SERIE_SERVICE_FIELD = "Service for series";
+    /** Service for series field */
+    private static final String SERIE_SERVICE_FIELD = "Service for series";
 
-	/** Service for seasons field */
-	private static final String SEASON_SERVICE_FIELD = "Service for seasons";
+    /** Service for seasons field */
+    private static final String SEASON_SERVICE_FIELD = "Service for seasons";
 
-	/** Service for episodes field */
-	private static final String EPISODE_SERVICE_FIELD = "Service for episodes";
+    /** Service for episodes field */
+    private static final String EPISODE_SERVICE_FIELD = "Service for episodes";
 
-	/** Service for genres field */
-	private static final String GENRE_SERVICE_FIELD = "Service for genres";
+    /** Service for genres field */
+    private static final String GENRE_SERVICE_FIELD = "Service for genres";
 
-	/** Conversion service field */
-	private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    /** Conversion service field */
+    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
 
-	/** Validator for TO for serie field */
-	private static final String SERIE_TO_VALIDATOR_FIELD = "Validator for TO for serie";
+    /** Validator for TO for serie field */
+    private static final String SERIE_TO_VALIDATOR_FIELD = "Validator for TO for serie";
 
-	/** Serie argument */
-	private static final String SERIE_ARGUMENT = "serie";
+    /** Serie argument */
+    private static final String SERIE_ARGUMENT = "serie";
 
-	/** TO for serie argument */
-	private static final String SERIE_TO_ARGUMENT = "TO for serie";
+    /** TO for serie argument */
+    private static final String SERIE_TO_ARGUMENT = "TO for serie";
 
-	/** TO for genre argument */
-	private static final String GENRE_TO_ARGUMENT = "TO for genre";
+    /** TO for genre argument */
+    private static final String GENRE_TO_ARGUMENT = "TO for genre";
 
-	/** ID argument */
-	private static final String ID_ARGUMENT = "ID";
+    /** ID argument */
+    private static final String ID_ARGUMENT = "ID";
 
-	/** Message for {@link FacadeOperationException} */
-	private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
+    /** Message for {@link FacadeOperationException} */
+    private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-	/** Message for not setting ID */
-	private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
+    /** Message for not setting ID */
+    private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-	/** Service for series */
-	@Autowired
-	private SerieService serieService;
+    /** Service for series */
+    @Autowired
+    private SerieService serieService;
 
-	/** Service for seasons */
-	@Autowired
-	private SeasonService seasonService;
+    /** Service for seasons */
+    @Autowired
+    private SeasonService seasonService;
 
-	/** Service for episodes */
-	@Autowired
-	private EpisodeService episodeService;
+    /** Service for episodes */
+    @Autowired
+    private EpisodeService episodeService;
 
-	/** Service for genres */
-	@Autowired
-	private GenreService genreService;
+    /** Service for genres */
+    @Autowired
+    private GenreService genreService;
 
-	/** Conversion service */
-	@Autowired
-	@Qualifier("coreConversionService")
-	private ConversionService conversionService;
+    /** Conversion service */
+    @Autowired
+    @Qualifier("coreConversionService")
+    private ConversionService conversionService;
 
-	/** Validator for TO for serie */
-	@Autowired
-	private SerieTOValidator serieTOValidator;
+    /** Validator for TO for serie */
+    @Autowired
+    private SerieTOValidator serieTOValidator;
 
-	/**
-	 * Returns service for series.
-	 *
-	 * @return service for series
-	 */
-	public SerieService getSerieService() {
-		return serieService;
-	}
+    /**
+     * Returns service for series.
+     *
+     * @return service for series
+     */
+    public SerieService getSerieService() {
+        return serieService;
+    }
 
-	/**
-	 * Sets a new value to service for series.
-	 *
-	 * @param serieService new value
-	 */
-	public void setSerieService(final SerieService serieService) {
-		this.serieService = serieService;
-	}
+    /**
+     * Sets a new value to service for series.
+     *
+     * @param serieService new value
+     */
+    public void setSerieService(final SerieService serieService) {
+        this.serieService = serieService;
+    }
 
-	/**
-	 * Returns service for seasons.
-	 *
-	 * @return service for seasons
-	 */
-	public SeasonService getSeasonService() {
-		return seasonService;
-	}
+    /**
+     * Returns service for seasons.
+     *
+     * @return service for seasons
+     */
+    public SeasonService getSeasonService() {
+        return seasonService;
+    }
 
-	/**
-	 * Sets a new value to service for seasons.
-	 *
-	 * @param seasonService new value
-	 */
-	public void setSeasonService(final SeasonService seasonService) {
-		this.seasonService = seasonService;
-	}
+    /**
+     * Sets a new value to service for seasons.
+     *
+     * @param seasonService new value
+     */
+    public void setSeasonService(final SeasonService seasonService) {
+        this.seasonService = seasonService;
+    }
 
-	/**
-	 * Returns service for episodes.
-	 *
-	 * @return service for episodes
-	 */
-	public EpisodeService getEpisodeService() {
-		return episodeService;
-	}
+    /**
+     * Returns service for episodes.
+     *
+     * @return service for episodes
+     */
+    public EpisodeService getEpisodeService() {
+        return episodeService;
+    }
 
-	/**
-	 * Sets a new value to service for episodes.
-	 *
-	 * @param episodeService new value
-	 */
-	public void setEpisodeService(final EpisodeService episodeService) {
-		this.episodeService = episodeService;
-	}
+    /**
+     * Sets a new value to service for episodes.
+     *
+     * @param episodeService new value
+     */
+    public void setEpisodeService(final EpisodeService episodeService) {
+        this.episodeService = episodeService;
+    }
 
-	/**
-	 * Returns service for genres.
-	 *
-	 * @return service for genres
-	 */
-	public GenreService getGenreService() {
-		return genreService;
-	}
+    /**
+     * Returns service for genres.
+     *
+     * @return service for genres
+     */
+    public GenreService getGenreService() {
+        return genreService;
+    }
 
-	/**
-	 * Sets a new value to service for genres.
-	 *
-	 * @param genreService new value
-	 */
-	public void setGenreService(final GenreService genreService) {
-		this.genreService = genreService;
-	}
+    /**
+     * Sets a new value to service for genres.
+     *
+     * @param genreService new value
+     */
+    public void setGenreService(final GenreService genreService) {
+        this.genreService = genreService;
+    }
 
-	/**
-	 * Returns conversion service.
-	 *
-	 * @return conversion service
-	 */
-	public ConversionService getConversionService() {
-		return conversionService;
-	}
+    /**
+     * Returns conversion service.
+     *
+     * @return conversion service
+     */
+    public ConversionService getConversionService() {
+        return conversionService;
+    }
 
-	/**
-	 * Sets a new value to conversion service.
-	 *
-	 * @param conversionService new value
-	 */
-	public void setConversionService(final ConversionService conversionService) {
-		this.conversionService = conversionService;
-	}
+    /**
+     * Sets a new value to conversion service.
+     *
+     * @param conversionService new value
+     */
+    public void setConversionService(final ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
 
-	/**
-	 * Returns validator for TO for serie.
-	 *
-	 * @return validator for TO for serie
-	 */
-	public SerieTOValidator getSerieTOValidator() {
-		return serieTOValidator;
-	}
+    /**
+     * Returns validator for TO for serie.
+     *
+     * @return validator for TO for serie
+     */
+    public SerieTOValidator getSerieTOValidator() {
+        return serieTOValidator;
+    }
 
-	/**
-	 * Sets a new value to validator for TO for serie.
-	 *
-	 * @param serieTOValidator new value
-	 */
-	public void setSerieTOValidator(final SerieTOValidator serieTOValidator) {
-		this.serieTOValidator = serieTOValidator;
-	}
+    /**
+     * Sets a new value to validator for TO for serie.
+     *
+     * @param serieTOValidator new value
+     */
+    public void setSerieTOValidator(final SerieTOValidator serieTOValidator) {
+        this.serieTOValidator = serieTOValidator;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void newData() {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void newData() {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
 
-		try {
-			serieService.newData();
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            serieService.newData();
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or service for seasons isn't set
-	 *                                  or service for episodes isn't set
-	 *                                  or conversion service isn't set
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<SerieTO> getSeries() {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-		Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or service for seasons isn't set
+     *                                  or service for episodes isn't set
+     *                                  or conversion service isn't set
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<SerieTO> getSeries() {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
 
-		try {
-			final List<SerieTO> series = new ArrayList<>();
-			for (Serie serie : serieService.getSeries()) {
-				series.add(convertSerieToSerieTO(serie));
-			}
-			Collections.sort(series);
-			return series;
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            final List<SerieTO> series = new ArrayList<>();
+            for (final Serie serie : serieService.getSeries()) {
+                series.add(convertSerieToSerieTO(serie));
+            }
+            Collections.sort(series);
+            return series;
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or service for seasons isn't set
-	 *                                  or service for episodes isn't set
-	 *                                  or conversion service isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public SerieTO getSerie(final Integer id) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-		Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or service for seasons isn't set
+     *                                  or service for episodes isn't set
+     *                                  or conversion service isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public SerieTO getSerie(final Integer id) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
+        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
-		try {
-			return convertSerieToSerieTO(serieService.getSerie(id));
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            return convertSerieToSerieTO(serieService.getSerie(id));
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or service for genres isn't set
-	 *                                  or conversion service isn't set
-	 *                                  or validator for TO for serie isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void add(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
-		serieTOValidator.validateNewSerieTO(serie);
-		try {
-			for (GenreTO genre : serie.getGenres()) {
-				Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
-			}
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or service for genres isn't set
+     *                                  or conversion service isn't set
+     *                                  or validator for TO for serie isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void add(final SerieTO serie) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
+        serieTOValidator.validateNewSerieTO(serie);
+        try {
+            for (final GenreTO genre : serie.getGenres()) {
+                Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
+            }
 
-			final Serie serieEntity = conversionService.convert(serie, Serie.class);
-			serieService.add(serieEntity);
-			if (serieEntity.getId() == null) {
-				throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
-			}
-			serie.setId(serieEntity.getId());
-			serie.setPosition(serieEntity.getPosition());
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+            final Serie serieEntity = conversionService.convert(serie, Serie.class);
+            serieService.add(serieEntity);
+            if (serieEntity.getId() == null) {
+                throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
+            }
+            serie.setId(serieEntity.getId());
+            serie.setPosition(serieEntity.getPosition());
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or service for genres isn't set
-	 *                                  or conversion service isn't set
-	 *                                  or validator for TO for serie isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void update(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
-		serieTOValidator.validateExistingSerieTO(serie);
-		try {
-			final Serie serieEntity = conversionService.convert(serie, Serie.class);
-			Validators.validateExists(serieService.exists(serieEntity), SERIE_TO_ARGUMENT);
-			for (GenreTO genre : serie.getGenres()) {
-				Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
-			}
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or service for genres isn't set
+     *                                  or conversion service isn't set
+     *                                  or validator for TO for serie isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+     *                                  {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void update(final SerieTO serie) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
+        serieTOValidator.validateExistingSerieTO(serie);
+        try {
+            final Serie serieEntity = conversionService.convert(serie, Serie.class);
+            Validators.validateExists(serieService.exists(serieEntity), SERIE_TO_ARGUMENT);
+            for (final GenreTO genre : serie.getGenres()) {
+                Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
+            }
 
-			serieService.update(serieEntity);
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+            serieService.update(serieEntity);
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or validator for TO for serie isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void remove(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
-		serieTOValidator.validateSerieTOWithId(serie);
-		try {
-			final Serie serieEntity = serieService.getSerie(serie.getId());
-			Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or validator for TO for serie isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+     *                                  {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void remove(final SerieTO serie) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
+        serieTOValidator.validateSerieTOWithId(serie);
+        try {
+            final Serie serieEntity = serieService.getSerie(serie.getId());
+            Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
 
-			serieService.remove(serieEntity);
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+            serieService.remove(serieEntity);
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or validator for TO for serie isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void duplicate(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
-		serieTOValidator.validateSerieTOWithId(serie);
-		try {
-			final Serie oldSerie = serieService.getSerie(serie.getId());
-			Validators.validateExists(oldSerie, SERIE_TO_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or validator for TO for serie isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void duplicate(final SerieTO serie) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
+        serieTOValidator.validateSerieTOWithId(serie);
+        try {
+            final Serie oldSerie = serieService.getSerie(serie.getId());
+            Validators.validateExists(oldSerie, SERIE_TO_ARGUMENT);
 
-			serieService.duplicate(oldSerie);
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+            serieService.duplicate(oldSerie);
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or validator for TO for serie isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void moveUp(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
-		serieTOValidator.validateSerieTOWithId(serie);
-		try {
-			final Serie serieEntity = serieService.getSerie(serie.getId());
-			Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
-			final List<Serie> series = serieService.getSeries();
-			Validators.validateMoveUp(series, serieEntity, SERIE_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or validator for TO for serie isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+     *                                  {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void moveUp(final SerieTO serie) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
+        serieTOValidator.validateSerieTOWithId(serie);
+        try {
+            final Serie serieEntity = serieService.getSerie(serie.getId());
+            Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
+            final List<Serie> series = serieService.getSeries();
+            Validators.validateMoveUp(series, serieEntity, SERIE_ARGUMENT);
 
-			serieService.moveUp(serieEntity);
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+            serieService.moveUp(serieEntity);
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or validator for TO for serie isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-	 *                                  {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void moveDown(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
-		serieTOValidator.validateSerieTOWithId(serie);
-		try {
-			final Serie serieEntity = serieService.getSerie(serie.getId());
-			Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
-			final List<Serie> series = serieService.getSeries();
-			Validators.validateMoveDown(series, serieEntity, SERIE_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or validator for TO for serie isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
+     *                                  {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void moveDown(final SerieTO serie) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
+        serieTOValidator.validateSerieTOWithId(serie);
+        try {
+            final Serie serieEntity = serieService.getSerie(serie.getId());
+            Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
+            final List<Serie> series = serieService.getSeries();
+            Validators.validateMoveDown(series, serieEntity, SERIE_ARGUMENT);
 
-			serieService.moveDown(serieEntity);
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+            serieService.moveDown(serieEntity);
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 *                                  or conversion service isn't set
-	 *                                  or validator for TO for serie isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public boolean exists(final SerieTO serie) {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-		Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-		Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
-		serieTOValidator.validateSerieTOWithId(serie);
-		try {
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     *                                  or conversion service isn't set
+     *                                  or validator for TO for serie isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public boolean exists(final SerieTO serie) {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
+        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
+        serieTOValidator.validateSerieTOWithId(serie);
+        try {
 
-			return serieService.exists(conversionService.convert(serie, Serie.class));
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+            return serieService.exists(conversionService.convert(serie, Serie.class));
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	public void updatePositions() {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    public void updatePositions() {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
 
-		try {
-			serieService.updatePositions();
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            serieService.updatePositions();
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Time getTotalLength() {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Time getTotalLength() {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
 
-		try {
-			return serieService.getTotalLength();
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            return serieService.getTotalLength();
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public int getSeasonsCount() {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public int getSeasonsCount() {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
 
-		try {
-			return serieService.getSeasonsCount();
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            return serieService.getSeasonsCount();
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if service for series isn't set
-	 * @throws FacadeOperationException {@inheritDoc}
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public int getEpisodesCount() {
-		Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if service for series isn't set
+     * @throws FacadeOperationException {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public int getEpisodesCount() {
+        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
 
-		try {
-			return serieService.getEpisodesCount();
-		} catch (final ServiceOperationException ex) {
-			throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            return serieService.getEpisodesCount();
+        } catch (final ServiceOperationException ex) {
+            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * Converts entity serie to TO for serie.
-	 *
-	 * @param serie entity serie
-	 * @return converted TO for serie
-	 */
-	private SerieTO convertSerieToSerieTO(final Serie serie) {
-		final SerieTO serieTO = conversionService.convert(serie, SerieTO.class);
-		if (serieTO != null) {
-			final List<Season> seasons = seasonService.findSeasonsBySerie(serie);
-			int count = 0;
-			int length = 0;
-			for (Season season : seasons) {
-				count += episodeService.findEpisodesBySeason(season).size();
-				length += episodeService.getTotalLengthBySeason(season).getLength();
-			}
-			serieTO.setSeasonsCount(seasons.size());
-			serieTO.setEpisodesCount(count);
-			serieTO.setTotalLength(new Time(length));
-		}
-		return serieTO;
-	}
+    /**
+     * Converts entity serie to TO for serie.
+     *
+     * @param serie entity serie
+     * @return converted TO for serie
+     */
+    private SerieTO convertSerieToSerieTO(final Serie serie) {
+        final SerieTO serieTO = conversionService.convert(serie, SerieTO.class);
+        if (serieTO != null) {
+            final List<Season> seasons = seasonService.findSeasonsBySerie(serie);
+            int count = 0;
+            int length = 0;
+            for (final Season season : seasons) {
+                count += episodeService.findEpisodesBySeason(season).size();
+                length += episodeService.getTotalLengthBySeason(season).getLength();
+            }
+            serieTO.setSeasonsCount(seasons.size());
+            serieTO.setEpisodesCount(count);
+            serieTO.setTotalLength(new Time(length));
+        }
+        return serieTO;
+    }
 
 }

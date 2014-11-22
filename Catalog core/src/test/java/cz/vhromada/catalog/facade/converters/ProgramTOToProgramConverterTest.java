@@ -16,28 +16,28 @@ import org.junit.Test;
  */
 public class ProgramTOToProgramConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link ProgramTOToProgramConverter} */
-	private ProgramTOToProgramConverter converter;
+    /** Instance of {@link ProgramTOToProgramConverter} */
+    private ProgramTOToProgramConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new ProgramTOToProgramConverter();
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new ProgramTOToProgramConverter();
+    }
 
-	/** Test method for {@link ProgramTOToProgramConverter#convert(ProgramTO)}. */
-	@Test
-	public void testConvert() {
-		final ProgramTO programTO = generate(ProgramTO.class);
-		final Program program = converter.convert(programTO);
-		DeepAsserts.assertNotNull(program);
-		DeepAsserts.assertEquals(programTO, program, "additionalData");
-	}
+    /** Test method for {@link ProgramTOToProgramConverter#convert(ProgramTO)}. */
+    @Test
+    public void testConvert() {
+        final ProgramTO programTO = generate(ProgramTO.class);
+        final Program program = converter.convert(programTO);
+        DeepAsserts.assertNotNull(program);
+        DeepAsserts.assertEquals(programTO, program, "additionalData");
+    }
 
-	/** Test method for {@link ProgramTOToProgramConverter#convert(ProgramTO)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link ProgramTOToProgramConverter#convert(ProgramTO)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
 }

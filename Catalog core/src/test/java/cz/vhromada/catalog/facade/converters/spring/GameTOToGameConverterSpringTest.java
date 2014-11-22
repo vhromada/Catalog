@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class GameTOToGameConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.GameTOToGameConverter#convert(GameTO)}. */
-	@Test
-	public void testConvert() {
-		final GameTO gameTO = objectGenerator.generate(GameTO.class);
-		final Game game = conversionService.convert(gameTO, Game.class);
-		DeepAsserts.assertNotNull(game);
-		DeepAsserts.assertEquals(gameTO, game, "additionalData");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.GameTOToGameConverter#convert(GameTO)}. */
+    @Test
+    public void testConvert() {
+        final GameTO gameTO = objectGenerator.generate(GameTO.class);
+        final Game game = conversionService.convert(gameTO, Game.class);
+        DeepAsserts.assertNotNull(game);
+        DeepAsserts.assertEquals(gameTO, game, "additionalData");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.GameTOToGameConverter#convert(GameTO)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, Game.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.GameTOToGameConverter#convert(GameTO)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, Game.class));
+    }
 
 }

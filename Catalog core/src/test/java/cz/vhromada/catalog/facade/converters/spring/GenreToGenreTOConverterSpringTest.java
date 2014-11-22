@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class GenreToGenreTOConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter#convert(Genre)}. */
-	@Test
-	public void testConvert() {
-		final Genre genre = objectGenerator.generate(Genre.class);
-		final GenreTO genreTO = conversionService.convert(genre, GenreTO.class);
-		DeepAsserts.assertNotNull(genreTO);
-		DeepAsserts.assertEquals(genre, genreTO);
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter#convert(Genre)}. */
+    @Test
+    public void testConvert() {
+        final Genre genre = objectGenerator.generate(Genre.class);
+        final GenreTO genreTO = conversionService.convert(genre, GenreTO.class);
+        DeepAsserts.assertNotNull(genreTO);
+        DeepAsserts.assertEquals(genre, genreTO);
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter#convert(Genre)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, GenreTO.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.GenreToGenreTOConverter#convert(Genre)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, GenreTO.class));
+    }
 
 }

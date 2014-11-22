@@ -29,86 +29,86 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SeasonDAOImplSpringTest {
 
-	/** Instance of {@link EntityManager} */
-	@Autowired
-	private EntityManager entityManager;
+    /** Instance of {@link EntityManager} */
+    @Autowired
+    private EntityManager entityManager;
 
-	/** Instance of {@link SeasonDAO} */
-	@Autowired
-	private SeasonDAO seasonDAO;
+    /** Instance of {@link SeasonDAO} */
+    @Autowired
+    private SeasonDAO seasonDAO;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Restarts sequence. */
-	@Before
-	public void setUp() {
-		entityManager.createNativeQuery("ALTER SEQUENCE seasons_sq RESTART WITH 10").executeUpdate();
-	}
+    /** Restarts sequence. */
+    @Before
+    public void setUp() {
+        entityManager.createNativeQuery("ALTER SEQUENCE seasons_sq RESTART WITH 10").executeUpdate();
+    }
 
-	/** Test method for {@link SeasonDAO#getSeason(Integer)}. */
-	@Test
-	public void testGetSeason() {
-		for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-			final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-			final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-			DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), seasonDAO.getSeason(i + 1));
-		}
+    /** Test method for {@link SeasonDAO#getSeason(Integer)}. */
+    @Test
+    public void testGetSeason() {
+        for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
+            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), seasonDAO.getSeason(i + 1));
+        }
 
-		assertNull(seasonDAO.getSeason(Integer.MAX_VALUE));
+        assertNull(seasonDAO.getSeason(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-	}
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+    }
 
-	/** Test method for {@link SeasonDAO#add(Season)}. */
-	@Test
-	public void testAdd() {
-		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
+    /** Test method for {@link SeasonDAO#add(Season)}. */
+    @Test
+    public void testAdd() {
+        final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
 
-		seasonDAO.add(season);
+        seasonDAO.add(season);
 
-		DeepAsserts.assertNotNull(season.getId());
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, season.getId());
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, season.getPosition());
-		final Season addedSeason = SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1);
-		DeepAsserts.assertEquals(season, addedSeason);
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
-	}
+        DeepAsserts.assertNotNull(season.getId());
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, season.getId());
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, season.getPosition());
+        final Season addedSeason = SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1);
+        DeepAsserts.assertEquals(season, addedSeason);
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
+    }
 
-	/** Test method for {@link SeasonDAO#update(Season)}. */
-	@Test
-	public void testUpdate() {
-		final Season season = SpringEntitiesUtils.updateSeason(1, objectGenerator, entityManager);
+    /** Test method for {@link SeasonDAO#update(Season)}. */
+    @Test
+    public void testUpdate() {
+        final Season season = SpringEntitiesUtils.updateSeason(1, objectGenerator, entityManager);
 
-		seasonDAO.update(season);
+        seasonDAO.update(season);
 
-		final Season updatedSeason = SpringUtils.getSeason(entityManager, 1);
-		DeepAsserts.assertEquals(season, updatedSeason);
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-	}
+        final Season updatedSeason = SpringUtils.getSeason(entityManager, 1);
+        DeepAsserts.assertEquals(season, updatedSeason);
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+    }
 
-	/** Test method for {@link SeasonDAO#remove(Season)}. */
-	@Test
-	public void testRemove() {
-		final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
-		entityManager.persist(season);
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
+    /** Test method for {@link SeasonDAO#remove(Season)}. */
+    @Test
+    public void testRemove() {
+        final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
+        entityManager.persist(season);
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
 
-		seasonDAO.remove(season);
+        seasonDAO.remove(season);
 
-		assertNull(SpringUtils.getSeason(entityManager, season.getId()));
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-	}
+        assertNull(SpringUtils.getSeason(entityManager, season.getId()));
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+    }
 
-	/** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)}. */
-	@Test
-	public void testFindSeasonsBySerie() {
-		for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
-			final Serie serie = SpringUtils.getSerie(entityManager, i);
-			DeepAsserts.assertEquals(SpringEntitiesUtils.getSeasons(i), seasonDAO.findSeasonsBySerie(serie));
-		}
-		DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-	}
+    /** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)}. */
+    @Test
+    public void testFindSeasonsBySerie() {
+        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+            final Serie serie = SpringUtils.getSerie(entityManager, i);
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeasons(i), seasonDAO.findSeasonsBySerie(serie));
+        }
+        DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
+    }
 
 }

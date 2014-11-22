@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class ProgramTOToProgramConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramTOToProgramConverter#convert(ProgramTO)}. */
-	@Test
-	public void testConvert() {
-		final ProgramTO programTO = objectGenerator.generate(ProgramTO.class);
-		final Program program = conversionService.convert(programTO, Program.class);
-		DeepAsserts.assertNotNull(program);
-		DeepAsserts.assertEquals(programTO, program, "additionalData");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramTOToProgramConverter#convert(ProgramTO)}. */
+    @Test
+    public void testConvert() {
+        final ProgramTO programTO = objectGenerator.generate(ProgramTO.class);
+        final Program program = conversionService.convert(programTO, Program.class);
+        DeepAsserts.assertNotNull(program);
+        DeepAsserts.assertEquals(programTO, program, "additionalData");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramTOToProgramConverter#convert(ProgramTO)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, Program.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramTOToProgramConverter#convert(ProgramTO)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, Program.class));
+    }
 
 }

@@ -11,11 +11,11 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ MovieToMovieTOConverterTest.class, MovieTOToMovieConverterTest.class, MediumToIntegerConverterTest.class,
-		IntegerToMediumConverterTest.class, SerieToSerieTOConverterTest.class, SerieTOToSerieConverterTest.class, SeasonToSeasonTOConverterTest.class,
-		SeasonTOToSeasonConverterTest.class, EpisodeToEpisodeTOConverterTest.class, EpisodeTOToEpisodeConverterTest.class, GameToGameTOConverterTest.class,
-		GameTOToGameConverterTest.class, MusicToMusicTOConverterTest.class, MusicTOToMusicConverterTest.class, SongToSongTOConverterTest.class,
-		SongTOToSongConverterTest.class, ProgramToProgramTOConverterTest.class, ProgramTOToProgramConverterTest.class,
-		BookCategoryToBookCategoryTOConverterTest.class, BookCategoryTOToBookCategoryConverterTest.class, BookToBookTOConverterTest.class,
-		BookTOToBookConverterTest.class, GenreToGenreTOConverterTest.class, GenreTOToGenreConverterTest.class, ConvertersSpringSuite.class })
+        IntegerToMediumConverterTest.class, SerieToSerieTOConverterTest.class, SerieTOToSerieConverterTest.class, SeasonToSeasonTOConverterTest.class,
+        SeasonTOToSeasonConverterTest.class, EpisodeToEpisodeTOConverterTest.class, EpisodeTOToEpisodeConverterTest.class, GameToGameTOConverterTest.class,
+        GameTOToGameConverterTest.class, MusicToMusicTOConverterTest.class, MusicTOToMusicConverterTest.class, SongToSongTOConverterTest.class,
+        SongTOToSongConverterTest.class, ProgramToProgramTOConverterTest.class, ProgramTOToProgramConverterTest.class,
+        BookCategoryToBookCategoryTOConverterTest.class, BookCategoryTOToBookCategoryConverterTest.class, BookToBookTOConverterTest.class,
+        BookTOToBookConverterTest.class, GenreToGenreTOConverterTest.class, GenreTOToGenreConverterTest.class, ConvertersSpringSuite.class })
 public class ConvertersSuite {
 }

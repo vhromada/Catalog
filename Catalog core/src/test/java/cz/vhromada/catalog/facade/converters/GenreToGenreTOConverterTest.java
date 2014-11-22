@@ -16,28 +16,28 @@ import org.junit.Test;
  */
 public class GenreToGenreTOConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link GenreToGenreTOConverter} */
-	private GenreToGenreTOConverter converter;
+    /** Instance of {@link GenreToGenreTOConverter} */
+    private GenreToGenreTOConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new GenreToGenreTOConverter();
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new GenreToGenreTOConverter();
+    }
 
-	/** Test method for {@link GenreToGenreTOConverter#convert(Genre)}. */
-	@Test
-	public void testConvert() {
-		final Genre genre = generate(Genre.class);
-		final GenreTO genreTO = converter.convert(genre);
-		DeepAsserts.assertNotNull(genreTO);
-		DeepAsserts.assertEquals(genre, genreTO);
-	}
+    /** Test method for {@link GenreToGenreTOConverter#convert(Genre)}. */
+    @Test
+    public void testConvert() {
+        final Genre genre = generate(Genre.class);
+        final GenreTO genreTO = converter.convert(genre);
+        DeepAsserts.assertNotNull(genreTO);
+        DeepAsserts.assertEquals(genre, genreTO);
+    }
 
-	/** Test method for {@link GenreToGenreTOConverter#convert(Genre)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link GenreToGenreTOConverter#convert(Genre)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
 }

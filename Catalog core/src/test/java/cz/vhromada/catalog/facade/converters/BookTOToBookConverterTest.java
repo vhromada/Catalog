@@ -16,36 +16,36 @@ import org.junit.Test;
  */
 public class BookTOToBookConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link BookTOToBookConverter} */
-	private BookTOToBookConverter converter;
+    /** Instance of {@link BookTOToBookConverter} */
+    private BookTOToBookConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new BookTOToBookConverter();
-		converter.setConverter(new BookCategoryTOToBookCategoryConverter());
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new BookTOToBookConverter();
+        converter.setConverter(new BookCategoryTOToBookCategoryConverter());
+    }
 
-	/** Test method for {@link BookTOToBookConverter#convert(BookTO)}. */
-	@Test
-	public void testConvert() {
-		final BookTO bookTO = generate(BookTO.class);
-		final Book book = converter.convert(bookTO);
-		DeepAsserts.assertNotNull(book);
-		DeepAsserts.assertEquals(bookTO, book, "booksCount");
-	}
+    /** Test method for {@link BookTOToBookConverter#convert(BookTO)}. */
+    @Test
+    public void testConvert() {
+        final BookTO bookTO = generate(BookTO.class);
+        final Book book = converter.convert(bookTO);
+        DeepAsserts.assertNotNull(book);
+        DeepAsserts.assertEquals(bookTO, book, "booksCount");
+    }
 
-	/** Test method for {@link BookTOToBookConverter#convert(BookTO)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link BookTOToBookConverter#convert(BookTO)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
-	/** Test method for {@link BookTOToBookConverter#convert(BookTO)} with not set converter for book category. */
-	@Test(expected = IllegalStateException.class)
-	public void testConvertWithNotSetBookCategoryConverter() {
-		converter.setConverter(null);
-		converter.convert(new BookTO());
-	}
+    /** Test method for {@link BookTOToBookConverter#convert(BookTO)} with not set converter for book category. */
+    @Test(expected = IllegalStateException.class)
+    public void testConvertWithNotSetBookCategoryConverter() {
+        converter.setConverter(null);
+        converter.convert(new BookTO());
+    }
 
 }

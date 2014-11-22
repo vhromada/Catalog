@@ -29,82 +29,82 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SongDAOImplSpringTest {
 
-	/** Instance of {@link EntityManager} */
-	@Autowired
-	private EntityManager entityManager;
+    /** Instance of {@link EntityManager} */
+    @Autowired
+    private EntityManager entityManager;
 
-	/** Instance of {@link SongDAO} */
-	@Autowired
-	private SongDAO songDAO;
+    /** Instance of {@link SongDAO} */
+    @Autowired
+    private SongDAO songDAO;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Restarts sequence. */
-	@Before
-	public void setUp() {
-		entityManager.createNativeQuery("ALTER SEQUENCE songs_sq RESTART WITH 10").executeUpdate();
-	}
+    /** Restarts sequence. */
+    @Before
+    public void setUp() {
+        entityManager.createNativeQuery("ALTER SEQUENCE songs_sq RESTART WITH 10").executeUpdate();
+    }
 
-	/** Test method for {@link SongDAO#getSong(Integer)}. */
-	@Test
-	public void testGetSong() {
-		for (int i = 0; i < SpringUtils.SONGS_COUNT; i++) {
-			final int musicNumber = i / SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
-			final int songNumber = i % SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
-			DeepAsserts.assertEquals(SpringEntitiesUtils.getSong(musicNumber, songNumber), songDAO.getSong(i + 1));
-		}
+    /** Test method for {@link SongDAO#getSong(Integer)}. */
+    @Test
+    public void testGetSong() {
+        for (int i = 0; i < SpringUtils.SONGS_COUNT; i++) {
+            final int musicNumber = i / SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
+            final int songNumber = i % SpringUtils.SONGS_PER_MUSIC_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSong(musicNumber, songNumber), songDAO.getSong(i + 1));
+        }
 
-		assertNull(songDAO.getSong(Integer.MAX_VALUE));
+        assertNull(songDAO.getSong(Integer.MAX_VALUE));
 
-		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
-	}
+        DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+    }
 
-	/** Test method for {@link SongDAO#add(Song)}. */
-	@Test
-	public void testAdd() {
-		final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
+    /** Test method for {@link SongDAO#add(Song)}. */
+    @Test
+    public void testAdd() {
+        final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
 
-		songDAO.add(song);
+        songDAO.add(song);
 
-		DeepAsserts.assertNotNull(song.getId());
-		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, song.getId());
-		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, song.getPosition());
-		final Song addedSong = SpringUtils.getSong(entityManager, SpringUtils.SONGS_COUNT + 1);
-		DeepAsserts.assertEquals(song, addedSong);
-		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
-	}
+        DeepAsserts.assertNotNull(song.getId());
+        DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, song.getId());
+        DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, song.getPosition());
+        final Song addedSong = SpringUtils.getSong(entityManager, SpringUtils.SONGS_COUNT + 1);
+        DeepAsserts.assertEquals(song, addedSong);
+        DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
+    }
 
-	/** Test method for {@link SongDAO#update(Song)}. */
-	@Test
-	public void testUpdate() {
-		final Song song = SpringEntitiesUtils.updateSong(1, objectGenerator, entityManager);
+    /** Test method for {@link SongDAO#update(Song)}. */
+    @Test
+    public void testUpdate() {
+        final Song song = SpringEntitiesUtils.updateSong(1, objectGenerator, entityManager);
 
-		songDAO.update(song);
+        songDAO.update(song);
 
-		final Song updatedSong = SpringUtils.getSong(entityManager, 1);
-		DeepAsserts.assertEquals(song, updatedSong);
-		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
-	}
+        final Song updatedSong = SpringUtils.getSong(entityManager, 1);
+        DeepAsserts.assertEquals(song, updatedSong);
+        DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+    }
 
-	/** Test method for {@link SongDAO#remove(Song)}. */
-	@Test
-	public void testRemove() {
-		songDAO.remove(SpringUtils.getSong(entityManager, 1));
+    /** Test method for {@link SongDAO#remove(Song)}. */
+    @Test
+    public void testRemove() {
+        songDAO.remove(SpringUtils.getSong(entityManager, 1));
 
-		assertNull(SpringUtils.getSong(entityManager, 1));
-		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT - 1, SpringUtils.getSongsCount(entityManager));
-	}
+        assertNull(SpringUtils.getSong(entityManager, 1));
+        DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT - 1, SpringUtils.getSongsCount(entityManager));
+    }
 
-	/** Test method for {@link SongDAO#findSongsByMusic(Music)}. */
-	@Test
-	public void testFindSongsByMusic() {
-		for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
-			final Music music = SpringUtils.getMusic(entityManager, i);
-			DeepAsserts.assertEquals(SpringEntitiesUtils.getSongs(i), songDAO.findSongsByMusic(music));
-		}
-		DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
-	}
+    /** Test method for {@link SongDAO#findSongsByMusic(Music)}. */
+    @Test
+    public void testFindSongsByMusic() {
+        for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
+            final Music music = SpringUtils.getMusic(entityManager, i);
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSongs(i), songDAO.findSongsByMusic(music));
+        }
+        DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
+    }
 
 }

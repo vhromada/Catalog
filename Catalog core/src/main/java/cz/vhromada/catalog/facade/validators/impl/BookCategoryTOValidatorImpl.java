@@ -13,62 +13,62 @@ import org.springframework.stereotype.Component;
 @Component("bookCategoryTOValidator")
 public class BookCategoryTOValidatorImpl implements BookCategoryTOValidator {
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 */
-	@Override
-	public void validateNewBookCategoryTO(final BookCategoryTO bookCategory) {
-		validateBookCategory(bookCategory);
-		Validators.validateNull(bookCategory.getId(), "ID");
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     */
+    @Override
+    public void validateNewBookCategoryTO(final BookCategoryTO bookCategory) {
+        validateBookCategoryTO(bookCategory);
+        Validators.validateNull(bookCategory.getId(), "ID");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 */
-	@Override
-	public void validateExistingBookCategoryTO(final BookCategoryTO bookCategory) {
-		validateBookCategory(bookCategory);
-		Validators.validateNotNull(bookCategory.getId(), "ID");
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     */
+    @Override
+    public void validateExistingBookCategoryTO(final BookCategoryTO bookCategory) {
+        validateBookCategoryTO(bookCategory);
+        Validators.validateNotNull(bookCategory.getId(), "ID");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  {@inheritDoc}
-	 */
-	@Override
-	public void validateBookCategoryTOWithId(final BookCategoryTO bookCategory) {
-		Validators.validateArgumentNotNull(bookCategory, "TO for book category");
-		Validators.validateNotNull(bookCategory.getId(), "ID");
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  {@inheritDoc}
+     */
+    @Override
+    public void validateBookCategoryTOWithId(final BookCategoryTO bookCategory) {
+        Validators.validateArgumentNotNull(bookCategory, "TO for book category");
+        Validators.validateNotNull(bookCategory.getId(), "ID");
+    }
 
-	/**
-	 * Validates TO for book category.
-	 *
-	 * @param bookCategory validating TO for book category
-	 * @throws IllegalArgumentException if TO for book category is null
-	 * @throws cz.vhromada.validators.exceptions.ValidationException
-	 *                                  if name is null
-	 *                                  or name is empty string
-	 *                                  or count of books is negative number
-	 *                                  or note is null
-	 */
-	private void validateBookCategory(final BookCategoryTO bookCategory) {
-		Validators.validateArgumentNotNull(bookCategory, "TO for book category");
-		Validators.validateNotNull(bookCategory.getName(), "Name");
-		Validators.validateNotEmptyString(bookCategory.getName(), "Name");
-		Validators.validateNotNegativeNumber(bookCategory.getBooksCount(), "Count of books");
-		Validators.validateNotNull(bookCategory.getNote(), "Note");
-	}
+    /**
+     * Validates TO for book category.
+     *
+     * @param bookCategory validating TO for book category
+     * @throws IllegalArgumentException if TO for book category is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException
+     *                                  if name is null
+     *                                  or name is empty string
+     *                                  or count of books is negative number
+     *                                  or note is null
+     */
+    private static void validateBookCategoryTO(final BookCategoryTO bookCategory) {
+        Validators.validateArgumentNotNull(bookCategory, "TO for book category");
+        Validators.validateNotNull(bookCategory.getName(), "Name");
+        Validators.validateNotEmptyString(bookCategory.getName(), "Name");
+        Validators.validateNotNegativeNumber(bookCategory.getBooksCount(), "Count of books");
+        Validators.validateNotNull(bookCategory.getNote(), "Note");
+    }
 
 }

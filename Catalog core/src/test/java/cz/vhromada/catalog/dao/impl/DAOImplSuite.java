@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ MovieDAOImplTest.class, SerieDAOImplTest.class, SeasonDAOImplTest.class, EpisodeDAOImplTest.class, GameDAOImplTest.class,
-		MusicDAOImplTest.class, SongDAOImplTest.class, ProgramDAOImplTest.class, BookCategoryDAOImplTest.class, BookDAOImplTest.class, GenreDAOImplTest.class,
-		DAOImplSpringSuite.class })
+        MusicDAOImplTest.class, SongDAOImplTest.class, ProgramDAOImplTest.class, BookCategoryDAOImplTest.class, BookDAOImplTest.class, GenreDAOImplTest.class,
+        DAOImplSpringSuite.class })
 public class DAOImplSuite {
 }

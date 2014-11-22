@@ -20,329 +20,325 @@ import cz.vhromada.validators.Validators;
  */
 public class SongInfoDialog extends JDialog {
 
-	/** SerialVersionUID */
-	private static final long serialVersionUID = 1L;
+    /** Horizontal time size */
+    public static final int HORIZONTAL_TIME_SIZE = 60;
+    /** SerialVersionUID */
+    private static final long serialVersionUID = 1L;
+    /** Horizontal label size in dialog */
+    private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
+    /** Horizontal data size in dialog */
+    private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
+    /** Horizontal button size */
+    private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-	/** Horizontal label size in dialog */
-	private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
+    /** Horizontal button gap size */
+    private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-	/** Horizontal data size in dialog */
-	private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
+    /** Horizontal gap size */
+    private static final int HORIZONTAL_GAP_SIZE = 20;
 
-	/** Horizontal time size */
-	public static final int HORIZONTAL_TIME_SIZE = 60;
+    /** Vertical gap size */
+    private static final int VERTICAL_GAP_SIZE = 10;
 
-	/** Horizontal button size */
-	private static final int HORIZONTAL_BUTTON_SIZE = 96;
+    /** Vertical long gap size */
+    private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-	/** Horizontal button gap size */
-	private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
+    /** Return status */
+    private DialogResult returnStatus;
 
-	/** Horizontal gap size */
-	private static final int HORIZONTAL_GAP_SIZE = 20;
+    /** TO for song */
+    private SongTO song;
 
-	/** Vertical gap size */
-	private static final int VERTICAL_GAP_SIZE = 10;
+    /** Label for name */
+    private JLabel nameLabel = new JLabel("Name");
 
-	/** Vertical long gap size */
-	private static final int VERTICAL_LONG_GAP_SIZE = 20;
+    /** Text field for name */
+    private JTextField nameData = new JTextField();
 
-	/** Return status */
-	private DialogResult returnStatus;
+    /** Label for length */
+    private JLabel lengthLabel = new JLabel("Length");
 
-	/** TO for song */
-	private SongTO song;
+    /** Spinner for length - hours */
+    private JSpinner lengthHoursData = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
 
-	/** Label for name */
-	private JLabel nameLabel = new JLabel("Name");
+    /** Spinner for length - minutes */
+    private JSpinner lengthMinutesData = new JSpinner(new SpinnerNumberModel(0, 0, 59, 1));
 
-	/** Text field for name */
-	private JTextField nameData = new JTextField();
+    /** Spinner for length - seconds */
+    private JSpinner lengthSecondsData = new JSpinner(new SpinnerNumberModel(0, 0, 59, 1));
 
-	/** Label for length */
-	private JLabel lengthLabel = new JLabel("Length");
+    /** Label for note */
+    private JLabel noteLabel = new JLabel("Note");
 
-	/** Spinner for length - hours */
-	private JSpinner lengthHoursData = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
+    /** Text field for note */
+    private JTextField noteData = new JTextField();
 
-	/** Spinner for length - minutes */
-	private JSpinner lengthMinutesData = new JSpinner(new SpinnerNumberModel(0, 0, 59, 1));
+    /** Button OK */
+    private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
 
-	/** Spinner for length - seconds */
-	private JSpinner lengthSecondsData = new JSpinner(new SpinnerNumberModel(0, 0, 59, 1));
+    /** Button Cancel */
+    private JButton cancelButton = new JButton("Cancel", Pictures.getPicture("cancel"));
 
-	/** Label for note */
-	private JLabel noteLabel = new JLabel("Note");
+    /** Creates a new instance of SongInfoDialog. */
+    public SongInfoDialog() {
+        this("Add", "add");
 
-	/** Text field for note */
-	private JTextField noteData = new JTextField();
+        nameData.requestFocusInWindow();
+    }
 
-	/** Button OK */
-	private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+    /**
+     * Creates a new instance of SongInfoDialog.
+     *
+     * @param song TO for song
+     * @throws IllegalArgumentException if TO for song is null
+     */
+    public SongInfoDialog(final SongTO song) {
+        this("Update", "update");
 
-	/** Button Cancel */
-	private JButton cancelButton = new JButton("Cancel", Pictures.getPicture("cancel"));
+        Validators.validateArgumentNotNull(song, "TO for song");
 
-	/** Creates a new instance of SongInfoDialog. */
-	public SongInfoDialog() {
-		this("Add", "add");
+        this.song = song;
+        this.nameData.setText(song.getName());
+        final Time length = new Time(song.getLength());
+        this.lengthHoursData.setValue(length.getData(Time.TimeData.HOUR));
+        this.lengthMinutesData.setValue(length.getData(Time.TimeData.MINUTE));
+        this.lengthSecondsData.setValue(length.getData(Time.TimeData.SECOND));
+        this.noteData.setText(song.getNote());
+        this.okButton.requestFocusInWindow();
+    }
 
-		nameData.requestFocusInWindow();
-	}
+    /**
+     * Creates a new instance of SongInfoDialog.
+     *
+     * @param name    name
+     * @param picture picture
+     */
+    private SongInfoDialog(final String name, final String picture) {
+        super(new JFrame(), name, true);
 
-	/**
-	 * Creates a new instance of SongInfoDialog.
-	 *
-	 * @param song TO for song
-	 * @throws IllegalArgumentException if TO for song is null
-	 */
-	public SongInfoDialog(final SongTO song) {
-		this("Update", "update");
+        initComponents();
+        setIconImage(Pictures.getPicture(picture).getImage());
+    }
 
-		Validators.validateArgumentNotNull(song, "TO for song");
+    /**
+     * Returns return status.
+     *
+     * @return return status
+     */
+    public DialogResult getReturnStatus() {
+        return returnStatus;
+    }
 
-		this.song = song;
-		this.nameData.setText(song.getName());
-		final Time length = new Time(song.getLength());
-		this.lengthHoursData.setValue(length.getData(Time.TimeData.HOUR));
-		this.lengthMinutesData.setValue(length.getData(Time.TimeData.MINUTE));
-		this.lengthSecondsData.setValue(length.getData(Time.TimeData.SECOND));
-		this.noteData.setText(song.getNote());
-		this.okButton.requestFocusInWindow();
-	}
+    /**
+     * Returns TO for song.
+     *
+     * @return TO for song
+     * @throws IllegalStateException if TO for hasn't been set
+     */
+    public SongTO getSongTO() {
+        Validators.validateFieldNotNull(song, "TO for song");
 
-	/**
-	 * Creates a new instance of SongInfoDialog.
-	 *
-	 * @param name    name
-	 * @param picture picture
-	 */
-	private SongInfoDialog(final String name, final String picture) {
-		super(new JFrame(), name, true);
+        return song;
+    }
 
-		initComponents();
-		setIconImage(Pictures.getPicture(picture).getImage());
-	}
+    /** Initializes components. */
+    private void initComponents() {
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
-	/**
-	 * Returns return status.
-	 *
-	 * @return return status
-	 */
-	public DialogResult getReturnStatus() {
-		return returnStatus;
-	}
+        initLabelComponent(nameLabel, nameData);
+        initLabelComponent(noteLabel, noteData);
 
-	/**
-	 * Returns TO for song.
-	 *
-	 * @return TO for song
-	 * @throws IllegalStateException if TO for hasn't been set
-	 */
-	public SongTO getSongTO() {
-		Validators.validateFieldNotNull(song, "TO for song");
+        nameData.getDocument().addDocumentListener(new InputValidator(okButton) {
 
-		return song;
-	}
+            @Override
+            public boolean isInputValid() {
+                return SongInfoDialog.this.isInputValid();
+            }
 
-	/** Initializes components. */
-	private void initComponents() {
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setResizable(false);
+        });
+        lengthLabel.setFocusable(false);
 
-		initLabelComponent(nameLabel, nameData);
-		initLabelComponent(noteLabel, noteData);
+        okButton.setEnabled(false);
+        okButton.addActionListener(new ActionListener() {
 
-		nameData.getDocument().addDocumentListener(new InputValidator(okButton) {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                okAction();
+            }
 
-			@Override
-			public boolean isInputValid() {
-				return SongInfoDialog.this.isInputValid();
-			}
+        });
 
-		});
-		lengthLabel.setFocusable(false);
+        cancelButton.addActionListener(new ActionListener() {
 
-		okButton.setEnabled(false);
-		okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                cancelAction();
+            }
 
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				okAction();
-			}
+        });
 
-		});
+        final GroupLayout layout = new GroupLayout(getRootPane());
+        getRootPane().setLayout(layout);
+        layout.setHorizontalGroup(createHorizontalLayout(layout));
+        layout.setVerticalGroup(createVerticalLayout(layout));
 
-		cancelButton.addActionListener(new ActionListener() {
+        pack();
+        setLocationRelativeTo(getRootPane());
+    }
 
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				cancelAction();
-			}
+    /**
+     * Initializes label with component.
+     *
+     * @param label     label
+     * @param component component
+     */
+    private static void initLabelComponent(final JLabel label, final JComponent component) {
+        label.setLabelFor(component);
+        label.setFocusable(false);
+    }
 
-		});
+    /** Performs action for button OK. */
+    private void okAction() {
+        returnStatus = DialogResult.OK;
+        if (song == null) {
+            song = new SongTO();
+        }
+        song.setName(nameData.getText());
+        final int hours = (Integer) lengthHoursData.getValue();
+        final int minutes = (Integer) lengthMinutesData.getValue();
+        final int seconds = (Integer) lengthSecondsData.getValue();
+        song.setLength(3600 * hours + 60 * minutes + seconds);
+        song.setNote(noteData.getText());
+        close();
+    }
 
-		final GroupLayout layout = new GroupLayout(getRootPane());
-		getRootPane().setLayout(layout);
-		layout.setHorizontalGroup(createHorizontalLayout(layout));
-		layout.setVerticalGroup(createVerticalLayout(layout));
+    /** Performs action for button Cancel. */
+    private void cancelAction() {
+        returnStatus = DialogResult.CANCEL;
+        song = null;
+        close();
+    }
 
-		pack();
-		setLocationRelativeTo(getRootPane());
-	}
+    /**
+     * Returns horizontal layout of components.
+     *
+     * @param layout layout
+     * @return horizontal layout of components
+     */
+    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
+        final GroupLayout.Group lengthData = layout.createSequentialGroup()
+                .addComponent(lengthHoursData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE)
+                .addGap(10)
+                .addComponent(lengthMinutesData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE)
+                .addGap(10)
+                .addComponent(lengthSecondsData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE);
+        final GroupLayout.Group length = layout.createSequentialGroup()
+                .addComponent(lengthLabel, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
+                .addGap(10)
+                .addGroup(lengthData);
 
-	/**
-	 * Initializes label with component.
-	 *
-	 * @param label     label
-	 * @param component component
-	 */
-	private void initLabelComponent(final JLabel label, final JComponent component) {
-		label.setLabelFor(component);
-		label.setFocusable(false);
-	}
-
-	/** Performs action for button OK. */
-	private void okAction() {
-		returnStatus = DialogResult.OK;
-		if (song == null) {
-			song = new SongTO();
-		}
-		song.setName(nameData.getText());
-		final int hours = (Integer) lengthHoursData.getValue();
-		final int minutes = (Integer) lengthMinutesData.getValue();
-		final int seconds = (Integer) lengthSecondsData.getValue();
-		song.setLength(3600 * hours + 60 * minutes + seconds);
-		song.setNote(noteData.getText());
-		close();
-	}
-
-	/** Performs action for button Cancel. */
-	private void cancelAction() {
-		returnStatus = DialogResult.CANCEL;
-		song = null;
-		close();
-	}
-
-	/**
-	 * Returns horizontal layout of components.
-	 *
-	 * @param layout layout
-	 * @return horizontal layout of components
-	 */
-	private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-		final GroupLayout.Group lengthData = layout.createSequentialGroup()
-				.addComponent(lengthHoursData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE)
-				.addGap(10)
-				.addComponent(lengthMinutesData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE)
-				.addGap(10)
-				.addComponent(lengthSecondsData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE);
-		final GroupLayout.Group length = layout.createSequentialGroup()
-				.addComponent(lengthLabel, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
-				.addGap(10)
-				.addGroup(lengthData);
-
-		final GroupLayout.Group buttons = layout.createSequentialGroup()
-				.addGap(HORIZONTAL_BUTTON_GAP_SIZE)
-				.addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-				.addGap(54)
-				.addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-				.addGap(HORIZONTAL_BUTTON_GAP_SIZE);
+        final GroupLayout.Group buttons = layout.createSequentialGroup()
+                .addGap(HORIZONTAL_BUTTON_GAP_SIZE)
+                .addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
+                .addGap(54)
+                .addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
+                .addGap(HORIZONTAL_BUTTON_GAP_SIZE);
 
 
-		final GroupLayout.Group components = layout.createParallelGroup()
-				.addGroup(createHorizontalComponents(layout, nameLabel, nameData))
-				.addGroup(length)
-				.addGroup(createHorizontalComponents(layout, noteLabel, noteData))
-				.addGroup(buttons);
+        final GroupLayout.Group components = layout.createParallelGroup()
+                .addGroup(createHorizontalComponents(layout, nameLabel, nameData))
+                .addGroup(length)
+                .addGroup(createHorizontalComponents(layout, noteLabel, noteData))
+                .addGroup(buttons);
 
-		return layout.createSequentialGroup()
-				.addGap(HORIZONTAL_GAP_SIZE)
-				.addGroup(components)
-				.addGap(HORIZONTAL_GAP_SIZE);
-	}
+        return layout.createSequentialGroup()
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addGroup(components)
+                .addGap(HORIZONTAL_GAP_SIZE);
+    }
 
-	/**
-	 * Returns horizontal layout for label component with data component.
-	 *
-	 * @param layout layout
-	 * @param label  label component
-	 * @param data   data component
-	 * @return horizontal layout for label component with data component
-	 */
-	private static GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-		return layout.createSequentialGroup()
-				.addComponent(label, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
-				.addGap(10)
-				.addComponent(data, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
-	}
+    /**
+     * Returns horizontal layout for label component with data component.
+     *
+     * @param layout layout
+     * @param label  label component
+     * @param data   data component
+     * @return horizontal layout for label component with data component
+     */
+    private static GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
+        return layout.createSequentialGroup()
+                .addComponent(label, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
+                .addGap(10)
+                .addComponent(data, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
+    }
 
-	/**
-	 * Returns vertical layout of components.
-	 *
-	 * @param layout layout
-	 * @return vertical layout of components
-	 */
-	private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-		final GroupLayout.Group length = layout.createParallelGroup()
-				.addComponent(lengthLabel, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-				.addComponent(lengthHoursData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-				.addComponent(lengthMinutesData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-				.addComponent(lengthSecondsData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+    /**
+     * Returns vertical layout of components.
+     *
+     * @param layout layout
+     * @return vertical layout of components
+     */
+    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
+        final GroupLayout.Group length = layout.createParallelGroup()
+                .addComponent(lengthLabel, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(lengthHoursData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(lengthMinutesData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(lengthSecondsData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
 
-		final GroupLayout.Group buttons = layout.createParallelGroup()
-				.addComponent(okButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-						CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
-				.addComponent(cancelButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-						CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
+        final GroupLayout.Group buttons = layout.createParallelGroup()
+                .addComponent(okButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+                .addComponent(cancelButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
 
-		return layout.createSequentialGroup()
-				.addGap(VERTICAL_LONG_GAP_SIZE)
-				.addGroup(createVerticalComponents(layout, nameLabel, nameData))
-				.addGap(VERTICAL_GAP_SIZE)
-				.addGroup(length)
-				.addGap(VERTICAL_GAP_SIZE)
-				.addGroup(createVerticalComponents(layout, noteLabel, noteData))
-				.addGap(VERTICAL_LONG_GAP_SIZE)
-				.addGroup(buttons)
-				.addGap(VERTICAL_LONG_GAP_SIZE);
-	}
+        return layout.createSequentialGroup()
+                .addGap(VERTICAL_LONG_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, nameLabel, nameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(length)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
+                .addGap(VERTICAL_LONG_GAP_SIZE)
+                .addGroup(buttons)
+                .addGap(VERTICAL_LONG_GAP_SIZE);
+    }
 
-	/**
-	 * Returns vertical layout for label component with data component.
-	 *
-	 * @param layout layout
-	 * @param label  label component
-	 * @param data   data component
-	 * @return vertical layout for label component with data component
-	 */
-	private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-		return layout.createParallelGroup()
-				.addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-				.addGap(VERTICAL_GAP_SIZE)
-				.addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
-	}
+    /**
+     * Returns vertical layout for label component with data component.
+     *
+     * @param layout layout
+     * @param label  label component
+     * @param data   data component
+     * @return vertical layout for label component with data component
+     */
+    private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
+        return layout.createParallelGroup()
+                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+    }
 
 
-	/**
-	 * Returns true if input is valid: name isn't empty string.
-	 *
-	 * @return true if input is valid: name isn't empty string
-	 */
-	private boolean isInputValid() {
-		return !nameData.getText().isEmpty();
-	}
+    /**
+     * Returns true if input is valid: name isn't empty string.
+     *
+     * @return true if input is valid: name isn't empty string
+     */
+    private boolean isInputValid() {
+        return !nameData.getText().isEmpty();
+    }
 
-	/** Closes dialog. */
-	private void close() {
-		setVisible(false);
-		dispose();
-	}
+    /** Closes dialog. */
+    private void close() {
+        setVisible(false);
+        dispose();
+    }
 
 }

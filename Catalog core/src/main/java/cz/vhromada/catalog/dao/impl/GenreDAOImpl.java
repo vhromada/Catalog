@@ -21,135 +21,135 @@ import org.springframework.stereotype.Component;
 @Component("genreDAO")
 public class GenreDAOImpl implements GenreDAO {
 
-	/** Entity manager field */
-	private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+    /** Entity manager field */
+    private static final String ENTITY_MANAGER_FIELD = "Entity manager";
 
-	/** Genre argument */
-	private static final String GENRE_ARGUMENT = "Genre";
+    /** Genre argument */
+    private static final String GENRE_ARGUMENT = "Genre";
 
-	/** ID argument */
-	private static final String ID_ARGUMENT = "ID";
+    /** ID argument */
+    private static final String ID_ARGUMENT = "ID";
 
-	/** Message for {@link DataStorageException} */
-	private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
+    /** Message for {@link DataStorageException} */
+    private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
-	/** Entity manager */
-	@Autowired
-	private EntityManager entityManager;
+    /** Entity manager */
+    @Autowired
+    private EntityManager entityManager;
 
-	/**
-	 * Returns entity manager.
-	 *
-	 * @return entity manager
-	 */
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
+    /**
+     * Returns entity manager.
+     *
+     * @return entity manager
+     */
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 
-	/**
-	 * Sets a new value to entity manager.
-	 *
-	 * @param entityManager new value
-	 */
-	public void setEntityManager(final EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+    /**
+     * Sets a new value to entity manager.
+     *
+     * @param entityManager new value
+     */
+    public void setEntityManager(final EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException if entity manager isn't set
-	 * @throws DataStorageException  {@inheritDoc}
-	 */
-	@Override
-	public List<Genre> getGenres() {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException if entity manager isn't set
+     * @throws DataStorageException  {@inheritDoc}
+     */
+    @Override
+    public List<Genre> getGenres() {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
 
-		try {
-			return new ArrayList<>(entityManager.createNamedQuery(Genre.SELECT_GENRES, Genre.class).getResultList());
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            return new ArrayList<>(entityManager.createNamedQuery(Genre.SELECT_GENRES, Genre.class).getResultList());
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public Genre getGenre(final Integer id) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(id, ID_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public Genre getGenre(final Integer id) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
-		try {
-			return entityManager.find(Genre.class, id);
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            return entityManager.find(Genre.class, id);
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public void add(final Genre genre) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public void add(final Genre genre) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
-		try {
-			entityManager.persist(genre);
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            entityManager.persist(genre);
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public void update(final Genre genre) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public void update(final Genre genre) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
-		try {
-			entityManager.merge(genre);
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            entityManager.merge(genre);
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException    if entity manager isn't set
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws DataStorageException     {@inheritDoc}
-	 */
-	@Override
-	public void remove(final Genre genre) {
-		Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-		Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException    if entity manager isn't set
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws DataStorageException     {@inheritDoc}
+     */
+    @Override
+    public void remove(final Genre genre) {
+        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
+        Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
-		try {
-			if (entityManager.contains(genre)) {
-				entityManager.remove(genre);
-			} else {
-				entityManager.remove(entityManager.getReference(Genre.class, genre.getId()));
-			}
-		} catch (final PersistenceException ex) {
-			throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-		}
-	}
+        try {
+            if (entityManager.contains(genre)) {
+                entityManager.remove(genre);
+            } else {
+                entityManager.remove(entityManager.getReference(Genre.class, genre.getId()));
+            }
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
 
 }

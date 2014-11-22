@@ -20,61 +20,61 @@ import org.springframework.stereotype.Component;
 @Component("serieTOToSerieConverter")
 public class SerieTOToSerieConverter implements Converter<SerieTO, Serie> {
 
-	/** Converter from TO for genre to entity genre */
-	@Autowired
-	private GenreTOToGenreConverter converter;
+    /** Converter from TO for genre to entity genre */
+    @Autowired
+    private GenreTOToGenreConverter converter;
 
-	/**
-	 * Returns converter from TO for genre to entity genre.
-	 *
-	 * @return converter from TO for genre to entity genre
-	 */
-	public GenreTOToGenreConverter getConverter() {
-		return converter;
-	}
+    /**
+     * Returns converter from TO for genre to entity genre.
+     *
+     * @return converter from TO for genre to entity genre
+     */
+    public GenreTOToGenreConverter getConverter() {
+        return converter;
+    }
 
-	/**
-	 * Sets a new value to converter from TO for genre to entity genre.
-	 *
-	 * @param converter new value
-	 */
-	public void setConverter(final GenreTOToGenreConverter converter) {
-		this.converter = converter;
-	}
+    /**
+     * Sets a new value to converter from TO for genre to entity genre.
+     *
+     * @param converter new value
+     */
+    public void setConverter(final GenreTOToGenreConverter converter) {
+        this.converter = converter;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws IllegalStateException    if converter from TO for genre to entity genre isn't set
-	 */
-	@Override
-	public Serie convert(final SerieTO source) {
-		Validators.validateFieldNotNull(converter, "Converter");
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws IllegalStateException    if converter from TO for genre to entity genre isn't set
+     */
+    @Override
+    public Serie convert(final SerieTO source) {
+        Validators.validateFieldNotNull(converter, "Converter");
 
-		if (source == null) {
-			return null;
-		}
+        if (source == null) {
+            return null;
+        }
 
-		final Serie serie = new Serie();
-		serie.setId(source.getId());
-		serie.setCzechName(source.getCzechName());
-		serie.setOriginalName(source.getOriginalName());
-		serie.setCsfd(source.getCsfd());
-		serie.setImdbCode(source.getImdbCode());
-		serie.setWikiEn(source.getWikiEn());
-		serie.setWikiCz(source.getWikiCz());
-		serie.setPicture(source.getPicture());
-		serie.setNote(source.getNote());
-		serie.setPosition(source.getPosition());
-		final List<Genre> genres = new ArrayList<>();
-		if (source.getGenres() != null) {
-			for (GenreTO genre : source.getGenres()) {
-				genres.add(converter.convert(genre));
-			}
-		}
-		serie.setGenres(genres);
-		return serie;
-	}
+        final Serie serie = new Serie();
+        serie.setId(source.getId());
+        serie.setCzechName(source.getCzechName());
+        serie.setOriginalName(source.getOriginalName());
+        serie.setCsfd(source.getCsfd());
+        serie.setImdbCode(source.getImdbCode());
+        serie.setWikiEn(source.getWikiEn());
+        serie.setWikiCz(source.getWikiCz());
+        serie.setPicture(source.getPicture());
+        serie.setNote(source.getNote());
+        serie.setPosition(source.getPosition());
+        final List<Genre> genres = new ArrayList<>();
+        if (source.getGenres() != null) {
+            for (final GenreTO genre : source.getGenres()) {
+                genres.add(converter.convert(genre));
+            }
+        }
+        serie.setGenres(genres);
+        return serie;
+    }
 
 }

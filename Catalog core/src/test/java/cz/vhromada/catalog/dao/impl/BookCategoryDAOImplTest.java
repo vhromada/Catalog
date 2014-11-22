@@ -42,298 +42,298 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class BookCategoryDAOImplTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link EntityManager} */
-	@Mock
-	private EntityManager entityManager;
+    /** Instance of {@link EntityManager} */
+    @Mock
+    private EntityManager entityManager;
 
-	/** Query for book categories */
-	@Mock
-	private TypedQuery<BookCategory> bookCategoriesQuery;
+    /** Query for book categories */
+    @Mock
+    private TypedQuery<BookCategory> bookCategoriesQuery;
 
-	/** Instance of {@link BookCategoryDAO} */
-	@InjectMocks
-	private BookCategoryDAO bookCategoryDAO = new BookCategoryDAOImpl();
+    /** Instance of {@link BookCategoryDAO} */
+    @InjectMocks
+    private BookCategoryDAO bookCategoryDAO = new BookCategoryDAOImpl();
 
-	/** Test method for {@link BookCategoryDAO#getBookCategories()}. */
-	@Test
-	public void testGetBookCategories() {
-		final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
-		when(entityManager.createNamedQuery(anyString(), eq(BookCategory.class))).thenReturn(bookCategoriesQuery);
-		when(bookCategoriesQuery.getResultList()).thenReturn(bookCategories);
+    /** Test method for {@link BookCategoryDAO#getBookCategories()}. */
+    @Test
+    public void testGetBookCategories() {
+        final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
+        when(entityManager.createNamedQuery(anyString(), eq(BookCategory.class))).thenReturn(bookCategoriesQuery);
+        when(bookCategoriesQuery.getResultList()).thenReturn(bookCategories);
 
-		DeepAsserts.assertEquals(bookCategories, bookCategoryDAO.getBookCategories());
+        DeepAsserts.assertEquals(bookCategories, bookCategoryDAO.getBookCategories());
 
-		verify(entityManager).createNamedQuery(BookCategory.SELECT_BOOK_CATEGORIES, BookCategory.class);
-		verify(bookCategoriesQuery).getResultList();
-		verifyNoMoreInteractions(entityManager, bookCategoriesQuery);
-	}
+        verify(entityManager).createNamedQuery(BookCategory.SELECT_BOOK_CATEGORIES, BookCategory.class);
+        verify(bookCategoriesQuery).getResultList();
+        verifyNoMoreInteractions(entityManager, bookCategoriesQuery);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#getBookCategories()} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testGetBookCategoriesWithNotSetEntityManager() {
-		((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
-		bookCategoryDAO.getBookCategories();
-	}
+    /** Test method for {@link BookCategoryDAOImpl#getBookCategories()} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testGetBookCategoriesWithNotSetEntityManager() {
+        ((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
+        bookCategoryDAO.getBookCategories();
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#getBookCategories()} with exception in persistence. */
-	@Test
-	public void testGetBookCategoriesWithPersistenceException() {
-		doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(BookCategory.class));
+    /** Test method for {@link BookCategoryDAOImpl#getBookCategories()} with exception in persistence. */
+    @Test
+    public void testGetBookCategoriesWithPersistenceException() {
+        doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(BookCategory.class));
 
-		try {
-			bookCategoryDAO.getBookCategories();
-			fail("Can't get book categories with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            bookCategoryDAO.getBookCategories();
+            fail("Can't get book categories with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).createNamedQuery(BookCategory.SELECT_BOOK_CATEGORIES, BookCategory.class);
-		verifyNoMoreInteractions(entityManager);
-		verifyZeroInteractions(bookCategoriesQuery);
-	}
+        verify(entityManager).createNamedQuery(BookCategory.SELECT_BOOK_CATEGORIES, BookCategory.class);
+        verifyNoMoreInteractions(entityManager);
+        verifyZeroInteractions(bookCategoriesQuery);
+    }
 
-	/** Test method for {@link BookCategoryDAO#getBookCategory(Integer)} with existing bookCategory. */
-	@Test
-	public void testGetBookCategoryWithExistingBookCategory() {
-		final int id = generate(Integer.class);
-		final BookCategory bookCategory = mock(BookCategory.class);
-		when(entityManager.find(eq(BookCategory.class), anyInt())).thenReturn(bookCategory);
+    /** Test method for {@link BookCategoryDAO#getBookCategory(Integer)} with existing bookCategory. */
+    @Test
+    public void testGetBookCategoryWithExistingBookCategory() {
+        final int id = generate(Integer.class);
+        final BookCategory bookCategory = mock(BookCategory.class);
+        when(entityManager.find(eq(BookCategory.class), anyInt())).thenReturn(bookCategory);
 
-		DeepAsserts.assertEquals(bookCategory, bookCategoryDAO.getBookCategory(id));
+        DeepAsserts.assertEquals(bookCategory, bookCategoryDAO.getBookCategory(id));
 
-		verify(entityManager).find(BookCategory.class, id);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(BookCategory.class, id);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAO#getBookCategory(Integer)} with not existing bookCategory. */
-	@Test
-	public void testGetBookCategoryWithNotExistingBookCategory() {
-		when(entityManager.find(eq(BookCategory.class), anyInt())).thenReturn(null);
+    /** Test method for {@link BookCategoryDAO#getBookCategory(Integer)} with not existing bookCategory. */
+    @Test
+    public void testGetBookCategoryWithNotExistingBookCategory() {
+        when(entityManager.find(eq(BookCategory.class), anyInt())).thenReturn(null);
 
-		assertNull(bookCategoryDAO.getBookCategory(Integer.MAX_VALUE));
+        assertNull(bookCategoryDAO.getBookCategory(Integer.MAX_VALUE));
 
-		verify(entityManager).find(BookCategory.class, Integer.MAX_VALUE);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(BookCategory.class, Integer.MAX_VALUE);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#getBookCategory(Integer)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testGetBookCategoryWithNotSetEntityManager() {
-		((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
-		bookCategoryDAO.getBookCategory(Integer.MAX_VALUE);
-	}
+    /** Test method for {@link BookCategoryDAOImpl#getBookCategory(Integer)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testGetBookCategoryWithNotSetEntityManager() {
+        ((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
+        bookCategoryDAO.getBookCategory(Integer.MAX_VALUE);
+    }
 
-	/** Test method for {@link BookCategoryDAO#getBookCategory(Integer)} with null argument. */
-	@Test
-	public void testGetBookCategoryWithNullArgument() {
-		try {
-			bookCategoryDAO.getBookCategory(null);
-			fail("Can't get book category with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link BookCategoryDAO#getBookCategory(Integer)} with null argument. */
+    @Test
+    public void testGetBookCategoryWithNullArgument() {
+        try {
+            bookCategoryDAO.getBookCategory(null);
+            fail("Can't get book category with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#getBookCategory(Integer)} with exception in persistence. */
-	@Test
-	public void testGetBookCategoryWithPersistenceException() {
-		doThrow(PersistenceException.class).when(entityManager).find(eq(BookCategory.class), anyInt());
+    /** Test method for {@link BookCategoryDAOImpl#getBookCategory(Integer)} with exception in persistence. */
+    @Test
+    public void testGetBookCategoryWithPersistenceException() {
+        doThrow(PersistenceException.class).when(entityManager).find(eq(BookCategory.class), anyInt());
 
-		try {
-			bookCategoryDAO.getBookCategory(Integer.MAX_VALUE);
-			fail("Can't get book category with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            bookCategoryDAO.getBookCategory(Integer.MAX_VALUE);
+            fail("Can't get book category with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).find(BookCategory.class, Integer.MAX_VALUE);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(BookCategory.class, Integer.MAX_VALUE);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAO#add(BookCategory)} with empty data storage. */
-	@Test
-	public void testAddWithEmptyDataStorage() {
-		final BookCategory bookCategory = generate(BookCategory.class);
-		final int id = generate(Integer.class);
-		doAnswer(setId(id)).when(entityManager).persist(any(BookCategory.class));
+    /** Test method for {@link BookCategoryDAO#add(BookCategory)} with empty data storage. */
+    @Test
+    public void testAddWithEmptyDataStorage() {
+        final BookCategory bookCategory = generate(BookCategory.class);
+        final int id = generate(Integer.class);
+        doAnswer(setId(id)).when(entityManager).persist(any(BookCategory.class));
 
-		bookCategoryDAO.add(bookCategory);
-		DeepAsserts.assertEquals(id, bookCategory.getId());
-		DeepAsserts.assertEquals(id - 1, bookCategory.getPosition());
+        bookCategoryDAO.add(bookCategory);
+        DeepAsserts.assertEquals(id, bookCategory.getId());
+        DeepAsserts.assertEquals(id - 1, bookCategory.getPosition());
 
-		verify(entityManager).persist(bookCategory);
-		verify(entityManager).merge(bookCategory);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).persist(bookCategory);
+        verify(entityManager).merge(bookCategory);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#add(BookCategory)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testAddWithNotSetEntityManager() {
-		((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
-		bookCategoryDAO.add(mock(BookCategory.class));
-	}
+    /** Test method for {@link BookCategoryDAOImpl#add(BookCategory)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testAddWithNotSetEntityManager() {
+        ((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
+        bookCategoryDAO.add(mock(BookCategory.class));
+    }
 
-	/** Test method for {@link BookCategoryDAO#add(BookCategory)} with null argument. */
-	@Test
-	public void testAddWithNullArgument() {
-		try {
-			bookCategoryDAO.add(null);
-			fail("Can't add book category with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link BookCategoryDAO#add(BookCategory)} with null argument. */
+    @Test
+    public void testAddWithNullArgument() {
+        try {
+            bookCategoryDAO.add(null);
+            fail("Can't add book category with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#add(BookCategory)} with exception in persistence. */
-	@Test
-	public void testAddWithPersistenceException() {
-		final BookCategory bookCategory = generate(BookCategory.class);
-		doThrow(PersistenceException.class).when(entityManager).persist(any(BookCategory.class));
+    /** Test method for {@link BookCategoryDAOImpl#add(BookCategory)} with exception in persistence. */
+    @Test
+    public void testAddWithPersistenceException() {
+        final BookCategory bookCategory = generate(BookCategory.class);
+        doThrow(PersistenceException.class).when(entityManager).persist(any(BookCategory.class));
 
-		try {
-			bookCategoryDAO.add(bookCategory);
-			fail("Can't add book category with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            bookCategoryDAO.add(bookCategory);
+            fail("Can't add book category with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).persist(bookCategory);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).persist(bookCategory);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAO#update(BookCategory)}. */
-	@Test
-	public void testUpdate() {
-		final BookCategory bookCategory = generate(BookCategory.class);
+    /** Test method for {@link BookCategoryDAO#update(BookCategory)}. */
+    @Test
+    public void testUpdate() {
+        final BookCategory bookCategory = generate(BookCategory.class);
 
-		bookCategoryDAO.update(bookCategory);
+        bookCategoryDAO.update(bookCategory);
 
-		verify(entityManager).merge(bookCategory);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).merge(bookCategory);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#update(BookCategory)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testUpdateWithNotSetEntityManager() {
-		((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
-		bookCategoryDAO.update(mock(BookCategory.class));
-	}
+    /** Test method for {@link BookCategoryDAOImpl#update(BookCategory)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testUpdateWithNotSetEntityManager() {
+        ((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
+        bookCategoryDAO.update(mock(BookCategory.class));
+    }
 
-	/** Test method for {@link BookCategoryDAO#update(BookCategory)} with null argument. */
-	@Test
-	public void testUpdateWithNullArgument() {
-		try {
-			bookCategoryDAO.update(null);
-			fail("Can't update book category with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link BookCategoryDAO#update(BookCategory)} with null argument. */
+    @Test
+    public void testUpdateWithNullArgument() {
+        try {
+            bookCategoryDAO.update(null);
+            fail("Can't update book category with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#update(BookCategory)} with exception in persistence. */
-	@Test
-	public void testUpdateWithPersistenceException() {
-		final BookCategory bookCategory = generate(BookCategory.class);
-		doThrow(PersistenceException.class).when(entityManager).merge(any(BookCategory.class));
+    /** Test method for {@link BookCategoryDAOImpl#update(BookCategory)} with exception in persistence. */
+    @Test
+    public void testUpdateWithPersistenceException() {
+        final BookCategory bookCategory = generate(BookCategory.class);
+        doThrow(PersistenceException.class).when(entityManager).merge(any(BookCategory.class));
 
-		try {
-			bookCategoryDAO.update(bookCategory);
-			fail("Can't update book category with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            bookCategoryDAO.update(bookCategory);
+            fail("Can't update book category with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).merge(bookCategory);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).merge(bookCategory);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAO#remove(BookCategory)} with managed book category. */
-	@Test
-	public void testRemoveWithManagedBookCategory() {
-		final BookCategory bookCategory = generate(BookCategory.class);
-		when(entityManager.contains(any(BookCategory.class))).thenReturn(true);
+    /** Test method for {@link BookCategoryDAO#remove(BookCategory)} with managed book category. */
+    @Test
+    public void testRemoveWithManagedBookCategory() {
+        final BookCategory bookCategory = generate(BookCategory.class);
+        when(entityManager.contains(any(BookCategory.class))).thenReturn(true);
 
-		bookCategoryDAO.remove(bookCategory);
+        bookCategoryDAO.remove(bookCategory);
 
-		verify(entityManager).contains(bookCategory);
-		verify(entityManager).remove(bookCategory);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(bookCategory);
+        verify(entityManager).remove(bookCategory);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAO#remove(BookCategory)} with not managed book category. */
-	@Test
-	public void testRemoveWithNotManagedBookCategory() {
-		final BookCategory bookCategory = generate(BookCategory.class);
-		when(entityManager.contains(any(BookCategory.class))).thenReturn(false);
-		when(entityManager.getReference(eq(BookCategory.class), anyInt())).thenReturn(bookCategory);
+    /** Test method for {@link BookCategoryDAO#remove(BookCategory)} with not managed book category. */
+    @Test
+    public void testRemoveWithNotManagedBookCategory() {
+        final BookCategory bookCategory = generate(BookCategory.class);
+        when(entityManager.contains(any(BookCategory.class))).thenReturn(false);
+        when(entityManager.getReference(eq(BookCategory.class), anyInt())).thenReturn(bookCategory);
 
-		bookCategoryDAO.remove(bookCategory);
+        bookCategoryDAO.remove(bookCategory);
 
-		verify(entityManager).contains(bookCategory);
-		verify(entityManager).getReference(BookCategory.class, bookCategory.getId());
-		verify(entityManager).remove(bookCategory);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(bookCategory);
+        verify(entityManager).getReference(BookCategory.class, bookCategory.getId());
+        verify(entityManager).remove(bookCategory);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#remove(BookCategory)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testRemoveWithNotSetEntityManager() {
-		((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
-		bookCategoryDAO.remove(mock(BookCategory.class));
-	}
+    /** Test method for {@link BookCategoryDAOImpl#remove(BookCategory)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testRemoveWithNotSetEntityManager() {
+        ((BookCategoryDAOImpl) bookCategoryDAO).setEntityManager(null);
+        bookCategoryDAO.remove(mock(BookCategory.class));
+    }
 
-	/** Test method for {@link BookCategoryDAO#remove(BookCategory)} with null argument. */
-	@Test
-	public void testRemoveWithNullArgument() {
-		try {
-			bookCategoryDAO.remove(null);
-			fail("Can't remove book category with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link BookCategoryDAO#remove(BookCategory)} with null argument. */
+    @Test
+    public void testRemoveWithNullArgument() {
+        try {
+            bookCategoryDAO.remove(null);
+            fail("Can't remove book category with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link BookCategoryDAOImpl#remove(BookCategory)} with exception in persistence. */
-	@Test
-	public void testRemoveWithPersistenceException() {
-		final BookCategory bookCategory = generate(BookCategory.class);
-		doThrow(PersistenceException.class).when(entityManager).contains(any(BookCategory.class));
+    /** Test method for {@link BookCategoryDAOImpl#remove(BookCategory)} with exception in persistence. */
+    @Test
+    public void testRemoveWithPersistenceException() {
+        final BookCategory bookCategory = generate(BookCategory.class);
+        doThrow(PersistenceException.class).when(entityManager).contains(any(BookCategory.class));
 
-		try {
-			bookCategoryDAO.remove(bookCategory);
-			fail("Can't remove book category with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            bookCategoryDAO.remove(bookCategory);
+            fail("Can't remove book category with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).contains(bookCategory);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(bookCategory);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/**
-	 * Sets ID.
-	 *
-	 * @param id ID
-	 * @return mocked answer
-	 */
-	private Answer<Void> setId(final Integer id) {
-		return new Answer<Void>() {
+    /**
+     * Sets ID.
+     *
+     * @param id ID
+     * @return mocked answer
+     */
+    private static Answer<Void> setId(final Integer id) {
+        return new Answer<Void>() {
 
-			@Override
-			public Void answer(final InvocationOnMock invocation) throws Throwable {
-				((BookCategory) invocation.getArguments()[0]).setId(id);
-				return null;
-			}
+            @Override
+            public Void answer(final InvocationOnMock invocation) {
+                ((BookCategory) invocation.getArguments()[0]).setId(id);
+                return null;
+            }
 
-		};
-	}
+        };
+    }
 
 }

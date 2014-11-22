@@ -43,313 +43,313 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class EpisodeDAOImplTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link EntityManager} */
-	@Mock
-	private EntityManager entityManager;
+    /** Instance of {@link EntityManager} */
+    @Mock
+    private EntityManager entityManager;
 
-	/** Query for episodes */
-	@Mock
-	private TypedQuery<Episode> episodesQuery;
+    /** Query for episodes */
+    @Mock
+    private TypedQuery<Episode> episodesQuery;
 
-	/** Instance of {@link EpisodeDAO} */
-	@InjectMocks
-	private EpisodeDAO episodeDAO = new EpisodeDAOImpl();
+    /** Instance of {@link EpisodeDAO} */
+    @InjectMocks
+    private EpisodeDAO episodeDAO = new EpisodeDAOImpl();
 
-	/** Test method for {@link EpisodeDAO#getEpisode(Integer)} with existing episode. */
-	@Test
-	public void testGetEpisodeWithExistingEpisode() {
-		final int id = generate(Integer.class);
-		final Episode episode = mock(Episode.class);
-		when(entityManager.find(eq(Episode.class), anyInt())).thenReturn(episode);
+    /** Test method for {@link EpisodeDAO#getEpisode(Integer)} with existing episode. */
+    @Test
+    public void testGetEpisodeWithExistingEpisode() {
+        final int id = generate(Integer.class);
+        final Episode episode = mock(Episode.class);
+        when(entityManager.find(eq(Episode.class), anyInt())).thenReturn(episode);
 
-		DeepAsserts.assertEquals(episode, episodeDAO.getEpisode(id));
+        DeepAsserts.assertEquals(episode, episodeDAO.getEpisode(id));
 
-		verify(entityManager).find(Episode.class, id);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(Episode.class, id);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAO#getEpisode(Integer)} with not existing episode. */
-	@Test
-	public void testGetEpisodeWithNotExistingEpisode() {
-		when(entityManager.find(eq(Episode.class), anyInt())).thenReturn(null);
+    /** Test method for {@link EpisodeDAO#getEpisode(Integer)} with not existing episode. */
+    @Test
+    public void testGetEpisodeWithNotExistingEpisode() {
+        when(entityManager.find(eq(Episode.class), anyInt())).thenReturn(null);
 
-		assertNull(episodeDAO.getEpisode(Integer.MAX_VALUE));
+        assertNull(episodeDAO.getEpisode(Integer.MAX_VALUE));
 
-		verify(entityManager).find(Episode.class, Integer.MAX_VALUE);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(Episode.class, Integer.MAX_VALUE);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#getEpisode(Integer)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testGetEpisodeWithNotSetEntityManager() {
-		((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-		episodeDAO.getEpisode(Integer.MAX_VALUE);
-	}
+    /** Test method for {@link EpisodeDAOImpl#getEpisode(Integer)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testGetEpisodeWithNotSetEntityManager() {
+        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
+        episodeDAO.getEpisode(Integer.MAX_VALUE);
+    }
 
-	/** Test method for {@link EpisodeDAO#getEpisode(Integer)} with null argument. */
-	@Test
-	public void testGetEpisodeWithNullArgument() {
-		try {
-			episodeDAO.getEpisode(null);
-			fail("Can't get episode with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link EpisodeDAO#getEpisode(Integer)} with null argument. */
+    @Test
+    public void testGetEpisodeWithNullArgument() {
+        try {
+            episodeDAO.getEpisode(null);
+            fail("Can't get episode with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#getEpisode(Integer)} with exception in persistence. */
-	@Test
-	public void testGetEpisodeWithPersistenceException() {
-		doThrow(PersistenceException.class).when(entityManager).find(eq(Episode.class), anyInt());
+    /** Test method for {@link EpisodeDAOImpl#getEpisode(Integer)} with exception in persistence. */
+    @Test
+    public void testGetEpisodeWithPersistenceException() {
+        doThrow(PersistenceException.class).when(entityManager).find(eq(Episode.class), anyInt());
 
-		try {
-			episodeDAO.getEpisode(Integer.MAX_VALUE);
-			fail("Can't get episode with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            episodeDAO.getEpisode(Integer.MAX_VALUE);
+            fail("Can't get episode with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).find(Episode.class, Integer.MAX_VALUE);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).find(Episode.class, Integer.MAX_VALUE);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAO#add(Episode)}. */
-	@Test
-	public void testAdd() {
-		final Episode episode = generate(Episode.class);
-		final int id = generate(Integer.class);
-		doAnswer(setId(id)).when(entityManager).persist(any(Episode.class));
+    /** Test method for {@link EpisodeDAO#add(Episode)}. */
+    @Test
+    public void testAdd() {
+        final Episode episode = generate(Episode.class);
+        final int id = generate(Integer.class);
+        doAnswer(setId(id)).when(entityManager).persist(any(Episode.class));
 
-		episodeDAO.add(episode);
-		DeepAsserts.assertEquals(id, episode.getId());
-		DeepAsserts.assertEquals(id - 1, episode.getPosition());
+        episodeDAO.add(episode);
+        DeepAsserts.assertEquals(id, episode.getId());
+        DeepAsserts.assertEquals(id - 1, episode.getPosition());
 
-		verify(entityManager).persist(episode);
-		verify(entityManager).merge(episode);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).persist(episode);
+        verify(entityManager).merge(episode);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#add(Episode)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testAddWithNotSetEntityManager() {
-		((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-		episodeDAO.add(mock(Episode.class));
-	}
+    /** Test method for {@link EpisodeDAOImpl#add(Episode)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testAddWithNotSetEntityManager() {
+        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
+        episodeDAO.add(mock(Episode.class));
+    }
 
-	/** Test method for {@link EpisodeDAO#add(Episode)} with null argument. */
-	@Test
-	public void testAddWithNullArgument() {
-		try {
-			episodeDAO.add(null);
-			fail("Can't add episode with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link EpisodeDAO#add(Episode)} with null argument. */
+    @Test
+    public void testAddWithNullArgument() {
+        try {
+            episodeDAO.add(null);
+            fail("Can't add episode with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#add(Episode)} with exception in persistence. */
-	@Test
-	public void testAddWithPersistenceException() {
-		final Episode episode = generate(Episode.class);
-		doThrow(PersistenceException.class).when(entityManager).persist(any(Episode.class));
+    /** Test method for {@link EpisodeDAOImpl#add(Episode)} with exception in persistence. */
+    @Test
+    public void testAddWithPersistenceException() {
+        final Episode episode = generate(Episode.class);
+        doThrow(PersistenceException.class).when(entityManager).persist(any(Episode.class));
 
-		try {
-			episodeDAO.add(episode);
-			fail("Can't add episode with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            episodeDAO.add(episode);
+            fail("Can't add episode with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).persist(episode);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).persist(episode);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAO#update(Episode)}. */
-	@Test
-	public void testUpdate() {
-		final Episode episode = generate(Episode.class);
+    /** Test method for {@link EpisodeDAO#update(Episode)}. */
+    @Test
+    public void testUpdate() {
+        final Episode episode = generate(Episode.class);
 
-		episodeDAO.update(episode);
+        episodeDAO.update(episode);
 
-		verify(entityManager).merge(episode);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).merge(episode);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#update(Episode)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testUpdateWithNotSetEntityManager() {
-		((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-		episodeDAO.update(mock(Episode.class));
-	}
+    /** Test method for {@link EpisodeDAOImpl#update(Episode)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testUpdateWithNotSetEntityManager() {
+        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
+        episodeDAO.update(mock(Episode.class));
+    }
 
-	/** Test method for {@link EpisodeDAO#update(Episode)} with null argument. */
-	@Test
-	public void testUpdateWithNullArgument() {
-		try {
-			episodeDAO.update(null);
-			fail("Can't update episode with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link EpisodeDAO#update(Episode)} with null argument. */
+    @Test
+    public void testUpdateWithNullArgument() {
+        try {
+            episodeDAO.update(null);
+            fail("Can't update episode with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#update(Episode)} with exception in persistence. */
-	@Test
-	public void testUpdateWithPersistenceException() {
-		final Episode episode = generate(Episode.class);
-		doThrow(PersistenceException.class).when(entityManager).merge(any(Episode.class));
+    /** Test method for {@link EpisodeDAOImpl#update(Episode)} with exception in persistence. */
+    @Test
+    public void testUpdateWithPersistenceException() {
+        final Episode episode = generate(Episode.class);
+        doThrow(PersistenceException.class).when(entityManager).merge(any(Episode.class));
 
-		try {
-			episodeDAO.update(episode);
-			fail("Can't update episode with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            episodeDAO.update(episode);
+            fail("Can't update episode with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).merge(episode);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).merge(episode);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAO#remove(Episode)} with managed episode. */
-	@Test
-	public void testRemoveWithManagedEpisode() {
-		final Episode episode = generate(Episode.class);
-		when(entityManager.contains(any(Episode.class))).thenReturn(true);
+    /** Test method for {@link EpisodeDAO#remove(Episode)} with managed episode. */
+    @Test
+    public void testRemoveWithManagedEpisode() {
+        final Episode episode = generate(Episode.class);
+        when(entityManager.contains(any(Episode.class))).thenReturn(true);
 
-		episodeDAO.remove(episode);
+        episodeDAO.remove(episode);
 
-		verify(entityManager).contains(episode);
-		verify(entityManager).remove(episode);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(episode);
+        verify(entityManager).remove(episode);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAO#remove(Episode)} with not managed episode. */
-	@Test
-	public void testRemoveWithNotManagedEpisode() {
-		final Episode episode = generate(Episode.class);
-		when(entityManager.contains(any(Episode.class))).thenReturn(false);
-		when(entityManager.getReference(eq(Episode.class), anyInt())).thenReturn(episode);
+    /** Test method for {@link EpisodeDAO#remove(Episode)} with not managed episode. */
+    @Test
+    public void testRemoveWithNotManagedEpisode() {
+        final Episode episode = generate(Episode.class);
+        when(entityManager.contains(any(Episode.class))).thenReturn(false);
+        when(entityManager.getReference(eq(Episode.class), anyInt())).thenReturn(episode);
 
-		episodeDAO.remove(episode);
+        episodeDAO.remove(episode);
 
-		verify(entityManager).contains(episode);
-		verify(entityManager).getReference(Episode.class, episode.getId());
-		verify(entityManager).remove(episode);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(episode);
+        verify(entityManager).getReference(Episode.class, episode.getId());
+        verify(entityManager).remove(episode);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#remove(Episode)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testRemoveWithNotSetEntityManager() {
-		((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-		episodeDAO.remove(mock(Episode.class));
-	}
+    /** Test method for {@link EpisodeDAOImpl#remove(Episode)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testRemoveWithNotSetEntityManager() {
+        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
+        episodeDAO.remove(mock(Episode.class));
+    }
 
-	/** Test method for {@link EpisodeDAO#remove(Episode)} with null argument. */
-	@Test
-	public void testRemoveWithNullArgument() {
-		try {
-			episodeDAO.remove(null);
-			fail("Can't remove episode with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link EpisodeDAO#remove(Episode)} with null argument. */
+    @Test
+    public void testRemoveWithNullArgument() {
+        try {
+            episodeDAO.remove(null);
+            fail("Can't remove episode with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager);
-	}
+        verifyZeroInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#remove(Episode)} with exception in persistence. */
-	@Test
-	public void testRemoveWithPersistenceException() {
-		final Episode episode = generate(Episode.class);
-		doThrow(PersistenceException.class).when(entityManager).contains(any(Episode.class));
+    /** Test method for {@link EpisodeDAOImpl#remove(Episode)} with exception in persistence. */
+    @Test
+    public void testRemoveWithPersistenceException() {
+        final Episode episode = generate(Episode.class);
+        doThrow(PersistenceException.class).when(entityManager).contains(any(Episode.class));
 
-		try {
-			episodeDAO.remove(episode);
-			fail("Can't remove episode with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            episodeDAO.remove(episode);
+            fail("Can't remove episode with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).contains(episode);
-		verifyNoMoreInteractions(entityManager);
-	}
+        verify(entityManager).contains(episode);
+        verifyNoMoreInteractions(entityManager);
+    }
 
-	/** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)}. */
-	@Test
-	public void testFindEpisodesBySeason() {
-		final Season season = generate(Season.class);
-		final List<Episode> episodes = CollectionUtils.newList(generate(Episode.class), generate(Episode.class));
-		when(entityManager.createNamedQuery(anyString(), eq(Episode.class))).thenReturn(episodesQuery);
-		when(episodesQuery.getResultList()).thenReturn(episodes);
+    /** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)}. */
+    @Test
+    public void testFindEpisodesBySeason() {
+        final Season season = generate(Season.class);
+        final List<Episode> episodes = CollectionUtils.newList(generate(Episode.class), generate(Episode.class));
+        when(entityManager.createNamedQuery(anyString(), eq(Episode.class))).thenReturn(episodesQuery);
+        when(episodesQuery.getResultList()).thenReturn(episodes);
 
-		DeepAsserts.assertEquals(episodes, episodeDAO.findEpisodesBySeason(season));
+        DeepAsserts.assertEquals(episodes, episodeDAO.findEpisodesBySeason(season));
 
-		verify(entityManager).createNamedQuery(Episode.FIND_BY_SEASON, Episode.class);
-		verify(episodesQuery).getResultList();
-		verify(episodesQuery).setParameter("season", season.getId());
-		verifyNoMoreInteractions(entityManager, episodesQuery);
-	}
+        verify(entityManager).createNamedQuery(Episode.FIND_BY_SEASON, Episode.class);
+        verify(episodesQuery).getResultList();
+        verify(episodesQuery).setParameter("season", season.getId());
+        verifyNoMoreInteractions(entityManager, episodesQuery);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#add(Episode)} with not set entity manager. */
-	@Test(expected = IllegalStateException.class)
-	public void testFindEpisodesBySeasonWithNotSetEntityManager() {
-		((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-		episodeDAO.findEpisodesBySeason(mock(Season.class));
-	}
+    /** Test method for {@link EpisodeDAOImpl#add(Episode)} with not set entity manager. */
+    @Test(expected = IllegalStateException.class)
+    public void testFindEpisodesBySeasonWithNotSetEntityManager() {
+        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
+        episodeDAO.findEpisodesBySeason(mock(Season.class));
+    }
 
-	/** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)} with null argument. */
-	@Test
-	public void testFindEpisodesBySeasonWithNullArgument() {
-		try {
-			episodeDAO.findEpisodesBySeason(null);
-			fail("Can't find episodes by season with null argument.");
-		} catch (final IllegalArgumentException ex) {
-			// OK
-		}
+    /** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)} with null argument. */
+    @Test
+    public void testFindEpisodesBySeasonWithNullArgument() {
+        try {
+            episodeDAO.findEpisodesBySeason(null);
+            fail("Can't find episodes by season with null argument.");
+        } catch (final IllegalArgumentException ex) {
+            // OK
+        }
 
-		verifyZeroInteractions(entityManager, episodesQuery);
-	}
+        verifyZeroInteractions(entityManager, episodesQuery);
+    }
 
-	/** Test method for {@link EpisodeDAOImpl#findEpisodesBySeason(Season)} with exception in persistence. */
-	@Test
-	public void testFindEpisodesBySeasonWithPersistenceException() {
-		doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Episode.class));
+    /** Test method for {@link EpisodeDAOImpl#findEpisodesBySeason(Season)} with exception in persistence. */
+    @Test
+    public void testFindEpisodesBySeasonWithPersistenceException() {
+        doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Episode.class));
 
-		try {
-			episodeDAO.findEpisodesBySeason(generate(Season.class));
-			fail("Can't find episodes by season with not thrown DataStorageException for exception in persistence.");
-		} catch (final DataStorageException ex) {
-			// OK
-		}
+        try {
+            episodeDAO.findEpisodesBySeason(generate(Season.class));
+            fail("Can't find episodes by season with not thrown DataStorageException for exception in persistence.");
+        } catch (final DataStorageException ex) {
+            // OK
+        }
 
-		verify(entityManager).createNamedQuery(Episode.FIND_BY_SEASON, Episode.class);
-		verifyNoMoreInteractions(entityManager);
-		verifyZeroInteractions(episodesQuery);
-	}
+        verify(entityManager).createNamedQuery(Episode.FIND_BY_SEASON, Episode.class);
+        verifyNoMoreInteractions(entityManager);
+        verifyZeroInteractions(episodesQuery);
+    }
 
-	/**
-	 * Sets ID.
-	 *
-	 * @param id ID
-	 * @return mocked answer
-	 */
-	private Answer<Void> setId(final Integer id) {
-		return new Answer<Void>() {
+    /**
+     * Sets ID.
+     *
+     * @param id ID
+     * @return mocked answer
+     */
+    private static Answer<Void> setId(final Integer id) {
+        return new Answer<Void>() {
 
-			@Override
-			public Void answer(final InvocationOnMock invocation) throws Throwable {
-				((Episode) invocation.getArguments()[0]).setId(id);
-				return null;
-			}
+            @Override
+            public Void answer(final InvocationOnMock invocation) {
+                ((Episode) invocation.getArguments()[0]).setId(id);
+                return null;
+            }
 
-		};
-	}
+        };
+    }
 
 }

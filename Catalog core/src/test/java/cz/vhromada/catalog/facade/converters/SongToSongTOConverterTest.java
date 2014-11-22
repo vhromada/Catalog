@@ -16,36 +16,36 @@ import org.junit.Test;
  */
 public class SongToSongTOConverterTest extends ObjectGeneratorTest {
 
-	/** Instance of {@link SongToSongTOConverter} */
-	private SongToSongTOConverter converter;
+    /** Instance of {@link SongToSongTOConverter} */
+    private SongToSongTOConverter converter;
 
-	/** Initializes converter. */
-	@Before
-	public void setUp() {
-		converter = new SongToSongTOConverter();
-		converter.setConverter(new MusicToMusicTOConverter());
-	}
+    /** Initializes converter. */
+    @Before
+    public void setUp() {
+        converter = new SongToSongTOConverter();
+        converter.setConverter(new MusicToMusicTOConverter());
+    }
 
-	/** Test method for {@link SongToSongTOConverter#convert(Song)}. */
-	@Test
-	public void testConvert() {
-		final Song song = generate(Song.class);
-		final SongTO songTO = converter.convert(song);
-		DeepAsserts.assertNotNull(songTO, "totalLength");
-		DeepAsserts.assertEquals(song, songTO, "songsCount", "totalLength");
-	}
+    /** Test method for {@link SongToSongTOConverter#convert(Song)}. */
+    @Test
+    public void testConvert() {
+        final Song song = generate(Song.class);
+        final SongTO songTO = converter.convert(song);
+        DeepAsserts.assertNotNull(songTO, "totalLength");
+        DeepAsserts.assertEquals(song, songTO, "songsCount", "totalLength");
+    }
 
-	/** Test method for {@link SongToSongTOConverter#convert(Song)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(converter.convert(null));
-	}
+    /** Test method for {@link SongToSongTOConverter#convert(Song)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(converter.convert(null));
+    }
 
-	/** Test method for {@link SongToSongTOConverter#convert(Song)} with not set converter for music. */
-	@Test(expected = IllegalStateException.class)
-	public void testConvertWithNotSetMusicConverter() {
-		converter.setConverter(null);
-		converter.convert(new Song());
-	}
+    /** Test method for {@link SongToSongTOConverter#convert(Song)} with not set converter for music. */
+    @Test(expected = IllegalStateException.class)
+    public void testConvertWithNotSetMusicConverter() {
+        converter.setConverter(null);
+        converter.convert(new Song());
+    }
 
 }

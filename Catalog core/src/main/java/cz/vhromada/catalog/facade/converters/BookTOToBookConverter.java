@@ -15,52 +15,52 @@ import org.springframework.stereotype.Component;
 @Component("bookTOToBookConverter")
 public class BookTOToBookConverter implements Converter<BookTO, Book> {
 
-	/** Converter from TO for book category to entity book category */
-	@Autowired
-	private BookCategoryTOToBookCategoryConverter converter;
+    /** Converter from TO for book category to entity book category */
+    @Autowired
+    private BookCategoryTOToBookCategoryConverter converter;
 
-	/**
-	 * Returns converter from TO for book category to entity book category.
-	 *
-	 * @return converter from TO for book category to entity book category
-	 */
-	public BookCategoryTOToBookCategoryConverter getConverter() {
-		return converter;
-	}
+    /**
+     * Returns converter from TO for book category to entity book category.
+     *
+     * @return converter from TO for book category to entity book category
+     */
+    public BookCategoryTOToBookCategoryConverter getConverter() {
+        return converter;
+    }
 
-	/**
-	 * Sets a new value to converter from TO for book category to entity book category.
-	 *
-	 * @param converter new value
-	 */
-	public void setConverter(final BookCategoryTOToBookCategoryConverter converter) {
-		this.converter = converter;
-	}
+    /**
+     * Sets a new value to converter from TO for book category to entity book category.
+     *
+     * @param converter new value
+     */
+    public void setConverter(final BookCategoryTOToBookCategoryConverter converter) {
+        this.converter = converter;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalArgumentException {@inheritDoc}
-	 * @throws IllegalStateException    if converter from TO for book category to entity book category isn't set
-	 */
-	@Override
-	public Book convert(final BookTO source) {
-		Validators.validateFieldNotNull(converter, "Converter");
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws IllegalStateException    if converter from TO for book category to entity book category isn't set
+     */
+    @Override
+    public Book convert(final BookTO source) {
+        Validators.validateFieldNotNull(converter, "Converter");
 
-		if (source == null) {
-			return null;
-		}
+        if (source == null) {
+            return null;
+        }
 
-		final Book book = new Book();
-		book.setId(source.getId());
-		book.setAuthor(source.getAuthor());
-		book.setTitle(source.getTitle());
-		book.setLanguages(source.getLanguages());
-		book.setCategory(source.getCategory());
-		book.setNote(source.getNote());
-		book.setPosition(source.getPosition());
-		book.setBookCategory(converter.convert(source.getBookCategory()));
-		return book;
-	}
+        final Book book = new Book();
+        book.setId(source.getId());
+        book.setAuthor(source.getAuthor());
+        book.setTitle(source.getTitle());
+        book.setLanguages(source.getLanguages());
+        book.setCategory(source.getCategory());
+        book.setNote(source.getNote());
+        book.setPosition(source.getPosition());
+        book.setBookCategory(converter.convert(source.getBookCategory()));
+        return book;
+    }
 
 }

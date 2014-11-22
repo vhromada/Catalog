@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @Component("mediumToIntegerConverter")
 public class MediumToIntegerConverter implements Converter<Medium, Integer> {
 
-	@Override
-	public Integer convert(final Medium source) {
-		if (source == null) {
-			return null;
-		}
+    @Override
+    public Integer convert(final Medium source) {
+        if (source == null) {
+            return null;
+        }
 
-		return source.getLength();
-	}
+        return source.getLength();
+    }
 
 }

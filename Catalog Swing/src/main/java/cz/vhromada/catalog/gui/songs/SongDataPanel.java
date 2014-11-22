@@ -14,152 +14,147 @@ import cz.vhromada.validators.Validators;
  */
 public class SongDataPanel extends JPanel {
 
-	/** SerialVersionUID */
-	private static final long serialVersionUID = 1L;
+    /** Horizontal label size */
+    public static final int HORIZONTAL_LABEL_SIZE = 150;
+    /** Horizontal data size */
+    public static final int HORIZONTAL_DATA_SIZE = 600;
+    /** Horizontal gap size */
+    public static final int HORIZONTAL_GAP_SIZE = 10;
+    /** Vertical gap size */
+    public static final int VERTICAL_GAP_SIZE = 10;
+    /** SerialVersionUID */
+    private static final long serialVersionUID = 1L;
+    /** Label for name */
+    private JLabel nameLabel = new JLabel("Name");
 
-	/** Horizontal label size */
-	public static final int HORIZONTAL_LABEL_SIZE = 150;
+    /** Label with name */
+    private JLabel nameData = new JLabel();
 
-	/** Horizontal data size */
-	public static final int HORIZONTAL_DATA_SIZE = 600;
+    /** Label for length */
+    private JLabel lengthLabel = new JLabel("Length");
 
-	/** Horizontal gap size */
-	public static final int HORIZONTAL_GAP_SIZE = 10;
+    /** Label with length */
+    private JLabel lengthData = new JLabel();
 
-	/** Vertical gap size */
-	public static final int VERTICAL_GAP_SIZE = 10;
+    /** Label for note */
+    private JLabel noteLabel = new JLabel("Note");
 
-	/** Label for name */
-	private JLabel nameLabel = new JLabel("Name");
+    /** Label with note */
+    private JLabel noteData = new JLabel();
 
-	/** Label with name */
-	private JLabel nameData = new JLabel();
+    /**
+     * Creates a new instance of SongDataPanel.
+     *
+     * @param song TO for song
+     * @throws IllegalArgumentException if TO for song is null
+     */
+    public SongDataPanel(final SongTO song) {
+        Validators.validateArgumentNotNull(song, "TO for song");
 
-	/** Label for length */
-	private JLabel lengthLabel = new JLabel("Length");
+        initData(nameLabel, nameData, song.getName());
+        initData(lengthLabel, lengthData, new Time(song.getLength()).toString());
+        initData(noteLabel, noteData, song.getNote());
 
-	/** Label with length */
-	private JLabel lengthData = new JLabel();
+        final GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
+        layout.setHorizontalGroup(createHorizontalLayout(layout));
+        layout.setVerticalGroup(createVerticalLayout(layout));
+    }
 
-	/** Label for note */
-	private JLabel noteLabel = new JLabel("Note");
+    /**
+     * Updates TO for song.
+     *
+     * @param song TO for song
+     * @throws IllegalArgumentException if TO for song is null
+     */
+    public void updateSongTO(final SongTO song) {
+        Validators.validateArgumentNotNull(song, "TO for song");
 
-	/** Label with note */
-	private JLabel noteData = new JLabel();
+        nameData.setText(song.getName());
+        lengthData.setText(new Time(song.getLength()).toString());
+        noteData.setText(song.getNote());
+    }
 
-	/**
-	 * Creates a new instance of SongDataPanel.
-	 *
-	 * @param song TO for song
-	 * @throws IllegalArgumentException if TO for song is null
-	 */
-	public SongDataPanel(final SongTO song) {
-		Validators.validateArgumentNotNull(song, "TO for song");
+    /**
+     * Initializes data.
+     *
+     * @param label label
+     * @param data  data
+     * @param text  text for data
+     */
+    private static void initData(final JLabel label, final JLabel data, final String text) {
+        label.setFocusable(false);
+        label.setLabelFor(data);
+        data.setText(text);
+        data.setFocusable(false);
+    }
 
-		initData(nameLabel, nameData, song.getName());
-		initData(lengthLabel, lengthData, new Time(song.getLength()).toString());
-		initData(noteLabel, noteData, song.getNote());
+    /**
+     * Returns horizontal layout for components.
+     *
+     * @param layout layout
+     * @return horizontal layout for components
+     */
+    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
+        final GroupLayout.Group components = layout.createParallelGroup()
+                .addGroup(createHorizontalDataComponents(layout, nameLabel, nameData))
+                .addGroup(createHorizontalDataComponents(layout, lengthLabel, lengthData))
+                .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData));
 
-		final GroupLayout layout = new GroupLayout(this);
-		setLayout(layout);
-		layout.setHorizontalGroup(createHorizontalLayout(layout));
-		layout.setVerticalGroup(createVerticalLayout(layout));
-	}
+        return layout.createSequentialGroup()
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addGroup(components)
+                .addGap(HORIZONTAL_GAP_SIZE);
+    }
 
-	/**
-	 * Updates TO for song.
-	 *
-	 * @param song TO for song
-	 * @throws IllegalArgumentException if TO for song is null
-	 */
-	public void updateSongTO(final SongTO song) {
-		Validators.validateArgumentNotNull(song, "TO for song");
+    /**
+     * Returns horizontal layout for label component with data component.
+     *
+     * @param layout layout
+     * @param label  label
+     * @param data   data
+     * @return horizontal layout for label component with data component
+     */
+    private GroupLayout.Group createHorizontalDataComponents(final GroupLayout layout, final JLabel label, final JLabel data) {
+        return layout.createSequentialGroup()
+                .addComponent(label, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE)
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addComponent(data, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE);
+    }
 
-		nameData.setText(song.getName());
-		lengthData.setText(new Time(song.getLength()).toString());
-		noteData.setText(song.getNote());
-	}
+    /**
+     * Returns vertical layout of components.
+     *
+     * @param layout layout
+     * @return vertical layout of components
+     */
+    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
+        return layout.createSequentialGroup()
+                .addGap(5)
+                .addGroup(createVerticalComponents(layout, nameLabel, nameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, lengthLabel, lengthData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
+                .addGap(VERTICAL_GAP_SIZE);
+    }
 
-	/**
-	 * Initializes data.
-	 *
-	 * @param label label
-	 * @param data  data
-	 * @param text  text for data
-	 */
-	private void initData(final JLabel label, final JLabel data, final String text) {
-		label.setFocusable(false);
-		label.setLabelFor(data);
-		data.setText(text);
-		data.setFocusable(false);
-	}
-
-	/**
-	 * Returns horizontal layout for components.
-	 *
-	 * @param layout layout
-	 * @return horizontal layout for components
-	 */
-	private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-		final GroupLayout.Group components = layout.createParallelGroup()
-				.addGroup(createHorizontalDataComponents(layout, nameLabel, nameData))
-				.addGroup(createHorizontalDataComponents(layout, lengthLabel, lengthData))
-				.addGroup(createHorizontalDataComponents(layout, noteLabel, noteData));
-
-		return layout.createSequentialGroup()
-				.addGap(HORIZONTAL_GAP_SIZE)
-				.addGroup(components)
-				.addGap(HORIZONTAL_GAP_SIZE);
-	}
-
-	/**
-	 * Returns horizontal layout for label component with data component.
-	 *
-	 * @param layout layout
-	 * @param label  label
-	 * @param data   data
-	 * @return horizontal layout for label component with data component
-	 */
-	private GroupLayout.Group createHorizontalDataComponents(final GroupLayout layout, final JLabel label, final JLabel data) {
-		return layout.createSequentialGroup()
-				.addComponent(label, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE)
-				.addGap(HORIZONTAL_GAP_SIZE)
-				.addComponent(data, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE);
-	}
-
-	/**
-	 * Returns vertical layout of components.
-	 *
-	 * @param layout layout
-	 * @return vertical layout of components
-	 */
-	private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-		return layout.createSequentialGroup()
-				.addGap(5)
-				.addGroup(createVerticalComponents(layout, nameLabel, nameData))
-				.addGap(VERTICAL_GAP_SIZE)
-				.addGroup(createVerticalComponents(layout, lengthLabel, lengthData))
-				.addGap(VERTICAL_GAP_SIZE)
-				.addGroup(createVerticalComponents(layout, noteLabel, noteData))
-				.addGap(VERTICAL_GAP_SIZE);
-	}
-
-	/**
-	 * Returns vertical layout for label component with data component.
-	 *
-	 * @param layout layout
-	 * @param label  label component
-	 * @param data   data component
-	 * @return vertical layout for label component with data component
-	 */
-	private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-		return layout.createParallelGroup()
-				.addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-				.addGap(VERTICAL_GAP_SIZE)
-				.addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-						CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
-	}
+    /**
+     * Returns vertical layout for label component with data component.
+     *
+     * @param layout layout
+     * @param label  label component
+     * @param data   data component
+     * @return vertical layout for label component with data component
+     */
+    private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
+        return layout.createParallelGroup()
+                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+    }
 
 
 }

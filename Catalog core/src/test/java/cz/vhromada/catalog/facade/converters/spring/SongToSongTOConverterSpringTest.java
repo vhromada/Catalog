@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class SongToSongTOConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.SongToSongTOConverter#convert(Song)}. */
-	@Test
-	public void testConvert() {
-		final Song song = objectGenerator.generate(Song.class);
-		final SongTO songTO = conversionService.convert(song, SongTO.class);
-		DeepAsserts.assertNotNull(songTO, "totalLength");
-		DeepAsserts.assertEquals(song, songTO, "songsCount", "totalLength");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.SongToSongTOConverter#convert(Song)}. */
+    @Test
+    public void testConvert() {
+        final Song song = objectGenerator.generate(Song.class);
+        final SongTO songTO = conversionService.convert(song, SongTO.class);
+        DeepAsserts.assertNotNull(songTO, "totalLength");
+        DeepAsserts.assertEquals(song, songTO, "songsCount", "totalLength");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.SongToSongTOConverter#convert(Song)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, SongTO.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.SongToSongTOConverter#convert(Song)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, SongTO.class));
+    }
 
 }

@@ -22,27 +22,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class ProgramToProgramTOConverterSpringTest {
 
-	/** Instance of {@link ConversionService} */
-	@Autowired
-	private ConversionService conversionService;
+    /** Instance of {@link ConversionService} */
+    @Autowired
+    private ConversionService conversionService;
 
-	/** Instance of {@link ObjectGenerator} */
-	@Autowired
-	private ObjectGenerator objectGenerator;
+    /** Instance of {@link ObjectGenerator} */
+    @Autowired
+    private ObjectGenerator objectGenerator;
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter#convert(Program)}. */
-	@Test
-	public void testConvert() {
-		final Program program = objectGenerator.generate(Program.class);
-		final ProgramTO programTO = conversionService.convert(program, ProgramTO.class);
-		DeepAsserts.assertNotNull(programTO);
-		DeepAsserts.assertEquals(program, programTO, "additionalData");
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter#convert(Program)}. */
+    @Test
+    public void testConvert() {
+        final Program program = objectGenerator.generate(Program.class);
+        final ProgramTO programTO = conversionService.convert(program, ProgramTO.class);
+        DeepAsserts.assertNotNull(programTO);
+        DeepAsserts.assertEquals(program, programTO, "additionalData");
+    }
 
-	/** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter#convert(Program)} with null argument. */
-	@Test
-	public void testConvertWithNullArgument() {
-		assertNull(conversionService.convert(null, ProgramTO.class));
-	}
+    /** Test method for {@link cz.vhromada.catalog.facade.converters.ProgramToProgramTOConverter#convert(Program)} with null argument. */
+    @Test
+    public void testConvertWithNullArgument() {
+        assertNull(conversionService.convert(null, ProgramTO.class));
+    }
 
 }

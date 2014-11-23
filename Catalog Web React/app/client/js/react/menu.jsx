@@ -18,6 +18,7 @@ app.react.Menu = function (routes) {
               <ul>
                 <li>
                   <a href={routes.games.url()}>All games</a>
+                  <a href={routes.addGame.url()}>Add game</a>
                 </li>
               </ul>
             </li>

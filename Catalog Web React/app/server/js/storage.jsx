@@ -34,6 +34,7 @@ server.Storage.prototype.load = function (route, params) {
   switch (route) {
     case this.routes.home:
     case this.routes.games:
+    case this.routes.addGame:
       return this.ok();
     default:
       return this.notFound();

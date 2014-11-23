@@ -148,7 +148,7 @@ app.games.Game.prototype.getAdditionalData = function () {
   this.addToResult(result, this.editor, 'editor');
   this.addToResult(result, this.saves, 'saves');
   if (!goog.string.isEmptyOrWhitespaceSafe(this.otherData)) {
-    if (result.getLength() != 0) {
+    if (result.getLength() !== 0) {
       result.append(', ');
     }
     result.append(this.otherData);
@@ -165,7 +165,7 @@ app.games.Game.prototype.getAdditionalData = function () {
  */
 app.games.Game.prototype.addToResult = function (result, value, string) {
   if (value) {
-    if (result.getLength() == 0) {
+    if (result.getLength() === 0) {
       result.append(string.substring(0, 1).toUpperCase());
       result.append(string.substring(1));
     } else {

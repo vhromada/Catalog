@@ -11,6 +11,7 @@ app.Routes = function () {
 
   this.home = this.route('/');
   this.games = this.route('/games');
+  this.addGame = this.route('/games/add');
 };
 
 goog.inherits(app.Routes, este.Routes);

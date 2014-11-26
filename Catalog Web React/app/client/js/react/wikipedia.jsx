@@ -6,7 +6,7 @@ goog.provide('app.react.Wikipedia');
 app.react.Wikipedia = function () {
   this.component = React.createFactory(React.createClass({
     render: function () {
-      if (goog.string.isEmptyOrWhitespaceSafe(this.props.url)) {
+      if (goog.string.isEmptyOrWhitespace(goog.string.makeSafe(this.props.url))) {
         return <span/>
       } else {
         return <a href={this.wikiUrl(this.props.country, this.props.url)} target="_blank">{this.props.text}</a>

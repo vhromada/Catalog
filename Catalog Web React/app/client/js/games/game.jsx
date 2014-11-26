@@ -147,7 +147,7 @@ app.games.Game.prototype.getAdditionalData = function () {
   this.addToResult(result, this.trainerData, 'data for trainer');
   this.addToResult(result, this.editor, 'editor');
   this.addToResult(result, this.saves, 'saves');
-  if (!goog.string.isEmptyOrWhitespaceSafe(this.otherData)) {
+  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(this.otherData))) {
     if (result.getLength() !== 0) {
       result.append(', ');
     }

@@ -33,6 +33,11 @@ app.games.Store = function (dispatcher, actions, data) {
   })(this));
 
   /**
+   * @type {boolean}
+   */
+  this.initialize = false;
+
+  /**
    * @type {Array.<app.games.Game>}
    */
   this.games = [];
@@ -46,6 +51,7 @@ app.games.Store = function (dispatcher, actions, data) {
 app.games.Store.prototype.newData = function () {
   goog.array.clear(this.games);
   this.mediaCount = 0;
+  this.initialize = true;
 };
 
 /**
@@ -58,6 +64,7 @@ app.games.Store.prototype.findAll = function () {
     goog.array.forEach(this.games, function (element) {
       this.mediaCount += element.mediaCount;
     }.bind(this));
+    this.initialize = true;
   }.bind(this)).then(function () {
     this.actions.renderApp();
   }.bind(this));
@@ -67,10 +74,20 @@ app.games.Store.prototype.findAll = function () {
  * @param {app.games.Game} game
  */
 app.games.Store.prototype.add = function (game) {
-  game.id = this.newId();
-  game.position = this.games.length;
-  goog.array.insert(this.games, game);
-  this.mediaCount += game.mediaCount;
+  var addGame = function(game, context) {
+    game.id = this.newId();
+    game.position = context.games.length;
+    goog.array.insert(context.games, game);
+    context.mediaCount += game.mediaCount;
+  };
+
+  if (!this.initialize) {
+    this.findAll().then(function () {
+      addGame(game, this);
+    }.bind(this));
+  } else {
+    addGame(game, this);
+  }
 };
 
 /**

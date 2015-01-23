@@ -75,7 +75,7 @@ app.games.Store.prototype.findAll = function () {
  */
 app.games.Store.prototype.add = function (game) {
   var addGame = function(game, context) {
-    game.id = this.newId();
+    game.id = context.newId();
     game.position = context.games.length;
     goog.array.insert(context.games, game);
     context.mediaCount += game.mediaCount;

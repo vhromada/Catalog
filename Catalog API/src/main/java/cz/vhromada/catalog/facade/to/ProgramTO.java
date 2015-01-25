@@ -189,33 +189,6 @@ public class ProgramTO implements Comparable<ProgramTO>, Serializable {
     }
 
     /**
-     * Returns additional data.
-     *
-     * @return additional data
-     */
-    public String getAdditionalData() {
-        final StringBuilder result = new StringBuilder();
-        if (crack) {
-            result.append("Crack");
-        }
-        if (serialKey) {
-            if (result.length() == 0) {
-                result.append("Serial key");
-            } else {
-                result.append(", serial key");
-            }
-        }
-        if (otherData != null && !otherData.isEmpty()) {
-            if (result.length() != 0) {
-                result.append(", ");
-            }
-            result.append(otherData);
-        }
-
-        return result.toString();
-    }
-
-    /**
      * Returns note.
      *
      * @return note

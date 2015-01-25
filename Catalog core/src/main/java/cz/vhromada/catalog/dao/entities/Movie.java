@@ -401,8 +401,7 @@ public class Movie implements Serializable {
     public String toString() {
         return String.format("Movie [id=%d, czechName=%s, originalName=%s, year=%d, language=%s, subtitles=%s, media=%s, csfd=%s, imdbCode=%d, wikiEn=%s, "
                         + "wikiCz=%s, picture=%s, note=%s, position=%d, genres=%s]", id, czechName, originalName, year, language, subtitles, media, csfd,
-                imdbCode,
-                wikiEn, wikiCz, picture, note, position, genres);
+                imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }
 
 }

@@ -86,7 +86,7 @@ public class ProgramDataPanel extends JPanel {
         Validators.validateArgumentNotNull(program, "TO for program");
 
         initData(nameLabel, nameData, program.getName());
-        initData(dataLabel, dataData, program.getAdditionalData());
+        //TODO vhromada 25.01.2015:initData(dataLabel, dataData, program.getAdditionalData());
         initData(mediaCountLabel, mediaCountData, Integer.toString(program.getMediaCount()));
         initData(noteLabel, noteData, program.getNote());
 
@@ -138,7 +138,7 @@ public class ProgramDataPanel extends JPanel {
         Validators.validateArgumentNotNull(program, "TO for program");
 
         nameData.setText(program.getName());
-        dataData.setText(program.getAdditionalData());
+        //TODO vhromada 25.01.2015:dataData.setText(program.getAdditionalData());
         mediaCountData.setText(Integer.toString(program.getMediaCount()));
         noteData.setText(program.getNote());
         wikiCz = program.getWikiCz();

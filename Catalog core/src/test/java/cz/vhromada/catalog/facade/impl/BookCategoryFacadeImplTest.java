@@ -15,19 +15,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
-import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.facade.BookCategoryFacade;
 import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.validators.BookCategoryTOValidator;
 import cz.vhromada.catalog.service.BookCategoryService;
-import cz.vhromada.catalog.service.BookService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -52,10 +49,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
     /** Instance of {@link BookCategoryService} */
     @Mock
     private BookCategoryService bookCategoryService;
-
-    /** Instance of {@link BookService} */
-    @Mock
-    private BookService bookService;
 
     /** Instance of {@link ConversionService} */
     @Mock
@@ -106,12 +99,7 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
     public void testGetBookCategories() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
         final List<BookCategoryTO> bookCategoriesList = CollectionUtils.newList(generate(BookCategoryTO.class), generate(BookCategoryTO.class));
-        final List<Book> books = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            books.add(generate(Book.class));
-        }
         when(bookCategoryService.getBookCategories()).thenReturn(bookCategories);
-        when(bookService.findBooksByBookCategory(any(BookCategory.class))).thenReturn(books);
         for (int i = 0; i < bookCategories.size(); i++) {
             final BookCategory bookCategory = bookCategories.get(i);
             when(conversionService.convert(bookCategory, BookCategoryTO.class)).thenReturn(bookCategoriesList.get(i));
@@ -121,10 +109,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
         verify(bookCategoryService).getBookCategories();
         for (final BookCategory bookCategory : bookCategories) {
-            verify(bookService).findBooksByBookCategory(bookCategory);
             verify(conversionService).convert(bookCategory, BookCategoryTO.class);
         }
-        verifyNoMoreInteractions(bookCategoryService, bookService, conversionService);
+        verifyNoMoreInteractions(bookCategoryService, conversionService);
     }
 
     /** Test method for {@link BookCategoryFacade#getBookCategories()} with null book category. */
@@ -143,20 +130,12 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
             verify(conversionService).convert(bookCategory, BookCategoryTO.class);
         }
         verifyNoMoreInteractions(bookCategoryService, conversionService);
-        verifyZeroInteractions(bookService);
     }
 
     /** Test method for {@link BookCategoryFacade#getBookCategories()} with not set service for book categories. */
     @Test(expected = IllegalStateException.class)
     public void testGetBookCategoriesWithNotSetBookCategoryService() {
         ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.getBookCategories();
-    }
-
-    /** Test method for {@link BookCategoryFacade#getBookCategories()} with not set service for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoriesWithNotSetBookService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookService(null);
         bookCategoryFacade.getBookCategories();
     }
 
@@ -181,7 +160,7 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
         verify(bookCategoryService).getBookCategories();
         verifyNoMoreInteractions(bookCategoryService);
-        verifyZeroInteractions(bookService, conversionService);
+        verifyZeroInteractions(conversionService);
     }
 
     /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with existing book category. */
@@ -189,20 +168,14 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
     public void testGetBookCategoryWithExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
         final BookCategoryTO bookCategoryTO = generate(BookCategoryTO.class);
-        final List<Book> books = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            books.add(generate(Book.class));
-        }
         when(bookCategoryService.getBookCategory(anyInt())).thenReturn(bookCategory);
-        when(bookService.findBooksByBookCategory(any(BookCategory.class))).thenReturn(books);
         when(conversionService.convert(any(BookCategory.class), eq(BookCategoryTO.class))).thenReturn(bookCategoryTO);
 
         DeepAsserts.assertEquals(bookCategoryTO, bookCategoryFacade.getBookCategory(bookCategoryTO.getId()));
 
         verify(bookCategoryService).getBookCategory(bookCategoryTO.getId());
-        verify(bookService).findBooksByBookCategory(bookCategory);
         verify(conversionService).convert(bookCategory, BookCategoryTO.class);
-        verifyNoMoreInteractions(bookCategoryService, bookService, conversionService);
+        verifyNoMoreInteractions(bookCategoryService, conversionService);
     }
 
     /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with not existing book category. */
@@ -216,20 +189,12 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verify(bookCategoryService).getBookCategory(Integer.MAX_VALUE);
         verify(conversionService).convert(null, BookCategoryTO.class);
         verifyNoMoreInteractions(bookCategoryService, conversionService);
-        verifyZeroInteractions(bookService);
     }
 
     /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with not set service for book categories. */
     @Test(expected = IllegalStateException.class)
     public void testGetBookCategoryWithNotSetBookCategoryService() {
         ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.getBookCategory(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with not set service for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoryWithNotSetBookService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookService(null);
         bookCategoryFacade.getBookCategory(Integer.MAX_VALUE);
     }
 
@@ -250,7 +215,7 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(bookCategoryService, bookService, conversionService);
+        verifyZeroInteractions(bookCategoryService, conversionService);
     }
 
     /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with exception in service tier. */
@@ -267,7 +232,7 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
         verify(bookCategoryService).getBookCategory(anyInt());
         verifyNoMoreInteractions(bookCategoryService);
-        verifyZeroInteractions(bookService, conversionService);
+        verifyZeroInteractions(conversionService);
     }
 
     /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)}. */

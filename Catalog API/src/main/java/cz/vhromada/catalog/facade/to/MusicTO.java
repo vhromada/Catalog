@@ -2,8 +2,6 @@ package cz.vhromada.catalog.facade.to;
 
 import java.io.Serializable;
 
-import cz.vhromada.catalog.commons.Time;
-
 /**
  * A class represents TO for music.
  *
@@ -28,12 +26,6 @@ public class MusicTO implements Comparable<MusicTO>, Serializable {
 
     /** Count of media */
     private int mediaCount;
-
-    /** Count of songs */
-    private int songsCount;
-
-    /** Total length of songs */
-    private Time totalLength;
 
     /** Note */
     private String note;
@@ -132,42 +124,6 @@ public class MusicTO implements Comparable<MusicTO>, Serializable {
     }
 
     /**
-     * Returns count of songs.
-     *
-     * @return count of songs
-     */
-    public int getSongsCount() {
-        return songsCount;
-    }
-
-    /**
-     * Sets a new value to count of songs.
-     *
-     * @param songsCount new value
-     */
-    public void setSongsCount(final int songsCount) {
-        this.songsCount = songsCount;
-    }
-
-    /**
-     * Returns total length of songs.
-     *
-     * @return total length of songs
-     */
-    public Time getTotalLength() {
-        return totalLength;
-    }
-
-    /**
-     * Sets a new value to total length of songs.
-     *
-     * @param totalLength new value
-     */
-    public void setTotalLength(final Time totalLength) {
-        this.totalLength = totalLength;
-    }
-
-    /**
      * Returns note.
      *
      * @return note
@@ -222,8 +178,8 @@ public class MusicTO implements Comparable<MusicTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("MusicTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, songsCount=%d, totalLength=%s, note=%s, position=%d]", id, name,
-                wikiEn, wikiCz, mediaCount, songsCount, totalLength, note, position);
+        return String.format("MusicTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, note=%s, position=%d]", id, name, wikiEn, wikiCz, mediaCount, note,
+                position);
     }
 
     @Override

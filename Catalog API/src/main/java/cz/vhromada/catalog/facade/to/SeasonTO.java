@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Language;
-import cz.vhromada.catalog.commons.Time;
 
 /**
  * A class represents TO for season.
@@ -33,12 +32,6 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
 
     /** Subtitles */
     private List<Language> subtitles;
-
-    /** Count of episodes */
-    private int episodesCount;
-
-    /** Total length of episodes */
-    private Time totalLength;
 
     /** Note */
     private String note;
@@ -122,15 +115,6 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
     }
 
     /**
-     * Returns year.
-     *
-     * @return year
-     */
-    public String getYear() {
-        return startYear == endYear ? Integer.toString(startYear) : startYear + " - " + endYear;
-    }
-
-    /**
      * Returns language.
      *
      * @return language
@@ -165,59 +149,6 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
      */
     public void setSubtitles(final List<Language> subtitles) {
         this.subtitles = subtitles;
-    }
-
-    /**
-     * Returns subtitles as string.
-     *
-     * @return subtitles as string
-     */
-    public String getSubtitlesAsString() {
-        if (subtitles == null || subtitles.isEmpty()) {
-            return "";
-        }
-        final StringBuilder subtitlesString = new StringBuilder();
-        for (final Language subtitle : subtitles) {
-            subtitlesString.append(subtitle);
-            subtitlesString.append(" / ");
-        }
-        return subtitlesString.substring(0, subtitlesString.length() - 3);
-    }
-
-    /**
-     * Returns count of episodes.
-     *
-     * @return count of episodes
-     */
-    public int getEpisodesCount() {
-        return episodesCount;
-    }
-
-    /**
-     * Sets a new value to count of episodes.
-     *
-     * @param episodesCount new value
-     */
-    public void setEpisodesCount(final int episodesCount) {
-        this.episodesCount = episodesCount;
-    }
-
-    /**
-     * Returns total length of episodes.
-     *
-     * @return total length of episodes
-     */
-    public Time getTotalLength() {
-        return totalLength;
-    }
-
-    /**
-     * Sets a new value to total length of episodes.
-     *
-     * @param totalLength new value
-     */
-    public void setTotalLength(final Time totalLength) {
-        this.totalLength = totalLength;
     }
 
     /**
@@ -293,8 +224,8 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("SeasonTO [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, episodesCount=%d, totalLength=%s, note=%s, "
-                + "position=%d, serie=%s]", id, number, startYear, endYear, language, subtitles, episodesCount, totalLength, note, position, serie);
+        return String.format("SeasonTO [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, serie=%s]", id, number,
+                startYear, endYear, language, subtitles, note, position, serie);
     }
 
     @Override

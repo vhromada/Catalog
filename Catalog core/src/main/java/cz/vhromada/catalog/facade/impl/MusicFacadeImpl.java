@@ -10,7 +10,6 @@ import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.catalog.service.MusicService;
-import cz.vhromada.catalog.service.SongService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class MusicFacadeImpl implements MusicFacade {
 
     /** Service for music field */
     private static final String MUSIC_SERVICE_FIELD = "Service for music";
-
-    /** Service for songs field */
-    private static final String SONG_SERVICE_FIELD = "Service for songs";
 
     /** Conversion service field */
     private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
@@ -59,10 +55,6 @@ public class MusicFacadeImpl implements MusicFacade {
     @Autowired
     private MusicService musicService;
 
-    /** Service for songs */
-    @Autowired
-    private SongService songService;
-
     /** Conversion service */
     @Autowired
     @Qualifier("coreConversionService")
@@ -88,24 +80,6 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     public void setMusicService(final MusicService musicService) {
         this.musicService = musicService;
-    }
-
-    /**
-     * Returns service for songs.
-     *
-     * @return service for songs
-     */
-    public SongService getSongService() {
-        return songService;
-    }
-
-    /**
-     * Sets a new value to service for songs.
-     *
-     * @param songService new value
-     */
-    public void setSongService(final SongService songService) {
-        this.songService = songService;
     }
 
     /**
@@ -165,7 +139,6 @@ public class MusicFacadeImpl implements MusicFacade {
      * {@inheritDoc}
      *
      * @throws IllegalStateException    if service for music isn't set
-     *                                  or service for songs isn't set
      *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -173,13 +146,12 @@ public class MusicFacadeImpl implements MusicFacade {
     @Transactional(readOnly = true)
     public List<MusicTO> getMusic() {
         Validators.validateFieldNotNull(musicService, MUSIC_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
         Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
 
         try {
             final List<MusicTO> musicList = new ArrayList<>();
             for (final Music music : musicService.getMusic()) {
-                musicList.add(convertMusicToMusicTO(music));
+                musicList.add(conversionService.convert(music, MusicTO.class));
             }
             return musicList;
         } catch (final ServiceOperationException ex) {
@@ -191,7 +163,6 @@ public class MusicFacadeImpl implements MusicFacade {
      * {@inheritDoc}
      *
      * @throws IllegalStateException    if service for music isn't set
-     *                                  or service for songs isn't set
      *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
@@ -200,12 +171,11 @@ public class MusicFacadeImpl implements MusicFacade {
     @Transactional(readOnly = true)
     public MusicTO getMusic(final Integer id) {
         Validators.validateFieldNotNull(musicService, MUSIC_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
         Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return convertMusicToMusicTO(musicService.getMusic(id));
+            return conversionService.convert(musicService.getMusic(id), MusicTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -470,21 +440,6 @@ public class MusicFacadeImpl implements MusicFacade {
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
-    }
-
-    /**
-     * Converts entity music to TO for music.
-     *
-     * @param music converting entity music
-     * @return converted TO for music
-     */
-    private MusicTO convertMusicToMusicTO(final Music music) {
-        final MusicTO musicTO = conversionService.convert(music, MusicTO.class);
-        if (musicTO != null) {
-            musicTO.setSongsCount(songService.findSongsByMusic(music).size());
-            musicTO.setTotalLength(songService.getTotalLengthByMusic(music));
-        }
-        return musicTO;
     }
 
 }

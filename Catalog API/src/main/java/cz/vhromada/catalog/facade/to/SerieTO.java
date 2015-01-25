@@ -3,8 +3,6 @@ package cz.vhromada.catalog.facade.to;
 import java.io.Serializable;
 import java.util.List;
 
-import cz.vhromada.catalog.commons.Time;
-
 /**
  * A class represents TO for serie.
  *
@@ -38,15 +36,6 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
 
     /** Path to file with serie's picture */
     private String picture;
-
-    /** Count of seasons */
-    private int seasonsCount;
-
-    /** Count of episodes */
-    private int episodesCount;
-
-    /** Total length of seasons */
-    private Time totalLength;
 
     /** Note */
     private String note;
@@ -202,60 +191,6 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
     }
 
     /**
-     * Returns count of seasons.
-     *
-     * @return count of seasons
-     */
-    public int getSeasonsCount() {
-        return seasonsCount;
-    }
-
-    /**
-     * Sets a new value to count of seasons.
-     *
-     * @param seasonsCount new value
-     */
-    public void setSeasonsCount(final int seasonsCount) {
-        this.seasonsCount = seasonsCount;
-    }
-
-    /**
-     * Returns count of episodes.
-     *
-     * @return count of episodes
-     */
-    public int getEpisodesCount() {
-        return episodesCount;
-    }
-
-    /**
-     * Sets a new value to count of episodes.
-     *
-     * @param episodesCount new value
-     */
-    public void setEpisodesCount(final int episodesCount) {
-        this.episodesCount = episodesCount;
-    }
-
-    /**
-     * Returns total length of seasons.
-     *
-     * @return total length of seasons
-     */
-    public Time getTotalLength() {
-        return totalLength;
-    }
-
-    /**
-     * Sets a new value to total length of seasons.
-     *
-     * @param totalLength new value
-     */
-    public void setTotalLength(final Time totalLength) {
-        this.totalLength = totalLength;
-    }
-
-    /**
      * Returns note.
      *
      * @return note
@@ -309,23 +244,6 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
         this.genres = genres;
     }
 
-    /**
-     * Returns genres as string.
-     *
-     * @return genres as string
-     */
-    public String getGenresAsString() {
-        if (genres == null || genres.isEmpty()) {
-            return "";
-        }
-        final StringBuilder genresString = new StringBuilder();
-        for (final GenreTO genre : genres) {
-            genresString.append(genre.getName());
-            genresString.append(", ");
-        }
-        return genresString.substring(0, genresString.length() - 2);
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -345,10 +263,8 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("SerieTO [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, seasonsCount=%d, "
-                        + "episodesCount=%d, totalLength=%s, note=%s, position=%d, genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz,
-                picture,
-                seasonsCount, episodesCount, totalLength, note, position, genres);
+        return String.format("SerieTO [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
+                + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }
 
     @Override

@@ -25,10 +25,6 @@ public interface SerieTOValidator {
      *                                  or URL to english Wikipedia page about serie is null
      *                                  or URL to czech Wikipedia page about serie is null
      *                                  or path to file with serie's picture is null
-     *                                  or count of seasons is negative number
-     *                                  or count of episodes is negative number
-     *                                  or total length of seasons is null
-     *                                  or total length of seasons is negative number
      *                                  or note is null
      *                                  or genres are null
      *                                  or genres contain null value
@@ -54,10 +50,6 @@ public interface SerieTOValidator {
      *                                  or URL to english Wikipedia page about serie is null
      *                                  or URL to czech Wikipedia page about serie is null
      *                                  or path to file with serie's picture is null
-     *                                  or count of seasons is negative number
-     *                                  or count of episodes is negative number
-     *                                  or total length of seasons is null
-     *                                  or total length of seasons is negative number
      *                                  or note is null
      *                                  or genres are null
      *                                  or genres contain null value

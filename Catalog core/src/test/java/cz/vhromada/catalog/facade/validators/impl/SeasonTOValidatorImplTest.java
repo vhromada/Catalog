@@ -120,33 +120,6 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
         seasonTOValidator.validateNewSeasonTO(season);
     }
 
-    /** Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSeasonTOWithNegativeEpisodesCount() {
-        final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-        season.setEpisodesCount(-1);
-
-        seasonTOValidator.validateNewSeasonTO(season);
-    }
-
-    /** Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with null total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSeasonTOWithNullTotalLength() {
-        final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-        season.setTotalLength(null);
-
-        seasonTOValidator.validateNewSeasonTO(season);
-    }
-
-    /** Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with negative total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSeasonTOWithNegativeTotalLength() {
-        final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-        season.setTotalLength(TestConstants.NEGATIVE_TIME);
-
-        seasonTOValidator.validateNewSeasonTO(season);
-    }
-
     /** Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with null note. */
     @Test(expected = ValidationException.class)
     public void testValidateNewSeasonTOWithNullNote() {
@@ -263,33 +236,6 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
     public void testValidateExistingSeasonTOWIthBadSubtitles() {
         final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
         season.setSubtitles(CollectionUtils.newList(generate(Language.class), null));
-
-        seasonTOValidator.validateExistingSeasonTO(season);
-    }
-
-    /** Test method for {@link SeasonTOValidator#validateExistingSeasonTO(SeasonTO)} with TO for season with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSeasonTOWithNegativeEpisodesCount() {
-        final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-        season.setEpisodesCount(-1);
-
-        seasonTOValidator.validateExistingSeasonTO(season);
-    }
-
-    /** Test method for {@link SeasonTOValidator#validateExistingSeasonTO(SeasonTO)} with TO for season with null total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSeasonTOWithNullTotalLength() {
-        final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-        season.setTotalLength(null);
-
-        seasonTOValidator.validateExistingSeasonTO(season);
-    }
-
-    /** Test method for {@link SeasonTOValidator#validateExistingSeasonTO(SeasonTO)} with TO for season with negative total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSeasonTOWithNegativeTotalLength() {
-        final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-        season.setTotalLength(TestConstants.NEGATIVE_TIME);
 
         seasonTOValidator.validateExistingSeasonTO(season);
     }

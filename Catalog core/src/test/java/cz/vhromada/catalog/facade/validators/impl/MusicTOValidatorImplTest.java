@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
-import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
@@ -82,33 +81,6 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateNewMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with negative count of songs. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewMusicTOWithNegativeSongsCount() {
-        final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
-        music.setSongsCount(-1);
-
-        musicTOValidator.validateNewMusicTO(music);
-    }
-
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null total length of songs. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewMusicTOWithNullTotalLength() {
-        final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
-        music.setTotalLength(null);
-
-        musicTOValidator.validateNewMusicTO(music);
-    }
-
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with negative total length of songs. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewMusicTOWithNegativeTotalLength() {
-        final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
-        music.setTotalLength(TestConstants.NEGATIVE_TIME);
-
-        musicTOValidator.validateNewMusicTO(music);
-    }
-
     /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null note. */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithNullNote() {
@@ -177,33 +149,6 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
     public void testValidateExistingMusicTOWithNotPositiveMediaCount() {
         final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
         music.setMediaCount(0);
-
-        musicTOValidator.validateExistingMusicTO(music);
-    }
-
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with negative count of songs. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingMusicTOWithNegativeSongsCount() {
-        final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
-        music.setSongsCount(-1);
-
-        musicTOValidator.validateExistingMusicTO(music);
-    }
-
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null total length of songs. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingMusicTOWithNullTotalLength() {
-        final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
-        music.setTotalLength(null);
-
-        musicTOValidator.validateExistingMusicTO(music);
-    }
-
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with negative total length of songs. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingMusicTOWithNegativeTotalLength() {
-        final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
-        music.setTotalLength(TestConstants.NEGATIVE_TIME);
 
         musicTOValidator.validateExistingMusicTO(music);
     }

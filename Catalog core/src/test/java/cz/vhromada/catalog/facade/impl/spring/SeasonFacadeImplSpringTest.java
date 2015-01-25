@@ -233,33 +233,6 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithNegativeEpisodesCount() {
-        final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-        season.setEpisodesCount(-1);
-
-        seasonFacade.add(season);
-    }
-
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with null total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithNullTotalLength() {
-        final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-        season.setTotalLength(null);
-
-        seasonFacade.add(season);
-    }
-
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with negative total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithNegativeTotalLength() {
-        final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-        season.setTotalLength(TestConstants.NEGATIVE_TIME);
-
-        seasonFacade.add(season);
-    }
-
     /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with null note. */
     @Test(expected = ValidationException.class)
     public void testAddWithNullNote() {
@@ -398,33 +371,6 @@ public class SeasonFacadeImplSpringTest {
     public void testUpdateWithBadSubtitles() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
         season.setSubtitles(CollectionUtils.newList(objectGenerator.generate(Language.class), null));
-
-        seasonFacade.update(season);
-    }
-
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithNegativeEpisodesCount() {
-        final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-        season.setEpisodesCount(-1);
-
-        seasonFacade.update(season);
-    }
-
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with null total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithNullTotalLength() {
-        final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-        season.setTotalLength(null);
-
-        seasonFacade.update(season);
-    }
-
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with negative total length of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithNegativeTotalLength() {
-        final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-        season.setTotalLength(TestConstants.NEGATIVE_TIME);
 
         seasonFacade.update(season);
     }
@@ -646,10 +592,6 @@ public class SeasonFacadeImplSpringTest {
             final List<SeasonTO> expectedSeasons = SpringToUtils.getSeasons(i);
             final List<SeasonTO> actualSeasons = seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator, i));
             DeepAsserts.assertEquals(expectedSeasons, actualSeasons, SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD);
-            for (int j = 0; j < expectedSeasons.size(); j++) {
-                DeepAsserts.assertEquals(expectedSeasons.get(j).getEpisodesCount(), actualSeasons.get(j).getEpisodesCount());
-                DeepAsserts.assertEquals(expectedSeasons.get(j).getTotalLength(), actualSeasons.get(j).getTotalLength());
-            }
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }

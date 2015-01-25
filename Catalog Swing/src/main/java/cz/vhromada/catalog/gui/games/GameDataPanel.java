@@ -86,7 +86,7 @@ public class GameDataPanel extends JPanel {
         Validators.validateArgumentNotNull(game, "TO for game");
 
         initData(nameLabel, nameData, game.getName());
-        initData(dataLabel, dataData, game.getAdditionalData());
+        //TODO vhromada 25.01.2015:initData(dataLabel, dataData, game.getAdditionalData());
         initData(mediaCountLabel, mediaCountData, Integer.toString(game.getMediaCount()));
         initData(noteLabel, noteData, game.getNote());
 
@@ -138,7 +138,7 @@ public class GameDataPanel extends JPanel {
         Validators.validateArgumentNotNull(game, "TO for game");
 
         nameData.setText(game.getName());
-        dataData.setText(game.getAdditionalData());
+        //TODO vhromada 25.01.2015:dataData.setText(game.getAdditionalData());
         mediaCountData.setText(Integer.toString(game.getMediaCount()));
         noteData.setText(game.getNote());
         wikiCz = game.getWikiCz();

@@ -138,4 +138,3 @@ public class BookCategory implements Serializable {
     }
 
 }
-

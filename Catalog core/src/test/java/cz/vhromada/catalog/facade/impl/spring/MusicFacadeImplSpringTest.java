@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringToUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
-import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
@@ -175,33 +174,6 @@ public class MusicFacadeImplSpringTest {
         musicFacade.add(music);
     }
 
-    /** Test method for {@link MusicFacade#add(MusicTO)} with music with negative count of songs. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithMusicWithNotNegativeSongsCount() {
-        final MusicTO music = SpringToUtils.newMusic(objectGenerator);
-        music.setSongsCount(-1);
-
-        musicFacade.add(music);
-    }
-
-    /** Test method for {@link MusicFacade#add(MusicTO)} with music with null total length. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithMusicWithNullTotalLength() {
-        final MusicTO music = SpringToUtils.newMusic(objectGenerator);
-        music.setTotalLength(null);
-
-        musicFacade.add(music);
-    }
-
-    /** Test method for {@link MusicFacade#add(MusicTO)} with music with negative total length. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithMusicWithNegativeTotalLength() {
-        final MusicTO music = SpringToUtils.newMusic(objectGenerator);
-        music.setTotalLength(TestConstants.NEGATIVE_TIME);
-
-        musicFacade.add(music);
-    }
-
     /** Test method for {@link MusicFacade#add(MusicTO)} with music with null note. */
     @Test(expected = ValidationException.class)
     public void testAddWithMusicWithNullNote() {
@@ -276,33 +248,6 @@ public class MusicFacadeImplSpringTest {
     public void testUpdateWithMusicWithNotPositiveMediaCount() {
         final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
         music.setMediaCount(0);
-
-        musicFacade.update(music);
-    }
-
-    /** Test method for {@link MusicFacade#update(MusicTO)} with music with negative count of songs. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithMusicWithNotNegativeSongsCount() {
-        final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
-        music.setSongsCount(-1);
-
-        musicFacade.update(music);
-    }
-
-    /** Test method for {@link MusicFacade#update(MusicTO)} with music with null total length. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithMusicWithNullTotalLength() {
-        final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
-        music.setTotalLength(null);
-
-        musicFacade.update(music);
-    }
-
-    /** Test method for {@link MusicFacade#update(MusicTO)} with music with negative total length. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithMusicWithNegativeTotalLength() {
-        final MusicTO music = SpringToUtils.newMusicWithId(objectGenerator);
-        music.setTotalLength(TestConstants.NEGATIVE_TIME);
 
         musicFacade.update(music);
     }

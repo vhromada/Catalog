@@ -146,15 +146,6 @@ public class BookCategoryFacadeImplSpringTest {
         bookCategoryFacade.add(bookCategory);
     }
 
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with book category with negative count of books. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithBookCategoryWithNotNegativeBooksCount() {
-        final BookCategoryTO bookCategory = SpringToUtils.newBookCategory(objectGenerator);
-        bookCategory.setBooksCount(-1);
-
-        bookCategoryFacade.add(bookCategory);
-    }
-
     /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with book category with null note. */
     @Test(expected = ValidationException.class)
     public void testAddWithBookCategoryWithNullNote() {
@@ -202,15 +193,6 @@ public class BookCategoryFacadeImplSpringTest {
     public void testUpdateWithBookCategoryWithEmptyName() {
         final BookCategoryTO bookCategory = SpringToUtils.newBookCategoryWithId(objectGenerator);
         bookCategory.setName(null);
-
-        bookCategoryFacade.update(bookCategory);
-    }
-
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with book category with negative count of books. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithBookCategoryWithNotNegativeBooksCount() {
-        final BookCategoryTO bookCategory = SpringToUtils.newBookCategoryWithId(objectGenerator);
-        bookCategory.setBooksCount(-1);
 
         bookCategoryFacade.update(bookCategory);
     }

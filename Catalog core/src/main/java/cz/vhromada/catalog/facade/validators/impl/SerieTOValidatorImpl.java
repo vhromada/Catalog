@@ -96,10 +96,6 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
      *                                  or URL to english Wikipedia page about serie is null
      *                                  or URL to czech Wikipedia page about serie is null
      *                                  or path to file with serie's picture is null
-     *                                  or count of seasons is negative number
-     *                                  or count of episodes is negative number
-     *                                  or total length of seasons is null
-     *                                  or total length of seasons is negative number
      *                                  or note is null
      *                                  or genres are null
      *                                  or genres contain null value
@@ -119,10 +115,6 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
         Validators.validateNotNull(serie.getWikiEn(), "URL to english Wikipedia page about serie");
         Validators.validateNotNull(serie.getWikiCz(), "URL to czech Wikipedia page about serie");
         Validators.validateNotNull(serie.getPicture(), "Path to file with serie's picture");
-        Validators.validateNotNegativeNumber(serie.getSeasonsCount(), "Count of seasons");
-        Validators.validateNotNegativeNumber(serie.getEpisodesCount(), "Count of episodes");
-        Validators.validateNotNull(serie.getTotalLength(), "Total length of seasons");
-        Validators.validateNotNegativeNumber(serie.getTotalLength().getLength(), "Total length of seasons");
         Validators.validateNotNull(serie.getNote(), "Note");
         Validators.validateNotNull(serie.getGenres(), "Genres");
         Validators.validateCollectionNotContainNull(serie.getGenres(), "Genres");

@@ -168,23 +168,6 @@ public class MovieTO implements Comparable<MovieTO>, Serializable {
     }
 
     /**
-     * Returns subtitles as string.
-     *
-     * @return subtitles as string
-     */
-    public String getSubtitlesAsString() {
-        if (subtitles == null || subtitles.isEmpty()) {
-            return "";
-        }
-        final StringBuilder subtitlesString = new StringBuilder();
-        for (final Language subtitle : subtitles) {
-            subtitlesString.append(subtitle);
-            subtitlesString.append(" / ");
-        }
-        return subtitlesString.substring(0, subtitlesString.length() - 3);
-    }
-
-    /**
      * Returns media.
      *
      * @return media
@@ -200,22 +183,6 @@ public class MovieTO implements Comparable<MovieTO>, Serializable {
      */
     public void setMedia(final List<Integer> media) {
         this.media = media;
-    }
-
-    /**
-     * Returns total length of movie.
-     *
-     * @return total length of movie
-     */
-    public int getTotalLength() {
-        if (media == null || media.isEmpty()) {
-            return 0;
-        }
-        int length = 0;
-        for (final Integer medium : media) {
-            length += medium;
-        }
-        return length;
     }
 
     /**
@@ -362,23 +329,6 @@ public class MovieTO implements Comparable<MovieTO>, Serializable {
         this.genres = genres;
     }
 
-    /**
-     * Returns genres as string.
-     *
-     * @return genres as string
-     */
-    public String getGenresAsString() {
-        if (genres == null || genres.isEmpty()) {
-            return "";
-        }
-        final StringBuilder genresString = new StringBuilder();
-        for (final GenreTO genre : genres) {
-            genresString.append(genre.getName());
-            genresString.append(", ");
-        }
-        return genresString.substring(0, genresString.length() - 2);
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -400,8 +350,7 @@ public class MovieTO implements Comparable<MovieTO>, Serializable {
     public String toString() {
         return String.format("MovieTO [id=%d, czechName=%s, originalName=%s, year=%d, language=%s, subtitles=%s, media=%s, csfd=%s, imdbCode=%d, wikiEn=%s, "
                         + "wikiCz=%s, picture=%s, note=%s, position=%d, genres=%s]", id, czechName, originalName, year, language, subtitles, media, csfd,
-                imdbCode,
-                wikiEn, wikiCz, picture, note, position, genres);
+                imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }
 
     @Override

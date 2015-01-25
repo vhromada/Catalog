@@ -148,42 +148,6 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with negative count of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSerieTOWithNegativeSeasonsCount() {
-        final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
-        serie.setSeasonsCount(-1);
-
-        serieTOValidator.validateNewSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSerieTOWithNegativeEpisodesCount() {
-        final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
-        serie.setEpisodesCount(-1);
-
-        serieTOValidator.validateNewSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSerieTOWithNullTotalLength() {
-        final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
-        serie.setTotalLength(null);
-
-        serieTOValidator.validateNewSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with negative total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSerieTOWithNegativeTotalLength() {
-        final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
-        serie.setTotalLength(TestConstants.NEGATIVE_TIME);
-
-        serieTOValidator.validateNewSerieTO(serie);
-    }
-
     /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null note. */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullNote() {
@@ -336,42 +300,6 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
     public void testValidateExistingSerieTOWithNullPicture() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
         serie.setPicture(null);
-
-        serieTOValidator.validateExistingSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with negative count of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSerieTOWithNegativeSeasonsCount() {
-        final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
-        serie.setSeasonsCount(-1);
-
-        serieTOValidator.validateExistingSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSerieTOWithNegativeEpisodesCount() {
-        final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
-        serie.setEpisodesCount(-1);
-
-        serieTOValidator.validateExistingSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSerieTOWithNullTotalLength() {
-        final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
-        serie.setTotalLength(null);
-
-        serieTOValidator.validateExistingSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with negative total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSerieTOWithNegativeTotalLength() {
-        final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
-        serie.setTotalLength(TestConstants.NEGATIVE_TIME);
 
         serieTOValidator.validateExistingSerieTO(serie);
     }

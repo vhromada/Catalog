@@ -18,9 +18,6 @@ public class BookCategoryTO implements Comparable<BookCategoryTO>, Serializable 
     /** Name */
     private String name;
 
-    /** Count of books */
-    private int booksCount;
-
     /** Note */
     private String note;
 
@@ -61,24 +58,6 @@ public class BookCategoryTO implements Comparable<BookCategoryTO>, Serializable 
      */
     public void setName(final String name) {
         this.name = name;
-    }
-
-    /**
-     * Returns count of books.
-     *
-     * @return count of books
-     */
-    public int getBooksCount() {
-        return booksCount;
-    }
-
-    /**
-     * Sets a new value to count of books.
-     *
-     * @param booksCount new value
-     */
-    public void setBooksCount(final int booksCount) {
-        this.booksCount = booksCount;
     }
 
     /**
@@ -136,7 +115,7 @@ public class BookCategoryTO implements Comparable<BookCategoryTO>, Serializable 
 
     @Override
     public String toString() {
-        return String.format("BookCategoryTO [id=%d, name=%s, booksCount=%d, note=%s, position=%d]", id, name, booksCount, note, position);
+        return String.format("BookCategoryTO [id=%d, name=%s, note=%s, position=%d]", id, name, note, position);
     }
 
     @Override

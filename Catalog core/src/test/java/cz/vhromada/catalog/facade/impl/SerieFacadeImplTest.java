@@ -10,30 +10,24 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Genre;
-import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.facade.validators.SerieTOValidator;
-import cz.vhromada.catalog.service.EpisodeService;
 import cz.vhromada.catalog.service.GenreService;
-import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
@@ -59,14 +53,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
     /** Instance of {@link SerieService} */
     @Mock
     private SerieService serieService;
-
-    /** Instance of {@link SeasonService} */
-    @Mock
-    private SeasonService seasonService;
-
-    /** Instance of {@link EpisodeService} */
-    @Mock
-    private EpisodeService episodeService;
 
     /** Instance of {@link GenreService} */
     @Mock
@@ -121,18 +107,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
     public void testGetSeries() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
         final List<SerieTO> seriesList = CollectionUtils.newList(generate(SerieTO.class), generate(SerieTO.class));
-        final List<Season> seasons = new ArrayList<>();
-        final List<Episode> episodes = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            seasons.add(generate(Season.class));
-        }
-        for (int i = 0; i < 10; i++) {
-            episodes.add(generate(Episode.class));
-        }
         when(serieService.getSeries()).thenReturn(series);
-        when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
-        when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-        when(episodeService.getTotalLengthBySeason(any(Season.class))).thenReturn(generate(Time.class));
         for (int i = 0; i < series.size(); i++) {
             final Serie serie = series.get(i);
             when(conversionService.convert(serie, SerieTO.class)).thenReturn(seriesList.get(i));
@@ -142,34 +117,15 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).getSeries();
         for (final Serie serie : series) {
-            verify(seasonService).findSeasonsBySerie(serie);
             verify(conversionService).convert(serie, SerieTO.class);
         }
-        for (final Season season : seasons) {
-            verify(episodeService, times(series.size())).findEpisodesBySeason(season);
-            verify(episodeService, times(series.size())).getTotalLengthBySeason(season);
-        }
-        verifyNoMoreInteractions(serieService, seasonService, episodeService, conversionService);
+        verifyNoMoreInteractions(serieService, conversionService);
     }
 
     /** Test method for {@link SerieFacade#getSeries()} with not set service for series. */
     @Test(expected = IllegalStateException.class)
     public void testGetSeriesWithNotSetSerieService() {
         ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.getSeries();
-    }
-
-    /** Test method for {@link SerieFacade#getSeries()} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeriesWithNotSetSeasonService() {
-        ((SerieFacadeImpl) serieFacade).setSeasonService(null);
-        serieFacade.getSeries();
-    }
-
-    /** Test method for {@link SerieFacade#getSeries()} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeriesWithNotSetEpisodeService() {
-        ((SerieFacadeImpl) serieFacade).setEpisodeService(null);
         serieFacade.getSeries();
     }
 
@@ -194,7 +150,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).getSeries();
         verifyNoMoreInteractions(serieService);
-        verifyZeroInteractions(seasonService, episodeService, conversionService);
+        verifyZeroInteractions(conversionService);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with existing serie. */
@@ -202,31 +158,15 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
     public void testGetSerieWithExistingSerie() {
         final Serie serie = generate(Serie.class);
         final SerieTO serieTO = generate(SerieTO.class);
-        final List<Season> seasons = new ArrayList<>();
-        final List<Episode> episodes = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            seasons.add(generate(Season.class));
-        }
-        for (int i = 0; i < 10; i++) {
-            episodes.add(generate(Episode.class));
-        }
         when(serieService.getSerie(anyInt())).thenReturn(serie);
-        when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
-        when(episodeService.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-        when(episodeService.getTotalLengthBySeason(any(Season.class))).thenReturn(generate(Time.class));
         when(conversionService.convert(any(Serie.class), eq(SerieTO.class))).thenReturn(serieTO);
 
         DeepAsserts.assertEquals(serieTO, serieFacade.getSerie(serieTO.getId()));
 
         verify(serieService).getSerie(serieTO.getId());
         verify(conversionService).convert(serie, SerieTO.class);
-        verify(seasonService).findSeasonsBySerie(serie);
-        for (final Season season : seasons) {
-            verify(episodeService).findEpisodesBySeason(season);
-            verify(episodeService).getTotalLengthBySeason(season);
-        }
         verify(conversionService).convert(serie, SerieTO.class);
-        verifyNoMoreInteractions(serieService, seasonService, episodeService, conversionService);
+        verifyNoMoreInteractions(serieService, conversionService);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with not existing serie. */
@@ -240,27 +180,12 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verify(serieService).getSerie(Integer.MAX_VALUE);
         verify(conversionService).convert(null, SerieTO.class);
         verifyNoMoreInteractions(serieService, conversionService);
-        verifyZeroInteractions(seasonService, episodeService);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with not set service for series. */
     @Test(expected = IllegalStateException.class)
     public void testGetSerieWithNotSetSerieService() {
         ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.getSerie(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSerieWithNotSetSeasonService() {
-        ((SerieFacadeImpl) serieFacade).setSeasonService(null);
-        serieFacade.getSerie(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSerieWithNotSetEpisodeService() {
-        ((SerieFacadeImpl) serieFacade).setEpisodeService(null);
         serieFacade.getSerie(Integer.MAX_VALUE);
     }
 
@@ -281,7 +206,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(serieService, seasonService, episodeService, conversionService);
+        verifyZeroInteractions(serieService, conversionService);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with exception in service tier. */
@@ -298,7 +223,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).getSerie(Integer.MAX_VALUE);
         verifyNoMoreInteractions(serieService);
-        verifyZeroInteractions(seasonService, episodeService, conversionService);
+        verifyZeroInteractions(conversionService);
     }
 
     /** Test method for {@link SerieFacade#add(SerieTO)}. */

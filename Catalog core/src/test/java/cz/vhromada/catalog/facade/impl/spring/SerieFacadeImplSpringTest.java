@@ -242,42 +242,6 @@ public class SerieFacadeImplSpringTest {
         serieFacade.add(serie);
     }
 
-    /** Test method for {@link SerieFacade#add(SerieTO)} with serie with negative count of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithNegativeSeasonsCount() {
-        final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
-        serie.setSeasonsCount(-1);
-
-        serieFacade.add(serie);
-    }
-
-    /** Test method for {@link SerieFacade#add(SerieTO)} with serie with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithNegativeEpisodesCount() {
-        final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
-        serie.setEpisodesCount(-1);
-
-        serieFacade.add(serie);
-    }
-
-    /** Test method for {@link SerieFacade#add(SerieTO)} with serie with null total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithNullTotalLength() {
-        final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
-        serie.setTotalLength(null);
-
-        serieFacade.add(serie);
-    }
-
-    /** Test method for {@link SerieFacade#add(SerieTO)} with serie with negative total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testAddWithNegativeTotalLength() {
-        final SerieTO serie = SpringToUtils.newSerie(objectGenerator);
-        serie.setTotalLength(TestConstants.NEGATIVE_TIME);
-
-        serieFacade.add(serie);
-    }
-
     /** Test method for {@link SerieFacade#add(SerieTO)} with serie with null note. */
     @Test(expected = ValidationException.class)
     public void testAddWithNullNote() {
@@ -445,42 +409,6 @@ public class SerieFacadeImplSpringTest {
     public void testUpdateWithNullPicture() {
         final SerieTO serie = objectGenerator.generate(SerieTO.class);
         serie.setPicture(null);
-
-        serieFacade.update(serie);
-    }
-
-    /** Test method for {@link SerieFacade#update(SerieTO)} with serie with negative count of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithNegativeSeasonsCount() {
-        final SerieTO serie = objectGenerator.generate(SerieTO.class);
-        serie.setSeasonsCount(-1);
-
-        serieFacade.update(serie);
-    }
-
-    /** Test method for {@link SerieFacade#update(SerieTO)} with serie with negative count of episodes. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithNegativeEpisodesCount() {
-        final SerieTO serie = objectGenerator.generate(SerieTO.class);
-        serie.setEpisodesCount(-1);
-
-        serieFacade.update(serie);
-    }
-
-    /** Test method for {@link SerieFacade#update(SerieTO)} with serie with null total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithNullTotalLength() {
-        final SerieTO serie = objectGenerator.generate(SerieTO.class);
-        serie.setTotalLength(null);
-
-        serieFacade.update(serie);
-    }
-
-    /** Test method for {@link SerieFacade#update(SerieTO)} with serie with negative total length of seasons. */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithNegativeTotalLength() {
-        final SerieTO serie = objectGenerator.generate(SerieTO.class);
-        serie.setTotalLength(TestConstants.NEGATIVE_TIME);
 
         serieFacade.update(serie);
     }

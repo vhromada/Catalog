@@ -37,9 +37,6 @@ public interface SeasonFacade {
      *                                  or language is null
      *                                  or subtitles are null
      *                                  or subtitles contain null value
-     *                                  or count of episodes is negative number
-     *                                  or total length of episodes is null
-     *                                  or total length of episodes is negative number
      *                                  or note is null
      *                                  or TO for serie is null
      *                                  or TO for serie ID is null
@@ -64,9 +61,6 @@ public interface SeasonFacade {
      *                                  or language is null
      *                                  or subtitles are null
      *                                  or subtitles contain null value
-     *                                  or count of episodes is negative number
-     *                                  or total length of episodes is null
-     *                                  or total length of episodes is negative number
      *                                  or note is null
      *                                  or TO for serie is null
      *                                  or TO for serie ID is null

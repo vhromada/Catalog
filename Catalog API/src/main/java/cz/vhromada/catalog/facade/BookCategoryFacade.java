@@ -48,7 +48,6 @@ public interface BookCategoryFacade {
      *                                  if ID isn't null
      *                                  or name is null
      *                                  or name is empty string
-     *                                  or count of books is negative number
      *                                  or note is null
      * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
      *                                  if there was error in working with service tier
@@ -64,7 +63,6 @@ public interface BookCategoryFacade {
      *                                  if ID is null
      *                                  or name is null
      *                                  or name is empty string
-     *                                  or count of books is negative number
      *                                  or note is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
      *                                  if TO for book category doesn't exist in data storage

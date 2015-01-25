@@ -157,9 +157,6 @@ public final class SpringToUtils {
         serie.setWikiEn("Serie " + index + " English Wikipedia");
         serie.setWikiCz("Serie " + index + " Czech Wikipedia");
         serie.setPicture("Serie " + index + " pc");
-        serie.setSeasonsCount(SpringUtils.SEASONS_PER_SERIE_COUNT);
-        serie.setEpisodesCount(SpringUtils.EPISODES_PER_SERIE_COUNT);
-        serie.setTotalLength(new Time(666));
         serie.setNote(index == 2 ? "Serie 2 note" : "");
         serie.setPosition(index - 1);
         final List<GenreTO> genres = new ArrayList<>();
@@ -234,8 +231,6 @@ public final class SpringToUtils {
         season.setNumber(seasonIndex);
         season.setStartYear(1980 + seasonIndex);
         season.setEndYear(seasonIndex == 3 ? 1984 : 1982);
-        season.setEpisodesCount(SpringUtils.EPISODES_PER_SEASON_COUNT);
-        season.setTotalLength(new Time(6 * SpringUtils.LENGTH_MULTIPLIERS[seasonIndex - 1]));
         season.setNote(seasonIndex == 2 ? "Serie " + serieIndex + " Season 2 note" : "");
         season.setPosition(seasonIndex - 1);
         season.setSerie(getSerie(serieIndex));
@@ -471,8 +466,6 @@ public final class SpringToUtils {
         music.setWikiEn("Music " + index + " English Wikipedia");
         music.setWikiCz("Music " + index + " Czech Wikipedia");
         music.setMediaCount(index * 10);
-        music.setSongsCount(SpringUtils.SONGS_PER_MUSIC_COUNT);
-        music.setTotalLength(new Time(6 * SpringUtils.LENGTH_MULTIPLIERS[index - 1]));
         music.setNote(index == 2 ? "Music 2 note" : "");
         music.setPosition(index - 1);
 
@@ -673,7 +666,6 @@ public final class SpringToUtils {
         final BookCategoryTO bookCategory = new BookCategoryTO();
         bookCategory.setId(index);
         bookCategory.setName("Book category " + index + " name");
-        bookCategory.setBooksCount(SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT);
         bookCategory.setNote(index == 1 ? "Book category 1 note" : "");
         bookCategory.setPosition(index - 1);
 

@@ -21,9 +21,6 @@ public interface MusicTOValidator {
      *                                  or URL to english Wikipedia page about music is null
      *                                  or URL to czech Wikipedia page about music is null
      *                                  or count of media isn't positive number
-     *                                  or count of songs is negative number
-     *                                  or total length of songs is null
-     *                                  or total length of songs is negative number
      *                                  or note is null
      */
     void validateNewMusicTO(MusicTO music);
@@ -40,9 +37,6 @@ public interface MusicTOValidator {
      *                                  or URL to english Wikipedia page about music is null
      *                                  or URL to czech Wikipedia page about music is null
      *                                  or count of media isn't positive number
-     *                                  or count of songs is negative number
-     *                                  or total length of songs is null
-     *                                  or total length of songs is negative number
      *                                  or note is null
      */
     void validateExistingMusicTO(MusicTO music);

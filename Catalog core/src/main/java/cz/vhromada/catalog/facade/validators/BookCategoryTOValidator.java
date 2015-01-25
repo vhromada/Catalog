@@ -18,7 +18,6 @@ public interface BookCategoryTOValidator {
      *                                  if ID isn't null
      *                                  or name is null
      *                                  or name is empty string
-     *                                  or count of books is negative number
      *                                  or note is null
      */
     void validateNewBookCategoryTO(BookCategoryTO bookCategory);
@@ -32,7 +31,6 @@ public interface BookCategoryTOValidator {
      *                                  if ID is null
      *                                  or name is null
      *                                  or name is empty string
-     *                                  or count of books is negative number
      *                                  or note is null
      */
     void validateExistingBookCategoryTO(BookCategoryTO bookCategory);

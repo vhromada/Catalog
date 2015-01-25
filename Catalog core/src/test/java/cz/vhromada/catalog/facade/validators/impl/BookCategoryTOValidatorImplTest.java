@@ -54,15 +54,6 @@ public class BookCategoryTOValidatorImplTest extends ObjectGeneratorTest {
         bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
     }
 
-    /** Test method for {@link BookCategoryTOValidator#validateNewBookCategoryTO(BookCategoryTO)} with TO for book category with negative count of books. */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewBookCategoryTOWithNegativeBooksCount() {
-        final BookCategoryTO bookCategory = ToGenerator.newBookCategory(getObjectGenerator());
-        bookCategory.setBooksCount(-1);
-
-        bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
-    }
-
     /** Test method for {@link BookCategoryTOValidator#validateNewBookCategoryTO(BookCategoryTO)} with TO for book category with null note. */
     @Test(expected = ValidationException.class)
     public void testValidateNewBookCategoryTOWithNullNote() {
@@ -98,18 +89,6 @@ public class BookCategoryTOValidatorImplTest extends ObjectGeneratorTest {
     public void testValidateExistingBookCategoryTOWithEmptyName() {
         final BookCategoryTO bookCategory = ToGenerator.newBookCategoryWithId(getObjectGenerator());
         bookCategory.setName("");
-
-        bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
-    }
-
-    /**
-     * Test method for {@link BookCategoryTOValidator#validateExistingBookCategoryTO(BookCategoryTO)} with TO for book category with negative count of
-     * books.
-     */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingBookCategoryTOWithNegativeBooksCount() {
-        final BookCategoryTO bookCategory = ToGenerator.newBookCategoryWithId(getObjectGenerator());
-        bookCategory.setBooksCount(-1);
 
         bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
     }

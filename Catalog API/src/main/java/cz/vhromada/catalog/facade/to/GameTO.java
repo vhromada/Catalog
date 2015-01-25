@@ -294,32 +294,6 @@ public class GameTO implements Comparable<GameTO>, Serializable {
     }
 
     /**
-     * Returns additional data.
-     *
-     * @return additional data
-     */
-    public String getAdditionalData() {
-        final StringBuilder result = new StringBuilder();
-        if (crack) {
-            result.append("Crack");
-        }
-        addToResult(result, serialKey, "serial key");
-        addToResult(result, patch, "patch");
-        addToResult(result, trainer, "trainer");
-        addToResult(result, trainerData, "data for trainer");
-        addToResult(result, editor, "editor");
-        addToResult(result, saves, "saves");
-        if (otherData != null && !otherData.isEmpty()) {
-            if (result.length() != 0) {
-                result.append(", ");
-            }
-            result.append(otherData);
-        }
-
-        return result.toString();
-    }
-
-    /**
      * Returns note.
      *
      * @return note
@@ -383,18 +357,6 @@ public class GameTO implements Comparable<GameTO>, Serializable {
     public int compareTo(final GameTO o) {
         final int result = position - o.position;
         return result == 0 ? id - o.id : result;
-    }
-
-    private static void addToResult(final StringBuilder result, final boolean value, final String data) {
-        if (value) {
-            if (result.length() == 0) {
-                result.append(data.substring(0, 1).toUpperCase());
-                result.append(data.substring(1));
-            } else {
-                result.append(", ");
-                result.append(data);
-            }
-        }
     }
 
 }

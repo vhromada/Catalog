@@ -52,9 +52,6 @@ public interface MusicFacade {
      *                                  or URL to english Wikipedia page about music is null
      *                                  or URL to czech Wikipedia page about music is null
      *                                  or count of media isn't positive number
-     *                                  or count of songs is negative number
-     *                                  or total length of songs is null
-     *                                  or total length of songs is negative number
      *                                  or note is null
      * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
      *                                  if there was error in working with service tier
@@ -73,9 +70,6 @@ public interface MusicFacade {
      *                                  or URL to english Wikipedia page about music is null
      *                                  or URL to czech Wikipedia page about music is null
      *                                  or count of media isn't positive number
-     *                                  or count of songs is negative number
-     *                                  or total length of songs is null
-     *                                  or total length of songs is negative number
      *                                  or note is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
      *                                  if TO for music doesn't exist in data storage

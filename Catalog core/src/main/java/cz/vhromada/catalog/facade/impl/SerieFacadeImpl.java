@@ -5,16 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.facade.validators.SerieTOValidator;
-import cz.vhromada.catalog.service.EpisodeService;
 import cz.vhromada.catalog.service.GenreService;
-import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
@@ -35,12 +32,6 @@ public class SerieFacadeImpl implements SerieFacade {
 
     /** Service for series field */
     private static final String SERIE_SERVICE_FIELD = "Service for series";
-
-    /** Service for seasons field */
-    private static final String SEASON_SERVICE_FIELD = "Service for seasons";
-
-    /** Service for episodes field */
-    private static final String EPISODE_SERVICE_FIELD = "Service for episodes";
 
     /** Service for genres field */
     private static final String GENRE_SERVICE_FIELD = "Service for genres";
@@ -73,14 +64,6 @@ public class SerieFacadeImpl implements SerieFacade {
     @Autowired
     private SerieService serieService;
 
-    /** Service for seasons */
-    @Autowired
-    private SeasonService seasonService;
-
-    /** Service for episodes */
-    @Autowired
-    private EpisodeService episodeService;
-
     /** Service for genres */
     @Autowired
     private GenreService genreService;
@@ -110,42 +93,6 @@ public class SerieFacadeImpl implements SerieFacade {
      */
     public void setSerieService(final SerieService serieService) {
         this.serieService = serieService;
-    }
-
-    /**
-     * Returns service for seasons.
-     *
-     * @return service for seasons
-     */
-    public SeasonService getSeasonService() {
-        return seasonService;
-    }
-
-    /**
-     * Sets a new value to service for seasons.
-     *
-     * @param seasonService new value
-     */
-    public void setSeasonService(final SeasonService seasonService) {
-        this.seasonService = seasonService;
-    }
-
-    /**
-     * Returns service for episodes.
-     *
-     * @return service for episodes
-     */
-    public EpisodeService getEpisodeService() {
-        return episodeService;
-    }
-
-    /**
-     * Sets a new value to service for episodes.
-     *
-     * @param episodeService new value
-     */
-    public void setEpisodeService(final EpisodeService episodeService) {
-        this.episodeService = episodeService;
     }
 
     /**
@@ -223,8 +170,6 @@ public class SerieFacadeImpl implements SerieFacade {
      * {@inheritDoc}
      *
      * @throws IllegalStateException    if service for series isn't set
-     *                                  or service for seasons isn't set
-     *                                  or service for episodes isn't set
      *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -232,14 +177,12 @@ public class SerieFacadeImpl implements SerieFacade {
     @Transactional(readOnly = true)
     public List<SerieTO> getSeries() {
         Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
         Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
 
         try {
             final List<SerieTO> series = new ArrayList<>();
             for (final Serie serie : serieService.getSeries()) {
-                series.add(convertSerieToSerieTO(serie));
+                series.add(conversionService.convert(serie, SerieTO.class));
             }
             Collections.sort(series);
             return series;
@@ -252,8 +195,6 @@ public class SerieFacadeImpl implements SerieFacade {
      * {@inheritDoc}
      *
      * @throws IllegalStateException    if service for series isn't set
-     *                                  or service for seasons isn't set
-     *                                  or service for episodes isn't set
      *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
@@ -262,13 +203,11 @@ public class SerieFacadeImpl implements SerieFacade {
     @Transactional(readOnly = true)
     public SerieTO getSerie(final Integer id) {
         Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
         Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return convertSerieToSerieTO(serieService.getSerie(id));
+            return conversionService.convert(serieService.getSerie(id), SerieTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -549,29 +488,6 @@ public class SerieFacadeImpl implements SerieFacade {
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
-    }
-
-    /**
-     * Converts entity serie to TO for serie.
-     *
-     * @param serie entity serie
-     * @return converted TO for serie
-     */
-    private SerieTO convertSerieToSerieTO(final Serie serie) {
-        final SerieTO serieTO = conversionService.convert(serie, SerieTO.class);
-        if (serieTO != null) {
-            final List<Season> seasons = seasonService.findSeasonsBySerie(serie);
-            int count = 0;
-            int length = 0;
-            for (final Season season : seasons) {
-                count += episodeService.findEpisodesBySeason(season).size();
-                length += episodeService.getTotalLengthBySeason(season).getLength();
-            }
-            serieTO.setSeasonsCount(seasons.size());
-            serieTO.setEpisodesCount(count);
-            serieTO.setTotalLength(new Time(length));
-        }
-        return serieTO;
     }
 
 }

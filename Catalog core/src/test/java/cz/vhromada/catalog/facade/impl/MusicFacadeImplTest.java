@@ -15,20 +15,17 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.entities.Music;
-import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.catalog.service.MusicService;
-import cz.vhromada.catalog.service.SongService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -53,10 +50,6 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
     /** Instance of {@link MusicService} */
     @Mock
     private MusicService musicService;
-
-    /** Instance of {@link SongService} */
-    @Mock
-    private SongService songService;
 
     /** Instance of {@link ConversionService} */
     @Mock
@@ -107,13 +100,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
     public void testGetMusic() {
         final List<Music> music = CollectionUtils.newList(generate(Music.class), generate(Music.class));
         final List<MusicTO> musicList = CollectionUtils.newList(generate(MusicTO.class), generate(MusicTO.class));
-        final List<Song> songs = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            songs.add(generate(Song.class));
-        }
         when(musicService.getMusic()).thenReturn(music);
-        when(songService.findSongsByMusic(any(Music.class))).thenReturn(songs);
-        when(songService.getTotalLengthByMusic(any(Music.class))).thenReturn(generate(Time.class));
         for (int i = 0; i < music.size(); i++) {
             final Music aMusic = music.get(i);
             when(conversionService.convert(aMusic, MusicTO.class)).thenReturn(musicList.get(i));
@@ -123,11 +110,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
         verify(musicService).getMusic();
         for (final Music aMusic : music) {
-            verify(songService).findSongsByMusic(aMusic);
-            verify(songService).getTotalLengthByMusic(aMusic);
             verify(conversionService).convert(aMusic, MusicTO.class);
         }
-        verifyNoMoreInteractions(musicService, songService, conversionService);
+        verifyNoMoreInteractions(musicService, conversionService);
     }
 
     /** Test method for {@link MusicFacade#getMusic()} with null music. */
@@ -146,20 +131,12 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
             verify(conversionService).convert(aMusic, MusicTO.class);
         }
         verifyNoMoreInteractions(musicService, conversionService);
-        verifyZeroInteractions(songService);
     }
 
     /** Test method for {@link MusicFacade#getMusic()} with not set service for music. */
     @Test(expected = IllegalStateException.class)
     public void testGetMusicWithNotSetMusicService() {
         ((MusicFacadeImpl) musicFacade).setMusicService(null);
-        musicFacade.getMusic();
-    }
-
-    /** Test method for {@link MusicFacade#getMusic()} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicWithNotSetSongService() {
-        ((MusicFacadeImpl) musicFacade).setSongService(null);
         musicFacade.getMusic();
     }
 
@@ -184,7 +161,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
         verify(musicService).getMusic();
         verifyNoMoreInteractions(musicService);
-        verifyZeroInteractions(songService, conversionService);
+        verifyZeroInteractions(conversionService);
     }
 
     /** Test method for {@link MusicFacade#getMusic(Integer)} with existing music. */
@@ -192,22 +169,14 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
     public void testGetMusicByIdWithExistingMusic() {
         final Music music = generate(Music.class);
         final MusicTO musicTO = generate(MusicTO.class);
-        final List<Song> songs = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            songs.add(generate(Song.class));
-        }
         when(musicService.getMusic(anyInt())).thenReturn(music);
-        when(songService.findSongsByMusic(any(Music.class))).thenReturn(songs);
-        when(songService.getTotalLengthByMusic(any(Music.class))).thenReturn(generate(Time.class));
         when(conversionService.convert(any(Music.class), eq(MusicTO.class))).thenReturn(musicTO);
 
         DeepAsserts.assertEquals(musicTO, musicFacade.getMusic(musicTO.getId()));
 
         verify(musicService).getMusic(musicTO.getId());
-        verify(songService).findSongsByMusic(music);
-        verify(songService).getTotalLengthByMusic(music);
         verify(conversionService).convert(music, MusicTO.class);
-        verifyNoMoreInteractions(musicService, songService, conversionService);
+        verifyNoMoreInteractions(musicService, conversionService);
     }
 
     /** Test method for {@link MusicFacade#getMusic(Integer)} with not existing music. */
@@ -221,20 +190,12 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verify(musicService).getMusic(Integer.MAX_VALUE);
         verify(conversionService).convert(null, MusicTO.class);
         verifyNoMoreInteractions(musicService, conversionService);
-        verifyZeroInteractions(songService);
     }
 
     /** Test method for {@link MusicFacade#getMusic(Integer)} with not set service for music. */
     @Test(expected = IllegalStateException.class)
     public void testGetMusicByIdWithNotSetMusicService() {
         ((MusicFacadeImpl) musicFacade).setMusicService(null);
-        musicFacade.getMusic(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link MusicFacade#getMusic(Integer)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicByIdWithNotSetSongService() {
-        ((MusicFacadeImpl) musicFacade).setSongService(null);
         musicFacade.getMusic(Integer.MAX_VALUE);
     }
 
@@ -255,7 +216,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(musicService, songService, conversionService);
+        verifyZeroInteractions(musicService, conversionService);
     }
 
     /** Test method for {@link MusicFacade#getMusic(Integer)} with exception in service tier. */
@@ -272,7 +233,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
         verify(musicService).getMusic(anyInt());
         verifyNoMoreInteractions(musicService);
-        verifyZeroInteractions(songService, conversionService);
+        verifyZeroInteractions(conversionService);
     }
 
     /** Test method for {@link MusicFacade#add(MusicTO)}. */

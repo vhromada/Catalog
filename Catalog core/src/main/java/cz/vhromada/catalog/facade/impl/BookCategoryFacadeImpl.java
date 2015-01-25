@@ -9,7 +9,6 @@ import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.BookCategoryTO;
 import cz.vhromada.catalog.facade.validators.BookCategoryTOValidator;
 import cz.vhromada.catalog.service.BookCategoryService;
-import cz.vhromada.catalog.service.BookService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
 
     /** Service for book categories field */
     private static final String BOOK_CATEGORY_SERVICE_FIELD = "Service for book categories";
-
-    /** Service for books field */
-    private static final String BOOK_SERVICE_FIELD = "Service for books";
 
     /** Conversion service field */
     private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
@@ -58,10 +54,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     @Autowired
     private BookCategoryService bookCategoryService;
 
-    /** Service for books */
-    @Autowired
-    private BookService bookService;
-
     /** Conversion service */
     @Autowired
     @Qualifier("coreConversionService")
@@ -87,24 +79,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     public void setBookCategoryService(final BookCategoryService bookCategoryService) {
         this.bookCategoryService = bookCategoryService;
-    }
-
-    /**
-     * Returns service for books.
-     *
-     * @return service for books
-     */
-    public BookService getBookService() {
-        return bookService;
-    }
-
-    /**
-     * Sets a new value to service for books.
-     *
-     * @param bookService new value
-     */
-    public void setBookService(final BookService bookService) {
-        this.bookService = bookService;
     }
 
     /**
@@ -164,7 +138,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      * {@inheritDoc}
      *
      * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or service for books isn't set
      *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -172,13 +145,12 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     @Transactional(readOnly = true)
     public List<BookCategoryTO> getBookCategories() {
         Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookService, BOOK_SERVICE_FIELD);
         Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
 
         try {
             final List<BookCategoryTO> bookCategories = new ArrayList<>();
             for (final BookCategory bookCategory : bookCategoryService.getBookCategories()) {
-                bookCategories.add(convertBookCategoryToBookCategoryTO(bookCategory));
+                bookCategories.add(conversionService.convert(bookCategory, BookCategoryTO.class));
             }
             return bookCategories;
         } catch (final ServiceOperationException ex) {
@@ -190,7 +162,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      * {@inheritDoc}
      *
      * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or service for books isn't set
      *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
@@ -199,12 +170,11 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     @Transactional(readOnly = true)
     public BookCategoryTO getBookCategory(final Integer id) {
         Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookService, BOOK_SERVICE_FIELD);
         Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return convertBookCategoryToBookCategoryTO(bookCategoryService.getBookCategory(id));
+            return conversionService.convert(bookCategoryService.getBookCategory(id), BookCategoryTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -441,20 +411,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
-    }
-
-    /**
-     * Converts entity book category to TO for book category.
-     *
-     * @param bookCategory converting entity category
-     * @return converted TO for book category
-     */
-    private BookCategoryTO convertBookCategoryToBookCategoryTO(final BookCategory bookCategory) {
-        final BookCategoryTO bookCategoryTO = conversionService.convert(bookCategory, BookCategoryTO.class);
-        if (bookCategoryTO != null) {
-            bookCategoryTO.setBooksCount(bookService.findBooksByBookCategory(bookCategory).size());
-        }
-        return bookCategoryTO;
     }
 
 }

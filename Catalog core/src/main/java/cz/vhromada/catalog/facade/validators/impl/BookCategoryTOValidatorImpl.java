@@ -60,14 +60,12 @@ public class BookCategoryTOValidatorImpl implements BookCategoryTOValidator {
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  if name is null
      *                                  or name is empty string
-     *                                  or count of books is negative number
      *                                  or note is null
      */
     private static void validateBookCategoryTO(final BookCategoryTO bookCategory) {
         Validators.validateArgumentNotNull(bookCategory, "TO for book category");
         Validators.validateNotNull(bookCategory.getName(), "Name");
         Validators.validateNotEmptyString(bookCategory.getName(), "Name");
-        Validators.validateNotNegativeNumber(bookCategory.getBooksCount(), "Count of books");
         Validators.validateNotNull(bookCategory.getNote(), "Note");
     }
 

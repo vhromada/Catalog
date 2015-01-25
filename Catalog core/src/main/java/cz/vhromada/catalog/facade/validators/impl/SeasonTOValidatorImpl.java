@@ -66,9 +66,6 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
      *                                  or language is null
      *                                  or subtitles are null
      *                                  or subtitles contain null value
-     *                                  or count of episodes is negative number
-     *                                  or total length of episodes is null
-     *                                  or total length of episodes is negative number
      *                                  or note is null
      *                                  or TO for serie is null
      *                                  or TO for serie ID is null
@@ -82,9 +79,6 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
         Validators.validateNotNull(season.getLanguage(), "Language");
         Validators.validateNotNull(season.getSubtitles(), "Subtitles");
         Validators.validateCollectionNotContainNull(season.getSubtitles(), "Subtitles");
-        Validators.validateNotNegativeNumber(season.getEpisodesCount(), "Count of episodes");
-        Validators.validateNotNull(season.getTotalLength(), "Total length of episodes");
-        Validators.validateNotNegativeNumber(season.getTotalLength().getLength(), "Total length of episodes");
         Validators.validateNotNull(season.getNote(), "Note");
         Validators.validateNotNull(season.getSerie(), "TO for serie");
         Validators.validateNotNull(season.getSerie().getId(), "TO for serie ID");

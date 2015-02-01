@@ -22,8 +22,16 @@ public class BookToBookTOConverterTest extends ObjectGeneratorTest {
     /** Initializes converter. */
     @Before
     public void setUp() {
-        converter = new BookToBookTOConverter();
-        converter.setConverter(new BookCategoryToBookCategoryTOConverter());
+        converter = new BookToBookTOConverter(new BookCategoryToBookCategoryTOConverter());
+    }
+
+    /**
+     * Test method for {@link BookToBookTOConverter#BookToBookTOConverter(BookCategoryToBookCategoryTOConverter)} with null converter from entity book category
+     * to TO for book category.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullBookCategoryToBookCategoryTOConverter() {
+        new BookToBookTOConverter(null);
     }
 
     /** Test method for {@link BookToBookTOConverter#convert(Book)}. */
@@ -39,13 +47,6 @@ public class BookToBookTOConverterTest extends ObjectGeneratorTest {
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null));
-    }
-
-    /** Test method for {@link BookToBookTOConverter#convert(Book)} with not set converter for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testConvertWithNotSetBookCategoryConverter() {
-        converter.setConverter(null);
-        converter.convert(new Book());
     }
 
 }

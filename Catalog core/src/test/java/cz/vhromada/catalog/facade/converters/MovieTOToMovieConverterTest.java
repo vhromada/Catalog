@@ -22,9 +22,25 @@ public class MovieTOToMovieConverterTest extends ObjectGeneratorTest {
     /** Initializes converter. */
     @Before
     public void setUp() {
-        converter = new MovieTOToMovieConverter();
-        converter.setMediumConverter(new IntegerToMediumConverter());
-        converter.setGenreConverter(new GenreTOToGenreConverter());
+        converter = new MovieTOToMovieConverter(new IntegerToMediumConverter(), new GenreTOToGenreConverter());
+    }
+
+    /**
+     * Test method for {@link MovieTOToMovieConverter#MovieTOToMovieConverter(IntegerToMediumConverter, GenreTOToGenreConverter)} with null converter
+     * from integer to entity medium.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullIntegerToMediumConverter() {
+        new MovieTOToMovieConverter(null, new GenreTOToGenreConverter());
+    }
+
+    /**
+     * Test method for {@link MovieTOToMovieConverter#MovieTOToMovieConverter(IntegerToMediumConverter, GenreTOToGenreConverter)} with null converter
+     * from TO for genre to entity genre.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreTOToGenreConverter() {
+        new MovieTOToMovieConverter(new IntegerToMediumConverter(), null);
     }
 
     /** Test method for {@link MovieTOToMovieConverter#convert(MovieTO)}. */
@@ -44,20 +60,6 @@ public class MovieTOToMovieConverterTest extends ObjectGeneratorTest {
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null));
-    }
-
-    /** Test method for {@link MovieTOToMovieConverter#convert(MovieTO)} with not set converter for medium. */
-    @Test(expected = IllegalStateException.class)
-    public void testConvertWithNotSetMediumConverter() {
-        converter.setMediumConverter(null);
-        converter.convert(new MovieTO());
-    }
-
-    /** Test method for {@link MovieTOToMovieConverter#convert(MovieTO)} with not set converter for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testConvertWithNotSetGenreConverter() {
-        converter.setGenreConverter(null);
-        converter.convert(new MovieTO());
     }
 
 }

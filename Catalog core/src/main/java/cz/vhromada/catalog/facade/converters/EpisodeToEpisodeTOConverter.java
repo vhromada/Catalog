@@ -16,37 +16,23 @@ import org.springframework.stereotype.Component;
 public class EpisodeToEpisodeTOConverter implements Converter<Episode, EpisodeTO> {
 
     /** Converter from entity season to TO for season */
-    @Autowired
     private SeasonToSeasonTOConverter converter;
 
     /**
-     * Returns converter from entity season to TO for season.
+     * Creates a new instance of EpisodeToEpisodeTOConverter.
      *
-     * @return converter from entity season to TO for season
+     * @param converter converter from entity season to TO for season
+     * @throws IllegalArgumentException if converter from entity season to TO for season is null
      */
-    public SeasonToSeasonTOConverter getConverter() {
-        return converter;
-    }
+    @Autowired
+    public EpisodeToEpisodeTOConverter(final SeasonToSeasonTOConverter converter) {
+        Validators.validateArgumentNotNull(converter, "Converter");
 
-    /**
-     * Sets a new value to converter from entity season to TO for season.
-     *
-     * @param converter new value
-     */
-    public void setConverter(final SeasonToSeasonTOConverter converter) {
         this.converter = converter;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws IllegalStateException    if converter from entity season to TO for season isn't set
-     */
     @Override
     public EpisodeTO convert(final Episode source) {
-        Validators.validateFieldNotNull(converter, "Converter");
-
         if (source == null) {
             return null;
         }

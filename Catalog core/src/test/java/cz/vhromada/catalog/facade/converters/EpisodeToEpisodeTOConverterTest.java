@@ -22,12 +22,17 @@ public class EpisodeToEpisodeTOConverterTest extends ObjectGeneratorTest {
     /** Initializes converter. */
     @Before
     public void setUp() {
-        final SerieToSerieTOConverter serieToSerieTOConverter = new SerieToSerieTOConverter();
-        serieToSerieTOConverter.setConverter(new GenreToGenreTOConverter());
-        final SeasonToSeasonTOConverter seasonToSeasonTOConverter = new SeasonToSeasonTOConverter();
-        seasonToSeasonTOConverter.setConverter(serieToSerieTOConverter);
-        converter = new EpisodeToEpisodeTOConverter();
-        converter.setConverter(seasonToSeasonTOConverter);
+        final SeasonToSeasonTOConverter seasonToSeasonTOConverter = new SeasonToSeasonTOConverter(new SerieToSerieTOConverter(new GenreToGenreTOConverter()));
+        converter = new EpisodeToEpisodeTOConverter(seasonToSeasonTOConverter);
+    }
+
+    /**
+     * Test method for {@link EpisodeToEpisodeTOConverter#EpisodeToEpisodeTOConverter(SeasonToSeasonTOConverter)} with null converter from entity season to
+     * TO for season.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSeasonToSeasonTOConverter() {
+        new EpisodeToEpisodeTOConverter(null);
     }
 
     /** Test method for {@link EpisodeToEpisodeTOConverter#convert(Episode)}. */
@@ -43,13 +48,6 @@ public class EpisodeToEpisodeTOConverterTest extends ObjectGeneratorTest {
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null));
-    }
-
-    /** Test method for {@link EpisodeToEpisodeTOConverter#convert(Episode)} with not set converter for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testConvertWithNotSetSeasonConverter() {
-        converter.setConverter(null);
-        converter.convert(new Episode());
     }
 
 }

@@ -22,8 +22,13 @@ public class SongTOToSongConverterTest extends ObjectGeneratorTest {
     /** Initializes converter. */
     @Before
     public void setUp() {
-        converter = new SongTOToSongConverter();
-        converter.setConverter(new MusicTOToMusicConverter());
+        converter = new SongTOToSongConverter(new MusicTOToMusicConverter());
+    }
+
+    /** Test method for {@link SongTOToSongConverter#SongTOToSongConverter(MusicTOToMusicConverter)} with null converter from TO for music to entity music. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMusicTOToMusicConverter() {
+        new SongTOToSongConverter(null);
     }
 
     /** Test method for {@link SongTOToSongConverter#convert(SongTO)}. */
@@ -39,13 +44,6 @@ public class SongTOToSongConverterTest extends ObjectGeneratorTest {
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null));
-    }
-
-    /** Test method for {@link SongTOToSongConverter#convert(SongTO)} with not set converter for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testConvertWithNotSetMusicConverter() {
-        converter.setConverter(null);
-        converter.convert(new SongTO());
     }
 
 }

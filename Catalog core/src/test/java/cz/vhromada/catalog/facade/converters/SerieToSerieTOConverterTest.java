@@ -22,8 +22,15 @@ public class SerieToSerieTOConverterTest extends ObjectGeneratorTest {
     /** Initializes converter. */
     @Before
     public void setUp() {
-        converter = new SerieToSerieTOConverter();
-        converter.setConverter(new GenreToGenreTOConverter());
+        converter = new SerieToSerieTOConverter(new GenreToGenreTOConverter());
+    }
+
+    /**
+     * Test method for {@link SerieToSerieTOConverter#SerieToSerieTOConverter(GenreToGenreTOConverter)} with null converter from entity genre to TO for genre.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreToGenreTOConverterr() {
+        new SerieToSerieTOConverter(null);
     }
 
     /** Test method for {@link SerieToSerieTOConverter#convert(Serie)}. */
@@ -39,13 +46,6 @@ public class SerieToSerieTOConverterTest extends ObjectGeneratorTest {
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null));
-    }
-
-    /** Test method for {@link SerieToSerieTOConverter#convert(Serie)} with not set converter for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testConvertWithNotSetGenreConverter() {
-        converter.setConverter(null);
-        converter.convert(new Serie());
     }
 
 }

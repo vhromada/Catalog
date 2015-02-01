@@ -21,33 +21,21 @@ import org.springframework.stereotype.Component;
 public class SerieToSerieTOConverter implements Converter<Serie, SerieTO> {
 
     /** Converter from entity genre to TO for genre */
-    @Autowired
     private GenreToGenreTOConverter converter;
 
     /**
-     * Returns converter from entity genre to TO for genre.
+     * Creates a new instance of SerieToSerieTOConverter.
      *
-     * @return converter from entity genre to TO for genre
+     * @param converter converter from entity genre to TO for genre
+     * @throws IllegalArgumentException if converter from entity genre to TO for genre is null
      */
-    public GenreToGenreTOConverter getConverter() {
-        return converter;
-    }
+    @Autowired
+    public SerieToSerieTOConverter(final GenreToGenreTOConverter converter) {
+        Validators.validateArgumentNotNull(converter, "Converter");
 
-    /**
-     * Sets a new value to converter from entity genre to TO for genre.
-     *
-     * @param converter new value
-     */
-    public void setConverter(final GenreToGenreTOConverter converter) {
         this.converter = converter;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws IllegalStateException    if converter from entity genre to TO for genre isn't set
-     */
     @Override
     public SerieTO convert(final Serie source) {
         Validators.validateFieldNotNull(converter, "Converter");

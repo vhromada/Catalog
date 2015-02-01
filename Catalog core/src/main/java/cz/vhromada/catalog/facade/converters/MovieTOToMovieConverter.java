@@ -30,53 +30,25 @@ public class MovieTOToMovieConverter implements Converter<MovieTO, Movie> {
     private GenreTOToGenreConverter genreConverter;
 
     /**
-     * Returns converter from integer to entity medium.
+     * Creates a new instance of MovieTOToMovieConverter.
      *
-     * @return converter from integer to entity medium
+     * @param mediumConverter converter from integer to entity medium
+     * @param genreConverter converter from TO for genre to entity genre
+     * @throws IllegalArgumentException if converter from integer to entity medium is null
+     *                                  or converter from TO for genre to entity genre is null
      */
-    public IntegerToMediumConverter getMediumConverter() {
-        return mediumConverter;
-    }
+    @Autowired
+    public MovieTOToMovieConverter(final IntegerToMediumConverter mediumConverter,
+            final GenreTOToGenreConverter genreConverter) {
+        Validators.validateArgumentNotNull(mediumConverter, "Medium converter");
+        Validators.validateArgumentNotNull(genreConverter, "Genre converter");
 
-    /**
-     * Sets a new value to converter from integer to entity medium.
-     *
-     * @param mediumConverter new value
-     */
-    public void setMediumConverter(final IntegerToMediumConverter mediumConverter) {
         this.mediumConverter = mediumConverter;
-    }
-
-    /**
-     * Returns converter from TO for genre to entity genre.
-     *
-     * @return converter from TO for genre to entity genre
-     */
-    public GenreTOToGenreConverter getGenreConverter() {
-        return genreConverter;
-    }
-
-    /**
-     * Sets a new value to converter from TO for genre to entity genre.
-     *
-     * @param genreConverter new value
-     */
-    public void setGenreConverter(final GenreTOToGenreConverter genreConverter) {
         this.genreConverter = genreConverter;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws IllegalStateException    if converter from integer to medium isn't set
-     *                                  or converter from TO for genre to entity genre isn't set
-     */
     @Override
     public Movie convert(final MovieTO source) {
-        Validators.validateFieldNotNull(mediumConverter, "Medium converter");
-        Validators.validateFieldNotNull(genreConverter, "Genre converter");
-
         if (source == null) {
             return null;
         }

@@ -20,33 +20,20 @@ public class BookTOToBookConverter implements Converter<BookTO, Book> {
     private BookCategoryTOToBookCategoryConverter converter;
 
     /**
-     * Returns converter from TO for book category to entity book category.
+     * Creates a new instance of BookTOToBookConverter.
      *
-     * @return converter from TO for book category to entity book category
+     * @param converter converter from TO for book category to entity book category
+     * @throws IllegalArgumentException if converter from TO for book category to entity book category is null
      */
-    public BookCategoryTOToBookCategoryConverter getConverter() {
-        return converter;
-    }
+    @Autowired
+    public BookTOToBookConverter(final BookCategoryTOToBookCategoryConverter converter) {
+        Validators.validateArgumentNotNull(converter, "Converter");
 
-    /**
-     * Sets a new value to converter from TO for book category to entity book category.
-     *
-     * @param converter new value
-     */
-    public void setConverter(final BookCategoryTOToBookCategoryConverter converter) {
         this.converter = converter;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws IllegalStateException    if converter from TO for book category to entity book category isn't set
-     */
     @Override
     public Book convert(final BookTO source) {
-        Validators.validateFieldNotNull(converter, "Converter");
-
         if (source == null) {
             return null;
         }

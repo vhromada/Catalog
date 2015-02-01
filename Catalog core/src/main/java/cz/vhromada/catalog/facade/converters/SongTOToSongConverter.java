@@ -16,37 +16,23 @@ import org.springframework.stereotype.Component;
 public class SongTOToSongConverter implements Converter<SongTO, Song> {
 
     /** Converter from TO for music to entity music */
-    @Autowired
     private MusicTOToMusicConverter converter;
 
     /**
-     * Returns converter from TO for music to entity music.
+     * Creates a new instance of SongTOToSongConverter.
      *
-     * @return converter from TO for music to entity music
+     * @param converter converter from TO for music to entity music
+     * @throws IllegalArgumentException if converter from TO for music to entity seaso is null
      */
-    public MusicTOToMusicConverter getConverter() {
-        return converter;
-    }
+    @Autowired
+    public SongTOToSongConverter(final MusicTOToMusicConverter converter) {
+        Validators.validateArgumentNotNull(converter, "Converter");
 
-    /**
-     * Sets a new value to converter from TO for music to entity music.
-     *
-     * @param converter new value
-     */
-    public void setConverter(final MusicTOToMusicConverter converter) {
         this.converter = converter;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws IllegalStateException    if converter from TO for music to entity music isn't set
-     */
     @Override
     public Song convert(final SongTO source) {
-        Validators.validateFieldNotNull(converter, "Converter");
-
         if (source == null) {
             return null;
         }

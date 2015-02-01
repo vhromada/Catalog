@@ -22,10 +22,16 @@ public class SeasonToSeasonTOConverterTest extends ObjectGeneratorTest {
     /** Initializes converter. */
     @Before
     public void setUp() {
-        final SerieToSerieTOConverter serieToSerieTOConverter = new SerieToSerieTOConverter();
-        serieToSerieTOConverter.setConverter(new GenreToGenreTOConverter());
-        converter = new SeasonToSeasonTOConverter();
-        converter.setConverter(serieToSerieTOConverter);
+        converter = new SeasonToSeasonTOConverter(new SerieToSerieTOConverter(new GenreToGenreTOConverter()));
+    }
+
+    /**
+     * Test method for {@link SeasonToSeasonTOConverter#SeasonToSeasonTOConverter(SerieToSerieTOConverter)} with null converter from entity serie
+     * to TO for serie.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieToSerieTOConverter() {
+        new SeasonToSeasonTOConverter(null);
     }
 
     /** Test method for {@link SeasonToSeasonTOConverter#convert(Season)}. */
@@ -41,13 +47,6 @@ public class SeasonToSeasonTOConverterTest extends ObjectGeneratorTest {
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null));
-    }
-
-    /** Test method for {@link SeasonToSeasonTOConverter#convert(Season)} with not set converter for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testConvertWithNotSetSerieConverter() {
-        converter.setConverter(null);
-        converter.convert(new Season());
     }
 
 }

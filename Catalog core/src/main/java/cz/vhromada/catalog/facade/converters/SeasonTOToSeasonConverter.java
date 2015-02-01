@@ -16,31 +16,23 @@ import org.springframework.stereotype.Component;
 public class SeasonTOToSeasonConverter implements Converter<SeasonTO, Season> {
 
     /** Converter from TO for serie to entity serie */
-    @Autowired
     private SerieTOToSerieConverter converter;
 
     /**
-     * Returns converter from TO for serie to entity serie.
+     * Creates a new instance of SeasonTOToSeasonConverter.
      *
-     * @return converter from TO for serie to entity serie
+     * @param converter converter from TO for serie to entity serie
+     * @throws IllegalArgumentException if converter from TO for serie to entity serie is null
      */
-    public SerieTOToSerieConverter getConverter() {
-        return converter;
-    }
+    @Autowired
+    public SeasonTOToSeasonConverter(final SerieTOToSerieConverter converter) {
+        Validators.validateArgumentNotNull(converter, "Converter");
 
-    /**
-     * Sets a new value to converter from TO for serie to entity serie.
-     *
-     * @param converter new value
-     */
-    public void setConverter(final SerieTOToSerieConverter converter) {
         this.converter = converter;
     }
 
     @Override
     public Season convert(final SeasonTO source) {
-        Validators.validateFieldNotNull(converter, "Converter");
-
         if (source == null) {
             return null;
         }

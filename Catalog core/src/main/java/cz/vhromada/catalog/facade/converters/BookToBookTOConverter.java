@@ -16,37 +16,23 @@ import org.springframework.stereotype.Component;
 public class BookToBookTOConverter implements Converter<Book, BookTO> {
 
     /** Converter from entity book category to TO for book category */
-    @Autowired
     private BookCategoryToBookCategoryTOConverter converter;
 
     /**
-     * Returns converter from entity book category to TO for book category.
+     * Creates a new instance of BookToBookTOConverter.
      *
-     * @return converter from entity book category to TO for book category
+     * @param converter converter from entity book category to TO for book category
+     * @throws IllegalArgumentException if converter from entity book category to TO for book category is null
      */
-    public BookCategoryToBookCategoryTOConverter getConverter() {
-        return converter;
-    }
+    @Autowired
+    public BookToBookTOConverter(final BookCategoryToBookCategoryTOConverter converter) {
+        Validators.validateArgumentNotNull(converter, "Converter");
 
-    /**
-     * Sets a new value to converter from entity book category to TO for book category.
-     *
-     * @param converter new value
-     */
-    public void setConverter(final BookCategoryToBookCategoryTOConverter converter) {
         this.converter = converter;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws IllegalStateException    if converter from entity book category to TO for book category isn't set
-     */
     @Override
     public BookTO convert(final Book source) {
-        Validators.validateFieldNotNull(converter, "Converter");
-
         if (source == null) {
             return null;
         }

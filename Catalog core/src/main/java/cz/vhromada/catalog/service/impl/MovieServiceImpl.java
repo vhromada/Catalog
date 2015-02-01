@@ -25,10 +25,10 @@ import org.springframework.stereotype.Component;
 public class MovieServiceImpl extends AbstractService<Movie> implements MovieService {
 
     /** DAO for movies field */
-    private static final String MOVIE_DAO_FIELD = "DAO for movies";
+    private static final String MOVIE_DAO_ARGUMENT = "DAO for movies";
 
     /** Cache for movies field */
-    private static final String MOVIE_CACHE_FIELD = "Cache for movies";
+    private static final String MOVIE_CACHE_ARGUMENT = "Cache for movies";
 
     /** Movie argument */
     private static final String MOVIE_ARGUMENT = "Movie";
@@ -46,62 +46,36 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     private static final String MOVIE_CACHE_KEY = "movie";
 
     /** DAO for movies */
-    @Autowired
     private MovieDAO movieDAO;
 
     /** Cache for movies */
-    @Value("#{cacheManager.getCache('movieCache')}")
     private Cache movieCache;
 
     /**
-     * Returns DAO for movies.
+     * Creates a new instance of MovieServiceImpl.
      *
-     * @return DAO for movies
+     * @param movieDAO DAO for movies
+     * @param movieCache cache for movies
+     * @throws IllegalArgumentException if DAO for movies is null
+     *                                  or cache for movies is null
      */
-    public MovieDAO getMovieDAO() {
-        return movieDAO;
-    }
+    @Autowired
+    public MovieServiceImpl(final MovieDAO movieDAO,
+            @Value("#{cacheManager.getCache('movieCache')}") final Cache movieCache) {
+        Validators.validateArgumentNotNull(movieDAO, MOVIE_DAO_ARGUMENT);
+        Validators.validateArgumentNotNull(movieCache, MOVIE_CACHE_ARGUMENT);
 
-    /**
-     * Sets a new value to DAO for movies.
-     *
-     * @param movieDAO new value
-     */
-    public void setMovieDAO(final MovieDAO movieDAO) {
         this.movieDAO = movieDAO;
-    }
-
-    /**
-     * /**
-     * Returns cache for movies.
-     *
-     * @return cache for movies
-     */
-    public Cache getMovieCache() {
-        return movieCache;
-    }
-
-    /**
-     * Sets a new value to cache for movies.
-     *
-     * @param movieCache new value
-     */
-    public void setMovieCache(final Cache movieCache) {
         this.movieCache = movieCache;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
-
         try {
             for (final Movie movie : getCachedMovies(false)) {
                 movieDAO.remove(movie);
@@ -115,15 +89,10 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Movie> getMovies() {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
-
         try {
             return getCachedMovies(true);
         } catch (final DataStorageException ex) {
@@ -134,15 +103,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Movie getMovie(final Integer id) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -155,15 +120,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Movie movie) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
         try {
@@ -177,15 +138,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Movie movie) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
         try {
@@ -199,15 +156,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Movie movie) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
         try {
@@ -222,15 +175,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Movie movie) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
         try {
@@ -260,15 +209,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Movie movie) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
         try {
@@ -286,15 +231,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Movie movie) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
         try {
@@ -312,15 +253,11 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Movie movie) {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
         Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
 
         try {
@@ -333,16 +270,10 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
-     * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void updatePositions() {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
-
         try {
             final List<Movie> movies = getCachedMovies(false);
             for (int i = 0; i < movies.size(); i++) {
@@ -359,16 +290,10 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
-     * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public int getTotalMediaCount() {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
-
         try {
             final List<Movie> movies = getCachedMovies(true);
             int sum = 0;
@@ -384,16 +309,10 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for movies isn't set
-     *                                   or cache for movies isn't set
-     * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Time getTotalLength() {
-        Validators.validateFieldNotNull(movieDAO, MOVIE_DAO_FIELD);
-        Validators.validateFieldNotNull(movieCache, MOVIE_CACHE_FIELD);
-
         try {
             final List<Movie> movies = getCachedMovies(true);
             int sum = 0;

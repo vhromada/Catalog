@@ -13,6 +13,8 @@ import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,10 +26,10 @@ import org.springframework.stereotype.Component;
 public class SeasonServiceImpl extends AbstractSerieService implements SeasonService {
 
     /** DAO for seasons field */
-    private static final String SEASON_DAO_FIELD = "DAO for seasons";
+    private static final String SEASON_DAO_ARGUMENT = "DAO for seasons";
 
     /** DAO for episodes field */
-    private static final String EPISODE_DAO_FIELD = "DAO for episodes";
+    private static final String EPISODE_DAO_ARGUMENT = "DAO for episodes";
 
     /** Serie argument */
     private static final String SERIE_ARGUMENT = "Serie";
@@ -42,61 +44,42 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
     /** DAO for seasons */
-    @Autowired
     private SeasonDAO seasonDAO;
 
     /** DAO for episodes */
-    @Autowired
     private EpisodeDAO episodeDAO;
 
     /**
-     * Returns DAO for seasons.
+     * Creates a new instance of SeasonServiceImpl.
      *
-     * @return DAO for seasons
+     * @param seasonDAO DAO for seasons
+     * @param episodeDAO DAO for episodes
+     * @param serieCache cache for series
+     * @throws IllegalArgumentException if DAO for seasons is null
+     *                                  or DAO for episodes is null
+     *                                  or cache for series is null
      */
-    public SeasonDAO getSeasonDAO() {
-        return seasonDAO;
-    }
+    @Autowired
+    public SeasonServiceImpl(final SeasonDAO seasonDAO,
+            final EpisodeDAO episodeDAO,
+            @Value("#{cacheManager.getCache('serieCache')}") final Cache serieCache) {
+        super(serieCache);
 
-    /**
-     * Sets a new value to DAO for seasons.
-     *
-     * @param seasonDAO new value
-     */
-    public void setSeasonDAO(final SeasonDAO seasonDAO) {
+        Validators.validateArgumentNotNull(seasonDAO, SEASON_DAO_ARGUMENT);
+        Validators.validateArgumentNotNull(episodeDAO, EPISODE_DAO_ARGUMENT);
+
         this.seasonDAO = seasonDAO;
-    }
-
-    /**
-     * Returns DAO for episodes.
-     *
-     * @return DAO for episodes
-     */
-    public EpisodeDAO getEpisodeDAO() {
-        return episodeDAO;
-    }
-
-    /**
-     * Sets a new value to DAO for episodes.
-     *
-     * @param episodeDAO new value
-     */
-    public void setEpisodeDAO(final EpisodeDAO episodeDAO) {
         this.episodeDAO = episodeDAO;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Season getSeason(final Integer id) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -109,15 +92,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Season season) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -131,15 +110,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Season season) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -153,17 +128,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Season season) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -180,17 +149,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Season season) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -216,15 +179,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Season season) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -242,15 +201,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Season season) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -268,15 +223,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Season season) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -289,15 +240,11 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for seasons isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Season> findSeasonsBySerie(final Serie serie) {
-        Validators.validateFieldNotNull(seasonDAO, SEASON_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
 
         try {

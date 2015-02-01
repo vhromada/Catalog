@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 public class ProgramServiceImpl extends AbstractService<Program> implements ProgramService {
 
     /** DAO for programs field */
-    private static final String PROGRAM_DAO_FIELD = "DAO for programs";
+    private static final String PROGRAM_DAO_ARGUMENT = "DAO for programs";
 
     /** Cache for programs field */
-    private static final String PROGRAM_CACHE_FIELD = "Cache for programs";
+    private static final String PROGRAM_CACHE_ARGUMENT = "Cache for programs";
 
     /** Program argument */
     private static final String PROGRAM_ARGUMENT = "Program";
@@ -43,61 +43,36 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     private static final String PROGRAM_CACHE_KEY = "program";
 
     /** DAO for programs */
-    @Autowired
     private ProgramDAO programDAO;
 
     /** Cache for programs */
-    @Value("#{cacheManager.getCache('programCache')}")
     private Cache programCache;
 
     /**
-     * Returns DAO for programs.
+     * Creates a new instance of ProgramServiceImpl.
      *
-     * @return DAO for programs
+     * @param programDAO DAO for programs
+     * @param programCache cache for programs
+     * @throws IllegalArgumentException if DAO for programs is null
+     *                                  or cache for programs is null
      */
-    public ProgramDAO getProgramDAO() {
-        return programDAO;
-    }
+    @Autowired
+    public ProgramServiceImpl(final ProgramDAO programDAO,
+            @Value("#{cacheManager.getCache('programCache')}") final Cache programCache) {
+        Validators.validateArgumentNotNull(programDAO, PROGRAM_DAO_ARGUMENT);
+        Validators.validateArgumentNotNull(programCache, PROGRAM_CACHE_ARGUMENT);
 
-    /**
-     * Sets a new value to DAO for programs.
-     *
-     * @param programDAO new value
-     */
-    public void setProgramDAO(final ProgramDAO programDAO) {
         this.programDAO = programDAO;
-    }
-
-    /**
-     * Returns cache for programs.
-     *
-     * @return cache for programs
-     */
-    public Cache getProgramCache() {
-        return programCache;
-    }
-
-    /**
-     * Sets a new value to cache for programs.
-     *
-     * @param programCache new value
-     */
-    public void setProgramCache(final Cache programCache) {
         this.programCache = programCache;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
-
         try {
             for (final Program program : getCachedPrograms(false)) {
                 programDAO.remove(program);
@@ -111,15 +86,10 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Program> getPrograms() {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
-
         try {
             return getCachedPrograms(true);
         } catch (final DataStorageException ex) {
@@ -130,15 +100,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Program getProgram(final Integer id) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -151,15 +117,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Program program) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -174,15 +136,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Program program) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -196,15 +154,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Program program) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -219,15 +173,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Program program) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -252,15 +202,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Program program) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -278,15 +224,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Program program) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -304,15 +246,11 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Program program) {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -325,16 +263,10 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
-     * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void updatePositions() {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
-
         try {
             final List<Program> programs = getCachedPrograms(false);
             for (int i = 0; i < programs.size(); i++) {
@@ -351,16 +283,10 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for programs isn't set
-     *                                   or cache for programs isn't set
-     * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public int getTotalMediaCount() {
-        Validators.validateFieldNotNull(programDAO, PROGRAM_DAO_FIELD);
-        Validators.validateFieldNotNull(programCache, PROGRAM_CACHE_FIELD);
-
         try {
             int sum = 0;
             for (final Program program : getCachedPrograms(true)) {

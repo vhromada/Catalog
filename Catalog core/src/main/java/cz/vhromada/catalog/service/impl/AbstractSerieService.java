@@ -5,8 +5,8 @@ import java.util.List;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.service.domain.CacheValue;
 import cz.vhromada.validators.Validators;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 
 /**
@@ -16,8 +16,8 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractSerieService extends AbstractInnerService<Serie, Season> {
 
-    /** Cache for series field */
-    private static final String SERIE_CACHE_FIELD = "Cache for series";
+    /** Cache for series argument */
+    private static final String SERIE_CACHE_ARGUMENT = "Cache for series";
 
     /** Cache key for list of series */
     private static final String SERIES_CACHE_KEY = "series";
@@ -38,34 +38,18 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
     private static final String EPISODE_CACHE_KEY = "episode";
 
     /** Cache for series */
-    @Value("#{cacheManager.getCache('serieCache')}")
     private Cache serieCache;
 
     /**
-     * Returns cache for series.
+     * Creates a new instance of AbstractSerieService.
      *
-     * @return cache for series
+     * @param serieCache cache for series
+     * @throws IllegalArgumentException if cache for series is null
      */
-    public Cache getSerieCache() {
-        return serieCache;
-    }
+    public AbstractSerieService(final Cache serieCache) {
+        Validators.validateArgumentNotNull(serieCache, SERIE_CACHE_ARGUMENT);
 
-    /**
-     * Sets a new value to cache for series.
-     *
-     * @param serieCache new value
-     */
-    public void setSerieCache(final Cache serieCache) {
         this.serieCache = serieCache;
-    }
-
-    /**
-     * Validates if cache for series is set.
-     *
-     * @throws IllegalStateException if cache for series is null
-     */
-    protected void validateSerieCacheNotNull() {
-        Validators.validateFieldNotNull(serieCache, SERIE_CACHE_FIELD);
     }
 
     /** Remove all mappings from the cache for series. */

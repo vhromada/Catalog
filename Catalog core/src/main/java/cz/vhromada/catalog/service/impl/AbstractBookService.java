@@ -5,7 +5,6 @@ import java.util.List;
 import cz.vhromada.catalog.dao.entities.Book;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.validators.Validators;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 
 /**
@@ -15,8 +14,8 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractBookService extends AbstractInnerService<BookCategory, Book> {
 
-    /** Cache for books field */
-    private static final String BOOK_CACHE_FIELD = "Cache for books";
+    /** Cache for books argument */
+    private static final String BOOK_CACHE_ARGUMENT = "Cache for books";
 
     /** Cache key for list of book categories */
     private static final String BOOK_CATEGORIES_CACHE_KEY = "bookCategories";
@@ -31,34 +30,18 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
     private static final String BOOK_CACHE_KEY = "book";
 
     /** Cache for books */
-    @Value("#{cacheManager.getCache('bookCache')}")
     private Cache bookCache;
 
     /**
-     * Returns cache for books.
+     * Creates a new instance of AbstractBookService.
      *
-     * @return cache for books
+     * @param bookCache cache for books
+     * @throws IllegalArgumentException if cache for books is null
      */
-    public Cache getBookCache() {
-        return bookCache;
-    }
+    public AbstractBookService(final Cache bookCache) {
+        Validators.validateArgumentNotNull(bookCache, BOOK_CACHE_ARGUMENT);
 
-    /**
-     * Sets a new value to cache for books.
-     *
-     * @param bookCache new value
-     */
-    public void setBookCache(final Cache bookCache) {
         this.bookCache = bookCache;
-    }
-
-    /**
-     * Validates if cache for books is set.
-     *
-     * @throws IllegalStateException if cache for books is null
-     */
-    protected void validateBookCacheNotNull() {
-        Validators.validateFieldNotNull(bookCache, BOOK_CACHE_FIELD);
     }
 
     /** Remove all mappings from the cache for books. */

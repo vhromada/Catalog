@@ -12,6 +12,8 @@ import cz.vhromada.catalog.service.EpisodeService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeService {
 
     /** DAO for episodes field */
-    private static final String EPISODE_DAO_FIELD = "DAO for episodes";
+    private static final String EPISODE_DAO_ARGUMENT = "DAO for episodes";
 
     /** Season argument */
     private static final String SEASON_ARGUMENT = "Season";
@@ -42,35 +44,31 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     private EpisodeDAO episodeDAO;
 
     /**
-     * Returns DAO for episodes.
+     * Creates a new instance of EpisodeServiceImpl.
      *
-     * @return DAO for episodes
+     * @param episodeDAO DAO for episodes
+     * @param serieCache cache for series
+     * @throws IllegalArgumentException if DAO for episodes is null
+     *                                  or cache for series is null
      */
-    public EpisodeDAO getEpisodeDAO() {
-        return episodeDAO;
-    }
+    @Autowired
+    public EpisodeServiceImpl(final EpisodeDAO episodeDAO,
+            @Value("#{cacheManager.getCache('serieCache')}") final Cache serieCache) {
+        super(serieCache);
 
-    /**
-     * Sets a new value to DAO for episodes.
-     *
-     * @param episodeDAO new value
-     */
-    public void setEpisodeDAO(final EpisodeDAO episodeDAO) {
+        Validators.validateArgumentNotNull(episodeDAO, EPISODE_DAO_ARGUMENT);
+
         this.episodeDAO = episodeDAO;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Episode getEpisode(final Integer id) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -83,15 +81,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Episode episode) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
@@ -105,15 +99,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Episode episode) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
@@ -127,15 +117,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Episode episode) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
@@ -149,15 +135,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Episode episode) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
@@ -179,15 +161,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Episode episode) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
@@ -205,15 +183,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Episode episode) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
@@ -231,15 +205,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Episode episode) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
@@ -252,15 +222,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Episode> findEpisodesBySeason(final Season season) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
@@ -273,15 +239,11 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for episodes isn't set
-     *                                   or cache for series isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Time getTotalLengthBySeason(final Season season) {
-        Validators.validateFieldNotNull(episodeDAO, EPISODE_DAO_FIELD);
-        validateSerieCacheNotNull();
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {

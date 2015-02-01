@@ -29,9 +29,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.MovieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -60,8 +60,25 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
     private Cache movieCache;
 
     /** Instance of {@link MovieService} */
-    @InjectMocks
-    private MovieService movieService = new MovieServiceImpl();
+    private MovieService movieService;
+
+    /** Initializes service for movies. */
+    @Before
+    public void setUp() {
+        movieService = new MovieServiceImpl(movieDAO, movieCache);
+    }
+
+    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with DAO for movies. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMovieDAO() {
+        new MovieServiceImpl(null, movieCache);
+    }
+
+    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with cache for movies. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMovieCache() {
+        new MovieServiceImpl(movieDAO, null);
+    }
 
     /** Test method for {@link MovieService#newData()} with cached movies. */
     @Test
@@ -95,20 +112,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verify(movieCache).get(MOVIES_CACHE_KEY);
         verify(movieCache).clear();
         verifyNoMoreInteractions(movieDAO, movieCache);
-    }
-
-    /** Test method for {@link MovieService#newData()} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.newData();
-    }
-
-    /** Test method for {@link MovieService#newData()} with not set movie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.newData();
     }
 
     /** Test method for {@link MovieService#newData()} with exception in DAO tier. */
@@ -155,20 +158,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verify(movieCache).get(MOVIES_CACHE_KEY);
         verify(movieCache).put(MOVIES_CACHE_KEY, movies);
         verifyNoMoreInteractions(movieDAO, movieCache);
-    }
-
-    /** Test method for {@link MovieService#getMovies()} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMoviesWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.getMovies();
-    }
-
-    /** Test method for {@link MovieService#getMovies()} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMoviesWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.getMovies();
     }
 
     /** Test method for {@link MovieService#getMovies()} with exception in DAO tier. */
@@ -245,20 +234,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMovieWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.getMovie(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link MovieService#getMovie(Integer)} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMovieWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.getMovie(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link MovieService#getMovie(Integer)} with null argument. */
     @Test
     public void testGetMovieWithNullArgument() {
@@ -323,20 +298,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#add(Movie)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.add(mock(Movie.class));
-    }
-
-    /** Test method for {@link MovieService#add(Movie)} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.add(mock(Movie.class));
-    }
-
     /** Test method for {@link MovieService#add(Movie)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -378,20 +339,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verify(movieDAO).update(movie);
         verify(movieCache).clear();
         verifyNoMoreInteractions(movieDAO, movieCache);
-    }
-
-    /** Test method for {@link MovieService#update(Movie)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.update(mock(Movie.class));
-    }
-
-    /** Test method for {@link MovieService#update(Movie)} with not set movie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.update(mock(Movie.class));
     }
 
     /** Test method for {@link MovieService#update(Movie)} with null argument. */
@@ -458,20 +405,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#remove(Movie)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.remove(mock(Movie.class));
-    }
-
-    /** Test method for {@link MovieService#remove(Movie)} with not set movie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.remove(mock(Movie.class));
-    }
-
     /** Test method for {@link MovieService#remove(Movie)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -531,20 +464,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verify(movieCache).get(MOVIES_CACHE_KEY);
         verify(movieCache).get(MOVIE_CACHE_KEY + null);
         verifyNoMoreInteractions(movieDAO, movieCache);
-    }
-
-    /** Test method for {@link MovieService#duplicate(Movie)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.duplicate(mock(Movie.class));
-    }
-
-    /** Test method for {@link MovieService#duplicate(Movie)} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.duplicate(mock(Movie.class));
     }
 
     /** Test method for {@link MovieService#duplicate(Movie)} with null argument. */
@@ -621,20 +540,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveUp(Movie)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.moveUp(mock(Movie.class));
-    }
-
-    /** Test method for {@link MovieService#moveUp(Movie)} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.moveUp(mock(Movie.class));
-    }
-
     /** Test method for {@link MovieService#moveUp(Movie)} with null argument. */
     @Test
     public void testMoveUpWithNullArgument() {
@@ -708,20 +613,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verify(movieCache).get(MOVIES_CACHE_KEY);
         verify(movieCache).clear();
         verifyNoMoreInteractions(movieDAO, movieCache);
-    }
-
-    /** Test method for {@link MovieService#moveDown(Movie)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.moveDown(mock(Movie.class));
-    }
-
-    /** Test method for {@link MovieService#moveDown(Movie)} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.moveDown(mock(Movie.class));
     }
 
     /** Test method for {@link MovieService#moveDown(Movie)} with null argument. */
@@ -811,20 +702,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.exists(mock(Movie.class));
-    }
-
-    /** Test method for {@link MovieService#exists(Movie)} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.exists(mock(Movie.class));
-    }
-
     /** Test method for {@link MovieService#exists(Movie)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -895,20 +772,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#updatePositions()} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.updatePositions();
-    }
-
-    /** Test method for {@link MovieService#updatePositions()} with not set movie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.updatePositions();
-    }
-
     /** Test method for {@link MovieService#updatePositions()} with exception in DAO tier. */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
@@ -971,20 +834,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verify(movie2).getMedia();
         verify(movie3).getMedia();
         verifyNoMoreInteractions(movieDAO, movieCache, movie1, movie2, movie3);
-    }
-
-    /** Test method for {@link MovieService#getTotalMediaCount()} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.getTotalMediaCount();
-    }
-
-    /** Test method for {@link MovieService#getTotalMediaCount()} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.getTotalMediaCount();
     }
 
     /** Test method for {@link MovieService#getTotalMediaCount()} with exception in DAO tier. */
@@ -1077,20 +926,6 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verify(movie2).getMedia();
         verify(movie3).getMedia();
         verifyNoMoreInteractions(movieDAO, movieCache, movie1, movie2, movie3);
-    }
-
-    /** Test method for {@link MovieService#getTotalLength()} with not set DAO for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetMovieDAO() {
-        ((MovieServiceImpl) movieService).setMovieDAO(null);
-        movieService.getTotalLength();
-    }
-
-    /** Test method for {@link MovieService#getTotalLength()} with not set cache for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetMovieCache() {
-        ((MovieServiceImpl) movieService).setMovieCache(null);
-        movieService.getTotalLength();
     }
 
     /** Test method for {@link MovieService#getTotalLength()} with exception in DAO tier. */

@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 public class GenreServiceImpl extends AbstractService<Genre> implements GenreService {
 
     /** DAO for genres field */
-    private static final String GENRE_DAO_FIELD = "DAO for genres";
+    private static final String GENRE_DAO_ARGUMENT = "DAO for genres";
 
     /** Cache for genres field */
-    private static final String GENRE_CACHE_FIELD = "Cache for genres";
+    private static final String GENRE_CACHE_ARGUMENT = "Cache for genres";
 
     /** Genre argument */
     private static final String GENRE_ARGUMENT = "Genre";
@@ -46,61 +46,36 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     private static final String GENRE_CACHE_KEY = "genre";
 
     /** DAO for genres */
-    @Autowired
     private GenreDAO genreDAO;
 
     /** Cache for genres */
-    @Value("#{cacheManager.getCache('genreCache')}")
     private Cache genreCache;
 
     /**
-     * Returns DAO for genres.
+     * Creates a new instance of GenreServiceImpl.
      *
-     * @return DAO for genres
+     * @param genreDAO DAO for genres
+     * @param genreCache cache for genres
+     * @throws IllegalArgumentException if DAO for genres is null
+     *                                  or cache for genres is null
      */
-    public GenreDAO getGenreDAO() {
-        return genreDAO;
-    }
+    @Autowired
+    public GenreServiceImpl(final GenreDAO genreDAO,
+            @Value("#{cacheManager.getCache('genreCache')}") final Cache genreCache) {
+        Validators.validateArgumentNotNull(genreDAO, GENRE_DAO_ARGUMENT);
+        Validators.validateArgumentNotNull(genreCache, GENRE_CACHE_ARGUMENT);
 
-    /**
-     * Sets a new value to DAO for genres.
-     *
-     * @param genreDAO new value
-     */
-    public void setGenreDAO(final GenreDAO genreDAO) {
         this.genreDAO = genreDAO;
-    }
-
-    /**
-     * Returns cache for genres.
-     *
-     * @return cache for genres
-     */
-    public Cache getGenreCache() {
-        return genreCache;
-    }
-
-    /**
-     * Sets a new value to cache for genres.
-     *
-     * @param genreCache new value
-     */
-    public void setGenreCache(final Cache genreCache) {
         this.genreCache = genreCache;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
-
         try {
             for (final Genre genre : getCachedGenres(false)) {
                 genreDAO.remove(genre);
@@ -114,15 +89,10 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Genre> getGenres() {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
-
         try {
             return getCachedGenres(true);
         } catch (final DataStorageException ex) {
@@ -133,15 +103,11 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Genre getGenre(final Integer id) {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -154,15 +120,11 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Genre genre) {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
         Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
         try {
@@ -177,15 +139,11 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final List<String> genres) {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
         Validators.validateArgumentNotNull(genres, GENRE_NAMES_ARGUMENT);
 
         try {
@@ -203,15 +161,11 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Genre genre) {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
         Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
         try {
@@ -225,15 +179,11 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Genre genre) {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
         Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
         try {
@@ -248,15 +198,11 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for genres isn't set
-     *                                   or cache for genres isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Genre genre) {
-        Validators.validateFieldNotNull(genreDAO, GENRE_DAO_FIELD);
-        Validators.validateFieldNotNull(genreCache, GENRE_CACHE_FIELD);
         Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
         try {

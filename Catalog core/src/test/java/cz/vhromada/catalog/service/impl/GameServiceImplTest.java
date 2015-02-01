@@ -25,9 +25,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.GameService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -56,8 +56,25 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
     private Cache gameCache;
 
     /** Instance of {@link GameService} */
-    @InjectMocks
-    private GameService gameService = new GameServiceImpl();
+    private GameService gameService;
+
+    /** Initializes service for games. */
+    @Before
+    public void setUp() {
+        gameService = new GameServiceImpl(gameDAO, gameCache);
+    }
+
+    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with DAO for games. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGameDAO() {
+        new GameServiceImpl(null, gameCache);
+    }
+
+    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with cache for games. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGameCache() {
+        new GameServiceImpl(gameDAO, null);
+    }
 
     /** Test method for {@link GameService#newData()} with cached games. */
     @Test
@@ -91,20 +108,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verify(gameCache).get(GAMES_CACHE_KEY);
         verify(gameCache).clear();
         verifyNoMoreInteractions(gameDAO, gameCache);
-    }
-
-    /** Test method for {@link GameService#newData()} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.newData();
-    }
-
-    /** Test method for {@link GameService#newData()} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.newData();
     }
 
     /** Test method for {@link GameService#newData()} with exception in DAO tier. */
@@ -151,20 +154,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verify(gameCache).get(GAMES_CACHE_KEY);
         verify(gameCache).put(GAMES_CACHE_KEY, games);
         verifyNoMoreInteractions(gameDAO, gameCache);
-    }
-
-    /** Test method for {@link GameService#getGames()} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGamesWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.getGames();
-    }
-
-    /** Test method for {@link GameService#getGames()} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGamesWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.getGames();
     }
 
     /** Test method for {@link GameService#getGames()} with exception in DAO tier. */
@@ -241,20 +230,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGameWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.getGame(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link GameService#getGame(Integer)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGameWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.getGame(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link GameService#getGame(Integer)} with null argument. */
     @Test
     public void testGetGameWithNullArgument() {
@@ -319,20 +294,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#add(Game)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.add(mock(Game.class));
-    }
-
-    /** Test method for {@link GameService#add(Game)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.add(mock(Game.class));
-    }
-
     /** Test method for {@link GameService#add(Game)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -374,20 +335,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verify(gameDAO).update(game);
         verify(gameCache).clear();
         verifyNoMoreInteractions(gameDAO, gameCache);
-    }
-
-    /** Test method for {@link GameService#update(Game)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.update(mock(Game.class));
-    }
-
-    /** Test method for {@link GameService#update(Game)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.update(mock(Game.class));
     }
 
     /** Test method for {@link GameService#update(Game)} with null argument. */
@@ -453,20 +400,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#remove(Game)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.remove(mock(Game.class));
-    }
-
-    /** Test method for {@link GameService#remove(Game)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.remove(mock(Game.class));
-    }
-
     /** Test method for {@link GameService#remove(Game)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -507,20 +440,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verify(gameDAO).update(any(Game.class));
         verify(gameCache).clear();
         verifyNoMoreInteractions(gameDAO, gameCache);
-    }
-
-    /** Test method for {@link GameService#duplicate(Game)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.duplicate(mock(Game.class));
-    }
-
-    /** Test method for {@link GameService#duplicate(Game)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.duplicate(mock(Game.class));
     }
 
     /** Test method for {@link GameService#duplicate(Game)} with null argument. */
@@ -597,20 +516,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveUp(Game)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.moveUp(mock(Game.class));
-    }
-
-    /** Test method for {@link GameService#moveUp(Game)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.moveUp(mock(Game.class));
-    }
-
     /** Test method for {@link GameService#moveUp(Game)} with null argument. */
     @Test
     public void testMoveUpWithNullArgument() {
@@ -684,20 +589,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verify(gameCache).get(GAMES_CACHE_KEY);
         verify(gameCache).clear();
         verifyNoMoreInteractions(gameDAO, gameCache);
-    }
-
-    /** Test method for {@link GameService#moveDown(Game)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.moveDown(mock(Game.class));
-    }
-
-    /** Test method for {@link GameService#moveDown(Game)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.moveDown(mock(Game.class));
     }
 
     /** Test method for {@link GameService#moveDown(Game)} with null argument. */
@@ -787,20 +678,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#exists(Game)} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.exists(mock(Game.class));
-    }
-
-    /** Test method for {@link GameService#exists(Game)} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.exists(mock(Game.class));
-    }
-
     /** Test method for {@link GameService#exists(Game)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -871,20 +748,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#updatePositions()} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.updatePositions();
-    }
-
-    /** Test method for {@link GameService#updatePositions()} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.updatePositions();
-    }
-
     /** Test method for {@link GameService#updatePositions()} with exception in DAO tier. */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
@@ -947,20 +810,6 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verify(game2).getMediaCount();
         verify(game3).getMediaCount();
         verifyNoMoreInteractions(gameDAO, gameCache, game1, game2, game3);
-    }
-
-    /** Test method for {@link GameService#getTotalMediaCount()} with not set DAO for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetGameDAO() {
-        ((GameServiceImpl) gameService).setGameDAO(null);
-        gameService.getTotalMediaCount();
-    }
-
-    /** Test method for {@link GameService#getTotalMediaCount()} with not set cache for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetGameCache() {
-        ((GameServiceImpl) gameService).setGameCache(null);
-        gameService.getTotalMediaCount();
     }
 
     /** Test method for {@link GameService#getTotalMediaCount()} with exception in DAO tier. */

@@ -5,7 +5,6 @@ import java.util.List;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.validators.Validators;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 
 /**
@@ -15,8 +14,8 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractMusicService extends AbstractInnerService<Music, Song> {
 
-    /** Cache for music field */
-    private static final String MUSIC_CACHE_FIELD = "Cache for music";
+    /** Cache for music argument */
+    private static final String MUSIC_CACHE_ARGUMENT = "Cache for music";
 
     /** Cache key for list of music */
     private static final String MUSIC_LIST_CACHE_KEY = "music";
@@ -31,34 +30,18 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
     private static final String SONG_CACHE_KEY = "song";
 
     /** Cache for music */
-    @Value("#{cacheManager.getCache('musicCache')}")
     private Cache musicCache;
 
     /**
-     * Returns cache for music.
+     * Creates a new instance of AbstractMusicService.
      *
-     * @return cache for music
+     * @param musicCache cache for music
+     * @throws IllegalArgumentException if cache for music is null
      */
-    public Cache getMusicCache() {
-        return musicCache;
-    }
+    public AbstractMusicService(final Cache musicCache) {
+        Validators.validateArgumentNotNull(musicCache, MUSIC_CACHE_ARGUMENT);
 
-    /**
-     * Sets a new value to cache for music.
-     *
-     * @param musicCache new value
-     */
-    public void setMusicCache(final Cache musicCache) {
         this.musicCache = musicCache;
-    }
-
-    /**
-     * Validates if cache for music is set.
-     *
-     * @throws IllegalStateException if cache for music is null
-     */
-    protected void validateMusicCacheNotNull() {
-        Validators.validateFieldNotNull(musicCache, MUSIC_CACHE_FIELD);
     }
 
     /** Remove all mappings from the cache for music. */

@@ -29,9 +29,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.EpisodeService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -60,8 +60,25 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     private Cache serieCache;
 
     /** Instance of {@link EpisodeService} */
-    @InjectMocks
-    private EpisodeService episodeService = new EpisodeServiceImpl();
+    private EpisodeService episodeService;
+
+    /** Initializes service for episodes. */
+    @Before
+    public void setUp() {
+        episodeService = new EpisodeServiceImpl(episodeDAO, serieCache);
+    }
+
+    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache)} with DAO for episodes. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEpisodeDAO() {
+        new EpisodeServiceImpl(null, serieCache);
+    }
+
+    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache))} with cache for series. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieCache() {
+        new EpisodeServiceImpl(episodeDAO, null);
+    }
 
     /** Test method for {@link EpisodeService#getEpisode(Integer)} with cached existing episode. */
     @Test
@@ -117,20 +134,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
         verify(serieCache).put(EPISODE_CACHE_KEY + episode.getId(), null);
         verifyNoMoreInteractions(episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodeWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.getEpisode(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodeWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.getEpisode(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link EpisodeService#getEpisode(Integer)} with null argument. */
@@ -197,20 +200,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#add(Episode)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.add(mock(Episode.class));
-    }
-
-    /** Test method for {@link EpisodeService#add(Episode)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.add(mock(Episode.class));
-    }
-
     /** Test method for {@link EpisodeService#add(Episode)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -252,20 +241,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(episodeDAO).update(episode);
         verify(serieCache).clear();
         verifyNoMoreInteractions(episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link EpisodeService#update(Episode)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.update(mock(Episode.class));
-    }
-
-    /** Test method for {@link EpisodeService#update(Episode)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.update(mock(Episode.class));
     }
 
     /** Test method for {@link EpisodeService#update(Episode)} with null argument. */
@@ -331,20 +306,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#remove(Episode)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.remove(mock(Episode.class));
-    }
-
-    /** Test method for {@link EpisodeService#remove(Episode)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.remove(mock(Episode.class));
-    }
-
     /** Test method for {@link EpisodeService#remove(Episode)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -406,20 +367,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
         verify(serieCache).get(EPISODE_CACHE_KEY + null);
         verifyNoMoreInteractions(episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.duplicate(mock(Episode.class));
-    }
-
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.duplicate(mock(Episode.class));
     }
 
     /** Test method for {@link EpisodeService#duplicate(Episode)} with null argument. */
@@ -500,20 +447,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
         verify(serieCache).clear();
         verifyNoMoreInteractions(episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link EpisodeService#moveUp(Episode)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.moveUp(mock(Episode.class));
-    }
-
-    /** Test method for {@link EpisodeService#moveUp(Episode)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.moveUp(mock(Episode.class));
     }
 
     /** Test method for {@link EpisodeService#moveUp(Episode)} with null argument. */
@@ -598,20 +531,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
         verify(serieCache).clear();
         verifyNoMoreInteractions(episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link EpisodeService#moveDown(Episode)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.moveDown(mock(Episode.class));
-    }
-
-    /** Test method for {@link EpisodeService#moveDown(Episode)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.moveDown(mock(Episode.class));
     }
 
     /** Test method for {@link EpisodeService#moveDown(Episode)} with null argument. */
@@ -704,20 +623,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.exists(mock(Episode.class));
-    }
-
-    /** Test method for {@link EpisodeService#exists(Episode)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.exists(mock(Episode.class));
-    }
-
     /** Test method for {@link EpisodeService#exists(Episode)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -778,20 +683,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
         verify(serieCache).put(EPISODES_CACHE_KEY + season.getId(), episodes);
         verifyNoMoreInteractions(episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindEpisodesBySeasonWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.findEpisodesBySeason(mock(Season.class));
-    }
-
-    /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindEpisodesBySeasonWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.findEpisodesBySeason(mock(Season.class));
     }
 
     /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with null argument. */
@@ -886,20 +777,6 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(episode2).getLength();
         verify(episode3).getLength();
         verifyNoMoreInteractions(episodeDAO, serieCache, episode1, episode2, episode3);
-    }
-
-    /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthBySeasonWithNotSetEpisodeDAO() {
-        ((EpisodeServiceImpl) episodeService).setEpisodeDAO(null);
-        episodeService.getTotalLengthBySeason(mock(Season.class));
-    }
-
-    /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthBySeasonWithNotSetSerieCache() {
-        ((EpisodeServiceImpl) episodeService).setSerieCache(null);
-        episodeService.getTotalLengthBySeason(mock(Season.class));
     }
 
     /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with null argument. */

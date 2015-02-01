@@ -28,9 +28,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.BookCategoryService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -66,8 +66,31 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
     private Cache bookCache;
 
     /** Instance of {@link BookCategoryService} */
-    @InjectMocks
-    private BookCategoryService bookCategoryService = new BookCategoryServiceImpl();
+    private BookCategoryService bookCategoryService;
+
+    /** Initializes service for book categories. */
+    @Before
+    public void setUp() {
+        bookCategoryService = new BookCategoryServiceImpl(bookCategoryDAO, bookDAO, bookCache);
+    }
+
+    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with DAO for book categories. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullBookCategoryDAO() {
+        new BookCategoryServiceImpl(null, bookDAO, bookCache);
+    }
+
+    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with DAO for books. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullBookDAO() {
+        new BookCategoryServiceImpl(bookCategoryDAO, null, bookCache);
+    }
+
+    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache))} with cache for books. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullBookCache() {
+        new BookCategoryServiceImpl(bookCategoryDAO, bookDAO, null);
+    }
 
     /** Test method for {@link BookCategoryService#newData()} with cached data. */
     @Test
@@ -118,27 +141,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#newData()} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.newData();
-    }
-
-    /** Test method for {@link BookCategoryService#newData()} with not set DAO for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetBookDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookDAO(null);
-        bookCategoryService.newData();
-    }
-
-    /** Test method for {@link BookCategoryService#newData()} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.newData();
-    }
-
     /** Test method for {@link BookCategoryService#newData()} with exception in DAO tier. */
     @Test
     public void testNewDataWithDAOTierException() {
@@ -184,20 +186,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verify(bookCache).get(BOOK_CATEGORIES_CACHE_KEY);
         verify(bookCache).put(BOOK_CATEGORIES_CACHE_KEY, bookCategories);
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
-    }
-
-    /** Test method for {@link BookCategoryService#getBookCategories()} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoriesWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.getBookCategories();
-    }
-
-    /** Test method for {@link BookCategoryService#getBookCategories()} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoriesWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.getBookCategories();
     }
 
     /** Test method for {@link BookCategoryService#getBookCategories()} with exception in DAO tier. */
@@ -274,20 +262,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoryWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.getBookCategory(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoryWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.getBookCategory(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with null argument. */
     @Test
     public void testGetBookCategoryWithNullArgument() {
@@ -352,20 +326,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#add(BookCategory)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.add(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#add(BookCategory)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.add(mock(BookCategory.class));
-    }
-
     /** Test method for {@link BookCategoryService#add(BookCategory)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -407,20 +367,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verify(bookCategoryDAO).update(bookCategory);
         verify(bookCache).clear();
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
-    }
-
-    /** Test method for {@link BookCategoryService#update(BookCategory)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.update(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#update(BookCategory)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.update(mock(BookCategory.class));
     }
 
     /** Test method for {@link BookCategoryService#update(BookCategory)} with null argument. */
@@ -492,27 +438,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#remove(BookCategory)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.remove(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#remove(BookCategory)} with not set DAO for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetBookDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookDAO(null);
-        bookCategoryService.remove(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#remove(BookCategory)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.remove(mock(BookCategory.class));
-    }
-
     /** Test method for {@link BookCategoryService#remove(BookCategory)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -582,27 +507,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory.getId());
         verify(bookCache).clear();
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
-    }
-
-    /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.duplicate(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with not set DAO for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetBookDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookDAO(null);
-        bookCategoryService.duplicate(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.duplicate(mock(BookCategory.class));
     }
 
     /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with null argument. */
@@ -679,20 +583,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveUp(BookCategory)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.moveUp(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#moveUp(BookCategory)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.moveUp(mock(BookCategory.class));
-    }
-
     /** Test method for {@link BookCategoryService#moveUp(BookCategory)} with null argument. */
     @Test
     public void testMoveUpWithNullArgument() {
@@ -766,20 +656,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verify(bookCache).get(BOOK_CATEGORIES_CACHE_KEY);
         verify(bookCache).clear();
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
-    }
-
-    /** Test method for {@link BookCategoryService#moveDown(BookCategory)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.moveDown(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#moveDown(BookCategory)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.moveDown(mock(BookCategory.class));
     }
 
     /** Test method for {@link BookCategoryService#moveDown(BookCategory)} with null argument. */
@@ -867,20 +743,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verify(bookCache).get(BOOK_CATEGORY_CACHE_KEY + bookCategory.getId());
         verify(bookCache).put(BOOK_CATEGORY_CACHE_KEY + bookCategory.getId(), null);
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
-    }
-
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.exists(mock(BookCategory.class));
-    }
-
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.exists(mock(BookCategory.class));
     }
 
     /** Test method for {@link BookCategoryService#exists(BookCategory)} with null argument. */
@@ -972,27 +834,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#updatePositions()} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.updatePositions();
-    }
-
-    /** Test method for {@link BookCategoryService#updatePositions()} with not set DAO for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetBookDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookDAO(null);
-        bookCategoryService.updatePositions();
-    }
-
-    /** Test method for {@link BookCategoryService#updatePositions()} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.updatePositions();
-    }
-
     /** Test method for {@link BookCategoryService#updatePositions()} with exception in DAO tier. */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
@@ -1058,27 +899,6 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verify(bookCache).get(BOOKS_CACHE_KEY + bookCategory2.getId());
         verify(bookCache).put(BOOKS_CACHE_KEY + bookCategory2.getId(), books2);
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
-    }
-
-    /** Test method for {@link BookCategoryService#getBooksCount()} with not set DAO for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBooksCountWithNotSetBookCategoryDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCategoryDAO(null);
-        bookCategoryService.getBooksCount();
-    }
-
-    /** Test method for {@link BookCategoryService#getBooksCount()} with not set DAO for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBooksCountWithNotSetBookDAO() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookDAO(null);
-        bookCategoryService.getBooksCount();
-    }
-
-    /** Test method for {@link BookCategoryService#getBooksCount()} with not set cache for books. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBooksCountWithNotSetBookCache() {
-        ((BookCategoryServiceImpl) bookCategoryService).setBookCache(null);
-        bookCategoryService.getBooksCount();
     }
 
     /** Test method for {@link BookCategoryService#getBooksCount()} with exception in DAO tier. */

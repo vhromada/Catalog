@@ -26,9 +26,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -61,8 +61,25 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
     private List<String> mockNamesList;
 
     /** Instance of {@link GenreService} */
-    @InjectMocks
-    private GenreService genreService = new GenreServiceImpl();
+    private GenreService genreService;
+
+    /** Initializes service for genres. */
+    @Before
+    public void setUp() {
+        genreService = new GenreServiceImpl(genreDAO, genreCache);
+    }
+
+    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with DAO for genres. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGameDAO() {
+        new GenreServiceImpl(null, genreCache);
+    }
+
+    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with cache for genres. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGameCache() {
+        new GenreServiceImpl(genreDAO, null);
+    }
 
     /** Test method for {@link GenreService#newData()} with cached genres. */
     @Test
@@ -96,20 +113,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verify(genreCache).get(GENRES_CACHE_KEY);
         verify(genreCache).clear();
         verifyNoMoreInteractions(genreDAO, genreCache);
-    }
-
-    /** Test method for {@link GenreService#newData()} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.newData();
-    }
-
-    /** Test method for {@link GenreService#newData()} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.newData();
     }
 
     /** Test method for {@link GenreService#newData()} with exception in DAO tier. */
@@ -156,20 +159,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verify(genreCache).get(GENRES_CACHE_KEY);
         verify(genreCache).put(GENRES_CACHE_KEY, genres);
         verifyNoMoreInteractions(genreDAO, genreCache);
-    }
-
-    /** Test method for {@link GenreService#getGenres()} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenresWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.getGenres();
-    }
-
-    /** Test method for {@link GenreService#getGenres()} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenresWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.getGenres();
     }
 
     /** Test method for {@link GenreService#getGenres()} with exception in DAO tier. */
@@ -246,20 +235,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenreWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.getGenre(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link GenreService#getGenre(Integer)} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenreWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.getGenre(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link GenreService#getGenre(Integer)} with null argument. */
     @Test
     public void testGetGenreWithNullArgument() {
@@ -324,20 +299,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(Genre)} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.add(mock(Genre.class));
-    }
-
-    /** Test method for {@link GenreService#add(Genre)} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.add(mock(Genre.class));
-    }
-
     /** Test method for {@link GenreService#add(Genre)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -381,20 +342,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(List)} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddListWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.add(mockNamesList);
-    }
-
-    /** Test method for {@link GenreService#add(List)} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddListWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.add(mockNamesList);
-    }
-
     /** Test method for {@link GenreService#add(List)} with null argument. */
     @Test
     public void testAddListWithNullArgument() {
@@ -436,20 +383,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verify(genreDAO).update(genre);
         verify(genreCache).clear();
         verifyNoMoreInteractions(genreDAO, genreCache);
-    }
-
-    /** Test method for {@link GenreService#update(Genre)} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.update(mock(Genre.class));
-    }
-
-    /** Test method for {@link GenreService#update(Genre)} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.update(mock(Genre.class));
     }
 
     /** Test method for {@link GenreService#update(Genre)} with null argument. */
@@ -513,20 +446,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verify(genreCache).get(GENRES_CACHE_KEY);
         verify(genreCache).evict(genre.getId());
         verifyNoMoreInteractions(genreDAO, genreCache);
-    }
-
-    /** Test method for {@link GenreService#remove(Genre)} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.remove(mock(Genre.class));
-    }
-
-    /** Test method for {@link GenreService#remove(Genre)} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.remove(mock(Genre.class));
     }
 
     /** Test method for {@link GenreService#remove(Genre)} with null argument. */
@@ -614,20 +533,6 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verify(genreCache).get(GENRE_CACHE_KEY + genre.getId());
         verify(genreCache).put(GENRE_CACHE_KEY + genre.getId(), null);
         verifyNoMoreInteractions(genreDAO, genreCache);
-    }
-
-    /** Test method for {@link GenreService#exists(Genre)} with not set DAO for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGenreDAO() {
-        ((GenreServiceImpl) genreService).setGenreDAO(null);
-        genreService.exists(mock(Genre.class));
-    }
-
-    /** Test method for {@link GenreService#exists(Genre)} with not set cache for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGenreCache() {
-        ((GenreServiceImpl) genreService).setGenreCache(null);
-        genreService.exists(mock(Genre.class));
     }
 
     /** Test method for {@link GenreService#exists(Genre)} with null argument. */

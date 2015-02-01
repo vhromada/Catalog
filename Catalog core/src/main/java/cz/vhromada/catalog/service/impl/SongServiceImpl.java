@@ -11,6 +11,8 @@ import cz.vhromada.catalog.service.SongService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class SongServiceImpl extends AbstractMusicService implements SongService {
 
     /** DAO for songs field */
-    private static final String SONG_DAO_FIELD = "DAO for songs";
+    private static final String SONG_DAO_ARGUMENT = "DAO for songs";
 
     /** Music argument */
     private static final String MUSIC_ARGUMENT = "Music";
@@ -37,39 +39,35 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
     /** DAO for songs */
-    @Autowired
     private SongDAO songDAO;
 
     /**
-     * Returns DAO for songs.
+     * Creates a new instance of SongServiceImpl.
      *
-     * @return DAO for songs
+     * @param songDAO DAO for songs
+     * @param musicCache cache for music
+     * @throws IllegalArgumentException if DAO for songs is null
+     *                                  or cache for music is null
      */
-    public SongDAO getSongDAO() {
-        return songDAO;
-    }
+    @Autowired
+    public SongServiceImpl(final SongDAO songDAO,
+            @Value("#{cacheManager.getCache('musicCache')}") final Cache musicCache) {
+        super(musicCache);
 
-    /**
-     * Sets a new value to DAO for songs.
-     *
-     * @param songDAO new value
-     */
-    public void setSongDAO(final SongDAO songDAO) {
+        Validators.validateArgumentNotNull(songDAO, SONG_DAO_ARGUMENT);
+
         this.songDAO = songDAO;
     }
+
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Song getSong(final Integer id) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -82,15 +80,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Song song) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
@@ -104,15 +98,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Song song) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
@@ -126,15 +116,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Song song) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
@@ -148,15 +134,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Song song) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
@@ -177,15 +159,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Song song) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
@@ -203,15 +181,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Song song) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
@@ -230,15 +204,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Song song) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
@@ -251,15 +221,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Song> findSongsByMusic(final Music music) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
         try {
@@ -272,15 +238,11 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for songs isn't set
-     *                                   or cache for music isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Time getTotalLengthByMusic(final Music music) {
-        Validators.validateFieldNotNull(songDAO, SONG_DAO_FIELD);
-        validateMusicCacheNotNull();
         Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
         try {

@@ -25,9 +25,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.ProgramService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -56,8 +56,25 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
     private Cache programCache;
 
     /** Instance of {@link ProgramService} */
-    @InjectMocks
-    private ProgramService programService = new ProgramServiceImpl();
+    private ProgramService programService;
+
+    /** Initializes service for programs. */
+    @Before
+    public void setUp() {
+        programService = new ProgramServiceImpl(programDAO, programCache);
+    }
+
+    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with DAO for programs. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullProgramDAO() {
+        new ProgramServiceImpl(null, programCache);
+    }
+
+    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with cache for programs. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullProgramCache() {
+        new ProgramServiceImpl(programDAO, null);
+    }
 
     /** Test method for {@link ProgramService#newData()} with cached programs. */
     @Test
@@ -91,20 +108,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verify(programCache).get(PROGRAMS_CACHE_KEY);
         verify(programCache).clear();
         verifyNoMoreInteractions(programDAO, programCache);
-    }
-
-    /** Test method for {@link ProgramService#newData()} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.newData();
-    }
-
-    /** Test method for {@link ProgramService#newData()} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.newData();
     }
 
     /** Test method for {@link ProgramService#newData()} with exception in DAO tier. */
@@ -151,20 +154,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verify(programCache).get(PROGRAMS_CACHE_KEY);
         verify(programCache).put(PROGRAMS_CACHE_KEY, programs);
         verifyNoMoreInteractions(programDAO, programCache);
-    }
-
-    /** Test method for {@link ProgramService#getPrograms()} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramsWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.getPrograms();
-    }
-
-    /** Test method for {@link ProgramService#getPrograms()} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramsWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.getPrograms();
     }
 
     /** Test method for {@link ProgramService#getPrograms()} with exception in DAO tier. */
@@ -241,20 +230,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.getProgram(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link ProgramService#getProgram(Integer)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.getProgram(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link ProgramService#getProgram(Integer)} with null argument. */
     @Test
     public void testGetProgramWithNullArgument() {
@@ -319,20 +294,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#add(Program)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.add(mock(Program.class));
-    }
-
-    /** Test method for {@link ProgramService#add(Program)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.add(mock(Program.class));
-    }
-
     /** Test method for {@link ProgramService#add(Program)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -374,20 +335,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verify(programDAO).update(program);
         verify(programCache).clear();
         verifyNoMoreInteractions(programDAO, programCache);
-    }
-
-    /** Test method for {@link ProgramService#update(Program)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.update(mock(Program.class));
-    }
-
-    /** Test method for {@link ProgramService#update(Program)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.update(mock(Program.class));
     }
 
     /** Test method for {@link ProgramService#update(Program)} with null argument. */
@@ -453,20 +400,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#remove(Program)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.remove(mock(Program.class));
-    }
-
-    /** Test method for {@link ProgramService#remove(Program)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.remove(mock(Program.class));
-    }
-
     /** Test method for {@link ProgramService#remove(Program)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -507,20 +440,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verify(programDAO).update(any(Program.class));
         verify(programCache).clear();
         verifyNoMoreInteractions(programDAO, programCache);
-    }
-
-    /** Test method for {@link ProgramService#duplicate(Program)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.duplicate(mock(Program.class));
-    }
-
-    /** Test method for {@link ProgramService#duplicate(Program)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.duplicate(mock(Program.class));
     }
 
     /** Test method for {@link ProgramService#duplicate(Program)} with null argument. */
@@ -597,20 +516,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveUp(Program)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.moveUp(mock(Program.class));
-    }
-
-    /** Test method for {@link ProgramService#moveUp(Program)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.moveUp(mock(Program.class));
-    }
-
     /** Test method for {@link ProgramService#moveUp(Program)} with null argument. */
     @Test
     public void testMoveUpWithNullArgument() {
@@ -684,20 +589,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verify(programCache).get(PROGRAMS_CACHE_KEY);
         verify(programCache).clear();
         verifyNoMoreInteractions(programDAO, programCache);
-    }
-
-    /** Test method for {@link ProgramService#moveDown(Program)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.moveDown(mock(Program.class));
-    }
-
-    /** Test method for {@link ProgramService#moveDown(Program)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.moveDown(mock(Program.class));
     }
 
     /** Test method for {@link ProgramService#moveDown(Program)} with null argument. */
@@ -787,20 +678,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.exists(mock(Program.class));
-    }
-
-    /** Test method for {@link ProgramService#exists(Program)} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.exists(mock(Program.class));
-    }
-
     /** Test method for {@link ProgramService#exists(Program)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -871,20 +748,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#updatePositions()} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.updatePositions();
-    }
-
-    /** Test method for {@link ProgramService#updatePositions()} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.updatePositions();
-    }
-
     /** Test method for {@link ProgramService#updatePositions()} with exception in DAO tier. */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
@@ -947,20 +810,6 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verify(program2).getMediaCount();
         verify(program3).getMediaCount();
         verifyNoMoreInteractions(programDAO, programCache, program1, program2, program3);
-    }
-
-    /** Test method for {@link ProgramService#getTotalMediaCount()} with not set DAO for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetProgramDAO() {
-        ((ProgramServiceImpl) programService).setProgramDAO(null);
-        programService.getTotalMediaCount();
-    }
-
-    /** Test method for {@link ProgramService#getTotalMediaCount()} with not set cache for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetProgramCache() {
-        ((ProgramServiceImpl) programService).setProgramCache(null);
-        programService.getTotalMediaCount();
     }
 
     /** Test method for {@link ProgramService#getTotalMediaCount()} with exception in DAO tier. */

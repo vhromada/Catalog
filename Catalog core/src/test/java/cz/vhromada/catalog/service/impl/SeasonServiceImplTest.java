@@ -29,9 +29,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -67,8 +67,31 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
     private Cache serieCache;
 
     /** Instance of {@link SeasonService} */
-    @InjectMocks
-    private SeasonService seasonService = new SeasonServiceImpl();
+    private SeasonService seasonService;
+
+    /** Initializes service for seasons. */
+    @Before
+    public void setUp() {
+        seasonService = new SeasonServiceImpl(seasonDAO, episodeDAO, serieCache);
+    }
+
+    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with DAO for seasons. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSeasonDAO() {
+        new SeasonServiceImpl(null, episodeDAO, serieCache);
+    }
+
+    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with DAO for episodes. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEpisodeDAO() {
+        new SeasonServiceImpl(seasonDAO, null, serieCache);
+    }
+
+    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache))} with cache for series. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieCache() {
+        new SeasonServiceImpl(seasonDAO, episodeDAO, null);
+    }
 
     /** Test method for {@link SeasonService#getSeason(Integer)} with cached existing season. */
     @Test
@@ -124,20 +147,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SEASON_CACHE_KEY + season.getId());
         verify(serieCache).put(SEASON_CACHE_KEY + season.getId(), null);
         verifyNoMoreInteractions(seasonDAO, serieCache);
-    }
-
-    /** Test method for {@link SeasonService#getSeason(Integer)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.getSeason(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link SeasonService#getSeason(Integer)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonWithNotSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.getSeason(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link SeasonService#getSeason(Integer)} with null argument. */
@@ -204,20 +213,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#add(Season)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.add(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#add(Season)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.add(mock(Season.class));
-    }
-
     /** Test method for {@link SeasonService#add(Season)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -259,20 +254,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verify(seasonDAO).update(season);
         verify(serieCache).clear();
         verifyNoMoreInteractions(seasonDAO, serieCache);
-    }
-
-    /** Test method for {@link SeasonService#update(Season)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.update(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#update(Season)} with not set season cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.update(mock(Season.class));
     }
 
     /** Test method for {@link SeasonService#update(Season)} with null argument. */
@@ -344,27 +325,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#remove(Season)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.remove(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#remove(Season)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEpisodeDAO() {
-        ((SeasonServiceImpl) seasonService).setEpisodeDAO(null);
-        seasonService.remove(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#remove(Season)} with not set season cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.remove(mock(Season.class));
-    }
-
     /** Test method for {@link SeasonService#remove(Season)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -434,27 +394,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
         verify(serieCache).clear();
         verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link SeasonService#duplicate(Season)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.duplicate(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#duplicate(Season)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetEpisodeDAO() {
-        ((SeasonServiceImpl) seasonService).setEpisodeDAO(null);
-        seasonService.duplicate(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#duplicate(Season)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.duplicate(mock(Season.class));
     }
 
     /** Test method for {@link SeasonService#duplicate(Season)} with null argument. */
@@ -535,20 +474,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
         verify(serieCache).clear();
         verifyNoMoreInteractions(seasonDAO, serieCache);
-    }
-
-    /** Test method for {@link SeasonService#moveUp(Season)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.moveUp(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#moveUp(Season)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.moveUp(mock(Season.class));
     }
 
     /** Test method for {@link SeasonService#moveUp(Season)} with null argument. */
@@ -633,20 +558,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
         verify(serieCache).clear();
         verifyNoMoreInteractions(seasonDAO, serieCache);
-    }
-
-    /** Test method for {@link SeasonService#moveDown(Season)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.moveDown(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#moveDown(Season)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.moveDown(mock(Season.class));
     }
 
     /** Test method for {@link SeasonService#moveDown(Season)} with null argument. */
@@ -739,20 +650,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.exists(mock(Season.class));
-    }
-
-    /** Test method for {@link SeasonService#exists(Season)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.exists(mock(Season.class));
-    }
-
     /** Test method for {@link SeasonService#exists(Season)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -813,20 +710,6 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
         verify(serieCache).put(SEASONS_CACHE_KEY + serie.getId(), seasons);
         verifyNoMoreInteractions(seasonDAO, serieCache);
-    }
-
-    /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSeasonsBySerieWithNotSetSeasonDAO() {
-        ((SeasonServiceImpl) seasonService).setSeasonDAO(null);
-        seasonService.findSeasonsBySerie(mock(Serie.class));
-    }
-
-    /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSeasonsBySerieWithNotSetSerieCache() {
-        ((SeasonServiceImpl) seasonService).setSerieCache(null);
-        seasonService.findSeasonsBySerie(mock(Serie.class));
     }
 
     /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with null argument. */

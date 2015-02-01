@@ -29,9 +29,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.MusicService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -67,8 +67,31 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
     private Cache musicCache;
 
     /** Instance of {@link MusicService} */
-    @InjectMocks
-    private MusicService musicService = new MusicServiceImpl();
+    private MusicService musicService;
+
+    /** Initializes service for music. */
+    @Before
+    public void setUp() {
+        musicService = new MusicServiceImpl(musicDAO, songDAO, musicCache);
+    }
+
+    /** Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache)} with DAO for music. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMusicDAO() {
+        new MusicServiceImpl(null, songDAO, musicCache);
+    }
+
+    /** Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache)} with DAO for songs. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSongDAO() {
+        new MusicServiceImpl(musicDAO, null, musicCache);
+    }
+
+    /** Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache))} with cache for music. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMusicCache() {
+        new MusicServiceImpl(musicDAO, songDAO, null);
+    }
 
     /** Test method for {@link MusicService#newData()} with cached data. */
     @Test
@@ -119,27 +142,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#newData()} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.newData();
-    }
-
-    /** Test method for {@link MusicService#newData()} with not set DAO for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetSongDAO() {
-        ((MusicServiceImpl) musicService).setSongDAO(null);
-        musicService.newData();
-    }
-
-    /** Test method for {@link MusicService#newData()} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.newData();
-    }
-
     /** Test method for {@link MusicService#newData()} with exception in DAO tier. */
     @Test
     public void testNewDataWithDAOTierException() {
@@ -185,20 +187,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
         verify(musicCache).put(MUSIC_LIST_CACHE_KEY, music);
         verifyNoMoreInteractions(musicDAO, musicCache);
-    }
-
-    /** Test method for {@link MusicService#getMusic()} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.getMusic();
-    }
-
-    /** Test method for {@link MusicService#getMusic()} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.getMusic();
     }
 
     /** Test method for {@link MusicService#getMusic()} with exception in DAO tier. */
@@ -275,20 +263,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getMusic(Integer)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicByIdWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.getMusic(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link MusicService#getMusic(Integer)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicByIdWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.getMusic(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link MusicService#getMusic(Integer)} with null argument. */
     @Test
     public void testGetMusicByIdWithNullArgument() {
@@ -353,20 +327,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#add(Music)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.add(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#add(Music)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.add(mock(Music.class));
-    }
-
     /** Test method for {@link MusicService#add(Music)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -408,20 +368,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verify(musicDAO).update(music);
         verify(musicCache).clear();
         verifyNoMoreInteractions(musicDAO, musicCache);
-    }
-
-    /** Test method for {@link MusicService#update(Music)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.update(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#update(Music)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.update(mock(Music.class));
     }
 
     /** Test method for {@link MusicService#update(Music)} with null argument. */
@@ -493,27 +439,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#remove(Music)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.remove(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#remove(Music)} with not set DAO for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSongDAO() {
-        ((MusicServiceImpl) musicService).setSongDAO(null);
-        musicService.remove(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#remove(Music)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.remove(mock(Music.class));
-    }
-
     /** Test method for {@link MusicService#remove(Music)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -583,27 +508,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verify(musicCache).get(SONGS_CACHE_KEY + music.getId());
         verify(musicCache).clear();
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
-    }
-
-    /** Test method for {@link MusicService#duplicate(Music)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.duplicate(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#duplicate(Music)} with not set DAO for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSongDAO() {
-        ((MusicServiceImpl) musicService).setSongDAO(null);
-        musicService.duplicate(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#duplicate(Music)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.duplicate(mock(Music.class));
     }
 
     /** Test method for {@link MusicService#duplicate(Music)} with null argument. */
@@ -680,20 +584,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveUp(Music)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.moveUp(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#moveUp(Music)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.moveUp(mock(Music.class));
-    }
-
     /** Test method for {@link MusicService#moveUp(Music)} with null argument. */
     @Test
     public void testMoveUpWithNullArgument() {
@@ -767,20 +657,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verify(musicCache).get(MUSIC_LIST_CACHE_KEY);
         verify(musicCache).clear();
         verifyNoMoreInteractions(musicDAO, musicCache);
-    }
-
-    /** Test method for {@link MusicService#moveDown(Music)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.moveDown(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#moveDown(Music)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.moveDown(mock(Music.class));
     }
 
     /** Test method for {@link MusicService#moveDown(Music)} with null argument. */
@@ -868,20 +744,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verify(musicCache).get(MUSIC_CACHE_KEY + music.getId());
         verify(musicCache).put(MUSIC_CACHE_KEY + music.getId(), null);
         verifyNoMoreInteractions(musicDAO, musicCache);
-    }
-
-    /** Test method for {@link MusicService#exists(Music)} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.exists(mock(Music.class));
-    }
-
-    /** Test method for {@link MusicService#exists(Music)} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.exists(mock(Music.class));
     }
 
     /** Test method for {@link MusicService#exists(Music)} with null argument. */
@@ -973,27 +835,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#updatePositions()} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.updatePositions();
-    }
-
-    /** Test method for {@link MusicService#updatePositions()} with not set DAO for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetSongDAO() {
-        ((MusicServiceImpl) musicService).setSongDAO(null);
-        musicService.updatePositions();
-    }
-
-    /** Test method for {@link MusicService#updatePositions()} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.updatePositions();
-    }
-
     /** Test method for {@link MusicService#updatePositions()} with exception in DAO tier. */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
@@ -1057,20 +898,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verify(music2).getMediaCount();
         verify(music3).getMediaCount();
         verifyNoMoreInteractions(musicDAO, musicCache, music1, music2, music3);
-    }
-
-    /** Test method for {@link MusicService#getTotalMediaCount()} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.getTotalMediaCount();
-    }
-
-    /** Test method for {@link MusicService#getTotalMediaCount()} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.getTotalMediaCount();
     }
 
     /** Test method for {@link MusicService#getTotalMediaCount()} with exception in DAO tier. */
@@ -1171,27 +998,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache, song1, song2, song3);
     }
 
-    /** Test method for {@link MusicService#getTotalLength()} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.getTotalLength();
-    }
-
-    /** Test method for {@link MusicService#getTotalLength()} with not set DAO for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetSongDAO() {
-        ((MusicServiceImpl) musicService).setSongDAO(null);
-        musicService.getTotalLength();
-    }
-
-    /** Test method for {@link MusicService#getTotalLength()} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.getTotalLength();
-    }
-
     /** Test method for {@link MusicService#getTotalLength()} with exception in DAO tier. */
     @Test
     public void testGetTotalLengthWithDAOTierException() {
@@ -1257,27 +1063,6 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verify(musicCache).get(SONGS_CACHE_KEY + music2.getId());
         verify(musicCache).put(SONGS_CACHE_KEY + music2.getId(), songs2);
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
-    }
-
-    /** Test method for {@link MusicService#getSongsCount()} with not set DAO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSongsCountWithNotSetMusicDAO() {
-        ((MusicServiceImpl) musicService).setMusicDAO(null);
-        musicService.getSongsCount();
-    }
-
-    /** Test method for {@link MusicService#getSongsCount()} with not set DAO for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSongsCountWithNotSetSongDAO() {
-        ((MusicServiceImpl) musicService).setSongDAO(null);
-        musicService.getSongsCount();
-    }
-
-    /** Test method for {@link MusicService#getSongsCount()} with not set cache for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSongsCountWithNotSetMusicCache() {
-        ((MusicServiceImpl) musicService).setMusicCache(null);
-        musicService.getSongsCount();
     }
 
     /** Test method for {@link MusicService#getSongsCount()} with exception in DAO tier. */

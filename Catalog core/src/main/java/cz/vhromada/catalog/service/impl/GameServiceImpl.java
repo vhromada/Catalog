@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 public class GameServiceImpl extends AbstractService<Game> implements GameService {
 
     /** DAO for games field */
-    private static final String GAME_DAO_FIELD = "DAO for games";
+    private static final String GAME_DAO_ARGUMENT = "DAO for games";
 
     /** Cache for games field */
-    private static final String GAME_CACHE_FIELD = "Cache for games";
+    private static final String GAME_CACHE_ARGUMENT = "Cache for games";
 
     /** Game argument */
     private static final String GAME_ARGUMENT = "Game";
@@ -43,61 +43,36 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     private static final String GAME_CACHE_KEY = "game";
 
     /** DAO for games */
-    @Autowired
     private GameDAO gameDAO;
 
     /** Cache for games */
-    @Value("#{cacheManager.getCache('gameCache')}")
     private Cache gameCache;
 
     /**
-     * Returns DAO for games.
+     * Creates a new instance of GameServiceImpl.
      *
-     * @return DAO for games
+     * @param gameDAO DAO for games
+     * @param gameCache cache for games
+     * @throws IllegalArgumentException if DAO for games is null
+     *                                  or cache for games is null
      */
-    public GameDAO getGameDAO() {
-        return gameDAO;
-    }
+    @Autowired
+    public GameServiceImpl(final GameDAO gameDAO,
+            @Value("#{cacheManager.getCache('gameCache')}") final Cache gameCache) {
+        Validators.validateArgumentNotNull(gameDAO, GAME_DAO_ARGUMENT);
+        Validators.validateArgumentNotNull(gameCache, GAME_CACHE_ARGUMENT);
 
-    /**
-     * Sets a new value to DAO for games.
-     *
-     * @param gameDAO new value
-     */
-    public void setGameDAO(final GameDAO gameDAO) {
         this.gameDAO = gameDAO;
-    }
-
-    /**
-     * Returns cache for games.
-     *
-     * @return cache for games
-     */
-    public Cache getGameCache() {
-        return gameCache;
-    }
-
-    /**
-     * Sets a new value to cache for games.
-     *
-     * @param gameCache new value
-     */
-    public void setGameCache(final Cache gameCache) {
         this.gameCache = gameCache;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
-
         try {
             for (final Game game : getCachedGames(false)) {
                 gameDAO.remove(game);
@@ -111,15 +86,10 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Game> getGames() {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
-
         try {
             return getCachedGames(true);
         } catch (final DataStorageException ex) {
@@ -130,15 +100,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Game getGame(final Integer id) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -151,15 +117,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Game game) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -174,15 +136,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Game game) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -196,15 +154,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Game game) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -219,15 +173,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Game game) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -257,15 +207,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Game game) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -283,15 +229,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Game game) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -309,15 +251,11 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Game game) {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -330,16 +268,10 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
-     * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void updatePositions() {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
-
         try {
             final List<Game> games = getCachedGames(false);
             for (int i = 0; i < games.size(); i++) {
@@ -356,16 +288,10 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for games isn't set
-     *                                   or cache for games isn't set
-     * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public int getTotalMediaCount() {
-        Validators.validateFieldNotNull(gameDAO, GAME_DAO_FIELD);
-        Validators.validateFieldNotNull(gameCache, GAME_CACHE_FIELD);
-
         try {
             int sum = 0;
             for (final Game game : getCachedGames(true)) {

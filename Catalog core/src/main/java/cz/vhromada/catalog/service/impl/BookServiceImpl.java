@@ -11,6 +11,8 @@ import cz.vhromada.catalog.service.BookService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class BookServiceImpl extends AbstractBookService implements BookService {
 
     /** DAO for books field */
-    private static final String BOOK_DAO_FIELD = "DAO for books";
+    private static final String BOOK_DAO_ARGUMENT = "DAO for books";
 
     /** Book category argument */
     private static final String BOOK_CATEGORY_ARGUMENT = "Book category";
@@ -37,39 +39,34 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
     /** DAO for books */
-    @Autowired
     private BookDAO bookDAO;
 
     /**
-     * Returns DAO for books.
+     * Creates a new instance of BookServiceImpl.
      *
-     * @return DAO for books
+     * @param bookDAO DAO for books
+     * @param bookCache cache for books
+     * @throws IllegalArgumentException if DAO for books is null
+     *                                  or cache for books is null
      */
-    public BookDAO getBookDAO() {
-        return bookDAO;
-    }
+    @Autowired
+    public BookServiceImpl(final BookDAO bookDAO,
+            @Value("#{cacheManager.getCache('bookCache')}") final Cache bookCache) {
+        super(bookCache);
 
-    /**
-     * Sets a new value to DAO for books.
-     *
-     * @param bookDAO new value
-     */
-    public void setBookDAO(final BookDAO bookDAO) {
+        Validators.validateArgumentNotNull(bookDAO, BOOK_DAO_ARGUMENT);
+
         this.bookDAO = bookDAO;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public Book getBook(final Integer id) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -82,15 +79,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void add(final Book book) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -104,15 +97,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void update(final Book book) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -126,15 +115,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void remove(final Book book) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -148,15 +133,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Book book) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -179,15 +160,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Book book) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -205,15 +182,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Book book) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -232,15 +205,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public boolean exists(final Book book) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -253,15 +222,11 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException     if DAO for books isn't set
-     *                                   or cache for books isn't set
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
     public List<Book> findBooksByBookCategory(final BookCategory bookCategory) {
-        Validators.validateFieldNotNull(bookDAO, BOOK_DAO_FIELD);
-        validateBookCacheNotNull();
         Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_ARGUMENT);
 
         try {

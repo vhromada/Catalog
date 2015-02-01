@@ -31,9 +31,9 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
@@ -76,8 +76,37 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
     private Cache serieCache;
 
     /** Instance of {@link SerieService} */
-    @InjectMocks
-    private SerieService serieService = new SerieServiceImpl();
+    private SerieService serieService;
+
+    /** Initializes service for series. */
+    @Before
+    public void setUp() {
+        serieService = new SerieServiceImpl(serieDAO, seasonDAO, episodeDAO, serieCache);
+    }
+
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with DAO for series. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieDAO() {
+        new SerieServiceImpl(null, seasonDAO, episodeDAO, serieCache);
+    }
+
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with DAO for seasons. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSeasonDAO() {
+        new SerieServiceImpl(serieDAO, null, episodeDAO, serieCache);
+    }
+
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with DAO for episodes. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEpisodeDAO() {
+        new SerieServiceImpl(serieDAO, seasonDAO, null, serieCache);
+    }
+
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache))} with cache for series. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieCache() {
+        new SerieServiceImpl(serieDAO, seasonDAO, episodeDAO, null);
+    }
 
     /** Test method for {@link SerieService#newData()} with cached data. */
     @Test
@@ -143,34 +172,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#newData()} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.newData();
-    }
-
-    /** Test method for {@link SerieService#newData()} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetSeasonDAO() {
-        ((SerieServiceImpl) serieService).setSeasonDAO(null);
-        serieService.newData();
-    }
-
-    /** Test method for {@link SerieService#newData()} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetEpisodeDAO() {
-        ((SerieServiceImpl) serieService).setEpisodeDAO(null);
-        serieService.newData();
-    }
-
-    /** Test method for {@link SerieService#newData()} with not set serie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.newData();
-    }
-
     /** Test method for {@link SerieService#newData()} with exception in DAO tier. */
     @Test
     public void testNewDataWithDAOTierException() {
@@ -216,20 +217,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SERIES_CACHE_KEY);
         verify(serieCache).put(SERIES_CACHE_KEY, series);
         verifyNoMoreInteractions(serieDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#getSeries()} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeriesWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.getSeries();
-    }
-
-    /** Test method for {@link SerieService#getSeries()} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeriesWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.getSeries();
     }
 
     /** Test method for {@link SerieService#getSeries()} with exception in DAO tier. */
@@ -306,20 +293,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSerieWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.getSerie(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link SerieService#getSerie(Integer)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSerieWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.getSerie(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link SerieService#getSerie(Integer)} with null argument. */
     @Test
     public void testGetSerieWithNullArgument() {
@@ -384,20 +357,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#add(Serie)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.add(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#add(Serie)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.add(mock(Serie.class));
-    }
-
     /** Test method for {@link SerieService#add(Serie)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -439,20 +398,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieDAO).update(serie);
         verify(serieCache).clear();
         verifyNoMoreInteractions(serieDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#update(Serie)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.update(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#update(Serie)} with not set serie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.update(mock(Serie.class));
     }
 
     /** Test method for {@link SerieService#update(Serie)} with null argument. */
@@ -537,34 +482,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SEASONS_CACHE_KEY + serie.getId());
         verify(serieCache).clear();
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#remove(Serie)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.remove(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#remove(Serie)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSeasonDAO() {
-        ((SerieServiceImpl) serieService).setSeasonDAO(null);
-        serieService.remove(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#remove(Serie)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEpisodeDAO() {
-        ((SerieServiceImpl) serieService).setEpisodeDAO(null);
-        serieService.remove(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#remove(Serie)} with not set serie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.remove(mock(Serie.class));
     }
 
     /** Test method for {@link SerieService#remove(Serie)} with null argument. */
@@ -657,34 +574,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#duplicate(Serie)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.duplicate(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#duplicate(Serie)} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSeasonDAO() {
-        ((SerieServiceImpl) serieService).setSeasonDAO(null);
-        serieService.duplicate(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#duplicate(Serie)} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetEpisodeDAO() {
-        ((SerieServiceImpl) serieService).setEpisodeDAO(null);
-        serieService.duplicate(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#duplicate(Serie)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.duplicate(mock(Serie.class));
-    }
-
     /** Test method for {@link SerieService#duplicate(Serie)} with null argument. */
     @Test
     public void testDuplicateWithNullArgument() {
@@ -757,20 +646,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SERIES_CACHE_KEY);
         verify(serieCache).clear();
         verifyNoMoreInteractions(serieDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#moveUp(Serie)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.moveUp(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#moveUp(Serie)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.moveUp(mock(Serie.class));
     }
 
     /** Test method for {@link SerieService#moveUp(Serie)} with null argument. */
@@ -846,20 +721,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SERIES_CACHE_KEY);
         verify(serieCache).clear();
         verifyNoMoreInteractions(serieDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#moveDown(Serie)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.moveDown(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#moveDown(Serie)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.moveDown(mock(Serie.class));
     }
 
     /** Test method for {@link SerieService#moveDown(Serie)} with null argument. */
@@ -947,20 +808,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SERIE_CACHE_KEY + serie.getId());
         verify(serieCache).put(SERIE_CACHE_KEY + serie.getId(), null);
         verifyNoMoreInteractions(serieDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#exists(Serie)} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.exists(mock(Serie.class));
-    }
-
-    /** Test method for {@link SerieService#exists(Serie)} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.exists(mock(Serie.class));
     }
 
     /** Test method for {@link SerieService#exists(Serie)} with null argument. */
@@ -1071,34 +918,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#updatePositions()} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.updatePositions();
-    }
-
-    /** Test method for {@link SerieService#updatePositions()} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetSeasonDAO() {
-        ((SerieServiceImpl) serieService).setSeasonDAO(null);
-        serieService.updatePositions();
-    }
-
-    /** Test method for {@link SerieService#updatePositions()} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetEpisodDAO() {
-        ((SerieServiceImpl) serieService).setEpisodeDAO(null);
-        serieService.updatePositions();
-    }
-
-    /** Test method for {@link SerieService#updatePositions()} with not set serie cache. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.updatePositions();
-    }
-
     /** Test method for {@link SerieService#updatePositions()} with exception in DAO tier. */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
@@ -1200,34 +1019,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache, episode1, episode2);
     }
 
-    /** Test method for {@link SerieService#getTotalLength()} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.getTotalLength();
-    }
-
-    /** Test method for {@link SerieService#getTotalLength()} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetSeasonDAO() {
-        ((SerieServiceImpl) serieService).setSeasonDAO(null);
-        serieService.getTotalLength();
-    }
-
-    /** Test method for {@link SerieService#getTotalLength()} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetEpisodeDAO() {
-        ((SerieServiceImpl) serieService).setEpisodeDAO(null);
-        serieService.getTotalLength();
-    }
-
-    /** Test method for {@link SerieService#getTotalLength()} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.getTotalLength();
-    }
-
     /** Test method for {@link SerieService#getTotalLength()} with exception in DAO tier. */
     @Test
     public void testGetTotalLengthWithDAOTierException() {
@@ -1292,27 +1083,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SEASONS_CACHE_KEY + serie2.getId());
         verify(serieCache).put(SEASONS_CACHE_KEY + serie2.getId(), seasons2);
         verifyNoMoreInteractions(serieDAO, seasonDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#getSeasonsCount()} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonsCountWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.getSeasonsCount();
-    }
-
-    /** Test method for {@link SerieService#getSeasonsCount()} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonsCountWithNotSetSeasonDAO() {
-        ((SerieServiceImpl) serieService).setSeasonDAO(null);
-        serieService.getSeasonsCount();
-    }
-
-    /** Test method for {@link SerieService#getSeasonsCount()} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonsCountWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.getSeasonsCount();
     }
 
     /** Test method for {@link SerieService#getSeasonsCount()} with exception in DAO tier. */
@@ -1388,34 +1158,6 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verify(serieCache).get(SERIES_CACHE_KEY);
         verify(serieCache).put(SERIES_CACHE_KEY, series);
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
-    }
-
-    /** Test method for {@link SerieService#getEpisodesCount()} with not set DAO for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodesCountWithNotSetSerieDAO() {
-        ((SerieServiceImpl) serieService).setSerieDAO(null);
-        serieService.getEpisodesCount();
-    }
-
-    /** Test method for {@link SerieService#getEpisodesCount()} with not set DAO for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodesCountWithNotSetSeasonDAO() {
-        ((SerieServiceImpl) serieService).setSeasonDAO(null);
-        serieService.getEpisodesCount();
-    }
-
-    /** Test method for {@link SerieService#getEpisodesCount()} with not set DAO for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodesCountWithNotSetEpisodeDAO() {
-        ((SerieServiceImpl) serieService).setEpisodeDAO(null);
-        serieService.getEpisodesCount();
-    }
-
-    /** Test method for {@link SerieService#getEpisodesCount()} with not set cache for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodesCountWithNotSetSerieCache() {
-        ((SerieServiceImpl) serieService).setSerieCache(null);
-        serieService.getEpisodesCount();
     }
 
     /** Test method for {@link SerieService#getEpisodesCount()} with exception in DAO tier. */

@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.service.impl;
+package cz.vhromada.catalog.service.domain;
 
 /**
  * A class represents value in cache.

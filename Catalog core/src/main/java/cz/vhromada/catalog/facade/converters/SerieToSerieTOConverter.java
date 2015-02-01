@@ -38,8 +38,6 @@ public class SerieToSerieTOConverter implements Converter<Serie, SerieTO> {
 
     @Override
     public SerieTO convert(final Serie source) {
-        Validators.validateFieldNotNull(converter, "Converter");
-
         if (source == null) {
             return null;
         }

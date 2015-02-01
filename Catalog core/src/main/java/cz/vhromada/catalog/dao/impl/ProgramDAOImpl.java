@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 @Component("programDAO")
 public class ProgramDAOImpl implements ProgramDAO {
 
-    /** Entity manager field */
-    private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+    /** Entity manager argument */
+    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
     /** Program argument */
     private static final String PROGRAM_ARGUMENT = "Program";
@@ -34,37 +34,28 @@ public class ProgramDAOImpl implements ProgramDAO {
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
     /** Entity manager */
-    @Autowired
     private EntityManager entityManager;
 
     /**
-     * Returns entity manager.
+     * Creates a new instance of ProgramDAOImpl.
      *
-     * @return entity manager
+     * @param entityManager entity manager
+     * @throws IllegalArgumentException if entity manager is null
      */
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
+    @Autowired
+    public ProgramDAOImpl(final EntityManager entityManager) {
+        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
 
-    /**
-     * Sets a new value to entity manager.
-     *
-     * @param entityManager new value
-     */
-    public void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException if entity manager isn't set
      * @throws DataStorageException  {@inheritDoc}
      */
     @Override
     public List<Program> getPrograms() {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-
         try {
             return new ArrayList<>(entityManager.createNamedQuery(Program.SELECT_PROGRAMS, Program.class).getResultList());
         } catch (final PersistenceException ex) {
@@ -75,13 +66,11 @@ public class ProgramDAOImpl implements ProgramDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public Program getProgram(final Integer id) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -94,13 +83,11 @@ public class ProgramDAOImpl implements ProgramDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void add(final Program program) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -115,13 +102,11 @@ public class ProgramDAOImpl implements ProgramDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void update(final Program program) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {
@@ -134,13 +119,11 @@ public class ProgramDAOImpl implements ProgramDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void remove(final Program program) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(program, PROGRAM_ARGUMENT);
 
         try {

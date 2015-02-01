@@ -26,9 +26,9 @@ import cz.vhromada.catalog.dao.SerieDAO;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,8 +51,19 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Serie> seriesQuery;
 
     /** Instance of {@link SerieDAO} */
-    @InjectMocks
-    private SerieDAO serieDAO = new SerieDAOImpl();
+    private SerieDAO serieDAO;
+
+    /** Initializes DAO for series. */
+    @Before
+    public void setUp() {
+        serieDAO = new SerieDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link SerieDAOImpl#SerieDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new SerieDAOImpl(null);
+    }
 
     /** Test method for {@link SerieDAO#getSeries()}. */
     @Test
@@ -68,14 +79,7 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, seriesQuery);
     }
 
-    /** Test method for {@link SerieDAOImpl#getSeries()} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeriesWithNotSetEntityManager() {
-        ((SerieDAOImpl) serieDAO).setEntityManager(null);
-        serieDAO.getSeries();
-    }
-
-    /** Test method for {@link SerieDAOImpl#getSeries()} with exception in persistence. */
+    /** Test method for {@link SerieDAO#getSeries()} with exception in persistence. */
     @Test
     public void testGetSeriesWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Serie.class));
@@ -116,13 +120,6 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#getSerie(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSerieWithNotSetEntityManager() {
-        ((SerieDAOImpl) serieDAO).setEntityManager(null);
-        serieDAO.getSerie(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link SerieDAO#getSerie(Integer)} with null argument. */
     @Test
     public void testGetSerieWithNullArgument() {
@@ -136,7 +133,7 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#getSerie(Integer)} with exception in persistence. */
+    /** Test method for {@link SerieDAO#getSerie(Integer)} with exception in persistence. */
     @Test
     public void testGetSerieWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Serie.class), anyInt());
@@ -168,13 +165,6 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#add(Serie)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((SerieDAOImpl) serieDAO).setEntityManager(null);
-        serieDAO.add(mock(Serie.class));
-    }
-
     /** Test method for {@link SerieDAO#add(Serie)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -188,7 +178,7 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#add(Serie)} with exception in persistence. */
+    /** Test method for {@link SerieDAO#add(Serie)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Serie serie = generate(Serie.class);
@@ -216,13 +206,6 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#update(Serie)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((SerieDAOImpl) serieDAO).setEntityManager(null);
-        serieDAO.update(mock(Serie.class));
-    }
-
     /** Test method for {@link SerieDAO#update(Serie)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -236,7 +219,7 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#update(Serie)} with exception in persistence. */
+    /** Test method for {@link SerieDAO#update(Serie)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Serie serie = generate(Serie.class);
@@ -281,13 +264,6 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#remove(Serie)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((SerieDAOImpl) serieDAO).setEntityManager(null);
-        serieDAO.remove(mock(Serie.class));
-    }
-
     /** Test method for {@link SerieDAO#remove(Serie)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -301,7 +277,7 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#remove(Serie)} with exception in persistence. */
+    /** Test method for {@link SerieDAO#remove(Serie)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Serie serie = generate(Serie.class);

@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 @Component("gameDAO")
 public class GameDAOImpl implements GameDAO {
 
-    /** Entity manager field */
-    private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+    /** Entity manager argument */
+    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
     /** Game argument */
     private static final String GAME_ARGUMENT = "Game";
@@ -34,37 +34,28 @@ public class GameDAOImpl implements GameDAO {
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
     /** Entity manager */
-    @Autowired
     private EntityManager entityManager;
 
     /**
-     * Returns entity manager.
+     * Creates a new instance of GameDAOImpl.
      *
-     * @return entity manager
+     * @param entityManager entity manager
+     * @throws IllegalArgumentException if entity manager is null
      */
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
+    @Autowired
+    public GameDAOImpl(final EntityManager entityManager) {
+        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
 
-    /**
-     * Sets a new value to entity manager.
-     *
-     * @param entityManager new value
-     */
-    public void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException if entity manager isn't set
      * @throws DataStorageException  {@inheritDoc}
      */
     @Override
     public List<Game> getGames() {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-
         try {
             return new ArrayList<>(entityManager.createNamedQuery(Game.SELECT_GAMES, Game.class).getResultList());
         } catch (final PersistenceException ex) {
@@ -75,13 +66,11 @@ public class GameDAOImpl implements GameDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public Game getGame(final Integer id) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -94,13 +83,11 @@ public class GameDAOImpl implements GameDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void add(final Game game) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -115,13 +102,11 @@ public class GameDAOImpl implements GameDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void update(final Game game) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {
@@ -134,13 +119,11 @@ public class GameDAOImpl implements GameDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void remove(final Game game) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
 
         try {

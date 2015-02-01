@@ -27,9 +27,9 @@ import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -52,8 +52,19 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Season> seasonsQuery;
 
     /** Instance of {@link SeasonDAO} */
-    @InjectMocks
-    private SeasonDAO seasonDAO = new SeasonDAOImpl();
+    private SeasonDAO seasonDAO;
+
+    /** Initializes DAO for seasons. */
+    @Before
+    public void setUp() {
+        seasonDAO = new SeasonDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link SeasonDAOImpl#SeasonDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new SeasonDAOImpl(null);
+    }
 
     /** Test method for {@link SeasonDAO#getSeason(Integer)} with existing season. */
     @Test
@@ -79,13 +90,6 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#getSeason(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonWithNotSetEntityManager() {
-        ((SeasonDAOImpl) seasonDAO).setEntityManager(null);
-        seasonDAO.getSeason(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link SeasonDAO#getSeason(Integer)} with null argument. */
     @Test
     public void testGetSeasonWithNullArgument() {
@@ -99,7 +103,7 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#getSeason(Integer)} with exception in persistence. */
+    /** Test method for {@link SeasonDAO#getSeason(Integer)} with exception in persistence. */
     @Test
     public void testGetSeasonWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Season.class), anyInt());
@@ -131,13 +135,6 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#add(Season)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((SeasonDAOImpl) seasonDAO).setEntityManager(null);
-        seasonDAO.add(mock(Season.class));
-    }
-
     /** Test method for {@link SeasonDAO#add(Season)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -151,7 +148,7 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#add(Season)} with exception in persistence. */
+    /** Test method for {@link SeasonDAO#add(Season)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Season season = generate(Season.class);
@@ -179,13 +176,6 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#update(Season)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((SeasonDAOImpl) seasonDAO).setEntityManager(null);
-        seasonDAO.update(mock(Season.class));
-    }
-
     /** Test method for {@link SeasonDAO#update(Season)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -199,7 +189,7 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#update(Season)} with exception in persistence. */
+    /** Test method for {@link SeasonDAO#update(Season)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Season season = generate(Season.class);
@@ -244,13 +234,6 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#remove(Season)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((SeasonDAOImpl) seasonDAO).setEntityManager(null);
-        seasonDAO.remove(mock(Season.class));
-    }
-
     /** Test method for {@link SeasonDAO#remove(Season)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -264,7 +247,7 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#remove(Season)} with exception in persistence. */
+    /** Test method for {@link SeasonDAO#remove(Season)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Season season = generate(Season.class);
@@ -297,13 +280,6 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, seasonsQuery);
     }
 
-    /** Test method for {@link SeasonDAOImpl#add(Season)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSeasonsBySerieWithNotSetEntityManager() {
-        ((SeasonDAOImpl) seasonDAO).setEntityManager(null);
-        seasonDAO.findSeasonsBySerie(mock(Serie.class));
-    }
-
     /** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with null argument. */
     @Test
     public void testFindSeasonsBySerieWithNullArgument() {
@@ -317,7 +293,7 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager, seasonsQuery);
     }
 
-    /** Test method for {@link SeasonDAOImpl#findSeasonsBySerie(Serie)} with exception in persistence. */
+    /** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with exception in persistence. */
     @Test
     public void testFindSeasonsBySerieWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Season.class));

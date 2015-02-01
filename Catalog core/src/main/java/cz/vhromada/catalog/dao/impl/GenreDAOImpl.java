@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 @Component("genreDAO")
 public class GenreDAOImpl implements GenreDAO {
 
-    /** Entity manager field */
-    private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+    /** Entity manager argument */
+    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
     /** Genre argument */
     private static final String GENRE_ARGUMENT = "Genre";
@@ -34,37 +34,28 @@ public class GenreDAOImpl implements GenreDAO {
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
     /** Entity manager */
-    @Autowired
     private EntityManager entityManager;
 
     /**
-     * Returns entity manager.
+     * Creates a new instance of GenreDAOImpl.
      *
-     * @return entity manager
+     * @param entityManager entity manager
+     * @throws IllegalArgumentException if entity manager is null
      */
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
+    @Autowired
+    public GenreDAOImpl(final EntityManager entityManager) {
+        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
 
-    /**
-     * Sets a new value to entity manager.
-     *
-     * @param entityManager new value
-     */
-    public void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException if entity manager isn't set
      * @throws DataStorageException  {@inheritDoc}
      */
     @Override
     public List<Genre> getGenres() {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-
         try {
             return new ArrayList<>(entityManager.createNamedQuery(Genre.SELECT_GENRES, Genre.class).getResultList());
         } catch (final PersistenceException ex) {
@@ -75,13 +66,11 @@ public class GenreDAOImpl implements GenreDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public Genre getGenre(final Integer id) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -94,13 +83,11 @@ public class GenreDAOImpl implements GenreDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void add(final Genre genre) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
         try {
@@ -113,13 +100,11 @@ public class GenreDAOImpl implements GenreDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void update(final Genre genre) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
         try {
@@ -132,13 +117,11 @@ public class GenreDAOImpl implements GenreDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void remove(final Genre genre) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(genre, GENRE_ARGUMENT);
 
         try {

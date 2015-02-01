@@ -26,9 +26,9 @@ import cz.vhromada.catalog.dao.ProgramDAO;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,8 +51,19 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Program> programsQuery;
 
     /** Instance of {@link ProgramDAO} */
-    @InjectMocks
-    private ProgramDAO programDAO = new ProgramDAOImpl();
+    private ProgramDAO programDAO;
+
+    /** Initializes DAO for programs. */
+    @Before
+    public void setUp() {
+        programDAO = new ProgramDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link ProgramDAOImpl#ProgramDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new ProgramDAOImpl(null);
+    }
 
     /** Test method for {@link ProgramDAO#getPrograms()}. */
     @Test
@@ -68,14 +79,7 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, programsQuery);
     }
 
-    /** Test method for {@link ProgramDAOImpl#getPrograms()} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramsWithNotSetEntityManager() {
-        ((ProgramDAOImpl) programDAO).setEntityManager(null);
-        programDAO.getPrograms();
-    }
-
-    /** Test method for {@link ProgramDAOImpl#getPrograms()} with exception in persistence. */
+    /** Test method for {@link ProgramDAO#getPrograms()} with exception in persistence. */
     @Test
     public void testGetProgramsWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Program.class));
@@ -116,13 +120,6 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#getProgram(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramWithNotSetEntityManager() {
-        ((ProgramDAOImpl) programDAO).setEntityManager(null);
-        programDAO.getProgram(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link ProgramDAO#getProgram(Integer)} with null argument. */
     @Test
     public void testGetProgramWithNullArgument() {
@@ -136,7 +133,7 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#getProgram(Integer)} with exception in persistence. */
+    /** Test method for {@link ProgramDAO#getProgram(Integer)} with exception in persistence. */
     @Test
     public void testGetProgramWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Program.class), anyInt());
@@ -168,13 +165,6 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#add(Program)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((ProgramDAOImpl) programDAO).setEntityManager(null);
-        programDAO.add(mock(Program.class));
-    }
-
     /** Test method for {@link ProgramDAO#add(Program)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -188,7 +178,7 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#add(Program)} with exception in persistence. */
+    /** Test method for {@link ProgramDAO#add(Program)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Program program = generate(Program.class);
@@ -216,13 +206,6 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#update(Program)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((ProgramDAOImpl) programDAO).setEntityManager(null);
-        programDAO.update(mock(Program.class));
-    }
-
     /** Test method for {@link ProgramDAO#update(Program)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -236,7 +219,7 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#update(Program)} with exception in persistence. */
+    /** Test method for {@link ProgramDAO#update(Program)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Program program = generate(Program.class);
@@ -281,13 +264,6 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#remove(Program)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((ProgramDAOImpl) programDAO).setEntityManager(null);
-        programDAO.remove(mock(Program.class));
-    }
-
     /** Test method for {@link ProgramDAO#remove(Program)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -301,7 +277,7 @@ public class ProgramDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link ProgramDAOImpl#remove(Program)} with exception in persistence. */
+    /** Test method for {@link ProgramDAO#remove(Program)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Program program = generate(Program.class);

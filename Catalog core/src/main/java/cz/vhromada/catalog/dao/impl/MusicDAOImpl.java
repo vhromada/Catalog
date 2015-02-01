@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 @Component("musicDAO")
 public class MusicDAOImpl implements MusicDAO {
 
-    /** Entity manager field */
-    private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+    /** Entity manager argument */
+    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
     /** Music argument */
     private static final String MUSIC_ARGUMENT = "Music";
@@ -34,37 +34,28 @@ public class MusicDAOImpl implements MusicDAO {
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
     /** Entity manager */
-    @Autowired
     private EntityManager entityManager;
 
     /**
-     * Returns entity manager.
+     * Creates a new instance of MusicDAOImpl.
      *
-     * @return entity manager
+     * @param entityManager entity manager
+     * @throws IllegalArgumentException if entity manager is null
      */
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
+    @Autowired
+    public MusicDAOImpl(final EntityManager entityManager) {
+        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
 
-    /**
-     * Sets a new value to entity manager.
-     *
-     * @param entityManager new value
-     */
-    public void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException if entity manager isn't set
      * @throws DataStorageException  {@inheritDoc}
      */
     @Override
     public List<Music> getMusic() {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
-
         try {
             return new ArrayList<>(entityManager.createNamedQuery(Music.SELECT_MUSIC, Music.class).getResultList());
         } catch (final PersistenceException ex) {
@@ -75,13 +66,11 @@ public class MusicDAOImpl implements MusicDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public Music getMusic(final Integer id) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -94,14 +83,11 @@ public class MusicDAOImpl implements MusicDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
-     *                                  or music validator isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void add(final Music music) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
         try {
@@ -116,13 +102,11 @@ public class MusicDAOImpl implements MusicDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void update(final Music music) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
         try {
@@ -135,13 +119,11 @@ public class MusicDAOImpl implements MusicDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void remove(final Music music) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
 
         try {

@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 @Component("bookDAO")
 public class BookDAOImpl implements BookDAO {
 
-    /** Entity manager field */
-    private static final String ENTITY_MANAGER_FIELD = "Entity manager";
+    /** Entity manager argument */
+    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
     /** Book category argument */
     private static final String BOOK_CATEGORY_ARGUMENT = "Book category";
@@ -38,37 +38,29 @@ public class BookDAOImpl implements BookDAO {
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
     /** Entity manager */
-    @Autowired
     private EntityManager entityManager;
 
     /**
-     * Returns entity manager.
+     * Creates a new instance of BookDAOImpl.
      *
-     * @return entity manager
+     * @param entityManager entity manager
+     * @throws IllegalArgumentException if entity manager is null
      */
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
+    @Autowired
+    public BookDAOImpl(final EntityManager entityManager) {
+        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
 
-    /**
-     * Sets a new value to entity manager.
-     *
-     * @param entityManager new value
-     */
-    public void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public Book getBook(final Integer id) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -81,13 +73,11 @@ public class BookDAOImpl implements BookDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void add(final Book book) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -102,13 +92,11 @@ public class BookDAOImpl implements BookDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void update(final Book book) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -121,13 +109,11 @@ public class BookDAOImpl implements BookDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public void remove(final Book book) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(book, BOOK_ARGUMENT);
 
         try {
@@ -144,13 +130,11 @@ public class BookDAOImpl implements BookDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if entity manager isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
     public List<Book> findBooksByBookCategory(final BookCategory bookCategory) {
-        Validators.validateFieldNotNull(entityManager, ENTITY_MANAGER_FIELD);
         Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_ARGUMENT);
 
         try {

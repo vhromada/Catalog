@@ -26,9 +26,9 @@ import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,8 +51,19 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Genre> genresQuery;
 
     /** Instance of {@link GenreDAO} */
-    @InjectMocks
-    private GenreDAO genreDAO = new GenreDAOImpl();
+    private GenreDAO genreDAO;
+
+    /** Initializes DAO for genres. */
+    @Before
+    public void setUp() {
+        genreDAO = new GenreDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link GenreDAOImpl#GenreDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new GenreDAOImpl(null);
+    }
 
     /** Test method for {@link GenreDAO#getGenres()}. */
     @Test
@@ -68,14 +79,7 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, genresQuery);
     }
 
-    /** Test method for {@link GenreDAOImpl#getGenres()} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenresWithNotSetEntityManager() {
-        ((GenreDAOImpl) genreDAO).setEntityManager(null);
-        genreDAO.getGenres();
-    }
-
-    /** Test method for {@link GenreDAOImpl#getGenres()} with exception in persistence. */
+    /** Test method for {@link GenreDAO#getGenres()} with exception in persistence. */
     @Test
     public void testGetGenresWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Genre.class));
@@ -116,13 +120,6 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#getGenre(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenreWithNotSetEntityManager() {
-        ((GenreDAOImpl) genreDAO).setEntityManager(null);
-        genreDAO.getGenre(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link GenreDAO#getGenre(Integer)} with null argument. */
     @Test
     public void testGetGenreWithNullArgument() {
@@ -136,7 +133,7 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#getGenre(Integer)} with exception in persistence. */
+    /** Test method for {@link GenreDAO#getGenre(Integer)} with exception in persistence. */
     @Test
     public void testGetGenreWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Genre.class), anyInt());
@@ -166,13 +163,6 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#add(Genre)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((GenreDAOImpl) genreDAO).setEntityManager(null);
-        genreDAO.add(mock(Genre.class));
-    }
-
     /** Test method for {@link GenreDAO#add(Genre)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -186,7 +176,7 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#add(Genre)} with exception in persistence. */
+    /** Test method for {@link GenreDAO#add(Genre)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Genre genre = generate(Genre.class);
@@ -214,13 +204,6 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#update(Genre)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((GenreDAOImpl) genreDAO).setEntityManager(null);
-        genreDAO.update(mock(Genre.class));
-    }
-
     /** Test method for {@link GenreDAO#update(Genre)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -234,7 +217,7 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#update(Genre)} with exception in persistence. */
+    /** Test method for {@link GenreDAO#update(Genre)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Genre genre = generate(Genre.class);
@@ -279,13 +262,6 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#remove(Genre)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((GenreDAOImpl) genreDAO).setEntityManager(null);
-        genreDAO.remove(mock(Genre.class));
-    }
-
     /** Test method for {@link GenreDAO#remove(Genre)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -299,7 +275,7 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GenreDAOImpl#remove(Genre)} with exception in persistence. */
+    /** Test method for {@link GenreDAO#remove(Genre)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Genre genre = generate(Genre.class);

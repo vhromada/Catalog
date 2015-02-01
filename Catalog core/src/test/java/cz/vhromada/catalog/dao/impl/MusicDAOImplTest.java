@@ -26,9 +26,9 @@ import cz.vhromada.catalog.dao.MusicDAO;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,8 +51,19 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Music> musicQuery;
 
     /** Instance of {@link MusicDAO} */
-    @InjectMocks
-    private MusicDAO musicDAO = new MusicDAOImpl();
+    private MusicDAO musicDAO;
+
+    /** Initializes DAO for music. */
+    @Before
+    public void setUp() {
+        musicDAO = new MusicDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link MusicDAOImpl#MusicDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new MusicDAOImpl(null);
+    }
 
     /** Test method for {@link MusicDAO#getMusic()}. */
     @Test
@@ -68,14 +79,7 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, musicQuery);
     }
 
-    /** Test method for {@link MusicDAOImpl#getMusic()} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicWithNotSetEntityManager() {
-        ((MusicDAOImpl) musicDAO).setEntityManager(null);
-        musicDAO.getMusic();
-    }
-
-    /** Test method for {@link MusicDAOImpl#getMusic()} with exception in persistence. */
+    /** Test method for {@link MusicDAO#getMusic()} with exception in persistence. */
     @Test
     public void testGetMusicWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Music.class));
@@ -116,13 +120,6 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#getMusic(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMusicByIdWithNotSetEntityManager() {
-        ((MusicDAOImpl) musicDAO).setEntityManager(null);
-        musicDAO.getMusic(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link MusicDAO#getMusic(Integer)} with null argument. */
     @Test
     public void testGetMusicByIdWithNullArgument() {
@@ -136,7 +133,7 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#getMusic(Integer)} with exception in persistence. */
+    /** Test method for {@link MusicDAO#getMusic(Integer)} with exception in persistence. */
     @Test
     public void testGetMusicByIdWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Music.class), anyInt());
@@ -168,13 +165,6 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#add(Music)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((MusicDAOImpl) musicDAO).setEntityManager(null);
-        musicDAO.add(mock(Music.class));
-    }
-
     /** Test method for {@link MusicDAO#add(Music)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -188,7 +178,7 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#add(Music)} with exception in persistence. */
+    /** Test method for {@link MusicDAO#add(Music)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Music music = generate(Music.class);
@@ -216,13 +206,6 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#update(Music)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((MusicDAOImpl) musicDAO).setEntityManager(null);
-        musicDAO.update(mock(Music.class));
-    }
-
     /** Test method for {@link MusicDAO#update(Music)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -236,7 +219,7 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#update(Music)} with exception in persistence. */
+    /** Test method for {@link MusicDAO#update(Music)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Music music = generate(Music.class);
@@ -281,13 +264,6 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#remove(Music)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((MusicDAOImpl) musicDAO).setEntityManager(null);
-        musicDAO.remove(mock(Music.class));
-    }
-
     /** Test method for {@link MusicDAO#remove(Music)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -301,7 +277,7 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#remove(Music)} with exception in persistence. */
+    /** Test method for {@link MusicDAO#remove(Music)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Music music = generate(Music.class);

@@ -26,9 +26,9 @@ import cz.vhromada.catalog.dao.MovieDAO;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,8 +51,19 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Movie> moviesQuery;
 
     /** Instance of {@link MovieDAO} */
-    @InjectMocks
-    private MovieDAO movieDAO = new MovieDAOImpl();
+    private MovieDAO movieDAO;
+
+    /** Initializes DAO for movies. */
+    @Before
+    public void setUp() {
+        movieDAO = new MovieDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link MovieDAOImpl#MovieDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new MovieDAOImpl(null);
+    }
 
     /** Test method for {@link MovieDAO#getMovies()}. */
     @Test
@@ -68,14 +79,7 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, moviesQuery);
     }
 
-    /** Test method for {@link MovieDAOImpl#getMovies()} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMoviesWithNotSetEntityManager() {
-        ((MovieDAOImpl) movieDAO).setEntityManager(null);
-        movieDAO.getMovies();
-    }
-
-    /** Test method for {@link MovieDAOImpl#getMovies()} with exception in persistence. */
+    /** Test method for {@link MovieDAO#getMovies()} with exception in persistence. */
     @Test
     public void testGetMoviesWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Movie.class));
@@ -116,13 +120,6 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#getMovie(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMovieWithNotSetEntityManager() {
-        ((MovieDAOImpl) movieDAO).setEntityManager(null);
-        movieDAO.getMovie(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link MovieDAO#getMovie(Integer)} with null argument. */
     @Test
     public void testGetMovieWithNullArgument() {
@@ -136,7 +133,7 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#getMovie(Integer)} with exception in persistence. */
+    /** Test method for {@link MovieDAO#getMovie(Integer)} with exception in persistence. */
     @Test
     public void testGetMovieWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Movie.class), anyInt());
@@ -168,13 +165,6 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#add(Movie)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((MovieDAOImpl) movieDAO).setEntityManager(null);
-        movieDAO.add(mock(Movie.class));
-    }
-
     /** Test method for {@link MovieDAO#add(Movie)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -188,7 +178,7 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#add(Movie)} with exception in persistence. */
+    /** Test method for {@link MovieDAO#add(Movie)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Movie movie = generate(Movie.class);
@@ -216,13 +206,6 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#update(Movie)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((MovieDAOImpl) movieDAO).setEntityManager(null);
-        movieDAO.update(mock(Movie.class));
-    }
-
     /** Test method for {@link MovieDAO#update(Movie)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -236,7 +219,7 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#update(Movie)} with exception in persistence. */
+    /** Test method for {@link MovieDAO#update(Movie)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Movie movie = generate(Movie.class);
@@ -281,13 +264,6 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#remove(Movie)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((MovieDAOImpl) movieDAO).setEntityManager(null);
-        movieDAO.remove(mock(Movie.class));
-    }
-
     /** Test method for {@link MovieDAO#remove(Movie)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -301,7 +277,7 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MovieDAOImpl#remove(Movie)} with exception in persistence. */
+    /** Test method for {@link MovieDAO#remove(Movie)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Movie movie = generate(Movie.class);

@@ -27,9 +27,9 @@ import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -52,8 +52,19 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Episode> episodesQuery;
 
     /** Instance of {@link EpisodeDAO} */
-    @InjectMocks
-    private EpisodeDAO episodeDAO = new EpisodeDAOImpl();
+    private EpisodeDAO episodeDAO;
+
+    /** Initializes DAO for episodes. */
+    @Before
+    public void setUp() {
+        episodeDAO = new EpisodeDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link EpisodeDAOImpl#EpisodeDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new EpisodeDAOImpl(null);
+    }
 
     /** Test method for {@link EpisodeDAO#getEpisode(Integer)} with existing episode. */
     @Test
@@ -79,13 +90,6 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#getEpisode(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodeWithNotSetEntityManager() {
-        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-        episodeDAO.getEpisode(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link EpisodeDAO#getEpisode(Integer)} with null argument. */
     @Test
     public void testGetEpisodeWithNullArgument() {
@@ -99,7 +103,7 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#getEpisode(Integer)} with exception in persistence. */
+    /** Test method for {@link EpisodeDAO#getEpisode(Integer)} with exception in persistence. */
     @Test
     public void testGetEpisodeWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Episode.class), anyInt());
@@ -131,13 +135,6 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#add(Episode)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-        episodeDAO.add(mock(Episode.class));
-    }
-
     /** Test method for {@link EpisodeDAO#add(Episode)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -151,7 +148,7 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#add(Episode)} with exception in persistence. */
+    /** Test method for {@link EpisodeDAO#add(Episode)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Episode episode = generate(Episode.class);
@@ -179,13 +176,6 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#update(Episode)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-        episodeDAO.update(mock(Episode.class));
-    }
-
     /** Test method for {@link EpisodeDAO#update(Episode)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -199,7 +189,7 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#update(Episode)} with exception in persistence. */
+    /** Test method for {@link EpisodeDAO#update(Episode)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Episode episode = generate(Episode.class);
@@ -244,13 +234,6 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#remove(Episode)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-        episodeDAO.remove(mock(Episode.class));
-    }
-
     /** Test method for {@link EpisodeDAO#remove(Episode)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -264,7 +247,7 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#remove(Episode)} with exception in persistence. */
+    /** Test method for {@link EpisodeDAO#remove(Episode)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Episode episode = generate(Episode.class);
@@ -297,13 +280,6 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, episodesQuery);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#add(Episode)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindEpisodesBySeasonWithNotSetEntityManager() {
-        ((EpisodeDAOImpl) episodeDAO).setEntityManager(null);
-        episodeDAO.findEpisodesBySeason(mock(Season.class));
-    }
-
     /** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)} with null argument. */
     @Test
     public void testFindEpisodesBySeasonWithNullArgument() {
@@ -317,7 +293,7 @@ public class EpisodeDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager, episodesQuery);
     }
 
-    /** Test method for {@link EpisodeDAOImpl#findEpisodesBySeason(Season)} with exception in persistence. */
+    /** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)} with exception in persistence. */
     @Test
     public void testFindEpisodesBySeasonWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Episode.class));

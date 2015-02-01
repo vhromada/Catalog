@@ -27,9 +27,9 @@ import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -52,8 +52,19 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
     private TypedQuery<Song> songsQuery;
 
     /** Instance of {@link SongDAO} */
-    @InjectMocks
-    private SongDAO songDAO = new SongDAOImpl();
+    private SongDAO songDAO;
+
+    /** Initializes DAO for songs. */
+    @Before
+    public void setUp() {
+        songDAO = new SongDAOImpl(entityManager);
+    }
+
+    /** Test method for {@link SongDAOImpl#SongDAOImpl(EntityManager)} with null entity manager. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEntityManager() {
+        new SongDAOImpl(null);
+    }
 
     /** Test method for {@link SongDAO#getSong(Integer)} with existing song. */
     @Test
@@ -79,13 +90,6 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#getSong(Integer)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSongWithNotSetEntityManager() {
-        ((SongDAOImpl) songDAO).setEntityManager(null);
-        songDAO.getSong(Integer.MAX_VALUE);
-    }
-
     /** Test method for {@link SongDAO#getSong(Integer)} with null argument. */
     @Test
     public void testGetSongWithNullArgument() {
@@ -99,7 +103,7 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#getSong(Integer)} with exception in persistence. */
+    /** Test method for {@link SongDAO#getSong(Integer)} with exception in persistence. */
     @Test
     public void testGetSongWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Song.class), anyInt());
@@ -131,13 +135,6 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#add(Song)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEntityManager() {
-        ((SongDAOImpl) songDAO).setEntityManager(null);
-        songDAO.add(mock(Song.class));
-    }
-
     /** Test method for {@link SongDAO#add(Song)} with null argument. */
     @Test
     public void testAddWithNullArgument() {
@@ -151,7 +148,7 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#add(Song)} with exception in persistence. */
+    /** Test method for {@link SongDAO#add(Song)} with exception in persistence. */
     @Test
     public void testAddWithPersistenceException() {
         final Song song = generate(Song.class);
@@ -179,13 +176,6 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#update(Song)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEntityManager() {
-        ((SongDAOImpl) songDAO).setEntityManager(null);
-        songDAO.update(mock(Song.class));
-    }
-
     /** Test method for {@link SongDAO#update(Song)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -199,7 +189,7 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#update(Song)} with exception in persistence. */
+    /** Test method for {@link SongDAO#update(Song)} with exception in persistence. */
     @Test
     public void testUpdateWithPersistenceException() {
         final Song song = generate(Song.class);
@@ -244,13 +234,6 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#remove(Song)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEntityManager() {
-        ((SongDAOImpl) songDAO).setEntityManager(null);
-        songDAO.remove(mock(Song.class));
-    }
-
     /** Test method for {@link SongDAO#remove(Song)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -264,7 +247,7 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SongDAOImpl#remove(Song)} with exception in persistence. */
+    /** Test method for {@link SongDAO#remove(Song)} with exception in persistence. */
     @Test
     public void testRemoveWithPersistenceException() {
         final Song song = generate(Song.class);
@@ -297,13 +280,6 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, songsQuery);
     }
 
-    /** Test method for {@link SongDAOImpl#add(Song)} with not set entity manager. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSongsByMusicWithNotSetEntityManager() {
-        ((SongDAOImpl) songDAO).setEntityManager(null);
-        songDAO.findSongsByMusic(mock(Music.class));
-    }
-
     /** Test method for {@link SongDAO#findSongsByMusic(Music)} with null argument. */
     @Test
     public void testFindSongsByMusicWithNullArgument() {
@@ -317,7 +293,7 @@ public class SongDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager, songsQuery);
     }
 
-    /** Test method for {@link SongDAOImpl#findSongsByMusic(Music)} with exception in persistence. */
+    /** Test method for {@link SongDAO#findSongsByMusic(Music)} with exception in persistence. */
     @Test
     public void testFindSongsByMusicWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Song.class));

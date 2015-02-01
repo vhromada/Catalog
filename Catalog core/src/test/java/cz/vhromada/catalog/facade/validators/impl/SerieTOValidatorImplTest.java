@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static org.mockito.Mockito.mock;
-
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.commons.TestConstants;
@@ -26,16 +24,16 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
     /** Initializes validator for TO for serie. */
     @Before
     public void setUp() {
-        final SerieTOValidatorImpl serieValidator = new SerieTOValidatorImpl();
-        serieValidator.setGenreTOValidator(new GenreTOValidatorImpl());
-        serieTOValidator = serieValidator;
+        serieTOValidator = new SerieTOValidatorImpl(new GenreTOValidatorImpl());
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testValidateNewSerieTOWithNotSetGenreTOValidator() {
-        ((SerieTOValidatorImpl) serieTOValidator).setGenreTOValidator(null);
-        serieTOValidator.validateNewSerieTO(mock(SerieTO.class));
+    /**
+     * Test method for {@link SerieTOValidatorImpl#SerieTOValidatorImpl(cz.vhromada.catalog.facade.validators.GenreTOValidator)} with null validator for
+     * TO for genre.
+     * */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreTOValidator() {
+        new SerieTOValidatorImpl(null);
     }
 
     /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with null argument. */
@@ -184,13 +182,6 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serie.setGenres(CollectionUtils.newList(ToGenerator.newGenreWithId(getObjectGenerator()), genre));
 
         serieTOValidator.validateNewSerieTO(serie);
-    }
-
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testValidateExistingSerieTOWithNotSetGenreTOValidator() {
-        ((SerieTOValidatorImpl) serieTOValidator).setGenreTOValidator(null);
-        serieTOValidator.validateExistingSerieTO(mock(SerieTO.class));
     }
 
     /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with null argument. */

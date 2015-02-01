@@ -18,31 +18,24 @@ import org.springframework.stereotype.Component;
 public class MovieTOValidatorImpl implements MovieTOValidator {
 
     /** Validator for TO for genre */
-    @Autowired
     private GenreTOValidator genreTOValidator;
 
     /**
-     * Returns validator for TO for genre.
+     * Creates a new instance of MovieTOValidatorImpl.
      *
-     * @return validator for TO for genre
+     * @param genreTOValidator validator for TO for genre
+     * @throws IllegalArgumentException if validator for TO for genre is null
      */
-    public GenreTOValidator getGenreTOValidator() {
-        return genreTOValidator;
-    }
+    @Autowired
+    public MovieTOValidatorImpl(final GenreTOValidator genreTOValidator) {
+        Validators.validateArgumentNotNull(genreTOValidator, "Validator for TO for genre");
 
-    /**
-     * Sets a new value to validator for TO for genre.
-     *
-     * @param genreTOValidator new value
-     */
-    public void setGenreTOValidator(final GenreTOValidator genreTOValidator) {
         this.genreTOValidator = genreTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -56,7 +49,6 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -84,7 +76,6 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
      * Validates TO for movie.
      *
      * @param movie validating TO for movie
-     * @throws IllegalStateException    if validator for TO for genre isn't set
      * @throws IllegalArgumentException if TO for movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  if czech name is null
@@ -110,7 +101,6 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
      *                                  or genre name is empty string
      */
     private void validateMovieTO(final MovieTO movie) {
-        Validators.validateFieldNotNull(genreTOValidator, "Validator for TO for genre");
         Validators.validateArgumentNotNull(movie, "TO for movie");
         Validators.validateNotNull(movie.getCzechName(), "Czech name");
         Validators.validateNotEmptyString(movie.getCzechName(), "Czech name");

@@ -18,31 +18,24 @@ import org.springframework.stereotype.Component;
 public class SerieTOValidatorImpl implements SerieTOValidator {
 
     /** Validator for TO for genre */
-    @Autowired
     private GenreTOValidator genreTOValidator;
 
     /**
-     * Returns validator for TO for genre.
+     * Creates a new instance of SerieTOValidatorImpl.
      *
-     * @return validator for TO for genre
+     * @param genreTOValidator validator for TO for genre
+     * @throws IllegalArgumentException if validator for TO for genre is null
      */
-    public GenreTOValidator getGenreTOValidator() {
-        return genreTOValidator;
-    }
+    @Autowired
+    public SerieTOValidatorImpl(final GenreTOValidator genreTOValidator) {
+        Validators.validateArgumentNotNull(genreTOValidator, "Validator for TO for genre");
 
-    /**
-     * Sets a new value to validator for TO for genre.
-     *
-     * @param genreTOValidator new value
-     */
-    public void setGenreTOValidator(final GenreTOValidator genreTOValidator) {
         this.genreTOValidator = genreTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -56,7 +49,6 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -84,7 +76,6 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
      * Validates TO for serie.
      *
      * @param serie validating TO for serie
-     * @throws IllegalStateException    if validator for TO for genre isn't set
      * @throws IllegalArgumentException if TO for serie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  if czech name is null
@@ -104,7 +95,6 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
      *                                  or genre name is empty string
      */
     private void validateSerieTO(final SerieTO serie) {
-        Validators.validateFieldNotNull(genreTOValidator, "Validator for TO for genre");
         Validators.validateArgumentNotNull(serie, "TO for serie");
         Validators.validateNotNull(serie.getCzechName(), "Czech name");
         Validators.validateNotEmptyString(serie.getCzechName(), "Czech name");

@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade.validators.impl;
 
-import static org.mockito.Mockito.mock;
-
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
@@ -27,16 +25,16 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
     /** Initializes validator for TO for movie. */
     @Before
     public void setUp() {
-        final MovieTOValidatorImpl movieValidator = new MovieTOValidatorImpl();
-        movieValidator.setGenreTOValidator(new GenreTOValidatorImpl());
-        movieTOValidator = movieValidator;
+        movieTOValidator = new MovieTOValidatorImpl(new GenreTOValidatorImpl());
     }
 
-    /** Test method for {@link MovieTOValidator#validateNewMovieTO(MovieTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testValidateNewMovieTOWithNotSetGenreTOValidator() {
-        ((MovieTOValidatorImpl) movieTOValidator).setGenreTOValidator(null);
-        movieTOValidator.validateNewMovieTO(mock(MovieTO.class));
+    /**
+     * Test method for {@link MovieTOValidatorImpl#MovieTOValidatorImpl(cz.vhromada.catalog.facade.validators.GenreTOValidator)} with null validator for 
+     * TO for genre. 
+     * */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreTOValidator() {
+        new MovieTOValidatorImpl(null);
     }
 
     /** Test method for {@link MovieTOValidator#validateNewMovieTO(MovieTO)} with null argument. */
@@ -266,13 +264,6 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
         movie.setGenres(CollectionUtils.newList(ToGenerator.newGenreWithId(getObjectGenerator()), badGenre));
 
         movieTOValidator.validateNewMovieTO(movie);
-    }
-
-    /** Test method for {@link MovieTOValidator#validateExistingMovieTO(MovieTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testValidateExistingMovieTOWithNotSetGenreTOValidator() {
-        ((MovieTOValidatorImpl) movieTOValidator).setGenreTOValidator(null);
-        movieTOValidator.validateExistingMovieTO(mock(MovieTO.class));
     }
 
     /** Test method for {@link MovieTOValidator#validateExistingMovieTO(MovieTO)} with null argument. */

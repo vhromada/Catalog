@@ -31,7 +31,7 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link MovieTOValidatorImpl#MovieTOValidatorImpl(cz.vhromada.catalog.facade.validators.GenreTOValidator)} with null validator for 
      * TO for genre. 
-     * */
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreTOValidator() {
         new MovieTOValidatorImpl(null);

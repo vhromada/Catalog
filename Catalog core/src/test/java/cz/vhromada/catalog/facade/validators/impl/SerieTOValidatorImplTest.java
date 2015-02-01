@@ -30,7 +30,7 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link SerieTOValidatorImpl#SerieTOValidatorImpl(cz.vhromada.catalog.facade.validators.GenreTOValidator)} with null validator for
      * TO for genre.
-     * */
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreTOValidator() {
         new SerieTOValidatorImpl(null);

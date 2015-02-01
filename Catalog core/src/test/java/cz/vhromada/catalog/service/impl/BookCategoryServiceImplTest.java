@@ -74,19 +74,19 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         bookCategoryService = new BookCategoryServiceImpl(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with DAO for book categories. */
+    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with null DAO for book categories. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookCategoryDAO() {
         new BookCategoryServiceImpl(null, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with DAO for books. */
+    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with null DAO for books. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookDAO() {
         new BookCategoryServiceImpl(bookCategoryDAO, null, bookCache);
     }
 
-    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache))} with cache for books. */
+    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache))} with null cache for books. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookCache() {
         new BookCategoryServiceImpl(bookCategoryDAO, bookDAO, null);

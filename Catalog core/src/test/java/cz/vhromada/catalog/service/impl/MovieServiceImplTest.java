@@ -68,13 +68,13 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         movieService = new MovieServiceImpl(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with DAO for movies. */
+    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with null DAO for movies. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMovieDAO() {
         new MovieServiceImpl(null, movieCache);
     }
 
-    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with cache for movies. */
+    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with null cache for movies. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMovieCache() {
         new MovieServiceImpl(movieDAO, null);

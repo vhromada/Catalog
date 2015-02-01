@@ -68,13 +68,13 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         episodeService = new EpisodeServiceImpl(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache)} with DAO for episodes. */
+    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache)} with null DAO for episodes. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEpisodeDAO() {
         new EpisodeServiceImpl(null, serieCache);
     }
 
-    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache))} with cache for series. */
+    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache))} with null cache for series. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieCache() {
         new EpisodeServiceImpl(episodeDAO, null);

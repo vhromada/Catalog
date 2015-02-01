@@ -68,13 +68,13 @@ public class SongServiceImplTest extends ObjectGeneratorTest {
         songService = new SongServiceImpl(songDAO, musicCache);
     }
 
-    /** Test method for {@link SongServiceImpl#SongServiceImpl(SongDAO, Cache)} with DAO for songs. */
+    /** Test method for {@link SongServiceImpl#SongServiceImpl(SongDAO, Cache)} with null DAO for songs. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSongDAO() {
         new SongServiceImpl(null, musicCache);
     }
 
-    /** Test method for {@link SongServiceImpl#SongServiceImpl(SongDAO, Cache))} with cache for music. */
+    /** Test method for {@link SongServiceImpl#SongServiceImpl(SongDAO, Cache))} with null cache for music. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMusicCache() {
         new SongServiceImpl(songDAO, null);

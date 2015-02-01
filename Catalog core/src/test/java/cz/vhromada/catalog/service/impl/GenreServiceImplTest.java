@@ -69,13 +69,13 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         genreService = new GenreServiceImpl(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with DAO for genres. */
+    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with null DAO for genres. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameDAO() {
         new GenreServiceImpl(null, genreCache);
     }
 
-    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with cache for genres. */
+    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with null cache for genres. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameCache() {
         new GenreServiceImpl(genreDAO, null);

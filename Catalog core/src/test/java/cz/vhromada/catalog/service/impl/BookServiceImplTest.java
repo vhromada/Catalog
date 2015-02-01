@@ -67,13 +67,13 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         bookService = new BookServiceImpl(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache)} with DAO for books. */
+    /** Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache)} with null DAO for books. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookDAO() {
         new BookServiceImpl(null, bookCache);
     }
 
-    /** Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache))} with cache for books. */
+    /** Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache))} with null cache for books. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookCache() {
         new BookServiceImpl(bookDAO, null);

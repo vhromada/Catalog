@@ -75,19 +75,19 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         seasonService = new SeasonServiceImpl(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with DAO for seasons. */
+    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with null DAO for seasons. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSeasonDAO() {
         new SeasonServiceImpl(null, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with DAO for episodes. */
+    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with null DAO for episodes. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEpisodeDAO() {
         new SeasonServiceImpl(seasonDAO, null, serieCache);
     }
 
-    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache))} with cache for series. */
+    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache))} with null cache for series. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieCache() {
         new SeasonServiceImpl(seasonDAO, episodeDAO, null);

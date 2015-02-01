@@ -64,13 +64,13 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         programService = new ProgramServiceImpl(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with DAO for programs. */
+    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with null DAO for programs. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramDAO() {
         new ProgramServiceImpl(null, programCache);
     }
 
-    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with cache for programs. */
+    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with null cache for programs. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramCache() {
         new ProgramServiceImpl(programDAO, null);

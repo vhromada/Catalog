@@ -84,25 +84,25 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         serieService = new SerieServiceImpl(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with DAO for series. */
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for series. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieDAO() {
         new SerieServiceImpl(null, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with DAO for seasons. */
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for seasons. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSeasonDAO() {
         new SerieServiceImpl(serieDAO, null, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with DAO for episodes. */
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for episodes. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEpisodeDAO() {
         new SerieServiceImpl(serieDAO, seasonDAO, null, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache))} with cache for series. */
+    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache))} with null cache for series. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieCache() {
         new SerieServiceImpl(serieDAO, seasonDAO, episodeDAO, null);

@@ -64,13 +64,13 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         gameService = new GameServiceImpl(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with DAO for games. */
+    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with null DAO for games. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameDAO() {
         new GameServiceImpl(null, gameCache);
     }
 
-    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with cache for games. */
+    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with null cache for games. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameCache() {
         new GameServiceImpl(gameDAO, null);

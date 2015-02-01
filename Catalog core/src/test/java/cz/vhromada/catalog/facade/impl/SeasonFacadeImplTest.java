@@ -33,9 +33,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -71,8 +71,58 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
     private SeasonTOValidator seasonTOValidator;
 
     /** Instance of {@link SeasonFacade} */
-    @InjectMocks
-    private SeasonFacade seasonFacade = new SeasonFacadeImpl();
+    private SeasonFacade seasonFacade;
+
+    /** Initializes facade for seasons. */
+    @Before
+    public void setUp() {
+        seasonFacade = new SeasonFacadeImpl(serieService, seasonService, conversionService, serieTOValidator, seasonTOValidator);
+    }
+
+    /**
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, ConversionService, SerieTOValidator, SeasonTOValidator)} with null
+     * service for series.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieService() {
+        new SeasonFacadeImpl(null, seasonService, conversionService, serieTOValidator, seasonTOValidator);
+    }
+
+    /**
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, ConversionService, SerieTOValidator, SeasonTOValidator)} with null
+     * service for seasons.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSeasonService() {
+        new SeasonFacadeImpl(serieService, null, conversionService, serieTOValidator, seasonTOValidator);
+    }
+
+    /**
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, ConversionService, SerieTOValidator, SeasonTOValidator)} with null
+     * conversion service.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new SeasonFacadeImpl(serieService, seasonService, null, serieTOValidator, seasonTOValidator);
+    }
+
+    /**
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, ConversionService, SerieTOValidator, SeasonTOValidator)} with null
+     * validator for TO for serie.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieTOValidator() {
+        new SeasonFacadeImpl(serieService, seasonService, conversionService, null, seasonTOValidator);
+    }
+
+    /**
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, ConversionService, SerieTOValidator, SeasonTOValidator)} with null
+     * validator for TO for season.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSeasonTOValidator() {
+        new SeasonFacadeImpl(serieService, seasonService, conversionService, serieTOValidator, null);
+    }
 
     /** Test method for {@link SeasonFacade#getSeason(Integer)} with existing season. */
     @Test
@@ -100,20 +150,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verify(seasonService).getSeason(Integer.MAX_VALUE);
         verify(conversionService).convert(null, SeasonTO.class);
         verifyNoMoreInteractions(seasonService, conversionService);
-    }
-
-    /** Test method for {@link SeasonFacade#getSeason(Integer)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.getSeason(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link SeasonFacade#getSeason(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonWithNotSetConversionService() {
-        ((SeasonFacadeImpl) seasonFacade).setConversionService(null);
-        seasonFacade.getSeason(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link SeasonFacade#getSeason(Integer)} with null argument. */
@@ -169,34 +205,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(seasonTO, Season.class);
         verify(seasonTOValidator).validateNewSeasonTO(seasonTO);
         verifyNoMoreInteractions(serieService, seasonService, conversionService, seasonTOValidator);
-    }
-
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSerieService() {
-        ((SeasonFacadeImpl) seasonFacade).setSerieService(null);
-        seasonFacade.add(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.add(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((SeasonFacadeImpl) seasonFacade).setConversionService(null);
-        seasonFacade.add(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSeasonTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonTOValidator(null);
-        seasonFacade.add(mock(SeasonTO.class));
     }
 
     /** Test method for {@link SeasonFacade#add(SeasonTO)} with null argument. */
@@ -319,34 +327,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, seasonService, conversionService, seasonTOValidator);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSerieService() {
-        ((SeasonFacadeImpl) seasonFacade).setSerieService(null);
-        seasonFacade.update(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.update(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((SeasonFacadeImpl) seasonFacade).setConversionService(null);
-        seasonFacade.update(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSeasonTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonTOValidator(null);
-        seasonFacade.update(mock(SeasonTO.class));
-    }
-
     /** Test method for {@link SeasonFacade#update(SeasonTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -441,20 +421,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
     }
 
-    /** Test method for {@link SeasonFacade#remove(SeasonTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.remove(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#remove(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSeasonTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonTOValidator(null);
-        seasonFacade.remove(mock(SeasonTO.class));
-    }
-
     /** Test method for {@link SeasonFacade#remove(SeasonTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -539,20 +505,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verify(seasonService).duplicate(season);
         verify(seasonTOValidator).validateSeasonTOWithId(seasonTO);
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
-    }
-
-    /** Test method for {@link SeasonFacade#duplicate(SeasonTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.duplicate(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#duplicate(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSeasonTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonTOValidator(null);
-        seasonFacade.duplicate(mock(SeasonTO.class));
     }
 
     /** Test method for {@link SeasonFacade#duplicate(SeasonTO)} with null argument. */
@@ -642,20 +594,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verify(seasonService).moveUp(season);
         verify(seasonTOValidator).validateSeasonTOWithId(seasonTO);
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
-    }
-
-    /** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.moveUp(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSeasonTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonTOValidator(null);
-        seasonFacade.moveUp(mock(SeasonTO.class));
     }
 
     /** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with null argument. */
@@ -769,21 +707,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
     }
 
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.moveDown(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSeasonTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonTOValidator(null);
-        seasonFacade.moveDown(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with null argument. */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
@@ -908,27 +831,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, conversionService, seasonTOValidator);
     }
 
-    /** Test method for {@link SeasonFacade#exists(SeasonTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.exists(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#exists(SeasonTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((SeasonFacadeImpl) seasonFacade).setConversionService(null);
-        seasonFacade.exists(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#exists(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSeasonTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonTOValidator(null);
-        seasonFacade.exists(mock(SeasonTO.class));
-    }
-
     /** Test method for {@link SeasonFacade#exists(SeasonTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1008,34 +910,6 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         }
         verify(serieTOValidator).validateSerieTOWithId(serieTO);
         verifyNoMoreInteractions(serieService, seasonService, conversionService, serieTOValidator);
-    }
-
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSeasonsBySerieWithNotSetSerieService() {
-        ((SeasonFacadeImpl) seasonFacade).setSerieService(null);
-        seasonFacade.findSeasonsBySerie(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with not set service for seasons. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSeasonsBySerieWithNotSetSeasonService() {
-        ((SeasonFacadeImpl) seasonFacade).setSeasonService(null);
-        seasonFacade.findSeasonsBySerie(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSeasonsBySerieWithNotSetConversionService() {
-        ((SeasonFacadeImpl) seasonFacade).setConversionService(null);
-        seasonFacade.findSeasonsBySerie(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSeasonsBySerieWithNotSetSerieTOValidator() {
-        ((SeasonFacadeImpl) seasonFacade).setSerieTOValidator(null);
-        seasonFacade.findSeasonsBySerie(mock(SerieTO.class));
     }
 
     /** Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with null argument. */

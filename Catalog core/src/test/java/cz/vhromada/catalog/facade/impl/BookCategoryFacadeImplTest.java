@@ -29,9 +29,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -59,8 +59,40 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
     private BookCategoryTOValidator bookCategoryTOValidator;
 
     /** Instance of {@link BookCategoryFacade} */
-    @InjectMocks
-    private BookCategoryFacade bookCategoryFacade = new BookCategoryFacadeImpl();
+    private BookCategoryFacade bookCategoryFacade;
+
+    /** Initializes facade for book categories. */
+    @Before
+    public void setUp() {
+        bookCategoryFacade = new BookCategoryFacadeImpl(bookCategoryService, conversionService, bookCategoryTOValidator);
+    }
+
+    /**
+     * Test method for {@link BookCategoryFacadeImpl#BookCategoryFacadeImpl(BookCategoryService, ConversionService, BookCategoryTOValidator)} with null
+     * service for book categories.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullBookCategoryService() {
+        new BookCategoryFacadeImpl(null, conversionService, bookCategoryTOValidator);
+    }
+
+    /**
+     * Test method for {@link BookCategoryFacadeImpl#BookCategoryFacadeImpl(BookCategoryService, ConversionService, BookCategoryTOValidator)} with null
+     * conversion service.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new BookCategoryFacadeImpl(bookCategoryService, null, bookCategoryTOValidator);
+    }
+
+    /**
+     * Test method for {@link BookCategoryFacadeImpl#BookCategoryFacadeImpl(BookCategoryService, ConversionService, BookCategoryTOValidator)} with null
+     * validator for TO for book category.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullBookCategoryTOValidator() {
+        new BookCategoryFacadeImpl(bookCategoryService, conversionService, null);
+    }
 
     /** Test method for {@link BookCategoryFacade#newData()}. */
     @Test
@@ -69,13 +101,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
         verify(bookCategoryService).newData();
         verifyNoMoreInteractions(bookCategoryService);
-    }
-
-    /** Test method for {@link BookCategoryFacade#newData()} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.newData();
     }
 
     /** Test method for {@link BookCategoryFacade#newData()} with exception in service tier. */
@@ -132,20 +157,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, conversionService);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBookCategories()} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoriesWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.getBookCategories();
-    }
-
-    /** Test method for {@link BookCategoryFacade#getBookCategories()} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoriesWithNotSetConversionService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setConversionService(null);
-        bookCategoryFacade.getBookCategories();
-    }
-
     /** Test method for {@link BookCategoryFacade#getBookCategories()} with exception in service tier. */
     @Test
     public void testGetBookCategoriesWithFacadeTierException() {
@@ -189,20 +200,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verify(bookCategoryService).getBookCategory(Integer.MAX_VALUE);
         verify(conversionService).convert(null, BookCategoryTO.class);
         verifyNoMoreInteractions(bookCategoryService, conversionService);
-    }
-
-    /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoryWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.getBookCategory(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBookCategoryWithNotSetConversionService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setConversionService(null);
-        bookCategoryFacade.getBookCategory(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with null argument. */
@@ -255,27 +252,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(bookCategoryTO, BookCategory.class);
         verify(bookCategoryTOValidator).validateNewBookCategoryTO(bookCategoryTO);
         verifyNoMoreInteractions(bookCategoryService, conversionService, bookCategoryTOValidator);
-    }
-
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.add(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setConversionService(null);
-        bookCategoryFacade.add(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with not set validator for TO for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetBookCategoryTOValidator() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryTOValidator(null);
-        bookCategoryFacade.add(mock(BookCategoryTO.class));
     }
 
     /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with null argument. */
@@ -376,27 +352,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, conversionService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.update(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setConversionService(null);
-        bookCategoryFacade.update(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with not set validator for TO for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetBookCategoryTOValidator() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryTOValidator(null);
-        bookCategoryFacade.update(mock(BookCategoryTO.class));
-    }
-
     /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -489,20 +444,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.remove(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with not set validator for TO for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetBookCategoryTOValidator() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryTOValidator(null);
-        bookCategoryFacade.remove(mock(BookCategoryTO.class));
-    }
-
     /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -587,20 +528,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verify(bookCategoryService).duplicate(bookCategory);
         verify(bookCategoryTOValidator).validateBookCategoryTOWithId(bookCategoryTO);
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
-    }
-
-    /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.duplicate(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with not set validator for TO for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetBookCategoryTOValidator() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryTOValidator(null);
-        bookCategoryFacade.duplicate(mock(BookCategoryTO.class));
     }
 
     /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with null argument. */
@@ -690,20 +617,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verify(bookCategoryService).moveUp(bookCategory);
         verify(bookCategoryTOValidator).validateBookCategoryTOWithId(bookCategoryTO);
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
-    }
-
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.moveUp(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not set validator for TO for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetBookCategoryTOValidator() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryTOValidator(null);
-        bookCategoryFacade.moveUp(mock(BookCategoryTO.class));
     }
 
     /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with null argument. */
@@ -815,20 +728,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verify(bookCategoryService).moveDown(bookCategory);
         verify(bookCategoryTOValidator).validateBookCategoryTOWithId(bookCategoryTO);
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
-    }
-
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.moveDown(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not set validator for TO for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetBookCategoryTOValidator() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryTOValidator(null);
-        bookCategoryFacade.moveDown(mock(BookCategoryTO.class));
     }
 
     /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with null argument. */
@@ -956,27 +855,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, conversionService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.exists(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setConversionService(null);
-        bookCategoryFacade.exists(mock(BookCategoryTO.class));
-    }
-
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with not set validator for TO for book category. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetBookCategoryTOValidator() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryTOValidator(null);
-        bookCategoryFacade.exists(mock(BookCategoryTO.class));
-    }
-
     /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1042,13 +920,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#updatePositions()} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.updatePositions();
-    }
-
     /** Test method for {@link BookCategoryFacade#updatePositions()} with exception in service tier. */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
@@ -1075,13 +946,6 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
         verify(bookCategoryService).getBooksCount();
         verifyNoMoreInteractions(bookCategoryService);
-    }
-
-    /** Test method for {@link BookCategoryFacade#getBooksCount()} with not set service for book categories. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetBooksCountWithNotSetBookCategoryService() {
-        ((BookCategoryFacadeImpl) bookCategoryFacade).setBookCategoryService(null);
-        bookCategoryFacade.getBooksCount();
     }
 
     /** Test method for {@link BookCategoryFacade#getBooksCount()} with exception in service tier. */

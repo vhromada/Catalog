@@ -32,19 +32,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class EpisodeFacadeImpl implements EpisodeFacade {
 
     /** Service for seasons field */
-    private static final String SEASON_SERVICE_FIELD = "Service for seasons";
+    private static final String SEASON_SERVICE_ARGUMENT = "Service for seasons";
 
     /** Service for episodes field */
-    private static final String EPISODE_SERVICE_FIELD = "Service for episodes";
+    private static final String EPISODE_SERVICE_ARGUMENT = "Service for episodes";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for season field */
-    private static final String SEASON_TO_VALIDATOR_FIELD = "Validator for TO for season";
+    private static final String SEASON_TO_VALIDATOR_ARGUMENT = "Validator for TO for season";
 
     /** Validator for TO for episode field */
-    private static final String EPISODE_TO_VALIDATOR_FIELD = "Validator for TO for episode";
+    private static final String EPISODE_TO_VALIDATOR_ARGUMENT = "Validator for TO for episode";
 
     /** Episode argument */
     private static final String EPISODE_ARGUMENT = "episode";
@@ -65,129 +65,62 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /** Service for seasons */
-    @Autowired
     private SeasonService seasonService;
 
     /** Service for episodes */
-    @Autowired
     private EpisodeService episodeService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for season */
-    @Autowired
     private SeasonTOValidator seasonTOValidator;
 
     /** Validator for TO for episode */
-    @Autowired
     private EpisodeTOValidator episodeTOValidator;
 
     /**
-     * Returns service for seasons.
+     * Creates a new instance of EpisodeFacadeImpl.
      *
-     * @return service for seasons
+     * @param seasonService service for seasons
+     * @param episodeService service for episodes
+     * @param conversionService conversion service
+     * @param seasonTOValidator validator for TO for season
+     * @param episodeTOValidator validator for TO for episode
+     * @throws IllegalArgumentException if service for seasons is null
+     *                                  or service for episodes is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for season is null
+     *                                  or validator for TO for episode is null
      */
-    public SeasonService getSeasonService() {
-        return seasonService;
-    }
+    @Autowired
+    public EpisodeFacadeImpl(final SeasonService seasonService,
+            final EpisodeService episodeService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final SeasonTOValidator seasonTOValidator,
+            final EpisodeTOValidator episodeTOValidator) {
+        Validators.validateArgumentNotNull(seasonService, SEASON_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(episodeService, EPISODE_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_ARGUMENT);
+        Validators.validateArgumentNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for seasons.
-     *
-     * @param seasonService new value
-     */
-    public void setSeasonService(final SeasonService seasonService) {
         this.seasonService = seasonService;
-    }
-
-    /**
-     * Returns service for episodes.
-     *
-     * @return service for episodes
-     */
-    public EpisodeService getEpisodeService() {
-        return episodeService;
-    }
-
-    /**
-     * Sets a new value to service for episodes.
-     *
-     * @param episodeService new value
-     */
-    public void setEpisodeService(final EpisodeService episodeService) {
         this.episodeService = episodeService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for season.
-     *
-     * @return validator for TO for season
-     */
-    public SeasonTOValidator getSeasonTOValidator() {
-        return seasonTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for season.
-     *
-     * @param seasonTOValidator new value
-     */
-    public void setSeasonTOValidator(final SeasonTOValidator seasonTOValidator) {
         this.seasonTOValidator = seasonTOValidator;
-    }
-
-    /**
-     * Returns validator for TO for episode.
-     *
-     * @return validator for TO for episode
-     */
-    public EpisodeTOValidator getEpisodeTOValidator() {
-        return episodeTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for episode.
-     *
-     * @param episodeTOValidator new value
-     */
-    public void setEpisodeTOValidator(final EpisodeTOValidator episodeTOValidator) {
         this.episodeTOValidator = episodeTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for episodes isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public EpisodeTO getEpisode(final Integer id) {
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -200,10 +133,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for season isn't set
-     *                                  or service for episodes isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for episode isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -213,10 +142,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void add(final EpisodeTO episode) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_FIELD);
         episodeTOValidator.validateNewEpisodeTO(episode);
         try {
             final Season season = seasonService.getSeason(episode.getSeason().getId());
@@ -238,10 +163,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or service for episodes isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for episode isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -251,10 +172,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void update(final EpisodeTO episode) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_FIELD);
         episodeTOValidator.validateExistingEpisodeTO(episode);
         try {
             final Episode episodeEntity = conversionService.convert(episode, Episode.class);
@@ -272,8 +189,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for episodes isn't set
-     *                                  or validator for TO for episode isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -283,8 +198,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void remove(final EpisodeTO episode) {
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_FIELD);
         episodeTOValidator.validateEpisodeTOWithId(episode);
         try {
             final Episode episodeEntity = episodeService.getEpisode(episode.getId());
@@ -299,8 +212,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for episodes isn't set
-     *                                  or validator for TO for episode isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -310,8 +221,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void duplicate(final EpisodeTO episode) {
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_FIELD);
         episodeTOValidator.validateEpisodeTOWithId(episode);
         try {
             final Episode oldEpisode = episodeService.getEpisode(episode.getId());
@@ -326,8 +235,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for episodes isn't set
-     *                                  or validator for TO for episode isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -337,8 +244,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void moveUp(final EpisodeTO episode) {
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_FIELD);
         episodeTOValidator.validateEpisodeTOWithId(episode);
         try {
             final Episode episodeEntity = episodeService.getEpisode(episode.getId());
@@ -355,8 +260,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for episodes isn't set
-     *                                  or validator for TO for episode isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -366,8 +269,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void moveDown(final EpisodeTO episode) {
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_FIELD);
         episodeTOValidator.validateEpisodeTOWithId(episode);
         try {
             final Episode episodeEntity = episodeService.getEpisode(episode.getId());
@@ -384,9 +285,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for episodes isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for episode isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -395,9 +293,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final EpisodeTO episode) {
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_FIELD);
         episodeTOValidator.validateEpisodeTOWithId(episode);
         try {
 
@@ -410,10 +305,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or service for episodes isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -424,10 +315,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Override
     @Transactional(readOnly = true)
     public List<EpisodeTO> findEpisodesBySeason(final SeasonTO season) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(episodeService, EPISODE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateSeasonTOWithId(season);
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());

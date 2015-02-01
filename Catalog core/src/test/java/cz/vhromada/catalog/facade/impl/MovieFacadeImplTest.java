@@ -33,9 +33,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -67,8 +67,46 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
     private MovieTOValidator movieTOValidator;
 
     /** Instance of {@link MovieFacade} */
-    @InjectMocks
-    private MovieFacade movieFacade = new MovieFacadeImpl();
+    private MovieFacade movieFacade;
+
+    /** Initializes facade for movies. */
+    @Before
+    public void setUp() {
+        movieFacade = new MovieFacadeImpl(movieService, genreService, conversionService, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, ConversionService, MovieTOValidator)} with null service for movies.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMovieService() {
+        new MovieFacadeImpl(null, genreService, conversionService, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, ConversionService, MovieTOValidator)} with null service for genres.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreService() {
+        new MovieFacadeImpl(movieService, null, conversionService, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, ConversionService, MovieTOValidator)} with null conversion service.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new MovieFacadeImpl(movieService, genreService, null, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, ConversionService, MovieTOValidator)} with null validator for
+     * TO for movie.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMovieTOValidator() {
+        new MovieFacadeImpl(movieService, genreService, conversionService, null);
+    }
 
     /** Test method for {@link MovieFacade#newData()}. */
     @Test
@@ -77,13 +115,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(movieService).newData();
         verifyNoMoreInteractions(movieService);
-    }
-
-    /** Test method for {@link MovieFacade#newData()} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.newData();
     }
 
     /** Test method for {@link MovieFacade#newData()} with exception in service tier. */
@@ -120,20 +151,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
             verify(conversionService).convert(movie, MovieTO.class);
         }
         verifyNoMoreInteractions(movieService, conversionService);
-    }
-
-    /** Test method for {@link MovieFacade#getMovies()} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMoviesWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.getMovies();
-    }
-
-    /** Test method for {@link MovieFacade#getMovies()} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMoviesWithNotSetConversionService() {
-        ((MovieFacadeImpl) movieFacade).setConversionService(null);
-        movieFacade.getMovies();
     }
 
     /** Test method for {@link MovieFacade#getMovies()} with exception in service tier. */
@@ -180,20 +197,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verify(movieService).getMovie(Integer.MAX_VALUE);
         verify(conversionService).convert(null, MovieTO.class);
         verifyNoMoreInteractions(movieService, conversionService);
-    }
-
-    /** Test method for {@link MovieFacade#getMovie(Integer)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMovieWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.getMovie(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link MovieFacade#getMovie(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetMovieWithNotSetConversionService() {
-        ((MovieFacadeImpl) movieFacade).setConversionService(null);
-        movieFacade.getMovie(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link MovieFacade#getMovie(Integer)} with null argument. */
@@ -250,34 +253,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(movieTO, Movie.class);
         verify(movieTOValidator).validateNewMovieTO(movieTO);
         verifyNoMoreInteractions(movieService, genreService, conversionService, movieTOValidator);
-    }
-
-    /** Test method for {@link MovieFacade#add(MovieTO)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.add(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#add(MovieTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGenreService() {
-        ((MovieFacadeImpl) movieFacade).setGenreService(null);
-        movieFacade.add(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#add(MovieTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((MovieFacadeImpl) movieFacade).setConversionService(null);
-        movieFacade.add(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#add(MovieTO)} with not set validator for TO for movie. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetMovieTOValidator() {
-        ((MovieFacadeImpl) movieFacade).setMovieTOValidator(null);
-        movieFacade.add(mock(MovieTO.class));
     }
 
     /** Test method for {@link MovieFacade#add(MovieTO)} with null argument. */
@@ -383,34 +358,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieService, conversionService, movieTOValidator);
     }
 
-    /** Test method for {@link MovieFacade#update(MovieTO)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.update(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#update(MovieTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGenreService() {
-        ((MovieFacadeImpl) movieFacade).setGenreService(null);
-        movieFacade.update(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#update(MovieTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((MovieFacadeImpl) movieFacade).setConversionService(null);
-        movieFacade.update(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#update(MovieTO)} with not set validator for TO for movie. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetMovieTOValidator() {
-        ((MovieFacadeImpl) movieFacade).setMovieTOValidator(null);
-        movieFacade.update(mock(MovieTO.class));
-    }
-
     /** Test method for {@link MovieFacade#update(MovieTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -504,20 +451,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieService, movieTOValidator);
     }
 
-    /** Test method for {@link MovieFacade#remove(MovieTO)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.remove(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#remove(MovieTO)} with not set validator for TO for movie. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetMovieTOValidator() {
-        ((MovieFacadeImpl) movieFacade).setMovieTOValidator(null);
-        movieFacade.remove(mock(MovieTO.class));
-    }
-
     /** Test method for {@link MovieFacade#remove(MovieTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -602,20 +535,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verify(movieService).duplicate(movie);
         verify(movieTOValidator).validateMovieTOWithId(movieTO);
         verifyNoMoreInteractions(movieService, movieTOValidator);
-    }
-
-    /** Test method for {@link MovieFacade#duplicate(MovieTO)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.duplicate(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#duplicate(MovieTO)} with not set validator for TO for movie. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetMovieTOValidator() {
-        ((MovieFacadeImpl) movieFacade).setMovieTOValidator(null);
-        movieFacade.duplicate(mock(MovieTO.class));
     }
 
     /** Test method for {@link MovieFacade#duplicate(MovieTO)} with null argument. */
@@ -705,20 +624,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verify(movieService).moveUp(movie);
         verify(movieTOValidator).validateMovieTOWithId(movieTO);
         verifyNoMoreInteractions(movieService, movieTOValidator);
-    }
-
-    /** Test method for {@link MovieFacade#moveUp(MovieTO)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.moveUp(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#moveUp(MovieTO)} with not set validator for TO for movie. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetMovieTOValidator() {
-        ((MovieFacadeImpl) movieFacade).setMovieTOValidator(null);
-        movieFacade.moveUp(mock(MovieTO.class));
     }
 
     /** Test method for {@link MovieFacade#moveUp(MovieTO)} with null argument. */
@@ -830,20 +735,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verify(movieService).moveDown(movie);
         verify(movieTOValidator).validateMovieTOWithId(movieTO);
         verifyNoMoreInteractions(movieService, movieTOValidator);
-    }
-
-    /** Test method for {@link MovieFacade#moveDown(MovieTO)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.moveDown(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#moveDown(MovieTO)} with not set validator for TO for movie. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetMovieTOValidator() {
-        ((MovieFacadeImpl) movieFacade).setMovieTOValidator(null);
-        movieFacade.moveDown(mock(MovieTO.class));
     }
 
     /** Test method for {@link MovieFacade#moveDown(MovieTO)} with null argument. */
@@ -971,27 +862,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieService, conversionService, movieTOValidator);
     }
 
-    /** Test method for {@link MovieFacade#exists(MovieTO)} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.exists(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#exists(MovieTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((MovieFacadeImpl) movieFacade).setConversionService(null);
-        movieFacade.exists(mock(MovieTO.class));
-    }
-
-    /** Test method for {@link MovieFacade#exists(MovieTO)} with not set validator for TO for movie. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetMovieTOValidator() {
-        ((MovieFacadeImpl) movieFacade).setMovieTOValidator(null);
-        movieFacade.exists(mock(MovieTO.class));
-    }
-
     /** Test method for {@link MovieFacade#exists(MovieTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1057,13 +927,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieService);
     }
 
-    /** Test method for {@link MovieFacade#updatePositions()} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.updatePositions();
-    }
-
     /** Test method for {@link MovieFacade#updatePositions()} with exception in service tier. */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
@@ -1092,13 +955,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieService);
     }
 
-    /** Test method for {@link MovieFacade#getTotalMediaCount()} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.getTotalMediaCount();
-    }
-
     /** Test method for {@link MovieFacade#getTotalMediaCount()} with exception in service tier. */
     @Test
     public void testGetTotalMediaCountWithServiceTierException() {
@@ -1125,13 +981,6 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(movieService).getTotalLength();
         verifyNoMoreInteractions(movieService);
-    }
-
-    /** Test method for {@link MovieFacade#getTotalLength()} with not set service for movies. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetMovieService() {
-        ((MovieFacadeImpl) movieFacade).setMovieService(null);
-        movieFacade.getTotalLength();
     }
 
     /** Test method for {@link MovieFacade#getTotalLength()} with exception in service tier. */

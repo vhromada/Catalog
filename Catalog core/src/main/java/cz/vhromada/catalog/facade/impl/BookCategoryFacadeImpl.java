@@ -27,13 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookCategoryFacadeImpl implements BookCategoryFacade {
 
     /** Service for book categories field */
-    private static final String BOOK_CATEGORY_SERVICE_FIELD = "Service for book categories";
+    private static final String BOOK_CATEGORY_SERVICE_ARGUMENT = "Service for book categories";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for book category field */
-    private static final String BOOK_CATEGORY_TO_VALIDATOR_FIELD = "Validator for TO for book category";
+    private static final String BOOK_CATEGORY_TO_VALIDATOR_ARGUMENT = "Validator for TO for book category";
 
     /** Book category argument */
     private static final String BOOK_CATEGORY_ARGUMENT = "book category";
@@ -51,82 +51,44 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /** Service for book categories */
-    @Autowired
     private BookCategoryService bookCategoryService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for book category */
-    @Autowired
     private BookCategoryTOValidator bookCategoryTOValidator;
 
     /**
-     * Returns service for book categories.
+     * Creates a new instance of BookCategoryFacadeImpl.
      *
-     * @return service for book categories
+     * @param bookCategoryService service for book categories
+     * @param conversionService conversion service
+     * @param bookCategoryTOValidator validator for TO for book category
+     * @throws IllegalArgumentException if service for book categories is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for book category is null
      */
-    public BookCategoryService getBookCategoryService() {
-        return bookCategoryService;
-    }
+    @Autowired
+    public BookCategoryFacadeImpl(final BookCategoryService bookCategoryService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final BookCategoryTOValidator bookCategoryTOValidator) {
+        Validators.validateArgumentNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for book categories.
-     *
-     * @param bookCategoryService new value
-     */
-    public void setBookCategoryService(final BookCategoryService bookCategoryService) {
         this.bookCategoryService = bookCategoryService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for book category.
-     *
-     * @return validator for TO for book category
-     */
-    public BookCategoryTOValidator getBookCategoryTOValidator() {
-        return bookCategoryTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for book category.
-     *
-     * @param bookCategoryTOValidator new value
-     */
-    public void setBookCategoryTOValidator(final BookCategoryTOValidator bookCategoryTOValidator) {
         this.bookCategoryTOValidator = bookCategoryTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-
         try {
             bookCategoryService.newData();
         } catch (final ServiceOperationException ex) {
@@ -137,16 +99,11 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public List<BookCategoryTO> getBookCategories() {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-
         try {
             final List<BookCategoryTO> bookCategories = new ArrayList<>();
             for (final BookCategory bookCategory : bookCategoryService.getBookCategories()) {
@@ -161,16 +118,12 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public BookCategoryTO getBookCategory(final Integer id) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -183,9 +136,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for book category isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -193,9 +143,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     @Override
     public void add(final BookCategoryTO bookCategory) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
         bookCategoryTOValidator.validateNewBookCategoryTO(bookCategory);
 
         try {
@@ -214,9 +161,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for book category isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -226,9 +170,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     @Override
     public void update(final BookCategoryTO bookCategory) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
         bookCategoryTOValidator.validateExistingBookCategoryTO(bookCategory);
         try {
             final BookCategory bookCategoryEntity = conversionService.convert(bookCategory, BookCategory.class);
@@ -243,8 +184,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or validator for TO for book category isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -254,8 +193,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     @Override
     public void remove(final BookCategoryTO bookCategory) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
         bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
         try {
             final BookCategory bookCategoryEntity = bookCategoryService.getBookCategory(bookCategory.getId());
@@ -270,8 +207,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or validator for TO for book category isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -281,8 +216,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     @Override
     public void duplicate(final BookCategoryTO bookCategory) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
         bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
         try {
             final BookCategory oldBookCategory = bookCategoryService.getBookCategory(bookCategory.getId());
@@ -297,8 +230,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or validator for TO for book category isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -308,8 +239,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     @Override
     public void moveUp(final BookCategoryTO bookCategory) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
         bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
         try {
             final BookCategory bookCategoryEntity = bookCategoryService.getBookCategory(bookCategory.getId());
@@ -326,8 +255,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or validator for TO for book category isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -337,8 +264,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     @Override
     public void moveDown(final BookCategoryTO bookCategory) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
         bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
         try {
             final BookCategory bookCategoryEntity = bookCategoryService.getBookCategory(bookCategory.getId());
@@ -355,9 +280,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for book category isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -366,9 +288,6 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final BookCategoryTO bookCategory) {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_FIELD);
         bookCategoryTOValidator.validateBookCategoryTOWithId(bookCategory);
         try {
 
@@ -381,13 +300,10 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void updatePositions() {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-
         try {
             bookCategoryService.updatePositions();
         } catch (final ServiceOperationException ex) {
@@ -398,14 +314,11 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for book categories isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public int getBooksCount() {
-        Validators.validateFieldNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_FIELD);
-
         try {
             return bookCategoryService.getBooksCount();
         } catch (final ServiceOperationException ex) {

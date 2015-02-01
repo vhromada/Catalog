@@ -28,13 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class GenreFacadeImpl implements GenreFacade {
 
     /** Service for genres field */
-    private static final String GENRE_SERVICE_FIELD = "Service for genres";
+    private static final String GENRE_SERVICE_ARGUMENT = "Service for genres";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for genre field */
-    private static final String GENRE_TO_VALIDATOR_FIELD = "Validator for TO for genre";
+    private static final String GENRE_TO_VALIDATOR_ARGUMENT = "Validator for TO for genre";
 
     /** TO for genre argument */
     private static final String GENRE_TO_ARGUMENT = "TO for genre";
@@ -51,84 +51,45 @@ public class GenreFacadeImpl implements GenreFacade {
     /** Message for not setting ID */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-
     /** Service for genres */
-    @Autowired
     private GenreService genreService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for genre */
-    @Autowired
     private GenreTOValidator genreTOValidator;
 
     /**
-     * Returns service for genres.
+     * Creates a new instance of GenreFacadeImpl.
      *
-     * @return service for genres
+     * @param genreService service for genres
+     * @param conversionService conversion service
+     * @param genreTOValidator validator for TO for genre
+     * @throws IllegalArgumentException if service for genres is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for genre is null
      */
-    public GenreService getGenreService() {
-        return genreService;
-    }
+    @Autowired
+    public GenreFacadeImpl(final GenreService genreService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final GenreTOValidator genreTOValidator) {
+        Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(genreTOValidator, GENRE_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for genres.
-     *
-     * @param genreService new value
-     */
-    public void setGenreService(final GenreService genreService) {
         this.genreService = genreService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for genre.
-     *
-     * @return validator for TO for genre
-     */
-    public GenreTOValidator getGenreTOValidator() {
-        return genreTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for genre.
-     *
-     * @param genreTOValidator new value
-     */
-    public void setGenreTOValidator(final GenreTOValidator genreTOValidator) {
         this.genreTOValidator = genreTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-
         try {
             genreService.newData();
         } catch (final ServiceOperationException ex) {
@@ -139,16 +100,11 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
-     *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public List<GenreTO> getGenres() {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-
         try {
             final List<GenreTO> genres = new ArrayList<>();
             for (final Genre genre : genreService.getGenres()) {
@@ -164,16 +120,12 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public GenreTO getGenre(final Integer id) {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -186,9 +138,6 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -196,9 +145,6 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void add(final GenreTO genre) {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(genreTOValidator, GENRE_TO_VALIDATOR_FIELD);
         genreTOValidator.validateNewGenreTO(genre);
 
         try {
@@ -216,7 +162,6 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -224,7 +169,6 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void add(final List<String> genres) {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
         Validators.validateArgumentNotNull(genres, GENRE_NAMES_ARGUMENT);
         Validators.validateCollectionNotContainNull(genres, GENRE_NAMES_ARGUMENT);
 
@@ -238,9 +182,6 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -250,9 +191,6 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void update(final GenreTO genre) {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(genreTOValidator, GENRE_TO_VALIDATOR_FIELD);
         genreTOValidator.validateExistingGenreTO(genre);
         try {
             final Genre genreEntity = conversionService.convert(genre, Genre.class);
@@ -267,8 +205,6 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
-     *                                  or validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -278,8 +214,6 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void remove(final GenreTO genre) {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(genreTOValidator, GENRE_TO_VALIDATOR_FIELD);
         genreTOValidator.validateGenreTOWithId(genre);
         try {
             final Genre genreEntity = genreService.getGenre(genre.getId());
@@ -294,8 +228,6 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
-     *                                  or validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -305,8 +237,6 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void duplicate(final GenreTO genre) {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(genreTOValidator, GENRE_TO_VALIDATOR_FIELD);
         genreTOValidator.validateGenreTOWithId(genre);
         try {
             final Genre oldGenre = genreService.getGenre(genre.getId());
@@ -323,9 +253,6 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for genres isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for genre isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -334,9 +261,6 @@ public class GenreFacadeImpl implements GenreFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final GenreTO genre) {
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(genreTOValidator, GENRE_TO_VALIDATOR_FIELD);
         genreTOValidator.validateGenreTOWithId(genre);
         try {
 

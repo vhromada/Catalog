@@ -31,16 +31,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class MovieFacadeImpl implements MovieFacade {
 
     /** Service for movies field */
-    private static final String MOVIE_SERVICE_FIELD = "Service for movies";
+    private static final String MOVIE_SERVICE_ARGUMENT = "Service for movies";
 
     /** Service for genres field */
-    private static final String GENRE_SERVICE_FIELD = "Service for genres";
+    private static final String GENRE_SERVICE_ARGUMENT = "Service for genres";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for movie field */
-    private static final String MOVIE_TO_VALIDATOR_FIELD = "Validator for TO for movie";
+    private static final String MOVIE_TO_VALIDATOR_ARGUMENT = "Validator for TO for movie";
 
     /** Movie argument */
     private static final String MOVIE_ARGUMENT = "movie";
@@ -61,104 +61,52 @@ public class MovieFacadeImpl implements MovieFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /** Service for movies */
-    @Autowired
     private MovieService movieService;
 
     /** Service for genres */
-    @Autowired
     private GenreService genreService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for movie */
-    @Autowired
     private MovieTOValidator movieTOValidator;
 
     /**
-     * Returns service for movies.
+     * Creates a new instance of MovieFacadeImpl.
      *
-     * @return service for movies
+     * @param movieService service for movies
+     * @param genreService service for genres
+     * @param conversionService conversion service
+     * @param movieTOValidator validator for TO for movie
+     * @throws IllegalArgumentException if service for movies is null
+     *                                  or service for genres is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for movie is null
      */
-    public MovieService getMovieService() {
-        return movieService;
-    }
+    @Autowired
+    public MovieFacadeImpl(final MovieService movieService,
+            final GenreService genreService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final MovieTOValidator movieTOValidator) {
+        Validators.validateArgumentNotNull(movieService, MOVIE_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for movies.
-     *
-     * @param movieService new value
-     */
-    public void setMovieService(final MovieService movieService) {
         this.movieService = movieService;
-    }
-
-    /**
-     * Returns service for genres.
-     *
-     * @return service for genres
-     */
-    public GenreService getGenreService() {
-        return genreService;
-    }
-
-    /**
-     * Sets a new value to service for genres.
-     *
-     * @param genreService new value
-     */
-    public void setGenreService(final GenreService genreService) {
         this.genreService = genreService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for movie.
-     *
-     * @return validator for TO for movie
-     */
-    public MovieTOValidator getMovieTOValidator() {
-        return movieTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for movie.
-     *
-     * @param movieTOValidator new value
-     */
-    public void setMovieTOValidator(final MovieTOValidator movieTOValidator) {
         this.movieTOValidator = movieTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-
         try {
             movieService.newData();
         } catch (final ServiceOperationException ex) {
@@ -169,16 +117,11 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public List<MovieTO> getMovies() {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-
         try {
             final List<MovieTO> movies = new ArrayList<>();
             for (final Movie movie : movieService.getMovies()) {
@@ -194,16 +137,12 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public MovieTO getMovie(final Integer id) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -216,10 +155,6 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or service for genres isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for movie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -227,10 +162,6 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void add(final MovieTO movie) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_FIELD);
         movieTOValidator.validateNewMovieTO(movie);
         try {
             for (final GenreTO genre : movie.getGenres()) {
@@ -252,10 +183,6 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or service for genres isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for movie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -265,10 +192,6 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void update(final MovieTO movie) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(genreService, GENRE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_FIELD);
         movieTOValidator.validateExistingMovieTO(movie);
         try {
             final Movie movieEntity = conversionService.convert(movie, Movie.class);
@@ -286,8 +209,6 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or validator for TO for movie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -297,8 +218,6 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void remove(final MovieTO movie) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_FIELD);
         movieTOValidator.validateMovieTOWithId(movie);
         try {
             final Movie movieEntity = movieService.getMovie(movie.getId());
@@ -313,8 +232,6 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or validator for TO for movie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -324,8 +241,6 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void duplicate(final MovieTO movie) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_FIELD);
         movieTOValidator.validateMovieTOWithId(movie);
         try {
             final Movie oldMovie = movieService.getMovie(movie.getId());
@@ -340,8 +255,6 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or validator for TO for movie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -351,8 +264,6 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void moveUp(final MovieTO movie) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_FIELD);
         movieTOValidator.validateMovieTOWithId(movie);
         try {
             final Movie movieEntity = movieService.getMovie(movie.getId());
@@ -369,8 +280,6 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or validator for TO for movie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -380,8 +289,6 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void moveDown(final MovieTO movie) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_FIELD);
         movieTOValidator.validateMovieTOWithId(movie);
         try {
             final Movie movieEntity = movieService.getMovie(movie.getId());
@@ -398,9 +305,6 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for movie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -409,9 +313,6 @@ public class MovieFacadeImpl implements MovieFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final MovieTO movie) {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_FIELD);
         movieTOValidator.validateMovieTOWithId(movie);
         try {
 
@@ -424,13 +325,10 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void updatePositions() {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-
         try {
             movieService.updatePositions();
         } catch (final ServiceOperationException ex) {
@@ -441,14 +339,11 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public int getTotalMediaCount() {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-
         try {
             return movieService.getTotalMediaCount();
         } catch (final ServiceOperationException ex) {
@@ -459,14 +354,11 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for movies isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public Time getTotalLength() {
-        Validators.validateFieldNotNull(movieService, MOVIE_SERVICE_FIELD);
-
         try {
             return movieService.getTotalLength();
         } catch (final ServiceOperationException ex) {

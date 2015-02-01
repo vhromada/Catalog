@@ -33,9 +33,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -71,8 +71,58 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
     private EpisodeTOValidator episodeTOValidator;
 
     /** Instance of (@link EpisodeFacade} */
-    @InjectMocks
-    private EpisodeFacade episodeFacade = new EpisodeFacadeImpl();
+    private EpisodeFacade episodeFacade;
+
+    /** Initializes facade for episodes. */
+    @Before
+    public void setUp() {
+        episodeFacade = new EpisodeFacadeImpl(seasonService, episodeService, conversionService, seasonTOValidator, episodeTOValidator);
+    }
+
+    /**
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(SeasonService, EpisodeService, ConversionService, SeasonTOValidator, EpisodeTOValidator)}
+     * with null service for seasons.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSeasonService() {
+        new EpisodeFacadeImpl(null, episodeService, conversionService, seasonTOValidator, episodeTOValidator);
+    }
+
+    /**
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(SeasonService, EpisodeService, ConversionService, SeasonTOValidator, EpisodeTOValidator)}
+     * with null service for episodes.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEpisodeService() {
+        new EpisodeFacadeImpl(seasonService, null, conversionService, seasonTOValidator, episodeTOValidator);
+    }
+
+    /**
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(SeasonService, EpisodeService, ConversionService, SeasonTOValidator, EpisodeTOValidator)}
+     * with null conversion service.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new EpisodeFacadeImpl(seasonService, episodeService, null, seasonTOValidator, episodeTOValidator);
+    }
+
+    /**
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(SeasonService, EpisodeService, ConversionService, SeasonTOValidator, EpisodeTOValidator)}
+     * with null validator for TO for season.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSeasonTOValidator() {
+        new EpisodeFacadeImpl(seasonService, episodeService, conversionService, null, episodeTOValidator);
+    }
+
+    /**
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(SeasonService, EpisodeService, ConversionService, SeasonTOValidator, EpisodeTOValidator)}
+     * with null validator for TO for episode.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullEpisodeTOValidator() {
+        new EpisodeFacadeImpl(seasonService, episodeService, conversionService, seasonTOValidator, null);
+    }
 
     /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with existing episode. */
     @Test
@@ -100,20 +150,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verify(episodeService).getEpisode(Integer.MAX_VALUE);
         verify(conversionService).convert(null, EpisodeTO.class);
         verifyNoMoreInteractions(episodeService, conversionService);
-    }
-
-    /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodeWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.getEpisode(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodeWithNotSetConversionService() {
-        ((EpisodeFacadeImpl) episodeFacade).setConversionService(null);
-        episodeFacade.getEpisode(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with null argument. */
@@ -169,34 +205,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verify(episodeTOValidator).validateNewEpisodeTO(episodeTO);
         verify(conversionService).convert(episodeTO, Episode.class);
         verifyNoMoreInteractions(seasonService, episodeService, conversionService, episodeTOValidator);
-    }
-
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with not set service for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSeasonService() {
-        ((EpisodeFacadeImpl) episodeFacade).setSeasonService(null);
-        episodeFacade.add(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.add(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((EpisodeFacadeImpl) episodeFacade).setConversionService(null);
-        episodeFacade.add(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with not set validator for TO for episode. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetEpisodeTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeTOValidator(null);
-        episodeFacade.add(mock(EpisodeTO.class));
     }
 
     /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with null argument. */
@@ -318,34 +326,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, episodeService, conversionService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with not set service for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSeasonService() {
-        ((EpisodeFacadeImpl) episodeFacade).setSeasonService(null);
-        episodeFacade.update(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.update(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((EpisodeFacadeImpl) episodeFacade).setConversionService(null);
-        episodeFacade.update(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with not set validator for TO for episode. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetEpisodeTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeTOValidator(null);
-        episodeFacade.update(mock(EpisodeTO.class));
-    }
-
     /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -440,20 +420,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.remove(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with not set validator for TO for episode. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetEpisodeTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeTOValidator(null);
-        episodeFacade.remove(mock(EpisodeTO.class));
-    }
-
     /** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -538,20 +504,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verify(episodeService).duplicate(episode);
         verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
-    }
-
-    /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.duplicate(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with not set validator for TO for episode. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetEpisodeTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeTOValidator(null);
-        episodeFacade.duplicate(mock(EpisodeTO.class));
     }
 
     /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with null argument. */
@@ -641,20 +593,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verify(episodeService).moveUp(episode);
         verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
-    }
-
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.moveUp(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not set validator for TO for episode. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetEpisodeTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeTOValidator(null);
-        episodeFacade.moveUp(mock(EpisodeTO.class));
     }
 
     /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with null argument. */
@@ -766,20 +704,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verify(episodeService).moveDown(episode);
         verify(episodeTOValidator).validateEpisodeTOWithId(episodeTO);
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
-    }
-
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.moveDown(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not set validator for TO for episode. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetEpisodeTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeTOValidator(null);
-        episodeFacade.moveDown(mock(EpisodeTO.class));
     }
 
     /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with null argument. */
@@ -907,27 +831,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, conversionService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.exists(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((EpisodeFacadeImpl) episodeFacade).setConversionService(null);
-        episodeFacade.exists(mock(EpisodeTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with not set validator for TO for episode. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetEpisodeTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeTOValidator(null);
-        episodeFacade.exists(mock(EpisodeTO.class));
-    }
-
     /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1007,34 +910,6 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         }
         verify(seasonTOValidator).validateSeasonTOWithId(seasonTO);
         verifyNoMoreInteractions(seasonService, episodeService, conversionService, seasonTOValidator);
-    }
-
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not set service for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindEpisodesBySeasonWithNotSetSeasonService() {
-        ((EpisodeFacadeImpl) episodeFacade).setSeasonService(null);
-        episodeFacade.findEpisodesBySeason(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not set service for episodes. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindEpisodesBySeasonWithNotSetEpisodeService() {
-        ((EpisodeFacadeImpl) episodeFacade).setEpisodeService(null);
-        episodeFacade.findEpisodesBySeason(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindEpisodesBySeasonWithNotSetConversionService() {
-        ((EpisodeFacadeImpl) episodeFacade).setConversionService(null);
-        episodeFacade.findEpisodesBySeason(mock(SeasonTO.class));
-    }
-
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not set validator for TO for season. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindEpisodesBySeasonWithNotSetSeasonTOValidator() {
-        ((EpisodeFacadeImpl) episodeFacade).setSeasonTOValidator(null);
-        episodeFacade.findEpisodesBySeason(mock(SeasonTO.class));
     }
 
     /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with null argument. */

@@ -33,9 +33,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -67,8 +67,46 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
     private SerieTOValidator serieTOValidator;
 
     /** Instance of {@link SerieFacade} */
-    @InjectMocks
-    private SerieFacade serieFacade = new SerieFacadeImpl();
+    private SerieFacade serieFacade;
+
+    /** Initializes facade for series. */
+    @Before
+    public void setUp() {
+        serieFacade = new SerieFacadeImpl(serieService, genreService, conversionService, serieTOValidator);
+    }
+
+    /**
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null service for series.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieService() {
+        new SerieFacadeImpl(null, genreService, conversionService, serieTOValidator);
+    }
+
+    /**
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null service for genres.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreService() {
+        new SerieFacadeImpl(serieService, null, conversionService, serieTOValidator);
+    }
+
+    /**
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null conversion service.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new SerieFacadeImpl(serieService, genreService, null, serieTOValidator);
+    }
+
+    /**
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null validator for
+     * TO for serie.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSerieTOValidator() {
+        new SerieFacadeImpl(serieService, genreService, conversionService, null);
+    }
 
     /** Test method for {@link SerieFacade#newData()}. */
     @Test
@@ -77,13 +115,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).newData();
         verifyNoMoreInteractions(serieService);
-    }
-
-    /** Test method for {@link SerieFacade#newData()} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.newData();
     }
 
     /** Test method for {@link SerieFacade#newData()} with exception in service tier. */
@@ -120,20 +151,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
             verify(conversionService).convert(serie, SerieTO.class);
         }
         verifyNoMoreInteractions(serieService, conversionService);
-    }
-
-    /** Test method for {@link SerieFacade#getSeries()} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeriesWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.getSeries();
-    }
-
-    /** Test method for {@link SerieFacade#getSeries()} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeriesWithNotSetConversionService() {
-        ((SerieFacadeImpl) serieFacade).setConversionService(null);
-        serieFacade.getSeries();
     }
 
     /** Test method for {@link SerieFacade#getSeries()} with exception in service tier. */
@@ -180,20 +197,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verify(serieService).getSerie(Integer.MAX_VALUE);
         verify(conversionService).convert(null, SerieTO.class);
         verifyNoMoreInteractions(serieService, conversionService);
-    }
-
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSerieWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.getSerie(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSerieWithNotSetConversionService() {
-        ((SerieFacadeImpl) serieFacade).setConversionService(null);
-        serieFacade.getSerie(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with null argument. */
@@ -250,34 +253,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateNewSerieTO(serieTO);
         verifyNoMoreInteractions(serieService, genreService, conversionService, serieTOValidator);
-    }
-
-    /** Test method for {@link SerieFacade#add(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.add(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#add(SerieTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGenreService() {
-        ((SerieFacadeImpl) serieFacade).setGenreService(null);
-        serieFacade.add(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#add(SerieTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((SerieFacadeImpl) serieFacade).setConversionService(null);
-        serieFacade.add(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#add(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSerieTOValidator() {
-        ((SerieFacadeImpl) serieFacade).setSerieTOValidator(null);
-        serieFacade.add(mock(SerieTO.class));
     }
 
     /** Test method for {@link SerieFacade#add(SerieTO)} with null argument. */
@@ -383,34 +358,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, conversionService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#update(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.update(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#update(SerieTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGenreService() {
-        ((SerieFacadeImpl) serieFacade).setGenreService(null);
-        serieFacade.update(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#update(SerieTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((SerieFacadeImpl) serieFacade).setConversionService(null);
-        serieFacade.update(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#update(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSerieTOValidator() {
-        ((SerieFacadeImpl) serieFacade).setSerieTOValidator(null);
-        serieFacade.update(mock(SerieTO.class));
-    }
-
     /** Test method for {@link SerieFacade#update(SerieTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -504,20 +451,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#remove(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.remove(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#remove(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSerieTOValidator() {
-        ((SerieFacadeImpl) serieFacade).setSerieTOValidator(null);
-        serieFacade.remove(mock(SerieTO.class));
-    }
-
     /** Test method for {@link SerieFacade#remove(SerieTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -602,20 +535,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verify(serieService).duplicate(serie);
         verify(serieTOValidator).validateSerieTOWithId(serieTO);
         verifyNoMoreInteractions(serieService, serieTOValidator);
-    }
-
-    /** Test method for {@link SerieFacade#duplicate(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.duplicate(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#duplicate(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSerieTOValidator() {
-        ((SerieFacadeImpl) serieFacade).setSerieTOValidator(null);
-        serieFacade.duplicate(mock(SerieTO.class));
     }
 
     /** Test method for {@link SerieFacade#duplicate(SerieTO)} with null argument. */
@@ -705,20 +624,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verify(serieService).moveUp(serie);
         verify(serieTOValidator).validateSerieTOWithId(serieTO);
         verifyNoMoreInteractions(serieService, serieTOValidator);
-    }
-
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.moveUp(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSerieTOValidator() {
-        ((SerieFacadeImpl) serieFacade).setSerieTOValidator(null);
-        serieFacade.moveUp(mock(SerieTO.class));
     }
 
     /** Test method for {@link SerieFacade#moveUp(SerieTO)} with null argument. */
@@ -830,20 +735,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verify(serieService).moveDown(serie);
         verify(serieTOValidator).validateSerieTOWithId(serieTO);
         verifyNoMoreInteractions(serieService, serieTOValidator);
-    }
-
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.moveDown(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSerieTOValidator() {
-        ((SerieFacadeImpl) serieFacade).setSerieTOValidator(null);
-        serieFacade.moveDown(mock(SerieTO.class));
     }
 
     /** Test method for {@link SerieFacade#moveDown(SerieTO)} with null argument. */
@@ -971,27 +862,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, conversionService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.exists(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((SerieFacadeImpl) serieFacade).setConversionService(null);
-        serieFacade.exists(mock(SerieTO.class));
-    }
-
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with not set validator for TO for serie. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSerieTOValidator() {
-        ((SerieFacadeImpl) serieFacade).setSerieTOValidator(null);
-        serieFacade.exists(mock(SerieTO.class));
-    }
-
     /** Test method for {@link SerieFacade#exists(SerieTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1057,13 +927,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#updatePositions()} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.updatePositions();
-    }
-
     /** Test method for {@link SerieFacade#updatePositions()} with exception in service tier. */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
@@ -1090,13 +953,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).getTotalLength();
         verifyNoMoreInteractions(serieService);
-    }
-
-    /** Test method for {@link SerieFacade#getTotalLength()} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalLengthWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.getTotalLength();
     }
 
     /** Test method for {@link SerieFacade#getTotalLength()} with exception in service tier. */
@@ -1127,13 +983,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getSeasonsCount()} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSeasonsCountWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.getSeasonsCount();
-    }
-
     /** Test method for {@link SerieFacade#getSeasonsCount()} with exception in service tier. */
     @Test
     public void testGetSeasonsCountWithServiceTierException() {
@@ -1160,13 +1009,6 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).getEpisodesCount();
         verifyNoMoreInteractions(serieService);
-    }
-
-    /** Test method for {@link SerieFacade#getEpisodesCount()} with not set service for series. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetEpisodesCountWithNotSetSerieService() {
-        ((SerieFacadeImpl) serieFacade).setSerieService(null);
-        serieFacade.getEpisodesCount();
     }
 
     /** Test method for {@link SerieFacade#getEpisodesCount()} with exception in service tier. */

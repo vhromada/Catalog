@@ -33,9 +33,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -71,8 +71,58 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
     private SongTOValidator songTOValidator;
 
     /** Instance of (@link SongFacade} */
-    @InjectMocks
-    private SongFacade songFacade = new SongFacadeImpl();
+    private SongFacade songFacade;
+
+    /** Initializes facade for songs. */
+    @Before
+    public void setUp() {
+        songFacade = new SongFacadeImpl(musicService, songService, conversionService, musicTOValidator, songTOValidator);
+    }
+
+    /**
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, ConversionService, MusicTOValidator, SongTOValidator)} with null 
+     * service for music. 
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMusicService() {
+        new SongFacadeImpl(null, songService, conversionService, musicTOValidator, songTOValidator);
+    }
+
+    /**
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, ConversionService, MusicTOValidator, SongTOValidator)} with null 
+     * service for songs. 
+     * */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSongService() {
+        new SongFacadeImpl(musicService, null, conversionService, musicTOValidator, songTOValidator);
+    }
+
+    /**
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, ConversionService, MusicTOValidator, SongTOValidator)} with null 
+     * conversion service. 
+     * */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new SongFacadeImpl(musicService, songService, null, musicTOValidator, songTOValidator);
+    }
+
+    /**
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, ConversionService, MusicTOValidator, SongTOValidator)} with null 
+     * validator for TO for music. 
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullMusicTOValidator() {
+        new SongFacadeImpl(musicService, songService, conversionService, null, songTOValidator);
+    }
+
+    /**
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, ConversionService, MusicTOValidator, SongTOValidator)} with null
+     * validator for TO for song.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullSongTOValidator() {
+        new SongFacadeImpl(musicService, songService, conversionService, musicTOValidator, null);
+    }
 
     /** Test method for {@link SongFacade#getSong(Integer)} with existing song. */
     @Test
@@ -100,20 +150,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verify(songService).getSong(Integer.MAX_VALUE);
         verify(conversionService).convert(null, SongTO.class);
         verifyNoMoreInteractions(songService, conversionService);
-    }
-
-    /** Test method for {@link SongFacade#getSong(Integer)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSongWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.getSong(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link SongFacade#getSong(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetSongWithNotSetConversionService() {
-        ((SongFacadeImpl) songFacade).setConversionService(null);
-        songFacade.getSong(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link SongFacade#getSong(Integer)} with null argument. */
@@ -169,34 +205,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(songTO, Song.class);
         verify(songTOValidator).validateNewSongTO(songTO);
         verifyNoMoreInteractions(musicService, songService, conversionService, songTOValidator);
-    }
-
-    /** Test method for {@link SongFacade#add(SongTO)} with not set service for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetMusicService() {
-        ((SongFacadeImpl) songFacade).setMusicService(null);
-        songFacade.add(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#add(SongTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.add(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#add(SongTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((SongFacadeImpl) songFacade).setConversionService(null);
-        songFacade.add(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#add(SongTO)} with not set validator for TO for song. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetSongTOValidator() {
-        ((SongFacadeImpl) songFacade).setSongTOValidator(null);
-        songFacade.add(mock(SongTO.class));
     }
 
     /** Test method for {@link SongFacade#add(SongTO)} with null argument. */
@@ -318,34 +326,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, songService, conversionService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with not set service for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetMusicService() {
-        ((SongFacadeImpl) songFacade).setMusicService(null);
-        songFacade.update(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#update(SongTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.update(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#update(SongTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((SongFacadeImpl) songFacade).setConversionService(null);
-        songFacade.update(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#update(SongTO)} with not set validator for TO for song. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetSongTOValidator() {
-        ((SongFacadeImpl) songFacade).setSongTOValidator(null);
-        songFacade.update(mock(SongTO.class));
-    }
-
     /** Test method for {@link SongFacade#update(SongTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -440,20 +420,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.remove(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#remove(SongTO)} with not set validator for TO for song. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetSongTOValidator() {
-        ((SongFacadeImpl) songFacade).setSongTOValidator(null);
-        songFacade.remove(mock(SongTO.class));
-    }
-
     /** Test method for {@link SongFacade#remove(SongTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -538,20 +504,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verify(songService).duplicate(song);
         verify(songTOValidator).validateSongTOWithId(songTO);
         verifyNoMoreInteractions(songService, songTOValidator);
-    }
-
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.duplicate(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with not set validator for TO for song. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetSongTOValidator() {
-        ((SongFacadeImpl) songFacade).setSongTOValidator(null);
-        songFacade.duplicate(mock(SongTO.class));
     }
 
     /** Test method for {@link SongFacade#duplicate(SongTO)} with null argument. */
@@ -641,20 +593,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verify(songService).moveUp(song);
         verify(songTOValidator).validateSongTOWithId(songTO);
         verifyNoMoreInteractions(songService, songTOValidator);
-    }
-
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.moveUp(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with not set validator for TO for song. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetSongTOValidator() {
-        ((SongFacadeImpl) songFacade).setSongTOValidator(null);
-        songFacade.moveUp(mock(SongTO.class));
     }
 
     /** Test method for {@link SongFacade#moveUp(SongTO)} with null argument. */
@@ -766,20 +704,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verify(songService).moveDown(song);
         verify(songTOValidator).validateSongTOWithId(songTO);
         verifyNoMoreInteractions(songService, songTOValidator);
-    }
-
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.moveDown(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with not set validator for TO for song. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetSongTOValidator() {
-        ((SongFacadeImpl) songFacade).setSongTOValidator(null);
-        songFacade.moveDown(mock(SongTO.class));
     }
 
     /** Test method for {@link SongFacade#moveDown(SongTO)} with null argument. */
@@ -907,27 +831,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, conversionService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.exists(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#exists(SongTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((SongFacadeImpl) songFacade).setConversionService(null);
-        songFacade.exists(mock(SongTO.class));
-    }
-
-    /** Test method for {@link SongFacade#exists(SongTO)} with not set validator for TO for song. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetSongTOValidator() {
-        ((SongFacadeImpl) songFacade).setSongTOValidator(null);
-        songFacade.exists(mock(SongTO.class));
-    }
-
     /** Test method for {@link SongFacade#exists(SongTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1007,34 +910,6 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         }
         verify(musicTOValidator).validateMusicTOWithId(musicTO);
         verifyNoMoreInteractions(musicService, songService, conversionService, musicTOValidator);
-    }
-
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with not set service for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSongsByMusicWithNotSetMusicService() {
-        ((SongFacadeImpl) songFacade).setMusicService(null);
-        songFacade.findSongsByMusic(mock(MusicTO.class));
-    }
-
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with not set service for songs. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSongsByMusicWithNotSetSongService() {
-        ((SongFacadeImpl) songFacade).setSongService(null);
-        songFacade.findSongsByMusic(mock(MusicTO.class));
-    }
-
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSongsByMusicWithNotSetConversionService() {
-        ((SongFacadeImpl) songFacade).setConversionService(null);
-        songFacade.findSongsByMusic(mock(MusicTO.class));
-    }
-
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with not set validator for TO for music. */
-    @Test(expected = IllegalStateException.class)
-    public void testFindSongsByMusicWithNotSetMusicTOValidator() {
-        ((SongFacadeImpl) songFacade).setMusicTOValidator(null);
-        songFacade.findSongsByMusic(mock(MusicTO.class));
     }
 
     /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with null argument. */

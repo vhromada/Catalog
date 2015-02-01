@@ -28,13 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class GameFacadeImpl implements GameFacade {
 
     /** Service for games field */
-    private static final String GAME_SERVICE_FIELD = "Service for games";
+    private static final String GAME_SERVICE_ARGUMENT = "Service for games";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for game field */
-    private static final String GAME_TO_VALIDATOR_FIELD = "Validator for TO for game";
+    private static final String GAME_TO_VALIDATOR_ARGUMENT = "Validator for TO for game";
 
     /** Game argument */
     private static final String GAME_ARGUMENT = "game";
@@ -52,82 +52,44 @@ public class GameFacadeImpl implements GameFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /** Service for games */
-    @Autowired
     private GameService gameService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for game */
-    @Autowired
     private GameTOValidator gameTOValidator;
 
     /**
-     * Returns service for games.
+     * Creates a new instance of GameFacadeImpl.
      *
-     * @return service for games
+     * @param gameService service for games
+     * @param conversionService conversion service
+     * @param gameTOValidator validator for TO for game
+     * @throws IllegalArgumentException if service for games is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for game is null
      */
-    public GameService getGameService() {
-        return gameService;
-    }
+    @Autowired
+    public GameFacadeImpl(final GameService gameService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final GameTOValidator gameTOValidator) {
+        Validators.validateArgumentNotNull(gameService, GAME_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(gameTOValidator, GAME_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for games.
-     *
-     * @param gameService new value
-     */
-    public void setGameService(final GameService gameService) {
         this.gameService = gameService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for game.
-     *
-     * @return validator for TO for game
-     */
-    public GameTOValidator getGameTOValidator() {
-        return gameTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for game.
-     *
-     * @param gameTOValidator new value
-     */
-    public void setGameTOValidator(final GameTOValidator gameTOValidator) {
         this.gameTOValidator = gameTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-
         try {
             gameService.newData();
         } catch (final ServiceOperationException ex) {
@@ -138,16 +100,11 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public List<GameTO> getGames() {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-
         try {
             final List<GameTO> games = new ArrayList<>();
             for (final Game game : gameService.getGames()) {
@@ -163,16 +120,12 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public GameTO getGame(final Integer id) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -185,9 +138,6 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for game isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -195,9 +145,6 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void add(final GameTO game) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(gameTOValidator, GAME_TO_VALIDATOR_FIELD);
         gameTOValidator.validateNewGameTO(game);
 
         try {
@@ -216,9 +163,6 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for game isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -228,9 +172,6 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void update(final GameTO game) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(gameTOValidator, GAME_TO_VALIDATOR_FIELD);
         gameTOValidator.validateExistingGameTO(game);
         try {
             final Game gameEntity = conversionService.convert(game, Game.class);
@@ -245,8 +186,6 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or validator for TO for game isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -256,8 +195,6 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void remove(final GameTO game) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(gameTOValidator, GAME_TO_VALIDATOR_FIELD);
         gameTOValidator.validateGameTOWithId(game);
         try {
             final Game gameEntity = gameService.getGame(game.getId());
@@ -272,8 +209,6 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or validator for TO for game isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -283,8 +218,6 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void duplicate(final GameTO game) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(gameTOValidator, GAME_TO_VALIDATOR_FIELD);
         gameTOValidator.validateGameTOWithId(game);
         try {
             final Game oldGame = gameService.getGame(game.getId());
@@ -299,8 +232,6 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or validator for TO for game isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -310,8 +241,6 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveUp(final GameTO game) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(gameTOValidator, GAME_TO_VALIDATOR_FIELD);
         gameTOValidator.validateGameTOWithId(game);
         try {
             final Game gameEntity = gameService.getGame(game.getId());
@@ -328,8 +257,6 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or validator for TO for game isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -339,8 +266,6 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveDown(final GameTO game) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(gameTOValidator, GAME_TO_VALIDATOR_FIELD);
         gameTOValidator.validateGameTOWithId(game);
         try {
             final Game gameEntity = gameService.getGame(game.getId());
@@ -357,9 +282,6 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for game isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -368,9 +290,6 @@ public class GameFacadeImpl implements GameFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final GameTO game) {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(gameTOValidator, GAME_TO_VALIDATOR_FIELD);
         gameTOValidator.validateGameTOWithId(game);
         try {
 
@@ -383,13 +302,10 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void updatePositions() {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-
         try {
             gameService.updatePositions();
         } catch (final ServiceOperationException ex) {
@@ -400,14 +316,11 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for games isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public int getTotalMediaCount() {
-        Validators.validateFieldNotNull(gameService, GAME_SERVICE_FIELD);
-
         try {
             return gameService.getTotalMediaCount();
         } catch (final ServiceOperationException ex) {

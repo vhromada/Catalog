@@ -28,13 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProgramFacadeImpl implements ProgramFacade {
 
     /** Service for programs field */
-    private static final String PROGRAM_SERVICE_FIELD = "Service for programs";
+    private static final String PROGRAM_SERVICE_ARGUMENT = "Service for programs";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for program field */
-    private static final String PROGRAM_TO_VALIDATOR_FIELD = "Validator for TO for program";
+    private static final String PROGRAM_TO_VALIDATOR_ARGUMENT = "Validator for TO for program";
 
     /** Program argument */
     private static final String PROGRAM_ARGUMENT = "program";
@@ -52,82 +52,44 @@ public class ProgramFacadeImpl implements ProgramFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /** Service for programs */
-    @Autowired
     private ProgramService programService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for program */
-    @Autowired
     private ProgramTOValidator programTOValidator;
 
     /**
-     * Returns service for programs.
+     * Creates a new instance of ProgramFacadeImpl.
      *
-     * @return service for programs
+     * @param programService service for programs
+     * @param conversionService conversion service
+     * @param programTOValidator validator for TO for program
+     * @throws IllegalArgumentException if service for programs is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for program is null
      */
-    public ProgramService getProgramService() {
-        return programService;
-    }
+    @Autowired
+    public ProgramFacadeImpl(final ProgramService programService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final ProgramTOValidator programTOValidator) {
+        Validators.validateArgumentNotNull(programService, PROGRAM_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for programs.
-     *
-     * @param programService new value
-     */
-    public void setProgramService(final ProgramService programService) {
         this.programService = programService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for program.
-     *
-     * @return validator for TO for program
-     */
-    public ProgramTOValidator getProgramTOValidator() {
-        return programTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for program.
-     *
-     * @param programTOValidator new value
-     */
-    public void setProgramTOValidator(final ProgramTOValidator programTOValidator) {
         this.programTOValidator = programTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void newData() {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-
         try {
             programService.newData();
         } catch (final ServiceOperationException ex) {
@@ -138,16 +100,11 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or conversion service isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public List<ProgramTO> getPrograms() {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-
         try {
             final List<ProgramTO> programs = new ArrayList<>();
             for (final Program program : programService.getPrograms()) {
@@ -163,16 +120,12 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public ProgramTO getProgram(final Integer id) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -185,9 +138,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for program isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -195,9 +145,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void add(final ProgramTO program) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_FIELD);
         programTOValidator.validateNewProgramTO(program);
 
         try {
@@ -216,9 +163,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for program isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -228,9 +172,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void update(final ProgramTO program) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_FIELD);
         programTOValidator.validateExistingProgramTO(program);
         try {
             final Program programEntity = conversionService.convert(program, Program.class);
@@ -245,8 +186,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or validator for TO for program isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -256,8 +195,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void remove(final ProgramTO program) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_FIELD);
         programTOValidator.validateProgramTOWithId(program);
         try {
             final Program programEntity = programService.getProgram(program.getId());
@@ -272,8 +209,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or validator for TO for program isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -283,8 +218,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void duplicate(final ProgramTO program) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_FIELD);
         programTOValidator.validateProgramTOWithId(program);
         try {
             final Program oldProgram = programService.getProgram(program.getId());
@@ -299,8 +232,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or validator for TO for program isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -310,8 +241,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void moveUp(final ProgramTO program) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_FIELD);
         programTOValidator.validateProgramTOWithId(program);
         try {
             final Program programEntity = programService.getProgram(program.getId());
@@ -328,8 +257,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or validator for TO for program isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -339,8 +266,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void moveDown(final ProgramTO program) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_FIELD);
         programTOValidator.validateProgramTOWithId(program);
         try {
             final Program programEntity = programService.getProgram(program.getId());
@@ -357,9 +282,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for program isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -368,9 +290,6 @@ public class ProgramFacadeImpl implements ProgramFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final ProgramTO program) {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_FIELD);
         programTOValidator.validateProgramTOWithId(program);
         try {
 
@@ -383,13 +302,10 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     public void updatePositions() {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-
         try {
             programService.updatePositions();
         } catch (final ServiceOperationException ex) {
@@ -400,14 +316,11 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for programs isn't set
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public int getTotalMediaCount() {
-        Validators.validateFieldNotNull(programService, PROGRAM_SERVICE_FIELD);
-
         try {
             return programService.getTotalMediaCount();
         } catch (final ServiceOperationException ex) {

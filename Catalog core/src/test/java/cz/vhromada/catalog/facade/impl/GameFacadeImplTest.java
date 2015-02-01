@@ -29,9 +29,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -59,8 +59,31 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
     private GameTOValidator gameTOValidator;
 
     /** Instance of {@link GameFacade} */
-    @InjectMocks
-    private GameFacade gameFacade = new GameFacadeImpl();
+    private GameFacade gameFacade;
+
+    /** Initializes facade for games. */
+    @Before
+    public void setUp() {
+        gameFacade = new GameFacadeImpl(gameService, conversionService, gameTOValidator);
+    }
+
+    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, ConversionService, GameTOValidator)} with null service for games. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGameService() {
+        new GameFacadeImpl(null, conversionService, gameTOValidator);
+    }
+
+    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, ConversionService, GameTOValidator)} with null conversion service. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new GameFacadeImpl(gameService, null, gameTOValidator);
+    }
+
+    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, ConversionService, GameTOValidator)} with null validator for TO for game. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGameTOValidator() {
+        new GameFacadeImpl(gameService, conversionService, null);
+    }
 
     /** Test method for {@link GameFacade#newData()}. */
     @Test
@@ -69,13 +92,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameService).newData();
         verifyNoMoreInteractions(gameService);
-    }
-
-    /** Test method for {@link GameFacade#newData()} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.newData();
     }
 
     /** Test method for {@link GameFacade#newData()} with exception in service tier. */
@@ -112,20 +128,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
             verify(conversionService).convert(game, GameTO.class);
         }
         verifyNoMoreInteractions(gameService, conversionService);
-    }
-
-    /** Test method for {@link GameFacade#getGames()} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGamesWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.getGames();
-    }
-
-    /** Test method for {@link GameFacade#getGames()} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGamesWithNotSetConversionService() {
-        ((GameFacadeImpl) gameFacade).setConversionService(null);
-        gameFacade.getGames();
     }
 
     /** Test method for {@link GameFacade#getGames()} with exception in service tier. */
@@ -171,20 +173,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verify(gameService).getGame(Integer.MAX_VALUE);
         verify(conversionService).convert(null, GameTO.class);
         verifyNoMoreInteractions(gameService, conversionService);
-    }
-
-    /** Test method for {@link GameFacade#getGame(Integer)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGameWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.getGame(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link GameFacade#getGame(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGameWithNotSetConversionService() {
-        ((GameFacadeImpl) gameFacade).setConversionService(null);
-        gameFacade.getGame(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link GameFacade#getGame(Integer)} with null argument. */
@@ -237,27 +225,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(gameTO, Game.class);
         verify(gameTOValidator).validateNewGameTO(gameTO);
         verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
-    }
-
-    /** Test method for {@link GameFacade#add(GameTO)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.add(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#add(GameTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((GameFacadeImpl) gameFacade).setConversionService(null);
-        gameFacade.add(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#add(GameTO)} with not set validator for TO for game. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGameTOValidator() {
-        ((GameFacadeImpl) gameFacade).setGameTOValidator(null);
-        gameFacade.add(mock(GameTO.class));
     }
 
     /** Test method for {@link GameFacade#add(GameTO)} with null argument. */
@@ -358,27 +325,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.update(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#update(GameTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((GameFacadeImpl) gameFacade).setConversionService(null);
-        gameFacade.update(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#update(GameTO)} with not set validator for TO for game. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGameTOValidator() {
-        ((GameFacadeImpl) gameFacade).setGameTOValidator(null);
-        gameFacade.update(mock(GameTO.class));
-    }
-
     /** Test method for {@link GameFacade#update(GameTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -471,20 +417,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.remove(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#remove(GameTO)} with not set validator for TO for game. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGameTOValidator() {
-        ((GameFacadeImpl) gameFacade).setGameTOValidator(null);
-        gameFacade.remove(mock(GameTO.class));
-    }
-
     /** Test method for {@link GameFacade#remove(GameTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -569,20 +501,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verify(gameService).duplicate(game);
         verify(gameTOValidator).validateGameTOWithId(gameTO);
         verifyNoMoreInteractions(gameService, gameTOValidator);
-    }
-
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.duplicate(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with not set validator for TO for game. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetGameTOValidator() {
-        ((GameFacadeImpl) gameFacade).setGameTOValidator(null);
-        gameFacade.duplicate(mock(GameTO.class));
     }
 
     /** Test method for {@link GameFacade#duplicate(GameTO)} with null argument. */
@@ -672,20 +590,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verify(gameService).moveUp(game);
         verify(gameTOValidator).validateGameTOWithId(gameTO);
         verifyNoMoreInteractions(gameService, gameTOValidator);
-    }
-
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.moveUp(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with not set validator for TO for game. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetGameTOValidator() {
-        ((GameFacadeImpl) gameFacade).setGameTOValidator(null);
-        gameFacade.moveUp(mock(GameTO.class));
     }
 
     /** Test method for {@link GameFacade#moveUp(GameTO)} with null argument. */
@@ -797,20 +701,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verify(gameService).moveDown(game);
         verify(gameTOValidator).validateGameTOWithId(gameTO);
         verifyNoMoreInteractions(gameService, gameTOValidator);
-    }
-
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.moveDown(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with not set validator for TO for game. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetGameTOValidator() {
-        ((GameFacadeImpl) gameFacade).setGameTOValidator(null);
-        gameFacade.moveDown(mock(GameTO.class));
     }
 
     /** Test method for {@link GameFacade#moveDown(GameTO)} with null argument. */
@@ -938,27 +828,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.exists(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#exists(GameTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((GameFacadeImpl) gameFacade).setConversionService(null);
-        gameFacade.exists(mock(GameTO.class));
-    }
-
-    /** Test method for {@link GameFacade#exists(GameTO)} with not set validator for TO for game. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGameTOValidator() {
-        ((GameFacadeImpl) gameFacade).setGameTOValidator(null);
-        gameFacade.exists(mock(GameTO.class));
-    }
-
     /** Test method for {@link GameFacade#exists(GameTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1024,13 +893,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#updatePositions()} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.updatePositions();
-    }
-
     /** Test method for {@link GameFacade#updatePositions()} with exception in service tier. */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
@@ -1057,13 +919,6 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameService).getTotalMediaCount();
         verifyNoMoreInteractions(gameService);
-    }
-
-    /** Test method for {@link GameFacade#getTotalMediaCount()} with not set service for games. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetGameService() {
-        ((GameFacadeImpl) gameFacade).setGameService(null);
-        gameFacade.getTotalMediaCount();
     }
 
     /** Test method for {@link GameFacade#getTotalMediaCount()} with exception in service tier. */

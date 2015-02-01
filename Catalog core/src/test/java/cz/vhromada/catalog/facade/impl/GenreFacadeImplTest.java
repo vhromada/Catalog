@@ -10,7 +10,6 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -30,9 +29,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -64,8 +63,31 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
     private List<String> genreNames;
 
     /** Instance of {@link GenreFacade} */
-    @InjectMocks
-    private GenreFacade genreFacade = new GenreFacadeImpl();
+    private GenreFacade genreFacade;
+
+    /** Initializes facade for genres. */
+    @Before
+    public void setUp() {
+        genreFacade = new GenreFacadeImpl(genreService, conversionService, genreTOValidator);
+    }
+
+    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, ConversionService, GenreTOValidator)} with null service for genres. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreService() {
+        new GenreFacadeImpl(null, conversionService, genreTOValidator);
+    }
+
+    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, ConversionService, GenreTOValidator)} with null conversion service. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new GenreFacadeImpl(genreService, null, genreTOValidator);
+    }
+
+    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, ConversionService, GenreTOValidator)} with null validator for TO for genre. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullGenreTOValidator() {
+        new GenreFacadeImpl(genreService, conversionService, null);
+    }
 
     /** Test method for {@link GenreFacade#newData()}. */
     @Test
@@ -74,13 +96,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreService).newData();
         verifyNoMoreInteractions(genreService);
-    }
-
-    /** Test method for {@link GenreFacade#newData()} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.newData();
     }
 
     /** Test method for {@link GenreFacade#newData()} with exception in service tier. */
@@ -117,20 +132,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
             verify(conversionService).convert(genre, GenreTO.class);
         }
         verifyNoMoreInteractions(genreService, conversionService);
-    }
-
-    /** Test method for {@link GenreFacade#getGenres()} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenresWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.getGenres();
-    }
-
-    /** Test method for {@link GenreFacade#getGenres()} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenresWithNotSetConversionService() {
-        ((GenreFacadeImpl) genreFacade).setConversionService(null);
-        genreFacade.getGenres();
     }
 
     /** Test method for {@link GenreFacade#getGenres()} with exception in service tier. */
@@ -176,20 +177,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verify(genreService).getGenre(Integer.MAX_VALUE);
         verify(conversionService).convert(null, GenreTO.class);
         verifyNoMoreInteractions(genreService, conversionService);
-    }
-
-    /** Test method for {@link GenreFacade#getGenre(Integer)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenreWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.getGenre(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link GenreFacade#getGenre(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetGenreWithNotSetConversionService() {
-        ((GenreFacadeImpl) genreFacade).setConversionService(null);
-        genreFacade.getGenre(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link GenreFacade#getGenre(Integer)} with null argument. */
@@ -240,27 +227,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateNewGenreTO(genreTO);
         verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
-    }
-
-    /** Test method for {@link GenreFacade#add(GenreTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.add(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#add(GenreTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((GenreFacadeImpl) genreFacade).setConversionService(null);
-        genreFacade.add(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#add(GenreTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetGenreTOValidator() {
-        ((GenreFacadeImpl) genreFacade).setGenreTOValidator(null);
-        genreFacade.add(mock(GenreTO.class));
     }
 
     /** Test method for {@link GenreFacade#add(GenreTO)} with null argument. */
@@ -355,13 +321,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#add(List)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddListWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.add(genreNames);
-    }
-
     /** Test method for {@link GenreFacade#add(List)} with null argument. */
     @Test
     public void testAddListWithNullArgument() {
@@ -420,27 +379,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateExistingGenreTO(genreTO);
         verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
-    }
-
-    /** Test method for {@link GenreFacade#update(GenreTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.update(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#update(GenreTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((GenreFacadeImpl) genreFacade).setConversionService(null);
-        genreFacade.update(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#update(GenreTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetGenreTOValidator() {
-        ((GenreFacadeImpl) genreFacade).setGenreTOValidator(null);
-        genreFacade.update(mock(GenreTO.class));
     }
 
     /** Test method for {@link GenreFacade#update(GenreTO)} with null argument. */
@@ -535,20 +473,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#remove(GenreTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.remove(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#remove(GenreTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetGenreTOValidator() {
-        ((GenreFacadeImpl) genreFacade).setGenreTOValidator(null);
-        genreFacade.remove(mock(GenreTO.class));
-    }
-
     /** Test method for {@link GenreFacade#remove(GenreTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -633,20 +557,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verify(genreService).add(any(Genre.class));
         verify(genreTOValidator).validateGenreTOWithId(genreTO);
         verifyNoMoreInteractions(genreService, genreTOValidator);
-    }
-
-    /** Test method for {@link GenreFacade#duplicate(GenreTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.duplicate(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#duplicate(GenreTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetGenreTOValidator() {
-        ((GenreFacadeImpl) genreFacade).setGenreTOValidator(null);
-        genreFacade.duplicate(mock(GenreTO.class));
     }
 
     /** Test method for {@link GenreFacade#duplicate(GenreTO)} with null argument. */
@@ -750,27 +660,6 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateGenreTOWithId(genreTO);
         verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
-    }
-
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with not set service for genres. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGenreService() {
-        ((GenreFacadeImpl) genreFacade).setGenreService(null);
-        genreFacade.exists(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((GenreFacadeImpl) genreFacade).setConversionService(null);
-        genreFacade.exists(mock(GenreTO.class));
-    }
-
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with not set validator for TO for genre. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetGenreTOValidator() {
-        ((GenreFacadeImpl) genreFacade).setGenreTOValidator(null);
-        genreFacade.exists(mock(GenreTO.class));
     }
 
     /** Test method for {@link GenreFacade#exists(GenreTO)} with null argument. */

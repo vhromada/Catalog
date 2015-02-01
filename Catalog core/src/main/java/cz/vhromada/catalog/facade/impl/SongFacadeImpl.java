@@ -32,19 +32,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class SongFacadeImpl implements SongFacade {
 
     /** Service for music field */
-    private static final String MUSIC_SERVICE_FIELD = "Service for music";
+    private static final String MUSIC_SERVICE_ARGUMENT = "Service for music";
 
     /** Service for songs field */
-    private static final String SONG_SERVICE_FIELD = "Service for songs";
+    private static final String SONG_SERVICE_ARGUMENT = "Service for songs";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for music field */
-    private static final String MUSIC_TO_VALIDATOR_FIELD = "Validator for TO for music";
+    private static final String MUSIC_TO_VALIDATOR_ARGUMENT = "Validator for TO for music";
 
     /** Validator for TO for song field */
-    private static final String SONG_TO_VALIDATOR_FIELD = "Validator for TO for song";
+    private static final String SONG_TO_VALIDATOR_ARGUMENT = "Validator for TO for song";
 
     /** Song argument */
     private static final String SONG_ARGUMENT = "song";
@@ -65,129 +65,62 @@ public class SongFacadeImpl implements SongFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /** Service for music */
-    @Autowired
     private MusicService musicService;
 
     /** Service for songs */
-    @Autowired
     private SongService songService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for music */
-    @Autowired
     private MusicTOValidator musicTOValidator;
 
     /** Validator for TO for song */
-    @Autowired
     private SongTOValidator songTOValidator;
 
     /**
-     * Returns service for music.
+     * Creates a new instance of SongFacadeImpl.
      *
-     * @return service for music
+     * @param musicService service for music
+     * @param songService service for songs
+     * @param conversionService conversion service
+     * @param musicTOValidator validator for TO for music
+     * @param songTOValidator validator for TO for song
+     * @throws IllegalArgumentException if service for music is null
+     *                                  or service for songs is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for music is null
+     *                                  or validator for TO for song is null
      */
-    public MusicService getMusicService() {
-        return musicService;
-    }
+    @Autowired
+    public SongFacadeImpl(final MusicService musicService,
+            final SongService songService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final MusicTOValidator musicTOValidator,
+            final SongTOValidator songTOValidator) {
+        Validators.validateArgumentNotNull(musicService, MUSIC_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(songService, SONG_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(musicTOValidator, MUSIC_TO_VALIDATOR_ARGUMENT);
+        Validators.validateArgumentNotNull(songTOValidator, SONG_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for music.
-     *
-     * @param musicService new value
-     */
-    public void setMusicService(final MusicService musicService) {
         this.musicService = musicService;
-    }
-
-    /**
-     * Returns service for songs.
-     *
-     * @return service for songs
-     */
-    public SongService getSongService() {
-        return songService;
-    }
-
-    /**
-     * Sets a new value to service for songs.
-     *
-     * @param songService new value
-     */
-    public void setSongService(final SongService songService) {
         this.songService = songService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for music.
-     *
-     * @return validator for TO for music
-     */
-    public MusicTOValidator getMusicTOValidator() {
-        return musicTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for music.
-     *
-     * @param musicTOValidator new value
-     */
-    public void setMusicTOValidator(final MusicTOValidator musicTOValidator) {
         this.musicTOValidator = musicTOValidator;
-    }
-
-    /**
-     * Returns validator for TO for song.
-     *
-     * @return validator for TO for song
-     */
-    public SongTOValidator getSongTOValidator() {
-        return songTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for song.
-     *
-     * @param songTOValidator new value
-     */
-    public void setSongTOValidator(final SongTOValidator songTOValidator) {
         this.songTOValidator = songTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for songs isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public SongTO getSong(final Integer id) {
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -200,10 +133,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for music isn't set
-     *                                  or service for songs isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for song isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -213,10 +142,6 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void add(final SongTO song) {
-        Validators.validateFieldNotNull(musicService, MUSIC_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songTOValidator, SONG_TO_VALIDATOR_FIELD);
         songTOValidator.validateNewSongTO(song);
         try {
             final Music music = musicService.getMusic(song.getMusic().getId());
@@ -238,10 +163,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for music isn't set
-     *                                  or service for songs isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for song isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -251,10 +172,6 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void update(final SongTO song) {
-        Validators.validateFieldNotNull(musicService, MUSIC_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songTOValidator, SONG_TO_VALIDATOR_FIELD);
         songTOValidator.validateExistingSongTO(song);
         try {
             final Song songEntity = conversionService.convert(song, Song.class);
@@ -272,8 +189,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for songs isn't set
-     *                                  or validator for TO for song isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -283,8 +198,6 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void remove(final SongTO song) {
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songTOValidator, SONG_TO_VALIDATOR_FIELD);
         songTOValidator.validateSongTOWithId(song);
         try {
             final Song songEntity = songService.getSong(song.getId());
@@ -299,8 +212,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for songs isn't set
-     *                                  or validator for TO for song isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -310,8 +221,6 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void duplicate(final SongTO song) {
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songTOValidator, SONG_TO_VALIDATOR_FIELD);
         songTOValidator.validateSongTOWithId(song);
         try {
             final Song oldSong = songService.getSong(song.getId());
@@ -326,8 +235,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for songs isn't set
-     *                                  or validator for TO for song isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -337,8 +244,6 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void moveUp(final SongTO song) {
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songTOValidator, SONG_TO_VALIDATOR_FIELD);
         songTOValidator.validateSongTOWithId(song);
         try {
             final Song songEntity = songService.getSong(song.getId());
@@ -355,8 +260,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for songs isn't set
-     *                                  or validator for TO for song isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -366,8 +269,6 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void moveDown(final SongTO song) {
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songTOValidator, SONG_TO_VALIDATOR_FIELD);
         songTOValidator.validateSongTOWithId(song);
         try {
             final Song songEntity = songService.getSong(song.getId());
@@ -384,9 +285,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for songs isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for song isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -395,9 +293,6 @@ public class SongFacadeImpl implements SongFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final SongTO song) {
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songTOValidator, SONG_TO_VALIDATOR_FIELD);
         songTOValidator.validateSongTOWithId(song);
         try {
 
@@ -410,10 +305,6 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for music isn't set
-     *                                  or service for songs isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for music isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -424,10 +315,6 @@ public class SongFacadeImpl implements SongFacade {
     @Override
     @Transactional(readOnly = true)
     public List<SongTO> findSongsByMusic(final MusicTO music) {
-        Validators.validateFieldNotNull(musicService, MUSIC_SERVICE_FIELD);
-        Validators.validateFieldNotNull(songService, SONG_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(musicTOValidator, MUSIC_TO_VALIDATOR_FIELD);
         musicTOValidator.validateMusicTOWithId(music);
         try {
             final Music musicEntity = musicService.getMusic(music.getId());

@@ -32,19 +32,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class SeasonFacadeImpl implements SeasonFacade {
 
     /** Service for series field */
-    private static final String SERIE_SERVICE_FIELD = "Service for series";
+    private static final String SERIE_SERVICE_ARGUMENT = "Service for series";
 
     /** Service for seasons field */
-    private static final String SEASON_SERVICE_FIELD = "Service for seasons";
+    private static final String SEASON_SERVICE_ARGUMENT = "Service for seasons";
 
     /** Conversion service field */
-    private static final String CONVERSION_SERVICE_FIELD = "Conversion service";
+    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
 
     /** Validator for TO for serie field */
-    private static final String SERIE_TO_VALIDATOR_FIELD = "Validator for TO for serie";
+    private static final String SERIE_TO_VALIDATOR_ARGUMENT = "Validator for TO for serie";
 
     /** Validator for TO for season field */
-    private static final String SEASON_TO_VALIDATOR_FIELD = "Validator for TO for season";
+    private static final String SEASON_TO_VALIDATOR_ARGUMENT = "Validator for TO for season";
 
     /** Season argument */
     private static final String SEASON_ARGUMENT = "season";
@@ -65,129 +65,62 @@ public class SeasonFacadeImpl implements SeasonFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /** Service for series */
-    @Autowired
     private SerieService serieService;
 
     /** Service for seasons */
-    @Autowired
     private SeasonService seasonService;
 
     /** Conversion service */
-    @Autowired
-    @Qualifier("coreConversionService")
     private ConversionService conversionService;
 
     /** Validator for TO for serie */
-    @Autowired
     private SerieTOValidator serieTOValidator;
 
     /** Validator for TO for season */
-    @Autowired
     private SeasonTOValidator seasonTOValidator;
 
     /**
-     * Returns service for series.
+     * Creates a new instance of SeasonFacadeImpl.
      *
-     * @return service for series
+     * @param serieService service for series
+     * @param seasonService service for seasons
+     * @param conversionService conversion service
+     * @param serieTOValidator validator for TO for serie
+     * @param seasonTOValidator validator for TO for season
+     * @throws IllegalArgumentException if service for series is null
+     *                                  or service for seasons is null
+     *                                  or conversion service is null
+     *                                  or validator for TO for serie is null
+     *                                  or validator for TO for season is null
      */
-    public SerieService getSerieService() {
-        return serieService;
-    }
+    @Autowired
+    public SeasonFacadeImpl(final SerieService serieService,
+            final SeasonService seasonService,
+            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final SerieTOValidator serieTOValidator,
+            final SeasonTOValidator seasonTOValidator) {
+        Validators.validateArgumentNotNull(serieService, SERIE_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(seasonService, SEASON_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(serieTOValidator, SERIE_TO_VALIDATOR_ARGUMENT);
+        Validators.validateArgumentNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_ARGUMENT);
 
-    /**
-     * Sets a new value to service for series.
-     *
-     * @param serieService new value
-     */
-    public void setSerieService(final SerieService serieService) {
         this.serieService = serieService;
-    }
-
-    /**
-     * Returns service for seasons.
-     *
-     * @return service for seasons
-     */
-    public SeasonService getSeasonService() {
-        return seasonService;
-    }
-
-    /**
-     * Sets a new value to service for seasons.
-     *
-     * @param seasonService new value
-     */
-    public void setSeasonService(final SeasonService seasonService) {
         this.seasonService = seasonService;
-    }
-
-    /**
-     * Returns conversion service.
-     *
-     * @return conversion service
-     */
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    /**
-     * Sets a new value to conversion service.
-     *
-     * @param conversionService new value
-     */
-    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    /**
-     * Returns validator for TO for serie.
-     *
-     * @return validator for TO for serie
-     */
-    public SerieTOValidator getSerieTOValidator() {
-        return serieTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for serie.
-     *
-     * @param serieTOValidator new value
-     */
-    public void setSerieTOValidator(final SerieTOValidator serieTOValidator) {
         this.serieTOValidator = serieTOValidator;
-    }
-
-    /**
-     * Returns validator for TO for season.
-     *
-     * @return validator for TO for season
-     */
-    public SeasonTOValidator getSeasonTOValidator() {
-        return seasonTOValidator;
-    }
-
-    /**
-     * Sets a new value to validator for TO for season.
-     *
-     * @param seasonTOValidator new value
-     */
-    public void setSeasonTOValidator(final SeasonTOValidator seasonTOValidator) {
         this.seasonTOValidator = seasonTOValidator;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or conversion service isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
     public SeasonTO getSeason(final Integer id) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
@@ -200,10 +133,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for series isn't set
-     *                                  or service for seasons isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -213,10 +142,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void add(final SeasonTO season) {
-        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateNewSeasonTO(season);
         try {
             final Serie serie = serieService.getSerie(season.getSerie().getId());
@@ -238,10 +163,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for series isn't set
-     *                                  or service for seasons isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -251,10 +172,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void update(final SeasonTO season) {
-        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateExistingSeasonTO(season);
         try {
             final Season seasonEntity = conversionService.convert(season, Season.class);
@@ -272,8 +189,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -283,8 +198,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void remove(final SeasonTO season) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateSeasonTOWithId(season);
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());
@@ -299,8 +212,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -310,8 +221,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void duplicate(final SeasonTO season) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateSeasonTOWithId(season);
         try {
             final Season oldSeason = seasonService.getSeason(season.getId());
@@ -326,8 +235,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -337,8 +244,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void moveUp(final SeasonTO season) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateSeasonTOWithId(season);
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());
@@ -355,8 +260,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -366,8 +269,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void moveDown(final SeasonTO season) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateSeasonTOWithId(season);
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());
@@ -384,9 +285,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for seasons isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for season isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -395,9 +293,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Override
     @Transactional(readOnly = true)
     public boolean exists(final SeasonTO season) {
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_FIELD);
         seasonTOValidator.validateSeasonTOWithId(season);
         try {
 
@@ -410,11 +305,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalStateException    if service for series isn't set
-     *                                  or service for seasons isn't set
-     *                                  or service for episodes isn't set
-     *                                  or conversion service isn't set
-     *                                  or validator for TO for serie isn't set
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException
      *                                  {@inheritDoc}
@@ -425,10 +315,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Override
     @Transactional(readOnly = true)
     public List<SeasonTO> findSeasonsBySerie(final SerieTO serie) {
-        Validators.validateFieldNotNull(serieService, SERIE_SERVICE_FIELD);
-        Validators.validateFieldNotNull(seasonService, SEASON_SERVICE_FIELD);
-        Validators.validateFieldNotNull(conversionService, CONVERSION_SERVICE_FIELD);
-        Validators.validateFieldNotNull(serieTOValidator, SERIE_TO_VALIDATOR_FIELD);
         serieTOValidator.validateSerieTOWithId(serie);
         try {
             final Serie serieEntity = serieService.getSerie(serie.getId());

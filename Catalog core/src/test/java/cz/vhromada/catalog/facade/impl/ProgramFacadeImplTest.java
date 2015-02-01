@@ -29,9 +29,9 @@ import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -59,8 +59,34 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
     private ProgramTOValidator programTOValidator;
 
     /** Instance of {@link ProgramFacade} */
-    @InjectMocks
-    private ProgramFacade programFacade = new ProgramFacadeImpl();
+    private ProgramFacade programFacade;
+
+    /** Initializes facade for programs. */
+    @Before
+    public void setUp() {
+        programFacade = new ProgramFacadeImpl(programService, conversionService, programTOValidator);
+    }
+
+    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, ConversionService, ProgramTOValidator)} with null service for programs. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullProgramService() {
+        new ProgramFacadeImpl(null, conversionService, programTOValidator);
+    }
+
+    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, ConversionService, ProgramTOValidator)} with null conversion service. */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullConversionService() {
+        new ProgramFacadeImpl(programService, null, programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, ConversionService, ProgramTOValidator)} with null validator for
+     * TO for program.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithNullProgramTOValidator() {
+        new ProgramFacadeImpl(programService, conversionService, null);
+    }
 
     /** Test method for {@link ProgramFacade#newData()}. */
     @Test
@@ -69,13 +95,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programService).newData();
         verifyNoMoreInteractions(programService);
-    }
-
-    /** Test method for {@link ProgramFacade#newData()} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testNewDataWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.newData();
     }
 
     /** Test method for {@link ProgramFacade#newData()} with exception in service tier. */
@@ -112,20 +131,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
             verify(conversionService).convert(program, ProgramTO.class);
         }
         verifyNoMoreInteractions(programService, conversionService);
-    }
-
-    /** Test method for {@link ProgramFacade#getPrograms()} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramsWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.getPrograms();
-    }
-
-    /** Test method for {@link ProgramFacade#getPrograms()} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramsWithNotSetConversionService() {
-        ((ProgramFacadeImpl) programFacade).setConversionService(null);
-        programFacade.getPrograms();
     }
 
     /** Test method for {@link ProgramFacade#getPrograms()} with exception in service tier. */
@@ -171,20 +176,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verify(programService).getProgram(Integer.MAX_VALUE);
         verify(conversionService).convert(null, ProgramTO.class);
         verifyNoMoreInteractions(programService, conversionService);
-    }
-
-    /** Test method for {@link ProgramFacade#getProgram(Integer)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.getProgram(Integer.MAX_VALUE);
-    }
-
-    /** Test method for {@link ProgramFacade#getProgram(Integer)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetProgramWithNotSetConversionService() {
-        ((ProgramFacadeImpl) programFacade).setConversionService(null);
-        programFacade.getProgram(Integer.MAX_VALUE);
     }
 
     /** Test method for {@link ProgramFacade#getProgram(Integer)} with null argument. */
@@ -237,27 +228,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verify(conversionService).convert(programTO, Program.class);
         verify(programTOValidator).validateNewProgramTO(programTO);
         verifyNoMoreInteractions(programService, conversionService, programTOValidator);
-    }
-
-    /** Test method for {@link ProgramFacade#add(ProgramTO)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.add(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#add(ProgramTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetConversionService() {
-        ((ProgramFacadeImpl) programFacade).setConversionService(null);
-        programFacade.add(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#add(ProgramTO)} with not set validator for TO for program. */
-    @Test(expected = IllegalStateException.class)
-    public void testAddWithNotSetProgramTOValidator() {
-        ((ProgramFacadeImpl) programFacade).setProgramTOValidator(null);
-        programFacade.add(mock(ProgramTO.class));
     }
 
     /** Test method for {@link ProgramFacade#add(ProgramTO)} with null argument. */
@@ -358,27 +328,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, conversionService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#update(ProgramTO)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.update(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#update(ProgramTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetConversionService() {
-        ((ProgramFacadeImpl) programFacade).setConversionService(null);
-        programFacade.update(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#update(ProgramTO)} with not set validator for TO for program. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateWithNotSetProgramTOValidator() {
-        ((ProgramFacadeImpl) programFacade).setProgramTOValidator(null);
-        programFacade.update(mock(ProgramTO.class));
-    }
-
     /** Test method for {@link ProgramFacade#update(ProgramTO)} with null argument. */
     @Test
     public void testUpdateWithNullArgument() {
@@ -471,20 +420,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#remove(ProgramTO)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.remove(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#remove(ProgramTO)} with not set validator for TO for program. */
-    @Test(expected = IllegalStateException.class)
-    public void testRemoveWithNotSetProgramTOValidator() {
-        ((ProgramFacadeImpl) programFacade).setProgramTOValidator(null);
-        programFacade.remove(mock(ProgramTO.class));
-    }
-
     /** Test method for {@link ProgramFacade#remove(ProgramTO)} with null argument. */
     @Test
     public void testRemoveWithNullArgument() {
@@ -569,20 +504,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verify(programService).duplicate(program);
         verify(programTOValidator).validateProgramTOWithId(programTO);
         verifyNoMoreInteractions(programService, programTOValidator);
-    }
-
-    /** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.duplicate(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with not set validator for TO for program. */
-    @Test(expected = IllegalStateException.class)
-    public void testDuplicateWithNotSetProgramTOValidator() {
-        ((ProgramFacadeImpl) programFacade).setProgramTOValidator(null);
-        programFacade.duplicate(mock(ProgramTO.class));
     }
 
     /** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with null argument. */
@@ -672,20 +593,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verify(programService).moveUp(program);
         verify(programTOValidator).validateProgramTOWithId(programTO);
         verifyNoMoreInteractions(programService, programTOValidator);
-    }
-
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.moveUp(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not set validator for TO for program. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveUpWithNotSetProgramTOValidator() {
-        ((ProgramFacadeImpl) programFacade).setProgramTOValidator(null);
-        programFacade.moveUp(mock(ProgramTO.class));
     }
 
     /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with null argument. */
@@ -797,20 +704,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verify(programService).moveDown(program);
         verify(programTOValidator).validateProgramTOWithId(programTO);
         verifyNoMoreInteractions(programService, programTOValidator);
-    }
-
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.moveDown(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not set validator for TO for program. */
-    @Test(expected = IllegalStateException.class)
-    public void testMoveDownWithNotSetProgramTOValidator() {
-        ((ProgramFacadeImpl) programFacade).setProgramTOValidator(null);
-        programFacade.moveDown(mock(ProgramTO.class));
     }
 
     /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with null argument. */
@@ -938,27 +831,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, conversionService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.exists(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with not set conversion service. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetConversionService() {
-        ((ProgramFacadeImpl) programFacade).setConversionService(null);
-        programFacade.exists(mock(ProgramTO.class));
-    }
-
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with not set validator for TO for program. */
-    @Test(expected = IllegalStateException.class)
-    public void testExistsWithNotSetProgramTOValidator() {
-        ((ProgramFacadeImpl) programFacade).setProgramTOValidator(null);
-        programFacade.exists(mock(ProgramTO.class));
-    }
-
     /** Test method for {@link ProgramFacade#exists(ProgramTO)} with null argument. */
     @Test
     public void testExistsWithNullArgument() {
@@ -1024,13 +896,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#updatePositions()} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdatePositionsWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.updatePositions();
-    }
-
     /** Test method for {@link ProgramFacade#updatePositions()} with exception in service tier. */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
@@ -1057,13 +922,6 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programService).getTotalMediaCount();
         verifyNoMoreInteractions(programService);
-    }
-
-    /** Test method for {@link ProgramFacade#getTotalMediaCount()} with not set service for programs. */
-    @Test(expected = IllegalStateException.class)
-    public void testGetTotalMediaCountWithNotSetProgramService() {
-        ((ProgramFacadeImpl) programFacade).setProgramService(null);
-        programFacade.getTotalMediaCount();
     }
 
     /** Test method for {@link ProgramFacade#getTotalMediaCount()} with exception in service tier. */

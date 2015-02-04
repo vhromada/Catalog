@@ -26,6 +26,7 @@ import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -36,7 +37,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.springframework.core.convert.ConversionService;
 
 /**
  * A class represents test for class {@link GenreFacadeImpl}.
@@ -50,9 +50,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
     @Mock
     private GenreService genreService;
 
-    /** Instance of {@link ConversionService} */
+    /** Instance of {@link Converter} */
     @Mock
-    private ConversionService conversionService;
+    private Converter converter;
 
     /** Instance of {@link GenreTOValidator} */
     @Mock
@@ -68,25 +68,25 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
     /** Initializes facade for genres. */
     @Before
     public void setUp() {
-        genreFacade = new GenreFacadeImpl(genreService, conversionService, genreTOValidator);
+        genreFacade = new GenreFacadeImpl(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, ConversionService, GenreTOValidator)} with null service for genres. */
+    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null service for genres. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreService() {
-        new GenreFacadeImpl(null, conversionService, genreTOValidator);
+        new GenreFacadeImpl(null, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, ConversionService, GenreTOValidator)} with null conversion service. */
+    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null converter. */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullConversionService() {
+    public void testConstructorWithNullConverter() {
         new GenreFacadeImpl(genreService, null, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, ConversionService, GenreTOValidator)} with null validator for TO for genre. */
+    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null validator for TO for genre. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreTOValidator() {
-        new GenreFacadeImpl(genreService, conversionService, null);
+        new GenreFacadeImpl(genreService, converter, null);
     }
 
     /** Test method for {@link GenreFacade#newData()}. */
@@ -120,18 +120,13 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final List<Genre> genres = CollectionUtils.newList(generate(Genre.class), generate(Genre.class));
         final List<GenreTO> genresList = CollectionUtils.newList(generate(GenreTO.class), generate(GenreTO.class));
         when(genreService.getGenres()).thenReturn(genres);
-        for (int i = 0; i < genres.size(); i++) {
-            final Genre genre = genres.get(i);
-            when(conversionService.convert(genre, GenreTO.class)).thenReturn(genresList.get(i));
-        }
+        when(converter.convertCollection(genres, GenreTO.class)).thenReturn(genresList);
 
         DeepAsserts.assertEquals(genresList, genreFacade.getGenres());
 
         verify(genreService).getGenres();
-        for (final Genre genre : genres) {
-            verify(conversionService).convert(genre, GenreTO.class);
-        }
-        verifyNoMoreInteractions(genreService, conversionService);
+        verify(converter).convertCollection(genres, GenreTO.class);
+        verifyNoMoreInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#getGenres()} with exception in service tier. */
@@ -148,7 +143,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreService).getGenres();
         verifyNoMoreInteractions(genreService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link GenreFacade#getGenre(Integer)} with existing genre. */
@@ -157,26 +152,26 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final Genre genre = generate(Genre.class);
         final GenreTO genreTO = generate(GenreTO.class);
         when(genreService.getGenre(anyInt())).thenReturn(genre);
-        when(conversionService.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(genreTO);
+        when(converter.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(genreTO);
 
         DeepAsserts.assertEquals(genreTO, genreFacade.getGenre(genreTO.getId()));
 
         verify(genreService).getGenre(genreTO.getId());
-        verify(conversionService).convert(genre, GenreTO.class);
-        verifyNoMoreInteractions(genreService, conversionService);
+        verify(converter).convert(genre, GenreTO.class);
+        verifyNoMoreInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#getGenre(Integer)} with not existing genre. */
     @Test
     public void testGetGenreWithNotExistingGenre() {
         when(genreService.getGenre(anyInt())).thenReturn(null);
-        when(conversionService.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(null);
+        when(converter.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(null);
 
         assertNull(genreFacade.getGenre(Integer.MAX_VALUE));
 
         verify(genreService).getGenre(Integer.MAX_VALUE);
-        verify(conversionService).convert(null, GenreTO.class);
-        verifyNoMoreInteractions(genreService, conversionService);
+        verify(converter).convert(null, GenreTO.class);
+        verifyNoMoreInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#getGenre(Integer)} with null argument. */
@@ -189,7 +184,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(genreService, conversionService);
+        verifyZeroInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#getGenre(Integer)} with exception in service tier. */
@@ -206,7 +201,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreService).getGenre(Integer.MAX_VALUE);
         verifyNoMoreInteractions(genreService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link GenreFacade#add(GenreTO)}. */
@@ -218,15 +213,15 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         genreTO.setId(null);
         final int id = generate(Integer.class);
         doAnswer(setGenreId(id)).when(genreService).add(any(Genre.class));
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         genreFacade.add(genreTO);
         DeepAsserts.assertEquals(id, genre.getId());
 
         verify(genreService).add(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateNewGenreTO(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#add(GenreTO)} with null argument. */
@@ -243,7 +238,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreTOValidator).validateNewGenreTO(null);
         verifyNoMoreInteractions(genreTOValidator);
-        verifyZeroInteractions(genreService, conversionService);
+        verifyZeroInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#add(GenreTO)} with argument with bad data. */
@@ -262,7 +257,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreTOValidator).validateNewGenreTO(genre);
         verifyNoMoreInteractions(genreTOValidator);
-        verifyZeroInteractions(genreService, conversionService);
+        verifyZeroInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#add(GenreTO)} with service tier not setting ID. */
@@ -272,7 +267,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         genre.setId(null);
         final GenreTO genreTO = generate(GenreTO.class);
         genreTO.setId(null);
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         try {
             genreFacade.add(genreTO);
@@ -282,9 +277,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(genreService).add(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateNewGenreTO(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#add(GenreTO)} with exception in service tier. */
@@ -295,7 +290,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final GenreTO genreTO = generate(GenreTO.class);
         genreTO.setId(null);
         doThrow(ServiceOperationException.class).when(genreService).add(any(Genre.class));
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         try {
             genreFacade.add(genreTO);
@@ -305,9 +300,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(genreService).add(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateNewGenreTO(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#add(List)}. */
@@ -370,15 +365,15 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final Genre genre = generate(Genre.class);
         final GenreTO genreTO = generate(GenreTO.class);
         when(genreService.exists(any(Genre.class))).thenReturn(true);
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         genreFacade.update(genreTO);
 
         verify(genreService).exists(genre);
         verify(genreService).update(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateExistingGenreTO(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#update(GenreTO)} with null argument. */
@@ -395,7 +390,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreTOValidator).validateExistingGenreTO(null);
         verifyNoMoreInteractions(genreTOValidator);
-        verifyZeroInteractions(genreService, conversionService);
+        verifyZeroInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#update(GenreTO)} with argument with bad data. */
@@ -413,7 +408,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreTOValidator).validateExistingGenreTO(genre);
         verifyNoMoreInteractions(genreTOValidator);
-        verifyZeroInteractions(genreService, conversionService);
+        verifyZeroInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#update(GenreTO)} with not existing argument. */
@@ -422,7 +417,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final Genre genre = generate(Genre.class);
         final GenreTO genreTO = generate(GenreTO.class);
         when(genreService.exists(any(Genre.class))).thenReturn(false);
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         try {
             genreFacade.update(genreTO);
@@ -432,9 +427,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(genreService).exists(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateExistingGenreTO(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#update(GenreTO)} with exception in service tier. */
@@ -443,7 +438,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final Genre genre = generate(Genre.class);
         final GenreTO genreTO = generate(GenreTO.class);
         doThrow(ServiceOperationException.class).when(genreService).exists(any(Genre.class));
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         try {
             genreFacade.update(genreTO);
@@ -453,9 +448,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(genreService).exists(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateExistingGenreTO(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#remove(GenreTO)}. */
@@ -636,14 +631,14 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final Genre genre = generate(Genre.class);
         final GenreTO genreTO = generate(GenreTO.class);
         when(genreService.exists(any(Genre.class))).thenReturn(true);
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         assertTrue(genreFacade.exists(genreTO));
 
         verify(genreService).exists(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateGenreTOWithId(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#exists(GenreTO)} with not existing genre. */
@@ -652,14 +647,14 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final Genre genre = generate(Genre.class);
         final GenreTO genreTO = generate(GenreTO.class);
         when(genreService.exists(any(Genre.class))).thenReturn(false);
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         assertFalse(genreFacade.exists(genreTO));
 
         verify(genreService).exists(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateGenreTOWithId(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /** Test method for {@link GenreFacade#exists(GenreTO)} with null argument. */
@@ -676,7 +671,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreTOValidator).validateGenreTOWithId(null);
         verifyNoMoreInteractions(genreTOValidator);
-        verifyZeroInteractions(genreService, conversionService);
+        verifyZeroInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#exists(GenreTO)} with argument with bad data. */
@@ -694,7 +689,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
         verify(genreTOValidator).validateGenreTOWithId(genre);
         verifyNoMoreInteractions(genreTOValidator);
-        verifyZeroInteractions(genreService, conversionService);
+        verifyZeroInteractions(genreService, converter);
     }
 
     /** Test method for {@link GenreFacade#exists(GenreTO)} with exception in service tier. */
@@ -703,7 +698,7 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         final Genre genre = generate(Genre.class);
         final GenreTO genreTO = generate(GenreTO.class);
         doThrow(ServiceOperationException.class).when(genreService).exists(any(Genre.class));
-        when(conversionService.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genre);
 
         try {
             genreFacade.exists(genreTO);
@@ -713,9 +708,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(genreService).exists(genre);
-        verify(conversionService).convert(genreTO, Genre.class);
+        verify(converter).convert(genreTO, Genre.class);
         verify(genreTOValidator).validateGenreTOWithId(genreTO);
-        verifyNoMoreInteractions(genreService, conversionService, genreTOValidator);
+        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
     /**

@@ -17,6 +17,7 @@
 				<bean class="cz.vhromada.catalog.commons.TimeRule"/>
 			</list>
 		</property>
+        <property name="collectionSize" value="2"/>
 	</bean>
 
 	<bean id="objectGenerator" class="cz.vhromada.generator.ObjectGenerator">

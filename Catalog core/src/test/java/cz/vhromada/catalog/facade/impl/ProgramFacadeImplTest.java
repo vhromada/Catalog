@@ -26,6 +26,7 @@ import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
 import cz.vhromada.catalog.service.ProgramService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -36,7 +37,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.springframework.core.convert.ConversionService;
 
 /**
  * A class represents test for class {@link ProgramFacadeImpl}.
@@ -50,9 +50,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
     @Mock
     private ProgramService programService;
 
-    /** Instance of {@link ConversionService} */
+    /** Instance of {@link Converter} */
     @Mock
-    private ConversionService conversionService;
+    private Converter converter;
 
     /** Instance of {@link ProgramTOValidator} */
     @Mock
@@ -64,28 +64,28 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
     /** Initializes facade for programs. */
     @Before
     public void setUp() {
-        programFacade = new ProgramFacadeImpl(programService, conversionService, programTOValidator);
+        programFacade = new ProgramFacadeImpl(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, ConversionService, ProgramTOValidator)} with null service for programs. */
+    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null service for programs. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramService() {
-        new ProgramFacadeImpl(null, conversionService, programTOValidator);
+        new ProgramFacadeImpl(null, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, ConversionService, ProgramTOValidator)} with null conversion service. */
+    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null converter. */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullConversionService() {
+    public void testConstructorWithNullConverter() {
         new ProgramFacadeImpl(programService, null, programTOValidator);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, ConversionService, ProgramTOValidator)} with null validator for
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null validator for
      * TO for program.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramTOValidator() {
-        new ProgramFacadeImpl(programService, conversionService, null);
+        new ProgramFacadeImpl(programService, converter, null);
     }
 
     /** Test method for {@link ProgramFacade#newData()}. */
@@ -119,18 +119,13 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
         final List<ProgramTO> programsList = CollectionUtils.newList(generate(ProgramTO.class), generate(ProgramTO.class));
         when(programService.getPrograms()).thenReturn(programs);
-        for (int i = 0; i < programs.size(); i++) {
-            final Program program = programs.get(i);
-            when(conversionService.convert(program, ProgramTO.class)).thenReturn(programsList.get(i));
-        }
+        when(converter.convertCollection(programs, ProgramTO.class)).thenReturn(programsList);
 
         DeepAsserts.assertEquals(programsList, programFacade.getPrograms());
 
         verify(programService).getPrograms();
-        for (final Program program : programs) {
-            verify(conversionService).convert(program, ProgramTO.class);
-        }
-        verifyNoMoreInteractions(programService, conversionService);
+        verify(converter).convertCollection(programs, ProgramTO.class);
+        verifyNoMoreInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#getPrograms()} with exception in service tier. */
@@ -147,7 +142,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programService).getPrograms();
         verifyNoMoreInteractions(programService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link ProgramFacade#getProgram(Integer)} with existing program. */
@@ -156,26 +151,26 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final Program program = generate(Program.class);
         final ProgramTO programTO = generate(ProgramTO.class);
         when(programService.getProgram(anyInt())).thenReturn(program);
-        when(conversionService.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(programTO);
+        when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(programTO);
 
         DeepAsserts.assertEquals(programTO, programFacade.getProgram(programTO.getId()));
 
         verify(programService).getProgram(programTO.getId());
-        verify(conversionService).convert(program, ProgramTO.class);
-        verifyNoMoreInteractions(programService, conversionService);
+        verify(converter).convert(program, ProgramTO.class);
+        verifyNoMoreInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#getProgram(Integer)} with not existing program. */
     @Test
     public void testGetProgramWithNotExistingProgram() {
         when(programService.getProgram(anyInt())).thenReturn(null);
-        when(conversionService.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(null);
+        when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(null);
 
         assertNull(programFacade.getProgram(Integer.MAX_VALUE));
 
         verify(programService).getProgram(Integer.MAX_VALUE);
-        verify(conversionService).convert(null, ProgramTO.class);
-        verifyNoMoreInteractions(programService, conversionService);
+        verify(converter).convert(null, ProgramTO.class);
+        verifyNoMoreInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#getProgram(Integer)} with null argument. */
@@ -188,7 +183,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(programService, conversionService);
+        verifyZeroInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#getProgram(Integer)} with exception in service tier. */
@@ -205,7 +200,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programService).getProgram(Integer.MAX_VALUE);
         verifyNoMoreInteractions(programService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link ProgramFacade#add(ProgramTO)}. */
@@ -218,16 +213,16 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final int id = generate(Integer.class);
         final int position = generate(Integer.class);
         doAnswer(setProgramIdAndPosition(id, position)).when(programService).add(any(Program.class));
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         programFacade.add(programTO);
         DeepAsserts.assertEquals(id, program.getId());
         DeepAsserts.assertEquals(position, program.getPosition());
 
         verify(programService).add(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateNewProgramTO(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#add(ProgramTO)} with null argument. */
@@ -244,7 +239,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programTOValidator).validateNewProgramTO(null);
         verifyNoMoreInteractions(programTOValidator);
-        verifyZeroInteractions(programService, conversionService);
+        verifyZeroInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#add(ProgramTO)} with argument with bad data. */
@@ -263,7 +258,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programTOValidator).validateNewProgramTO(program);
         verifyNoMoreInteractions(programTOValidator);
-        verifyZeroInteractions(programService, conversionService);
+        verifyZeroInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#add(ProgramTO)} with service tier not setting ID. */
@@ -273,7 +268,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         program.setId(null);
         final ProgramTO programTO = generate(ProgramTO.class);
         programTO.setId(null);
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         try {
             programFacade.add(programTO);
@@ -283,9 +278,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(programService).add(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateNewProgramTO(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#add(ProgramTO)} with exception in service tier. */
@@ -296,7 +291,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final ProgramTO programTO = generate(ProgramTO.class);
         programTO.setId(null);
         doThrow(ServiceOperationException.class).when(programService).add(any(Program.class));
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         try {
             programFacade.add(programTO);
@@ -306,9 +301,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(programService).add(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateNewProgramTO(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#update(ProgramTO)}. */
@@ -317,15 +312,15 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final Program program = generate(Program.class);
         final ProgramTO programTO = generate(ProgramTO.class);
         when(programService.exists(any(Program.class))).thenReturn(true);
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         programFacade.update(programTO);
 
         verify(programService).exists(program);
         verify(programService).update(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateExistingProgramTO(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#update(ProgramTO)} with null argument. */
@@ -342,7 +337,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programTOValidator).validateExistingProgramTO(null);
         verifyNoMoreInteractions(programTOValidator);
-        verifyZeroInteractions(programService, conversionService);
+        verifyZeroInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#update(ProgramTO)} with argument with bad data. */
@@ -360,7 +355,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programTOValidator).validateExistingProgramTO(program);
         verifyNoMoreInteractions(programTOValidator);
-        verifyZeroInteractions(programService, conversionService);
+        verifyZeroInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#update(ProgramTO)} with not existing argument. */
@@ -369,7 +364,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final Program program = generate(Program.class);
         final ProgramTO programTO = generate(ProgramTO.class);
         when(programService.exists(any(Program.class))).thenReturn(false);
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         try {
             programFacade.update(programTO);
@@ -379,9 +374,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(programService).exists(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateExistingProgramTO(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#update(ProgramTO)} with exception in service tier. */
@@ -390,7 +385,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final Program program = generate(Program.class);
         final ProgramTO programTO = generate(ProgramTO.class);
         doThrow(ServiceOperationException.class).when(programService).exists(any(Program.class));
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         try {
             programFacade.update(programTO);
@@ -400,9 +395,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(programService).exists(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateExistingProgramTO(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#remove(ProgramTO)}. */
@@ -805,14 +800,14 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final Program program = generate(Program.class);
         final ProgramTO programTO = generate(ProgramTO.class);
         when(programService.exists(any(Program.class))).thenReturn(true);
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         assertTrue(programFacade.exists(programTO));
 
         verify(programService).exists(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateProgramTOWithId(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#exists(ProgramTO)} with not existing program. */
@@ -821,14 +816,14 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final Program program = generate(Program.class);
         final ProgramTO programTO = generate(ProgramTO.class);
         when(programService.exists(any(Program.class))).thenReturn(false);
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         assertFalse(programFacade.exists(programTO));
 
         verify(programService).exists(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateProgramTOWithId(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#exists(ProgramTO)} with null argument. */
@@ -845,7 +840,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programTOValidator).validateProgramTOWithId(null);
         verifyNoMoreInteractions(programTOValidator);
-        verifyZeroInteractions(programService, conversionService);
+        verifyZeroInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#exists(ProgramTO)} with argument with bad data. */
@@ -863,7 +858,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
         verify(programTOValidator).validateProgramTOWithId(program);
         verifyNoMoreInteractions(programTOValidator);
-        verifyZeroInteractions(programService, conversionService);
+        verifyZeroInteractions(programService, converter);
     }
 
     /** Test method for {@link ProgramFacade#exists(ProgramTO)} with exception in service tier. */
@@ -872,7 +867,7 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         final Program program = generate(Program.class);
         final ProgramTO programTO = generate(ProgramTO.class);
         doThrow(ServiceOperationException.class).when(programService).exists(any(Program.class));
-        when(conversionService.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
 
         try {
             programFacade.exists(programTO);
@@ -882,9 +877,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(programService).exists(program);
-        verify(conversionService).convert(programTO, Program.class);
+        verify(converter).convert(programTO, Program.class);
         verify(programTOValidator).validateProgramTOWithId(programTO);
-        verifyNoMoreInteractions(programService, conversionService, programTOValidator);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
     /** Test method for {@link ProgramFacade#updatePositions()}. */

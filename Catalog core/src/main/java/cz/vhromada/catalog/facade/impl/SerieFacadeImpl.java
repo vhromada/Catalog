@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,10 +13,9 @@ import cz.vhromada.catalog.facade.validators.SerieTOValidator;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,16 +28,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SerieFacadeImpl implements SerieFacade {
 
-    /** Service for series field */
+    /** Service for series argument */
     private static final String SERIE_SERVICE_ARGUMENT = "Service for series";
 
-    /** Service for genres field */
+    /** Service for genres argument */
     private static final String GENRE_SERVICE_ARGUMENT = "Service for genres";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for serie field */
+    /** Validator for TO for serie argument */
     private static final String SERIE_TO_VALIDATOR_ARGUMENT = "Validator for TO for serie";
 
     /** Serie argument */
@@ -66,8 +64,8 @@ public class SerieFacadeImpl implements SerieFacade {
     /** Service for genres */
     private GenreService genreService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for serie */
     private SerieTOValidator serieTOValidator;
@@ -77,26 +75,26 @@ public class SerieFacadeImpl implements SerieFacade {
      *
      * @param serieService service for series
      * @param genreService service for genres
-     * @param conversionService conversion service
+     * @param converter converter
      * @param serieTOValidator validator for TO for serie
      * @throws IllegalArgumentException if service for series is null
      *                                  or service for genres is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for serie is null
      */
     @Autowired
     public SerieFacadeImpl(final SerieService serieService,
             final GenreService genreService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final SerieTOValidator serieTOValidator) {
         Validators.validateArgumentNotNull(serieService, SERIE_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(serieTOValidator, SERIE_TO_VALIDATOR_ARGUMENT);
 
         this.serieService = serieService;
         this.genreService = genreService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.serieTOValidator = serieTOValidator;
     }
 
@@ -123,10 +121,7 @@ public class SerieFacadeImpl implements SerieFacade {
     @Transactional(readOnly = true)
     public List<SerieTO> getSeries() {
         try {
-            final List<SerieTO> series = new ArrayList<>();
-            for (final Serie serie : serieService.getSeries()) {
-                series.add(conversionService.convert(serie, SerieTO.class));
-            }
+            final List<SerieTO> series = converter.convertCollection(serieService.getSeries(), SerieTO.class);
             Collections.sort(series);
             return series;
         } catch (final ServiceOperationException ex) {
@@ -146,7 +141,7 @@ public class SerieFacadeImpl implements SerieFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(serieService.getSerie(id), SerieTO.class);
+            return converter.convert(serieService.getSerie(id), SerieTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -168,7 +163,7 @@ public class SerieFacadeImpl implements SerieFacade {
                 Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
             }
 
-            final Serie serieEntity = conversionService.convert(serie, Serie.class);
+            final Serie serieEntity = converter.convert(serie, Serie.class);
             serieService.add(serieEntity);
             if (serieEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -194,7 +189,7 @@ public class SerieFacadeImpl implements SerieFacade {
     public void update(final SerieTO serie) {
         serieTOValidator.validateExistingSerieTO(serie);
         try {
-            final Serie serieEntity = conversionService.convert(serie, Serie.class);
+            final Serie serieEntity = converter.convert(serie, Serie.class);
             Validators.validateExists(serieService.exists(serieEntity), SERIE_TO_ARGUMENT);
             for (final GenreTO genre : serie.getGenres()) {
                 Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
@@ -314,7 +309,7 @@ public class SerieFacadeImpl implements SerieFacade {
         serieTOValidator.validateSerieTOWithId(serie);
         try {
 
-            return serieService.exists(conversionService.convert(serie, Serie.class));
+            return serieService.exists(converter.convert(serie, Serie.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }

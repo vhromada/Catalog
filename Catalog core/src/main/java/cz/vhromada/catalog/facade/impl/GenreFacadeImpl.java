@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,10 +10,9 @@ import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GenreFacadeImpl implements GenreFacade {
 
-    /** Service for genres field */
+    /** Service for genres argument */
     private static final String GENRE_SERVICE_ARGUMENT = "Service for genres";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for genre field */
+    /** Validator for TO for genre argument */
     private static final String GENRE_TO_VALIDATOR_ARGUMENT = "Validator for TO for genre";
 
     /** TO for genre argument */
@@ -54,8 +52,8 @@ public class GenreFacadeImpl implements GenreFacade {
     /** Service for genres */
     private GenreService genreService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for genre */
     private GenreTOValidator genreTOValidator;
@@ -64,22 +62,22 @@ public class GenreFacadeImpl implements GenreFacade {
      * Creates a new instance of GenreFacadeImpl.
      *
      * @param genreService service for genres
-     * @param conversionService conversion service
+     * @param converter converter
      * @param genreTOValidator validator for TO for genre
      * @throws IllegalArgumentException if service for genres is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for genre is null
      */
     @Autowired
     public GenreFacadeImpl(final GenreService genreService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final GenreTOValidator genreTOValidator) {
         Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(genreTOValidator, GENRE_TO_VALIDATOR_ARGUMENT);
 
         this.genreService = genreService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.genreTOValidator = genreTOValidator;
     }
 
@@ -106,10 +104,7 @@ public class GenreFacadeImpl implements GenreFacade {
     @Transactional(readOnly = true)
     public List<GenreTO> getGenres() {
         try {
-            final List<GenreTO> genres = new ArrayList<>();
-            for (final Genre genre : genreService.getGenres()) {
-                genres.add(conversionService.convert(genre, GenreTO.class));
-            }
+            final List<GenreTO> genres = converter.convertCollection(genreService.getGenres(), GenreTO.class);
             Collections.sort(genres);
             return genres;
         } catch (final ServiceOperationException ex) {
@@ -129,7 +124,7 @@ public class GenreFacadeImpl implements GenreFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(genreService.getGenre(id), GenreTO.class);
+            return converter.convert(genreService.getGenre(id), GenreTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -148,7 +143,7 @@ public class GenreFacadeImpl implements GenreFacade {
         genreTOValidator.validateNewGenreTO(genre);
 
         try {
-            final Genre genreEntity = conversionService.convert(genre, Genre.class);
+            final Genre genreEntity = converter.convert(genre, Genre.class);
             genreService.add(genreEntity);
             if (genreEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -193,7 +188,7 @@ public class GenreFacadeImpl implements GenreFacade {
     public void update(final GenreTO genre) {
         genreTOValidator.validateExistingGenreTO(genre);
         try {
-            final Genre genreEntity = conversionService.convert(genre, Genre.class);
+            final Genre genreEntity = converter.convert(genre, Genre.class);
             Validators.validateExists(genreService.exists(genreEntity), GENRE_TO_ARGUMENT);
 
             genreService.update(genreEntity);
@@ -262,9 +257,9 @@ public class GenreFacadeImpl implements GenreFacade {
     @Transactional(readOnly = true)
     public boolean exists(final GenreTO genre) {
         genreTOValidator.validateGenreTOWithId(genre);
-        try {
 
-            return genreService.exists(conversionService.convert(genre, Genre.class));
+        try {
+            return genreService.exists(converter.convert(genre, Genre.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }

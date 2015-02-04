@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,10 +10,9 @@ import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.validators.GameTOValidator;
 import cz.vhromada.catalog.service.GameService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameFacadeImpl implements GameFacade {
 
-    /** Service for games field */
+    /** Service for games argument */
     private static final String GAME_SERVICE_ARGUMENT = "Service for games";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for game field */
+    /** Validator for TO for game argument */
     private static final String GAME_TO_VALIDATOR_ARGUMENT = "Validator for TO for game";
 
     /** Game argument */
@@ -54,8 +52,8 @@ public class GameFacadeImpl implements GameFacade {
     /** Service for games */
     private GameService gameService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for game */
     private GameTOValidator gameTOValidator;
@@ -64,22 +62,22 @@ public class GameFacadeImpl implements GameFacade {
      * Creates a new instance of GameFacadeImpl.
      *
      * @param gameService service for games
-     * @param conversionService conversion service
+     * @param converter converter
      * @param gameTOValidator validator for TO for game
      * @throws IllegalArgumentException if service for games is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for game is null
      */
     @Autowired
     public GameFacadeImpl(final GameService gameService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final GameTOValidator gameTOValidator) {
         Validators.validateArgumentNotNull(gameService, GAME_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(gameTOValidator, GAME_TO_VALIDATOR_ARGUMENT);
 
         this.gameService = gameService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.gameTOValidator = gameTOValidator;
     }
 
@@ -106,10 +104,7 @@ public class GameFacadeImpl implements GameFacade {
     @Transactional(readOnly = true)
     public List<GameTO> getGames() {
         try {
-            final List<GameTO> games = new ArrayList<>();
-            for (final Game game : gameService.getGames()) {
-                games.add(conversionService.convert(game, GameTO.class));
-            }
+            final List<GameTO> games = converter.convertCollection(gameService.getGames(), GameTO.class);
             Collections.sort(games);
             return games;
         } catch (final ServiceOperationException ex) {
@@ -129,7 +124,7 @@ public class GameFacadeImpl implements GameFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(gameService.getGame(id), GameTO.class);
+            return converter.convert(gameService.getGame(id), GameTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -148,7 +143,7 @@ public class GameFacadeImpl implements GameFacade {
         gameTOValidator.validateNewGameTO(game);
 
         try {
-            final Game gameEntity = conversionService.convert(game, Game.class);
+            final Game gameEntity = converter.convert(game, Game.class);
             gameService.add(gameEntity);
             if (gameEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -174,7 +169,7 @@ public class GameFacadeImpl implements GameFacade {
     public void update(final GameTO game) {
         gameTOValidator.validateExistingGameTO(game);
         try {
-            final Game gameEntity = conversionService.convert(game, Game.class);
+            final Game gameEntity = converter.convert(game, Game.class);
             Validators.validateExists(gameService.exists(gameEntity), GAME_TO_ARGUMENT);
 
             gameService.update(gameEntity);
@@ -293,7 +288,7 @@ public class GameFacadeImpl implements GameFacade {
         gameTOValidator.validateGameTOWithId(game);
         try {
 
-            return gameService.exists(conversionService.convert(game, Game.class));
+            return gameService.exists(converter.convert(game, Game.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }

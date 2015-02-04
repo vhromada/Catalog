@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,10 +14,9 @@ import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
 import cz.vhromada.catalog.service.EpisodeService;
 import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,14 +29,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EpisodeFacadeImpl implements EpisodeFacade {
 
-    /** Service for seasons field */
+    /** Service for seasons argument */
     private static final String SEASON_SERVICE_ARGUMENT = "Service for seasons";
 
-    /** Service for episodes field */
+    /** Service for episodes argument */
     private static final String EPISODE_SERVICE_ARGUMENT = "Service for episodes";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
     /** Validator for TO for season field */
     private static final String SEASON_TO_VALIDATOR_ARGUMENT = "Validator for TO for season";
@@ -70,8 +68,8 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /** Service for episodes */
     private EpisodeService episodeService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for season */
     private SeasonTOValidator seasonTOValidator;
@@ -84,30 +82,30 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      *
      * @param seasonService service for seasons
      * @param episodeService service for episodes
-     * @param conversionService conversion service
+     * @param converter converter
      * @param seasonTOValidator validator for TO for season
      * @param episodeTOValidator validator for TO for episode
      * @throws IllegalArgumentException if service for seasons is null
      *                                  or service for episodes is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for season is null
      *                                  or validator for TO for episode is null
      */
     @Autowired
     public EpisodeFacadeImpl(final SeasonService seasonService,
             final EpisodeService episodeService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final SeasonTOValidator seasonTOValidator,
             final EpisodeTOValidator episodeTOValidator) {
         Validators.validateArgumentNotNull(seasonService, SEASON_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(episodeService, EPISODE_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_ARGUMENT);
         Validators.validateArgumentNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_ARGUMENT);
 
         this.seasonService = seasonService;
         this.episodeService = episodeService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.seasonTOValidator = seasonTOValidator;
         this.episodeTOValidator = episodeTOValidator;
     }
@@ -124,7 +122,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(episodeService.getEpisode(id), EpisodeTO.class);
+            return converter.convert(episodeService.getEpisode(id), EpisodeTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -147,7 +145,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
             final Season season = seasonService.getSeason(episode.getSeason().getId());
             Validators.validateExists(season, SEASON_TO_ARGUMENT);
 
-            final Episode episodeEntity = conversionService.convert(episode, Episode.class);
+            final Episode episodeEntity = converter.convert(episode, Episode.class);
             episodeEntity.setSeason(season);
             episodeService.add(episodeEntity);
             if (episodeEntity.getId() == null) {
@@ -174,7 +172,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     public void update(final EpisodeTO episode) {
         episodeTOValidator.validateExistingEpisodeTO(episode);
         try {
-            final Episode episodeEntity = conversionService.convert(episode, Episode.class);
+            final Episode episodeEntity = converter.convert(episode, Episode.class);
             Validators.validateExists(episodeService.exists(episodeEntity), EPISODE_TO_ARGUMENT);
             final Season season = seasonService.getSeason(episode.getSeason().getId());
             Validators.validateExists(season, SEASON_TO_ARGUMENT);
@@ -296,7 +294,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
         episodeTOValidator.validateEpisodeTOWithId(episode);
         try {
 
-            return episodeService.exists(conversionService.convert(episode, Episode.class));
+            return episodeService.exists(converter.convert(episode, Episode.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -320,10 +318,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
             final Season seasonEntity = seasonService.getSeason(season.getId());
             Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
 
-            final List<EpisodeTO> episodes = new ArrayList<>();
-            for (final Episode episode : episodeService.findEpisodesBySeason(seasonEntity)) {
-                episodes.add(conversionService.convert(episode, EpisodeTO.class));
-            }
+            final List<EpisodeTO> episodes = converter.convertCollection(episodeService.findEpisodesBySeason(seasonEntity), EpisodeTO.class);
             Collections.sort(episodes);
             return episodes;
         } catch (final ServiceOperationException ex) {

@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,10 +13,9 @@ import cz.vhromada.catalog.facade.validators.MovieTOValidator;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.MovieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,16 +28,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MovieFacadeImpl implements MovieFacade {
 
-    /** Service for movies field */
+    /** Service for movies argument */
     private static final String MOVIE_SERVICE_ARGUMENT = "Service for movies";
 
-    /** Service for genres field */
+    /** Service for genres argument */
     private static final String GENRE_SERVICE_ARGUMENT = "Service for genres";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for movie field */
+    /** Validator for TO for movie argument */
     private static final String MOVIE_TO_VALIDATOR_ARGUMENT = "Validator for TO for movie";
 
     /** Movie argument */
@@ -66,8 +64,8 @@ public class MovieFacadeImpl implements MovieFacade {
     /** Service for genres */
     private GenreService genreService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for movie */
     private MovieTOValidator movieTOValidator;
@@ -77,26 +75,26 @@ public class MovieFacadeImpl implements MovieFacade {
      *
      * @param movieService service for movies
      * @param genreService service for genres
-     * @param conversionService conversion service
+     * @param converter converter
      * @param movieTOValidator validator for TO for movie
      * @throws IllegalArgumentException if service for movies is null
      *                                  or service for genres is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for movie is null
      */
     @Autowired
     public MovieFacadeImpl(final MovieService movieService,
             final GenreService genreService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final MovieTOValidator movieTOValidator) {
         Validators.validateArgumentNotNull(movieService, MOVIE_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(movieTOValidator, MOVIE_TO_VALIDATOR_ARGUMENT);
 
         this.movieService = movieService;
         this.genreService = genreService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.movieTOValidator = movieTOValidator;
     }
 
@@ -123,10 +121,7 @@ public class MovieFacadeImpl implements MovieFacade {
     @Transactional(readOnly = true)
     public List<MovieTO> getMovies() {
         try {
-            final List<MovieTO> movies = new ArrayList<>();
-            for (final Movie movie : movieService.getMovies()) {
-                movies.add(conversionService.convert(movie, MovieTO.class));
-            }
+            final List<MovieTO> movies = converter.convertCollection(movieService.getMovies(), MovieTO.class);
             Collections.sort(movies);
             return movies;
         } catch (final ServiceOperationException ex) {
@@ -146,7 +141,7 @@ public class MovieFacadeImpl implements MovieFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(movieService.getMovie(id), MovieTO.class);
+            return converter.convert(movieService.getMovie(id), MovieTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -168,7 +163,7 @@ public class MovieFacadeImpl implements MovieFacade {
                 Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
             }
 
-            final Movie movieEntity = conversionService.convert(movie, Movie.class);
+            final Movie movieEntity = converter.convert(movie, Movie.class);
             movieService.add(movieEntity);
             if (movieEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -194,7 +189,7 @@ public class MovieFacadeImpl implements MovieFacade {
     public void update(final MovieTO movie) {
         movieTOValidator.validateExistingMovieTO(movie);
         try {
-            final Movie movieEntity = conversionService.convert(movie, Movie.class);
+            final Movie movieEntity = converter.convert(movie, Movie.class);
             Validators.validateExists(movieService.exists(movieEntity), MOVIE_TO_ARGUMENT);
             for (final GenreTO genre : movie.getGenres()) {
                 Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
@@ -316,7 +311,7 @@ public class MovieFacadeImpl implements MovieFacade {
         movieTOValidator.validateMovieTOWithId(movie);
         try {
 
-            return movieService.exists(conversionService.convert(movie, Movie.class));
+            return movieService.exists(converter.convert(movie, Movie.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }

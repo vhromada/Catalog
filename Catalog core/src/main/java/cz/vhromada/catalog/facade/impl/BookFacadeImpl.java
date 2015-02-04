@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,10 +14,9 @@ import cz.vhromada.catalog.facade.validators.BookTOValidator;
 import cz.vhromada.catalog.service.BookCategoryService;
 import cz.vhromada.catalog.service.BookService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,14 +29,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BookFacadeImpl implements BookFacade {
 
-    /** Service for book categories field */
+    /** Service for book categories argument */
     private static final String BOOK_CATEGORY_SERVICE_ARGUMENT = "Service for book categories";
 
-    /** Service for books field */
+    /** Service for books argument */
     private static final String BOOK_SERVICE_ARGUMENT = "Service for books";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
     /** Validator for TO for book category field */
     private static final String BOOK_CATEGORY_TO_VALIDATOR_ARGUMENT = "Validator for TO for book category";
@@ -70,8 +68,8 @@ public class BookFacadeImpl implements BookFacade {
     /** Service for books */
     private BookService bookService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for book category */
     private BookCategoryTOValidator bookCategoryTOValidator;
@@ -84,29 +82,29 @@ public class BookFacadeImpl implements BookFacade {
      *
      * @param bookCategoryService service for book categories
      * @param bookService service for book
-     * @param conversionService conversion service
+     * @param converter converter
      * @param bookCategoryTOValidator validator for TO for book category
      * @param bookTOValidator validator for TO for book
      * @throws IllegalArgumentException if service for book categories is null
      *                                  or service for books is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for book category is null
      */
     @Autowired
     public BookFacadeImpl(final BookCategoryService bookCategoryService,
             final BookService bookService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final BookCategoryTOValidator bookCategoryTOValidator,
             final BookTOValidator bookTOValidator) {
         Validators.validateArgumentNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(bookService, BOOK_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(bookCategoryTOValidator, BOOK_CATEGORY_TO_VALIDATOR_ARGUMENT);
         Validators.validateArgumentNotNull(bookTOValidator, BOOK_TO_VALIDATOR_ARGUMENT);
 
         this.bookCategoryService = bookCategoryService;
         this.bookService = bookService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.bookCategoryTOValidator = bookCategoryTOValidator;
         this.bookTOValidator = bookTOValidator;
     }
@@ -123,7 +121,7 @@ public class BookFacadeImpl implements BookFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(bookService.getBook(id), BookTO.class);
+            return converter.convert(bookService.getBook(id), BookTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -146,7 +144,7 @@ public class BookFacadeImpl implements BookFacade {
             final BookCategory bookCategory = bookCategoryService.getBookCategory(book.getBookCategory().getId());
             Validators.validateExists(bookCategory, BOOK_CATEGORY_TO_ARGUMENT);
 
-            final Book bookEntity = conversionService.convert(book, Book.class);
+            final Book bookEntity = converter.convert(book, Book.class);
             bookEntity.setBookCategory(bookCategory);
             bookService.add(bookEntity);
             if (bookEntity.getId() == null) {
@@ -173,7 +171,7 @@ public class BookFacadeImpl implements BookFacade {
     public void update(final BookTO book) {
         bookTOValidator.validateExistingBookTO(book);
         try {
-            final Book bookEntity = conversionService.convert(book, Book.class);
+            final Book bookEntity = converter.convert(book, Book.class);
             Validators.validateExists(bookService.exists(bookEntity), BOOK_TO_ARGUMENT);
             final BookCategory bookCategory = bookCategoryService.getBookCategory(book.getBookCategory().getId());
             Validators.validateExists(bookCategory, BOOK_CATEGORY_TO_ARGUMENT);
@@ -295,7 +293,7 @@ public class BookFacadeImpl implements BookFacade {
         bookTOValidator.validateBookTOWithId(book);
 
         try {
-            return bookService.exists(conversionService.convert(book, Book.class));
+            return bookService.exists(converter.convert(book, Book.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -319,10 +317,7 @@ public class BookFacadeImpl implements BookFacade {
             final BookCategory bookCategoryEntity = bookCategoryService.getBookCategory(bookCategory.getId());
             Validators.validateExists(bookCategoryEntity, BOOK_CATEGORY_TO_ARGUMENT);
 
-            final List<BookTO> books = new ArrayList<>();
-            for (final Book book : bookService.findBooksByBookCategory(bookCategoryEntity)) {
-                books.add(conversionService.convert(book, BookTO.class));
-            }
+            final List<BookTO> books = converter.convertCollection(bookService.findBooksByBookCategory(bookCategoryEntity), BookTO.class);
             Collections.sort(books);
             return books;
         } catch (final ServiceOperationException ex) {

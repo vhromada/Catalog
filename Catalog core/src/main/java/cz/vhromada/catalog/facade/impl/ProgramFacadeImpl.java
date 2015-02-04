@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,10 +10,9 @@ import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
 import cz.vhromada.catalog.service.ProgramService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProgramFacadeImpl implements ProgramFacade {
 
-    /** Service for programs field */
+    /** Service for programs argument */
     private static final String PROGRAM_SERVICE_ARGUMENT = "Service for programs";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for program field */
+    /** Validator for TO for program argument */
     private static final String PROGRAM_TO_VALIDATOR_ARGUMENT = "Validator for TO for program";
 
     /** Program argument */
@@ -54,8 +52,8 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /** Service for programs */
     private ProgramService programService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for program */
     private ProgramTOValidator programTOValidator;
@@ -64,22 +62,22 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * Creates a new instance of ProgramFacadeImpl.
      *
      * @param programService service for programs
-     * @param conversionService conversion service
+     * @param converter converter
      * @param programTOValidator validator for TO for program
      * @throws IllegalArgumentException if service for programs is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for program is null
      */
     @Autowired
     public ProgramFacadeImpl(final ProgramService programService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final ProgramTOValidator programTOValidator) {
         Validators.validateArgumentNotNull(programService, PROGRAM_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(programTOValidator, PROGRAM_TO_VALIDATOR_ARGUMENT);
 
         this.programService = programService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.programTOValidator = programTOValidator;
     }
 
@@ -106,10 +104,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     @Transactional(readOnly = true)
     public List<ProgramTO> getPrograms() {
         try {
-            final List<ProgramTO> programs = new ArrayList<>();
-            for (final Program program : programService.getPrograms()) {
-                programs.add(conversionService.convert(program, ProgramTO.class));
-            }
+            final List<ProgramTO> programs = converter.convertCollection(programService.getPrograms(), ProgramTO.class);
             Collections.sort(programs);
             return programs;
         } catch (final ServiceOperationException ex) {
@@ -129,7 +124,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(programService.getProgram(id), ProgramTO.class);
+            return converter.convert(programService.getProgram(id), ProgramTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -148,7 +143,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
         programTOValidator.validateNewProgramTO(program);
 
         try {
-            final Program programEntity = conversionService.convert(program, Program.class);
+            final Program programEntity = converter.convert(program, Program.class);
             programService.add(programEntity);
             if (programEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -174,7 +169,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     public void update(final ProgramTO program) {
         programTOValidator.validateExistingProgramTO(program);
         try {
-            final Program programEntity = conversionService.convert(program, Program.class);
+            final Program programEntity = converter.convert(program, Program.class);
             Validators.validateExists(programService.exists(programEntity), PROGRAM_TO_ARGUMENT);
 
             programService.update(programEntity);
@@ -293,7 +288,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
         programTOValidator.validateProgramTOWithId(program);
         try {
 
-            return programService.exists(conversionService.convert(program, Program.class));
+            return programService.exists(converter.convert(program, Program.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }

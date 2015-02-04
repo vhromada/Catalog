@@ -53,6 +53,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+            <!--Dozer converter-->
+            <dependency>
+				<groupId>cz.vhromada.converters</groupId>
+				<artifactId>converters-dozer</artifactId>
+				<version>1.0.0</version>
+			</dependency>
 			<!--Validators-->
 			<dependency>
 				<groupId>cz.vhromada.validators</groupId>

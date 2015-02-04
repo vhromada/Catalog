@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
@@ -11,10 +11,9 @@ import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.catalog.service.MusicService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MusicFacadeImpl implements MusicFacade {
 
-    /** Service for music field */
+    /** Service for music argument */
     private static final String MUSIC_SERVICE_ARGUMENT = "Service for music";
 
-    /** Conversion service field */
-    private static final String CONVERSION_SERVICE_ARGUMENT = "Conversion service";
+    /** Converter argument */
+    private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for music field */
+    /** Validator for TO for music argument */
     private static final String MUSIC_TO_VALIDATOR_ARGUMENT = "Validator for TO for music";
 
     /** Music argument */
@@ -54,8 +53,8 @@ public class MusicFacadeImpl implements MusicFacade {
     /** Service for music */
     private MusicService musicService;
 
-    /** Conversion service */
-    private ConversionService conversionService;
+    /** Converter */
+    private Converter converter;
 
     /** Validator for TO for music */
     private MusicTOValidator musicTOValidator;
@@ -64,22 +63,22 @@ public class MusicFacadeImpl implements MusicFacade {
      * Creates a new instance of MusicFacadeImpl.
      *
      * @param musicService service for music
-     * @param conversionService conversion service
+     * @param converter converter
      * @param musicTOValidator validator for TO for music
      * @throws IllegalArgumentException if service for music is null
-     *                                  or conversion service is null
+     *                                  or converter is null
      *                                  or validator for TO for music is null
      */
     @Autowired
     public MusicFacadeImpl(final MusicService musicService,
-            @Qualifier("coreConversionService") final ConversionService conversionService,
+            final Converter converter,
             final MusicTOValidator musicTOValidator) {
         Validators.validateArgumentNotNull(musicService, MUSIC_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(conversionService, CONVERSION_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
         Validators.validateArgumentNotNull(musicTOValidator, MUSIC_TO_VALIDATOR_ARGUMENT);
 
         this.musicService = musicService;
-        this.conversionService = conversionService;
+        this.converter = converter;
         this.musicTOValidator = musicTOValidator;
     }
 
@@ -106,10 +105,8 @@ public class MusicFacadeImpl implements MusicFacade {
     @Transactional(readOnly = true)
     public List<MusicTO> getMusic() {
         try {
-            final List<MusicTO> musicList = new ArrayList<>();
-            for (final Music music : musicService.getMusic()) {
-                musicList.add(conversionService.convert(music, MusicTO.class));
-            }
+            final List<MusicTO> musicList = converter.convertCollection(musicService.getMusic(), MusicTO.class);
+            Collections.sort(musicList);
             return musicList;
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -128,7 +125,7 @@ public class MusicFacadeImpl implements MusicFacade {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return conversionService.convert(musicService.getMusic(id), MusicTO.class);
+            return converter.convert(musicService.getMusic(id), MusicTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -147,7 +144,7 @@ public class MusicFacadeImpl implements MusicFacade {
         musicTOValidator.validateNewMusicTO(music);
 
         try {
-            final Music musicEntity = conversionService.convert(music, Music.class);
+            final Music musicEntity = converter.convert(music, Music.class);
             musicService.add(musicEntity);
             if (musicEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -173,7 +170,7 @@ public class MusicFacadeImpl implements MusicFacade {
     public void update(final MusicTO music) {
         musicTOValidator.validateExistingMusicTO(music);
         try {
-            final Music musicEntity = conversionService.convert(music, Music.class);
+            final Music musicEntity = converter.convert(music, Music.class);
             Validators.validateExists(musicService.exists(musicEntity), MUSIC_TO_ARGUMENT);
 
             musicService.update(musicEntity);
@@ -284,7 +281,7 @@ public class MusicFacadeImpl implements MusicFacade {
         musicTOValidator.validateMusicTOWithId(music);
         try {
 
-            return musicService.exists(conversionService.convert(music, Music.class));
+            return musicService.exists(converter.convert(music, Music.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }

@@ -26,6 +26,7 @@ import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.validators.GameTOValidator;
 import cz.vhromada.catalog.service.GameService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -36,7 +37,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.springframework.core.convert.ConversionService;
 
 /**
  * A class represents test for class {@link GameFacadeImpl}.
@@ -50,9 +50,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
     @Mock
     private GameService gameService;
 
-    /** Instance of {@link ConversionService} */
+    /** Instance of {@link Converter} */
     @Mock
-    private ConversionService conversionService;
+    private Converter converter;
 
     /** Instance of {@link GameTOValidator} */
     @Mock
@@ -64,25 +64,25 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
     /** Initializes facade for games. */
     @Before
     public void setUp() {
-        gameFacade = new GameFacadeImpl(gameService, conversionService, gameTOValidator);
+        gameFacade = new GameFacadeImpl(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, ConversionService, GameTOValidator)} with null service for games. */
+    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null service for games. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameService() {
-        new GameFacadeImpl(null, conversionService, gameTOValidator);
+        new GameFacadeImpl(null, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, ConversionService, GameTOValidator)} with null conversion service. */
+    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null converter. */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullConversionService() {
+    public void testConstructorWithNullConverter() {
         new GameFacadeImpl(gameService, null, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, ConversionService, GameTOValidator)} with null validator for TO for game. */
+    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null validator for TO for game. */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameTOValidator() {
-        new GameFacadeImpl(gameService, conversionService, null);
+        new GameFacadeImpl(gameService, converter, null);
     }
 
     /** Test method for {@link GameFacade#newData()}. */
@@ -116,18 +116,13 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
         final List<GameTO> gamesList = CollectionUtils.newList(generate(GameTO.class), generate(GameTO.class));
         when(gameService.getGames()).thenReturn(games);
-        for (int i = 0; i < games.size(); i++) {
-            final Game game = games.get(i);
-            when(conversionService.convert(game, GameTO.class)).thenReturn(gamesList.get(i));
-        }
+        when(converter.convertCollection(games, GameTO.class)).thenReturn(gamesList);
 
         DeepAsserts.assertEquals(gamesList, gameFacade.getGames());
 
         verify(gameService).getGames();
-        for (final Game game : games) {
-            verify(conversionService).convert(game, GameTO.class);
-        }
-        verifyNoMoreInteractions(gameService, conversionService);
+        verify(converter).convertCollection(games, GameTO.class);
+        verifyNoMoreInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#getGames()} with exception in service tier. */
@@ -144,7 +139,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameService).getGames();
         verifyNoMoreInteractions(gameService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link GameFacade#getGame(Integer)} with existing game. */
@@ -153,26 +148,26 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final Game game = generate(Game.class);
         final GameTO gameTO = generate(GameTO.class);
         when(gameService.getGame(anyInt())).thenReturn(game);
-        when(conversionService.convert(any(Game.class), eq(GameTO.class))).thenReturn(gameTO);
+        when(converter.convert(any(Game.class), eq(GameTO.class))).thenReturn(gameTO);
 
         DeepAsserts.assertEquals(gameTO, gameFacade.getGame(gameTO.getId()));
 
         verify(gameService).getGame(gameTO.getId());
-        verify(conversionService).convert(game, GameTO.class);
-        verifyNoMoreInteractions(gameService, conversionService);
+        verify(converter).convert(game, GameTO.class);
+        verifyNoMoreInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#getGame(Integer)} with not existing game. */
     @Test
     public void testGetGameWithNotExistingGame() {
         when(gameService.getGame(anyInt())).thenReturn(null);
-        when(conversionService.convert(any(Game.class), eq(GameTO.class))).thenReturn(null);
+        when(converter.convert(any(Game.class), eq(GameTO.class))).thenReturn(null);
 
         assertNull(gameFacade.getGame(Integer.MAX_VALUE));
 
         verify(gameService).getGame(Integer.MAX_VALUE);
-        verify(conversionService).convert(null, GameTO.class);
-        verifyNoMoreInteractions(gameService, conversionService);
+        verify(converter).convert(null, GameTO.class);
+        verifyNoMoreInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#getGame(Integer)} with null argument. */
@@ -185,7 +180,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(gameService, conversionService);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#getGame(Integer)} with exception in service tier. */
@@ -202,7 +197,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameService).getGame(Integer.MAX_VALUE);
         verifyNoMoreInteractions(gameService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link GameFacade#add(GameTO)}. */
@@ -215,16 +210,16 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final int id = generate(Integer.class);
         final int position = generate(Integer.class);
         doAnswer(setGameIdAndPosition(id, position)).when(gameService).add(any(Game.class));
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         gameFacade.add(gameTO);
         DeepAsserts.assertEquals(id, game.getId());
         DeepAsserts.assertEquals(position, game.getPosition());
 
         verify(gameService).add(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateNewGameTO(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#add(GameTO)} with null argument. */
@@ -241,7 +236,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameTOValidator).validateNewGameTO(null);
         verifyNoMoreInteractions(gameTOValidator);
-        verifyZeroInteractions(gameService, conversionService);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#add(GameTO)} with argument with bad data. */
@@ -260,7 +255,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameTOValidator).validateNewGameTO(game);
         verifyNoMoreInteractions(gameTOValidator);
-        verifyZeroInteractions(gameService, conversionService);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#add(GameTO)} with service tier not setting ID. */
@@ -270,7 +265,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         game.setId(null);
         final GameTO gameTO = generate(GameTO.class);
         gameTO.setId(null);
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         try {
             gameFacade.add(gameTO);
@@ -280,9 +275,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(gameService).add(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateNewGameTO(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#add(GameTO)} with exception in service tier. */
@@ -293,7 +288,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final GameTO gameTO = generate(GameTO.class);
         gameTO.setId(null);
         doThrow(ServiceOperationException.class).when(gameService).add(any(Game.class));
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         try {
             gameFacade.add(gameTO);
@@ -303,9 +298,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(gameService).add(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateNewGameTO(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#update(GameTO)}. */
@@ -314,15 +309,15 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final Game game = generate(Game.class);
         final GameTO gameTO = generate(GameTO.class);
         when(gameService.exists(any(Game.class))).thenReturn(true);
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         gameFacade.update(gameTO);
 
         verify(gameService).exists(game);
         verify(gameService).update(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateExistingGameTO(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#update(GameTO)} with null argument. */
@@ -339,7 +334,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameTOValidator).validateExistingGameTO(null);
         verifyNoMoreInteractions(gameTOValidator);
-        verifyZeroInteractions(gameService, conversionService);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#update(GameTO)} with argument with bad data. */
@@ -357,7 +352,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameTOValidator).validateExistingGameTO(game);
         verifyNoMoreInteractions(gameTOValidator);
-        verifyZeroInteractions(gameService, conversionService);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#update(GameTO)} with not existing argument. */
@@ -366,7 +361,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final Game game = generate(Game.class);
         final GameTO gameTO = generate(GameTO.class);
         when(gameService.exists(any(Game.class))).thenReturn(false);
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         try {
             gameFacade.update(gameTO);
@@ -376,9 +371,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(gameService).exists(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateExistingGameTO(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#update(GameTO)} with exception in service tier. */
@@ -387,7 +382,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final Game game = generate(Game.class);
         final GameTO gameTO = generate(GameTO.class);
         doThrow(ServiceOperationException.class).when(gameService).exists(any(Game.class));
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         try {
             gameFacade.update(gameTO);
@@ -397,9 +392,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(gameService).exists(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateExistingGameTO(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#remove(GameTO)}. */
@@ -802,14 +797,14 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final Game game = generate(Game.class);
         final GameTO gameTO = generate(GameTO.class);
         when(gameService.exists(any(Game.class))).thenReturn(true);
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         assertTrue(gameFacade.exists(gameTO));
 
         verify(gameService).exists(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateGameTOWithId(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#exists(GameTO)} with not existing game. */
@@ -818,14 +813,14 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final Game game = generate(Game.class);
         final GameTO gameTO = generate(GameTO.class);
         when(gameService.exists(any(Game.class))).thenReturn(false);
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         assertFalse(gameFacade.exists(gameTO));
 
         verify(gameService).exists(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateGameTOWithId(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#exists(GameTO)} with null argument. */
@@ -842,7 +837,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameTOValidator).validateGameTOWithId(null);
         verifyNoMoreInteractions(gameTOValidator);
-        verifyZeroInteractions(gameService, conversionService);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#exists(GameTO)} with argument with bad data. */
@@ -860,7 +855,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         verify(gameTOValidator).validateGameTOWithId(game);
         verifyNoMoreInteractions(gameTOValidator);
-        verifyZeroInteractions(gameService, conversionService);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /** Test method for {@link GameFacade#exists(GameTO)} with exception in service tier. */
@@ -869,7 +864,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         final Game game = generate(Game.class);
         final GameTO gameTO = generate(GameTO.class);
         doThrow(ServiceOperationException.class).when(gameService).exists(any(Game.class));
-        when(conversionService.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(game);
 
         try {
             gameFacade.exists(gameTO);
@@ -879,9 +874,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(gameService).exists(game);
-        verify(conversionService).convert(gameTO, Game.class);
+        verify(converter).convert(gameTO, Game.class);
         verify(gameTOValidator).validateGameTOWithId(gameTO);
-        verifyNoMoreInteractions(gameService, conversionService, gameTOValidator);
+        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
     /** Test method for {@link GameFacade#updatePositions()}. */

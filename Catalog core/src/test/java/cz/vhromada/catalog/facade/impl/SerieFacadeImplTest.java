@@ -30,6 +30,7 @@ import cz.vhromada.catalog.facade.validators.SerieTOValidator;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -40,7 +41,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.springframework.core.convert.ConversionService;
 
 /**
  * A class represents test for class {@link SerieFacadeImpl}.
@@ -58,9 +58,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
     @Mock
     private GenreService genreService;
 
-    /** Instance of {@link ConversionService} */
+    /** Instance of {@link Converter} */
     @Mock
-    private ConversionService conversionService;
+    private Converter converter;
 
     /** Instance of {@link SerieTOValidator} */
     @Mock
@@ -72,40 +72,40 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
     /** Initializes facade for series. */
     @Before
     public void setUp() {
-        serieFacade = new SerieFacadeImpl(serieService, genreService, conversionService, serieTOValidator);
+        serieFacade = new SerieFacadeImpl(serieService, genreService, converter, serieTOValidator);
     }
 
     /**
-     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null service for series.
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, Converter, SerieTOValidator)} with null service for series.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieService() {
-        new SerieFacadeImpl(null, genreService, conversionService, serieTOValidator);
+        new SerieFacadeImpl(null, genreService, converter, serieTOValidator);
     }
 
     /**
-     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null service for genres.
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, Converter, SerieTOValidator)} with null service for genres.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreService() {
-        new SerieFacadeImpl(serieService, null, conversionService, serieTOValidator);
+        new SerieFacadeImpl(serieService, null, converter, serieTOValidator);
     }
 
     /**
-     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null conversion service.
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, Converter, SerieTOValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullConversionService() {
+    public void testConstructorWithNullConverter() {
         new SerieFacadeImpl(serieService, genreService, null, serieTOValidator);
     }
 
     /**
-     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, ConversionService, SerieTOValidator)} with null validator for
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, Converter, SerieTOValidator)} with null validator for
      * TO for serie.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieTOValidator() {
-        new SerieFacadeImpl(serieService, genreService, conversionService, null);
+        new SerieFacadeImpl(serieService, genreService, converter, null);
     }
 
     /** Test method for {@link SerieFacade#newData()}. */
@@ -139,18 +139,13 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
         final List<SerieTO> seriesList = CollectionUtils.newList(generate(SerieTO.class), generate(SerieTO.class));
         when(serieService.getSeries()).thenReturn(series);
-        for (int i = 0; i < series.size(); i++) {
-            final Serie serie = series.get(i);
-            when(conversionService.convert(serie, SerieTO.class)).thenReturn(seriesList.get(i));
-        }
+        when(converter.convertCollection(series, SerieTO.class)).thenReturn(seriesList);
 
         DeepAsserts.assertEquals(seriesList, serieFacade.getSeries());
 
         verify(serieService).getSeries();
-        for (final Serie serie : series) {
-            verify(conversionService).convert(serie, SerieTO.class);
-        }
-        verifyNoMoreInteractions(serieService, conversionService);
+        verify(converter).convertCollection(series, SerieTO.class);
+        verifyNoMoreInteractions(serieService, converter);
     }
 
     /** Test method for {@link SerieFacade#getSeries()} with exception in service tier. */
@@ -167,7 +162,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).getSeries();
         verifyNoMoreInteractions(serieService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with existing serie. */
@@ -176,27 +171,27 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final Serie serie = generate(Serie.class);
         final SerieTO serieTO = generate(SerieTO.class);
         when(serieService.getSerie(anyInt())).thenReturn(serie);
-        when(conversionService.convert(any(Serie.class), eq(SerieTO.class))).thenReturn(serieTO);
+        when(converter.convert(any(Serie.class), eq(SerieTO.class))).thenReturn(serieTO);
 
         DeepAsserts.assertEquals(serieTO, serieFacade.getSerie(serieTO.getId()));
 
         verify(serieService).getSerie(serieTO.getId());
-        verify(conversionService).convert(serie, SerieTO.class);
-        verify(conversionService).convert(serie, SerieTO.class);
-        verifyNoMoreInteractions(serieService, conversionService);
+        verify(converter).convert(serie, SerieTO.class);
+        verify(converter).convert(serie, SerieTO.class);
+        verifyNoMoreInteractions(serieService, converter);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with not existing serie. */
     @Test
     public void testGetSerieWithNotExistingSerie() {
         when(serieService.getSerie(anyInt())).thenReturn(null);
-        when(conversionService.convert(any(Serie.class), eq(SerieTO.class))).thenReturn(null);
+        when(converter.convert(any(Serie.class), eq(SerieTO.class))).thenReturn(null);
 
         assertNull(serieFacade.getSerie(Integer.MAX_VALUE));
 
         verify(serieService).getSerie(Integer.MAX_VALUE);
-        verify(conversionService).convert(null, SerieTO.class);
-        verifyNoMoreInteractions(serieService, conversionService);
+        verify(converter).convert(null, SerieTO.class);
+        verifyNoMoreInteractions(serieService, converter);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with null argument. */
@@ -209,7 +204,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(serieService, conversionService);
+        verifyZeroInteractions(serieService, converter);
     }
 
     /** Test method for {@link SerieFacade#getSerie(Integer)} with exception in service tier. */
@@ -226,7 +221,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieService).getSerie(Integer.MAX_VALUE);
         verifyNoMoreInteractions(serieService);
-        verifyZeroInteractions(conversionService);
+        verifyZeroInteractions(converter);
     }
 
     /** Test method for {@link SerieFacade#add(SerieTO)}. */
@@ -240,7 +235,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final int position = generate(Integer.class);
         doAnswer(setSerieIdAndPosition(id, position)).when(serieService).add(any(Serie.class));
         when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         serieFacade.add(serieTO);
         DeepAsserts.assertEquals(id, serie.getId());
@@ -250,9 +245,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         for (final GenreTO genre : serieTO.getGenres()) {
             verify(genreService).getGenre(genre.getId());
         }
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateNewSerieTO(serieTO);
-        verifyNoMoreInteractions(serieService, genreService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, genreService, converter, serieTOValidator);
     }
 
     /** Test method for {@link SerieFacade#add(SerieTO)} with null argument. */
@@ -269,7 +264,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieTOValidator).validateNewSerieTO(null);
         verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, genreService, conversionService);
+        verifyZeroInteractions(serieService, genreService, converter);
     }
 
     /** Test method for {@link SerieFacade#add(SerieTO)} with argument with bad data. */
@@ -288,7 +283,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieTOValidator).validateNewSerieTO(serie);
         verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, genreService, conversionService);
+        verifyZeroInteractions(serieService, genreService, converter);
     }
 
     /** Test method for {@link SerieFacade#add(SerieTO)} with service tier not setting ID. */
@@ -299,7 +294,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final SerieTO serieTO = generate(SerieTO.class);
         serieTO.setId(null);
         when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         try {
             serieFacade.add(serieTO);
@@ -312,9 +307,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         for (final GenreTO genre : serieTO.getGenres()) {
             verify(genreService).getGenre(genre.getId());
         }
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateNewSerieTO(serieTO);
-        verifyNoMoreInteractions(serieService, genreService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, genreService, converter, serieTOValidator);
     }
 
     /** Test method for {@link SerieFacade#add(SerieTO)} with exception in service tier. */
@@ -334,7 +329,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verify(genreService).getGenre(serie.getGenres().get(0).getId());
         verify(serieTOValidator).validateNewSerieTO(serie);
         verifyNoMoreInteractions(genreService, serieTOValidator);
-        verifyZeroInteractions(serieService, conversionService);
+        verifyZeroInteractions(serieService, converter);
     }
 
     /** Test method for {@link SerieFacade#update(SerieTO)}. */
@@ -344,7 +339,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final SerieTO serieTO = generate(SerieTO.class);
         when(serieService.exists(any(Serie.class))).thenReturn(true);
         when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         serieFacade.update(serieTO);
 
@@ -353,9 +348,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         for (final GenreTO genre : serieTO.getGenres()) {
             verify(genreService).getGenre(genre.getId());
         }
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateExistingSerieTO(serieTO);
-        verifyNoMoreInteractions(serieService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
     /** Test method for {@link SerieFacade#update(SerieTO)} with null argument. */
@@ -372,7 +367,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieTOValidator).validateExistingSerieTO(null);
         verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, genreService, conversionService);
+        verifyZeroInteractions(serieService, genreService, converter);
     }
 
     /** Test method for {@link SerieFacade#update(SerieTO)} with argument with bad data. */
@@ -390,7 +385,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieTOValidator).validateExistingSerieTO(serie);
         verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, genreService, conversionService);
+        verifyZeroInteractions(serieService, genreService, converter);
     }
 
     /** Test method for {@link SerieFacade#update(SerieTO)} with not existing argument. */
@@ -399,7 +394,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final Serie serie = generate(Serie.class);
         final SerieTO serieTO = generate(SerieTO.class);
         when(serieService.exists(any(Serie.class))).thenReturn(false);
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         try {
             serieFacade.update(serieTO);
@@ -409,9 +404,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(serieService).exists(serie);
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateExistingSerieTO(serieTO);
-        verifyNoMoreInteractions(serieService, genreService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, genreService, converter, serieTOValidator);
     }
 
     /** Test method for {@link SerieFacade#update(SerieTO)} with exception in service tier. */
@@ -420,7 +415,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final Serie serie = generate(Serie.class);
         final SerieTO serieTO = generate(SerieTO.class);
         doThrow(ServiceOperationException.class).when(serieService).exists(any(Serie.class));
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         try {
             serieFacade.update(serieTO);
@@ -430,9 +425,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(serieService).exists(serie);
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateExistingSerieTO(serieTO);
-        verifyNoMoreInteractions(serieService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, converter, serieTOValidator);
         verifyZeroInteractions(genreService);
     }
 
@@ -836,14 +831,14 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final Serie serie = generate(Serie.class);
         final SerieTO serieTO = generate(SerieTO.class);
         when(serieService.exists(any(Serie.class))).thenReturn(true);
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         assertTrue(serieFacade.exists(serieTO));
 
         verify(serieService).exists(serie);
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateSerieTOWithId(serieTO);
-        verifyNoMoreInteractions(serieService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
     /** Test method for {@link SerieFacade#exists(SerieTO)} with not existing serie. */
@@ -852,14 +847,14 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final Serie serie = generate(Serie.class);
         final SerieTO serieTO = generate(SerieTO.class);
         when(serieService.exists(any(Serie.class))).thenReturn(false);
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         assertFalse(serieFacade.exists(serieTO));
 
         verify(serieService).exists(serie);
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateSerieTOWithId(serieTO);
-        verifyNoMoreInteractions(serieService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
     /** Test method for {@link SerieFacade#exists(SerieTO)} with null argument. */
@@ -876,7 +871,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieTOValidator).validateSerieTOWithId(null);
         verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, conversionService);
+        verifyZeroInteractions(serieService, converter);
     }
 
     /** Test method for {@link SerieFacade#exists(SerieTO)} with argument with bad data. */
@@ -894,7 +889,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
         verify(serieTOValidator).validateSerieTOWithId(serie);
         verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, conversionService);
+        verifyZeroInteractions(serieService, converter);
     }
 
     /** Test method for {@link SerieFacade#exists(SerieTO)} with exception in service tier. */
@@ -903,7 +898,7 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         final Serie serie = generate(Serie.class);
         final SerieTO serieTO = generate(SerieTO.class);
         doThrow(ServiceOperationException.class).when(serieService).exists(any(Serie.class));
-        when(conversionService.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
+        when(converter.convert(any(SerieTO.class), eq(Serie.class))).thenReturn(serie);
 
         try {
             serieFacade.exists(serieTO);
@@ -913,9 +908,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(serieService).exists(serie);
-        verify(conversionService).convert(serieTO, Serie.class);
+        verify(converter).convert(serieTO, Serie.class);
         verify(serieTOValidator).validateSerieTOWithId(serieTO);
-        verifyNoMoreInteractions(serieService, conversionService, serieTOValidator);
+        verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
     /** Test method for {@link SerieFacade#updatePositions()}. */

@@ -86,7 +86,7 @@ public class GameDataPanel extends JPanel {
         Validators.validateArgumentNotNull(game, "TO for game");
 
         initData(nameLabel, nameData, game.getName());
-        //TODO vhromada 25.01.2015:initData(dataLabel, dataData, game.getAdditionalData());
+        initData(dataLabel, dataData, getAdditionalData(game));
         initData(mediaCountLabel, mediaCountData, Integer.toString(game.getMediaCount()));
         initData(noteLabel, noteData, game.getNote());
 
@@ -138,7 +138,7 @@ public class GameDataPanel extends JPanel {
         Validators.validateArgumentNotNull(game, "TO for game");
 
         nameData.setText(game.getName());
-        //TODO vhromada 25.01.2015:dataData.setText(game.getAdditionalData());
+        dataData.setText(getAdditionalData(game));
         mediaCountData.setText(Integer.toString(game.getMediaCount()));
         noteData.setText(game.getNote());
         wikiCz = game.getWikiCz();
@@ -159,6 +159,52 @@ public class GameDataPanel extends JPanel {
         label.setLabelFor(data);
         data.setText(text);
         data.setFocusable(false);
+    }
+
+    /**
+     * Returns additional data.
+     *
+     * @param game TO for game
+     * @return additional data
+     */
+    private static String getAdditionalData(final GameTO game) {
+        final StringBuilder result = new StringBuilder();
+        if (game.hasCrack()) {
+            result.append("Crack");
+        }
+        addToResult(result, game.hasSerialKey(), "serial key");
+        addToResult(result, game.hasPatch(), "patch");
+        addToResult(result, game.hasTrainer(), "trainer");
+        addToResult(result, game.hasTrainerData(), "data for trainer");
+        addToResult(result, game.hasEditor(), "editor");
+        addToResult(result, game.haveSaves(), "saves");
+        if (game.getOtherData() != null && !game.getOtherData().isEmpty()) {
+            if (result.length() != 0) {
+                result.append(", ");
+            }
+            result.append(game.getOtherData());
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * Adds data to result.
+     *
+     * @param result result
+     * @param value value
+     * @param data data
+     */
+    private static void addToResult(final StringBuilder result, final boolean value, final String data) {
+        if (value) {
+            if (result.length() == 0) {
+                result.append(data.substring(0, 1).toUpperCase());
+                result.append(data.substring(1));
+            } else {
+                result.append(", ");
+                result.append(data);
+            }
+        }
     }
 
     /**

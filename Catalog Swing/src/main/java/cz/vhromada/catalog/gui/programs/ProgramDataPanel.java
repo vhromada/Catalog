@@ -86,7 +86,7 @@ public class ProgramDataPanel extends JPanel {
         Validators.validateArgumentNotNull(program, "TO for program");
 
         initData(nameLabel, nameData, program.getName());
-        //TODO vhromada 25.01.2015:initData(dataLabel, dataData, program.getAdditionalData());
+        initData(dataLabel, dataData, getAdditionalData(program));
         initData(mediaCountLabel, mediaCountData, Integer.toString(program.getMediaCount()));
         initData(noteLabel, noteData, program.getNote());
 
@@ -138,7 +138,7 @@ public class ProgramDataPanel extends JPanel {
         Validators.validateArgumentNotNull(program, "TO for program");
 
         nameData.setText(program.getName());
-        //TODO vhromada 25.01.2015:dataData.setText(program.getAdditionalData());
+        dataData.setText(getAdditionalData(program));
         mediaCountData.setText(Integer.toString(program.getMediaCount()));
         noteData.setText(program.getNote());
         wikiCz = program.getWikiCz();
@@ -159,6 +159,47 @@ public class ProgramDataPanel extends JPanel {
         label.setLabelFor(data);
         data.setText(text);
         data.setFocusable(false);
+    }
+
+    /**
+     * Returns additional data.
+     *
+     * @param program TO for program
+     * @return additional data
+     */
+    private static String getAdditionalData(final ProgramTO program) {
+        final StringBuilder result = new StringBuilder();
+        if (program.hasCrack()) {
+            result.append("Crack");
+        }
+        addToResult(result, program.hasSerialKey(), "serial key");
+        if (program.getOtherData() != null && !program.getOtherData().isEmpty()) {
+            if (result.length() != 0) {
+                result.append(", ");
+            }
+            result.append(program.getOtherData());
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * Adds data to result.
+     *
+     * @param result result
+     * @param value value
+     * @param data data
+     */
+    private static void addToResult(final StringBuilder result, final boolean value, final String data) {
+        if (value) {
+            if (result.length() == 0) {
+                result.append(data.substring(0, 1).toUpperCase());
+                result.append(data.substring(1));
+            } else {
+                result.append(", ");
+                result.append(data);
+            }
+        }
     }
 
     /**

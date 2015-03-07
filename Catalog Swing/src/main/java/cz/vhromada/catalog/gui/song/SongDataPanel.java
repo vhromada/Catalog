@@ -14,20 +14,20 @@ import cz.vhromada.validators.Validators;
  */
 public class SongDataPanel extends JPanel {
 
-    /** Horizontal label size */
-    public static final int HORIZONTAL_LABEL_SIZE = 150;
-
-    /** Horizontal data size */
-    public static final int HORIZONTAL_DATA_SIZE = 600;
-
-    /** Horizontal gap size */
-    public static final int HORIZONTAL_GAP_SIZE = 10;
-
-    /** Vertical gap size */
-    public static final int VERTICAL_GAP_SIZE = 10;
-
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
+
+    /** Horizontal label size */
+    private static final int HORIZONTAL_LABEL_SIZE = 150;
+
+    /** Horizontal data size */
+    private static final int HORIZONTAL_DATA_SIZE = 600;
+
+    /** Horizontal gap size */
+    private static final int HORIZONTAL_GAP_SIZE = 10;
+
+    /** Vertical gap size */
+    private static final int VERTICAL_GAP_SIZE = 10;
 
     /** Label for name */
     private JLabel nameLabel = new JLabel("Name");
@@ -72,7 +72,7 @@ public class SongDataPanel extends JPanel {
      * @param song TO for song
      * @throws IllegalArgumentException if TO for song is null
      */
-    public void updateSongTO(final SongTO song) {
+    public void updateSong(final SongTO song) {
         Validators.validateArgumentNotNull(song, "TO for song");
 
         nameData.setText(song.getName());
@@ -160,6 +160,5 @@ public class SongDataPanel extends JPanel {
                 .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
                         CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
     }
-
 
 }

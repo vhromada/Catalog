@@ -94,7 +94,7 @@ public class SongsPanel extends JPanel {
     /**
      * Sets a new value to TO for music.
      *
-     * @param music TO for music
+     * @param music new value
      * @throws IllegalArgumentException if TO for music is null
      */
     public void setMusic(final MusicTO music) {
@@ -202,7 +202,7 @@ public class SongsPanel extends JPanel {
                 final SongInfoDialog dialog = new SongInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final SongTO song = dialog.getSongTO();
+                    final SongTO song = dialog.getSong();
                     song.setMusic(music);
                     songFacade.add(song);
                     songsListDataModel.update();
@@ -225,11 +225,11 @@ public class SongsPanel extends JPanel {
                 final SongInfoDialog dialog = new SongInfoDialog(song);
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final SongTO updatedSongTO = dialog.getSongTO();
-                    songFacade.update(updatedSongTO);
+                    final SongTO updatedSong = dialog.getSong();
+                    songFacade.update(updatedSong);
                     songsListDataModel.update();
                     list.updateUI();
-                    ((SongDataPanel) tabbedPane.getComponentAt(0)).updateSongTO(updatedSongTO);
+                    ((SongDataPanel) tabbedPane.getComponentAt(0)).updateSong(updatedSong);
                     firePropertyChange(UPDATE_PROPERTY, false, true);
                 }
             }

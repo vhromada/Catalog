@@ -227,21 +227,6 @@ public class MusicInfoDialog extends JDialog {
     }
 
     /**
-     * Returns true if input is valid: name isn't empty string.
-     *
-     * @return true if input is valid: name isn't empty string
-     */
-    private boolean isInputValid() {
-        return !nameData.getText().isEmpty();
-    }
-
-    /** Closes dialog. */
-    private void close() {
-        setVisible(false);
-        dispose();
-    }
-
-    /**
      * Returns horizontal layout of components.
      *
      * @param layout layout
@@ -329,6 +314,21 @@ public class MusicInfoDialog extends JDialog {
                 .addGap(VERTICAL_GAP_SIZE)
                 .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
                         CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+    }
+
+    /**
+     * Returns true if input is valid: name isn't empty string.
+     *
+     * @return true if input is valid: name isn't empty string
+     */
+    private boolean isInputValid() {
+        return !nameData.getText().isEmpty();
+    }
+
+    /** Closes dialog. */
+    private void close() {
+        setVisible(false);
+        dispose();
     }
 
 }

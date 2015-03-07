@@ -77,16 +77,16 @@ public class MusicDataPanel extends JPanel {
     /** Label with note */
     private JLabel noteData = new JLabel();
 
-    /** Button for showing game's czech Wikipedia page */
+    /** Button for showing music czech Wikipedia page */
     private JButton wikiCzButton = new JButton("Czech Wikipedia");
 
-    /** Button for showing game's english Wikipedia page */
+    /** Button for showing music english Wikipedia page */
     private JButton wikiEnButton = new JButton("English Wikipedia");
 
-    /** URL to czech Wikipedia page about game */
+    /** URL to czech Wikipedia page about music */
     private String wikiCz;
 
-    /** URL to english Wikipedia page about game */
+    /** URL to english Wikipedia page about music */
     private String wikiEn;
 
     /**
@@ -95,7 +95,7 @@ public class MusicDataPanel extends JPanel {
      * @param music TO for music
      * @param songFacade facade for songs
      * @throws IllegalArgumentException if TO for music is null
-     * or facade for songs is null
+     *                                  or facade for songs is null
      */
     public MusicDataPanel(final MusicTO music, final SongFacade songFacade) {
         Validators.validateArgumentNotNull(music, "TO for music");
@@ -131,7 +131,7 @@ public class MusicDataPanel extends JPanel {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final String url = "http://en.wikipedia.org/wiki/" + wikiCz;
+                final String url = "http://en.wikipedia.org/wiki/" + wikiEn;
                 try {
                     Runtime.getRuntime().exec("rundll32.exe url.dll,FileProtocolHandler " + url);
                 } catch (final IOException ex) {
@@ -174,7 +174,7 @@ public class MusicDataPanel extends JPanel {
      * @param data  data
      * @param text  text for data
      */
-    private void initData(final JLabel label, final JLabel data, final String text) {
+    private static void initData(final JLabel label, final JLabel data, final String text) {
         label.setFocusable(false);
         label.setLabelFor(data);
         data.setText(text);

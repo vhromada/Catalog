@@ -20,9 +20,6 @@ import cz.vhromada.validators.Validators;
  */
 public class SongInfoDialog extends JDialog {
 
-    /** Horizontal time size */
-    public static final int HORIZONTAL_TIME_SIZE = 60;
-
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +28,9 @@ public class SongInfoDialog extends JDialog {
 
     /** Horizontal data size in dialog */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
+
+    /** Horizontal time size */
+    private static final int HORIZONTAL_TIME_SIZE = 60;
 
     /** Horizontal button size */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
@@ -148,7 +148,7 @@ public class SongInfoDialog extends JDialog {
      * @return TO for song
      * @throws IllegalStateException if TO for hasn't been set
      */
-    public SongTO getSongTO() {
+    public SongTO getSong() {
         Validators.validateFieldNotNull(song, "TO for song");
 
         return song;

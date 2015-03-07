@@ -14,20 +14,20 @@ import cz.vhromada.validators.Validators;
  */
 public class EpisodeDataPanel extends JPanel {
 
-    /** Horizontal label size */
-    public static final int HORIZONTAL_LABEL_SIZE = 150;
-
-    /** Horizontal data size */
-    public static final int HORIZONTAL_DATA_SIZE = 600;
-
-    /** Horizontal gap size */
-    public static final int HORIZONTAL_GAP_SIZE = 10;
-
-    /** Vertical gap size */
-    public static final int VERTICAL_GAP_SIZE = 10;
-
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
+
+    /** Horizontal label size */
+    private static final int HORIZONTAL_LABEL_SIZE = 150;
+
+    /** Horizontal data size */
+    private static final int HORIZONTAL_DATA_SIZE = 600;
+
+    /** Horizontal gap size */
+    private static final int HORIZONTAL_GAP_SIZE = 10;
+
+    /** Vertical gap size */
+    private static final int VERTICAL_GAP_SIZE = 10;
 
     /** Label for number */
     private JLabel numberLabel = new JLabel("Number of episode");
@@ -95,7 +95,7 @@ public class EpisodeDataPanel extends JPanel {
      * @param data  data
      * @param text  text for data
      */
-    private void initData(final JLabel label, final JLabel data, final String text) {
+    private static void initData(final JLabel label, final JLabel data, final String text) {
         label.setFocusable(false);
         label.setLabelFor(data);
         data.setText(text);

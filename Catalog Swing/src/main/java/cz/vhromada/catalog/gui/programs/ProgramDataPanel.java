@@ -134,7 +134,7 @@ public class ProgramDataPanel extends JPanel {
      * @param program TO for program
      * @throws IllegalArgumentException if TO for program is null
      */
-    public void updateProgramTO(final ProgramTO program) {
+    public void updateProgram(final ProgramTO program) {
         Validators.validateArgumentNotNull(program, "TO for program");
 
         nameData.setText(program.getName());

@@ -134,7 +134,7 @@ public class GameDataPanel extends JPanel {
      * @param game TO for game
      * @throws IllegalArgumentException if TO for game is null
      */
-    public void updateGameTO(final GameTO game) {
+    public void updateGame(final GameTO game) {
         Validators.validateArgumentNotNull(game, "TO for game");
 
         nameData.setText(game.getName());

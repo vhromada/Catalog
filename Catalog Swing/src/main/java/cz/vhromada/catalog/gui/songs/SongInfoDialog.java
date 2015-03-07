@@ -41,9 +41,6 @@ public class SongInfoDialog extends JDialog {
     /** Horizontal gap size */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Horizontal gap size between buttons */
-    private static final int HORIZONTAL_BUTTONS_GAP_SIZE = 54;
-
     /** Vertical gap size */
     private static final int VERTICAL_GAP_SIZE = 10;
 
@@ -257,7 +254,7 @@ public class SongInfoDialog extends JDialog {
         final GroupLayout.Group buttons = layout.createSequentialGroup()
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE)
                 .addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(HORIZONTAL_BUTTONS_GAP_SIZE)
+                .addGap(54)
                 .addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE);
 

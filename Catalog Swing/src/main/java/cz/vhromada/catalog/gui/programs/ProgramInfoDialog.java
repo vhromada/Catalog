@@ -155,10 +155,10 @@ public class ProgramInfoDialog extends JDialog {
     /**
      * Returns TO for program.
      *
-     * @return TO for ame
+     * @return TO for program
      * @throws IllegalStateException if TO for program hasn't been set
      */
-    public ProgramTO getProgramTO() {
+    public ProgramTO getProgram() {
         Validators.validateFieldNotNull(program, "TO for program");
 
         return program;

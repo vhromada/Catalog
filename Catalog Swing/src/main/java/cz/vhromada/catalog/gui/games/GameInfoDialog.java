@@ -178,7 +178,7 @@ public class GameInfoDialog extends JDialog {
      * @return TO for ame
      * @throws IllegalStateException if TO for game hasn't been set
      */
-    public GameTO getGameTO() {
+    public GameTO getGame() {
         Validators.validateFieldNotNull(game, "TO for game");
 
         return game;

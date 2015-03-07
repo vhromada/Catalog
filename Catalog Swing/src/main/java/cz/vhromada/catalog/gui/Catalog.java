@@ -17,7 +17,9 @@ import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
+import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.gui.games.GamesPanel;
+import cz.vhromada.catalog.gui.music.MusicPanel;
 import cz.vhromada.catalog.gui.programs.ProgramsPanel;
 import cz.vhromada.validators.Validators;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -70,6 +72,9 @@ public class Catalog extends JFrame {
 
     /** Panel for games */
     private GamesPanel gamesPanel;
+
+    /** Panel for music */
+    private MusicPanel musicPanel;
 
     /** Panel for programs */
     private ProgramsPanel programsPanel;
@@ -127,6 +132,7 @@ public class Catalog extends JFrame {
         });
 
         gamesPanel = new GamesPanel(gameFacade);
+        musicPanel = new MusicPanel(musicFacade, context.getBean(SongFacade.class));
         programsPanel = new ProgramsPanel(programFacade);
 
         initTabbedPane();
@@ -220,12 +226,14 @@ public class Catalog extends JFrame {
     /** Initializes tabbed pane. */
     private void initTabbedPane() {
         tabbedPane.addTab("Games", gamesPanel);
+        tabbedPane.addTab("Music", musicPanel);
         tabbedPane.addTab("Programs", programsPanel);
         tabbedPane.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(final ChangeEvent e) {
                 gamesPanel.clearSelection();
+                musicPanel.clearSelection();
                 programsPanel.clearSelection();
             }
 
@@ -235,6 +243,7 @@ public class Catalog extends JFrame {
     /** Performs action for button New. */
     private void newAction() {
         gamesPanel.newData();
+        musicPanel.newData();
         programsPanel.newData();
     }
 
@@ -278,7 +287,7 @@ public class Catalog extends JFrame {
 
     /** Closes form. */
     private void closing() {
-        final boolean saved = gamesPanel.isSaved() && programsPanel.isSaved();
+        final boolean saved = gamesPanel.isSaved() && musicPanel.isSaved() && programsPanel.isSaved();
         if (!saved) {
             final int returnStatus = JOptionPane.showConfirmDialog(this, "Save data?", "", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (returnStatus == JOptionPane.YES_OPTION) {
@@ -297,6 +306,7 @@ public class Catalog extends JFrame {
         programFacade.updatePositions();
         bookCategoryFacade.updatePositions();
         gamesPanel.save();
+        musicPanel.save();
         programsPanel.save();
     }
 

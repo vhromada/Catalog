@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui.songs;
+package cz.vhromada.catalog.gui.song;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui.programs;
+package cz.vhromada.catalog.gui.program;
 
 import java.util.List;
 

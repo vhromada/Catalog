@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui.programs;
+package cz.vhromada.catalog.gui.program;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

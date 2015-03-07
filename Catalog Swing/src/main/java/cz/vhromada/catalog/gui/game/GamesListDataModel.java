@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui.games;
+package cz.vhromada.catalog.gui.game;
 
 import java.util.List;
 

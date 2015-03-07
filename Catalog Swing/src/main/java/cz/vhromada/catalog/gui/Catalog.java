@@ -18,9 +18,9 @@ import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.catalog.gui.games.GamesPanel;
+import cz.vhromada.catalog.gui.game.GamesPanel;
 import cz.vhromada.catalog.gui.music.MusicPanel;
-import cz.vhromada.catalog.gui.programs.ProgramsPanel;
+import cz.vhromada.catalog.gui.program.ProgramsPanel;
 import cz.vhromada.validators.Validators;
 import org.springframework.context.ConfigurableApplicationContext;
 

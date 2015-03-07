@@ -18,7 +18,7 @@ import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.Pictures;
 import cz.vhromada.catalog.gui.StatsTableCellRenderer;
-import cz.vhromada.catalog.gui.songs.SongsPanel;
+import cz.vhromada.catalog.gui.song.SongsPanel;
 import cz.vhromada.validators.Validators;
 
 /**

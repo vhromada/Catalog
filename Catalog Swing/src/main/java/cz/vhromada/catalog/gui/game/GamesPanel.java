@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui.games;
+package cz.vhromada.catalog.gui.game;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

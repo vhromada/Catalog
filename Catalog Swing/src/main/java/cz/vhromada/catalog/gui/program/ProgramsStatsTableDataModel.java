@@ -1,42 +1,42 @@
-package cz.vhromada.catalog.gui.games;
+package cz.vhromada.catalog.gui.program;
 
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import cz.vhromada.catalog.facade.GameFacade;
-import cz.vhromada.catalog.facade.to.GameTO;
+import cz.vhromada.catalog.facade.ProgramFacade;
+import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.validators.Validators;
 
 /**
- * A class represents data model for table with stats for games.
+ * A class represents data model for table with stats for programs.
  *
  * @author Vladimir Hromada
  */
-public class GamesStatsTableDataModel extends AbstractTableModel {
+public class ProgramsStatsTableDataModel extends AbstractTableModel {
 
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for games */
-    private GameFacade gameFacade;
+    /** Facade for programs */
+    private ProgramFacade programFacade;
 
-    /** List of TO for game */
-    private List<GameTO> games;
+    /** List of TO for program */
+    private List<ProgramTO> programs;
 
     /** Total count of media */
     private int totalMediaCount;
 
     /**
-     * Creates a new instance of GamesStatsTableDataModel.
+     * Creates a new instance of ProgramsStatsTableDataModel.
      *
-     * @param gameFacade facade for games
-     * @throws IllegalArgumentException if facade for games is null
+     * @param programFacade facade for programs
+     * @throws IllegalArgumentException if facade for programs is null
      */
-    public GamesStatsTableDataModel(final GameFacade gameFacade) {
-        Validators.validateArgumentNotNull(gameFacade, "Facade for games");
+    public ProgramsStatsTableDataModel(final ProgramFacade programFacade) {
+        Validators.validateArgumentNotNull(programFacade, "Facade for programs");
 
-        this.gameFacade = gameFacade;
+        this.programFacade = programFacade;
         update();
     }
 
@@ -51,7 +51,7 @@ public class GamesStatsTableDataModel extends AbstractTableModel {
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return games.size();
+                return programs.size();
             case 1:
                 return totalMediaCount;
             default:
@@ -100,7 +100,7 @@ public class GamesStatsTableDataModel extends AbstractTableModel {
     public String getColumnName(final int column) {
         switch (column) {
             case 0:
-                return "Count of games";
+                return "Count of programs";
             case 1:
                 return "Count of media";
             default:
@@ -110,8 +110,8 @@ public class GamesStatsTableDataModel extends AbstractTableModel {
 
     /** Updates model. */
     public final void update() {
-        games = gameFacade.getGames();
-        totalMediaCount = gameFacade.getTotalMediaCount();
+        programs = programFacade.getPrograms();
+        totalMediaCount = programFacade.getTotalMediaCount();
     }
 
 }

@@ -22,12 +22,16 @@ public class SongInfoDialog extends JDialog {
 
     /** Horizontal time size */
     public static final int HORIZONTAL_TIME_SIZE = 60;
+
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
+
     /** Horizontal label size in dialog */
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
+
     /** Horizontal data size in dialog */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
+
     /** Horizontal button size */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
@@ -37,11 +41,23 @@ public class SongInfoDialog extends JDialog {
     /** Horizontal gap size */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
+    /** Horizontal gap size between buttons */
+    private static final int HORIZONTAL_BUTTONS_GAP_SIZE = 54;
+
     /** Vertical gap size */
     private static final int VERTICAL_GAP_SIZE = 10;
 
     /** Vertical long gap size */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
+
+    /** Maximum hours */
+    private static final int MAX_HOURS = 23;
+
+    /** Maximum minutes */
+    private static final int MAX_MINUTES = 59;
+
+    /** Maximum seconds */
+    private static final int MAX_SECONDS = 59;
 
     /** Return status */
     private DialogResult returnStatus;
@@ -59,13 +75,13 @@ public class SongInfoDialog extends JDialog {
     private JLabel lengthLabel = new JLabel("Length");
 
     /** Spinner for length - hours */
-    private JSpinner lengthHoursData = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
+    private JSpinner lengthHoursData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_HOURS, 1));
 
     /** Spinner for length - minutes */
-    private JSpinner lengthMinutesData = new JSpinner(new SpinnerNumberModel(0, 0, 59, 1));
+    private JSpinner lengthMinutesData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_MINUTES, 1));
 
     /** Spinner for length - seconds */
-    private JSpinner lengthSecondsData = new JSpinner(new SpinnerNumberModel(0, 0, 59, 1));
+    private JSpinner lengthSecondsData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_SECONDS, 1));
 
     /** Label for note */
     private JLabel noteLabel = new JLabel("Note");
@@ -208,7 +224,7 @@ public class SongInfoDialog extends JDialog {
         final int hours = (Integer) lengthHoursData.getValue();
         final int minutes = (Integer) lengthMinutesData.getValue();
         final int seconds = (Integer) lengthSecondsData.getValue();
-        song.setLength(3600 * hours + 60 * minutes + seconds);
+        song.setLength(new Time(hours, minutes, seconds).getLength());
         song.setNote(noteData.getText());
         close();
     }
@@ -241,7 +257,7 @@ public class SongInfoDialog extends JDialog {
         final GroupLayout.Group buttons = layout.createSequentialGroup()
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE)
                 .addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(54)
+                .addGap(HORIZONTAL_BUTTONS_GAP_SIZE)
                 .addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE);
 

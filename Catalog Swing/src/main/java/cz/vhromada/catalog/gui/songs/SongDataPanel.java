@@ -16,14 +16,19 @@ public class SongDataPanel extends JPanel {
 
     /** Horizontal label size */
     public static final int HORIZONTAL_LABEL_SIZE = 150;
+
     /** Horizontal data size */
     public static final int HORIZONTAL_DATA_SIZE = 600;
+
     /** Horizontal gap size */
     public static final int HORIZONTAL_GAP_SIZE = 10;
+
     /** Vertical gap size */
     public static final int VERTICAL_GAP_SIZE = 10;
+
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
+
     /** Label for name */
     private JLabel nameLabel = new JLabel("Name");
 

@@ -32,6 +32,9 @@ public class SongsPanel extends JPanel {
     /** Vertical data component size */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
+    /** Update property */
+    private static final String UPDATE_PROPERTY = "update";
+
     /** Popup menu */
     private JPopupMenu popupMenu = new JPopupMenu();
 
@@ -94,7 +97,7 @@ public class SongsPanel extends JPanel {
      * @param music TO for music
      * @throws IllegalArgumentException if TO for music is null
      */
-    public void setMusicTO(final MusicTO music) {
+    public void setMusic(final MusicTO music) {
         Validators.validateArgumentNotNull(music, "TO for music");
 
         this.music = music;
@@ -205,7 +208,7 @@ public class SongsPanel extends JPanel {
                     songsListDataModel.update();
                     list.updateUI();
                     list.setSelectedIndex(list.getModel().getSize() - 1);
-                    firePropertyChange("update", false, true);
+                    firePropertyChange(UPDATE_PROPERTY, false, true);
                 }
             }
 
@@ -227,7 +230,7 @@ public class SongsPanel extends JPanel {
                     songsListDataModel.update();
                     list.updateUI();
                     ((SongDataPanel) tabbedPane.getComponentAt(0)).updateSongTO(updatedSongTO);
-                    firePropertyChange("update", false, true);
+                    firePropertyChange(UPDATE_PROPERTY, false, true);
                 }
             }
 
@@ -240,7 +243,7 @@ public class SongsPanel extends JPanel {
         songsListDataModel.update();
         list.updateUI();
         list.clearSelection();
-        firePropertyChange("update", false, true);
+        firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
     /** Performs action for button Duplicate. */
@@ -250,7 +253,7 @@ public class SongsPanel extends JPanel {
         songsListDataModel.update();
         list.updateUI();
         list.setSelectedIndex(index + 1);
-        firePropertyChange("update", false, true);
+        firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
     /** Performs action for button MoveUp. */
@@ -260,7 +263,7 @@ public class SongsPanel extends JPanel {
         songsListDataModel.update();
         list.updateUI();
         list.setSelectedIndex(index - 1);
-        firePropertyChange("update", false, true);
+        firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
     /** Performs action for button MoveDown. */
@@ -270,7 +273,7 @@ public class SongsPanel extends JPanel {
         songsListDataModel.update();
         list.updateUI();
         list.setSelectedIndex(index + 1);
-        firePropertyChange("update", false, true);
+        firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
     /** Initializes list. */

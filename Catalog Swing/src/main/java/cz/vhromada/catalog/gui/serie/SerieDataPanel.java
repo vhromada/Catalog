@@ -1,0 +1,251 @@
+package cz.vhromada.catalog.gui.serie;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.swing.*;
+
+import cz.vhromada.catalog.commons.SwingUtils;
+import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.validators.Validators;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * A class represents panel with serie's data.
+ *
+ * @author Vladimir Hromada
+ */
+public class SerieDataPanel extends JPanel {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(SerieDataPanel.class);
+
+    /** SerialVersionUID */
+    private static final long serialVersionUID = 1L;
+
+    /** Horizontal label size */
+    private static final int HORIZONTAL_LABEL_SIZE = 150;
+
+    /** Horizontal data size */
+    private static final int HORIZONTAL_DATA_SIZE = 600;
+
+    /** Horizontal button size */
+    private static final int HORIZONTAL_BUTTON_SIZE = 120;
+
+    /** Horizontal gap size */
+    private static final int HORIZONTAL_GAP_SIZE = 10;
+
+    /** Vertical gap size */
+    private static final int VERTICAL_GAP_SIZE = 10;
+
+    /** Label for picture */
+    private JLabel pictureData = new JLabel();
+
+    /** Label for czech name */
+    private JLabel czechNameLabel = new JLabel("Czech name");
+
+    /** Label with czech name */
+    private JLabel czechNameData = new JLabel();
+
+    /** Label for original name */
+    private JLabel originalNameLabel = new JLabel("Original name");
+
+    /** Label with original name */
+    private JLabel originalNameData = new JLabel();
+
+    /** Label for genre */
+    private JLabel genreLabel = new JLabel("Genre");
+
+    /** Label with genre */
+    private JLabel genreData = new JLabel();
+
+    /** Label for count of seasons */
+    private JLabel seasonsCountLabel = new JLabel("Count of seasons");
+
+    /** Label with count of seasons */
+    private JLabel seasonsCountData = new JLabel();
+
+    /** Label for count of episodes */
+    private JLabel episodesCountLabel = new JLabel("Count of episodes");
+
+    /** Label with count of episodes */
+    private JLabel episodesCountData = new JLabel();
+
+    /** Label for total length */
+    private JLabel totalLengthLabel = new JLabel("Total length");
+
+    /** Label with total length */
+    private JLabel totalLengthData = new JLabel();
+
+    /** Label for note */
+    private JLabel noteLabel = new JLabel("Note");
+
+    /** Label with note */
+    private JLabel noteData = new JLabel();
+
+    /** Button for showing serie's ČSFD page */
+    private JButton csfdButton = new JButton("\u010cSFD");
+
+    /** Button for showing serie's IMDB page */
+    private JButton imdbButton = new JButton("IMDB");
+
+    /** Button for showing serie's Wikipedia page */
+    private JButton wikiButton = new JButton("Wikipedia");
+
+    /** URL to ČSFD page about serie */
+    private String csfd;
+
+    /** IMDB code */
+    private int imdb;
+
+    /** Button for showing serie's czech Wikipedia page */
+    private JButton wikiCzButton = new JButton("Czech Wikipedia");
+
+    /** Button for showing serie's english Wikipedia page */
+    private JButton wikiEnButton = new JButton("English Wikipedia");
+
+    /** URL to czech Wikipedia page about serie */
+    private String wikiCz;
+
+    /** URL to english Wikipedia page about serie */
+    private String wikiEn;
+
+    /**
+     * Creates a new instance of SerieDataPanel.
+     *
+     * @param serie TO for serie
+     * @throws IllegalArgumentException if serie is null
+     */
+    public SerieDataPanel(final SerieTO serie) {
+        Validators.validateArgumentNotNull(serie, "TO for serie");
+
+        final String picture = serie.getPicture();
+        if (!picture.isEmpty()) {
+            pictureData.setIcon(new ImageIcon("posters/" + picture));
+        }
+        pictureData.setFocusable(false);
+
+        initData(czechNameLabel, czechNameData, serie.getCzechName());
+        initData(originalNameLabel, originalNameData, serie.getOriginalName());
+        //TODO
+        initData(genreLabel, genreData, null);
+//		initData(seasonsCountLabel, seasonsCountData, Integer.toString(serieTO.getSeasons().size()));
+//		initData(episodesCountLabel, episodesCountData, Integer.toString(serieTO.getTotalEpisodesCount()));
+//		initData(totalLengthLabel, totalLengthData, serieTO.getTotalLength().toString());
+        initData(noteLabel, noteData, serie.getNote());
+
+        csfd = serie.getCsfd();
+        csfdButton.setEnabled(!csfd.isEmpty());
+        csfdButton.addActionListener(createActionListener("http://www.csfd.cz/film/" + csfd, "\u010cSFD"));
+
+        imdb = serie.getImdbCode();
+        imdbButton.setEnabled(imdb > 0);
+        imdbButton.addActionListener(createActionListener("http://www.imdb.com/title/tt" + imdb, "IMDB"));
+
+        wikiCz = serie.getWikiCz();
+        wikiCzButton.setEnabled(!wikiCz.isEmpty());
+        wikiCzButton.addActionListener(createActionListener("http://cs.wikipedia.org/wiki/" + wikiCz, "czech Wikipedia"));
+
+        wikiEn = serie.getWikiEn();
+        wikiEnButton.setEnabled(!wikiEn.isEmpty());
+        wikiEnButton.addActionListener(createActionListener("http://en.wikipedia.org/wiki/" + wikiEn, "english Wikipedia"));
+
+        final GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
+        //TODO
+        layout.setHorizontalGroup(SwingUtils.createHorizontalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton, wikiButton));
+        layout.setVerticalGroup(SwingUtils.createVerticalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton, wikiButton));
+    }
+
+    /**
+     * Updates TO for serie.
+     *
+     * @param serie TO for serie
+     * @throws IllegalArgumentException if TO for serie is null
+     */
+    public void updateSerie(final SerieTO serie) {
+        Validators.validateArgumentNotNull(serie, "TO for serie");
+
+        final String picture = serie.getPicture();
+        if (!picture.isEmpty()) {
+            pictureData.setIcon(new ImageIcon("posters/" + picture));
+        } else {
+            pictureData.setIcon(null);
+        }
+        czechNameData.setText(serie.getCzechName());
+        originalNameData.setText(serie.getOriginalName());
+        //TODO
+        genreData.setText(null);
+//		seasonsCountData.setText(Integer.toString(serie.getSeasons().size()));
+//		episodesCountData.setText(Integer.toString(serie.getTotalEpisodesCount()));
+//		totalLengthData.setText(serie.getTotalLength().toString());
+        noteData.setText(serie.getNote());
+        csfd = serie.getCsfd();
+        csfdButton.setEnabled(!csfd.isEmpty());
+        imdb = serie.getImdbCode();
+        imdbButton.setEnabled(imdb > 0);
+        wikiCz = serie.getWikiCz();
+        wikiCzButton.setEnabled(!wikiCz.isEmpty());
+        wikiEn = serie.getWikiEn();
+        wikiEnButton.setEnabled(!wikiEn.isEmpty());
+    }
+
+    /**
+     * Initializes data.
+     *
+     * @param label label
+     * @param data  data
+     * @param text  text for data
+     */
+    private static void initData(final JLabel label, final JLabel data, final String text) {
+        label.setFocusable(false);
+        label.setLabelFor(data);
+        data.setText(text);
+        data.setFocusable(false);
+    }
+
+    /**
+     * Returns action listener.
+     *
+     * @param url  URL to web page
+     * @param name name of web page
+     * @return action listener
+     */
+    private ActionListener createActionListener(final String url, final String name) {
+        return new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                try {
+                    Runtime.getRuntime().exec("rundll32.exe url.dll,FileProtocolHandler " + url);
+                } catch (final IOException ex) {
+                    logger.error("Error in showing {} page.", name, ex);
+                }
+
+            }
+
+        };
+    }
+
+    /**
+     * Returns components map.
+     *
+     * @return components map
+     */
+    private Map<JLabel, JLabel> createComponentsMap() {
+        final Map<JLabel, JLabel> components = new LinkedHashMap<>(7);
+        components.put(czechNameLabel, czechNameData);
+        components.put(originalNameLabel, originalNameData);
+        components.put(genreLabel, genreData);
+        components.put(seasonsCountLabel, seasonsCountData);
+        components.put(episodesCountLabel, episodesCountData);
+        components.put(totalLengthLabel, totalLengthData);
+        components.put(noteLabel, noteData);
+        return components;
+    }
+
+}

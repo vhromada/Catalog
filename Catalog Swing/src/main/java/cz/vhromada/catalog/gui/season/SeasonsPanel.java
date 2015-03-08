@@ -315,7 +315,7 @@ public class SeasonsPanel extends JPanel {
         tabbedPane.removeAll();
         if (validSelection) {
             final SeasonTO season = seasonsListDataModel.getSeasonAt(selectedRow);
-            tabbedPane.add("Data", new SeasonDataPanel(season));
+            tabbedPane.add("Data", new SeasonDataPanel(season, episodeFacade));
             final EpisodesPanel episodesPanel = new EpisodesPanel(episodeFacade, season);
             episodesPanel.addPropertyChangeListener(UPDATE_PROPERTY, new PropertyChangeListener() {
 

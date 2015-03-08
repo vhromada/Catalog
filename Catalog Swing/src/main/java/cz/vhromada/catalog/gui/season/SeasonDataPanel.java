@@ -186,7 +186,7 @@ public class SeasonDataPanel extends JPanel {
     }
 
     /**
-     * Returns total length of all season's episodes
+     * Returns total length of all season's episodes.
      *
      * @param season TO for season
      * @return total length of all season's episodes

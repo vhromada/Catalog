@@ -4,11 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.*;
 
 import cz.vhromada.catalog.commons.SwingUtils;
+import cz.vhromada.catalog.commons.Time;
+import cz.vhromada.catalog.facade.EpisodeFacade;
+import cz.vhromada.catalog.facade.SeasonFacade;
+import cz.vhromada.catalog.facade.to.EpisodeTO;
+import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.validators.Validators;
 import org.slf4j.Logger;
@@ -41,6 +48,12 @@ public class SerieDataPanel extends JPanel {
 
     /** Vertical gap size */
     private static final int VERTICAL_GAP_SIZE = 10;
+
+    /** Facade for seasons */
+    private SeasonFacade seasonFacade;
+
+    /** Facade for episodes */
+    private EpisodeFacade episodeFacade;
 
     /** Label for picture */
     private JLabel pictureData = new JLabel();
@@ -93,20 +106,17 @@ public class SerieDataPanel extends JPanel {
     /** Button for showing serie's IMDB page */
     private JButton imdbButton = new JButton("IMDB");
 
-    /** Button for showing serie's Wikipedia page */
-    private JButton wikiButton = new JButton("Wikipedia");
+    /** Button for showing serie's czech Wikipedia page */
+    private JButton wikiCzButton = new JButton("Czech Wikipedia");
+
+    /** Button for showing serie's english Wikipedia page */
+    private JButton wikiEnButton = new JButton("English Wikipedia");
 
     /** URL to ČSFD page about serie */
     private String csfd;
 
     /** IMDB code */
     private int imdb;
-
-    /** Button for showing serie's czech Wikipedia page */
-    private JButton wikiCzButton = new JButton("Czech Wikipedia");
-
-    /** Button for showing serie's english Wikipedia page */
-    private JButton wikiEnButton = new JButton("English Wikipedia");
 
     /** URL to czech Wikipedia page about serie */
     private String wikiCz;
@@ -118,10 +128,19 @@ public class SerieDataPanel extends JPanel {
      * Creates a new instance of SerieDataPanel.
      *
      * @param serie TO for serie
+     * @param seasonFacade facade for seasons
+     * @param episodeFacade facade for episodes
      * @throws IllegalArgumentException if serie is null
+     *                                  or facade for seasons is null
+     *                                  or facade for episodes is null
      */
-    public SerieDataPanel(final SerieTO serie) {
+    public SerieDataPanel(final SerieTO serie, final SeasonFacade seasonFacade, final EpisodeFacade episodeFacade) {
         Validators.validateArgumentNotNull(serie, "TO for serie");
+        Validators.validateArgumentNotNull(seasonFacade, "Facade for seasons");
+        Validators.validateArgumentNotNull(episodeFacade, "Facade for episodes");
+
+        this.seasonFacade = seasonFacade;
+        this.episodeFacade = episodeFacade;
 
         final String picture = serie.getPicture();
         if (!picture.isEmpty()) {
@@ -131,11 +150,10 @@ public class SerieDataPanel extends JPanel {
 
         initData(czechNameLabel, czechNameData, serie.getCzechName());
         initData(originalNameLabel, originalNameData, serie.getOriginalName());
-        //TODO
-        initData(genreLabel, genreData, null);
-//		initData(seasonsCountLabel, seasonsCountData, Integer.toString(serieTO.getSeasons().size()));
-//		initData(episodesCountLabel, episodesCountData, Integer.toString(serieTO.getTotalEpisodesCount()));
-//		initData(totalLengthLabel, totalLengthData, serieTO.getTotalLength().toString());
+        initData(genreLabel, genreData, getGenres(serie));
+        initData(seasonsCountLabel, seasonsCountData, getSeasonsCount(serie));
+        initData(episodesCountLabel, episodesCountData, getEpisodesCount(serie));
+        initData(totalLengthLabel, totalLengthData, getSerieLength(serie));
         initData(noteLabel, noteData, serie.getNote());
 
         csfd = serie.getCsfd();
@@ -157,8 +175,9 @@ public class SerieDataPanel extends JPanel {
         final GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         //TODO
-        layout.setHorizontalGroup(SwingUtils.createHorizontalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton, wikiButton));
-        layout.setVerticalGroup(SwingUtils.createVerticalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton, wikiButton));
+        layout.setHorizontalGroup(SwingUtils.createHorizontalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton,
+                wikiCzButton));
+        layout.setVerticalGroup(SwingUtils.createVerticalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton, wikiEnButton));
     }
 
     /**
@@ -178,11 +197,10 @@ public class SerieDataPanel extends JPanel {
         }
         czechNameData.setText(serie.getCzechName());
         originalNameData.setText(serie.getOriginalName());
-        //TODO
-        genreData.setText(null);
-//		seasonsCountData.setText(Integer.toString(serie.getSeasons().size()));
-//		episodesCountData.setText(Integer.toString(serie.getTotalEpisodesCount()));
-//		totalLengthData.setText(serie.getTotalLength().toString());
+        genreData.setText(getGenres(serie));
+        seasonsCountData.setText(getSeasonsCount(serie));
+        episodesCountData.setText(getEpisodesCount(serie));
+        totalLengthData.setText(getSerieLength(serie));
         noteData.setText(serie.getNote());
         csfd = serie.getCsfd();
         csfdButton.setEnabled(!csfd.isEmpty());
@@ -206,6 +224,73 @@ public class SerieDataPanel extends JPanel {
         label.setLabelFor(data);
         data.setText(text);
         data.setFocusable(false);
+    }
+
+    /**
+     * Returns serie's genres.
+     *
+     * @param serie TO for serie
+     * @return serie's genres
+     */
+    private static String getGenres(final SerieTO serie) {
+        final List<GenreTO> genres = serie.getGenres();
+
+        if (genres == null || genres.isEmpty()) {
+            return "";
+        }
+
+        final StringBuilder subtitlesString = new StringBuilder();
+        for (final GenreTO genre : genres) {
+            subtitlesString.append(genre.getName());
+            subtitlesString.append(", ");
+        }
+
+        return subtitlesString.substring(0, subtitlesString.length() - 2);
+    }
+
+    /**
+     * Returns count of serie's seasons.
+     *
+     * @param serie TO for serie
+     * @return count of serie's seasons
+     */
+    private String getSeasonsCount(final SerieTO serie) {
+        final List<SeasonTO> seasons = seasonFacade.findSeasonsBySerie(serie);
+        return Integer.toString(seasons.size());
+    }
+
+    /**
+     * Returns count of serie's episodes.
+     *
+     * @param serie TO for serie
+     * @return count of serie's episodes
+     */
+    private String getEpisodesCount(final SerieTO serie) {
+        final List<SeasonTO> seasons = seasonFacade.findSeasonsBySerie(serie);
+        int totalCount = 0;
+        for (SeasonTO season : seasons) {
+            final List<EpisodeTO> episodes = episodeFacade.findEpisodesBySeason(season);
+            totalCount += episodes.size();
+        }
+        return Integer.toString(totalCount);
+    }
+
+    /**
+     * Returns total length of all serie's seasons.
+     *
+     * @param serie TO for serie
+     * @return total length of all serie's seasons
+     */
+    private String getSerieLength(final SerieTO serie) {
+        final List<SeasonTO> seasons = seasonFacade.findSeasonsBySerie(serie);
+        int totalLength = 0;
+        for (SeasonTO season : seasons) {
+            final List<EpisodeTO> episodes = episodeFacade.findEpisodesBySeason(season);
+            for (EpisodeTO episode : episodes) {
+                totalLength += episode.getLength();
+            }
+        }
+        return new Time(totalLength).toString();
     }
 
     /**

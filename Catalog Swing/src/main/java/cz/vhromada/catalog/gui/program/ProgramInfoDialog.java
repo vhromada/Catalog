@@ -308,7 +308,7 @@ public class ProgramInfoDialog extends JDialog {
         final GroupLayout.Group checkBoxes = layout.createSequentialGroup()
                 .addComponent(crackData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
                         CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-                .addGap(10)
+                .addGap(VERTICAL_GAP_SIZE)
                 .addComponent(serialData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
                         CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
 

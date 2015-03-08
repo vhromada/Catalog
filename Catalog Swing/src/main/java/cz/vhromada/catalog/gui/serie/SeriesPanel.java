@@ -360,7 +360,7 @@ public class SeriesPanel extends JPanel {
         tabbedPane.removeAll();
         if (validSelection) {
             final SerieTO serie = seriesListDataModel.getSerieAt(selectedRow);
-            tabbedPane.add("Data", new SerieDataPanel(serie));
+            tabbedPane.add("Data", new SerieDataPanel(serie, seasonFacade, episodeFacade));
             final SeasonsPanel seasonsPanel = new SeasonsPanel(seasonFacade, episodeFacade, serie);
             seasonsPanel.addPropertyChangeListener("update", new PropertyChangeListener() {
 

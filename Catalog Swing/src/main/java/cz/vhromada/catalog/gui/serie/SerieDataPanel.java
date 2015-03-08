@@ -3,13 +3,11 @@ package cz.vhromada.catalog.gui.serie;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.SwingUtils;
+import cz.vhromada.catalog.commons.CatalogSwingConstant2;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
@@ -28,24 +26,22 @@ import org.slf4j.LoggerFactory;
  */
 public class SerieDataPanel extends JPanel {
 
+    /** Vertical picture size */
+    public static final int VERTICAL_PICTURE_SIZE = 180;
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SerieDataPanel.class);
-
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
-
     /** Horizontal label size */
     private static final int HORIZONTAL_LABEL_SIZE = 150;
-
     /** Horizontal data size */
     private static final int HORIZONTAL_DATA_SIZE = 600;
-
     /** Horizontal button size */
-    private static final int HORIZONTAL_BUTTON_SIZE = 120;
-
+    private static final int HORIZONTAL_BUTTON_SIZE = 90;
+    /** Horizontal picture size */
+    private static final int HORIZONTAL_PICTURE_SIZE = 200;
     /** Horizontal gap size */
     private static final int HORIZONTAL_GAP_SIZE = 10;
-
     /** Vertical gap size */
     private static final int VERTICAL_GAP_SIZE = 10;
 
@@ -174,10 +170,8 @@ public class SerieDataPanel extends JPanel {
 
         final GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
-        //TODO
-        layout.setHorizontalGroup(SwingUtils.createHorizontalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton,
-                wikiCzButton));
-        layout.setVerticalGroup(SwingUtils.createVerticalLayoutWithPicture(layout, pictureData, createComponentsMap(), csfdButton, imdbButton, wikiEnButton));
+        layout.setHorizontalGroup(createHorizontalLayout(layout));
+        layout.setVerticalGroup(createVerticalLayout(layout));
     }
 
     /**
@@ -317,20 +311,108 @@ public class SerieDataPanel extends JPanel {
     }
 
     /**
-     * Returns components map.
+     * Returns horizontal layout of components.
      *
-     * @return components map
+     * @param layout layout
+     * @return horizontal layout of components
      */
-    private Map<JLabel, JLabel> createComponentsMap() {
-        final Map<JLabel, JLabel> components = new LinkedHashMap<>(7);
-        components.put(czechNameLabel, czechNameData);
-        components.put(originalNameLabel, originalNameData);
-        components.put(genreLabel, genreData);
-        components.put(seasonsCountLabel, seasonsCountData);
-        components.put(episodesCountLabel, episodesCountData);
-        components.put(totalLengthLabel, totalLengthData);
-        components.put(noteLabel, noteData);
-        return components;
+    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
+        final GroupLayout.Group buttons = layout.createSequentialGroup()
+                .addComponent(csfdButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addComponent(imdbButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addComponent(wikiCzButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addComponent(wikiEnButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE);
+
+        final GroupLayout.Group components = layout.createParallelGroup()
+                .addComponent(pictureData, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE)
+                .addGroup(createHorizontalDataComponents(layout, czechNameLabel, czechNameData))
+                .addGroup(createHorizontalDataComponents(layout, originalNameLabel, originalNameData))
+                .addGroup(createHorizontalDataComponents(layout, genreLabel, genreData))
+                .addGroup(createHorizontalDataComponents(layout, seasonsCountLabel, seasonsCountData))
+                .addGroup(createHorizontalDataComponents(layout, episodesCountLabel, episodesCountData))
+                .addGroup(createHorizontalDataComponents(layout, totalLengthLabel, totalLengthData))
+                .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData))
+                .addGroup(buttons);
+
+        return layout.createSequentialGroup()
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addGroup(components)
+                .addGap(HORIZONTAL_GAP_SIZE);
+
+    }
+
+    /**
+     * Returns horizontal layout for label component with data component.
+     *
+     * @param layout layout
+     * @param label  label
+     * @param data   data
+     * @return horizontal layout for label component with data component
+     */
+    private GroupLayout.Group createHorizontalDataComponents(final GroupLayout layout, final JLabel label, final JLabel data) {
+        return layout.createSequentialGroup()
+                .addComponent(label, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE)
+                .addGap(HORIZONTAL_GAP_SIZE)
+                .addComponent(data, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE);
+    }
+
+    /**
+     * Returns vertical layout of components.
+     *
+     * @param layout layout
+     * @return vertical layout of components
+     */
+    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
+        final GroupLayout.Group buttons = layout.createParallelGroup()
+                .addComponent(csfdButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+                .addComponent(imdbButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+                .addComponent(wikiCzButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+                .addComponent(wikiEnButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
+
+        return layout.createSequentialGroup()
+                .addGap(5)
+                .addComponent(pictureData, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, czechNameLabel, czechNameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, originalNameLabel, originalNameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, genreLabel, genreData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, seasonsCountLabel, seasonsCountData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, episodesCountLabel, episodesCountData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, totalLengthLabel, totalLengthData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(buttons)
+                .addGap(5);
+    }
+
+    /**
+     * Returns vertical layout for label component with data component.
+     *
+     * @param layout layout
+     * @param label  label component
+     * @param data   data component
+     * @return vertical layout for label component with data component
+     */
+    private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
+        return layout.createParallelGroup()
+                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
     }
 
 }

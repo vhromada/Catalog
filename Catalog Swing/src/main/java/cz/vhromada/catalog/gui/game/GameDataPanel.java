@@ -258,7 +258,6 @@ public class GameDataPanel extends JPanel {
         final GroupLayout.Group buttons = layout.createParallelGroup()
                 .addComponent(wikiCzButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
                         CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
-                .addGap(VERTICAL_GAP_SIZE)
                 .addComponent(wikiEnButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
                         CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
 

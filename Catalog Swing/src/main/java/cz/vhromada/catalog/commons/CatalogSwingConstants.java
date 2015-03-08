@@ -8,15 +8,6 @@ package cz.vhromada.catalog.commons;
 @Deprecated
 public final class CatalogSwingConstants {
 
-    /** Return status Cancel */
-    public static final int RET_CANCEL = 0;
-
-    /** Return status OK */
-    public static final int RET_OK = 1;
-
-    /** Horizontal component size */
-    public static final int HORIZONTAL_COMPONENT_SIZE = 310;
-
     /** Horizontal scroll pane size */
     public static final int HORIZONTAL_SCROLL_PANE_SIZE = 300;
 
@@ -56,9 +47,6 @@ public final class CatalogSwingConstants {
     /** Horizontal gap size between buttons */
     public static final int HORIZONTAL_BUTTONS_GAP_SIZE = 54;
 
-    /** Horizontal gap size between link buttons */
-    public static final int HORIZONTAL_LINK_BUTTONS_GAP_SIZE = 15;
-
     /** Vertical component size */
     public static final int VERTICAL_COMPONENT_SIZE = 23;
 
@@ -67,9 +55,6 @@ public final class CatalogSwingConstants {
 
     /** Vertical data component size */
     public static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
-
-    /** Vertical picture size */
-    public static final int VERTICAL_PICTURE_SIZE = 180;
 
     /** Vertical button size */
     public static final int VERTICAL_BUTTON_SIZE = 26;

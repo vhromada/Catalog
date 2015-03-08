@@ -49,7 +49,7 @@ public class SeasonInfoDialog extends JDialog {
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
     /** Return status */
-    private DialogResult returnStatus;
+    private DialogResult returnStatus = DialogResult.CANCEL;
 
     /** TO for season */
     private SeasonTO season;
@@ -149,6 +149,7 @@ public class SeasonInfoDialog extends JDialog {
             default:
                 throw new IndexOutOfBoundsException("Bad language");
         }
+        //TODO vhromada 08.03.2015: subtitles
         initSubtitles(null);
         this.noteData.setText(season.getNote());
         this.okButton.requestFocusInWindow();

@@ -134,7 +134,7 @@ public class SerieInfoDialog extends JDialog {
         this.serie = serie;
         this.czechNameData.setText(serie.getCzechName());
         this.originalNameData.setText(serie.getOriginalName());
-        //TODO
+        //TODO vhromada 08.03.2015: genres
         this.genreData.setText(null);
         this.csfdData.setText(serie.getCsfd());
         final int imdbCode = serie.getImdbCode();
@@ -276,7 +276,7 @@ public class SerieInfoDialog extends JDialog {
         }
         serie.setCzechName(czechNameData.getText());
         serie.setOriginalName(originalNameData.getText());
-        //TODO
+        //TODO vhromada 08.03.2015: genres
         serie.setGenres(null);
         serie.setCsfd(csfdData.getText());
         serie.setImdbCode(imdbCodeLabel.isSelected() ? (Integer) imdbCodeData.getValue() : -1);

@@ -26,22 +26,30 @@ import org.slf4j.LoggerFactory;
  */
 public class SerieDataPanel extends JPanel {
 
-    /** Vertical picture size */
-    public static final int VERTICAL_PICTURE_SIZE = 180;
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SerieDataPanel.class);
+
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
+
     /** Horizontal label size */
     private static final int HORIZONTAL_LABEL_SIZE = 150;
+
     /** Horizontal data size */
     private static final int HORIZONTAL_DATA_SIZE = 600;
+
     /** Horizontal button size */
     private static final int HORIZONTAL_BUTTON_SIZE = 90;
+
     /** Horizontal picture size */
     private static final int HORIZONTAL_PICTURE_SIZE = 200;
+
     /** Horizontal gap size */
     private static final int HORIZONTAL_GAP_SIZE = 10;
+
+    /** Vertical picture size */
+    private static final int VERTICAL_PICTURE_SIZE = 180;
+
     /** Vertical gap size */
     private static final int VERTICAL_GAP_SIZE = 10;
 

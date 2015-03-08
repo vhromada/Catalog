@@ -37,33 +37,6 @@ public final class SwingUtils {
     /**
      * Returns horizontal layout for components.
      *
-     * @param layout     layout
-     * @param picture    picture component
-     * @param components components (Map: label -> data)
-     * @param buttons    buttons
-     * @return horizontal layout for components
-     */
-    public static GroupLayout.Group createHorizontalLayoutWithPicture(final GroupLayout layout, final JLabel picture, final Map<JLabel, JLabel> components,
-            final JButton... buttons) {
-        final GroupLayout.Group componentsGroup = layout.createParallelGroup()
-                .addComponent(picture, CatalogSwingConstants.HORIZONTAL_DATA_DIALOG_SIZE, CatalogSwingConstants.HORIZONTAL_DATA_DIALOG_SIZE,
-                        CatalogSwingConstants.HORIZONTAL_DATA_DIALOG_SIZE);
-        createHorizontalLayout(layout, componentsGroup, components);
-        final GroupLayout.Group buttonGroup = layout.createSequentialGroup();
-        for (JButton button : buttons) {
-            buttonGroup.addComponent(button, CatalogSwingConstants.HORIZONTAL_BUTTON_SIZE, CatalogSwingConstants.HORIZONTAL_BUTTON_SIZE,
-                    CatalogSwingConstants.HORIZONTAL_BUTTON_SIZE);
-            if (!button.equals(buttons[buttons.length - 1])) {
-                buttonGroup.addGap(CatalogSwingConstants.HORIZONTAL_LINK_BUTTONS_GAP_SIZE);
-            }
-        }
-        componentsGroup.addGroup(buttonGroup);
-        return createResult(layout, componentsGroup);
-    }
-
-    /**
-     * Returns horizontal layout for components.
-     *
      * @param layout layout
      * @param groups group layouts for components
      * @return horizontal layout for components
@@ -212,31 +185,6 @@ public final class SwingUtils {
                     CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
         }
         return result;
-    }
-
-    /**
-     * Returns vertical layout for components.
-     *
-     * @param layout     layout
-     * @param picture    picture component
-     * @param components components (Map: label -> data)
-     * @param buttons    buttons
-     * @return vertical layout for components
-     */
-    public static GroupLayout.Group createVerticalLayoutWithPicture(final GroupLayout layout, final JLabel picture,
-            final Map<? extends JComponent, ? extends JComponent> components, final JButton... buttons) {
-        final GroupLayout.Group result = layout.createSequentialGroup()
-                .addGap(CatalogSwingConstants.VERTICAL_SHORT_GAP_SIZE)
-                .addComponent(picture, CatalogSwingConstants.VERTICAL_PICTURE_SIZE, CatalogSwingConstants.VERTICAL_PICTURE_SIZE,
-                        CatalogSwingConstants.VERTICAL_PICTURE_SIZE)
-                .addGap(CatalogSwingConstants.VERTICAL_GAP_SIZE);
-        createVerticalLayout(layout, result, components);
-        final GroupLayout.Group buttonGroup = layout.createParallelGroup();
-        for (JButton button : buttons) {
-            buttonGroup.addComponent(button, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                    CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
-        }
-        return result.addGroup(buttonGroup);
     }
 
     /**

@@ -57,7 +57,7 @@ public class SongInfoDialog extends JDialog {
     private static final int MAX_SECONDS = 59;
 
     /** Return status */
-    private DialogResult returnStatus;
+    private DialogResult returnStatus = DialogResult.CANCEL;
 
     /** TO for song */
     private SongTO song;

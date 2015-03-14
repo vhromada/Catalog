@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui;
+package cz.vhromada.catalog.gui.commons;
 
 import javax.swing.table.DefaultTableCellRenderer;
 

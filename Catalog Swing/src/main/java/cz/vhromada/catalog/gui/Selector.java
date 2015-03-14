@@ -5,7 +5,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.Picture;
 
 /**
  * A class represents main screen for selecting options.

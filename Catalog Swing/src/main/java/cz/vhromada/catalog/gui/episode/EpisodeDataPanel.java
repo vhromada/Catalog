@@ -2,9 +2,9 @@ package cz.vhromada.catalog.gui.episode;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
 
 /**

@@ -21,6 +21,7 @@ import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.SongFacade;
+import cz.vhromada.catalog.gui.commons.Picture;
 import cz.vhromada.catalog.gui.game.GamesPanel;
 import cz.vhromada.catalog.gui.genre.GenresPanel;
 import cz.vhromada.catalog.gui.movie.MoviesPanel;

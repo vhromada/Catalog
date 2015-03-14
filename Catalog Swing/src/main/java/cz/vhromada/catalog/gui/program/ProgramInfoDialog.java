@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.facade.to.ProgramTO;
-import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.InputValidator;
-import cz.vhromada.catalog.gui.Picture;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.InputValidator;
+import cz.vhromada.catalog.gui.commons.Picture;
 import cz.vhromada.validators.Validators;
 
 /**

@@ -7,11 +7,11 @@ import java.util.List;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

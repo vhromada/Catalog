@@ -11,14 +11,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Constants;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.InputValidator;
-import cz.vhromada.catalog.gui.Picture;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.InputValidator;
+import cz.vhromada.catalog.gui.commons.Picture;
 import cz.vhromada.catalog.gui.genre.GenreChooseDialog;
 import cz.vhromada.validators.Validators;
 

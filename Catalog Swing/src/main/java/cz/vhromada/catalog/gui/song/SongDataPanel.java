@@ -2,9 +2,9 @@ package cz.vhromada.catalog.gui.song;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.SongTO;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
 
 /**

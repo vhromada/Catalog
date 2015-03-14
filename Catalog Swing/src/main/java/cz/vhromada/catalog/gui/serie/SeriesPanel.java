@@ -17,9 +17,9 @@ import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Picture;
-import cz.vhromada.catalog.gui.StatsTableCellRenderer;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.Picture;
+import cz.vhromada.catalog.gui.commons.StatsTableCellRenderer;
 import cz.vhromada.catalog.gui.season.SeasonsPanel;
 import cz.vhromada.validators.Validators;
 

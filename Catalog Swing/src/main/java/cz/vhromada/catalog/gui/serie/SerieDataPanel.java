@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
@@ -15,6 +14,7 @@ import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

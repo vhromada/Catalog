@@ -16,8 +16,8 @@ import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Picture;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.Picture;
 import cz.vhromada.catalog.gui.episode.EpisodesPanel;
 import cz.vhromada.validators.Validators;
 

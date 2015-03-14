@@ -11,9 +11,9 @@ import javax.swing.event.ListSelectionListener;
 
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.facade.to.GameTO;
-import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Picture;
-import cz.vhromada.catalog.gui.StatsTableCellRenderer;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.Picture;
+import cz.vhromada.catalog.gui.commons.StatsTableCellRenderer;
 import cz.vhromada.validators.Validators;
 
 /**

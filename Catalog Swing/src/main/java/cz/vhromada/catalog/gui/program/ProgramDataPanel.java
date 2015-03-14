@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

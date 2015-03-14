@@ -12,8 +12,8 @@ import javax.swing.event.ListSelectionListener;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
-import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Picture;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.Picture;
 import cz.vhromada.validators.Validators;
 
 /**

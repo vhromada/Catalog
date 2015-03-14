@@ -9,12 +9,12 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Constants;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Picture;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.gui.commons.DialogResult;
+import cz.vhromada.catalog.gui.commons.Picture;
 import cz.vhromada.validators.Validators;
 
 /**

@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
+import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
 
 /**

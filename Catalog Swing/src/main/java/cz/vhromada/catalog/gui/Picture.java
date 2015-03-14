@@ -13,6 +13,7 @@ public enum Picture {
     ADD(new ImageIcon("pics/add.jpg")),
     CANCEL(new ImageIcon("pics/cancel.jpg")),
     CATALOG(new ImageIcon("pics/catalog.jpg")),
+    CHOOSE(new ImageIcon("pics/choose.jpg")),
     DOWN(new ImageIcon("pics/down.jpg")),
     DUPLICATE(new ImageIcon("pics/duplicate.jpg")),
     EXIT(new ImageIcon("pics/exit.jpg")),

@@ -39,7 +39,7 @@ public class SerieDataPanel extends JPanel {
     private static final int HORIZONTAL_DATA_SIZE = 600;
 
     /** Horizontal button size */
-    private static final int HORIZONTAL_BUTTON_SIZE = 90;
+    private static final int HORIZONTAL_BUTTON_SIZE = 120;
 
     /** Horizontal picture size */
     private static final int HORIZONTAL_PICTURE_SIZE = 200;

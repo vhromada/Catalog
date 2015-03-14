@@ -149,8 +149,9 @@ public class SeasonInfoDialog extends JDialog {
             default:
                 throw new IndexOutOfBoundsException("Bad language");
         }
-        //TODO vhromada 08.03.2015: subtitles
-        initSubtitles(null);
+        for (Language subtitles : season.getSubtitles()) {
+            initSubtitles(subtitles);
+        }
         this.noteData.setText(season.getNote());
         this.okButton.requestFocusInWindow();
     }

@@ -151,7 +151,7 @@ public class Catalog extends JFrame {
         });
 
         moviesPanel = new MoviesPanel(movieFacade);
-        seriesPanel = new SeriesPanel(serieFacade, context.getBean(SeasonFacade.class), context.getBean(EpisodeFacade.class));
+        seriesPanel = new SeriesPanel(serieFacade, context.getBean(SeasonFacade.class), context.getBean(EpisodeFacade.class), genreFacade);
         gamesPanel = new GamesPanel(gameFacade);
         musicPanel = new MusicPanel(musicFacade, context.getBean(SongFacade.class));
         programsPanel = new ProgramsPanel(programFacade);
@@ -247,8 +247,9 @@ public class Catalog extends JFrame {
 
     /** Initializes tabbed pane. */
     private void initTabbedPane() {
+        //TODO vhromada 14.03.2015: movies
 //        tabbedPane.addTab("Movies", moviesPanel);
-//        tabbedPane.addTab("Series", seriesPanel);
+        tabbedPane.addTab("Series", seriesPanel);
         tabbedPane.addTab("Games", gamesPanel);
         tabbedPane.addTab("Music", musicPanel);
         tabbedPane.addTab("Programs", programsPanel);

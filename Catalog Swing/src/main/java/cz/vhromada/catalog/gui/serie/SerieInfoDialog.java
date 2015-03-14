@@ -1,5 +1,6 @@
 package cz.vhromada.catalog.gui.serie;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,11 +13,13 @@ import javax.swing.event.DocumentListener;
 
 import cz.vhromada.catalog.commons.CatalogSwingConstant2;
 import cz.vhromada.catalog.commons.Constants;
+import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.InputValidator;
 import cz.vhromada.catalog.gui.Picture;
+import cz.vhromada.catalog.gui.genre.GenreChooseDialog;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -55,6 +58,9 @@ public class SerieInfoDialog extends JDialog {
 
     /** Return status */
     private DialogResult returnStatus = DialogResult.CANCEL;
+
+    /** Facade for genres */
+    private GenreFacade genreFacade;
 
     /** TO for serie */
     private SerieTO serie;
@@ -108,7 +114,7 @@ public class SerieInfoDialog extends JDialog {
     private JTextField noteData = new JTextField();
 
     /** Button for genres */
-    private JButton genresButton = new JButton("Genres", Picture.ADD.getIcon());
+    private JButton genresButton = new JButton("Genres", Picture.CHOOSE.getIcon());
 
     /** Button OK */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
@@ -119,24 +125,30 @@ public class SerieInfoDialog extends JDialog {
     /** List of TO for genre */
     private List<GenreTO> genres = new ArrayList<>();
 
-    /** Creates a new instance of SerieInfoDialog. */
-    public SerieInfoDialog() {
-        this("Add", Picture.ADD);
+    /**
+     * Creates a new instance of SerieInfoDialog.
+     *
+     * @param genreFacade facade for genres
+     * @throws IllegalArgumentException if facade for genres is null
+     */
+    public SerieInfoDialog(final GenreFacade genreFacade) {
+        this("Add", Picture.ADD, genreFacade);
 
         imdbCodeData.setEnabled(imdbCodeLabel.isSelected());
+        okButton.setEnabled(false);
         czechNameData.requestFocusInWindow();
     }
 
     /**
      * Creates a new instance of SerieInfoDialog.
      *
+     * @param genreFacade facade for genres
      * @param serie TO for serie
-     * @throws IllegalArgumentException if TO for serie is null
+     * @throws IllegalArgumentException if facade for genres is null
+     * or TO for serie is null
      */
-    public SerieInfoDialog(final SerieTO serie) {
-        this("Update", Picture.UPDATE);
-
-        Validators.validateArgumentNotNull(serie, "TO for serie");
+    public SerieInfoDialog(final GenreFacade genreFacade, final SerieTO serie) {
+        this("Update", Picture.UPDATE, genreFacade);
 
         this.serie = serie;
         this.czechNameData.setText(serie.getCzechName());
@@ -148,12 +160,14 @@ public class SerieInfoDialog extends JDialog {
             this.imdbCodeData.setValue(serie.getImdbCode());
         } else {
             this.imdbCodeLabel.setSelected(false);
+            this.imdbCodeData.setEnabled(false);
         }
         this.wikiCzData.setText(serie.getWikiCz());
         this.wikiEnData.setText(serie.getWikiEn());
         this.pictureData.setText(serie.getPicture());
         this.noteData.setText(serie.getNote());
         this.genres = serie.getGenres();
+        this.okButton.setEnabled(true);
         this.okButton.requestFocusInWindow();
     }
 
@@ -162,10 +176,15 @@ public class SerieInfoDialog extends JDialog {
      *
      * @param name    name
      * @param picture picture
+     * @param genreFacade facade for genres
+     * @throws IllegalArgumentException if facade for genres is null
      */
-    private SerieInfoDialog(final String name, final Picture picture) {
+    private SerieInfoDialog(final String name, final Picture picture, final GenreFacade genreFacade) {
         super(new JFrame(), name, true);
 
+        Validators.validateArgumentNotNull(genreFacade, "Facade for genres");
+
+        this.genreFacade = genreFacade;
         initComponents();
         setIconImage(picture.getIcon().getImage());
     }
@@ -230,7 +249,6 @@ public class SerieInfoDialog extends JDialog {
 
         });
 
-        okButton.setEnabled(false);
         okButton.addActionListener(new ActionListener() {
 
             @Override
@@ -309,22 +327,20 @@ public class SerieInfoDialog extends JDialog {
 
     /** Performs action for button Genres. */
     private void genresAction() {
-//        EventQueue.invokeLater(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                final GenreChooseDialog dialog = new GenreChooseDialog();
-//                dialog.setVisible(true);
-//                if (dialog.getReturnStatus() == DialogResult.OK) {
-        //TODO vhromada 14.03.2015: genres
-        final GenreTO genre = new GenreTO();
-        genre.setName("TEST");
-        genres.add(genre);
-        okButton.setEnabled(isInputValid());
-//                }
-//            }
-//
-//        });
+        EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                final GenreChooseDialog dialog = new GenreChooseDialog(genreFacade, new ArrayList<>(genres));
+                dialog.setVisible(true);
+                if (dialog.getReturnStatus() == DialogResult.OK) {
+                    genres.clear();
+                    genres.addAll(dialog.getGenres());
+                    okButton.setEnabled(isInputValid());
+                }
+            }
+
+        });
     }
 
     /**

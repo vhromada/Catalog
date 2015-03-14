@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import cz.vhromada.catalog.facade.EpisodeFacade;
+import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.to.SerieTO;
@@ -86,6 +87,9 @@ public class SeriesPanel extends JPanel {
     /** Facade for episodes */
     private EpisodeFacade episodeFacade;
 
+    /** Facade for genres */
+    private GenreFacade genreFacade;
+
     /** Data model for list with series */
     private SeriesListDataModel seriesListDataModel;
 
@@ -99,18 +103,24 @@ public class SeriesPanel extends JPanel {
      * Creates a new instance of SeriesPanel.
      *
      * @param serieFacade facade for series
+     * @param seasonFacade facade for episodes
+     * @param episodeFacade facade for episodes
+     * @param genreFacade facade for genres
      * @throws IllegalArgumentException if facade for series is null
      *                                  or facade for seasons is null
      *                                  or facade for episodes is null
+     *                                  or facade for genres is null
      */
-    public SeriesPanel(final SerieFacade serieFacade, final SeasonFacade seasonFacade, final EpisodeFacade episodeFacade) {
+    public SeriesPanel(final SerieFacade serieFacade, final SeasonFacade seasonFacade, final EpisodeFacade episodeFacade, final GenreFacade genreFacade) {
         Validators.validateArgumentNotNull(serieFacade, "Facade for series");
         Validators.validateArgumentNotNull(seasonFacade, "Facade for seasons");
         Validators.validateArgumentNotNull(episodeFacade, "Facade for episodes");
+        Validators.validateArgumentNotNull(genreFacade, "Facade for genres");
 
         this.serieFacade = serieFacade;
         this.seasonFacade = seasonFacade;
         this.episodeFacade = episodeFacade;
+        this.genreFacade = genreFacade;
         this.saved = true;
         initComponents();
     }
@@ -249,7 +259,7 @@ public class SeriesPanel extends JPanel {
 
             @Override
             public void run() {
-                final SerieInfoDialog dialog = new SerieInfoDialog();
+                final SerieInfoDialog dialog = new SerieInfoDialog(genreFacade);
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
                     serieFacade.add(dialog.getSerie());
@@ -272,7 +282,7 @@ public class SeriesPanel extends JPanel {
             @Override
             public void run() {
                 final int index = list.getSelectedIndex();
-                final SerieInfoDialog dialog = new SerieInfoDialog(seriesListDataModel.getSerieAt(index));
+                final SerieInfoDialog dialog = new SerieInfoDialog(genreFacade, seriesListDataModel.getSerieAt(index));
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
                     final SerieTO serie = dialog.getSerie();
@@ -372,6 +382,7 @@ public class SeriesPanel extends JPanel {
                         final SerieTO newSerie = seriesListDataModel.getSerieAt(selectedRow);
                         ((SerieDataPanel) tabbedPane.getComponentAt(0)).updateSerie(newSerie);
                         seasonsPanel.setSerie(newSerie);
+                        seriesStatsTableDataModel.update();
                         statsTable.updateUI();
                         saved = false;
                     }

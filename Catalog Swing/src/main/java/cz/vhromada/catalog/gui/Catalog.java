@@ -246,6 +246,8 @@ public class Catalog extends JFrame {
 
             @Override
             public void stateChanged(final ChangeEvent e) {
+                moviesPanel.clearSelection();
+                seriesPanel.clearSelection();
                 gamesPanel.clearSelection();
                 musicPanel.clearSelection();
                 programsPanel.clearSelection();

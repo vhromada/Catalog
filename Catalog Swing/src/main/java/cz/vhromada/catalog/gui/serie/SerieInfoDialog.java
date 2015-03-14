@@ -116,7 +116,7 @@ public class SerieInfoDialog extends JDialog {
     /** Button Cancel */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Genres */
+    /** List of TO for genre */
     private List<GenreTO> genres = new ArrayList<>();
 
     /** Creates a new instance of SerieInfoDialog. */

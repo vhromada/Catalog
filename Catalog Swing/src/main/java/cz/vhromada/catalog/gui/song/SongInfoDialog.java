@@ -146,7 +146,7 @@ public class SongInfoDialog extends JDialog {
      * Returns TO for song.
      *
      * @return TO for song
-     * @throws IllegalStateException if TO for hasn't been set
+     * @throws IllegalStateException if TO for song hasn't been set
      */
     public SongTO getSong() {
         Validators.validateFieldNotNull(song, "TO for song");

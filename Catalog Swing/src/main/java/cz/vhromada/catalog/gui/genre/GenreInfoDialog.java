@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.gui.episode;
+package cz.vhromada.catalog.gui.genre;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,19 +6,18 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import cz.vhromada.catalog.commons.CatalogSwingConstant2;
-import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.facade.to.EpisodeTO;
+import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.InputValidator;
 import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.validators.Validators;
 
 /**
- * A class represents dialog for episode.
+ * A class represents dialog for genre.
  *
  * @author Vladimir Hromada
  */
-public class EpisodeInfoDialog extends JDialog {
+public class GenreInfoDialog extends JDialog {
 
     /** SerialVersionUID */
     private static final long serialVersionUID = 1L;
@@ -28,9 +27,6 @@ public class EpisodeInfoDialog extends JDialog {
 
     /** Horizontal data size in dialog */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
-
-    /** Horizontal time size */
-    private static final int HORIZONTAL_TIME_SIZE = 60;
 
     /** Horizontal button size */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
@@ -47,26 +43,11 @@ public class EpisodeInfoDialog extends JDialog {
     /** Vertical long gap size */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Maximum hours */
-    private static final int MAX_HOURS = 23;
-
-    /** Maximum minutes */
-    private static final int MAX_MINUTES = 59;
-
-    /** Maximum seconds */
-    private static final int MAX_SECONDS = 59;
-
     /** Return status */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** TO for episode */
-    private EpisodeTO episode;
-
-    /** Label for episode's number */
-    private JLabel numberLabel = new JLabel("Number of episode");
-
-    /** Spinner for episode's number */
-    private JSpinner numberData = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+    /** TO for genre */
+    private GenreTO genre;
 
     /** Label for name */
     private JLabel nameLabel = new JLabel("Name");
@@ -74,66 +55,42 @@ public class EpisodeInfoDialog extends JDialog {
     /** Text field for name */
     private JTextField nameData = new JTextField();
 
-    /** Label for length */
-    private JLabel lengthLabel = new JLabel("Length");
-
-    /** Spinner for length - hours */
-    private JSpinner lengthHoursData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_HOURS, 1));
-
-    /** Spinner for length - minutes */
-    private JSpinner lengthMinutesData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_MINUTES, 1));
-
-    /** Spinner for length - seconds */
-    private JSpinner lengthSecondsData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_SECONDS, 1));
-
-    /** Label for note */
-    private JLabel noteLabel = new JLabel("Note");
-
-    /** Text field for note */
-    private JTextField noteData = new JTextField();
-
     /** Button OK */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
     /** Button Cancel */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Creates a new instance of EpisodeInfoDialog. */
-    public EpisodeInfoDialog() {
+    /** Creates a new instance of GenreInfoDialog. */
+    public GenreInfoDialog() {
         this("Add", Picture.ADD);
 
-        numberData.requestFocusInWindow();
+        nameData.requestFocusInWindow();
     }
 
     /**
-     * Creates a new instance of EpisodeInfoDialog.
+     * Creates a new instance of GenreInfoDialog.
      *
-     * @param episode TO for episode
-     * @throws IllegalArgumentException if TO for episode is null
+     * @param genre TO for genre
+     * @throws IllegalArgumentException if TO for genre is null
      */
-    public EpisodeInfoDialog(final EpisodeTO episode) {
+    public GenreInfoDialog(final GenreTO genre) {
         this("Update", Picture.UPDATE);
 
-        Validators.validateArgumentNotNull(episode, "TO for episode");
+        Validators.validateArgumentNotNull(genre, "TO for genre");
 
-        this.episode = episode;
-        this.numberData.setValue(episode.getNumber());
-        this.nameData.setText(episode.getName());
-        final Time length = new Time(episode.getLength());
-        this.lengthHoursData.setValue(length.getData(Time.TimeData.HOUR));
-        this.lengthMinutesData.setValue(length.getData(Time.TimeData.MINUTE));
-        this.lengthSecondsData.setValue(length.getData(Time.TimeData.SECOND));
-        this.noteData.setText(episode.getNote());
+        this.genre = genre;
+        this.nameData.setText(genre.getName());
         this.okButton.requestFocusInWindow();
     }
 
     /**
-     * Creates a new instance of EpisodeInfoDialog.
+     * Creates a new instance of GenreInfoDialog.
      *
      * @param name    name
      * @param picture picture
      */
-    private EpisodeInfoDialog(final String name, final Picture picture) {
+    private GenreInfoDialog(final String name, final Picture picture) {
         super(new JFrame(), name, true);
 
         initComponents();
@@ -150,15 +107,15 @@ public class EpisodeInfoDialog extends JDialog {
     }
 
     /**
-     * Returns TO for episode.
+     * Returns TO for genre.
      *
-     * @return TO for episode
-     * @throws IllegalStateException if TO for episode hasn't been set
+     * @return TO for genre
+     * @throws IllegalStateException if TO for genre hasn't been set
      */
-    public EpisodeTO getEpisode() {
-        Validators.validateFieldNotNull(episode, "TO for episode");
+    public GenreTO getGenre() {
+        Validators.validateFieldNotNull(genre, "TO for genre");
 
-        return episode;
+        return genre;
     }
 
     /** Initializes components. */
@@ -166,19 +123,16 @@ public class EpisodeInfoDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        initLabelComponent(numberLabel, numberData);
         initLabelComponent(nameLabel, nameData);
-        initLabelComponent(noteLabel, noteData);
 
         nameData.getDocument().addDocumentListener(new InputValidator(okButton) {
 
             @Override
             public boolean isInputValid() {
-                return EpisodeInfoDialog.this.isInputValid();
+                return GenreInfoDialog.this.isInputValid();
             }
 
         });
-        lengthLabel.setFocusable(false);
 
         okButton.setEnabled(false);
         okButton.addActionListener(new ActionListener() {
@@ -214,7 +168,7 @@ public class EpisodeInfoDialog extends JDialog {
      * @param label     label
      * @param component component
      */
-    private void initLabelComponent(final JLabel label, final JComponent component) {
+    private static void initLabelComponent(final JLabel label, final JComponent component) {
         label.setLabelFor(component);
         label.setFocusable(false);
     }
@@ -222,23 +176,17 @@ public class EpisodeInfoDialog extends JDialog {
     /** Performs action for button OK. */
     private void okAction() {
         returnStatus = DialogResult.OK;
-        if (episode == null) {
-            episode = new EpisodeTO();
+        if (genre == null) {
+            genre = new GenreTO();
         }
-        episode.setNumber((Integer) numberData.getValue());
-        episode.setName(nameData.getText());
-        final int hours = (Integer) lengthHoursData.getValue();
-        final int minutes = (Integer) lengthMinutesData.getValue();
-        final int seconds = (Integer) lengthSecondsData.getValue();
-        episode.setLength(new Time(hours, minutes, seconds).getLength());
-        episode.setNote(noteData.getText());
+        genre.setName(nameData.getText());
         close();
     }
 
     /** Performs action for button Cancel. */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
-        episode = null;
+        genre = null;
         close();
     }
 
@@ -249,17 +197,6 @@ public class EpisodeInfoDialog extends JDialog {
      * @return horizontal layout of components
      */
     private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-        final GroupLayout.Group lengthData = layout.createSequentialGroup()
-                .addComponent(lengthHoursData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE)
-                .addGap(10)
-                .addComponent(lengthMinutesData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE)
-                .addGap(10)
-                .addComponent(lengthSecondsData, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE, HORIZONTAL_TIME_SIZE);
-        final GroupLayout.Group length = layout.createSequentialGroup()
-                .addComponent(lengthLabel, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
-                .addGap(10)
-                .addGroup(lengthData);
-
         final GroupLayout.Group buttons = layout.createSequentialGroup()
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE)
                 .addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
@@ -267,18 +204,13 @@ public class EpisodeInfoDialog extends JDialog {
                 .addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE);
 
-
-        final GroupLayout.Group components = layout.createParallelGroup()
-                .addGroup(createHorizontalComponents(layout, numberLabel, numberData))
-                .addGroup(length)
+        final GroupLayout.Group componentsGroup = layout.createParallelGroup()
                 .addGroup(createHorizontalComponents(layout, nameLabel, nameData))
-                .addGroup(length)
-                .addGroup(createHorizontalComponents(layout, noteLabel, noteData))
                 .addGroup(buttons);
 
         return layout.createSequentialGroup()
                 .addGap(HORIZONTAL_GAP_SIZE)
-                .addGroup(components)
+                .addGroup(componentsGroup)
                 .addGap(HORIZONTAL_GAP_SIZE);
     }
 
@@ -290,12 +222,13 @@ public class EpisodeInfoDialog extends JDialog {
      * @param data   data component
      * @return horizontal layout for label component with data component
      */
-    private static GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
+    private GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
         return layout.createSequentialGroup()
                 .addComponent(label, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
                 .addGap(10)
                 .addComponent(data, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
     }
+
 
     /**
      * Returns vertical layout of components.
@@ -304,16 +237,6 @@ public class EpisodeInfoDialog extends JDialog {
      * @return vertical layout of components
      */
     private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-        final GroupLayout.Group length = layout.createParallelGroup()
-                .addComponent(lengthLabel, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-                .addComponent(lengthHoursData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-                .addComponent(lengthMinutesData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
-                .addComponent(lengthSecondsData, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
-
         final GroupLayout.Group buttons = layout.createParallelGroup()
                 .addComponent(okButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
                         CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
@@ -322,13 +245,7 @@ public class EpisodeInfoDialog extends JDialog {
 
         return layout.createSequentialGroup()
                 .addGap(VERTICAL_LONG_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, numberLabel, numberData))
-                .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, nameLabel, nameData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(length)
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
                 .addGap(VERTICAL_LONG_GAP_SIZE)
                 .addGroup(buttons)
                 .addGap(VERTICAL_LONG_GAP_SIZE);

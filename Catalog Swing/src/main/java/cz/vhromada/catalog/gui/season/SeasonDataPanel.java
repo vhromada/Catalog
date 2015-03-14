@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.EpisodeFacade;
@@ -165,13 +165,13 @@ public class SeasonDataPanel extends JPanel {
             return "";
         }
 
-        final StringBuilder subtitlesString = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         for (final Language subtitle : subtitles) {
-            subtitlesString.append(subtitle);
-            subtitlesString.append(" / ");
+            result.append(subtitle);
+            result.append(" / ");
         }
 
-        return subtitlesString.substring(0, subtitlesString.length() - 3);
+        return result.substring(0, result.length() - 3);
     }
 
     /**
@@ -272,11 +272,11 @@ public class SeasonDataPanel extends JPanel {
      */
     private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
         return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
 }

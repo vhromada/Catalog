@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 
 /**
  * A class represents main screen for selecting options.
@@ -112,9 +112,9 @@ public class Selector extends JFrame {
     private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
         return layout.createSequentialGroup()
                 .addGap(0, VERTICAL_GAP_SIZE, Short.MAX_VALUE)
-                .addComponent(catalogButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
+                .addComponent(catalogButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
                 .addGap(0, VERTICAL_GAP_SIZE, Short.MAX_VALUE)
-                .addComponent(exitButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
+                .addComponent(exitButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, Short.MAX_VALUE)
                 .addGap(0, VERTICAL_GAP_SIZE, Short.MAX_VALUE);
     }
 

@@ -2,7 +2,7 @@ package cz.vhromada.catalog.gui.episode;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.validators.Validators;
@@ -165,11 +165,11 @@ public class EpisodeDataPanel extends JPanel {
      */
     private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
         return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
 }

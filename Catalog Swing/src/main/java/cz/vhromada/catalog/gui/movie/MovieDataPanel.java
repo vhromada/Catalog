@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.GenreTO;
@@ -89,17 +89,11 @@ public class MovieDataPanel extends JPanel {
     /** Label with subtitles */
     private JLabel subtitlesData = new JLabel();
 
-    /** Label for 1st medium */
-    private JLabel medium1Label = new JLabel("Length of 1st medium");
+    /** Label for media */
+    private JLabel mediaLabel = new JLabel("Length of media");
 
-    /** Label with 1st medium */
-    private JLabel medium1Data = new JLabel();
-
-    /** Label for 2nd medium */
-    private JLabel medium2Label = new JLabel("Length of 2nd medium");
-
-    /** Label with 2nd medium */
-    private JLabel medium2Data = new JLabel();
+    /** Label with media */
+    private JLabel mediaData = new JLabel();
 
     /** Label for total length */
     private JLabel totalLengthLabel = new JLabel("Total length");
@@ -158,8 +152,7 @@ public class MovieDataPanel extends JPanel {
         initData(yearLabel, yearData, Integer.toString(movie.getYear()));
         initData(languageLabel, languageData, movie.getLanguage().toString());
         initData(subtitlesLabel, subtitlesData, getSubtitles(movie));
-        //TODO vhromada 08.03.2015: media
-//        initData(medium2Label, medium2Data, "");
+        initData(mediaLabel, mediaData, getMedia(movie));
         initData(totalLengthLabel, totalLengthData, getMovieLength(movie));
         initData(noteLabel, noteData, movie.getNote());
 
@@ -202,14 +195,11 @@ public class MovieDataPanel extends JPanel {
         }
         czechNameData.setText(movie.getCzechName());
         originalNameData.setText(movie.getOriginalName());
-        genreData.setText(null);
+        genreData.setText(getGenres(movie));
         yearData.setText(Integer.toString(movie.getYear()));
         languageData.setText(movie.getLanguage().toString());
         subtitlesData.setText(getSubtitles(movie));
-        //TODO vhromada 08.03.2015: media
-//        medium1Data.setText(null);
-//        final Time medium2 = null;
-//		medium2Data.setText(medium2 == null ? "" : medium2.toString());
+        mediaData.setText(getMedia(movie));
         totalLengthData.setText(getMovieLength(movie));
         noteData.setText(movie.getNote());
         csfd = movie.getCsfd();
@@ -271,13 +261,35 @@ public class MovieDataPanel extends JPanel {
             return "";
         }
 
-        final StringBuilder subtitlesString = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         for (final Language subtitle : subtitles) {
-            subtitlesString.append(subtitle);
-            subtitlesString.append(" / ");
+            result.append(subtitle);
+            result.append(" / ");
         }
 
-        return subtitlesString.substring(0, subtitlesString.length() - 3);
+        return result.substring(0, result.length() - 3);
+    }
+
+    /**
+     * Returns movie's media.
+     *
+     * @param movie TO for movie
+     * @return movie's media
+     */
+    private static String getMedia(final MovieTO movie) {
+        final List<Integer> media = movie.getMedia();
+
+        if (media == null || media.isEmpty()) {
+            return "";
+        }
+
+        final StringBuilder subtitlesString = new StringBuilder();
+        for (final Integer medium : media) {
+            subtitlesString.append(new Time(medium).toString());
+            subtitlesString.append(", ");
+        }
+
+        return subtitlesString.substring(0, subtitlesString.length() - 2);
     }
 
     /**
@@ -347,7 +359,7 @@ public class MovieDataPanel extends JPanel {
                 .addGroup(createHorizontalDataComponents(layout, yearLabel, yearData))
                 .addGroup(createHorizontalDataComponents(layout, languageLabel, languageData))
                 .addGroup(createHorizontalDataComponents(layout, subtitlesLabel, subtitlesData))
-                        //TODO vhromada 08.03.2015: media
+                .addGroup(createHorizontalDataComponents(layout, mediaLabel, mediaData))
                 .addGroup(createHorizontalDataComponents(layout, totalLengthLabel, totalLengthData))
                 .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData))
                 .addGroup(buttons);
@@ -382,14 +394,14 @@ public class MovieDataPanel extends JPanel {
      */
     private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
         final GroupLayout.Group buttons = layout.createParallelGroup()
-                .addComponent(csfdButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
-                .addComponent(imdbButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
-                .addComponent(wikiCzButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
-                .addComponent(wikiEnButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
+                .addComponent(csfdButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
+                .addComponent(imdbButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
+                .addComponent(wikiCzButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
+                .addComponent(wikiEnButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
 
         return layout.createSequentialGroup()
                 .addGap(5)
@@ -407,7 +419,8 @@ public class MovieDataPanel extends JPanel {
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, subtitlesLabel, subtitlesData))
                 .addGap(VERTICAL_GAP_SIZE)
-                        //TODO vhromada 08.03.2015: media
+                .addGroup(createVerticalComponents(layout, mediaLabel, mediaData))
+                .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, totalLengthLabel, totalLengthData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData))
@@ -426,11 +439,11 @@ public class MovieDataPanel extends JPanel {
      */
     private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
         return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
 }

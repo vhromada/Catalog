@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 
 /**
  * A class represents dialog about.
@@ -136,20 +136,20 @@ public class AboutDialog extends JDialog {
     private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
         return layout.createSequentialGroup()
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(nameLabel, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(nameLabel, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(versionLabel, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(versionLabel, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(authorLabel, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(authorLabel, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(rightsLabel, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(rightsLabel, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_LONG_GAP_SIZE)
-                .addComponent(okButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+                .addComponent(okButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
                 .addGap(VERTICAL_GAP_SIZE);
     }
 

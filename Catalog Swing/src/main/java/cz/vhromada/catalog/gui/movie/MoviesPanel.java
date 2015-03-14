@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.gui.DialogResult;
@@ -75,6 +76,9 @@ public class MoviesPanel extends JPanel {
     /** Facade for movies */
     private MovieFacade movieFacade;
 
+    /** Facade for genres */
+    private GenreFacade genreFacade;
+
     /** Data model for list with movies */
     private MoviesListDataModel moviesListDataModel;
 
@@ -88,12 +92,16 @@ public class MoviesPanel extends JPanel {
      * Creates a new instance of MoviesPanel.
      *
      * @param movieFacade facade for movies
+     * @param genreFacade facade for genres
      * @throws IllegalArgumentException if facade for movies is null
+     *                                  or facade for genres is null
      */
-    public MoviesPanel(final MovieFacade movieFacade) {
+    public MoviesPanel(final MovieFacade movieFacade, final GenreFacade genreFacade) {
         Validators.validateArgumentNotNull(movieFacade, "Facade for movies");
+        Validators.validateArgumentNotNull(genreFacade, "Facade for genres");
 
         this.movieFacade = movieFacade;
+        this.genreFacade = genreFacade;
         this.saved = true;
         initComponents();
     }
@@ -230,7 +238,7 @@ public class MoviesPanel extends JPanel {
 
             @Override
             public void run() {
-                final MovieInfoDialog dialog = new MovieInfoDialog();
+                final MovieInfoDialog dialog = new MovieInfoDialog(genreFacade);
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
                     movieFacade.add(dialog.getMovie());
@@ -253,7 +261,7 @@ public class MoviesPanel extends JPanel {
             @Override
             public void run() {
                 final int index = list.getSelectedIndex();
-                final MovieInfoDialog dialog = new MovieInfoDialog(moviesListDataModel.getMovieAt(index));
+                final MovieInfoDialog dialog = new MovieInfoDialog(genreFacade, moviesListDataModel.getMovieAt(index));
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
                     final MovieTO movie = dialog.getMovie();

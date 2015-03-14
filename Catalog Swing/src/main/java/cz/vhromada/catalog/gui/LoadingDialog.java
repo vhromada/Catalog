@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,8 +98,8 @@ public class LoadingDialog extends JDialog {
      * @return vertical layout of components
      */
     private GroupLayout.SequentialGroup createVerticalLayout(final GroupLayout layout) {
-        return layout.createSequentialGroup().addComponent(progress, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+        return layout.createSequentialGroup().addComponent(progress, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
     /** A class represents swing worker for loading data. */

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.validators.Validators;
 import org.slf4j.Logger;
@@ -251,11 +251,11 @@ public class ProgramDataPanel extends JPanel {
      */
     private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
         final GroupLayout.Group buttons = layout.createParallelGroup()
-                .addComponent(wikiCzButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+                .addComponent(wikiCzButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(wikiEnButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
+                .addComponent(wikiEnButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
 
         return layout.createSequentialGroup()
                 .addGap(5)
@@ -281,11 +281,11 @@ public class ProgramDataPanel extends JPanel {
      */
     private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
         return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
 }

@@ -11,7 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 
-import cz.vhromada.catalog.commons.CatalogSwingConstant2;
+import cz.vhromada.catalog.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.commons.Constants;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
@@ -149,6 +149,8 @@ public class SerieInfoDialog extends JDialog {
      */
     public SerieInfoDialog(final GenreFacade genreFacade, final SerieTO serie) {
         this("Update", Picture.UPDATE, genreFacade);
+
+        Validators.validateArgumentNotNull(serie, "TO for serie");
 
         this.serie = serie;
         this.czechNameData.setText(serie.getCzechName());
@@ -390,7 +392,6 @@ public class SerieInfoDialog extends JDialog {
                 .addComponent(data, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
     }
 
-
     /**
      * Returns vertical layout of components.
      *
@@ -399,10 +400,10 @@ public class SerieInfoDialog extends JDialog {
      */
     private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
         final GroupLayout.Group buttons = layout.createParallelGroup()
-                .addComponent(okButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
-                .addComponent(cancelButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE);
+                .addComponent(okButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
+                .addComponent(cancelButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
 
         return layout.createSequentialGroup()
                 .addGap(VERTICAL_LONG_GAP_SIZE)
@@ -422,8 +423,8 @@ public class SerieInfoDialog extends JDialog {
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData))
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(genresButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
+                .addComponent(genresButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
                 .addGap(VERTICAL_LONG_GAP_SIZE)
                 .addGroup(buttons)
                 .addGap(VERTICAL_LONG_GAP_SIZE);
@@ -439,17 +440,17 @@ public class SerieInfoDialog extends JDialog {
      */
     private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
         return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE)
+                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE, CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstant2.VERTICAL_COMPONENT_SIZE);
+                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
     /**
-     * Returns true if input is valid: czech name isn't empty string, original name isn't empty string, genre isn't empty collection.
+     * Returns true if input is valid: czech name isn't empty string, original name isn't empty string, genres isn't empty collection.
      *
-     * @return true if input is valid: czech name isn't empty string, original name isn't empty string, genre isn't empty collection
+     * @return true if input is valid: czech name isn't empty string, original name isn't empty string, genres isn't empty collection
      */
     private boolean isInputValid() {
         return !czechNameData.getText().isEmpty() && !originalNameData.getText().isEmpty() && !genres.isEmpty();

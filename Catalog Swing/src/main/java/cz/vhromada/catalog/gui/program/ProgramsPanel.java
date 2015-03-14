@@ -231,7 +231,7 @@ public class ProgramsPanel extends JPanel {
                 final ProgramInfoDialog dialog = new ProgramInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    programFacade.add(dialog.getProgram());
+                    programFacade.add(dialog.getData());
                     programsListDataModel.update();
                     list.updateUI();
                     list.setSelectedIndex(list.getModel().getSize() - 1);
@@ -253,7 +253,7 @@ public class ProgramsPanel extends JPanel {
                 final ProgramInfoDialog dialog = new ProgramInfoDialog(programsListDataModel.getProgramAt(list.getSelectedIndex()));
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final ProgramTO program = dialog.getProgram();
+                    final ProgramTO program = dialog.getData();
                     programFacade.update(program);
                     programsListDataModel.update();
                     list.updateUI();

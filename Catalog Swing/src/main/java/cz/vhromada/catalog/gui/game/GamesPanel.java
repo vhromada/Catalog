@@ -231,7 +231,7 @@ public class GamesPanel extends JPanel {
                 final GameInfoDialog dialog = new GameInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    gameFacade.add(dialog.getGame());
+                    gameFacade.add(dialog.getData());
                     gamesListDataModel.update();
                     list.updateUI();
                     list.setSelectedIndex(list.getModel().getSize() - 1);
@@ -253,7 +253,7 @@ public class GamesPanel extends JPanel {
                 final GameInfoDialog dialog = new GameInfoDialog(gamesListDataModel.getGameAt(list.getSelectedIndex()));
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final GameTO game = dialog.getGame();
+                    final GameTO game = dialog.getData();
                     gameFacade.update(game);
                     gamesListDataModel.update();
                     list.updateUI();

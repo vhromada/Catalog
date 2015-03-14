@@ -17,7 +17,7 @@ import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.InputValidator;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -169,14 +169,14 @@ public class MovieInfoDialog extends JDialog {
     private JTextField noteData = new JTextField();
 
     /** Button OK */
-    private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
     /** Button Cancel */
-    private JButton cancelButton = new JButton("Cancel", Pictures.getPicture("cancel"));
+    private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
     /** Creates a new instance of MovieInfoDialog. */
     public MovieInfoDialog() {
-        this("Add", "add");
+        this("Add", Picture.ADD);
 
         czechNameData.requestFocusInWindow();
     }
@@ -188,7 +188,7 @@ public class MovieInfoDialog extends JDialog {
      * @throws IllegalArgumentException if TO for movie is null
      */
     public MovieInfoDialog(final MovieTO movie) {
-        this("Update", "update");
+        this("Update", Picture.UPDATE);
 
         Validators.validateArgumentNotNull(movie, "TO for movie");
 
@@ -241,11 +241,11 @@ public class MovieInfoDialog extends JDialog {
      * @param name    name
      * @param picture picture
      */
-    private MovieInfoDialog(final String name, final String picture) {
+    private MovieInfoDialog(final String name, final Picture picture) {
         super(new JFrame(), name, true);
 
         initComponents();
-        setIconImage(Pictures.getPicture(picture).getImage());
+        setIconImage(picture.getIcon().getImage());
     }
 
     /**

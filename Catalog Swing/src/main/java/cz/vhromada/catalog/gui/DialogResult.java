@@ -7,10 +7,7 @@ package cz.vhromada.catalog.gui;
  */
 public enum DialogResult {
 
-    /** OK */
     OK,
-
-    /** Cancel */
     CANCEL
 
 }

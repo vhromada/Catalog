@@ -35,7 +35,7 @@ public class Selector extends JFrame {
     /** Creates a new instance of Selector. */
     public Selector() {
         setTitle("Catalog - Selector");
-        setIconImage(Pictures.getPicture("catalog").getImage());
+        setIconImage(Picture.CATALOG.getIcon().getImage());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         catalogButton.addActionListener(new ActionListener() {

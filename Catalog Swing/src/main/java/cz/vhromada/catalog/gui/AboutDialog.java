@@ -40,7 +40,7 @@ public class AboutDialog extends JDialog {
     private static final int FONT_SIZE = 12;
 
     /** Label for name */
-    private JLabel nameLabel = new JLabel("Catalog", Pictures.getPicture("catalog"), SwingConstants.LEADING);
+    private JLabel nameLabel = new JLabel("Catalog", Picture.CATALOG.getIcon(), SwingConstants.LEADING);
 
     /** Label for version */
     private JLabel versionLabel = new JLabel("Version: 1.0.0");
@@ -52,13 +52,13 @@ public class AboutDialog extends JDialog {
     private JLabel rightsLabel = new JLabel("All rights reserved.");
 
     /** Button OK */
-    private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
     /** Creates a new instance of AboutDialog. */
     public AboutDialog() {
         super(new JFrame(), "About", true);
 
-        setIconImage(Pictures.getPicture("about").getImage());
+        setIconImage(Picture.ABOUT.getIcon().getImage());
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 

@@ -14,7 +14,7 @@ import cz.vhromada.catalog.commons.Constants;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -106,14 +106,14 @@ public class SeasonInfoDialog extends JDialog {
     private JTextField noteData = new JTextField();
 
     /** Button OK */
-    private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
     /** Button Cancel */
-    private JButton cancelButton = new JButton("Cancel", Pictures.getPicture("cancel"));
+    private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
     /** Creates a new instance of SeasonInfoDialog. */
     public SeasonInfoDialog() {
-        this("Add", "add");
+        this("Add", Picture.ADD);
 
         numberData.requestFocusInWindow();
     }
@@ -125,7 +125,7 @@ public class SeasonInfoDialog extends JDialog {
      * @throws IllegalArgumentException if TO for season is null
      */
     public SeasonInfoDialog(final SeasonTO season) {
-        this("Update", "update");
+        this("Update", Picture.UPDATE);
 
         Validators.validateArgumentNotNull(season, "TO for season");
 
@@ -161,11 +161,11 @@ public class SeasonInfoDialog extends JDialog {
      * @param name    name
      * @param picture picture
      */
-    private SeasonInfoDialog(final String name, final String picture) {
+    private SeasonInfoDialog(final String name, final Picture picture) {
         super(new JFrame(), name, true);
 
         initComponents();
-        setIconImage(Pictures.getPicture(picture).getImage());
+        setIconImage(picture.getIcon().getImage());
     }
 
     /**

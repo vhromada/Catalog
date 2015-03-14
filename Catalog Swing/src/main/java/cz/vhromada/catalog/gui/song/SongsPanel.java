@@ -13,7 +13,7 @@ import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -39,22 +39,22 @@ public class SongsPanel extends JPanel {
     private JPopupMenu popupMenu = new JPopupMenu();
 
     /** Menu item for adding song */
-    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Pictures.getPicture("add"));
+    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
     /** Menu item for updating song */
-    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Pictures.getPicture("update"));
+    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
     /** Menu item for removing song */
-    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Pictures.getPicture("remove"));
+    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
     /** Menu item for duplicating song */
-    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Pictures.getPicture("duplicate"));
+    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
     /** Menu item for moving up song */
-    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Pictures.getPicture("up"));
+    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
     /** Menu item for moving down song */
-    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Pictures.getPicture("down"));
+    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
     /** List with songs */
     private JList<String> list = new JList<>();

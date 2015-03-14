@@ -9,7 +9,7 @@ import cz.vhromada.catalog.commons.CatalogSwingConstant2;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.InputValidator;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -80,14 +80,14 @@ public class MusicInfoDialog extends JDialog {
     private JTextField noteData = new JTextField();
 
     /** Button OK */
-    private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
     /** Button Cancel */
-    private JButton cancelButton = new JButton("Cancel", Pictures.getPicture("cancel"));
+    private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
     /** Creates a new instance of MusicInfoDialog. */
     public MusicInfoDialog() {
-        this("Add", "add");
+        this("Add", Picture.ADD);
 
         nameData.requestFocusInWindow();
     }
@@ -99,7 +99,7 @@ public class MusicInfoDialog extends JDialog {
      * @throws IllegalArgumentException if TO for music is null
      */
     public MusicInfoDialog(final MusicTO music) {
-        this("Update", "update");
+        this("Update", Picture.UPDATE);
 
         Validators.validateArgumentNotNull(music, "TO for music");
 
@@ -118,11 +118,11 @@ public class MusicInfoDialog extends JDialog {
      * @param name    name
      * @param picture picture
      */
-    private MusicInfoDialog(final String name, final String picture) {
+    private MusicInfoDialog(final String name, final Picture picture) {
         super(new JFrame(), name, true);
 
         initComponents();
-        setIconImage(Pictures.getPicture(picture).getImage());
+        setIconImage(picture.getIcon().getImage());
     }
 
     /**

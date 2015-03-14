@@ -17,7 +17,7 @@ import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.catalog.gui.episode.EpisodesPanel;
 import cz.vhromada.validators.Validators;
 
@@ -44,22 +44,22 @@ public class SeasonsPanel extends JPanel {
     private JPopupMenu popupMenu = new JPopupMenu();
 
     /** Menu item for adding season */
-    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Pictures.getPicture("add"));
+    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
     /** Menu item for updating season */
-    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Pictures.getPicture("update"));
+    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
     /** Menu item for removing season */
-    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Pictures.getPicture("remove"));
+    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
     /** Menu item for duplicating season */
-    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Pictures.getPicture("duplicate"));
+    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
     /** Menu item for moving up season */
-    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Pictures.getPicture("up"));
+    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
     /** Menu item for moving down season */
-    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Pictures.getPicture("down"));
+    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
     /** List with seasons */
     private JList<Integer> list = new JList<>();

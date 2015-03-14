@@ -16,7 +16,7 @@ import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.catalog.gui.StatsTableCellRenderer;
 import cz.vhromada.catalog.gui.song.SongsPanel;
 import cz.vhromada.validators.Validators;
@@ -44,22 +44,22 @@ public class MusicPanel extends JPanel {
     private JPopupMenu popupMenu = new JPopupMenu();
 
     /** Menu item for adding music */
-    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Pictures.getPicture("add"));
+    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
     /** Menu item for updating music */
-    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Pictures.getPicture("update"));
+    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
     /** Menu item for removing music */
-    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Pictures.getPicture("remove"));
+    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
     /** Menu item for duplicating music */
-    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Pictures.getPicture("duplicate"));
+    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
     /** Menu item for moving up music */
-    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Pictures.getPicture("up"));
+    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
     /** Menu item for moving down music */
-    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Pictures.getPicture("down"));
+    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
     /** List with music */
     private JList<String> list = new JList<>();

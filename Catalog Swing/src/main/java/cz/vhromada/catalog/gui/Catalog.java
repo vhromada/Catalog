@@ -12,15 +12,19 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import cz.vhromada.catalog.facade.BookCategoryFacade;
+import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.ProgramFacade;
+import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.gui.game.GamesPanel;
+import cz.vhromada.catalog.gui.movie.MoviesPanel;
 import cz.vhromada.catalog.gui.music.MusicPanel;
 import cz.vhromada.catalog.gui.program.ProgramsPanel;
+import cz.vhromada.catalog.gui.serie.SeriesPanel;
 import cz.vhromada.validators.Validators;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -50,25 +54,31 @@ public class Catalog extends JFrame {
     private final JMenu fileMenu = new JMenu("File");
 
     /** Menu item new */
-    private final JMenuItem newMenuItem = new JMenuItem("New", Pictures.getPicture("new"));
+    private final JMenuItem newMenuItem = new JMenuItem("New", Picture.NEW.getIcon());
 
     /** Menu item save */
-    private final JMenuItem saveMenuItem = new JMenuItem("Save", Pictures.getPicture("save"));
+    private final JMenuItem saveMenuItem = new JMenuItem("Save", Picture.SAVE.getIcon());
 
     /** Menu item selector */
-    private final JMenuItem selectorMenuItem = new JMenuItem("Selector", Pictures.getPicture("catalog"));
+    private final JMenuItem selectorMenuItem = new JMenuItem("Selector", Picture.CATALOG.getIcon());
 
     /** Menu item exit */
-    private final JMenuItem exitMenuItem = new JMenuItem("Exit", Pictures.getPicture("exit"));
+    private final JMenuItem exitMenuItem = new JMenuItem("Exit", Picture.EXIT.getIcon());
 
     /** Menu help */
     private final JMenu helpMenu = new JMenu("Help");
 
     /** Menu item about */
-    private final JMenuItem aboutMenuItem = new JMenuItem("About", Pictures.getPicture("about"));
+    private final JMenuItem aboutMenuItem = new JMenuItem("About", Picture.ABOUT.getIcon());
 
     /** Tabbed pane */
     private final JTabbedPane tabbedPane = new JTabbedPane();
+
+    /** Panel for movies */
+    private MoviesPanel moviesPanel;
+
+    /** Panel for series */
+    private SeriesPanel seriesPanel;
 
     /** Panel for games */
     private GamesPanel gamesPanel;
@@ -108,7 +118,7 @@ public class Catalog extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Catalog");
-        setIconImage(Pictures.getPicture("catalog").getImage());
+        setIconImage(Picture.CATALOG.getIcon().getImage());
 
         this.context = context;
         movieFacade = context.getBean(MovieFacade.class);
@@ -131,6 +141,8 @@ public class Catalog extends JFrame {
 
         });
 
+        moviesPanel = new MoviesPanel(movieFacade);
+        seriesPanel = new SeriesPanel(serieFacade, context.getBean(SeasonFacade.class), context.getBean(EpisodeFacade.class));
         gamesPanel = new GamesPanel(gameFacade);
         musicPanel = new MusicPanel(musicFacade, context.getBean(SongFacade.class));
         programsPanel = new ProgramsPanel(programFacade);
@@ -225,6 +237,8 @@ public class Catalog extends JFrame {
 
     /** Initializes tabbed pane. */
     private void initTabbedPane() {
+//        tabbedPane.addTab("Movies", moviesPanel);
+//        tabbedPane.addTab("Series", seriesPanel);
         tabbedPane.addTab("Games", gamesPanel);
         tabbedPane.addTab("Music", musicPanel);
         tabbedPane.addTab("Programs", programsPanel);
@@ -242,6 +256,8 @@ public class Catalog extends JFrame {
 
     /** Performs action for button New. */
     private void newAction() {
+        moviesPanel.newData();
+        seriesPanel.newData();
         gamesPanel.newData();
         musicPanel.newData();
         programsPanel.newData();
@@ -287,7 +303,7 @@ public class Catalog extends JFrame {
 
     /** Closes form. */
     private void closing() {
-        final boolean saved = gamesPanel.isSaved() && musicPanel.isSaved() && programsPanel.isSaved();
+        final boolean saved = moviesPanel.isSaved() && seriesPanel.isSaved() && gamesPanel.isSaved() && musicPanel.isSaved() && programsPanel.isSaved();
         if (!saved) {
             final int returnStatus = JOptionPane.showConfirmDialog(this, "Save data?", "", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (returnStatus == JOptionPane.YES_OPTION) {
@@ -305,6 +321,8 @@ public class Catalog extends JFrame {
         musicFacade.updatePositions();
         programFacade.updatePositions();
         bookCategoryFacade.updatePositions();
+        moviesPanel.save();
+        seriesPanel.save();
         gamesPanel.save();
         musicPanel.save();
         programsPanel.save();

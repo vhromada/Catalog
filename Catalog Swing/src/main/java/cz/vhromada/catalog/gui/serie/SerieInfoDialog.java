@@ -2,6 +2,8 @@ package cz.vhromada.catalog.gui.serie;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -10,10 +12,11 @@ import javax.swing.event.DocumentListener;
 
 import cz.vhromada.catalog.commons.CatalogSwingConstant2;
 import cz.vhromada.catalog.commons.Constants;
+import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.InputValidator;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -31,6 +34,9 @@ public class SerieInfoDialog extends JDialog {
 
     /** Horizontal data size in dialog */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
+
+    /** Horizontal genres button size */
+    private static final int HORIZONTAL_GENRES_BUTTON_SIZE = 310;
 
     /** Horizontal button size */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
@@ -64,12 +70,6 @@ public class SerieInfoDialog extends JDialog {
 
     /** Text field for original name */
     private JTextField originalNameData = new JTextField();
-
-    /** Label for genre */
-    private JLabel genreLabel = new JLabel("Genre");
-
-    /** Text field for genre */
-    private JTextField genreData = new JTextField();
 
     /** Label for ČSFD */
     private JLabel csfdLabel = new JLabel("\u010cSFD");
@@ -107,16 +107,23 @@ public class SerieInfoDialog extends JDialog {
     /** Text field for note */
     private JTextField noteData = new JTextField();
 
+    /** Button for genres */
+    private JButton genresButton = new JButton("Genres", Picture.ADD.getIcon());
+
     /** Button OK */
-    private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
     /** Button Cancel */
-    private JButton cancelButton = new JButton("Cancel", Pictures.getPicture("cancel"));
+    private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
+
+    /** Genres */
+    private List<GenreTO> genres = new ArrayList<>();
 
     /** Creates a new instance of SerieInfoDialog. */
     public SerieInfoDialog() {
-        this("Add", "add");
+        this("Add", Picture.ADD);
 
+        imdbCodeData.setEnabled(imdbCodeLabel.isSelected());
         czechNameData.requestFocusInWindow();
     }
 
@@ -127,15 +134,13 @@ public class SerieInfoDialog extends JDialog {
      * @throws IllegalArgumentException if TO for serie is null
      */
     public SerieInfoDialog(final SerieTO serie) {
-        this("Update", "update");
+        this("Update", Picture.UPDATE);
 
         Validators.validateArgumentNotNull(serie, "TO for serie");
 
         this.serie = serie;
         this.czechNameData.setText(serie.getCzechName());
         this.originalNameData.setText(serie.getOriginalName());
-        //TODO vhromada 08.03.2015: genres
-        this.genreData.setText(null);
         this.csfdData.setText(serie.getCsfd());
         final int imdbCode = serie.getImdbCode();
         if (imdbCode > 0) {
@@ -148,6 +153,7 @@ public class SerieInfoDialog extends JDialog {
         this.wikiEnData.setText(serie.getWikiEn());
         this.pictureData.setText(serie.getPicture());
         this.noteData.setText(serie.getNote());
+        this.genres = serie.getGenres();
         this.okButton.requestFocusInWindow();
     }
 
@@ -157,11 +163,11 @@ public class SerieInfoDialog extends JDialog {
      * @param name    name
      * @param picture picture
      */
-    private SerieInfoDialog(final String name, final String picture) {
+    private SerieInfoDialog(final String name, final Picture picture) {
         super(new JFrame(), name, true);
 
         initComponents();
-        setIconImage(Pictures.getPicture(picture).getImage());
+        setIconImage(picture.getIcon().getImage());
     }
 
     /**
@@ -200,7 +206,6 @@ public class SerieInfoDialog extends JDialog {
         };
         initLabelTextFieldWithValidator(czechNameLabel, czechNameData, inputValidator);
         initLabelTextFieldWithValidator(originalNameLabel, originalNameData, inputValidator);
-        initLabelTextFieldWithValidator(genreLabel, genreData, inputValidator);
         initLabelComponent(csfdLabel, csfdData);
         initLabelComponent(wikiCzLabel, wikiCzData);
         initLabelComponent(wikiEnLabel, wikiEnData);
@@ -212,6 +217,15 @@ public class SerieInfoDialog extends JDialog {
             @Override
             public void stateChanged(final ChangeEvent e) {
                 imdbCodeData.setEnabled(imdbCodeLabel.isSelected());
+            }
+
+        });
+
+        genresButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                genresAction();
             }
 
         });
@@ -276,14 +290,13 @@ public class SerieInfoDialog extends JDialog {
         }
         serie.setCzechName(czechNameData.getText());
         serie.setOriginalName(originalNameData.getText());
-        //TODO vhromada 08.03.2015: genres
-        serie.setGenres(null);
         serie.setCsfd(csfdData.getText());
         serie.setImdbCode(imdbCodeLabel.isSelected() ? (Integer) imdbCodeData.getValue() : -1);
         serie.setWikiCz(wikiCzData.getText());
         serie.setWikiEn(wikiEnData.getText());
         serie.setPicture(pictureData.getText());
         serie.setNote(noteData.getText());
+        serie.setGenres(genres);
         close();
     }
 
@@ -292,6 +305,26 @@ public class SerieInfoDialog extends JDialog {
         returnStatus = DialogResult.CANCEL;
         serie = null;
         close();
+    }
+
+    /** Performs action for button Genres. */
+    private void genresAction() {
+//        EventQueue.invokeLater(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                final GenreChooseDialog dialog = new GenreChooseDialog();
+//                dialog.setVisible(true);
+//                if (dialog.getReturnStatus() == DialogResult.OK) {
+        //TODO vhromada 14.03.2015: genres
+        final GenreTO genre = new GenreTO();
+        genre.setName("TEST");
+        genres.add(genre);
+        okButton.setEnabled(isInputValid());
+//                }
+//            }
+//
+//        });
     }
 
     /**
@@ -311,13 +344,13 @@ public class SerieInfoDialog extends JDialog {
         final GroupLayout.Group componentsGroup = layout.createParallelGroup()
                 .addGroup(createHorizontalComponents(layout, czechNameLabel, czechNameData))
                 .addGroup(createHorizontalComponents(layout, originalNameLabel, originalNameData))
-                .addGroup(createHorizontalComponents(layout, genreLabel, genreData))
                 .addGroup(createHorizontalComponents(layout, csfdLabel, csfdData))
                 .addGroup(createHorizontalComponents(layout, imdbCodeLabel, imdbCodeData))
                 .addGroup(createHorizontalComponents(layout, wikiCzLabel, wikiCzData))
                 .addGroup(createHorizontalComponents(layout, wikiEnLabel, wikiEnData))
                 .addGroup(createHorizontalComponents(layout, pictureLabel, pictureData))
                 .addGroup(createHorizontalComponents(layout, noteLabel, noteData))
+                .addComponent(genresButton, HORIZONTAL_GENRES_BUTTON_SIZE, HORIZONTAL_GENRES_BUTTON_SIZE, HORIZONTAL_GENRES_BUTTON_SIZE)
                 .addGroup(buttons);
 
         return layout.createSequentialGroup()
@@ -361,8 +394,6 @@ public class SerieInfoDialog extends JDialog {
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, originalNameLabel, originalNameData))
                 .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, genreLabel, genreData))
-                .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, csfdLabel, csfdData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, imdbCodeLabel, imdbCodeData))
@@ -374,6 +405,9 @@ public class SerieInfoDialog extends JDialog {
                 .addGroup(createVerticalComponents(layout, pictureLabel, pictureData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(genresButton, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE, CatalogSwingConstant2.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstant2.VERTICAL_BUTTON_SIZE)
                 .addGap(VERTICAL_LONG_GAP_SIZE)
                 .addGroup(buttons)
                 .addGap(VERTICAL_LONG_GAP_SIZE);
@@ -397,12 +431,12 @@ public class SerieInfoDialog extends JDialog {
     }
 
     /**
-     * Returns true if input is valid: czech name isn't empty string, original name isn't empty string, genre isn't empty string.
+     * Returns true if input is valid: czech name isn't empty string, original name isn't empty string, genre isn't empty collection.
      *
-     * @return true if input is valid: czech name isn't empty string, original name isn't empty string, genre isn't empty string
+     * @return true if input is valid: czech name isn't empty string, original name isn't empty string, genre isn't empty collection
      */
     private boolean isInputValid() {
-        return !czechNameData.getText().isEmpty() && !originalNameData.getText().isEmpty() && !genreData.getText().isEmpty();
+        return !czechNameData.getText().isEmpty() && !originalNameData.getText().isEmpty() && !genres.isEmpty();
     }
 
     /** Closes dialog. */

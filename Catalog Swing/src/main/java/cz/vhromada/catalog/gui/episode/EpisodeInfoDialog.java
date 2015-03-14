@@ -10,7 +10,7 @@ import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.gui.DialogResult;
 import cz.vhromada.catalog.gui.InputValidator;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -93,14 +93,14 @@ public class EpisodeInfoDialog extends JDialog {
     private JTextField noteData = new JTextField();
 
     /** Button OK */
-    private JButton okButton = new JButton("OK", Pictures.getPicture("ok"));
+    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
     /** Button Cancel */
-    private JButton cancelButton = new JButton("Cancel", Pictures.getPicture("cancel"));
+    private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
     /** Creates a new instance of EpisodeInfoDialog. */
     public EpisodeInfoDialog() {
-        this("Add", "add");
+        this("Add", Picture.ADD);
 
         numberData.requestFocusInWindow();
     }
@@ -112,7 +112,7 @@ public class EpisodeInfoDialog extends JDialog {
      * @throws IllegalArgumentException if TO for episode is null
      */
     public EpisodeInfoDialog(final EpisodeTO episode) {
-        this("Update", "update");
+        this("Update", Picture.UPDATE);
 
         Validators.validateArgumentNotNull(episode, "TO for episode");
 
@@ -133,11 +133,11 @@ public class EpisodeInfoDialog extends JDialog {
      * @param name    name
      * @param picture picture
      */
-    private EpisodeInfoDialog(final String name, final String picture) {
+    private EpisodeInfoDialog(final String name, final Picture picture) {
         super(new JFrame(), name, true);
 
         initComponents();
-        setIconImage(Pictures.getPicture(picture).getImage());
+        setIconImage(picture.getIcon().getImage());
     }
 
     /**

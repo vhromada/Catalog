@@ -17,7 +17,7 @@ import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.gui.DialogResult;
-import cz.vhromada.catalog.gui.Pictures;
+import cz.vhromada.catalog.gui.Picture;
 import cz.vhromada.catalog.gui.StatsTableCellRenderer;
 import cz.vhromada.catalog.gui.season.SeasonsPanel;
 import cz.vhromada.validators.Validators;
@@ -45,22 +45,22 @@ public class SeriesPanel extends JPanel {
     private JPopupMenu popupMenu = new JPopupMenu();
 
     /** Menu item for adding serie */
-    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Pictures.getPicture("add"));
+    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
     /** Menu item for updating serie */
-    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Pictures.getPicture("update"));
+    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
     /** Menu item for removing serie */
-    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Pictures.getPicture("remove"));
+    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
     /** Menu item for duplicating serie */
-    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Pictures.getPicture("duplicate"));
+    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
     /** Menu item for moving up serie */
-    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Pictures.getPicture("up"));
+    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
     /** Menu item for moving down serie */
-    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Pictures.getPicture("down"));
+    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
     /** List with series */
     private JList<String> list = new JList<>();

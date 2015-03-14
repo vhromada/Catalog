@@ -44,6 +44,7 @@ public class GenreDataPanel extends JPanel {
         Validators.validateArgumentNotNull(genre, "TO for genre");
 
         initData(nameLabel, nameData, genre.getName());
+
         final GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(createHorizontalLayout(layout));

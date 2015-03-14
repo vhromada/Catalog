@@ -27,7 +27,7 @@ public class ProgramsPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     /** Horizontal scroll pane size */
-    private static final int HORIZONTAL_SCROLL_PANE_SIZE = 300;
+    private static final int HORIZONTAL_SCROLL_PANE_SIZE = 200;
 
     /** Vertical data component size */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;

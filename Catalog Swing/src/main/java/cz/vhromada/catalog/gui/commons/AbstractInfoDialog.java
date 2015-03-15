@@ -23,11 +23,6 @@ import cz.vhromada.validators.Validators;
 public abstract class AbstractInfoDialog<T> extends JDialog {
 
     /**
-     * Horizontal label size in dialog
-     */
-    protected static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
-
-    /**
      * Horizontal check box size
      */
     protected static final int HORIZONTAL_CHECK_BOX_SIZE = 310;
@@ -43,7 +38,12 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Horizontal data size in dialog
+     * Horizontal label size
+     */
+    private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
+
+    /**
+     * Horizontal data size
      */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
 
@@ -206,7 +206,7 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
      * @param label     label
      * @param component component
      */
-    protected final void initLabelComponent(final JLabel label, final JComponent component) {
+    protected static void initLabelComponent(final JLabel label, final JComponent component) {
         label.setLabelFor(component);
         label.setFocusable(false);
     }

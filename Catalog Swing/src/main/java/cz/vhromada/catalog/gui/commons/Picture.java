@@ -27,14 +27,14 @@ public enum Picture {
     /**
      * Icon
      */
-    private ImageIcon icon;
+    private final ImageIcon icon;
 
     /**
      * Creates a new instance of Pictures.
      *
      * @param icon icon
      */
-    private Picture(final ImageIcon icon) {
+    Picture(final ImageIcon icon) {
         this.icon = icon;
     }
 

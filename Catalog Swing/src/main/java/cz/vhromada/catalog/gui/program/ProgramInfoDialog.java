@@ -19,6 +19,11 @@ import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
 
     /**
+     * SerialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Label for name
      */
     private JLabel nameLabel = new JLabel("Name");
@@ -92,8 +97,6 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
      * Creates a new instance of ProgramInfoDialog.
      */
     public ProgramInfoDialog() {
-        super();
-
         initComponents();
         nameData.requestFocusInWindow();
         createLayout();

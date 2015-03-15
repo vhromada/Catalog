@@ -174,11 +174,6 @@ public class Catalog extends JFrame {
     private BookCategoryFacade bookCategoryFacade;
 
     /**
-     * Facade for genres
-     */
-    private GenreFacade genreFacade;
-
-    /**
      * Creates a new instance Catalog.
      *
      * @param context application context
@@ -198,7 +193,7 @@ public class Catalog extends JFrame {
         musicFacade = context.getBean(MusicFacade.class);
         programFacade = context.getBean(ProgramFacade.class);
         bookCategoryFacade = context.getBean(BookCategoryFacade.class);
-        genreFacade = context.getBean(GenreFacade.class);
+        final GenreFacade genreFacade = context.getBean(GenreFacade.class);
 
         initMenuBar();
         initFileMenu();

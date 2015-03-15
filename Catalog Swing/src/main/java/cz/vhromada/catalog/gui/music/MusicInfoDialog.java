@@ -75,8 +75,6 @@ public class MusicInfoDialog extends AbstractInfoDialog<MusicTO> {
      * Creates a new instance of MusicInfoDialog.
      */
     public MusicInfoDialog() {
-        super();
-
         initComponents();
         nameData.requestFocusInWindow();
         createLayout();

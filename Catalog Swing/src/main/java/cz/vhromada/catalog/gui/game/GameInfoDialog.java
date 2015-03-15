@@ -122,8 +122,6 @@ public class GameInfoDialog extends AbstractInfoDialog<GameTO> {
      * Creates a new instance of GameInfoDialog.
      */
     public GameInfoDialog() {
-        super();
-
         initComponents();
         nameData.requestFocusInWindow();
         createLayout();

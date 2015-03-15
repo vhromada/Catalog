@@ -2,11 +2,10 @@ package cz.vhromada.catalog.gui.season;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -14,7 +13,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SeasonsListDataModel extends AbstractListModel<Integer> {
+public class SeasonsListDataModel extends AbstractListDataModel<SeasonTO> {
 
     /**
      * SerialVersionUID
@@ -30,11 +29,6 @@ public class SeasonsListDataModel extends AbstractListModel<Integer> {
      * TO for serie
      */
     private SerieTO serie;
-
-    /**
-     * List of TO for season
-     */
-    private List<SeasonTO> seasons;
 
     /**
      * Creates a new instance of SeasonsListDataModel.
@@ -53,42 +47,14 @@ public class SeasonsListDataModel extends AbstractListModel<Integer> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
     @Override
-    public int getSize() {
-        return seasons.size();
+    public String getElementAt(final int index) {
+        return Integer.toString(getObjectAt(index).getNumber());
     }
 
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
-    public Integer getElementAt(final int index) {
-        return getSeasonAt(index).getNumber();
-    }
-
-    /**
-     * Returns TO for season at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for season at index
-     */
-    public SeasonTO getSeasonAt(final int index) {
-        return seasons.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        seasons = seasonFacade.findSeasonsBySerie(serie);
+    protected List<SeasonTO> getData() {
+        return seasonFacade.findSeasonsBySerie(serie);
     }
 
 }

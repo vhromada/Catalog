@@ -2,10 +2,9 @@ package cz.vhromada.catalog.gui.serie;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -13,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SeriesListDataModel extends AbstractListModel<String> {
+public class SeriesListDataModel extends AbstractListDataModel<SerieTO> {
 
     /**
      * SerialVersionUID
@@ -24,11 +23,6 @@ public class SeriesListDataModel extends AbstractListModel<String> {
      * Facade for series
      */
     private SerieFacade serieFacade;
-
-    /**
-     * List of TO for serie
-     */
-    private List<SerieTO> series;
 
     /**
      * Creates a new instance of SeriesListDataModel.
@@ -43,43 +37,14 @@ public class SeriesListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
-    @Override
-    public int getSize() {
-        return series.size();
-
-    }
-
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
     public String getElementAt(final int index) {
-        return getSerieAt(index).getCzechName();
+        return getObjectAt(index).getCzechName();
     }
 
-    /**
-     * Returns TO for serie at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for serie at index
-     */
-    public SerieTO getSerieAt(final int index) {
-        return series.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        series = serieFacade.getSeries();
+    @Override
+    protected List<SerieTO> getData() {
+        return serieFacade.getSeries();
     }
 
 }

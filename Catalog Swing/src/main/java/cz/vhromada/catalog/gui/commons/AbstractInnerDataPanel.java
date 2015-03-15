@@ -203,7 +203,7 @@ public abstract class AbstractInnerDataPanel<T> extends JPanel {
      *
      * @param data data
      */
-    protected void updateModel(final T data) {
+    protected final void updateModel(final T data) {
         listDataModel.update();
         list.updateUI();
         updateDataPanel(tabbedPane.getComponentAt(0), data);

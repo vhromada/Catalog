@@ -374,6 +374,7 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         statsTable.setEnabled(false);
         statsTable.setRowSelectionAllowed(false);
         statsTable.setDefaultRenderer(Integer.class, new StatsTableCellRenderer());
+        statsTable.setDefaultRenderer(String.class, new StatsTableCellRenderer());
 
         final GroupLayout layout = new GroupLayout(this);
         setLayout(layout);

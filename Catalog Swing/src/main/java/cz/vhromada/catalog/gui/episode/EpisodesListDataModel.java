@@ -2,11 +2,10 @@ package cz.vhromada.catalog.gui.episode;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -14,7 +13,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class EpisodesListDataModel extends AbstractListModel<String> {
+public class EpisodesListDataModel extends AbstractListDataModel<EpisodeTO> {
 
     /**
      * SerialVersionUID
@@ -30,11 +29,6 @@ public class EpisodesListDataModel extends AbstractListModel<String> {
      * TO for season
      */
     private SeasonTO season;
-
-    /**
-     * List of TO for episode
-     */
-    private List<EpisodeTO> episodes;
 
     /**
      * Creates a new instance of EpisodesListDataModel.
@@ -53,42 +47,14 @@ public class EpisodesListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
-    @Override
-    public int getSize() {
-        return episodes.size();
-    }
-
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
     public String getElementAt(final int index) {
-        return getEpisodeAt(index).getName();
+        return getObjectAt(index).getName();
     }
 
-    /**
-     * Returns TO for episode at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for episode at index
-     */
-    public EpisodeTO getEpisodeAt(final int index) {
-        return episodes.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        episodes = episodeFacade.findEpisodesBySeason(season);
+    @Override
+    protected List<EpisodeTO> getData() {
+        return episodeFacade.findEpisodesBySeason(season);
     }
 
 }

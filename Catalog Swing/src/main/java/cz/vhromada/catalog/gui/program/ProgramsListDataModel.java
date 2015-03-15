@@ -2,10 +2,9 @@ package cz.vhromada.catalog.gui.program;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -13,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class ProgramsListDataModel extends AbstractListModel<String> {
+public class ProgramsListDataModel extends AbstractListDataModel<ProgramTO> {
 
     /**
      * SerialVersionUID
@@ -24,11 +23,6 @@ public class ProgramsListDataModel extends AbstractListModel<String> {
      * Facade for programs
      */
     private ProgramFacade programFacade;
-
-    /**
-     * List of TO for program
-     */
-    private List<ProgramTO> programs;
 
     /**
      * Creates a new instance of ProgramsListDataModel.
@@ -43,42 +37,14 @@ public class ProgramsListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
-    @Override
-    public int getSize() {
-        return programs.size();
-    }
-
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
     public String getElementAt(final int index) {
-        return getProgramAt(index).getName();
+        return getObjectAt(index).getName();
     }
 
-    /**
-     * Returns TO for program at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for program at index
-     */
-    public ProgramTO getProgramAt(final int index) {
-        return programs.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        programs = programFacade.getPrograms();
+    @Override
+    protected List<ProgramTO> getData() {
+        return programFacade.getPrograms();
     }
 
 }

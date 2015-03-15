@@ -2,10 +2,9 @@ package cz.vhromada.catalog.gui.game;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.facade.to.GameTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -13,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class GamesListDataModel extends AbstractListModel<String> {
+public class GamesListDataModel extends AbstractListDataModel<GameTO> {
 
     /**
      * SerialVersionUID
@@ -24,11 +23,6 @@ public class GamesListDataModel extends AbstractListModel<String> {
      * Facade for games
      */
     private GameFacade gameFacade;
-
-    /**
-     * List of TO for game
-     */
-    private List<GameTO> games;
 
     /**
      * Creates a new instance of GamesListDataModel.
@@ -43,42 +37,14 @@ public class GamesListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
-    @Override
-    public int getSize() {
-        return games.size();
-    }
-
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
     public String getElementAt(final int index) {
-        return getGameAt(index).getName();
+        return getObjectAt(index).getName();
     }
 
-    /**
-     * Returns TO for game at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for game at index
-     */
-    public GameTO getGameAt(final int index) {
-        return games.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        games = gameFacade.getGames();
+    @Override
+    protected List<GameTO> getData() {
+        return gameFacade.getGames();
     }
 
 }

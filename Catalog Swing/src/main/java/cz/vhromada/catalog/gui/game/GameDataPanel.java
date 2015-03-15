@@ -55,6 +55,11 @@ public class GameDataPanel extends JPanel {
     private static final int HORIZONTAL_GAP_SIZE = 10;
 
     /**
+     * Vertical small gap size
+     */
+    private static final int VERTICAL_SMALL_GAP_SIZE = 5;
+
+    /**
      * Vertical gap size
      */
     private static final int VERTICAL_GAP_SIZE = 10;
@@ -305,7 +310,7 @@ public class GameDataPanel extends JPanel {
                         CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
 
         return layout.createSequentialGroup()
-                .addGap(5)
+                .addGap(VERTICAL_SMALL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, nameLabel, nameData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, dataLabel, dataData))
@@ -315,7 +320,7 @@ public class GameDataPanel extends JPanel {
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(buttons)
-                .addGap(5);
+                .addGap(VERTICAL_SMALL_GAP_SIZE);
     }
 
     /**

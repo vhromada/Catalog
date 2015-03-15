@@ -161,6 +161,7 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         listDataModel.update();
         list.clearSelection();
         list.updateUI();
+        tabbedPane.removeAll();
         statsTableDataModel.update();
         statsTable.updateUI();
         saved = true;
@@ -170,6 +171,7 @@ public abstract class AbstractDataPanel<T> extends JPanel {
      * Clears selection.
      */
     public void clearSelection() {
+        tabbedPane.removeAll();
         list.clearSelection();
     }
 
@@ -260,6 +262,29 @@ public abstract class AbstractDataPanel<T> extends JPanel {
      * @return data panel
      */
     protected abstract JPanel getDataPanel(final T data);
+
+    /**
+     * Updates data on change.
+     *
+     * @param dataPanel tabbed pane with data
+     * @param data      data
+     */
+    protected void updateDataOnChange(final JTabbedPane dataPanel, final T data) {
+    }
+
+    /**
+     * Updates model.
+     *
+     * @param data data
+     */
+    protected void updateModel(final T data) {
+        listDataModel.update();
+        list.updateUI();
+        updateDataPanel(tabbedPane.getComponentAt(0), data);
+        statsTableDataModel.update();
+        statsTable.updateUI();
+        saved = false;
+    }
 
     /**
      * Initializes components.
@@ -404,12 +429,7 @@ public abstract class AbstractDataPanel<T> extends JPanel {
                 if (dialog.getReturnStatus() == DialogResult.OK) {
                     final T data = dialog.getData();
                     updateData(data);
-                    listDataModel.update();
-                    list.updateUI();
-                    updateDataPanel(tabbedPane.getComponentAt(0), data);
-                    statsTableDataModel.update();
-                    statsTable.updateUI();
-                    saved = false;
+                    updateModel(data);
                 }
             }
 
@@ -480,7 +500,9 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         duplicatePopupMenuItem.setEnabled(validSelection);
         tabbedPane.removeAll();
         if (validSelection) {
-            tabbedPane.add("Data", getDataPanel(listDataModel.getObjectAt(selectedRow)));
+            final T data = listDataModel.getObjectAt(selectedRow);
+            tabbedPane.add("Data", getDataPanel(data));
+            updateDataOnChange(tabbedPane, data);
         }
         if (isSelectedRow && selectedRow > 0) {
             moveUpPopupMenuItem.setEnabled(true);

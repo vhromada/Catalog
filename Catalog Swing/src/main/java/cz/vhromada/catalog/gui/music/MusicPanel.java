@@ -1,32 +1,17 @@
 package cz.vhromada.catalog.gui.music;
 
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.GroupLayout;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
-import cz.vhromada.catalog.gui.commons.DialogResult;
-import cz.vhromada.catalog.gui.commons.Picture;
-import cz.vhromada.catalog.gui.commons.StatsTableCellRenderer;
+import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
+import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
 import cz.vhromada.catalog.gui.song.SongsPanel;
 import cz.vhromada.validators.Validators;
 
@@ -35,87 +20,12 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class MusicPanel extends JPanel {
+public class MusicPanel extends AbstractDataPanel<MusicTO> {
 
     /**
      * SerialVersionUID
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Horizontal scroll pane size
-     */
-    private static final int HORIZONTAL_SCROLL_PANE_SIZE = 200;
-
-    /**
-     * Vertical data component size
-     */
-    private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
-
-    /**
-     * Vertical size for scroll pane for table with stats
-     */
-    private static final int VERTICAL_STATS_SCROLL_PANE_SIZE = 45;
-
-    /**
-     * Popup menu
-     */
-    private JPopupMenu popupMenu = new JPopupMenu();
-
-    /**
-     * Menu item for adding music
-     */
-    private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
-
-    /**
-     * Menu item for updating music
-     */
-    private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
-
-    /**
-     * Menu item for removing music
-     */
-    private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
-
-    /**
-     * Menu item for duplicating music
-     */
-    private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
-
-    /**
-     * Menu item for moving up music
-     */
-    private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
-
-    /**
-     * Menu item for moving down music
-     */
-    private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
-
-    /**
-     * List with music
-     */
-    private JList<String> list = new JList<>();
-
-    /**
-     * ScrollPane for list with music
-     */
-    private JScrollPane listScrollPane = new JScrollPane(list);
-
-    /**
-     * Tabbed pane with music data
-     */
-    private JTabbedPane tabbedPane = new JTabbedPane();
-
-    /**
-     * Table with with music stats
-     */
-    private JTable statsTable = new JTable();
-
-    /**
-     * ScrollPane for table with music stats
-     */
-    private JScrollPane statsTableScrollPane = new JScrollPane(statsTable);
 
     /**
      * Facade for music
@@ -128,21 +38,6 @@ public class MusicPanel extends JPanel {
     private SongFacade songFacade;
 
     /**
-     * Data model for list with music
-     */
-    private MusicListDataModel musicListDataModel;
-
-    /**
-     * Data model for table with stats for music
-     */
-    private MusicStatsTableDataModel musicStatsTableDataModel;
-
-    /**
-     * True if data is saved
-     */
-    private boolean saved;
-
-    /**
      * Creates a new instance of MusicPanel.
      *
      * @param musicFacade facade for music
@@ -151,348 +46,103 @@ public class MusicPanel extends JPanel {
      *                                  or facade for songs is null
      */
     public MusicPanel(final MusicFacade musicFacade, final SongFacade songFacade) {
-        Validators.validateArgumentNotNull(musicFacade, "Facade for music");
+        super(getMusicListDataModel(musicFacade), getMusicStatsTableDataModel(musicFacade));
+
         Validators.validateArgumentNotNull(songFacade, "Facade for songs");
 
         this.musicFacade = musicFacade;
         this.songFacade = songFacade;
-        this.saved = true;
-        initComponents();
     }
 
-    /**
-     * Creates new data.
-     */
-    public void newData() {
+    @Override
+    protected AbstractInfoDialog<MusicTO> getInfoDialog(final boolean add, final MusicTO data) {
+        return add ? new MusicInfoDialog() : new MusicInfoDialog(data);
+    }
+
+    @Override
+    protected void deleteData() {
         musicFacade.newData();
-        musicListDataModel.update();
-        list.clearSelection();
-        list.updateUI();
-        tabbedPane.removeAll();
-        musicStatsTableDataModel.update();
-        statsTable.updateUI();
-        saved = true;
     }
 
-    /**
-     * Clears selection.
-     */
-    public void clearSelection() {
-        list.clearSelection();
-        tabbedPane.removeAll();
+    @Override
+    protected void addData(final MusicTO data) {
+        musicFacade.add(data);
     }
 
-    /**
-     * Saves.
-     */
-    public void save() {
-        saved = true;
+    @Override
+    protected void updateData(final MusicTO data) {
+        musicFacade.update(data);
     }
 
-    /**
-     * Returns true if data is saved.
-     *
-     * @return true if data is saved
-     */
-    public boolean isSaved() {
-        return saved;
+    @Override
+    protected void removeData(final MusicTO data) {
+        musicFacade.remove(data);
     }
 
-    /**
-     * Initializes components.
-     */
-    private void initComponents() {
-        initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
-
-        addPopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
-        addPopupMenuItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                addAction();
-            }
-
-        });
-
-        updatePopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
-        updatePopupMenuItem.setEnabled(false);
-        updatePopupMenuItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                updateAction();
-            }
-
-        });
-
-        removePopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-        removePopupMenuItem.setEnabled(false);
-        removePopupMenuItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                removeAction();
-            }
-
-        });
-
-        duplicatePopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
-        duplicatePopupMenuItem.setEnabled(false);
-        duplicatePopupMenuItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                duplicateAction();
-            }
-
-        });
-
-        moveUpPopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.CTRL_MASK));
-        moveUpPopupMenuItem.setEnabled(false);
-        moveUpPopupMenuItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                moveUpAction();
-            }
-
-        });
-
-        moveDownPopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
-        moveDownPopupMenuItem.setEnabled(false);
-        moveDownPopupMenuItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                moveDownAction();
-            }
-
-        });
-
-        initList();
-
-        musicStatsTableDataModel = new MusicStatsTableDataModel(musicFacade);
-        statsTable.setModel(musicStatsTableDataModel);
-        statsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        statsTable.setEnabled(false);
-        statsTable.setRowSelectionAllowed(false);
-        statsTable.setDefaultRenderer(Integer.class, new StatsTableCellRenderer());
-
-        final GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
-        layout.setHorizontalGroup(createHorizontalLayout(layout));
-        layout.setVerticalGroup(createVerticalLayout(layout));
+    @Override
+    protected void duplicatesData(final MusicTO data) {
+        musicFacade.duplicate(data);
     }
 
-    /**
-     * Initializes popup menu.
-     *
-     * @param menuItems popup menu items
-     */
-    private void initPopupMenu(final JMenuItem... menuItems) {
-        for (JMenuItem menuItem : menuItems) {
-            popupMenu.add(menuItem);
-        }
+    @Override
+    protected void moveUpData(final MusicTO data) {
+        musicFacade.moveUp(data);
     }
 
-    /**
-     * Performs action for button Add.
-     */
-    private void addAction() {
-        EventQueue.invokeLater(new Runnable() {
+    @Override
+    protected void moveDownData(final MusicTO data) {
+        musicFacade.moveDown(data);
+    }
+
+    @Override
+    protected void updateDataPanel(final Component dataPanel, final MusicTO data) {
+        ((MusicDataPanel) dataPanel).updateMusic(data);
+    }
+
+    @Override
+    protected JPanel getDataPanel(final MusicTO data) {
+        return new MusicDataPanel(data, songFacade);
+    }
+
+    @Override
+    protected void updateDataOnChange(final JTabbedPane dataPanel, final MusicTO data) {
+        super.updateDataOnChange(dataPanel, data);
+
+        final SongsPanel songsPanel = new SongsPanel(songFacade, data);
+        songsPanel.addPropertyChangeListener("update", new PropertyChangeListener() {
 
             @Override
-            public void run() {
-                final MusicInfoDialog dialog = new MusicInfoDialog();
-                dialog.setVisible(true);
-                if (dialog.getReturnStatus() == DialogResult.OK) {
-                    musicFacade.add(dialog.getData());
-                    musicListDataModel.update();
-                    list.updateUI();
-                    list.setSelectedIndex(list.getModel().getSize() - 1);
-                    musicStatsTableDataModel.update();
-                    statsTable.updateUI();
-                    saved = false;
+            public void propertyChange(final PropertyChangeEvent evt) {
+                if (Boolean.TRUE.equals(evt.getNewValue())) {
+                    updateModel(data);
+                    songsPanel.setMusic(data);
                 }
             }
 
         });
+        dataPanel.add("Songs", songsPanel);
     }
 
     /**
-     * Performs action for button Update.
-     */
-    private void updateAction() {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final int index = list.getSelectedIndex();
-                final MusicInfoDialog dialog = new MusicInfoDialog(musicListDataModel.getMusicAt(index));
-                dialog.setVisible(true);
-                if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final MusicTO music = dialog.getData();
-                    musicFacade.update(music);
-                    musicListDataModel.update();
-                    list.updateUI();
-                    ((MusicDataPanel) tabbedPane.getComponentAt(0)).updateMusic(music);
-                    musicStatsTableDataModel.update();
-                    statsTable.updateUI();
-                    saved = false;
-                }
-            }
-
-        });
-    }
-
-    /**
-     * Performs action for button Remove.
-     */
-    private void removeAction() {
-        musicFacade.remove(musicListDataModel.getMusicAt(list.getSelectedIndex()));
-        musicListDataModel.update();
-        list.updateUI();
-        list.clearSelection();
-        musicStatsTableDataModel.update();
-        statsTable.updateUI();
-        saved = false;
-    }
-
-    /**
-     * Performs action for button Duplicate.
-     */
-    private void duplicateAction() {
-        final int index = list.getSelectedIndex();
-        musicFacade.duplicate(musicListDataModel.getMusicAt(index));
-        musicListDataModel.update();
-        list.updateUI();
-        list.setSelectedIndex(index + 1);
-        musicStatsTableDataModel.update();
-        statsTable.updateUI();
-        saved = false;
-    }
-
-    /**
-     * Performs action for button MoveUp.
-     */
-    private void moveUpAction() {
-        final int index = list.getSelectedIndex();
-        musicFacade.moveUp(musicListDataModel.getMusicAt(index));
-        musicListDataModel.update();
-        list.updateUI();
-        list.setSelectedIndex(index - 1);
-        saved = false;
-    }
-
-    /**
-     * Performs action for button MoveDown.
-     */
-    private void moveDownAction() {
-        final int index = list.getSelectedIndex();
-        musicFacade.moveDown(musicListDataModel.getMusicAt(index));
-        musicListDataModel.update();
-        list.updateUI();
-        list.setSelectedIndex(index + 1);
-        saved = false;
-    }
-
-    /**
-     * Initializes list.
-     */
-    private void initList() {
-        musicListDataModel = new MusicListDataModel(musicFacade);
-        list.setModel(musicListDataModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setComponentPopupMenu(popupMenu);
-        list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                listValueChangedAction();
-            }
-
-        });
-    }
-
-    /**
-     * Performs action for change of list value.
-     */
-    private void listValueChangedAction() {
-        final boolean isSelectedRow = list.getSelectedIndices().length == 1;
-        final int selectedRow = list.getSelectedIndex();
-        final boolean validRowIndex = selectedRow >= 0;
-        final boolean validSelection = isSelectedRow && validRowIndex;
-        removePopupMenuItem.setEnabled(validSelection);
-        updatePopupMenuItem.setEnabled(validSelection);
-        duplicatePopupMenuItem.setEnabled(validSelection);
-        tabbedPane.removeAll();
-        if (validSelection) {
-            final MusicTO music = musicListDataModel.getMusicAt(selectedRow);
-            tabbedPane.add("Data", new MusicDataPanel(music, songFacade));
-            final SongsPanel songsPanel = new SongsPanel(songFacade, music);
-            songsPanel.addPropertyChangeListener("update", new PropertyChangeListener() {
-
-                @Override
-                public void propertyChange(final PropertyChangeEvent evt) {
-                    if (Boolean.TRUE.equals(evt.getNewValue())) {
-                        musicListDataModel.update();
-                        list.updateUI();
-                        final MusicTO newMusic = musicListDataModel.getMusicAt(selectedRow);
-                        ((MusicDataPanel) tabbedPane.getComponentAt(0)).updateMusic(newMusic);
-                        songsPanel.setMusic(newMusic);
-                        musicStatsTableDataModel.update();
-                        statsTable.updateUI();
-                        saved = false;
-                    }
-                }
-
-            });
-            tabbedPane.add("Songs", songsPanel);
-        }
-        if (isSelectedRow && selectedRow > 0) {
-            moveUpPopupMenuItem.setEnabled(true);
-        } else {
-            moveUpPopupMenuItem.setEnabled(false);
-        }
-        if (validSelection && selectedRow < list.getModel().getSize() - 1) {
-            moveDownPopupMenuItem.setEnabled(true);
-        } else {
-            moveDownPopupMenuItem.setEnabled(false);
-        }
-    }
-
-    /**
-     * Returns horizontal layout of components.
+     * Returns data model for list with music.
      *
-     * @param layout layout
-     * @return horizontal layout of components
+     * @param facade facade for music
+     * @return data model for list with music
+     * @throws IllegalArgumentException if facade for music is null
      */
-    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-        final GroupLayout.Group data = layout.createSequentialGroup()
-                .addComponent(listScrollPane, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE)
-                .addGap(5)
-                .addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-
-        return layout.createParallelGroup()
-                .addGroup(data)
-                .addComponent(statsTableScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+    private static MusicListDataModel getMusicListDataModel(final MusicFacade facade) {
+        return new MusicListDataModel(facade);
     }
 
     /**
-     * Returns vertical layout of components.
+     * Returns data model for table with stats for music.
      *
-     * @param layout layout
-     * @return vertical layout of components
+     * @param facade facade for music
+     * @return data model for table with stats for music
+     * @throws IllegalArgumentException if facade for music is null
      */
-    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-        final GroupLayout.Group data = layout.createParallelGroup()
-                .addComponent(listScrollPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE)
-                .addComponent(tabbedPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE);
-
-        return layout.createSequentialGroup()
-                .addGroup(data)
-                .addGap(2)
-                .addComponent(statsTableScrollPane, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE);
+    private static MusicStatsTableDataModel getMusicStatsTableDataModel(final MusicFacade facade) {
+        return new MusicStatsTableDataModel(facade);
     }
 
 }

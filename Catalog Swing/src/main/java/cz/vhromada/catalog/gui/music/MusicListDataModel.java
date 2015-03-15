@@ -2,10 +2,9 @@ package cz.vhromada.catalog.gui.music;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -13,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class MusicListDataModel extends AbstractListModel<String> {
+public class MusicListDataModel extends AbstractListDataModel<MusicTO> {
 
     /**
      * SerialVersionUID
@@ -24,11 +23,6 @@ public class MusicListDataModel extends AbstractListModel<String> {
      * Facade for music
      */
     private MusicFacade musicFacade;
-
-    /**
-     * List of TO for music
-     */
-    private List<MusicTO> musicList;
 
     /**
      * Creates a new instance of MusicListDataModel.
@@ -43,42 +37,14 @@ public class MusicListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
-    @Override
-    public int getSize() {
-        return musicList.size();
-    }
-
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
     public String getElementAt(final int index) {
-        return getMusicAt(index).getName();
+        return getObjectAt(index).getName();
     }
 
-    /**
-     * Returns TO for music at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for music at index
-     */
-    public MusicTO getMusicAt(final int index) {
-        return musicList.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        musicList = musicFacade.getMusic();
+    @Override
+    protected List<MusicTO> getData() {
+        return musicFacade.getMusic();
     }
 
 }

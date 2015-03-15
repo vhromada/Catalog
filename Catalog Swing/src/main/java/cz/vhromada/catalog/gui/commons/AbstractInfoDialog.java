@@ -9,7 +9,10 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JSpinner;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 
 import cz.vhromada.validators.Validators;
@@ -118,7 +121,6 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
         Validators.validateArgumentNotNull(data, "Data");
 
         this.data = data;
-        this.okButton.requestFocusInWindow();
     }
 
     /**
@@ -226,6 +228,8 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
 
     /**
      * Adds validator to input.
+     *
+     * @param input input
      */
     protected final void addInputValidator(final JTextComponent input) {
         input.getDocument().addDocumentListener(new InputValidator(okButton) {
@@ -239,12 +243,37 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
     }
 
     /**
+     * Adds validator to spinner.
+     *
+     * @param spinner spinner
+     */
+    protected final void addSpinnerValidator(final JSpinner spinner) {
+        spinner.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(final ChangeEvent e) {
+                okButton.setEnabled(isInputValid());
+            }
+
+        });
+    }
+
+    /**
      * Returns true if input is valid.
      *
      * @return true if input is valid
      */
     protected boolean isInputValid() {
         return true;
+    }
+
+    /**
+     * Sets enabled to button OK.
+     *
+     * @param enabled true if button should be enabled
+     */
+    protected final void setOkButtonEnabled(final boolean enabled) {
+        okButton.setEnabled(enabled);
     }
 
     /**
@@ -273,6 +302,19 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
                 .addComponent(labelComponent, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
                 .addGap(HORIZONTAL_DATA_GAP_SIZE)
                 .addComponent(dataComponent, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
+    }
+
+    /**
+     * Returns horizontal layout for selectable component.
+     *
+     * @param layout    layout
+     * @param component component
+     * @return horizontal layout for selectable component
+     */
+    protected final GroupLayout.Group createHorizontalSelectableComponent(final GroupLayout layout, final JComponent component) {
+        return layout.createSequentialGroup()
+                .addGap(110)
+                .addComponent(component, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
     }
 
     /**

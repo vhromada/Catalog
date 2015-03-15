@@ -80,6 +80,7 @@ public class TimeDataPanel extends JPanel {
         Validators.validateArgumentNotNull(labelText, "Label text");
         Validators.validateNotEmptyString(labelText, "Label text");
 
+        this.lengthLabel.setFocusable(false);
         this.lengthLabel.setText(labelText);
 
         final GroupLayout layout = new GroupLayout(this);

@@ -1,91 +1,35 @@
 package cz.vhromada.catalog.gui.season;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.GroupLayout;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import cz.vhromada.catalog.commons.Constants;
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.facade.to.SeasonTO;
+import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
-import cz.vhromada.catalog.gui.commons.DialogResult;
-import cz.vhromada.catalog.gui.commons.Picture;
-import cz.vhromada.validators.Validators;
 
 /**
  * A class represents dialog for season.
  *
  * @author Vladimir Hromada
  */
-public class SeasonInfoDialog extends JDialog {
+public class SeasonInfoDialog extends AbstractInfoDialog<SeasonTO> {
 
     /**
      * SerialVersionUID
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Horizontal label size in dialog
-     */
-    private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
-
-    /**
-     * Horizontal data size in dialog
-     */
-    private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
-
-    /**
-     * Horizontal button size
-     */
-    private static final int HORIZONTAL_BUTTON_SIZE = 96;
-
-    /**
-     * Horizontal button gap size
-     */
-    private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
-
-    /**
-     * Horizontal gap size
-     */
-    private static final int HORIZONTAL_GAP_SIZE = 20;
-
-    /**
-     * Vertical gap size
-     */
-    private static final int VERTICAL_GAP_SIZE = 10;
-
-    /**
-     * Vertical long gap size
-     */
-    private static final int VERTICAL_LONG_GAP_SIZE = 20;
-
-    /**
-     * Return status
-     */
-    private DialogResult returnStatus = DialogResult.CANCEL;
-
-    /**
-     * TO for season
-     */
-    private SeasonTO season;
 
     /**
      * Label for season's number
@@ -173,22 +117,12 @@ public class SeasonInfoDialog extends JDialog {
     private JTextField noteData = new JTextField();
 
     /**
-     * Button OK
-     */
-    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
-
-    /**
-     * Button Cancel
-     */
-    private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
-
-    /**
      * Creates a new instance of SeasonInfoDialog.
      */
     public SeasonInfoDialog() {
-        this("Add", Picture.ADD);
+        init();
 
-        numberData.requestFocusInWindow();
+        setOkButtonEnabled(true);
     }
 
     /**
@@ -198,11 +132,9 @@ public class SeasonInfoDialog extends JDialog {
      * @throws IllegalArgumentException if TO for season is null
      */
     public SeasonInfoDialog(final SeasonTO season) {
-        this("Update", Picture.UPDATE);
+        super(season);
 
-        Validators.validateArgumentNotNull(season, "TO for season");
-
-        this.season = season;
+        init();
         this.numberData.setValue(season.getNumber());
         this.startYearData.setValue(season.getStartYear());
         this.endYearData.setValue(season.getEndYear());
@@ -222,91 +154,7 @@ public class SeasonInfoDialog extends JDialog {
             default:
                 throw new IndexOutOfBoundsException("Bad language");
         }
-        for (Language subtitles : season.getSubtitles()) {
-            initSubtitles(subtitles);
-        }
-        this.noteData.setText(season.getNote());
-        this.okButton.requestFocusInWindow();
-    }
-
-    /**
-     * Creates a new instance of SeasonInfoDialog.
-     *
-     * @param name    name
-     * @param picture picture
-     */
-    private SeasonInfoDialog(final String name, final Picture picture) {
-        super(new JFrame(), name, true);
-
-        initComponents();
-        setIconImage(picture.getIcon().getImage());
-    }
-
-    /**
-     * Returns return status.
-     *
-     * @return return status
-     */
-    public DialogResult getReturnStatus() {
-        return returnStatus;
-    }
-
-    /**
-     * Returns TO for season.
-     *
-     * @return TO for season
-     * @throws IllegalStateException if TO for season hasn't been set
-     */
-    public SeasonTO getSeason() {
-        Validators.validateFieldNotNull(season, "TO for season");
-
-        return season;
-    }
-
-    /**
-     * Returns horizontal layout for selectable components.
-     *
-     * @param layout     layout
-     * @param components components
-     * @return horizontal layout for selectable components
-     */
-    public static GroupLayout.Group createHorizontalSelectableComponents(final GroupLayout layout, final JComponent... components) {
-        final GroupLayout.Group result = layout.createParallelGroup();
-        for (JComponent component : components) {
-            final GroupLayout.Group group = layout.createSequentialGroup()
-                    .addGap(110)
-                    .addComponent(component, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
-            result.addGroup(group);
-        }
-        return result;
-    }
-
-    /**
-     * Returns vertical layout for selectable components.
-     *
-     * @param layout     layout
-     * @param components components
-     * @return vertical layout for selectable components
-     */
-    public static GroupLayout.Group createVerticalSelectableComponents(final GroupLayout layout, final JComponent... components) {
-        final GroupLayout.Group result = layout.createSequentialGroup();
-        for (JComponent component : components) {
-            result.addComponent(component, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                    CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
-            if (!component.equals(components[components.length - 1])) {
-                result.addGap(VERTICAL_GAP_SIZE);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Initializes subtitles.
-     *
-     * @param subtitles subtitles
-     */
-    private void initSubtitles(final Language subtitles) {
-        if (subtitles != null) {
+        for (final Language subtitles : season.getSubtitles()) {
             switch (subtitles) {
                 case CZ:
                     this.czechSubtitlesData.setSelected(true);
@@ -318,98 +166,30 @@ public class SeasonInfoDialog extends JDialog {
                     throw new IndexOutOfBoundsException("Bad subtitles");
             }
         }
+        this.noteData.setText(season.getNote());
     }
 
-    /**
-     * Initializes components.
-     */
-    private void initComponents() {
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
-
+    @Override
+    protected void initComponents() {
         initLabelComponent(numberLabel, numberData);
-        initLabelSpinnerWithListener(startYearLabel, startYearData);
-        initLabelSpinnerWithListener(endYearLabel, endYearData);
-        initButtonGroup(czechLanguageData, englishLanguageData, frenchLanguageData, japaneseLanguageData);
-        subtitlesLabel.setFocusable(false);
+        initLabelComponent(startYearLabel, startYearData);
+        initLabelComponent(endYearLabel, endYearData);
         initLabelComponent(noteLabel, noteData);
 
-        okButton.addActionListener(new ActionListener() {
+        languagesButtonGroup.add(czechLanguageData);
+        languagesButtonGroup.add(englishLanguageData);
+        languagesButtonGroup.add(frenchLanguageData);
+        languagesButtonGroup.add(japaneseLanguageData);
 
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                okAction();
-            }
+        subtitlesLabel.setFocusable(false);
 
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                cancelAction();
-            }
-
-        });
-
-        final GroupLayout layout = new GroupLayout(getRootPane());
-        getRootPane().setLayout(layout);
-        layout.setHorizontalGroup(createHorizontalLayout(layout));
-        layout.setVerticalGroup(createVerticalLayout(layout));
-
-        pack();
-        setLocationRelativeTo(getRootPane());
+        addSpinnerValidator(startYearData);
+        addSpinnerValidator(endYearData);
     }
 
-    /**
-     * Initializes label with component.
-     *
-     * @param label     label
-     * @param component component
-     */
-    private void initLabelComponent(final JLabel label, final JComponent component) {
-        label.setLabelFor(component);
-        label.setFocusable(false);
-    }
-
-    /**
-     * Initializes label with spinner and listener.
-     *
-     * @param label   label
-     * @param spinner component
-     */
-    private void initLabelSpinnerWithListener(final JLabel label, final JSpinner spinner) {
-        label.setLabelFor(spinner);
-        label.setFocusable(false);
-        spinner.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                okButton.setEnabled(isInputValid());
-            }
-
-        });
-    }
-
-    /**
-     * Initializes button group.
-     *
-     * @param buttons buttons in button group
-     */
-    private void initButtonGroup(final JRadioButton... buttons) {
-        for (JRadioButton button : buttons) {
-            languagesButtonGroup.add(button);
-        }
-    }
-
-    /**
-     * Performs action for button OK.
-     */
-    private void okAction() {
-        returnStatus = DialogResult.OK;
-        if (season == null) {
-            season = new SeasonTO();
-        }
+    @Override
+    protected SeasonTO processData(final SeasonTO objectData) {
+        final SeasonTO season = objectData == null ? new SeasonTO() : objectData;
         season.setNumber((Integer) numberData.getValue());
         season.setStartYear((Integer) startYearData.getValue());
         season.setEndYear((Integer) endYearData.getValue());
@@ -425,7 +205,61 @@ public class SeasonInfoDialog extends JDialog {
         season.setLanguage(language);
         season.setSubtitles(getSelectedSubtitles());
         season.setNote(noteData.getText());
-        close();
+
+        return season;
+    }
+
+    /**
+     * Returns true if input is valid: starting year isn't greater than ending year.
+     *
+     * @return true if input is valid: starting year isn't greater than ending year
+     */
+    @Override
+    protected boolean isInputValid() {
+        return (Integer) startYearData.getValue() <= (Integer) endYearData.getValue();
+    }
+
+    @Override
+    protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group
+                .addGroup(createHorizontalComponents(layout, numberLabel, numberData))
+                .addGroup(createHorizontalComponents(layout, startYearLabel, startYearData))
+                .addGroup(createHorizontalComponents(layout, endYearLabel, endYearData))
+                .addGroup(createHorizontalComponents(layout, languageLabel, czechLanguageData))
+                .addGroup(createHorizontalSelectableComponent(layout, englishLanguageData))
+                .addGroup(createHorizontalSelectableComponent(layout, frenchLanguageData))
+                .addGroup(createHorizontalSelectableComponent(layout, japaneseLanguageData))
+                .addGroup(createHorizontalComponents(layout, subtitlesLabel, czechSubtitlesData))
+                .addGroup(createHorizontalSelectableComponent(layout, englishSubtitlesData))
+                .addGroup(createHorizontalComponents(layout, noteLabel, noteData));
+    }
+
+    @Override
+    protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group
+                .addGroup(createVerticalComponents(layout, numberLabel, numberData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, startYearLabel, startYearData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, endYearLabel, endYearData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, languageLabel, czechLanguageData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(englishLanguageData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(frenchLanguageData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(japaneseLanguageData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, subtitlesLabel, czechSubtitlesData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(englishSubtitlesData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, noteLabel, noteData));
     }
 
     /**
@@ -443,131 +277,6 @@ public class SeasonInfoDialog extends JDialog {
         }
 
         return subtitles;
-    }
-
-    /**
-     * Performs action for button Cancel.
-     */
-    private void cancelAction() {
-        returnStatus = DialogResult.CANCEL;
-        season = null;
-        close();
-    }
-
-    /**
-     * Returns horizontal layout of components.
-     *
-     * @param layout layout
-     * @return horizontal layout of components
-     */
-    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-        final GroupLayout.Group buttons = layout.createSequentialGroup()
-                .addGap(HORIZONTAL_BUTTON_GAP_SIZE)
-                .addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(54)
-                .addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(HORIZONTAL_BUTTON_GAP_SIZE);
-
-
-        final GroupLayout.Group components = layout.createParallelGroup()
-                .addGroup(createHorizontalComponents(layout, numberLabel, numberData))
-                .addGroup(createHorizontalComponents(layout, startYearLabel, startYearData))
-                .addGroup(createHorizontalComponents(layout, endYearLabel, endYearData))
-                .addGroup(createHorizontalComponents(layout, languageLabel, czechLanguageData))
-                .addGroup(createHorizontalSelectableComponents(layout, englishLanguageData, frenchLanguageData, japaneseLanguageData))
-                .addGroup(createHorizontalComponents(layout, subtitlesLabel, czechSubtitlesData))
-                .addGroup(createHorizontalSelectableComponents(layout, englishSubtitlesData))
-                .addGroup(createHorizontalComponents(layout, noteLabel, noteData))
-                .addGroup(buttons);
-
-        return layout.createSequentialGroup()
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addGroup(components)
-                .addGap(HORIZONTAL_GAP_SIZE);
-    }
-
-    /**
-     * Returns horizontal layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label component
-     * @param data   data component
-     * @return horizontal layout for label component with data component
-     */
-    private static GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-        return layout.createSequentialGroup()
-                .addComponent(label, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
-                .addGap(10)
-                .addComponent(data, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
-    }
-
-    /**
-     * Returns vertical layout of components.
-     *
-     * @param layout layout
-     * @return vertical layout of components
-     */
-    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-        final GroupLayout.Group buttons = layout.createParallelGroup()
-                .addComponent(okButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
-                .addComponent(cancelButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
-
-        return layout.createSequentialGroup()
-                .addGap(VERTICAL_LONG_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, numberLabel, numberData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, startYearLabel, startYearData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, endYearLabel, endYearData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, languageLabel, czechLanguageData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalSelectableComponents(layout, englishLanguageData, frenchLanguageData, japaneseLanguageData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, subtitlesLabel, czechSubtitlesData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalSelectableComponents(layout, englishSubtitlesData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
-                .addGap(VERTICAL_LONG_GAP_SIZE)
-                .addGroup(buttons)
-                .addGap(VERTICAL_LONG_GAP_SIZE);
-    }
-
-    /**
-     * Returns vertical layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label component
-     * @param data   data component
-     * @return vertical layout for label component with data component
-     */
-    private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-        return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
-                .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
-    }
-
-    /**
-     * Returns true if input is valid: starting year isn't greater than ending year.
-     *
-     * @return true if input is valid: starting year isn't greater than ending year
-     */
-    private boolean isInputValid() {
-        return (Integer) startYearData.getValue() <= (Integer) endYearData.getValue();
-    }
-
-    /**
-     * Closes dialog.
-     */
-    private void close() {
-        setVisible(false);
-        dispose();
     }
 
 }

@@ -327,7 +327,7 @@ public class SeriesPanel extends JPanel {
                 final SerieInfoDialog dialog = new SerieInfoDialog(genreFacade);
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    serieFacade.add(dialog.getSerie());
+                    serieFacade.add(dialog.getData());
                     seriesListDataModel.update();
                     list.updateUI();
                     list.setSelectedIndex(list.getModel().getSize() - 1);
@@ -352,7 +352,7 @@ public class SeriesPanel extends JPanel {
                 final SerieInfoDialog dialog = new SerieInfoDialog(genreFacade, seriesListDataModel.getSerieAt(index));
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final SerieTO serie = dialog.getSerie();
+                    final SerieTO serie = dialog.getData();
                     serieFacade.update(serie);
                     seriesListDataModel.update();
                     list.updateUI();

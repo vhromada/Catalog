@@ -261,7 +261,7 @@ public class SeasonsPanel extends JPanel {
                 final SeasonInfoDialog dialog = new SeasonInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final SeasonTO season = dialog.getSeason();
+                    final SeasonTO season = dialog.getData();
                     season.setSerie(serie);
                     seasonFacade.add(season);
                     seasonsListDataModel.update();
@@ -286,7 +286,7 @@ public class SeasonsPanel extends JPanel {
                 final SeasonInfoDialog dialog = new SeasonInfoDialog(season);
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final SeasonTO updatedSeason = dialog.getSeason();
+                    final SeasonTO updatedSeason = dialog.getData();
                     seasonFacade.update(updatedSeason);
                     seasonsListDataModel.update();
                     list.updateUI();

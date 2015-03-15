@@ -249,7 +249,7 @@ public class EpisodesPanel extends JPanel {
                 final EpisodeInfoDialog dialog = new EpisodeInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final EpisodeTO episode = dialog.getEpisode();
+                    final EpisodeTO episode = dialog.getData();
                     episode.setSeason(season);
                     episodeFacade.add(episode);
                     episodesListDataModel.update();
@@ -274,7 +274,7 @@ public class EpisodesPanel extends JPanel {
                 final EpisodeInfoDialog dialog = new EpisodeInfoDialog(episode);
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final EpisodeTO updatedEpisode = dialog.getEpisode();
+                    final EpisodeTO updatedEpisode = dialog.getData();
                     episodeFacade.update(updatedEpisode);
                     episodesListDataModel.update();
                     list.updateUI();

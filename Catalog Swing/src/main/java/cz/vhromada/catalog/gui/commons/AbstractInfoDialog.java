@@ -26,9 +26,9 @@ import cz.vhromada.validators.Validators;
 public abstract class AbstractInfoDialog<T> extends JDialog {
 
     /**
-     * Horizontal check box size
+     * Horizontal long component size
      */
-    protected static final int HORIZONTAL_CHECK_BOX_SIZE = 310;
+    protected static final int HORIZONTAL_LONG_COMPONENT_SIZE = 310;
 
     /**
      * Vertical gap size

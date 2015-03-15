@@ -164,8 +164,8 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
                 .addGroup(createHorizontalComponents(layout, wikiCzLabel, wikiCzData))
                 .addGroup(createHorizontalComponents(layout, wikiEnLabel, wikiEnData))
                 .addGroup(createHorizontalComponents(layout, mediaCountLabel, mediaCountData))
-                .addComponent(crackData, HORIZONTAL_CHECK_BOX_SIZE, HORIZONTAL_CHECK_BOX_SIZE, HORIZONTAL_CHECK_BOX_SIZE)
-                .addComponent(serialData, HORIZONTAL_CHECK_BOX_SIZE, HORIZONTAL_CHECK_BOX_SIZE, HORIZONTAL_CHECK_BOX_SIZE)
+                .addComponent(crackData, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE)
+                .addComponent(serialData, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE)
                 .addGroup(createHorizontalComponents(layout, otherDataLabel, otherDataData))
                 .addGroup(createHorizontalComponents(layout, noteLabel, noteData));
     }

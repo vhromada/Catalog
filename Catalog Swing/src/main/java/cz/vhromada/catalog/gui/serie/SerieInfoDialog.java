@@ -40,11 +40,6 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Horizontal genres button size
-     */
-    private static final int HORIZONTAL_GENRES_BUTTON_SIZE = 310;
-
-    /**
      * Facade for genres
      */
     private GenreFacade genreFacade;
@@ -135,9 +130,19 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
     private JTextField noteData = new JTextField();
 
     /**
+     * Label for genres
+     */
+    private JLabel genreLabel = new JLabel("Genres");
+
+    /**
+     * Data with genres
+     */
+    private JLabel genreData = new JLabel();
+
+    /**
      * Button for genres
      */
-    private JButton genresButton = new JButton("Genres", Picture.CHOOSE.getIcon());
+    private JButton genresButton = new JButton("Change genres", Picture.CHOOSE.getIcon());
 
     /**
      * Creates a new instance of SerieInfoDialog.
@@ -148,7 +153,8 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
     public SerieInfoDialog(final GenreFacade genreFacade) {
         init();
         setGenreFacade(genreFacade);
-        imdbCodeData.setEnabled(imdbCodeLabel.isSelected());
+        imdbCodeLabel.setSelected(false);
+        imdbCodeData.setEnabled(false);
     }
 
     /**
@@ -180,6 +186,7 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
         this.wikiEnData.setText(serie.getWikiEn());
         this.pictureData.setText(serie.getPicture());
         this.noteData.setText(serie.getNote());
+        this.genreData.setText(getGenres());
     }
 
     @Override
@@ -191,10 +198,12 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
         initLabelComponent(wikiEnLabel, wikiEnData);
         initLabelComponent(pictureLabel, pictureData);
         initLabelComponent(noteLabel, noteData);
+        initLabelComponent(genreLabel, genreData);
 
         addInputValidator(czechNameData);
         addInputValidator(originalNameData);
-        addInputValidator(czechNameData);
+
+        genreData.setFocusable(false);
 
         imdbCodeLabel.addChangeListener(new ChangeListener() {
 
@@ -252,7 +261,8 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
                 .addGroup(createHorizontalComponents(layout, wikiEnLabel, wikiEnData))
                 .addGroup(createHorizontalComponents(layout, pictureLabel, pictureData))
                 .addGroup(createHorizontalComponents(layout, noteLabel, noteData))
-                .addComponent(genresButton, HORIZONTAL_GENRES_BUTTON_SIZE, HORIZONTAL_GENRES_BUTTON_SIZE, HORIZONTAL_GENRES_BUTTON_SIZE);
+                .addGroup(createHorizontalComponents(layout, genreLabel, genreData))
+                .addComponent(genresButton, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE);
     }
 
     @Override
@@ -274,6 +284,8 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData))
                 .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, genreLabel, genreData))
+                .addGap(VERTICAL_GAP_SIZE)
                 .addComponent(genresButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
                         CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
     }
@@ -290,6 +302,25 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
     }
 
     /**
+     * Returns genres.
+     *
+     * @return genres
+     */
+    private String getGenres() {
+        if (genres == null || genres.isEmpty()) {
+            return "";
+        }
+
+        final StringBuilder subtitlesString = new StringBuilder();
+        for (final GenreTO genre : genres) {
+            subtitlesString.append(genre.getName());
+            subtitlesString.append(", ");
+        }
+
+        return subtitlesString.substring(0, subtitlesString.length() - 2);
+    }
+
+    /**
      * Performs action for button Genres.
      */
     private void genresAction() {
@@ -302,6 +333,7 @@ public class SerieInfoDialog extends AbstractInfoDialog<SerieTO> {
                 if (dialog.getReturnStatus() == DialogResult.OK) {
                     genres.clear();
                     genres.addAll(dialog.getGenres());
+                    genreData.setText(getGenres());
                     setOkButtonEnabled(isInputValid());
                 }
             }

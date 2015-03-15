@@ -97,9 +97,7 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
      * Creates a new instance of ProgramInfoDialog.
      */
     public ProgramInfoDialog() {
-        initComponents();
-        nameData.requestFocusInWindow();
-        createLayout();
+        init();
     }
 
     /**
@@ -111,7 +109,7 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
     public ProgramInfoDialog(final ProgramTO program) {
         super(program);
 
-        initComponents();
+        init();
         this.nameData.setText(program.getName());
         this.wikiCzData.setText(program.getWikiCz());
         this.wikiEnData.setText(program.getWikiEn());
@@ -120,7 +118,18 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
         this.serialData.setSelected(program.hasSerialKey());
         this.otherDataData.setText(program.getOtherData());
         this.noteData.setText(program.getNote());
-        createLayout();
+    }
+
+    @Override
+    protected void initComponents() {
+        initLabelComponent(nameLabel, nameData);
+        initLabelComponent(wikiCzLabel, wikiCzData);
+        initLabelComponent(wikiEnLabel, wikiEnData);
+        initLabelComponent(mediaCountLabel, mediaCountData);
+        initLabelComponent(otherDataLabel, otherDataData);
+        initLabelComponent(noteLabel, noteData);
+
+        addInputValidator(nameData);
     }
 
     @Override
@@ -181,20 +190,6 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
                 .addGroup(createVerticalComponents(layout, otherDataLabel, otherDataData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData));
-    }
-
-    /**
-     * Initializes components.
-     */
-    private void initComponents() {
-        initLabelComponent(nameLabel, nameData);
-        initLabelComponent(wikiCzLabel, wikiCzData);
-        initLabelComponent(wikiEnLabel, wikiEnData);
-        initLabelComponent(mediaCountLabel, mediaCountData);
-        initLabelComponent(otherDataLabel, otherDataData);
-        initLabelComponent(noteLabel, noteData);
-
-        addInputValidator(nameData);
     }
 
 }

@@ -122,9 +122,7 @@ public class GameInfoDialog extends AbstractInfoDialog<GameTO> {
      * Creates a new instance of GameInfoDialog.
      */
     public GameInfoDialog() {
-        initComponents();
-        nameData.requestFocusInWindow();
-        createLayout();
+        init();
     }
 
     /**
@@ -136,7 +134,7 @@ public class GameInfoDialog extends AbstractInfoDialog<GameTO> {
     public GameInfoDialog(final GameTO game) {
         super(game);
 
-        initComponents();
+        init();
         this.nameData.setText(game.getName());
         this.wikiCzData.setText(game.getWikiCz());
         this.wikiEnData.setText(game.getWikiEn());
@@ -150,7 +148,18 @@ public class GameInfoDialog extends AbstractInfoDialog<GameTO> {
         this.savesData.setSelected(game.haveSaves());
         this.otherDataData.setText(game.getOtherData());
         this.noteData.setText(game.getNote());
-        createLayout();
+    }
+
+    @Override
+    protected void initComponents() {
+        initLabelComponent(nameLabel, nameData);
+        initLabelComponent(wikiCzLabel, wikiCzData);
+        initLabelComponent(wikiEnLabel, wikiEnData);
+        initLabelComponent(mediaCountLabel, mediaCountData);
+        initLabelComponent(otherDataLabel, otherDataData);
+        initLabelComponent(noteLabel, noteData);
+
+        addInputValidator(nameData);
     }
 
     @Override
@@ -236,20 +245,6 @@ public class GameInfoDialog extends AbstractInfoDialog<GameTO> {
                 .addGroup(createVerticalComponents(layout, otherDataLabel, otherDataData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData));
-    }
-
-    /**
-     * Initializes components.
-     */
-    private void initComponents() {
-        initLabelComponent(nameLabel, nameData);
-        initLabelComponent(wikiCzLabel, wikiCzData);
-        initLabelComponent(wikiEnLabel, wikiEnData);
-        initLabelComponent(mediaCountLabel, mediaCountData);
-        initLabelComponent(otherDataLabel, otherDataData);
-        initLabelComponent(noteLabel, noteData);
-
-        addInputValidator(nameData);
     }
 
 }

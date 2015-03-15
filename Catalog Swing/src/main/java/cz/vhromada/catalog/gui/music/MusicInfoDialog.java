@@ -75,9 +75,7 @@ public class MusicInfoDialog extends AbstractInfoDialog<MusicTO> {
      * Creates a new instance of MusicInfoDialog.
      */
     public MusicInfoDialog() {
-        initComponents();
-        nameData.requestFocusInWindow();
-        createLayout();
+        init();
     }
 
     /**
@@ -89,13 +87,23 @@ public class MusicInfoDialog extends AbstractInfoDialog<MusicTO> {
     public MusicInfoDialog(final MusicTO music) {
         super(music);
 
-        initComponents();
+        init();
         this.nameData.setText(music.getName());
         this.wikiCzData.setText(music.getWikiCz());
         this.wikiEnData.setText(music.getWikiEn());
         this.mediaCountData.setValue(music.getMediaCount());
         this.noteData.setText(music.getNote());
-        createLayout();
+    }
+
+    @Override
+    protected void initComponents() {
+        initLabelComponent(nameLabel, nameData);
+        initLabelComponent(wikiCzLabel, wikiCzData);
+        initLabelComponent(wikiEnLabel, wikiEnData);
+        initLabelComponent(mediaCountLabel, mediaCountData);
+        initLabelComponent(noteLabel, noteData);
+
+        addInputValidator(nameData);
     }
 
     @Override
@@ -142,19 +150,6 @@ public class MusicInfoDialog extends AbstractInfoDialog<MusicTO> {
                 .addGroup(createVerticalComponents(layout, mediaCountLabel, mediaCountData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData));
-    }
-
-    /**
-     * Initializes components.
-     */
-    private void initComponents() {
-        initLabelComponent(nameLabel, nameData);
-        initLabelComponent(wikiCzLabel, wikiCzData);
-        initLabelComponent(wikiEnLabel, wikiEnData);
-        initLabelComponent(mediaCountLabel, mediaCountData);
-        initLabelComponent(noteLabel, noteData);
-
-        addInputValidator(nameData);
     }
 
 }

@@ -259,7 +259,7 @@ public class GenresPanel extends JPanel {
                 final GenreInfoDialog dialog = new GenreInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    genreFacade.add(dialog.getGenre());
+                    genreFacade.add(dialog.getData());
                     genresListDataModel.update();
                     list.updateUI();
                     list.setSelectedIndex(list.getModel().getSize() - 1);
@@ -283,7 +283,7 @@ public class GenresPanel extends JPanel {
                 final GenreInfoDialog dialog = new GenreInfoDialog(genresListDataModel.getGenreAt(list.getSelectedIndex()));
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final GenreTO genre = dialog.getGenre();
+                    final GenreTO genre = dialog.getData();
                     genreFacade.update(genre);
                     genresListDataModel.update();
                     list.updateUI();

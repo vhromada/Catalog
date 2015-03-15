@@ -175,6 +175,11 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
     }
 
     /**
+     * Initializes components.
+     */
+    protected abstract void initComponents();
+
+    /**
      * Returns object with filled data.
      *
      * @param objectData object for filling data
@@ -199,6 +204,14 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
      * @return vertical layout with added components
      */
     protected abstract GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group);
+
+    /**
+     * Initializes.
+     */
+    protected final void init() {
+        initComponents();
+        createLayout();
+    }
 
     /**
      * Initializes label with component.

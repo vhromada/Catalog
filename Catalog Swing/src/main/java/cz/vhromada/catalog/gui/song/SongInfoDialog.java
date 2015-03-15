@@ -50,9 +50,7 @@ public class SongInfoDialog extends AbstractInfoDialog<SongTO> {
      * Creates a new instance of SongInfoDialog.
      */
     public SongInfoDialog() {
-        initComponents();
-        nameData.requestFocusInWindow();
-        createLayout();
+        init();
     }
 
     /**
@@ -64,11 +62,18 @@ public class SongInfoDialog extends AbstractInfoDialog<SongTO> {
     public SongInfoDialog(final SongTO song) {
         super(song);
 
-        initComponents();
+        init();
         this.nameData.setText(song.getName());
         this.lengthPanel.setLength(new Time(song.getLength()));
         this.noteData.setText(song.getNote());
-        createLayout();
+    }
+
+    @Override
+    protected void initComponents() {
+        initLabelComponent(nameLabel, nameData);
+        initLabelComponent(noteLabel, noteData);
+
+        addInputValidator(nameData);
     }
 
     @Override
@@ -107,16 +112,6 @@ public class SongInfoDialog extends AbstractInfoDialog<SongTO> {
                 .addComponent(lengthPanel)
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, noteLabel, noteData));
-    }
-
-    /**
-     * Initializes components.
-     */
-    private void initComponents() {
-        initLabelComponent(nameLabel, nameData);
-        initLabelComponent(noteLabel, noteData);
-
-        addInputValidator(nameData);
     }
 
 }

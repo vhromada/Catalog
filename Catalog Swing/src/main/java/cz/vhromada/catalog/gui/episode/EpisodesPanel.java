@@ -233,7 +233,7 @@ public class EpisodesPanel extends JPanel {
      * @param menuItems popup menu items
      */
     private void initPopupMenu(final JMenuItem... menuItems) {
-        for (JMenuItem menuItem : menuItems) {
+        for (final JMenuItem menuItem : menuItems) {
             popupMenu.add(menuItem);
         }
     }

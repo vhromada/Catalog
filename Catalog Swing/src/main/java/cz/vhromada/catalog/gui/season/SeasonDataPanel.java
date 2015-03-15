@@ -237,7 +237,7 @@ public class SeasonDataPanel extends JPanel {
     private String getSeasonLength(final SeasonTO season) {
         final List<EpisodeTO> episodes = episodeFacade.findEpisodesBySeason(season);
         int totalLength = 0;
-        for (EpisodeTO episode : episodes) {
+        for (final EpisodeTO episode : episodes) {
             totalLength += episode.getLength();
         }
         return new Time(totalLength).toString();

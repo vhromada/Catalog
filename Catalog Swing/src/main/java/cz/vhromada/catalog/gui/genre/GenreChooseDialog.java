@@ -191,7 +191,7 @@ public class GenreChooseDialog extends JDialog {
         returnStatus = DialogResult.OK;
         genres.clear();
         final int[] indexes = list.getSelectedIndices();
-        for (int index : indexes) {
+        for (final int index : indexes) {
             genres.add(genreChooseListDataModel.getGenreAt(index));
         }
         close();

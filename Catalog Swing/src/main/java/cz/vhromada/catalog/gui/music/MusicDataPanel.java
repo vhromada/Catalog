@@ -250,7 +250,7 @@ public class MusicDataPanel extends JPanel {
     private String getMusicLength(final MusicTO music) {
         final List<SongTO> songs = songFacade.findSongsByMusic(music);
         int totalLength = 0;
-        for (SongTO song : songs) {
+        for (final SongTO song : songs) {
             totalLength += song.getLength();
         }
         return new Time(totalLength).toString();

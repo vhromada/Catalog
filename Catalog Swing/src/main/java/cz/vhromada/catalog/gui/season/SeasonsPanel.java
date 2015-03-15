@@ -245,7 +245,7 @@ public class SeasonsPanel extends JPanel {
      * @param menuItems popup menu items
      */
     private void initPopupMenu(final JMenuItem... menuItems) {
-        for (JMenuItem menuItem : menuItems) {
+        for (final JMenuItem menuItem : menuItems) {
             popupMenu.add(menuItem);
         }
     }
@@ -382,7 +382,7 @@ public class SeasonsPanel extends JPanel {
             episodesPanel.addPropertyChangeListener(UPDATE_PROPERTY, new PropertyChangeListener() {
 
                 @Override
-                public void propertyChange(PropertyChangeEvent evt) {
+                public void propertyChange(final PropertyChangeEvent evt) {
                     if (Boolean.TRUE.equals(evt.getNewValue())) {
                         seasonsListDataModel.update();
                         list.updateUI();

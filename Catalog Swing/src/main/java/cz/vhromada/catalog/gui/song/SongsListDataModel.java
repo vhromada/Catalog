@@ -2,11 +2,10 @@ package cz.vhromada.catalog.gui.song;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -14,7 +13,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SongsListDataModel extends AbstractListModel<String> {
+public class SongsListDataModel extends AbstractListDataModel<SongTO> {
 
     /**
      * SerialVersionUID
@@ -30,11 +29,6 @@ public class SongsListDataModel extends AbstractListModel<String> {
      * TO for music
      */
     private MusicTO music;
-
-    /**
-     * List of TO for song
-     */
-    private List<SongTO> songs;
 
     /**
      * Creates a new instance of SongsListDataModel.
@@ -53,42 +47,14 @@ public class SongsListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
-    @Override
-    public int getSize() {
-        return songs.size();
-    }
-
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
     public String getElementAt(final int index) {
-        return getSongAt(index).getName();
+        return getObjectAt(index).getName();
     }
 
-    /**
-     * Returns TO for song at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for song at index
-     */
-    public SongTO getSongAt(final int index) {
-        return songs.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        songs = songFacade.findSongsByMusic(music);
+    @Override
+    protected List<SongTO> getData() {
+        return songFacade.findSongsByMusic(music);
     }
 
 }

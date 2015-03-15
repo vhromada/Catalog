@@ -3,7 +3,14 @@ package cz.vhromada.catalog.gui.genre;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;

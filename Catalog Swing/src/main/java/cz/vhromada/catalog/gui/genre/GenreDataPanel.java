@@ -1,6 +1,9 @@
 package cz.vhromada.catalog.gui.genre;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;

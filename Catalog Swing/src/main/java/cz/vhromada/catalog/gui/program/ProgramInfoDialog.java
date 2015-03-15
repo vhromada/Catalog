@@ -1,11 +1,15 @@
 package cz.vhromada.catalog.gui.program;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
-import cz.vhromada.catalog.gui.commons.InputValidator;
 
 /**
  * A class represents dialog for program.
@@ -131,6 +135,16 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
         return program;
     }
 
+    /**
+     * Returns true if input is valid: name isn't empty string.
+     *
+     * @return true if input is valid: name isn't empty string
+     */
+    @Override
+    protected boolean isInputValid() {
+        return !nameData.getText().isEmpty();
+    }
+
     @Override
     protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
         return group
@@ -177,23 +191,7 @@ public class ProgramInfoDialog extends AbstractInfoDialog<ProgramTO> {
         initLabelComponent(otherDataLabel, otherDataData);
         initLabelComponent(noteLabel, noteData);
 
-        nameData.getDocument().addDocumentListener(new InputValidator(getOkButton()) {
-
-            @Override
-            public boolean isInputValid() {
-                return ProgramInfoDialog.this.isInputValid();
-            }
-
-        });
-    }
-
-    /**
-     * Returns true if input is valid: name isn't empty string.
-     *
-     * @return true if input is valid: name isn't empty string
-     */
-    private boolean isInputValid() {
-        return !nameData.getText().isEmpty();
+        addInputValidator(nameData);
     }
 
 }

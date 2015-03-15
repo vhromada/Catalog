@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Properties;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import cz.vhromada.catalog.gui.Selector;
 

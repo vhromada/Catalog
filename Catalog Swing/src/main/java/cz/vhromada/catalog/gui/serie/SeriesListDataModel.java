@@ -2,7 +2,7 @@ package cz.vhromada.catalog.gui.serie;
 
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractListModel;
 
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.to.SerieTO;

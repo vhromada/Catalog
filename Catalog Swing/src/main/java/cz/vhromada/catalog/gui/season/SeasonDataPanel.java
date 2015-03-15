@@ -2,7 +2,10 @@ package cz.vhromada.catalog.gui.season;
 
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Time;

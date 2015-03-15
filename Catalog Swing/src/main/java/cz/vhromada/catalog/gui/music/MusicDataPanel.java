@@ -5,7 +5,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.SongFacade;

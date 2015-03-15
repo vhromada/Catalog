@@ -2,7 +2,7 @@ package cz.vhromada.catalog.gui.movie;
 
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractListModel;
 
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.to.MovieTO;

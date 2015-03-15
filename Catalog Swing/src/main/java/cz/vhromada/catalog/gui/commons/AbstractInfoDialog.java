@@ -3,7 +3,14 @@ package cz.vhromada.catalog.gui.commons;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.WindowConstants;
+import javax.swing.text.JTextComponent;
 
 import cz.vhromada.validators.Validators;
 
@@ -205,12 +212,26 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
     }
 
     /**
-     * Returns button OK.
-     *
-     * @return button OK
+     * Adds validator to input.
      */
-    protected final JButton getOkButton() {
-        return okButton;
+    protected final void addInputValidator(final JTextComponent input) {
+        input.getDocument().addDocumentListener(new InputValidator(okButton) {
+
+            @Override
+            public boolean isInputValid() {
+                return AbstractInfoDialog.this.isInputValid();
+            }
+
+        });
+    }
+
+    /**
+     * Returns true if input is valid.
+     *
+     * @return true if input is valid
+     */
+    protected boolean isInputValid() {
+        return true;
     }
 
     /**

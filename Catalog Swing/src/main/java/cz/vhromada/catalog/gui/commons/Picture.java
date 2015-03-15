@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.gui.commons;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 /**
  * An enumeration represents picture.

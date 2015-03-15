@@ -51,26 +51,38 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class SerieFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link SerieService} */
+    /**
+     * Instance of {@link SerieService}
+     */
     @Mock
     private SerieService serieService;
 
-    /** Instance of {@link GenreService} */
+    /**
+     * Instance of {@link GenreService}
+     */
     @Mock
     private GenreService genreService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link SerieTOValidator} */
+    /**
+     * Instance of {@link SerieTOValidator}
+     */
     @Mock
     private SerieTOValidator serieTOValidator;
 
-    /** Instance of {@link SerieFacade} */
+    /**
+     * Instance of {@link SerieFacade}
+     */
     private SerieFacade serieFacade;
 
-    /** Initializes facade for series. */
+    /**
+     * Initializes facade for series.
+     */
     @Before
     public void setUp() {
         serieFacade = new SerieFacadeImpl(serieService, genreService, converter, serieTOValidator);
@@ -101,15 +113,16 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, Converter, SerieTOValidator)} with null validator for
-     * TO for serie.
+     * Test method for {@link SerieFacadeImpl#SerieFacadeImpl(SerieService, GenreService, Converter, SerieTOValidator)} with null validator for TO for serie.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieTOValidator() {
         new SerieFacadeImpl(serieService, genreService, converter, null);
     }
 
-    /** Test method for {@link SerieFacade#newData()}. */
+    /**
+     * Test method for {@link SerieFacade#newData()}.
+     */
     @Test
     public void testNewData() {
         serieFacade.newData();
@@ -118,7 +131,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#newData()} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#newData()} with exception in service tier.
+     */
     @Test
     public void testNewDataWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(serieService).newData();
@@ -134,7 +149,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getSeries()}. */
+    /**
+     * Test method for {@link SerieFacade#getSeries()}.
+     */
     @Test
     public void testGetSeries() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -149,7 +166,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, converter);
     }
 
-    /** Test method for {@link SerieFacade#getSeries()} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#getSeries()} with exception in service tier.
+     */
     @Test
     public void testGetSeriesWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(serieService).getSeries();
@@ -166,7 +185,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with existing serie. */
+    /**
+     * Test method for {@link SerieFacade#getSerie(Integer)} with existing serie.
+     */
     @Test
     public void testGetSerieWithExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -182,7 +203,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, converter);
     }
 
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with not existing serie. */
+    /**
+     * Test method for {@link SerieFacade#getSerie(Integer)} with not existing serie.
+     */
     @Test
     public void testGetSerieWithNotExistingSerie() {
         when(serieService.getSerie(anyInt())).thenReturn(null);
@@ -195,7 +218,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, converter);
     }
 
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#getSerie(Integer)} with null argument.
+     */
     @Test
     public void testGetSerieWithNullArgument() {
         try {
@@ -208,7 +233,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, converter);
     }
 
-    /** Test method for {@link SerieFacade#getSerie(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#getSerie(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetSerieWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(serieService).getSerie(anyInt());
@@ -225,7 +252,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link SerieFacade#add(SerieTO)}. */
+    /**
+     * Test method for {@link SerieFacade#add(SerieTO)}.
+     */
     @Test
     public void testAdd() {
         final Serie serie = generate(Serie.class);
@@ -251,7 +280,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, genreService, converter, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#add(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#add(SerieTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(serieTOValidator).validateNewSerieTO(any(SerieTO.class));
@@ -268,7 +299,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, genreService, converter);
     }
 
-    /** Test method for {@link SerieFacade#add(SerieTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SerieFacade#add(SerieTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -287,7 +320,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, genreService, converter);
     }
 
-    /** Test method for {@link SerieFacade#add(SerieTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link SerieFacade#add(SerieTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final Serie serie = generate(Serie.class);
@@ -313,7 +348,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, genreService, converter, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#add(SerieTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#add(SerieTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final SerieTO serie = generate(SerieTO.class);
@@ -333,7 +370,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, converter);
     }
 
-    /** Test method for {@link SerieFacade#update(SerieTO)}. */
+    /**
+     * Test method for {@link SerieFacade#update(SerieTO)}.
+     */
     @Test
     public void testUpdate() {
         final Serie serie = generate(Serie.class);
@@ -354,7 +393,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#update(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#update(SerieTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(serieTOValidator).validateExistingSerieTO(any(SerieTO.class));
@@ -371,7 +412,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, genreService, converter);
     }
 
-    /** Test method for {@link SerieFacade#update(SerieTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SerieFacade#update(SerieTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -389,7 +432,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, genreService, converter);
     }
 
-    /** Test method for {@link SerieFacade#update(SerieTO)} with not existing argument. */
+    /**
+     * Test method for {@link SerieFacade#update(SerieTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final Serie serie = generate(Serie.class);
@@ -410,7 +455,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, genreService, converter, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#update(SerieTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#update(SerieTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final Serie serie = generate(Serie.class);
@@ -432,7 +479,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService);
     }
 
-    /** Test method for {@link SerieFacade#remove(SerieTO)}. */
+    /**
+     * Test method for {@link SerieFacade#remove(SerieTO)}.
+     */
     @Test
     public void testRemove() {
         final Serie serie = generate(Serie.class);
@@ -447,7 +496,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#remove(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#remove(SerieTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
@@ -464,7 +515,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#remove(SerieTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SerieFacade#remove(SerieTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -482,7 +535,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#remove(SerieTO)} with not existing argument. */
+    /**
+     * Test method for {@link SerieFacade#remove(SerieTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -500,7 +555,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#remove(SerieTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#remove(SerieTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final SerieTO serie = generate(SerieTO.class);
@@ -518,7 +575,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#duplicate(SerieTO)}. */
+    /**
+     * Test method for {@link SerieFacade#duplicate(SerieTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Serie serie = generate(Serie.class);
@@ -533,7 +592,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#duplicate(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#duplicate(SerieTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
@@ -550,7 +611,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#duplicate(SerieTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SerieFacade#duplicate(SerieTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -568,7 +631,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#duplicate(SerieTO)} with not existing argument. */
+    /**
+     * Test method for {@link SerieFacade#duplicate(SerieTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -586,7 +651,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#duplicate(SerieTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#duplicate(SerieTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final SerieTO serie = generate(SerieTO.class);
@@ -604,7 +671,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)}. */
+    /**
+     * Test method for {@link SerieFacade#moveUp(SerieTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Serie serie = generate(Serie.class);
@@ -622,7 +691,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#moveUp(SerieTO)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
@@ -639,7 +710,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SerieFacade#moveUp(SerieTO)} with argument with bad data.
+     */
     @Test
     public void testMoveUpWithBadArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -657,7 +730,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)} with not existing argument. */
+    /**
+     * Test method for {@link SerieFacade#moveUp(SerieTO)} with not existing argument.
+     */
     @Test
     public void testMoveUpWithNotExistingArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -675,7 +750,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SerieFacade#moveUp(SerieTO)} with not moveable argument.
+     */
     @Test
     public void testMoveUpWithNotMoveableArgument() {
         final Serie serie = generate(Serie.class);
@@ -697,7 +774,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveUp(SerieTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#moveUp(SerieTO)} with exception in service tier.
+     */
     @Test
     public void testMoveUpWithServiceTierException() {
         final SerieTO serie = generate(SerieTO.class);
@@ -715,7 +794,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)}. */
+    /**
+     * Test method for {@link SerieFacade#moveDown(SerieTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Serie serie = generate(Serie.class);
@@ -733,7 +814,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#moveDown(SerieTO)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
@@ -750,7 +833,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SerieFacade#moveDown(SerieTO)} with argument with bad data.
+     */
     @Test
     public void testMoveDownWithBadArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -768,7 +853,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)} with not existing argument. */
+    /**
+     * Test method for {@link SerieFacade#moveDown(SerieTO)} with not existing argument.
+     */
     @Test
     public void testMoveDownWithNotExistingArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -786,7 +873,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SerieFacade#moveDown(SerieTO)} with not moveable argument.
+     */
     @Test
     public void testMoveDownWithNotMoveableArgument() {
         final Serie serie = generate(Serie.class);
@@ -808,7 +897,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#moveDown(SerieTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#moveDown(SerieTO)} with exception in service tier.
+     */
     @Test
     public void testMoveDownWithServiceTierException() {
         final SerieTO serie = generate(SerieTO.class);
@@ -826,7 +917,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with existing serie. */
+    /**
+     * Test method for {@link SerieFacade#exists(SerieTO)} with existing serie.
+     */
     @Test
     public void testExistsWithExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -842,7 +935,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with not existing serie. */
+    /**
+     * Test method for {@link SerieFacade#exists(SerieTO)} with not existing serie.
+     */
     @Test
     public void testExistsWithNotExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -858,7 +953,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieFacade#exists(SerieTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
@@ -875,7 +972,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, converter);
     }
 
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SerieFacade#exists(SerieTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final SerieTO serie = generate(SerieTO.class);
@@ -893,7 +992,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieService, converter);
     }
 
-    /** Test method for {@link SerieFacade#exists(SerieTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#exists(SerieTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final Serie serie = generate(Serie.class);
@@ -914,7 +1015,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService, converter, serieTOValidator);
     }
 
-    /** Test method for {@link SerieFacade#updatePositions()}. */
+    /**
+     * Test method for {@link SerieFacade#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         serieFacade.updatePositions();
@@ -923,7 +1026,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#updatePositions()} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#updatePositions()} with exception in service tier.
+     */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(serieService).updatePositions();
@@ -939,7 +1044,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getTotalLength()}. */
+    /**
+     * Test method for {@link SerieFacade#getTotalLength()}.
+     */
     @Test
     public void testGetTotalLength() {
         final Time length = generate(Time.class);
@@ -951,7 +1058,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getTotalLength()} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#getTotalLength()} with exception in service tier.
+     */
     @Test
     public void testGetTotalLengthWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(serieService).getTotalLength();
@@ -967,7 +1076,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getSeasonsCount()}. */
+    /**
+     * Test method for {@link SerieFacade#getSeasonsCount()}.
+     */
     @Test
     public void testGetSeasonsCount() {
         final int count = generate(Integer.class);
@@ -979,7 +1090,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getSeasonsCount()} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#getSeasonsCount()} with exception in service tier.
+     */
     @Test
     public void testGetSeasonsCountWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(serieService).getSeasonsCount();
@@ -995,7 +1108,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getEpisodesCount()}. */
+    /**
+     * Test method for {@link SerieFacade#getEpisodesCount()}.
+     */
     @Test
     public void testGetEpisodesCount() {
         final int count = generate(Integer.class);
@@ -1007,7 +1122,9 @@ public class SerieFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieService);
     }
 
-    /** Test method for {@link SerieFacade#getEpisodesCount()} with exception in service tier. */
+    /**
+     * Test method for {@link SerieFacade#getEpisodesCount()} with exception in service tier.
+     */
     @Test
     public void testGetEpisodesCountWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(serieService).getEpisodesCount();

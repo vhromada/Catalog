@@ -15,13 +15,19 @@ import cz.vhromada.validators.Validators;
  */
 public class GenresStatsTableDataModel extends AbstractTableModel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for genres */
+    /**
+     * Facade for genres
+     */
     private GenreFacade genreFacade;
 
-    /** List of TO for genre */
+    /**
+     * List of TO for genre
+     */
     private List<GenreTO> genres;
 
     /**
@@ -101,7 +107,9 @@ public class GenresStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         genres = genreFacade.getGenres();
     }

@@ -9,13 +9,19 @@ import java.io.Serializable;
  */
 public class GenreTO implements Comparable<GenreTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String name;
 
     /**

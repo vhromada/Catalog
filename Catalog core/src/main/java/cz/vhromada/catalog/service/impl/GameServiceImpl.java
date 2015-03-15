@@ -22,31 +22,49 @@ import org.springframework.stereotype.Component;
 @Component("gameService")
 public class GameServiceImpl extends AbstractService<Game> implements GameService {
 
-    /** DAO for games field */
+    /**
+     * DAO for games field
+     */
     private static final String GAME_DAO_ARGUMENT = "DAO for games";
 
-    /** Cache for games field */
+    /**
+     * Cache for games field
+     */
     private static final String GAME_CACHE_ARGUMENT = "Cache for games";
 
-    /** Game argument */
+    /**
+     * Game argument
+     */
     private static final String GAME_ARGUMENT = "Game";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link ServiceOperationException} */
+    /**
+     * Message for {@link ServiceOperationException}
+     */
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
-    /** Cache key for list of games */
+    /**
+     * Cache key for list of games
+     */
     private static final String GAMES_CACHE_KEY = "games";
 
-    /** Cache key for game */
+    /**
+     * Cache key for game
+     */
     private static final String GAME_CACHE_KEY = "game";
 
-    /** DAO for games */
+    /**
+     * DAO for games
+     */
     private GameDAO gameDAO;
 
-    /** Cache for games */
+    /**
+     * Cache for games
+     */
     private Cache gameCache;
 
     /**

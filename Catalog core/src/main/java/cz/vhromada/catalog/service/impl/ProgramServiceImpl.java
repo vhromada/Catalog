@@ -22,31 +22,49 @@ import org.springframework.stereotype.Component;
 @Component("programService")
 public class ProgramServiceImpl extends AbstractService<Program> implements ProgramService {
 
-    /** DAO for programs field */
+    /**
+     * DAO for programs field
+     */
     private static final String PROGRAM_DAO_ARGUMENT = "DAO for programs";
 
-    /** Cache for programs field */
+    /**
+     * Cache for programs field
+     */
     private static final String PROGRAM_CACHE_ARGUMENT = "Cache for programs";
 
-    /** Program argument */
+    /**
+     * Program argument
+     */
     private static final String PROGRAM_ARGUMENT = "Program";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link ServiceOperationException} */
+    /**
+     * Message for {@link ServiceOperationException}
+     */
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
-    /** Cache key for list of programs */
+    /**
+     * Cache key for list of programs
+     */
     private static final String PROGRAMS_CACHE_KEY = "programs";
 
-    /** Cache key for program */
+    /**
+     * Cache key for program
+     */
     private static final String PROGRAM_CACHE_KEY = "program";
 
-    /** DAO for programs */
+    /**
+     * DAO for programs
+     */
     private ProgramDAO programDAO;
 
-    /** Cache for programs */
+    /**
+     * Cache for programs
+     */
     private Cache programCache;
 
     /**

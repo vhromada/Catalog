@@ -47,46 +47,64 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class GameFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link GameService} */
+    /**
+     * Instance of {@link GameService}
+     */
     @Mock
     private GameService gameService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link GameTOValidator} */
+    /**
+     * Instance of {@link GameTOValidator}
+     */
     @Mock
     private GameTOValidator gameTOValidator;
 
-    /** Instance of {@link GameFacade} */
+    /**
+     * Instance of {@link GameFacade}
+     */
     private GameFacade gameFacade;
 
-    /** Initializes facade for games. */
+    /**
+     * Initializes facade for games.
+     */
     @Before
     public void setUp() {
         gameFacade = new GameFacadeImpl(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null service for games. */
+    /**
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null service for games.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameService() {
         new GameFacadeImpl(null, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null converter. */
+    /**
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null converter.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
         new GameFacadeImpl(gameService, null, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null validator for TO for game. */
+    /**
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(GameService, Converter, GameTOValidator)} with null validator for TO for game.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameTOValidator() {
         new GameFacadeImpl(gameService, converter, null);
     }
 
-    /** Test method for {@link GameFacade#newData()}. */
+    /**
+     * Test method for {@link GameFacade#newData()}.
+     */
     @Test
     public void testNewData() {
         gameFacade.newData();
@@ -95,7 +113,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#newData()} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#newData()} with exception in service tier.
+     */
     @Test
     public void testNewDataWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(gameService).newData();
@@ -111,7 +131,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#getGames()}. */
+    /**
+     * Test method for {@link GameFacade#getGames()}.
+     */
     @Test
     public void testGetGames() {
         final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
@@ -126,7 +148,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#getGames()} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#getGames()} with exception in service tier.
+     */
     @Test
     public void testGetGamesWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(gameService).getGames();
@@ -143,7 +167,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link GameFacade#getGame(Integer)} with existing game. */
+    /**
+     * Test method for {@link GameFacade#getGame(Integer)} with existing game.
+     */
     @Test
     public void testGetGameWithExistingGame() {
         final Game game = generate(Game.class);
@@ -158,7 +184,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#getGame(Integer)} with not existing game. */
+    /**
+     * Test method for {@link GameFacade#getGame(Integer)} with not existing game.
+     */
     @Test
     public void testGetGameWithNotExistingGame() {
         when(gameService.getGame(anyInt())).thenReturn(null);
@@ -171,7 +199,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#getGame(Integer)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#getGame(Integer)} with null argument.
+     */
     @Test
     public void testGetGameWithNullArgument() {
         try {
@@ -184,7 +214,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#getGame(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#getGame(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetGameWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(gameService).getGame(anyInt());
@@ -201,7 +233,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)}.
+     */
     @Test
     public void testAdd() {
         final Game game = generate(Game.class);
@@ -223,7 +257,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(gameTOValidator).validateNewGameTO(any(GameTO.class));
@@ -240,7 +276,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final GameTO game = generate(GameTO.class);
@@ -259,7 +297,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final Game game = generate(Game.class);
@@ -281,7 +321,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final Game game = generate(Game.class);
@@ -304,7 +346,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)}.
+     */
     @Test
     public void testUpdate() {
         final Game game = generate(Game.class);
@@ -321,7 +365,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(gameTOValidator).validateExistingGameTO(any(GameTO.class));
@@ -338,7 +384,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final GameTO game = generate(GameTO.class);
@@ -356,7 +404,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with not existing argument. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final Game game = generate(Game.class);
@@ -377,7 +427,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final Game game = generate(Game.class);
@@ -398,7 +450,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)}.
+     */
     @Test
     public void testRemove() {
         final Game game = generate(Game.class);
@@ -413,7 +467,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
@@ -430,7 +486,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final GameTO game = generate(GameTO.class);
@@ -448,7 +506,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with not existing argument. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final GameTO game = generate(GameTO.class);
@@ -466,7 +526,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final GameTO game = generate(GameTO.class);
@@ -484,7 +546,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Game game = generate(Game.class);
@@ -499,7 +563,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
@@ -516,7 +582,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final GameTO game = generate(GameTO.class);
@@ -534,7 +602,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with not existing argument. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final GameTO game = generate(GameTO.class);
@@ -552,7 +622,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final GameTO game = generate(GameTO.class);
@@ -570,7 +642,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Game game = generate(Game.class);
@@ -588,7 +662,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
@@ -605,7 +681,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with argument with bad data.
+     */
     @Test
     public void testMoveUpWithBadArgument() {
         final GameTO game = generate(GameTO.class);
@@ -623,7 +701,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with not existing argument. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with not existing argument.
+     */
     @Test
     public void testMoveUpWithNotExistingArgument() {
         final GameTO game = generate(GameTO.class);
@@ -641,7 +721,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with not moveable argument. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with not moveable argument.
+     */
     @Test
     public void testMoveUpWithNotMoveableArgument() {
         final Game game = generate(Game.class);
@@ -663,7 +745,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with exception in service tier.
+     */
     @Test
     public void testMoveUpWithServiceTierException() {
         final GameTO game = generate(GameTO.class);
@@ -681,7 +765,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Game game = generate(Game.class);
@@ -699,7 +785,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
@@ -716,7 +804,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with argument with bad data.
+     */
     @Test
     public void testMoveDownWithBadArgument() {
         final GameTO game = generate(GameTO.class);
@@ -734,7 +824,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with not existing argument. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with not existing argument.
+     */
     @Test
     public void testMoveDownWithNotExistingArgument() {
         final GameTO game = generate(GameTO.class);
@@ -752,7 +844,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with not moveable argument. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with not moveable argument.
+     */
     @Test
     public void testMoveDownWithNotMoveableArgument() {
         final Game game = generate(Game.class);
@@ -774,7 +868,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with exception in service tier.
+     */
     @Test
     public void testMoveDownWithServiceTierException() {
         final GameTO game = generate(GameTO.class);
@@ -792,7 +888,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with existing game. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with existing game.
+     */
     @Test
     public void testExistsWithExistingGame() {
         final Game game = generate(Game.class);
@@ -808,7 +906,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with not existing game. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with not existing game.
+     */
     @Test
     public void testExistsWithNotExistingGame() {
         final Game game = generate(Game.class);
@@ -824,7 +924,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
@@ -841,7 +943,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final GameTO game = generate(GameTO.class);
@@ -859,7 +963,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameService, converter);
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final Game game = generate(Game.class);
@@ -880,7 +986,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
     }
 
-    /** Test method for {@link GameFacade#updatePositions()}. */
+    /**
+     * Test method for {@link GameFacade#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         gameFacade.updatePositions();
@@ -889,7 +997,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#updatePositions()} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#updatePositions()} with exception in service tier.
+     */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(gameService).updatePositions();
@@ -905,7 +1015,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#getTotalMediaCount()}. */
+    /**
+     * Test method for {@link GameFacade#getTotalMediaCount()}.
+     */
     @Test
     public void testGetTotalMediaCount() {
         final int count = generate(Integer.class);
@@ -917,7 +1029,9 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameService);
     }
 
-    /** Test method for {@link GameFacade#getTotalMediaCount()} with exception in service tier. */
+    /**
+     * Test method for {@link GameFacade#getTotalMediaCount()} with exception in service tier.
+     */
     @Test
     public void testGetTotalMediaCountWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(gameService).getTotalMediaCount();

@@ -29,32 +29,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProgramDAOImplSpringTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link ProgramDAO} */
+    /**
+     * Instance of {@link ProgramDAO}
+     */
     @Autowired
     private ProgramDAO programDAO;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Restarts sequence. */
+    /**
+     * Restarts sequence.
+     */
     @Before
     public void setUp() {
         entityManager.createNativeQuery("ALTER SEQUENCE programs_sq RESTART WITH 4").executeUpdate();
     }
 
-    /** Test method for {@link ProgramDAO#getPrograms()}. */
+    /**
+     * Test method for {@link ProgramDAO#getPrograms()}.
+     */
     @Test
     public void testGetPrograms() {
         DeepAsserts.assertEquals(SpringEntitiesUtils.getPrograms(), programDAO.getPrograms());
         DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
     }
 
-    /** Test method for {@link ProgramDAO#getProgram(Integer)}. */
+    /**
+     * Test method for {@link ProgramDAO#getProgram(Integer)}.
+     */
     @Test
     public void testGetProgram() {
         for (int i = 1; i <= SpringUtils.PROGRAMS_COUNT; i++) {
@@ -66,7 +78,9 @@ public class ProgramDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
     }
 
-    /** Test method for {@link ProgramDAO#add(Program)}. */
+    /**
+     * Test method for {@link ProgramDAO#add(Program)}.
+     */
     @Test
     public void testAdd() {
         final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
@@ -81,7 +95,9 @@ public class ProgramDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT + 1, SpringUtils.getProgramsCount(entityManager));
     }
 
-    /** Test method for {@link ProgramDAO#update(Program)}. */
+    /**
+     * Test method for {@link ProgramDAO#update(Program)}.
+     */
     @Test
     public void testUpdate() {
         final Program program = SpringEntitiesUtils.updateProgram(1, objectGenerator, entityManager);
@@ -93,7 +109,9 @@ public class ProgramDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.PROGRAMS_COUNT, SpringUtils.getProgramsCount(entityManager));
     }
 
-    /** Test method for {@link ProgramDAO#remove(Program)}. */
+    /**
+     * Test method for {@link ProgramDAO#remove(Program)}.
+     */
     @Test
     public void testRemove() {
         programDAO.remove(SpringUtils.getProgram(entityManager, 1));

@@ -14,49 +14,79 @@ public class MovieTO implements Comparable<MovieTO>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Czech name */
+    /**
+     * Czech name
+     */
     private String czechName;
 
-    /** Original name */
+    /**
+     * Original name
+     */
     private String originalName;
 
-    /** Year */
+    /**
+     * Year
+     */
     private int year;
 
-    /** Language */
+    /**
+     * Language
+     */
     private Language language;
 
-    /** Subtitles */
+    /**
+     * Subtitles
+     */
     private List<Language> subtitles;
 
-    /** Media */
+    /**
+     * Media
+     */
     private List<Integer> media;
 
-    /** URL to ČSFD page about movie */
+    /**
+     * URL to ČSFD page about movie
+     */
     private String csfd;
 
-    /** IMDB code */
+    /**
+     * IMDB code
+     */
     private int imdbCode;
 
-    /** URL to english Wikipedia page about movie */
+    /**
+     * URL to english Wikipedia page about movie
+     */
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about movie */
+    /**
+     * URL to czech Wikipedia page about movie
+     */
     private String wikiCz;
 
-    /** Path to file with movie's picture */
+    /**
+     * Path to file with movie's picture
+     */
     private String picture;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** List of TO for genre */
+    /**
+     * List of TO for genre
+     */
     private List<GenreTO> genres;
 
     /**

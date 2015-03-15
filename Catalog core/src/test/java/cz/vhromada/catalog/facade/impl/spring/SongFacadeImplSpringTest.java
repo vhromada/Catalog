@@ -35,29 +35,43 @@ import org.springframework.transaction.PlatformTransactionManager;
 @ContextConfiguration("classpath:testFacadeContext.xml")
 public class SongFacadeImplSpringTest {
 
-    /** Count of songs */
+    /**
+     * Count of songs
+     */
     private static final String SONGS_COUNT_FIELD = "songsCount";
 
-    /** Total length field */
+    /**
+     * Total length field
+     */
     private static final String TOTAL_LENGTH_FIELD = "totalLength";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link PlatformTransactionManager} */
+    /**
+     * Instance of {@link PlatformTransactionManager}
+     */
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    /** Instance of (@link SongFacade} */
+    /**
+     * Instance of (@link SongFacade}
+     */
     @Autowired
     private SongFacade songFacade;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Initializes database. */
+    /**
+     * Initializes database.
+     */
     @Before
     public void setUp() {
         SpringUtils.remove(transactionManager, entityManager, Song.class);
@@ -76,7 +90,9 @@ public class SongFacadeImplSpringTest {
         }
     }
 
-    /** Test method for {@link SongFacade#getSong(Integer)}. */
+    /**
+     * Test method for {@link SongFacade#getSong(Integer)}.
+     */
     @Test
     public void testGetSong() {
         for (int i = 0; i < SpringUtils.SONGS_COUNT; i++) {
@@ -90,13 +106,17 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#getSong(Integer)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#getSong(Integer)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testGetSongWithNullArgument() {
         songFacade.getSong(null);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)}.
+     */
     @Test
     public void testAdd() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -111,19 +131,25 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testAddWithNullArgument() {
         songFacade.add(null);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with not null ID. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with not null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSongWithNotNullId() {
         songFacade.add(SpringToUtils.newSongWithId(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with null name. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSongWithNullName() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -132,7 +158,9 @@ public class SongFacadeImplSpringTest {
         songFacade.add(song);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with empty string as name. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with empty string as name.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSongWithEmptyName() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -141,7 +169,9 @@ public class SongFacadeImplSpringTest {
         songFacade.add(song);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with negative length. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with negative length.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSongWithNegativeLength() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -150,7 +180,9 @@ public class SongFacadeImplSpringTest {
         songFacade.add(song);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with null note. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSongWithNullNote() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -159,7 +191,9 @@ public class SongFacadeImplSpringTest {
         songFacade.add(song);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with null TO for music. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with null TO for music.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSongWithNullMusic() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -168,7 +202,9 @@ public class SongFacadeImplSpringTest {
         songFacade.add(song);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with TO for music with null ID. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with TO for music with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSongWithMusicWithNullId() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -177,7 +213,9 @@ public class SongFacadeImplSpringTest {
         songFacade.add(song);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with song with not existing music. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with song with not existing music.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testAddWithSongWithNotExistingMusic() {
         final SongTO song = SpringToUtils.newSong(objectGenerator);
@@ -186,7 +224,9 @@ public class SongFacadeImplSpringTest {
         songFacade.add(song);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)}.
+     */
     @Test
     public void testUpdate() {
         final SongTO song = SpringToUtils.newSong(objectGenerator, 1);
@@ -198,19 +238,25 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateWithNullArgument() {
         songFacade.update(null);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with song with null ID. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with song with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSongWithNullId() {
         songFacade.update(SpringToUtils.newSong(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with song with null name. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with song with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSongWithNullName() {
         final SongTO song = SpringToUtils.newSongWithId(objectGenerator);
@@ -219,7 +265,9 @@ public class SongFacadeImplSpringTest {
         songFacade.update(song);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with song with empty string as name. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with song with empty string as name.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSongWithEmptyName() {
         final SongTO song = SpringToUtils.newSongWithId(objectGenerator);
@@ -228,7 +276,9 @@ public class SongFacadeImplSpringTest {
         songFacade.update(song);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with song with negative length. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with song with negative length.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSongWithNegativeLength() {
         final SongTO song = SpringToUtils.newSongWithId(objectGenerator);
@@ -237,7 +287,9 @@ public class SongFacadeImplSpringTest {
         songFacade.update(song);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with song with null note. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with song with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSongWithNullNote() {
         final SongTO song = SpringToUtils.newSongWithId(objectGenerator);
@@ -246,7 +298,9 @@ public class SongFacadeImplSpringTest {
         songFacade.update(song);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with song with null TO for music. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with song with null TO for music.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSongWithNullMusic() {
         final SongTO song = SpringToUtils.newSongWithId(objectGenerator);
@@ -255,7 +309,9 @@ public class SongFacadeImplSpringTest {
         songFacade.update(song);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with song with null TO for music. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with song with null TO for music.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSongWithMusicWithNullId() {
         final SongTO song = SpringToUtils.newSongWithId(objectGenerator);
@@ -264,13 +320,17 @@ public class SongFacadeImplSpringTest {
         songFacade.update(song);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with bad ID. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdateWithBadId() {
         songFacade.update(SpringToUtils.newSong(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with not existing music. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with not existing music.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdateWithNotExistingMusic() {
         final SongTO song = SpringToUtils.newSongWithId(objectGenerator);
@@ -279,7 +339,9 @@ public class SongFacadeImplSpringTest {
         songFacade.update(song);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)}.
+     */
     @Test
     public void testRemove() {
         songFacade.remove(SpringToUtils.newSong(objectGenerator, 1));
@@ -288,25 +350,33 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT - 1, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveWithNullArgument() {
         songFacade.remove(null);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with song with null ID. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)} with song with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testRemoveWithSongWithNullId() {
         songFacade.remove(SpringToUtils.newSong(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with bad ID. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testRemoveWithBadId() {
         songFacade.remove(SpringToUtils.newSong(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Song song = SpringEntitiesUtils.getSong(SpringUtils.MUSIC_COUNT, SpringUtils.SONGS_PER_MUSIC_COUNT);
@@ -319,25 +389,33 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT + 1, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicateWithNullArgument() {
         songFacade.duplicate(null);
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with song with null ID. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)} with song with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testDuplicateWithSongWithNullId() {
         songFacade.duplicate(SpringToUtils.newSong(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with bad ID. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicateWithBadId() {
         songFacade.duplicate(SpringToUtils.newSong(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Song song1 = SpringEntitiesUtils.getSong(1, 1);
@@ -356,31 +434,41 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUpWithNullArgument() {
         songFacade.moveUp(null);
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with song with null ID. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with song with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveUpWithSongWithNullId() {
         songFacade.moveUp(SpringToUtils.newSong(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with not moveable argument.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveUpWithNotMoveableArgument() {
         songFacade.moveUp(SpringToUtils.newSong(objectGenerator, 1));
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with bad ID. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUpWithBadId() {
         songFacade.moveUp(SpringToUtils.newSong(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Song song1 = SpringEntitiesUtils.getSong(1, 1);
@@ -399,31 +487,41 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDownWithNullArgument() {
         songFacade.moveDown(null);
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with song with null ID. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with song with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveDownWithSongWithNullId() {
         songFacade.moveDown(SpringToUtils.newSong(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with not moveable argument.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveDownWithNotMoveableArgument() {
         songFacade.moveDown(SpringToUtils.newSong(objectGenerator, SpringUtils.SONGS_COUNT));
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with bad ID. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDownWithBadId() {
         songFacade.moveDown(SpringToUtils.newSong(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)}.
+     */
     @Test
     public void testExists() {
         for (int i = 1; i <= SpringUtils.SONGS_COUNT; i++) {
@@ -435,19 +533,25 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testExistsWithNullArgument() {
         songFacade.exists(null);
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with song with null ID. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)} with song with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testExistsWithSongWithNullId() {
         songFacade.exists(SpringToUtils.newSong(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)}. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)}.
+     */
     @Test
     public void testFindSongsByMusic() {
         for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
@@ -457,19 +561,25 @@ public class SongFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SONGS_COUNT, SpringUtils.getSongsCount(entityManager));
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSongsByMusicWithNullArgument() {
         songFacade.findSongsByMusic(null);
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with music with null ID. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with music with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testFindSongsByMusicWithNullId() {
         songFacade.findSongsByMusic(SpringToUtils.newMusic(objectGenerator));
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with bad ID. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testFindSongsByMusicWithBadId() {
         songFacade.findSongsByMusic(SpringToUtils.newMusic(objectGenerator, Integer.MAX_VALUE));

@@ -22,19 +22,29 @@ import org.springframework.stereotype.Component;
 @Component("serieDAO")
 public class SerieDAOImpl implements SerieDAO {
 
-    /** Entity manager argument */
+    /**
+     * Entity manager argument
+     */
     private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
-    /** Serie argument */
+    /**
+     * Serie argument
+     */
     private static final String SERIE_ARGUMENT = "Serie";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link DataStorageException} */
+    /**
+     * Message for {@link DataStorageException}
+     */
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
-    /** Entity manager */
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager;
 
     /**

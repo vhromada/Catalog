@@ -28,31 +28,49 @@ import org.springframework.stereotype.Component;
 @Component("serieService")
 public class SerieServiceImpl extends AbstractSerieService implements SerieService {
 
-    /** DAO for series field */
+    /**
+     * DAO for series field
+     */
     private static final String SERIE_DAO_ARGUMENT = "DAO for series";
 
-    /** DAO for seasons field */
+    /**
+     * DAO for seasons field
+     */
     private static final String SEASON_DAO_ARGUMENT = "DAO for seasons";
 
-    /** DAO for episodes field */
+    /**
+     * DAO for episodes field
+     */
     private static final String EPISODE_DAO_ARGUMENT = "DAO for episodes";
 
-    /** Serie argument */
+    /**
+     * Serie argument
+     */
     private static final String SERIE_ARGUMENT = "Serie";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link ServiceOperationException} */
+    /**
+     * Message for {@link ServiceOperationException}
+     */
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
-    /** DAO for series */
+    /**
+     * DAO for series
+     */
     private SerieDAO serieDAO;
 
-    /** DAO for seasons */
+    /**
+     * DAO for seasons
+     */
     private SeasonDAO seasonDAO;
 
-    /** DAO for episodes */
+    /**
+     * DAO for episodes
+     */
     private EpisodeDAO episodeDAO;
 
     /**

@@ -12,31 +12,49 @@ import cz.vhromada.catalog.commons.Language;
  */
 public class BookTO implements Comparable<BookTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Author */
+    /**
+     * Author
+     */
     private String author;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String title;
 
-    /** Languages */
+    /**
+     * Languages
+     */
     private List<Language> languages;
 
-    /** Category */
+    /**
+     * Category
+     */
     private String category;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** TO for book category */
+    /**
+     * TO for book category
+     */
     private BookCategoryTO bookCategory;
 
     /**

@@ -23,33 +23,49 @@ import javax.persistence.Table;
 @NamedQuery(name = Song.FIND_BY_MUSIC, query = "SELECT s FROM Song s WHERE s.music.id = :music ORDER BY s.position, s.id")
 public class Song implements Serializable {
 
-    /** Name for query - find by music */
+    /**
+     * Name for query - find by music
+     */
     public static final String FIND_BY_MUSIC = "Song.findByMusic";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "song_generator", sequenceName = "songs_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "song_generator")
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     @Column(name = "song_name")
     private String name;
 
-    /** Length */
+    /**
+     * Length
+     */
     @Column(name = "song_length")
     private int length;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** Music */
+    /**
+     * Music
+     */
     @ManyToOne
     @JoinColumn(name = "music", referencedColumnName = "id")
     private Music music;

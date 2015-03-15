@@ -13,7 +13,9 @@ import cz.vhromada.validators.Validators;
  */
 public abstract class InputValidator implements DocumentListener {
 
-    /** Button */
+    /**
+     * Button
+     */
     private JButton button;
 
     /**

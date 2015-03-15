@@ -15,13 +15,19 @@ import cz.vhromada.validators.Validators;
  */
 public class MoviesListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for movies */
+    /**
+     * Facade for movies
+     */
     private MovieFacade movieFacade;
 
-    /** List of TO for movie */
+    /**
+     * List of TO for movie
+     */
     private List<MovieTO> movies;
 
     /**
@@ -68,7 +74,9 @@ public class MoviesListDataModel extends AbstractListModel<String> {
         return movies.get(index);
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         movies = movieFacade.getMovies();
     }

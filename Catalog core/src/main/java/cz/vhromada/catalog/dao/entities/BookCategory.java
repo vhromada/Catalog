@@ -21,26 +21,38 @@ import javax.persistence.Table;
 @NamedQuery(name = BookCategory.SELECT_BOOK_CATEGORIES, query = "SELECT bc FROM BookCategory bc ORDER BY bc.position, bc.id")
 public class BookCategory implements Serializable {
 
-    /** Name for query - select book categories */
+    /**
+     * Name for query - select book categories
+     */
     public static final String SELECT_BOOK_CATEGORIES = "BookCategory.selectBookCategories";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "book_category_generator", sequenceName = "book_categories_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "book_category_generator")
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     @Column(name = "book_category_name")
     private String name;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
     /**

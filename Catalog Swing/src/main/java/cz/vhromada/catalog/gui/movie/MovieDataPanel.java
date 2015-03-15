@@ -24,112 +24,184 @@ import org.slf4j.LoggerFactory;
  */
 public class MovieDataPanel extends JPanel {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(MovieDataPanel.class);
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size */
+    /**
+     * Horizontal label size
+     */
     private static final int HORIZONTAL_LABEL_SIZE = 150;
 
-    /** Horizontal data size */
+    /**
+     * Horizontal data size
+     */
     private static final int HORIZONTAL_DATA_SIZE = 600;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 90;
 
-    /** Horizontal picture size */
+    /**
+     * Horizontal picture size
+     */
     private static final int HORIZONTAL_PICTURE_SIZE = 200;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 10;
 
-    /** Vertical picture size */
+    /**
+     * Vertical picture size
+     */
     private static final int VERTICAL_PICTURE_SIZE = 180;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Label for picture */
+    /**
+     * Label for picture
+     */
     private JLabel pictureData = new JLabel();
 
-    /** Label for czech name */
+    /**
+     * Label for czech name
+     */
     private JLabel czechNameLabel = new JLabel("Czech name");
 
-    /** Label with czech name */
+    /**
+     * Label with czech name
+     */
     private JLabel czechNameData = new JLabel();
 
-    /** Label for original name */
+    /**
+     * Label for original name
+     */
     private JLabel originalNameLabel = new JLabel("Original name");
 
-    /** Label with original name */
+    /**
+     * Label with original name
+     */
     private JLabel originalNameData = new JLabel();
 
-    /** Label for genre */
+    /**
+     * Label for genre
+     */
     private JLabel genreLabel = new JLabel("Genre");
 
-    /** Label with genre */
+    /**
+     * Label with genre
+     */
     private JLabel genreData = new JLabel();
 
-    /** Label for year */
+    /**
+     * Label for year
+     */
     private JLabel yearLabel = new JLabel("Year");
 
-    /** Label with year */
+    /**
+     * Label with year
+     */
     private JLabel yearData = new JLabel();
 
-    /** Label for language */
+    /**
+     * Label for language
+     */
     private JLabel languageLabel = new JLabel("Language");
 
-    /** Label with language */
+    /**
+     * Label with language
+     */
     private JLabel languageData = new JLabel();
 
-    /** Label for subtitles */
+    /**
+     * Label for subtitles
+     */
     private JLabel subtitlesLabel = new JLabel("Subtitles");
 
-    /** Label with subtitles */
+    /**
+     * Label with subtitles
+     */
     private JLabel subtitlesData = new JLabel();
 
-    /** Label for media */
+    /**
+     * Label for media
+     */
     private JLabel mediaLabel = new JLabel("Length of media");
 
-    /** Label with media */
+    /**
+     * Label with media
+     */
     private JLabel mediaData = new JLabel();
 
-    /** Label for total length */
+    /**
+     * Label for total length
+     */
     private JLabel totalLengthLabel = new JLabel("Total length");
 
-    /** Label with total length */
+    /**
+     * Label with total length
+     */
     private JLabel totalLengthData = new JLabel();
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Label with note */
+    /**
+     * Label with note
+     */
     private JLabel noteData = new JLabel();
 
-    /** Button for showing movie's ČSFD page */
+    /**
+     * Button for showing movie's ČSFD page
+     */
     private JButton csfdButton = new JButton("\u010cSFD");
 
-    /** Button for showing movie's IMDB page */
+    /**
+     * Button for showing movie's IMDB page
+     */
     private JButton imdbButton = new JButton("IMDB");
 
-    /** Button for showing movie's czech Wikipedia page */
+    /**
+     * Button for showing movie's czech Wikipedia page
+     */
     private JButton wikiCzButton = new JButton("Czech Wikipedia");
 
-    /** Button for showing movie's english Wikipedia page */
+    /**
+     * Button for showing movie's english Wikipedia page
+     */
     private JButton wikiEnButton = new JButton("English Wikipedia");
 
-    /** URL to ČSFD page about movie */
+    /**
+     * URL to ČSFD page about movie
+     */
     private String csfd;
 
-    /** IMDB code */
+    /**
+     * IMDB code
+     */
     private int imdb;
 
-    /** URL to czech Wikipedia page about movie */
+    /**
+     * URL to czech Wikipedia page about movie
+     */
     private String wikiCz;
 
-    /** URL to english Wikipedia page about movie */
+    /**
+     * URL to english Wikipedia page about movie
+     */
     private String wikiEn;
 
     /**

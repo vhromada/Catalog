@@ -15,22 +15,34 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractBookService extends AbstractInnerService<BookCategory, Book> {
 
-    /** Cache for books argument */
+    /**
+     * Cache for books argument
+     */
     private static final String BOOK_CACHE_ARGUMENT = "Cache for books";
 
-    /** Cache key for list of book categories */
+    /**
+     * Cache key for list of book categories
+     */
     private static final String BOOK_CATEGORIES_CACHE_KEY = "bookCategories";
 
-    /** Cache key for book category */
+    /**
+     * Cache key for book category
+     */
     private static final String BOOK_CATEGORY_CACHE_KEY = "bookCategory";
 
-    /** Cache key for list of books */
+    /**
+     * Cache key for list of books
+     */
     private static final String BOOKS_CACHE_KEY = "books";
 
-    /** Cache key for book */
+    /**
+     * Cache key for book
+     */
     private static final String BOOK_CACHE_KEY = "book";
 
-    /** Cache for books */
+    /**
+     * Cache for books
+     */
     private Cache bookCache;
 
     /**
@@ -45,7 +57,9 @@ public abstract class AbstractBookService extends AbstractInnerService<BookCateg
         this.bookCache = bookCache;
     }
 
-    /** Remove all mappings from the cache for books. */
+    /**
+     * Remove all mappings from the cache for books.
+     */
     protected void clearCache() {
         bookCache.clear();
     }

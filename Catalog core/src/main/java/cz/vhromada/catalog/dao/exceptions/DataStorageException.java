@@ -7,7 +7,9 @@ package cz.vhromada.catalog.dao.exceptions;
  */
 public class DataStorageException extends RuntimeException {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
     /**

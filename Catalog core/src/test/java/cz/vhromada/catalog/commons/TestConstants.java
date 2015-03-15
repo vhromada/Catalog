@@ -12,22 +12,34 @@ import org.slf4j.LoggerFactory;
  */
 public final class TestConstants {
 
-    /** Bad minimal year */
+    /**
+     * Bad minimal year
+     */
     public static final int BAD_MIN_YEAR = Constants.MIN_YEAR - 1;
 
-    /** Bad maximal year */
+    /**
+     * Bad maximal year
+     */
     public static final int BAD_MAX_YEAR = Constants.CURRENT_YEAR + 1;
 
-    /** Bad minimum IMDB code */
+    /**
+     * Bad minimum IMDB code
+     */
     public static final int BAD_MIN_IMDB_CODE = -2;
 
-    /** Bad maximum IMDB code */
+    /**
+     * Bad maximum IMDB code
+     */
     public static final int BAD_MAX_IMDB_CODE = Constants.MAX_IMDB_CODE + 1;
 
-    /** Negative time */
+    /**
+     * Negative time
+     */
     public static final Time NEGATIVE_TIME = new Time(0);
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(TestConstants.class);
 
     static {
@@ -40,7 +52,9 @@ public final class TestConstants {
         }
     }
 
-    /** Creates a new instance of TestConstants. */
+    /**
+     * Creates a new instance of TestConstants.
+     */
     private TestConstants() {
     }
 

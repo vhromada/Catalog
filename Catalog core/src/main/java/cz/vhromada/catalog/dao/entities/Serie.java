@@ -29,51 +29,77 @@ import org.hibernate.annotations.FetchMode;
 @NamedQuery(name = Serie.SELECT_SERIES, query = "SELECT s FROM Serie s ORDER BY s.position, s.id")
 public class Serie implements Serializable {
 
-    /** Name for query - select series */
+    /**
+     * Name for query - select series
+     */
     public static final String SELECT_SERIES = "Serie.selectSeries";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "serie_generator", sequenceName = "series_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "serie_generator")
     private Integer id;
 
-    /** Czech name */
+    /**
+     * Czech name
+     */
     @Column(name = "czech_name")
     private String czechName;
 
-    /** Original name */
+    /**
+     * Original name
+     */
     @Column(name = "original_name")
     private String originalName;
 
-    /** URL to ČSFD page about serie */
+    /**
+     * URL to ČSFD page about serie
+     */
     private String csfd;
 
-    /** IMDB code */
+    /**
+     * IMDB code
+     */
     @Column(name = "imdb_code")
     private int imdbCode;
 
-    /** URL to english Wikipedia page about serie */
+    /**
+     * URL to english Wikipedia page about serie
+     */
     @Column(name = "wiki_en")
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about serie */
+    /**
+     * URL to czech Wikipedia page about serie
+     */
     @Column(name = "wiki_cz")
     private String wikiCz;
 
-    /** Path to file with serie's picture */
+    /**
+     * Path to file with serie's picture
+     */
     private String picture;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** Genres */
+    /**
+     * Genres
+     */
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "serie_genres", joinColumns = @JoinColumn(name = "serie"), inverseJoinColumns = @JoinColumn(name = "genre"))
     @Fetch(FetchMode.SELECT)

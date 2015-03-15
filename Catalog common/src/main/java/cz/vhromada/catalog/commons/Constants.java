@@ -9,16 +9,24 @@ import java.util.Calendar;
  */
 public final class Constants {
 
-    /** Minimal year */
+    /**
+     * Minimal year
+     */
     public static final int MIN_YEAR = 1940;
 
-    /** Current year */
+    /**
+     * Current year
+     */
     public static final int CURRENT_YEAR = Calendar.getInstance().get(Calendar.YEAR);
 
-    /** Maximum IMDB code */
+    /**
+     * Maximum IMDB code
+     */
     public static final int MAX_IMDB_CODE = 9999999;
 
-    /** Creates a new instance of Constants. */
+    /**
+     * Creates a new instance of Constants.
+     */
     private Constants() {
     }
 

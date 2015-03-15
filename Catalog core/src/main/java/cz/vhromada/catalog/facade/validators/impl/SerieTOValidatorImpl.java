@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 @Component("serieTOValidator")
 public class SerieTOValidatorImpl implements SerieTOValidator {
 
-    /** Validator for TO for genre */
+    /**
+     * Validator for TO for genre
+     */
     private GenreTOValidator genreTOValidator;
 
     /**

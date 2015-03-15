@@ -38,36 +38,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BookServiceImplSpringTest {
 
-    /** Cache key for list of books */
+    /**
+     * Cache key for list of books
+     */
     private static final String BOOKS_CACHE_KEY = "books";
 
-    /** Cache key for book */
+    /**
+     * Cache key for book
+     */
     private static final String BOOK_CACHE_KEY = "book";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('bookCache')}")
     private Cache bookCache;
 
-    /** Instance of {@link BookService} */
+    /**
+     * Instance of {@link BookService}
+     */
     @Autowired
     private BookService bookService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequence. */
+    /**
+     * Clears cache and restarts sequence.
+     */
     @Before
     public void setUp() {
         bookCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE books_sq RESTART WITH 10").executeUpdate();
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with existing book. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with existing book.
+     */
     @Test
     public void testGetBookWithExistingBook() {
         final List<String> keys = new ArrayList<>();
@@ -89,7 +105,9 @@ public class BookServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with not existing book. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with not existing book.
+     */
     @Test
     public void testGetBookWithNotExistingBook() {
         final String key = BOOK_CACHE_KEY + Integer.MAX_VALUE;
@@ -100,7 +118,9 @@ public class BookServiceImplSpringTest {
         SpringUtils.assertCacheValue(bookCache, key, null);
     }
 
-    /** Test method for {@link BookService#add(Book)} with empty cache. */
+    /**
+     * Test method for {@link BookService#add(Book)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
@@ -115,7 +135,9 @@ public class BookServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
     }
 
-    /** Test method for {@link BookService#add(Book)} with not empty cache. */
+    /**
+     * Test method for {@link BookService#add(Book)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
@@ -136,7 +158,9 @@ public class BookServiceImplSpringTest {
         SpringUtils.assertCacheValue(bookCache, keyItem, book);
     }
 
-    /** Test method for {@link BookService#update(Book)}. */
+    /**
+     * Test method for {@link BookService#update(Book)}.
+     */
     @Test
     public void testUpdate() {
         final Book book = SpringEntitiesUtils.updateBook(1, objectGenerator, entityManager);
@@ -149,7 +173,9 @@ public class BookServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
     }
 
-    /** Test method for {@link BookService#remove(Book)} with empty cache. */
+    /**
+     * Test method for {@link BookService#remove(Book)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
@@ -163,7 +189,9 @@ public class BookServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
     }
 
-    /** Test method for {@link BookService#remove(Book)} with not empty cache. */
+    /**
+     * Test method for {@link BookService#remove(Book)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
@@ -182,7 +210,9 @@ public class BookServiceImplSpringTest {
         SpringUtils.assertCacheValue(bookCache, key, new ArrayList<>());
     }
 
-    /** Test method for {@link BookService#duplicate(Book)} with empty cache. */
+    /**
+     * Test method for {@link BookService#duplicate(Book)} with empty cache.
+     */
     @Test
     public void testDuplicateWithEmptyCache() {
         final Book book = SpringUtils.getBook(entityManager, 3);
@@ -201,7 +231,9 @@ public class BookServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
     }
 
-    /** Test method for {@link BookService#duplicate(Book)} with not empty cache. */
+    /**
+     * Test method for {@link BookService#duplicate(Book)} with not empty cache.
+     */
     @Test
     public void testDuplicateWithNotEmptyCache() {
         final Book book = SpringUtils.getBook(entityManager, 3);
@@ -226,7 +258,9 @@ public class BookServiceImplSpringTest {
         SpringUtils.assertCacheValue(bookCache, keyItem, expectedBook);
     }
 
-    /** Test method for {@link BookService#moveUp(Book)}. */
+    /**
+     * Test method for {@link BookService#moveUp(Book)}.
+     */
     @Test
     public void testMoveUp() {
         final Book book = SpringUtils.getBook(entityManager, 2);
@@ -248,7 +282,9 @@ public class BookServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(bookCache).size());
     }
 
-    /** Test method for {@link BookService#moveDown(Book)}. */
+    /**
+     * Test method for {@link BookService#moveDown(Book)}.
+     */
     @Test
     public void testMoveDown() {
         final Book book = SpringUtils.getBook(entityManager, 1);
@@ -271,7 +307,9 @@ public class BookServiceImplSpringTest {
     }
 
 
-    /** Test method for {@link BookService#exists(Book)} with existing book. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with existing book.
+     */
     @Test
     public void testExistsWithExistingBook() {
         final List<String> keys = new ArrayList<>();
@@ -293,7 +331,9 @@ public class BookServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link BookService#exists(Book)} with not existing book. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with not existing book.
+     */
     @Test
     public void testExistsWithNotExistingBook() {
         final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
@@ -306,7 +346,9 @@ public class BookServiceImplSpringTest {
         SpringUtils.assertCacheValue(bookCache, key, null);
     }
 
-    /** Test method for {@link BookService#findBooksByBookCategory(BookCategory)}. */
+    /**
+     * Test method for {@link BookService#findBooksByBookCategory(BookCategory)}.
+     */
     @Test
     public void testFindBooksByBookCategory() {
         final List<String> keys = new ArrayList<>();

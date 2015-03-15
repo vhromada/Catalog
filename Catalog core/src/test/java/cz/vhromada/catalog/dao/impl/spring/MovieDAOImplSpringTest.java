@@ -33,33 +33,45 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MovieDAOImplSpringTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link MovieDAO} */
+    /**
+     * Instance of {@link MovieDAO}
+     */
     @Autowired
     private MovieDAO movieDAO;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Restarts sequences. */
+    /**
+     * Restarts sequences.
+     */
     @Before
     public void setUp() {
         entityManager.createNativeQuery("ALTER SEQUENCE movies_sq RESTART WITH 4").executeUpdate();
         entityManager.createNativeQuery("ALTER SEQUENCE media_sq RESTART WITH 5").executeUpdate();
     }
 
-    /** Test method for {@link MovieDAO#getMovies()}. */
+    /**
+     * Test method for {@link MovieDAO#getMovies()}.
+     */
     @Test
     public void testGetMovies() {
         DeepAsserts.assertEquals(SpringEntitiesUtils.getMovies(), movieDAO.getMovies());
         DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
     }
 
-    /** Test method for {@link MovieDAO#getMovie(Integer)}. */
+    /**
+     * Test method for {@link MovieDAO#getMovie(Integer)}.
+     */
     @Test
     public void testGetMovie() {
         for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
@@ -71,7 +83,9 @@ public class MovieDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
     }
 
-    /** Test method for {@link MovieDAO#add(Movie)}. */
+    /**
+     * Test method for {@link MovieDAO#add(Movie)}.
+     */
     @Test
     public void testAdd() {
         final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
@@ -86,7 +100,9 @@ public class MovieDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT + 1, SpringUtils.getMoviesCount(entityManager));
     }
 
-    /** Test method for {@link MovieDAO#update(Movie)} with no media change. */
+    /**
+     * Test method for {@link MovieDAO#update(Movie)} with no media change.
+     */
     @Test
     public void testUpdateWithNoMediaChange() {
         final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
@@ -98,7 +114,9 @@ public class MovieDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
     }
 
-    /** Test method for {@link MovieDAO#update(Movie)} with added medium. */
+    /**
+     * Test method for {@link MovieDAO#update(Movie)} with added medium.
+     */
     @Test
     public void testUpdateWithAddedMedium() {
         final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
@@ -113,7 +131,9 @@ public class MovieDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
     }
 
-    /** Test method for {@link MovieDAO#update(Movie)} with removed medium. */
+    /**
+     * Test method for {@link MovieDAO#update(Movie)} with removed medium.
+     */
     @Test
     public void testUpdateWithRemovedMedium() {
         final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
@@ -126,7 +146,9 @@ public class MovieDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MOVIES_COUNT, SpringUtils.getMoviesCount(entityManager));
     }
 
-    /** Test method for {@link MovieDAO#remove(Movie)}. */
+    /**
+     * Test method for {@link MovieDAO#remove(Movie)}.
+     */
     @Test
     public void testRemove() {
         movieDAO.remove(SpringUtils.getMovie(entityManager, 1));

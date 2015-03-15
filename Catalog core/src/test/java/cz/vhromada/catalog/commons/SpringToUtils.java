@@ -25,7 +25,9 @@ import org.joda.time.DateTime;
  */
 public final class SpringToUtils {
 
-    /** Creates a new instance of SpringToUtils. */
+    /**
+     * Creates a new instance of SpringToUtils.
+     */
     private SpringToUtils() {
     }
 

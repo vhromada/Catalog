@@ -42,42 +42,60 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of programs */
+    /**
+     * Cache key for list of programs
+     */
     private static final String PROGRAMS_CACHE_KEY = "programs";
 
-    /** Cache key for program */
+    /**
+     * Cache key for program
+     */
     private static final String PROGRAM_CACHE_KEY = "program";
 
-    /** Instance of {@link ProgramDAO} */
+    /**
+     * Instance of {@link ProgramDAO}
+     */
     @Mock
     private ProgramDAO programDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache programCache;
 
-    /** Instance of {@link ProgramService} */
+    /**
+     * Instance of {@link ProgramService}
+     */
     private ProgramService programService;
 
-    /** Initializes service for programs. */
+    /**
+     * Initializes service for programs.
+     */
     @Before
     public void setUp() {
         programService = new ProgramServiceImpl(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with null DAO for programs. */
+    /**
+     * Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with null DAO for programs.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramDAO() {
         new ProgramServiceImpl(null, programCache);
     }
 
-    /** Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with null cache for programs. */
+    /**
+     * Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramDAO, Cache)} with null cache for programs.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramCache() {
         new ProgramServiceImpl(programDAO, null);
     }
 
-    /** Test method for {@link ProgramService#newData()} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#newData()} with cached programs.
+     */
     @Test
     public void testNewDataWithCachedPrograms() {
         final List<Program> programs = CollectionUtils.newList(mock(Program.class), mock(Program.class));
@@ -93,7 +111,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#newData()} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#newData()} with not cached programs.
+     */
     @Test
     public void testNewDataWithNotCachedPrograms() {
         final List<Program> programs = CollectionUtils.newList(mock(Program.class), mock(Program.class));
@@ -111,7 +131,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#newData()} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#newData()} with exception in DAO tier.
+     */
     @Test
     public void testNewDataWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).getPrograms();
@@ -129,7 +151,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getPrograms()} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#getPrograms()} with cached programs.
+     */
     @Test
     public void testGetProgramsWithCachedPrograms() {
         final List<Program> programs = CollectionUtils.newList(mock(Program.class), mock(Program.class));
@@ -142,7 +166,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO);
     }
 
-    /** Test method for {@link ProgramService#getPrograms()} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#getPrograms()} with not cached programs.
+     */
     @Test
     public void testGetProgramsWithNotCachedPrograms() {
         final List<Program> programs = CollectionUtils.newList(mock(Program.class), mock(Program.class));
@@ -157,7 +183,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getPrograms()} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#getPrograms()} with exception in DAO tier.
+     */
     @Test
     public void testGetProgramsWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).getPrograms();
@@ -175,7 +203,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with cached existing program. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with cached existing program.
+     */
     @Test
     public void testGetProgramWithCachedExistingProgram() {
         final Program program = generate(Program.class);
@@ -188,7 +218,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with cached not existing program. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with cached not existing program.
+     */
     @Test
     public void testGetProgramWithCachedNotExistingProgram() {
         final int id = generate(Integer.class);
@@ -201,7 +233,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with not cached existing program. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with not cached existing program.
+     */
     @Test
     public void testGetProgramWithNotCachedExistingProgram() {
         final Program program = generate(Program.class);
@@ -216,7 +250,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with not cached not existing program. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with not cached not existing program.
+     */
     @Test
     public void testGetProgramWithNotCachedNotExistingProgram() {
         final int id = generate(Integer.class);
@@ -231,7 +267,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with null argument.
+     */
     @Test
     public void testGetProgramWithNullArgument() {
         try {
@@ -244,7 +282,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetProgramWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).getProgram(anyInt());
@@ -262,7 +302,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#add(Program)} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#add(Program)} with cached programs.
+     */
     @Test
     public void testAddWithCachedPrograms() {
         final Program program = generate(Program.class);
@@ -281,7 +323,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#add(Program)} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#add(Program)} with not cached programs.
+     */
     @Test
     public void testAddWithNotCachedPrograms() {
         final Program program = generate(Program.class);
@@ -295,7 +339,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#add(Program)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#add(Program)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -308,7 +354,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#add(Program)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#add(Program)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Program program = generate(Program.class);
@@ -326,7 +374,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programCache);
     }
 
-    /** Test method for {@link ProgramService#update(Program)}. */
+    /**
+     * Test method for {@link ProgramService#update(Program)}.
+     */
     @Test
     public void testUpdate() {
         final Program program = generate(Program.class);
@@ -338,7 +388,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#update(Program)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#update(Program)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -351,7 +403,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#update(Program)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#update(Program)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Program program = generate(Program.class);
@@ -369,7 +423,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programCache);
     }
 
-    /** Test method for {@link ProgramService#remove(Program)} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#remove(Program)} with cached programs.
+     */
     @Test
     public void testRemoveWithCachedPrograms() {
         final Program program = generate(Program.class);
@@ -387,7 +443,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#remove(Program)} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#remove(Program)} with not cached programs.
+     */
     @Test
     public void testRemoveWithNotCachedPrograms() {
         final Program program = generate(Program.class);
@@ -401,7 +459,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#remove(Program)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#remove(Program)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -414,7 +474,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#remove(Program)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#remove(Program)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Program program = generate(Program.class);
@@ -432,7 +494,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programCache);
     }
 
-    /** Test method for {@link ProgramService#duplicate(Program)}. */
+    /**
+     * Test method for {@link ProgramService#duplicate(Program)}.
+     */
     @Test
     public void testDuplicate() {
         programService.duplicate(generate(Program.class));
@@ -443,7 +507,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#duplicate(Program)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#duplicate(Program)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -456,7 +522,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#duplicate(Program)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#duplicate(Program)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).add(any(Program.class));
@@ -473,7 +541,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programCache);
     }
 
-    /** Test method for {@link ProgramService#moveUp(Program)} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#moveUp(Program)} with cached programs.
+     */
     @Test
     public void testMoveUpWithCachedPrograms() {
         final Program program1 = generate(Program.class);
@@ -494,7 +564,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveUp(Program)} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#moveUp(Program)} with not cached programs.
+     */
     @Test
     public void testMoveUpWithNotCachedPrograms() {
         final Program program1 = generate(Program.class);
@@ -517,7 +589,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveUp(Program)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#moveUp(Program)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -530,7 +604,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveUp(Program)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#moveUp(Program)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).getPrograms();
@@ -548,7 +624,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveDown(Program)} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#moveDown(Program)} with cached programs.
+     */
     @Test
     public void testMoveDownWithCachedPrograms() {
         final Program program1 = generate(Program.class);
@@ -569,7 +647,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveDown(Program)} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#moveDown(Program)} with not cached programs.
+     */
     @Test
     public void testMoveDownWithNotCachedPrograms() {
         final Program program1 = generate(Program.class);
@@ -592,7 +672,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveDown(Program)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#moveDown(Program)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -605,7 +687,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#moveDown(Program)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#moveDown(Program)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).getPrograms();
@@ -623,7 +707,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with cached existing program. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with cached existing program.
+     */
     @Test
     public void testExistsWithCachedExistingProgram() {
         final Program program = generate(Program.class);
@@ -636,7 +722,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO);
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with cached not existing program. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with cached not existing program.
+     */
     @Test
     public void testExistsWithCachedNotExistingProgram() {
         final Program program = generate(Program.class);
@@ -649,7 +737,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO);
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with not cached existing program. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with not cached existing program.
+     */
     @Test
     public void testExistsWithNotCachedExistingProgram() {
         final Program program = generate(Program.class);
@@ -664,7 +754,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with not cached not existing program. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with not cached not existing program.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingProgram() {
         final Program program = generate(Program.class);
@@ -679,7 +771,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with null argument. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -692,7 +786,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Program program = generate(Program.class);
@@ -711,7 +807,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#updatePositions()} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#updatePositions()} with cached programs.
+     */
     @Test
     public void testUpdatePositionsWithCachedPrograms() {
         final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
@@ -729,7 +827,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#updatePositions()} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#updatePositions()} with not cached programs.
+     */
     @Test
     public void testUpdatePositionsWithNotCachedPrograms() {
         final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
@@ -749,7 +849,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#updatePositions()} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#updatePositions()} with exception in DAO tier.
+     */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).getPrograms();
@@ -767,7 +869,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache);
     }
 
-    /** Test method for {@link ProgramService#getTotalMediaCount()} with cached programs. */
+    /**
+     * Test method for {@link ProgramService#getTotalMediaCount()} with cached programs.
+     */
     @Test
     public void testGetTotalMediaCountWithCachedPrograms() {
         final Program program1 = mock(Program.class);
@@ -789,7 +893,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programDAO);
     }
 
-    /** Test method for {@link ProgramService#getTotalMediaCount()} with not cached programs. */
+    /**
+     * Test method for {@link ProgramService#getTotalMediaCount()} with not cached programs.
+     */
     @Test
     public void testGetTotalMediaCountWithNotCachedPrograms() {
         final Program program1 = mock(Program.class);
@@ -813,7 +919,9 @@ public class ProgramServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programDAO, programCache, program1, program2, program3);
     }
 
-    /** Test method for {@link ProgramService#getTotalMediaCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link ProgramService#getTotalMediaCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalMediaCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(programDAO).getPrograms();

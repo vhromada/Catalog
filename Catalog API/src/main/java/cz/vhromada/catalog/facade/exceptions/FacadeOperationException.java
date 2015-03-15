@@ -7,7 +7,9 @@ package cz.vhromada.catalog.facade.exceptions;
  */
 public class FacadeOperationException extends RuntimeException {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
     /**

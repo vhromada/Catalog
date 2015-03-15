@@ -12,34 +12,54 @@ import cz.vhromada.catalog.commons.Language;
  */
 public class SeasonTO implements Comparable<SeasonTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Number of season */
+    /**
+     * Number of season
+     */
     private int number;
 
-    /** Starting year */
+    /**
+     * Starting year
+     */
     private int startYear;
 
-    /** Ending year */
+    /**
+     * Ending year
+     */
     private int endYear;
 
-    /** Language */
+    /**
+     * Language
+     */
     private Language language;
 
-    /** Subtitles */
+    /**
+     * Subtitles
+     */
     private List<Language> subtitles;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** TO for serie */
+    /**
+     * TO for serie
+     */
     private SerieTO serie;
 
     /**

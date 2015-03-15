@@ -47,50 +47,70 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class GenreFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link GenreService} */
+    /**
+     * Instance of {@link GenreService}
+     */
     @Mock
     private GenreService genreService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link GenreTOValidator} */
+    /**
+     * Instance of {@link GenreTOValidator}
+     */
     @Mock
     private GenreTOValidator genreTOValidator;
 
-    /** Genre names */
+    /**
+     * Genre names
+     */
     @Mock
     private List<String> genreNames;
 
-    /** Instance of {@link GenreFacade} */
+    /**
+     * Instance of {@link GenreFacade}
+     */
     private GenreFacade genreFacade;
 
-    /** Initializes facade for genres. */
+    /**
+     * Initializes facade for genres.
+     */
     @Before
     public void setUp() {
         genreFacade = new GenreFacadeImpl(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null service for genres. */
+    /**
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null service for genres.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreService() {
         new GenreFacadeImpl(null, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null converter. */
+    /**
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null converter.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
         new GenreFacadeImpl(genreService, null, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null validator for TO for genre. */
+    /**
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(GenreService, Converter, GenreTOValidator)} with null validator for TO for genre.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreTOValidator() {
         new GenreFacadeImpl(genreService, converter, null);
     }
 
-    /** Test method for {@link GenreFacade#newData()}. */
+    /**
+     * Test method for {@link GenreFacade#newData()}.
+     */
     @Test
     public void testNewData() {
         genreFacade.newData();
@@ -99,7 +119,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#newData()} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#newData()} with exception in service tier.
+     */
     @Test
     public void testNewDataWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(genreService).newData();
@@ -115,7 +137,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#getGenres()}. */
+    /**
+     * Test method for {@link GenreFacade#getGenres()}.
+     */
     @Test
     public void testGetGenres() {
         final List<Genre> genres = CollectionUtils.newList(generate(Genre.class), generate(Genre.class));
@@ -130,7 +154,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#getGenres()} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#getGenres()} with exception in service tier.
+     */
     @Test
     public void testGetGenresWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(genreService).getGenres();
@@ -147,7 +173,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link GenreFacade#getGenre(Integer)} with existing genre. */
+    /**
+     * Test method for {@link GenreFacade#getGenre(Integer)} with existing genre.
+     */
     @Test
     public void testGetGenreWithExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -162,7 +190,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#getGenre(Integer)} with not existing genre. */
+    /**
+     * Test method for {@link GenreFacade#getGenre(Integer)} with not existing genre.
+     */
     @Test
     public void testGetGenreWithNotExistingGenre() {
         when(genreService.getGenre(anyInt())).thenReturn(null);
@@ -175,7 +205,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#getGenre(Integer)} with null argument. */
+    /**
+     * Test method for {@link GenreFacade#getGenre(Integer)} with null argument.
+     */
     @Test
     public void testGetGenreWithNullArgument() {
         try {
@@ -188,7 +220,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#getGenre(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#getGenre(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetGenreWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(genreService).getGenre(anyInt());
@@ -205,7 +239,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link GenreFacade#add(GenreTO)}. */
+    /**
+     * Test method for {@link GenreFacade#add(GenreTO)}.
+     */
     @Test
     public void testAdd() {
         final Genre genre = generate(Genre.class);
@@ -225,7 +261,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#add(GenreTO)} with null argument. */
+    /**
+     * Test method for {@link GenreFacade#add(GenreTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(genreTOValidator).validateNewGenreTO(any(GenreTO.class));
@@ -242,7 +280,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#add(GenreTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GenreFacade#add(GenreTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final GenreTO genre = generate(GenreTO.class);
@@ -261,7 +301,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#add(GenreTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link GenreFacade#add(GenreTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final Genre genre = generate(Genre.class);
@@ -283,7 +325,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#add(GenreTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#add(GenreTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final Genre genre = generate(Genre.class);
@@ -306,7 +350,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#add(List)}. */
+    /**
+     * Test method for {@link GenreFacade#add(List)}.
+     */
     @Test
     public void testAddList() {
         final List<String> genres = CollectionUtils.newList(generate(String.class), generate(String.class));
@@ -317,7 +363,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#add(List)} with null argument. */
+    /**
+     * Test method for {@link GenreFacade#add(List)} with null argument.
+     */
     @Test
     public void testAddListWithNullArgument() {
         try {
@@ -330,7 +378,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#add(List)} with bad argument. */
+    /**
+     * Test method for {@link GenreFacade#add(List)} with bad argument.
+     */
     @Test
     public void testAddListWithBadArgument() {
         try {
@@ -343,7 +393,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#add(List)} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#add(List)} with exception in service tier.
+     */
     @Test
     public void testAddListWithServiceTierException() {
         final List<String> genres = CollectionUtils.newList(generate(String.class), generate(String.class));
@@ -360,7 +412,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#update(GenreTO)}. */
+    /**
+     * Test method for {@link GenreFacade#update(GenreTO)}.
+     */
     @Test
     public void testUpdate() {
         final Genre genre = generate(Genre.class);
@@ -377,7 +431,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#update(GenreTO)} with null argument. */
+    /**
+     * Test method for {@link GenreFacade#update(GenreTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(genreTOValidator).validateExistingGenreTO(any(GenreTO.class));
@@ -394,7 +450,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#update(GenreTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GenreFacade#update(GenreTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final GenreTO genre = generate(GenreTO.class);
@@ -412,7 +470,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#update(GenreTO)} with not existing argument. */
+    /**
+     * Test method for {@link GenreFacade#update(GenreTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final Genre genre = generate(Genre.class);
@@ -433,7 +493,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#update(GenreTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#update(GenreTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final Genre genre = generate(Genre.class);
@@ -454,7 +516,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#remove(GenreTO)}. */
+    /**
+     * Test method for {@link GenreFacade#remove(GenreTO)}.
+     */
     @Test
     public void testRemove() {
         final Genre genre = generate(Genre.class);
@@ -469,7 +533,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#remove(GenreTO)} with null argument. */
+    /**
+     * Test method for {@link GenreFacade#remove(GenreTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
@@ -486,7 +552,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#remove(GenreTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GenreFacade#remove(GenreTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final GenreTO genre = generate(GenreTO.class);
@@ -504,7 +572,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#remove(GenreTO)} with not existing argument. */
+    /**
+     * Test method for {@link GenreFacade#remove(GenreTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final GenreTO genre = generate(GenreTO.class);
@@ -522,7 +592,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#remove(GenreTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#remove(GenreTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final GenreTO genre = generate(GenreTO.class);
@@ -540,7 +612,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#duplicate(GenreTO)}. */
+    /**
+     * Test method for {@link GenreFacade#duplicate(GenreTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Genre genre = generate(Genre.class);
@@ -555,7 +629,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#duplicate(GenreTO)} with null argument. */
+    /**
+     * Test method for {@link GenreFacade#duplicate(GenreTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
@@ -572,7 +648,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#duplicate(GenreTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GenreFacade#duplicate(GenreTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final GenreTO genre = generate(GenreTO.class);
@@ -590,7 +668,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService);
     }
 
-    /** Test method for {@link GenreFacade#duplicate(GenreTO)} with not existing argument. */
+    /**
+     * Test method for {@link GenreFacade#duplicate(GenreTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final GenreTO genre = generate(GenreTO.class);
@@ -608,7 +688,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#duplicate(GenreTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#duplicate(GenreTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final GenreTO genre = generate(GenreTO.class);
@@ -626,7 +708,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with existing genre. */
+    /**
+     * Test method for {@link GenreFacade#exists(GenreTO)} with existing genre.
+     */
     @Test
     public void testExistsWithExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -642,7 +726,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with not existing genre. */
+    /**
+     * Test method for {@link GenreFacade#exists(GenreTO)} with not existing genre.
+     */
     @Test
     public void testExistsWithNotExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -658,7 +744,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
     }
 
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with null argument. */
+    /**
+     * Test method for {@link GenreFacade#exists(GenreTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
@@ -675,7 +763,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with argument with bad data. */
+    /**
+     * Test method for {@link GenreFacade#exists(GenreTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final GenreTO genre = generate(GenreTO.class);
@@ -693,7 +783,9 @@ public class GenreFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreService, converter);
     }
 
-    /** Test method for {@link GenreFacade#exists(GenreTO)} with exception in service tier. */
+    /**
+     * Test method for {@link GenreFacade#exists(GenreTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final Genre genre = generate(Genre.class);

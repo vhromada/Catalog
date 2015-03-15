@@ -23,43 +23,69 @@ import cz.vhromada.validators.Validators;
  */
 public class GenreChooseDialog extends JDialog {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** Facade for genres */
+    /**
+     * Facade for genres
+     */
     private GenreFacade genreFacade;
 
-    /** List of TO for genre */
+    /**
+     * List of TO for genre
+     */
     private List<GenreTO> genres;
 
-    /** List with genres */
+    /**
+     * List with genres
+     */
     private JList<String> list = new JList<>();
 
-    /** ScrollPane for list with genres */
+    /**
+     * ScrollPane for list with genres
+     */
     private JScrollPane listScrollPane = new JScrollPane(list);
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Button Cancel */
+    /**
+     * Button Cancel
+     */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Data model for list for choosing genres */
+    /**
+     * Data model for list for choosing genres
+     */
     private GenreChooseListDataModel genreChooseListDataModel;
 
     /**
@@ -103,7 +129,9 @@ public class GenreChooseDialog extends JDialog {
         return genres;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -149,7 +177,9 @@ public class GenreChooseDialog extends JDialog {
         setLocationRelativeTo(getRootPane());
     }
 
-    /** Performs action for button OK. */
+    /**
+     * Performs action for button OK.
+     */
     private void okAction() {
         returnStatus = DialogResult.OK;
         genres.clear();
@@ -160,14 +190,18 @@ public class GenreChooseDialog extends JDialog {
         close();
     }
 
-    /** Performs action for button Cancel. */
+    /**
+     * Performs action for button Cancel.
+     */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
         genres = null;
         close();
     }
 
-    /** Performs action for selection change. */
+    /**
+     * Performs action for selection change.
+     */
     private void selectionChangeAction() {
         final int[] indexes = list.getSelectedIndices();
         okButton.setEnabled(indexes.length > 0);
@@ -219,7 +253,9 @@ public class GenreChooseDialog extends JDialog {
                 .addGap(VERTICAL_LONG_GAP_SIZE);
     }
 
-    /** Closes dialog. */
+    /**
+     * Closes dialog.
+     */
     private void close() {
         setVisible(false);
         dispose();

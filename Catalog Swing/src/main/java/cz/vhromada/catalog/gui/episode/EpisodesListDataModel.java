@@ -16,16 +16,24 @@ import cz.vhromada.validators.Validators;
  */
 public class EpisodesListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for episodes */
+    /**
+     * Facade for episodes
+     */
     private EpisodeFacade episodeFacade;
 
-    /** TO for season */
+    /**
+     * TO for season
+     */
     private SeasonTO season;
 
-    /** List of TO for episode */
+    /**
+     * List of TO for episode
+     */
     private List<EpisodeTO> episodes;
 
     /**
@@ -76,7 +84,9 @@ public class EpisodesListDataModel extends AbstractListModel<String> {
         return episodes.get(index);
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         episodes = episodeFacade.findEpisodesBySeason(season);
     }

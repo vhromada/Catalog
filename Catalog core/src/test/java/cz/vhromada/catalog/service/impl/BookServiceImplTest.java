@@ -45,42 +45,60 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of books */
+    /**
+     * Cache key for list of books
+     */
     private static final String BOOKS_CACHE_KEY = "books";
 
-    /** Cache key for book */
+    /**
+     * Cache key for book
+     */
     private static final String BOOK_CACHE_KEY = "book";
 
-    /** Instance of {@link BookDAO} */
+    /**
+     * Instance of {@link BookDAO}
+     */
     @Mock
     private BookDAO bookDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache bookCache;
 
-    /** Instance of {@link BookService} */
+    /**
+     * Instance of {@link BookService}
+     */
     private BookService bookService;
 
-    /** Initializes service for books. */
+    /**
+     * Initializes service for books.
+     */
     @Before
     public void setUp() {
         bookService = new BookServiceImpl(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache)} with null DAO for books. */
+    /**
+     * Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache)} with null DAO for books.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookDAO() {
         new BookServiceImpl(null, bookCache);
     }
 
-    /** Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache))} with null cache for books. */
+    /**
+     * Test method for {@link BookServiceImpl#BookServiceImpl(BookDAO, Cache))} with null cache for books.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookCache() {
         new BookServiceImpl(bookDAO, null);
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with cached existing book. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with cached existing book.
+     */
     @Test
     public void testGetBookWithCachedExistingBook() {
         final Book book = generate(Book.class);
@@ -93,7 +111,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO);
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with cached not existing book. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with cached not existing book.
+     */
     @Test
     public void testGetBookWithCachedNotExistingBook() {
         final Book book = generate(Book.class);
@@ -106,7 +126,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO);
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with not cached existing book. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with not cached existing book.
+     */
     @Test
     public void testGetBookWithNotCachedExistingBook() {
         final Book book = generate(Book.class);
@@ -121,7 +143,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with not cached not existing book. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with not cached not existing book.
+     */
     @Test
     public void testGetBookWithNotCachedNotExistingBook() {
         final Book book = generate(Book.class);
@@ -136,7 +160,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with null argument. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with null argument.
+     */
     @Test
     public void testGetBookWithNullArgument() {
         try {
@@ -149,7 +175,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#getBook(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#getBook(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetBookWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookDAO).getBook(anyInt());
@@ -167,7 +195,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#add(Book)} with cached books. */
+    /**
+     * Test method for {@link BookService#add(Book)} with cached books.
+     */
     @Test
     public void testAddWithCachedBooks() {
         final Book book = generate(Book.class);
@@ -186,7 +216,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#add(Book)} with not cached books. */
+    /**
+     * Test method for {@link BookService#add(Book)} with not cached books.
+     */
     @Test
     public void testAddWithNotCachedBooks() {
         final Book book = generate(Book.class);
@@ -200,7 +232,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#add(Book)} with null argument. */
+    /**
+     * Test method for {@link BookService#add(Book)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -213,7 +247,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#add(Book)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#add(Book)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Book book = generate(Book.class);
@@ -231,7 +267,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCache);
     }
 
-    /** Test method for {@link BookService#update(Book)}. */
+    /**
+     * Test method for {@link BookService#update(Book)}.
+     */
     @Test
     public void testUpdate() {
         final Book book = generate(Book.class);
@@ -243,7 +281,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#update(Book)} with null argument. */
+    /**
+     * Test method for {@link BookService#update(Book)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -256,7 +296,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#update(Book)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#update(Book)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Book book = generate(Book.class);
@@ -274,7 +316,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCache);
     }
 
-    /** Test method for {@link BookService#remove(Book)} with cached books. */
+    /**
+     * Test method for {@link BookService#remove(Book)} with cached books.
+     */
     @Test
     public void testRemoveWithCachedBooks() {
         final Book book = generate(Book.class);
@@ -292,7 +336,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#remove(Book)} with not cached books. */
+    /**
+     * Test method for {@link BookService#remove(Book)} with not cached books.
+     */
     @Test
     public void testRemoveWithNotCachedBooks() {
         final Book book = generate(Book.class);
@@ -306,7 +352,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#remove(Book)} with null argument. */
+    /**
+     * Test method for {@link BookService#remove(Book)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -319,7 +367,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#remove(Book)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#remove(Book)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Book book = generate(Book.class);
@@ -337,7 +387,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCache);
     }
 
-    /** Test method for {@link BookService#duplicate(Book)} with cached books. */
+    /**
+     * Test method for {@link BookService#duplicate(Book)} with cached books.
+     */
     @Test
     public void testDuplicateWithCachedBooks() {
         final Book book = generate(Book.class);
@@ -354,7 +406,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#duplicate(Book)} with not cached books. */
+    /**
+     * Test method for {@link BookService#duplicate(Book)} with not cached books.
+     */
     @Test
     public void testDuplicateWithNotCachedBooks() {
         final Book book = generate(Book.class);
@@ -369,7 +423,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#duplicate(Book)} with null argument. */
+    /**
+     * Test method for {@link BookService#duplicate(Book)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -382,7 +438,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#duplicate(Book)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#duplicate(Book)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookDAO).add(any(Book.class));
@@ -399,7 +457,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCache);
     }
 
-    /** Test method for {@link BookService#moveUp(Book)} with cached books. */
+    /**
+     * Test method for {@link BookService#moveUp(Book)} with cached books.
+     */
     @Test
     public void testMoveUpWithCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -423,7 +483,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#moveUp(Book)} with not cached books. */
+    /**
+     * Test method for {@link BookService#moveUp(Book)} with not cached books.
+     */
     @Test
     public void testMoveUpWithNotCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -449,7 +511,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#moveUp(Book)} with null argument. */
+    /**
+     * Test method for {@link BookService#moveUp(Book)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -462,7 +526,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#moveUp(Book)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#moveUp(Book)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -483,7 +549,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#moveDown(Book)} with cached books. */
+    /**
+     * Test method for {@link BookService#moveDown(Book)} with cached books.
+     */
     @Test
     public void testMoveDownWithCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -507,7 +575,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#moveDown(Book)} with not cached books. */
+    /**
+     * Test method for {@link BookService#moveDown(Book)} with not cached books.
+     */
     @Test
     public void testMoveDownWithNotCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -533,7 +603,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#moveDown(Book)} with null argument. */
+    /**
+     * Test method for {@link BookService#moveDown(Book)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -546,7 +618,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#moveDown(Book)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#moveDown(Book)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -567,7 +641,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#exists(Book)} with cached existing book. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with cached existing book.
+     */
     @Test
     public void testExistsWithCachedExistingBook() {
         final Book book = generate(Book.class);
@@ -580,7 +656,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO);
     }
 
-    /** Test method for {@link BookService#exists(Book)} with cached not existing book. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with cached not existing book.
+     */
     @Test
     public void testExistsWithCachedNotExistingBook() {
         final Book book = generate(Book.class);
@@ -593,7 +671,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO);
     }
 
-    /** Test method for {@link BookService#exists(Book)} with not cached existing book. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with not cached existing book.
+     */
     @Test
     public void testExistsWithNotCachedExistingBook() {
         final Book book = generate(Book.class);
@@ -608,7 +688,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#exists(Book)} with not cached not existing book. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with not cached not existing book.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingBook() {
         final Book book = generate(Book.class);
@@ -623,7 +705,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#exists(Book)} with null argument. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -636,7 +720,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#exists(Book)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#exists(Book)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Book book = generate(Book.class);
@@ -655,7 +741,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with cached books. */
+    /**
+     * Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with cached books.
+     */
     @Test
     public void testFindBooksByBookCategoryWithCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -669,7 +757,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO);
     }
 
-    /** Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with not cached books. */
+    /**
+     * Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with not cached books.
+     */
     @Test
     public void testFindBooksByBookCategoryWithNotCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -685,7 +775,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with null argument.
+     */
     @Test
     public void testFindBooksByBookCategoryWithNullArgument() {
         try {
@@ -698,7 +790,9 @@ public class BookServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookService#findBooksByBookCategory(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testFindBooksByBookCategoryWithDAOTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);

@@ -42,42 +42,60 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class GameServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of games */
+    /**
+     * Cache key for list of games
+     */
     private static final String GAMES_CACHE_KEY = "games";
 
-    /** Cache key for game */
+    /**
+     * Cache key for game
+     */
     private static final String GAME_CACHE_KEY = "game";
 
-    /** Instance of {@link GameDAO} */
+    /**
+     * Instance of {@link GameDAO}
+     */
     @Mock
     private GameDAO gameDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache gameCache;
 
-    /** Instance of {@link GameService} */
+    /**
+     * Instance of {@link GameService}
+     */
     private GameService gameService;
 
-    /** Initializes service for games. */
+    /**
+     * Initializes service for games.
+     */
     @Before
     public void setUp() {
         gameService = new GameServiceImpl(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with null DAO for games. */
+    /**
+     * Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with null DAO for games.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameDAO() {
         new GameServiceImpl(null, gameCache);
     }
 
-    /** Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with null cache for games. */
+    /**
+     * Test method for {@link GameServiceImpl#GameServiceImpl(GameDAO, Cache)} with null cache for games.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameCache() {
         new GameServiceImpl(gameDAO, null);
     }
 
-    /** Test method for {@link GameService#newData()} with cached games. */
+    /**
+     * Test method for {@link GameService#newData()} with cached games.
+     */
     @Test
     public void testNewDataWithCachedGames() {
         final List<Game> games = CollectionUtils.newList(mock(Game.class), mock(Game.class));
@@ -93,7 +111,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#newData()} with not cached games. */
+    /**
+     * Test method for {@link GameService#newData()} with not cached games.
+     */
     @Test
     public void testNewDataWithNotCachedGames() {
         final List<Game> games = CollectionUtils.newList(mock(Game.class), mock(Game.class));
@@ -111,7 +131,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#newData()} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#newData()} with exception in DAO tier.
+     */
     @Test
     public void testNewDataWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).getGames();
@@ -129,7 +151,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getGames()} with cached games. */
+    /**
+     * Test method for {@link GameService#getGames()} with cached games.
+     */
     @Test
     public void testGetGamesWithCachedGames() {
         final List<Game> games = CollectionUtils.newList(mock(Game.class), mock(Game.class));
@@ -142,7 +166,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO);
     }
 
-    /** Test method for {@link GameService#getGames()} with not cached games. */
+    /**
+     * Test method for {@link GameService#getGames()} with not cached games.
+     */
     @Test
     public void testGetGamesWithNotCachedGames() {
         final List<Game> games = CollectionUtils.newList(mock(Game.class), mock(Game.class));
@@ -157,7 +183,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getGames()} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#getGames()} with exception in DAO tier.
+     */
     @Test
     public void testGetGamesWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).getGames();
@@ -175,7 +203,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with cached existing game. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with cached existing game.
+     */
     @Test
     public void testGetGameWithCachedExistingGame() {
         final Game game = generate(Game.class);
@@ -188,7 +218,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with cached not existing game. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with cached not existing game.
+     */
     @Test
     public void testGetGameWithCachedNotExistingGame() {
         final int id = generate(Integer.class);
@@ -201,7 +233,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with not cached existing game. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with not cached existing game.
+     */
     @Test
     public void testGetGameWithNotCachedExistingGame() {
         final Game game = generate(Game.class);
@@ -216,7 +250,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with not cached not existing game. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with not cached not existing game.
+     */
     @Test
     public void testGetGameWithNotCachedNotExistingGame() {
         final int id = generate(Integer.class);
@@ -231,7 +267,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with null argument. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with null argument.
+     */
     @Test
     public void testGetGameWithNullArgument() {
         try {
@@ -244,7 +282,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetGameWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).getGame(anyInt());
@@ -262,7 +302,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#add(Game)} with cached games. */
+    /**
+     * Test method for {@link GameService#add(Game)} with cached games.
+     */
     @Test
     public void testAddWithCachedGames() {
         final Game game = generate(Game.class);
@@ -281,7 +323,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#add(Game)} with not cached games. */
+    /**
+     * Test method for {@link GameService#add(Game)} with not cached games.
+     */
     @Test
     public void testAddWithNotCachedGames() {
         final Game game = generate(Game.class);
@@ -295,7 +339,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#add(Game)} with null argument. */
+    /**
+     * Test method for {@link GameService#add(Game)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -308,7 +354,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#add(Game)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#add(Game)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Game game = generate(Game.class);
@@ -326,7 +374,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameCache);
     }
 
-    /** Test method for {@link GameService#update(Game)}. */
+    /**
+     * Test method for {@link GameService#update(Game)}.
+     */
     @Test
     public void testUpdate() {
         final Game game = generate(Game.class);
@@ -338,7 +388,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#update(Game)} with null argument. */
+    /**
+     * Test method for {@link GameService#update(Game)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -351,7 +403,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#update(Game)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#update(Game)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Game game = generate(Game.class);
@@ -369,7 +423,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameCache);
     }
 
-    /** Test method for {@link GameService#remove(Game)} with cached games. */
+    /**
+     * Test method for {@link GameService#remove(Game)} with cached games.
+     */
     @Test
     public void testRemoveWithCachedGames() {
         final Game game = generate(Game.class);
@@ -387,7 +443,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#remove(Game)} with not cached games. */
+    /**
+     * Test method for {@link GameService#remove(Game)} with not cached games.
+     */
     @Test
     public void testRemoveWithNotCachedGames() {
         final Game game = generate(Game.class);
@@ -401,7 +459,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#remove(Game)} with null argument. */
+    /**
+     * Test method for {@link GameService#remove(Game)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -414,7 +474,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#remove(Game)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#remove(Game)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Game game = generate(Game.class);
@@ -432,7 +494,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameCache);
     }
 
-    /** Test method for {@link GameService#duplicate(Game)}. */
+    /**
+     * Test method for {@link GameService#duplicate(Game)}.
+     */
     @Test
     public void testDuplicate() {
         gameService.duplicate(generate(Game.class));
@@ -443,7 +507,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#duplicate(Game)} with null argument. */
+    /**
+     * Test method for {@link GameService#duplicate(Game)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -456,7 +522,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#duplicate(Game)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#duplicate(Game)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).add(any(Game.class));
@@ -473,7 +541,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameCache);
     }
 
-    /** Test method for {@link GameService#moveUp(Game)} with cached games. */
+    /**
+     * Test method for {@link GameService#moveUp(Game)} with cached games.
+     */
     @Test
     public void testMoveUpWithCachedGames() {
         final Game game1 = generate(Game.class);
@@ -494,7 +564,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveUp(Game)} with not cached games. */
+    /**
+     * Test method for {@link GameService#moveUp(Game)} with not cached games.
+     */
     @Test
     public void testMoveUpWithNotCachedGames() {
         final Game game1 = generate(Game.class);
@@ -517,7 +589,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveUp(Game)} with null argument. */
+    /**
+     * Test method for {@link GameService#moveUp(Game)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -530,7 +604,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveUp(Game)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#moveUp(Game)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).getGames();
@@ -548,7 +624,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveDown(Game)} with cached games. */
+    /**
+     * Test method for {@link GameService#moveDown(Game)} with cached games.
+     */
     @Test
     public void testMoveDownWithCachedGames() {
         final Game game1 = generate(Game.class);
@@ -569,7 +647,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveDown(Game)} with not cached games. */
+    /**
+     * Test method for {@link GameService#moveDown(Game)} with not cached games.
+     */
     @Test
     public void testMoveDownWithNotCachedGames() {
         final Game game1 = generate(Game.class);
@@ -592,7 +672,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveDown(Game)} with null argument. */
+    /**
+     * Test method for {@link GameService#moveDown(Game)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -605,7 +687,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#moveDown(Game)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#moveDown(Game)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).getGames();
@@ -623,7 +707,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#exists(Game)} with cached existing game. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with cached existing game.
+     */
     @Test
     public void testExistsWithCachedExistingGame() {
         final Game game = generate(Game.class);
@@ -636,7 +722,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO);
     }
 
-    /** Test method for {@link GameService#exists(Game)} with cached not existing game. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with cached not existing game.
+     */
     @Test
     public void testExistsWithCachedNotExistingGame() {
         final Game game = generate(Game.class);
@@ -649,7 +737,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO);
     }
 
-    /** Test method for {@link GameService#exists(Game)} with not cached existing game. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with not cached existing game.
+     */
     @Test
     public void testExistsWithNotCachedExistingGame() {
         final Game game = generate(Game.class);
@@ -664,7 +754,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#exists(Game)} with not cached not existing game. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with not cached not existing game.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingGame() {
         final Game game = generate(Game.class);
@@ -679,7 +771,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#exists(Game)} with null argument. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -692,7 +786,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#exists(Game)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Game game = generate(Game.class);
@@ -711,7 +807,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#updatePositions()} with cached games. */
+    /**
+     * Test method for {@link GameService#updatePositions()} with cached games.
+     */
     @Test
     public void testUpdatePositionsWithCachedGames() {
         final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
@@ -729,7 +827,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#updatePositions()} with not cached games. */
+    /**
+     * Test method for {@link GameService#updatePositions()} with not cached games.
+     */
     @Test
     public void testUpdatePositionsWithNotCachedGames() {
         final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
@@ -749,7 +849,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#updatePositions()} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#updatePositions()} with exception in DAO tier.
+     */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).getGames();
@@ -767,7 +869,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache);
     }
 
-    /** Test method for {@link GameService#getTotalMediaCount()} with cached games. */
+    /**
+     * Test method for {@link GameService#getTotalMediaCount()} with cached games.
+     */
     @Test
     public void testGetTotalMediaCountWithCachedGames() {
         final Game game1 = mock(Game.class);
@@ -789,7 +893,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gameDAO);
     }
 
-    /** Test method for {@link GameService#getTotalMediaCount()} with not cached games. */
+    /**
+     * Test method for {@link GameService#getTotalMediaCount()} with not cached games.
+     */
     @Test
     public void testGetTotalMediaCountWithNotCachedGames() {
         final Game game1 = mock(Game.class);
@@ -813,7 +919,9 @@ public class GameServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(gameDAO, gameCache, game1, game2, game3);
     }
 
-    /** Test method for {@link GameService#getTotalMediaCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link GameService#getTotalMediaCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalMediaCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(gameDAO).getGames();

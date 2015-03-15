@@ -30,25 +30,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EpisodeDAOImplSpringTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link EpisodeDAO} */
+    /**
+     * Instance of {@link EpisodeDAO}
+     */
     @Autowired
     private EpisodeDAO episodeDAO;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Restarts sequence. */
+    /**
+     * Restarts sequence.
+     */
     @Before
     public void setUp() {
         entityManager.createNativeQuery("ALTER SEQUENCE episodes_sq RESTART WITH 28").executeUpdate();
     }
 
-    /** Test method for {@link EpisodeDAO#getEpisode(Integer)}. */
+    /**
+     * Test method for {@link EpisodeDAO#getEpisode(Integer)}.
+     */
     @Test
     public void testGetEpisode() {
         for (int i = 0; i < SpringUtils.EPISODES_COUNT; i++) {
@@ -63,7 +73,9 @@ public class EpisodeDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
     }
 
-    /** Test method for {@link EpisodeDAO#add(Episode)}. */
+    /**
+     * Test method for {@link EpisodeDAO#add(Episode)}.
+     */
     @Test
     public void testAdd() {
         final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
@@ -78,7 +90,9 @@ public class EpisodeDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT + 1, SpringUtils.getEpisodesCount(entityManager));
     }
 
-    /** Test method for {@link EpisodeDAO#update(Episode)}. */
+    /**
+     * Test method for {@link EpisodeDAO#update(Episode)}.
+     */
     @Test
     public void testUpdate() {
         final Episode episode = SpringEntitiesUtils.updateEpisode(1, objectGenerator, entityManager);
@@ -90,7 +104,9 @@ public class EpisodeDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
     }
 
-    /** Test method for {@link EpisodeDAO#remove(Episode)}. */
+    /**
+     * Test method for {@link EpisodeDAO#remove(Episode)}.
+     */
     @Test
     public void testRemove() {
         episodeDAO.remove(SpringUtils.getEpisode(entityManager, 1));
@@ -99,7 +115,9 @@ public class EpisodeDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT - 1, SpringUtils.getEpisodesCount(entityManager));
     }
 
-    /** Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)}. */
+    /**
+     * Test method for {@link EpisodeDAO#findEpisodesBySeason(Season)}.
+     */
     @Test
     public void testFindEpisodesBySeason() {
         for (int i = 1; i <= SpringUtils.SEASONS_COUNT; i++) {

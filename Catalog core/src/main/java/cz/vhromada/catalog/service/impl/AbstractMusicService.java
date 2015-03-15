@@ -15,22 +15,34 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractMusicService extends AbstractInnerService<Music, Song> {
 
-    /** Cache for music argument */
+    /**
+     * Cache for music argument
+     */
     private static final String MUSIC_CACHE_ARGUMENT = "Cache for music";
 
-    /** Cache key for list of music */
+    /**
+     * Cache key for list of music
+     */
     private static final String MUSIC_LIST_CACHE_KEY = "music";
 
-    /** Cache key for music */
+    /**
+     * Cache key for music
+     */
     private static final String MUSIC_CACHE_KEY = "musicItem";
 
-    /** Cache key for list of songs */
+    /**
+     * Cache key for list of songs
+     */
     private static final String SONGS_CACHE_KEY = "songs";
 
-    /** Cache key for song */
+    /**
+     * Cache key for song
+     */
     private static final String SONG_CACHE_KEY = "song";
 
-    /** Cache for music */
+    /**
+     * Cache for music
+     */
     private Cache musicCache;
 
     /**
@@ -45,7 +57,9 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
         this.musicCache = musicCache;
     }
 
-    /** Remove all mappings from the cache for music. */
+    /**
+     * Remove all mappings from the cache for music.
+     */
     protected void clearCache() {
         musicCache.clear();
     }

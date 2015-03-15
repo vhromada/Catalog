@@ -24,7 +24,9 @@ public class BookCategoryController extends JsonController {
     @Qualifier("bookCategoryFacade")
     private BookCategoryFacade bookCategoryFacade;
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
     public void newData() {
@@ -162,7 +164,9 @@ public class BookCategoryController extends JsonController {
         return serialize(bookCategoryFacade.exists(deserialize(bookCategory, BookCategoryTO.class)));
     }
 
-    /** Updates positions. */
+    /**
+     * Updates positions.
+     */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     @ResponseBody
     public void updatePositions() {

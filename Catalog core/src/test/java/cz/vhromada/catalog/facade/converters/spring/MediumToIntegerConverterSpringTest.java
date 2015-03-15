@@ -23,15 +23,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:testFacadeConvertersContext.xml")
 public class MediumToIntegerConverterSpringTest {
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Autowired
     private Converter converter;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Test method for {@link Converter#convert(Object, Class)}. */
+    /**
+     * Test method for {@link Converter#convert(Object, Class)}.
+     */
     @Test
     public void testConvert() {
         final Medium medium = objectGenerator.generate(Medium.class);
@@ -40,7 +46,9 @@ public class MediumToIntegerConverterSpringTest {
         DeepAsserts.assertEquals(medium.getLength(), length);
     }
 
-    /** Test method for {@link Converter#convert(Object, Class)} with null argument. */
+    /**
+     * Test method for {@link Converter#convert(Object, Class)} with null argument.
+     */
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null, Integer.class));

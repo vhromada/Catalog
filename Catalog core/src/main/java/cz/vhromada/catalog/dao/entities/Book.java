@@ -34,25 +34,37 @@ import org.hibernate.annotations.FetchMode;
 @NamedQuery(name = Book.FIND_BY_BOOK_CATEGORY, query = "SELECT b FROM Book b WHERE b.bookCategory.id = :bookCategory ORDER BY b.position, b.id")
 public class Book implements Serializable {
 
-    /** Name for query - find by book category */
+    /**
+     * Name for query - find by book category
+     */
     public static final String FIND_BY_BOOK_CATEGORY = "Book.findByBookCategory";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "book_generator", sequenceName = "books_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "book_generator")
     private Integer id;
 
-    /** Author */
+    /**
+     * Author
+     */
     private String author;
 
-    /** Title */
+    /**
+     * Title
+     */
     private String title;
 
-    /** Languages */
+    /**
+     * Languages
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "book_languages", joinColumns = @JoinColumn(name = "book"))
     @Enumerated(EnumType.STRING)
@@ -60,16 +72,24 @@ public class Book implements Serializable {
     @Fetch(FetchMode.SELECT)
     private List<Language> languages;
 
-    /** Category */
+    /**
+     * Category
+     */
     private String category;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** Book category */
+    /**
+     * Book category
+     */
     @ManyToOne
     @JoinColumn(name = "book_category", referencedColumnName = "id")
     private BookCategory bookCategory;

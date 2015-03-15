@@ -39,36 +39,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EpisodeServiceImplSpringTest {
 
-    /** Cache key for list of episodes */
+    /**
+     * Cache key for list of episodes
+     */
     private static final String EPISODES_CACHE_KEY = "episodes";
 
-    /** Cache key for episode */
+    /**
+     * Cache key for episode
+     */
     private static final String EPISODE_CACHE_KEY = "episode";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('serieCache')}")
     private Cache serieCache;
 
-    /** Instance of {@link EpisodeService} */
+    /**
+     * Instance of {@link EpisodeService}
+     */
     @Autowired
     private EpisodeService episodeService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequence. */
+    /**
+     * Clears cache and restarts sequence.
+     */
     @Before
     public void setUp() {
         serieCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE episodes_sq RESTART WITH 28").executeUpdate();
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with existing episode. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with existing episode.
+     */
     @Test
     public void testGetEpisodeWithExistingEpisode() {
         final List<String> keys = new ArrayList<>();
@@ -92,7 +108,9 @@ public class EpisodeServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with not existing episode. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with not existing episode.
+     */
     @Test
     public void testGetEpisodeWithNotExistingEpisode() {
         final String key = EPISODE_CACHE_KEY + Integer.MAX_VALUE;
@@ -103,7 +121,9 @@ public class EpisodeServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, null);
     }
 
-    /** Test method for {@link EpisodeService#add(Episode)} with empty cache. */
+    /**
+     * Test method for {@link EpisodeService#add(Episode)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
@@ -118,7 +138,9 @@ public class EpisodeServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link EpisodeService#add(Episode)} with not empty cache. */
+    /**
+     * Test method for {@link EpisodeService#add(Episode)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
@@ -139,7 +161,9 @@ public class EpisodeServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, keyItem, episode);
     }
 
-    /** Test method for {@link EpisodeService#update(Episode)}. */
+    /**
+     * Test method for {@link EpisodeService#update(Episode)}.
+     */
     @Test
     public void testUpdate() {
         final Episode episode = SpringEntitiesUtils.updateEpisode(1, objectGenerator, entityManager);
@@ -152,7 +176,9 @@ public class EpisodeServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link EpisodeService#remove(Episode)} with empty cache. */
+    /**
+     * Test method for {@link EpisodeService#remove(Episode)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
@@ -166,7 +192,9 @@ public class EpisodeServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link EpisodeService#remove(Episode)} with not empty cache. */
+    /**
+     * Test method for {@link EpisodeService#remove(Episode)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
@@ -185,7 +213,9 @@ public class EpisodeServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, new ArrayList<>());
     }
 
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with empty cache. */
+    /**
+     * Test method for {@link EpisodeService#duplicate(Episode)} with empty cache.
+     */
     @Test
     public void testDuplicateWithEmptyCache() {
         final Episode episode = SpringUtils.getEpisode(entityManager, 3);
@@ -205,7 +235,9 @@ public class EpisodeServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with not empty cache. */
+    /**
+     * Test method for {@link EpisodeService#duplicate(Episode)} with not empty cache.
+     */
     @Test
     public void testDuplicateWithNotEmptyCache() {
         final Episode episode = SpringUtils.getEpisode(entityManager, 3);
@@ -231,7 +263,9 @@ public class EpisodeServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, keyItem, expectedEpisode);
     }
 
-    /** Test method for {@link EpisodeService#moveUp(Episode)}. */
+    /**
+     * Test method for {@link EpisodeService#moveUp(Episode)}.
+     */
     @Test
     public void testMoveUp() {
         final Episode episode = SpringUtils.getEpisode(entityManager, 2);
@@ -254,7 +288,9 @@ public class EpisodeServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link EpisodeService#moveDown(Episode)}. */
+    /**
+     * Test method for {@link EpisodeService#moveDown(Episode)}.
+     */
     @Test
     public void testMoveDown() {
         final Episode episode = SpringUtils.getEpisode(entityManager, 1);
@@ -278,7 +314,9 @@ public class EpisodeServiceImplSpringTest {
     }
 
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with existing episode. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with existing episode.
+     */
     @Test
     public void testExistsWithExistingEpisode() {
         final List<String> keys = new ArrayList<>();
@@ -302,7 +340,9 @@ public class EpisodeServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with not existing episode. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with not existing episode.
+     */
     @Test
     public void testExistsWithNotExistingEpisode() {
         final Episode episode = SpringEntitiesUtils.newEpisode(objectGenerator, entityManager);
@@ -315,7 +355,9 @@ public class EpisodeServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, null);
     }
 
-    /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)}. */
+    /**
+     * Test method for {@link EpisodeService#findEpisodesBySeason(Season)}.
+     */
     @Test
     public void testFindEpisodesBySeason() {
         final List<String> keys = new ArrayList<>();
@@ -337,7 +379,9 @@ public class EpisodeServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)}. */
+    /**
+     * Test method for {@link EpisodeService#getTotalLengthBySeason(Season)}.
+     */
     @Test
     public void testGetTotalLengthBySeason() {
         final List<String> keys = new ArrayList<>();

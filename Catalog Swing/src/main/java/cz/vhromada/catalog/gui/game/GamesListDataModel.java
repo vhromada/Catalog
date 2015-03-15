@@ -15,13 +15,19 @@ import cz.vhromada.validators.Validators;
  */
 public class GamesListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for games */
+    /**
+     * Facade for games
+     */
     private GameFacade gameFacade;
 
-    /** List of TO for game */
+    /**
+     * List of TO for game
+     */
     private List<GameTO> games;
 
     /**
@@ -68,7 +74,9 @@ public class GamesListDataModel extends AbstractListModel<String> {
         return games.get(index);
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         games = gameFacade.getGames();
     }

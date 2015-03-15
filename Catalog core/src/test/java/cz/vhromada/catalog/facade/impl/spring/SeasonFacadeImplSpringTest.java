@@ -41,41 +41,63 @@ import org.springframework.transaction.PlatformTransactionManager;
 @ContextConfiguration("classpath:testFacadeContext.xml")
 public class SeasonFacadeImplSpringTest {
 
-    /** Year field */
+    /**
+     * Year field
+     */
     private static final String YEAR_FIELD = "year";
 
-    /** Count of seasons field */
+    /**
+     * Count of seasons field
+     */
     private static final String SEASONS_COUNT_FIELD = "seasonsCount";
 
-    /** Count of episodes field */
+    /**
+     * Count of episodes field
+     */
     private static final String EPISODES_COUNT_FIELD = "episodesCount";
 
-    /** Total length field */
+    /**
+     * Total length field
+     */
     private static final String TOTAL_LENGTH_FIELD = "totalLength";
 
-    /** Subtitles as string method */
+    /**
+     * Subtitles as string method
+     */
     private static final String SUBTITLES_AS_STRING_METHOD = "subtitlesAsString";
 
-    /** Genres as string method */
+    /**
+     * Genres as string method
+     */
     private static final String GENRES_AS_STRING_METHOD = "genresAsString";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link PlatformTransactionManager} */
+    /**
+     * Instance of {@link PlatformTransactionManager}
+     */
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    /** Instance of (@link SeasonFacade} */
+    /**
+     * Instance of (@link SeasonFacade}
+     */
     @Autowired
     private SeasonFacade seasonFacade;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Initializes database. */
+    /**
+     * Initializes database.
+     */
     @Before
     public void setUp() {
         SpringUtils.remove(transactionManager, entityManager, Episode.class);
@@ -104,7 +126,9 @@ public class SeasonFacadeImplSpringTest {
         }
     }
 
-    /** Test method for {@link SeasonFacade#getSeason(Integer)}. */
+    /**
+     * Test method for {@link SeasonFacade#getSeason(Integer)}.
+     */
     @Test
     public void testGetSeason() {
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
@@ -119,13 +143,17 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#getSeason(Integer)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#getSeason(Integer)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testGetSeasonWithNullArgument() {
         seasonFacade.getSeason(null);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)}.
+     */
     @Test
     public void testAdd() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -141,19 +169,25 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testAddWithNullArgument() {
         seasonFacade.add(null);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with not null ID. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with not null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSeasonWithNotNullId() {
         seasonFacade.add(SpringToUtils.newSeasonWithId(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with not positive number of season. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with not positive number of season.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithNotPositiveNumber() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -162,7 +196,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad minimum starting year. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad minimum starting year.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithBadMinimumStartYear() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -171,7 +207,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad maximum starting year. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad maximum starting year.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithBadMaximumStartYear() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -180,7 +218,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad minimum ending year. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad minimum ending year.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithBadMinimumEndYear() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -189,7 +229,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad maximum ending year. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with bad maximum ending year.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithBadMaximumEndYear() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -198,7 +240,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with starting year greater than ending year. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with starting year greater than ending year.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithBadYear() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -207,7 +251,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with null language. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with null language.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithNullLanguage() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -216,7 +262,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with null subtitles. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with null subtitles.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithNullSubtitles() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -225,7 +273,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with subtitles with null value. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with subtitles with null value.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithBadSubtitles() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -234,7 +284,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with null note. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithNullNote() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -243,7 +295,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with null TO for serie. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with null TO for serie.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithNullSerie() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -252,7 +306,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with TO for serie with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with TO for serie with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithSerieWithNullId() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -261,7 +317,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#add(SeasonTO)} with season with not existing serie. */
+    /**
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with not existing serie.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testAddWithSeasonWithNotExistingSerie() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
@@ -270,7 +328,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.add(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)}.
+     */
     @Test
     public void testUpdate() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator, 1);
@@ -283,19 +343,25 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateWithNullArgument() {
         seasonFacade.update(null);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSeasonWithNullId() {
         seasonFacade.update(SpringToUtils.newSeason(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with not positive number of season. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with not positive number of season.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithNotPositiveNumber() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -304,7 +370,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad minimum starting year. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad minimum starting year.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithBadMinimumStartYear() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -313,7 +381,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad maximum starting year. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad maximum starting year.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithBadMaximumStartYear() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -322,7 +392,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad minimum ending year. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad minimum ending year.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithBadMinimumEndYear() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -331,7 +403,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad maximum ending year. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad maximum ending year.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithBadMaximumEndYear() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -340,7 +414,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with starting year greater than ending year. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with starting year greater than ending year.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithBadYear() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -349,7 +425,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with null language. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null language.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithNullLanguage() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -358,7 +436,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with null subtitles. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null subtitles.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithNullSubtitles() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -367,7 +447,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with subtitles with null value. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with subtitles with null value.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithBadSubtitles() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -376,7 +458,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with null note. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithNullNote() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -385,7 +469,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with null TO for serie. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null TO for serie.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithNullSerie() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -394,7 +480,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with season with TO for serie with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with TO for serie with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithSerieWithNullId() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -403,13 +491,17 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with bad ID. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdateWithBadId() {
         seasonFacade.update(SpringToUtils.newSeason(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SeasonFacade#update(SeasonTO)} with not existing serie. */
+    /**
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with not existing serie.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdateWithNotExistingSerie() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
@@ -418,7 +510,9 @@ public class SeasonFacadeImplSpringTest {
         seasonFacade.update(season);
     }
 
-    /** Test method for {@link SeasonFacade#remove(SeasonTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#remove(SeasonTO)}.
+     */
     @Test
     public void testRemove() {
         seasonFacade.remove(SpringToUtils.newSeason(objectGenerator, 1));
@@ -427,25 +521,33 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT - 1, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#remove(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#remove(SeasonTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveWithNullArgument() {
         seasonFacade.remove(null);
     }
 
-    /** Test method for {@link SeasonFacade#remove(SeasonTO)} with season with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#remove(SeasonTO)} with season with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testRemoveWithSeasonWithNullId() {
         seasonFacade.remove(SpringToUtils.newSeason(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#remove(SeasonTO)} with bad ID. */
+    /**
+     * Test method for {@link SeasonFacade#remove(SeasonTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testRemoveWithBadId() {
         seasonFacade.remove(SpringToUtils.newSeason(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SeasonFacade#duplicate(SeasonTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#duplicate(SeasonTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Season season = SpringEntitiesUtils.getSeason(SpringUtils.SERIES_COUNT, SpringUtils.SEASONS_PER_SERIE_COUNT);
@@ -458,25 +560,33 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#duplicate(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#duplicate(SeasonTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicateWithNullArgument() {
         seasonFacade.duplicate(null);
     }
 
-    /** Test method for {@link SeasonFacade#duplicate(SeasonTO)} with season with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#duplicate(SeasonTO)} with season with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testDuplicateWithSeasonWithNullId() {
         seasonFacade.duplicate(SpringToUtils.newSeason(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#duplicate(SeasonTO)} with bad ID. */
+    /**
+     * Test method for {@link SeasonFacade#duplicate(SeasonTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicateWithBadId() {
         seasonFacade.duplicate(SpringToUtils.newSeason(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SeasonFacade#moveUp(SeasonTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#moveUp(SeasonTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Season season1 = SpringEntitiesUtils.getSeason(1, 1);
@@ -495,31 +605,41 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUpWithNullArgument() {
         seasonFacade.moveUp(null);
     }
 
-    /** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with season with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with season with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveUpWithSeasonWithNullId() {
         seasonFacade.moveUp(SpringToUtils.newSeason(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not moveable argument.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveUpWithNotMoveableArgument() {
         seasonFacade.moveUp(SpringToUtils.newSeason(objectGenerator, 1));
     }
 
-    /** Test method for {@link SeasonFacade#moveUp(SeasonTO)} with bad ID. */
+    /**
+     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUpWithBadId() {
         seasonFacade.moveUp(SpringToUtils.newSeason(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#moveDown(SeasonTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Season season1 = SpringEntitiesUtils.getSeason(1, 1);
@@ -538,31 +658,41 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDownWithNullArgument() {
         seasonFacade.moveDown(null);
     }
 
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with season with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with season with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveDownWithSeasonWithNullId() {
         seasonFacade.moveDown(SpringToUtils.newSeason(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not moveable argument.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveDownWithNotMoveableArgument() {
         seasonFacade.moveDown(SpringToUtils.newSeason(objectGenerator, SpringUtils.SEASONS_COUNT));
     }
 
-    /** Test method for {@link SeasonFacade#moveDown(SeasonTO)} with bad ID. */
+    /**
+     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDownWithBadId() {
         seasonFacade.moveDown(SpringToUtils.newSeason(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link SeasonFacade#exists(SeasonTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#exists(SeasonTO)}.
+     */
     @Test
     public void testExists() {
         for (int i = 1; i <= SpringUtils.SEASONS_COUNT; i++) {
@@ -574,19 +704,25 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#exists(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#exists(SeasonTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testExistsWithNullArgument() {
         seasonFacade.exists(null);
     }
 
-    /** Test method for {@link SeasonFacade#exists(SeasonTO)} with season with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#exists(SeasonTO)} with season with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testExistsWithSeasonWithNullId() {
         seasonFacade.exists(SpringToUtils.newSeason(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)}. */
+    /**
+     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)}.
+     */
     @Test
     public void testFindSeasonsBySerie() {
         for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
@@ -597,19 +733,25 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
 
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSeasonsBySerieWithNullArgument() {
         seasonFacade.findSeasonsBySerie(null);
     }
 
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with serie with null ID. */
+    /**
+     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with serie with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testFindSeasonsBySerieWithNullId() {
         seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator));
     }
 
-    /** Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with bad ID. */
+    /**
+     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testFindSeasonsBySerieWithBadId() {
         seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE));

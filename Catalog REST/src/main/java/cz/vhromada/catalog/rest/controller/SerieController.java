@@ -24,7 +24,9 @@ public class SerieController extends JsonController {
     @Qualifier("serieFacade")
     private SerieFacade serieFacade;
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
     public void newData() {
@@ -195,7 +197,9 @@ public class SerieController extends JsonController {
         return serialize(serieFacade.exists(deserialize(serie, SerieTO.class)));
     }
 
-    /** Updates positions. */
+    /**
+     * Updates positions.
+     */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     @ResponseBody
     public void updatePositions() {

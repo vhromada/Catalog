@@ -47,49 +47,64 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link ProgramService} */
+    /**
+     * Instance of {@link ProgramService}
+     */
     @Mock
     private ProgramService programService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link ProgramTOValidator} */
+    /**
+     * Instance of {@link ProgramTOValidator}
+     */
     @Mock
     private ProgramTOValidator programTOValidator;
 
-    /** Instance of {@link ProgramFacade} */
+    /**
+     * Instance of {@link ProgramFacade}
+     */
     private ProgramFacade programFacade;
 
-    /** Initializes facade for programs. */
+    /**
+     * Initializes facade for programs.
+     */
     @Before
     public void setUp() {
         programFacade = new ProgramFacadeImpl(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null service for programs. */
+    /**
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null service for programs.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramService() {
         new ProgramFacadeImpl(null, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null converter. */
+    /**
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null converter.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
         new ProgramFacadeImpl(programService, null, programTOValidator);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null validator for
-     * TO for program.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null validator for TO for program.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullProgramTOValidator() {
         new ProgramFacadeImpl(programService, converter, null);
     }
 
-    /** Test method for {@link ProgramFacade#newData()}. */
+    /**
+     * Test method for {@link ProgramFacade#newData()}.
+     */
     @Test
     public void testNewData() {
         programFacade.newData();
@@ -98,7 +113,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#newData()} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#newData()} with exception in service tier.
+     */
     @Test
     public void testNewDataWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(programService).newData();
@@ -114,7 +131,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#getPrograms()}. */
+    /**
+     * Test method for {@link ProgramFacade#getPrograms()}.
+     */
     @Test
     public void testGetPrograms() {
         final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
@@ -129,7 +148,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#getPrograms()} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#getPrograms()} with exception in service tier.
+     */
     @Test
     public void testGetProgramsWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(programService).getPrograms();
@@ -146,7 +167,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link ProgramFacade#getProgram(Integer)} with existing program. */
+    /**
+     * Test method for {@link ProgramFacade#getProgram(Integer)} with existing program.
+     */
     @Test
     public void testGetProgramWithExistingProgram() {
         final Program program = generate(Program.class);
@@ -161,7 +184,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#getProgram(Integer)} with not existing program. */
+    /**
+     * Test method for {@link ProgramFacade#getProgram(Integer)} with not existing program.
+     */
     @Test
     public void testGetProgramWithNotExistingProgram() {
         when(programService.getProgram(anyInt())).thenReturn(null);
@@ -174,7 +199,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#getProgram(Integer)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#getProgram(Integer)} with null argument.
+     */
     @Test
     public void testGetProgramWithNullArgument() {
         try {
@@ -187,7 +214,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#getProgram(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#getProgram(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetProgramWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(programService).getProgram(anyInt());
@@ -204,7 +233,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link ProgramFacade#add(ProgramTO)}. */
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)}.
+     */
     @Test
     public void testAdd() {
         final Program program = generate(Program.class);
@@ -226,7 +257,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#add(ProgramTO)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(programTOValidator).validateNewProgramTO(any(ProgramTO.class));
@@ -243,7 +276,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#add(ProgramTO)} with argument with bad data. */
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -262,7 +297,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#add(ProgramTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final Program program = generate(Program.class);
@@ -284,7 +321,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#add(ProgramTO)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final Program program = generate(Program.class);
@@ -307,7 +346,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#update(ProgramTO)}. */
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)}.
+     */
     @Test
     public void testUpdate() {
         final Program program = generate(Program.class);
@@ -324,7 +365,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#update(ProgramTO)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(programTOValidator).validateExistingProgramTO(any(ProgramTO.class));
@@ -341,7 +384,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#update(ProgramTO)} with argument with bad data. */
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -359,7 +404,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#update(ProgramTO)} with not existing argument. */
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final Program program = generate(Program.class);
@@ -380,7 +427,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#update(ProgramTO)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final Program program = generate(Program.class);
@@ -401,7 +450,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#remove(ProgramTO)}. */
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)}.
+     */
     @Test
     public void testRemove() {
         final Program program = generate(Program.class);
@@ -416,7 +467,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#remove(ProgramTO)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
@@ -433,7 +486,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#remove(ProgramTO)} with argument with bad data. */
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -451,7 +506,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#remove(ProgramTO)} with not existing argument. */
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -469,7 +526,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#remove(ProgramTO)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -487,7 +546,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#duplicate(ProgramTO)}. */
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Program program = generate(Program.class);
@@ -502,7 +563,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
@@ -519,7 +582,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with argument with bad data. */
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -537,7 +602,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with not existing argument. */
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -555,7 +622,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#duplicate(ProgramTO)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -573,7 +642,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)}. */
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Program program = generate(Program.class);
@@ -591,7 +662,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
@@ -608,7 +681,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with argument with bad data. */
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with argument with bad data.
+     */
     @Test
     public void testMoveUpWithBadArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -626,7 +701,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not existing argument. */
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not existing argument.
+     */
     @Test
     public void testMoveUpWithNotExistingArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -644,7 +721,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not moveable argument. */
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not moveable argument.
+     */
     @Test
     public void testMoveUpWithNotMoveableArgument() {
         final Program program = generate(Program.class);
@@ -666,7 +745,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveUp(ProgramTO)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with exception in service tier.
+     */
     @Test
     public void testMoveUpWithServiceTierException() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -684,7 +765,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)}. */
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Program program = generate(Program.class);
@@ -702,7 +785,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
@@ -719,7 +804,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with argument with bad data. */
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with argument with bad data.
+     */
     @Test
     public void testMoveDownWithBadArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -737,7 +824,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not existing argument. */
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not existing argument.
+     */
     @Test
     public void testMoveDownWithNotExistingArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -755,7 +844,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not moveable argument. */
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not moveable argument.
+     */
     @Test
     public void testMoveDownWithNotMoveableArgument() {
         final Program program = generate(Program.class);
@@ -777,7 +868,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#moveDown(ProgramTO)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with exception in service tier.
+     */
     @Test
     public void testMoveDownWithServiceTierException() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -795,7 +888,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with existing program. */
+    /**
+     * Test method for {@link ProgramFacade#exists(ProgramTO)} with existing program.
+     */
     @Test
     public void testExistsWithExistingProgram() {
         final Program program = generate(Program.class);
@@ -811,7 +906,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with not existing program. */
+    /**
+     * Test method for {@link ProgramFacade#exists(ProgramTO)} with not existing program.
+     */
     @Test
     public void testExistsWithNotExistingProgram() {
         final Program program = generate(Program.class);
@@ -827,7 +924,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with null argument. */
+    /**
+     * Test method for {@link ProgramFacade#exists(ProgramTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
@@ -844,7 +943,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with argument with bad data. */
+    /**
+     * Test method for {@link ProgramFacade#exists(ProgramTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final ProgramTO program = generate(ProgramTO.class);
@@ -862,7 +963,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(programService, converter);
     }
 
-    /** Test method for {@link ProgramFacade#exists(ProgramTO)} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#exists(ProgramTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final Program program = generate(Program.class);
@@ -883,7 +986,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService, converter, programTOValidator);
     }
 
-    /** Test method for {@link ProgramFacade#updatePositions()}. */
+    /**
+     * Test method for {@link ProgramFacade#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         programFacade.updatePositions();
@@ -892,7 +997,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#updatePositions()} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#updatePositions()} with exception in service tier.
+     */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(programService).updatePositions();
@@ -908,7 +1015,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#getTotalMediaCount()}. */
+    /**
+     * Test method for {@link ProgramFacade#getTotalMediaCount()}.
+     */
     @Test
     public void testGetTotalMediaCount() {
         final int count = generate(Integer.class);
@@ -920,7 +1029,9 @@ public class ProgramFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(programService);
     }
 
-    /** Test method for {@link ProgramFacade#getTotalMediaCount()} with exception in service tier. */
+    /**
+     * Test method for {@link ProgramFacade#getTotalMediaCount()} with exception in service tier.
+     */
     @Test
     public void testGetTotalMediaCountWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(programService).getTotalMediaCount();

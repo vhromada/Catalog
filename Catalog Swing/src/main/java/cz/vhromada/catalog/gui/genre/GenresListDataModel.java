@@ -15,13 +15,19 @@ import cz.vhromada.validators.Validators;
  */
 public class GenresListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for genres */
+    /**
+     * Facade for genres
+     */
     private GenreFacade genreFacade;
 
-    /** List of TO for genre */
+    /**
+     * List of TO for genre
+     */
     private List<GenreTO> genres;
 
     /**
@@ -68,7 +74,9 @@ public class GenresListDataModel extends AbstractListModel<String> {
         return genres.get(index);
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         genres = genreFacade.getGenres();
     }

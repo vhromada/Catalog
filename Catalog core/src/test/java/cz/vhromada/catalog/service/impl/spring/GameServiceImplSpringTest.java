@@ -37,36 +37,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameServiceImplSpringTest {
 
-    /** Cache key for list of games */
+    /**
+     * Cache key for list of games
+     */
     private static final String GAMES_CACHE_KEY = "games";
 
-    /** Cache key for game */
+    /**
+     * Cache key for game
+     */
     private static final String GAME_CACHE_KEY = "game";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('gameCache')}")
     private Cache gameCache;
 
-    /** Instance of {@link GameService} */
+    /**
+     * Instance of {@link GameService}
+     */
     @Autowired
     private GameService gameService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequence. */
+    /**
+     * Clears cache and restarts sequence.
+     */
     @Before
     public void setUp() {
         gameCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE games_sq RESTART WITH 4").executeUpdate();
     }
 
-    /** Test method for {@link GameService#newData()}. */
+    /**
+     * Test method for {@link GameService#newData()}.
+     */
     @Test
     public void testNewData() {
         gameService.newData();
@@ -75,7 +91,9 @@ public class GameServiceImplSpringTest {
         assertTrue(SpringUtils.getCacheKeys(gameCache).isEmpty());
     }
 
-    /** Test method for {@link GameService#getGames()}. */
+    /**
+     * Test method for {@link GameService#getGames()}.
+     */
     @Test
     public void testGetGames() {
         final List<Game> games = SpringEntitiesUtils.getGames();
@@ -87,7 +105,9 @@ public class GameServiceImplSpringTest {
         SpringUtils.assertCacheValue(gameCache, key, games);
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with existing game. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with existing game.
+     */
     @Test
     public void testGetGameWithExistingGame() {
         final List<String> keys = new ArrayList<>();
@@ -105,7 +125,9 @@ public class GameServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link GameService#getGame(Integer)} with not existing game. */
+    /**
+     * Test method for {@link GameService#getGame(Integer)} with not existing game.
+     */
     @Test
     public void testGetGameWithNotExistingGame() {
         final String key = GAME_CACHE_KEY + Integer.MAX_VALUE;
@@ -116,7 +138,9 @@ public class GameServiceImplSpringTest {
         SpringUtils.assertCacheValue(gameCache, key, null);
     }
 
-    /** Test method for {@link GameService#add(Game)} with empty cache. */
+    /**
+     * Test method for {@link GameService#add(Game)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Game game = SpringEntitiesUtils.newGame(objectGenerator);
@@ -131,7 +155,9 @@ public class GameServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
     }
 
-    /** Test method for {@link GameService#add(Game)} with not empty cache. */
+    /**
+     * Test method for {@link GameService#add(Game)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Game game = SpringEntitiesUtils.newGame(objectGenerator);
@@ -152,7 +178,9 @@ public class GameServiceImplSpringTest {
         SpringUtils.assertCacheValue(gameCache, keyItem, game);
     }
 
-    /** Test method for {@link GameService#update(Game)}. */
+    /**
+     * Test method for {@link GameService#update(Game)}.
+     */
     @Test
     public void testUpdate() {
         final Game game = SpringEntitiesUtils.updateGame(1, objectGenerator, entityManager);
@@ -165,7 +193,9 @@ public class GameServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
     }
 
-    /** Test method for {@link GameService#remove(Game)} with empty cache. */
+    /**
+     * Test method for {@link GameService#remove(Game)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Game game = SpringEntitiesUtils.newGame(objectGenerator);
@@ -179,7 +209,9 @@ public class GameServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
     }
 
-    /** Test method for {@link GameService#remove(Game)} with not empty cache. */
+    /**
+     * Test method for {@link GameService#remove(Game)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Game game = SpringEntitiesUtils.newGame(objectGenerator);
@@ -198,7 +230,9 @@ public class GameServiceImplSpringTest {
         SpringUtils.assertCacheValue(gameCache, key, new ArrayList<>());
     }
 
-    /** Test method for {@link GameService#duplicate(Game)}. */
+    /**
+     * Test method for {@link GameService#duplicate(Game)}.
+     */
     @Test
     public void testDuplicate() {
         final Game game = SpringUtils.getGame(entityManager, 3);
@@ -215,7 +249,9 @@ public class GameServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
     }
 
-    /** Test method for {@link GameService#moveUp(Game)}. */
+    /**
+     * Test method for {@link GameService#moveUp(Game)}.
+     */
     @Test
     public void testMoveUp() {
         final Game game = SpringUtils.getGame(entityManager, 2);
@@ -235,7 +271,9 @@ public class GameServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
     }
 
-    /** Test method for {@link GameService#moveDown(Game)}. */
+    /**
+     * Test method for {@link GameService#moveDown(Game)}.
+     */
     @Test
     public void testMoveDown() {
         final Game game = SpringUtils.getGame(entityManager, 1);
@@ -256,7 +294,9 @@ public class GameServiceImplSpringTest {
     }
 
 
-    /** Test method for {@link GameService#exists(Game)} with existing game. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with existing game.
+     */
     @Test
     public void testExistsWithExistingGame() {
         final List<String> keys = new ArrayList<>();
@@ -274,7 +314,9 @@ public class GameServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link GameService#exists(Game)} with not existing game. */
+    /**
+     * Test method for {@link GameService#exists(Game)} with not existing game.
+     */
     @Test
     public void testExistsWithNotExistingGame() {
         final Game game = SpringEntitiesUtils.newGame(objectGenerator);
@@ -287,7 +329,9 @@ public class GameServiceImplSpringTest {
         SpringUtils.assertCacheValue(gameCache, key, null);
     }
 
-    /** Test method for {@link GameService#updatePositions()}. */
+    /**
+     * Test method for {@link GameService#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         final Game game = SpringUtils.getGame(entityManager, SpringUtils.GAMES_COUNT);
@@ -303,7 +347,9 @@ public class GameServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(gameCache).size());
     }
 
-    /** Test method for {@link GameService#getTotalMediaCount()}. */
+    /**
+     * Test method for {@link GameService#getTotalMediaCount()}.
+     */
     @Test
     public void testGetTotalMediaCount() {
         final String key = GAMES_CACHE_KEY;

@@ -45,55 +45,79 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of book categories */
+    /**
+     * Cache key for list of book categories
+     */
     private static final String BOOK_CATEGORIES_CACHE_KEY = "bookCategories";
 
-    /** Cache key for book category */
+    /**
+     * Cache key for book category
+     */
     private static final String BOOK_CATEGORY_CACHE_KEY = "bookCategory";
 
-    /** Cache key for list of books */
+    /**
+     * Cache key for list of books
+     */
     private static final String BOOKS_CACHE_KEY = "books";
 
-    /** Instance of {@link BookCategoryDAO} */
+    /**
+     * Instance of {@link BookCategoryDAO}
+     */
     @Mock
     private BookCategoryDAO bookCategoryDAO;
 
-    /** Instance of {@link BookDAO} */
+    /**
+     * Instance of {@link BookDAO}
+     */
     @Mock
     private BookDAO bookDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache bookCache;
 
-    /** Instance of {@link BookCategoryService} */
+    /**
+     * Instance of {@link BookCategoryService}
+     */
     private BookCategoryService bookCategoryService;
 
-    /** Initializes service for book categories. */
+    /**
+     * Initializes service for book categories.
+     */
     @Before
     public void setUp() {
         bookCategoryService = new BookCategoryServiceImpl(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with null DAO for book categories. */
+    /**
+     * Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with null DAO for book categories.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookCategoryDAO() {
         new BookCategoryServiceImpl(null, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with null DAO for books. */
+    /**
+     * Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache)} with null DAO for books.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookDAO() {
         new BookCategoryServiceImpl(bookCategoryDAO, null, bookCache);
     }
 
-    /** Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache))} with null cache for books. */
+    /**
+     * Test method for {@link BookCategoryServiceImpl#BookCategoryServiceImpl(BookCategoryDAO, BookDAO, Cache))} with null cache for books.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullBookCache() {
         new BookCategoryServiceImpl(bookCategoryDAO, bookDAO, null);
     }
 
-    /** Test method for {@link BookCategoryService#newData()} with cached data. */
+    /**
+     * Test method for {@link BookCategoryService#newData()} with cached data.
+     */
     @Test
     public void testNewDataWithCachedData() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
@@ -117,7 +141,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#newData()} with not cached data. */
+    /**
+     * Test method for {@link BookCategoryService#newData()} with not cached data.
+     */
     @Test
     public void testNewDataWithNotCachedData() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
@@ -142,7 +168,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#newData()} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#newData()} with exception in DAO tier.
+     */
     @Test
     public void testNewDataWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategories();
@@ -161,7 +189,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategories()} with cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategories()} with cached book categories.
+     */
     @Test
     public void testGetBookCategoriesWithCachedBookCategories() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(mock(BookCategory.class), mock(BookCategory.class));
@@ -174,7 +204,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategories()} with not cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategories()} with not cached book categories.
+     */
     @Test
     public void testGetBookCategoriesWithNotCachedBookCategories() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(mock(BookCategory.class), mock(BookCategory.class));
@@ -189,7 +221,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategories()} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategories()} with exception in DAO tier.
+     */
     @Test
     public void testGetBookCategoriesWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategories();
@@ -207,7 +241,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with cached existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategory(Integer)} with cached existing book category.
+     */
     @Test
     public void testGetBookCategoryWithCachedExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -220,7 +256,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with cached not existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategory(Integer)} with cached not existing book category.
+     */
     @Test
     public void testGetBookCategoryWithCachedNotExistingBookCategory() {
         final int id = generate(Integer.class);
@@ -233,7 +271,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with not cached existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategory(Integer)} with not cached existing book category.
+     */
     @Test
     public void testGetBookCategoryWithNotCachedExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -248,7 +288,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with not cached not existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategory(Integer)} with not cached not existing book category.
+     */
     @Test
     public void testGetBookCategoryWithNotCachedNotExistingBookCategory() {
         final int id = generate(Integer.class);
@@ -263,7 +305,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategory(Integer)} with null argument.
+     */
     @Test
     public void testGetBookCategoryWithNullArgument() {
         try {
@@ -276,7 +320,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#getBookCategory(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#getBookCategory(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetBookCategoryWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategory(anyInt());
@@ -294,7 +340,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#add(BookCategory)} with cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#add(BookCategory)} with cached book categories.
+     */
     @Test
     public void testAddWithCachedBookCategories() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -313,7 +361,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#add(BookCategory)} with not cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#add(BookCategory)} with not cached book categories.
+     */
     @Test
     public void testAddWithNotCachedBookCategories() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -327,7 +377,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#add(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#add(BookCategory)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -340,7 +392,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#add(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#add(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -358,7 +412,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#update(BookCategory)}. */
+    /**
+     * Test method for {@link BookCategoryService#update(BookCategory)}.
+     */
     @Test
     public void testUpdate() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -370,7 +426,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#update(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#update(BookCategory)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -383,7 +441,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#update(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#update(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -401,7 +461,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#remove(BookCategory)} with cached books. */
+    /**
+     * Test method for {@link BookCategoryService#remove(BookCategory)} with cached books.
+     */
     @Test
     public void testRemoveWithCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -419,7 +481,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#remove(BookCategory)} with not cached books. */
+    /**
+     * Test method for {@link BookCategoryService#remove(BookCategory)} with not cached books.
+     */
     @Test
     public void testRemoveWithNotCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -439,7 +503,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#remove(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#remove(BookCategory)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -452,7 +518,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#remove(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#remove(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -472,7 +540,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO);
     }
 
-    /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with cached books. */
+    /**
+     * Test method for {@link BookCategoryService#duplicate(BookCategory)} with cached books.
+     */
     @Test
     public void testDuplicateWithCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -490,7 +560,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with not cached books. */
+    /**
+     * Test method for {@link BookCategoryService#duplicate(BookCategory)} with not cached books.
+     */
     @Test
     public void testDuplicateWithNotCachedBooks() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -510,7 +582,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#duplicate(BookCategory)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -523,7 +597,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#duplicate(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#duplicate(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).add(any(BookCategory.class));
@@ -540,7 +616,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveUp(BookCategory)} with cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#moveUp(BookCategory)} with cached book categories.
+     */
     @Test
     public void testMoveUpWithCachedBookCategories() {
         final BookCategory bookCategory1 = generate(BookCategory.class);
@@ -561,7 +639,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveUp(BookCategory)} with not cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#moveUp(BookCategory)} with not cached book categories.
+     */
     @Test
     public void testMoveUpWithNotCachedBookCategories() {
         final BookCategory bookCategory1 = generate(BookCategory.class);
@@ -584,7 +664,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveUp(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#moveUp(BookCategory)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -597,7 +679,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveUp(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#moveUp(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategories();
@@ -615,7 +699,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveDown(BookCategory)} with cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#moveDown(BookCategory)} with cached book categories.
+     */
     @Test
     public void testMoveDownWithCachedBookCategories() {
         final BookCategory bookCategory1 = generate(BookCategory.class);
@@ -636,7 +722,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveDown(BookCategory)} with not cached book categories. */
+    /**
+     * Test method for {@link BookCategoryService#moveDown(BookCategory)} with not cached book categories.
+     */
     @Test
     public void testMoveDownWithNotCachedBookCategories() {
         final BookCategory bookCategory1 = generate(BookCategory.class);
@@ -659,7 +747,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveDown(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#moveDown(BookCategory)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -672,7 +762,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#moveDown(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#moveDown(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategories();
@@ -690,7 +782,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with cached existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#exists(BookCategory)} with cached existing book category.
+     */
     @Test
     public void testExistsWithCachedExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -703,7 +797,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO);
     }
 
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with cached not existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#exists(BookCategory)} with cached not existing book category.
+     */
     @Test
     public void testExistsWithCachedNotExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -716,7 +812,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO);
     }
 
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with not cached existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#exists(BookCategory)} with not cached existing book category.
+     */
     @Test
     public void testExistsWithNotCachedExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -731,7 +829,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with not cached not existing book category. */
+    /**
+     * Test method for {@link BookCategoryService#exists(BookCategory)} with not cached not existing book category.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -746,7 +846,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryService#exists(BookCategory)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -759,7 +861,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#exists(BookCategory)} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#exists(BookCategory)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -778,7 +882,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#updatePositions()} with cached data. */
+    /**
+     * Test method for {@link BookCategoryService#updatePositions()} with cached data.
+     */
     @Test
     public void testUpdatePositionsWithCachedData() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
@@ -806,7 +912,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#updatePositions()} with not cached data. */
+    /**
+     * Test method for {@link BookCategoryService#updatePositions()} with not cached data.
+     */
     @Test
     public void testUpdatePositionsWithNotCachedData() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
@@ -835,7 +943,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#updatePositions()} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#updatePositions()} with exception in DAO tier.
+     */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategories();
@@ -854,7 +964,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookDAO);
     }
 
-    /** Test method for {@link BookCategoryService#getBooksCount()} with cached data. */
+    /**
+     * Test method for {@link BookCategoryService#getBooksCount()} with cached data.
+     */
     @Test
     public void testGetBooksCountWithCachedData() {
         final BookCategory bookCategory1 = generate(BookCategory.class);
@@ -875,7 +987,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryDAO, bookDAO);
     }
 
-    /** Test method for {@link BookCategoryService#getBooksCount()} with not cached data. */
+    /**
+     * Test method for {@link BookCategoryService#getBooksCount()} with not cached data.
+     */
     @Test
     public void testGetBooksCountWithNotCachedBookCategories() {
         final BookCategory bookCategory1 = generate(BookCategory.class);
@@ -902,7 +1016,9 @@ public class BookCategoryServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryDAO, bookDAO, bookCache);
     }
 
-    /** Test method for {@link BookCategoryService#getBooksCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link BookCategoryService#getBooksCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetBooksCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(bookCategoryDAO).getBookCategories();

@@ -9,37 +9,59 @@ import java.io.Serializable;
  */
 public class ProgramTO implements Comparable<ProgramTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String name;
 
-    /** URL to english Wikipedia page about program */
+    /**
+     * URL to english Wikipedia page about program
+     */
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about program */
+    /**
+     * URL to czech Wikipedia page about program
+     */
     private String wikiCz;
 
-    /** Count of media */
+    /**
+     * Count of media
+     */
     private int mediaCount;
 
-    /** True if there is crack */
+    /**
+     * True if there is crack
+     */
     private boolean crack;
 
-    /** True if there is serial key */
+    /**
+     * True if there is serial key
+     */
     private boolean serialKey;
 
-    /** Other data */
+    /**
+     * Other data
+     */
     private String otherData;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
     /**

@@ -18,85 +18,121 @@ import org.junit.Test;
  */
 public class TimeTest {
 
-    /** Length */
+    /**
+     * Length
+     */
     private static final int LENGTH = 9326;
 
-    /** Array of Time in length */
+    /**
+     * Array of Time in length
+     */
     private static final int[] TIME_LENGTHS = { 106261, 88261, 104401, 106260, 45061, 19861, 18000, 211, 12, 0 };
 
-    /** Array of Time in strings */
+    /**
+     * Array of Time in strings
+     */
     private static final String[] TIME_STRINGS = { "1:05:31:01", "1:00:31:01", "1:05:00:01", "1:05:31:00", "12:31:01", "5:31:01", "5:00:00", "0:03:31",
             "0:00:12", "0:00:00" };
 
-    /** Length - hours */
+    /**
+     * Length - hours
+     */
     private static final int HOURS = 2;
 
-    /** Length - minutes */
+    /**
+     * Length - minutes
+     */
     private static final int MINUTES = 35;
 
-    /** Length - seconds */
+    /**
+     * Length - seconds
+     */
     private static final int SECONDS = 26;
 
-    /** Bad maximum minutes or seconds */
+    /**
+     * Bad maximum minutes or seconds
+     */
     private static final int BAD_MAX_TIME = 60;
 
-    /** Instance of {@link Time} */
+    /**
+     * Instance of {@link Time}
+     */
     private Time timeLength;
 
-    /** Instance of {@link Time} */
+    /**
+     * Instance of {@link Time}
+     */
     private Time timeHMS;
 
-    /** Initializes time. */
+    /**
+     * Initializes time.
+     */
     @Before
     public void setUp() {
         timeLength = new Time(LENGTH);
         timeHMS = new Time(HOURS, MINUTES, SECONDS);
     }
 
-    /** Test method for {@link Time#Time(int)} with bad length. */
+    /**
+     * Test method for {@link Time#Time(int)} with bad length.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithBadLength() {
         new Time(-1);
     }
 
-    /** Test method for {@link Time#Time(int)} with bad hours. */
+    /**
+     * Test method for {@link Time#Time(int)} with bad hours.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithBadHours() {
         new Time(-1, MINUTES, SECONDS);
     }
 
-    /** Test method for {@link Time#Time(int)} with negative minutes. */
+    /**
+     * Test method for {@link Time#Time(int)} with negative minutes.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNegativeMinutes() {
         new Time(HOURS, -1, SECONDS);
     }
 
-    /** Test method for {@link Time#Time(int)} with bad minutes. */
+    /**
+     * Test method for {@link Time#Time(int)} with bad minutes.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithBadMinutes() {
         new Time(HOURS, BAD_MAX_TIME, SECONDS);
     }
 
-    /** Test method for {@link Time#Time(int)} with negative seconds. */
+    /**
+     * Test method for {@link Time#Time(int)} with negative seconds.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNegativeSeconds() {
         new Time(HOURS, MINUTES, -1);
     }
 
-    /** Test method for {@link Time#Time(int)} with bad seconds. */
+    /**
+     * Test method for {@link Time#Time(int)} with bad seconds.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithBadSeconds() {
         new Time(HOURS, MINUTES, BAD_MAX_TIME);
     }
 
-    /** Test method for {@link Time#getLength()}. */
+    /**
+     * Test method for {@link Time#getLength()}.
+     */
     @Test
     public void testGetLength() {
         DeepAsserts.assertEquals(LENGTH, timeLength.getLength());
         DeepAsserts.assertEquals(LENGTH, timeHMS.getLength());
     }
 
-    /** Test method for {@link Time#getData(Time.TimeData)}. */
+    /**
+     * Test method for {@link Time#getData(Time.TimeData)}.
+     */
     @Test
     public void testGetData() {
         DeepAsserts.assertEquals(HOURS, timeLength.getData(Time.TimeData.HOUR));
@@ -107,13 +143,17 @@ public class TimeTest {
         DeepAsserts.assertEquals(SECONDS, timeHMS.getData(Time.TimeData.SECOND));
     }
 
-    /** Test method for {@link Time#getData(Time.TimeData)} with null argument. */
+    /**
+     * Test method for {@link Time#getData(Time.TimeData)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testGetDataWithNegativeArgument() {
         timeLength.getData(null);
     }
 
-    /** Test method for {@link Time#equals(Object)} and {@link Time#hashCode()}. */
+    /**
+     * Test method for {@link Time#equals(Object)} and {@link Time#hashCode()}.
+     */
     @Test
     public void testEqualsHashCode() {
         final int count = 10;
@@ -140,7 +180,9 @@ public class TimeTest {
         }
     }
 
-    /** Test method for {@link Time#toString()}. */
+    /**
+     * Test method for {@link Time#toString()}.
+     */
     @Test
     public void testToString() {
         DeepAsserts.assertEquals("2:35:26", timeLength.toString());

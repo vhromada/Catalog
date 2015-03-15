@@ -17,16 +17,22 @@ import org.junit.Test;
  */
 public class MediumToIntegerConverterTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link MediumToIntegerConverter} */
+    /**
+     * Instance of {@link MediumToIntegerConverter}
+     */
     private MediumToIntegerConverter converter;
 
-    /** Initializes converter. */
+    /**
+     * Initializes converter.
+     */
     @Before
     public void setUp() {
         converter = new MediumToIntegerConverter();
     }
 
-    /** Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with integer argument. */
+    /**
+     * Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with integer argument.
+     */
     @Test
     public void testConvertWithIntegerArgument() {
         final int length = generate(Integer.class);
@@ -35,7 +41,9 @@ public class MediumToIntegerConverterTest extends ObjectGeneratorTest {
         DeepAsserts.assertEquals(length, medium.getLength());
     }
 
-    /** Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with medium argument. */
+    /**
+     * Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with medium argument.
+     */
     @Test
     public void testConvertWithMediumArgument() {
         final Medium medium = generate(Medium.class);
@@ -44,13 +52,17 @@ public class MediumToIntegerConverterTest extends ObjectGeneratorTest {
         DeepAsserts.assertEquals(medium.getLength(), length);
     }
 
-    /** Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with null argument. */
+    /**
+     * Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with null argument.
+     */
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null, null, null, null));
     }
 
-    /** Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with bad argument. */
+    /**
+     * Test method for {@link MediumToIntegerConverter#convert(Object, Object, Class, Class)} with bad argument.
+     */
     @Test(expected = MappingException.class)
     public void testConvertWithBadArgument() {
         assertNull(converter.convert(null, "Test", Integer.class, Medium.class));

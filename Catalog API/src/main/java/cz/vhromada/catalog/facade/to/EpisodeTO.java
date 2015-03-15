@@ -9,28 +9,44 @@ import java.io.Serializable;
  */
 public class EpisodeTO implements Comparable<EpisodeTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Number of episode */
+    /**
+     * Number of episode
+     */
     private int number;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String name;
 
-    /** Length */
+    /**
+     * Length
+     */
     private int length;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** TO for season */
+    /**
+     * TO for season
+     */
     private SeasonTO season;
 
     /**

@@ -23,22 +23,34 @@ import org.springframework.stereotype.Component;
 @Component("songDAO")
 public class SongDAOImpl implements SongDAO {
 
-    /** Entity manager argument */
+    /**
+     * Entity manager argument
+     */
     private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
-    /** Music argument */
+    /**
+     * Music argument
+     */
     private static final String MUSIC_ARGUMENT = "Music";
 
-    /** Song argument */
+    /**
+     * Song argument
+     */
     private static final String SONG_ARGUMENT = "Song";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link DataStorageException} */
+    /**
+     * Message for {@link DataStorageException}
+     */
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
-    /** Entity manager */
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager;
 
     /**

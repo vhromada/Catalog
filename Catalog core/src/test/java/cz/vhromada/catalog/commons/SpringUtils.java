@@ -34,61 +34,99 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  */
 public final class SpringUtils {
 
-    /** Count of movies */
+    /**
+     * Count of movies
+     */
     public static final int MOVIES_COUNT = 3;
 
-    /** Count of series */
+    /**
+     * Count of series
+     */
     public static final int SERIES_COUNT = 3;
 
-    /** Count of seasons */
+    /**
+     * Count of seasons
+     */
     public static final int SEASONS_COUNT = 9;
 
-    /** Count of seasons in serie */
+    /**
+     * Count of seasons in serie
+     */
     public static final int SEASONS_PER_SERIE_COUNT = 3;
 
-    /** Count of episodes */
+    /**
+     * Count of episodes
+     */
     public static final int EPISODES_COUNT = 27;
 
-    /** Count of episodes in serie */
+    /**
+     * Count of episodes in serie
+     */
     public static final int EPISODES_PER_SERIE_COUNT = 9;
 
-    /** Count of episodes in season */
+    /**
+     * Count of episodes in season
+     */
     public static final int EPISODES_PER_SEASON_COUNT = 3;
 
-    /** Count of games */
+    /**
+     * Count of games
+     */
     public static final int GAMES_COUNT = 3;
 
-    /** Count of music */
+    /**
+     * Count of music
+     */
     public static final int MUSIC_COUNT = 3;
 
-    /** Count of songs */
+    /**
+     * Count of songs
+     */
     public static final int SONGS_COUNT = 9;
 
-    /** Count of songs in music */
+    /**
+     * Count of songs in music
+     */
     public static final int SONGS_PER_MUSIC_COUNT = 3;
 
-    /** Count of programs */
+    /**
+     * Count of programs
+     */
     public static final int PROGRAMS_COUNT = 3;
 
-    /** Count of book categories */
+    /**
+     * Count of book categories
+     */
     public static final int BOOK_CATEGORIES_COUNT = 3;
 
-    /** Count of books */
+    /**
+     * Count of books
+     */
     public static final int BOOKS_COUNT = 9;
 
-    /** Count of books in book category */
+    /**
+     * Count of books in book category
+     */
     public static final int BOOKS_PER_BOOK_CATEGORY_COUNT = 3;
 
-    /** Count of genres */
+    /**
+     * Count of genres
+     */
     public static final int GENRES_COUNT = 4;
 
-    /** Count of media */
+    /**
+     * Count of media
+     */
     public static final int MEDIA_COUNT = 4;
 
-    /** Multipliers for length */
+    /**
+     * Multipliers for length
+     */
     public static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
 
-    /** Creates a new instance of SpringUtils. */
+    /**
+     * Creates a new instance of SpringUtils.
+     */
     private SpringUtils() {
     }
 

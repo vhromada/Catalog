@@ -7,16 +7,24 @@ package cz.vhromada.catalog.commons;
  */
 public enum Language {
 
-    /** Czech language */
+    /**
+     * Czech language
+     */
     CZ,
 
-    /** English language */
+    /**
+     * English language
+     */
     EN,
 
-    /** French language */
+    /**
+     * French language
+     */
     FR,
 
-    /** Japanese language */
+    /**
+     * Japanese language
+     */
     JP
 
 }

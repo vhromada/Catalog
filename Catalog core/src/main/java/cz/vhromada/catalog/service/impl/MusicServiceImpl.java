@@ -25,25 +25,39 @@ import org.springframework.stereotype.Component;
 @Component("musicService")
 public class MusicServiceImpl extends AbstractMusicService implements MusicService {
 
-    /** DAO for music field */
+    /**
+     * DAO for music field
+     */
     private static final String MUSIC_DAO_ARGUMENT = "DAO for music";
 
-    /** DAO for songs field */
+    /**
+     * DAO for songs field
+     */
     private static final String SONG_DAO_ARGUMENT = "DAO for songs";
 
-    /** Music argument */
+    /**
+     * Music argument
+     */
     private static final String MUSIC_ARGUMENT = "Music";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link ServiceOperationException} */
+    /**
+     * Message for {@link ServiceOperationException}
+     */
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
-    /** DAO for music */
+    /**
+     * DAO for music
+     */
     private MusicDAO musicDAO;
 
-    /** DAO for songs */
+    /**
+     * DAO for songs
+     */
     private SongDAO songDAO;
 
     /**

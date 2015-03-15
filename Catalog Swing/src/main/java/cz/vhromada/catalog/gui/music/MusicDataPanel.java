@@ -24,70 +24,114 @@ import org.slf4j.LoggerFactory;
  */
 public class MusicDataPanel extends JPanel {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(MusicDataPanel.class);
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size */
+    /**
+     * Horizontal label size
+     */
     private static final int HORIZONTAL_LABEL_SIZE = 150;
 
-    /** Horizontal data size */
+    /**
+     * Horizontal data size
+     */
     private static final int HORIZONTAL_DATA_SIZE = 600;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 120;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 10;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Facade for songs */
+    /**
+     * Facade for songs
+     */
     private SongFacade songFacade;
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Name");
 
-    /** Label with name */
+    /**
+     * Label with name
+     */
     private JLabel nameData = new JLabel();
 
-    /** Label for count of media */
+    /**
+     * Label for count of media
+     */
     private JLabel mediaCountLabel = new JLabel("Count of media");
 
-    /** Label with count of media */
+    /**
+     * Label with count of media
+     */
     private JLabel mediaCountData = new JLabel();
 
-    /** Label for count of songs */
+    /**
+     * Label for count of songs
+     */
     private JLabel songsCountLabel = new JLabel("Count of songs");
 
-    /** Label with count of songs */
+    /**
+     * Label with count of songs
+     */
     private JLabel songsCountData = new JLabel();
 
-    /** Label for total length */
+    /**
+     * Label for total length
+     */
     private JLabel totalLengthLabel = new JLabel("Total length");
 
-    /** Label with total length */
+    /**
+     * Label with total length
+     */
     private JLabel totalLengthData = new JLabel();
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Label with note */
+    /**
+     * Label with note
+     */
     private JLabel noteData = new JLabel();
 
-    /** Button for showing music czech Wikipedia page */
+    /**
+     * Button for showing music czech Wikipedia page
+     */
     private JButton wikiCzButton = new JButton("Czech Wikipedia");
 
-    /** Button for showing music english Wikipedia page */
+    /**
+     * Button for showing music english Wikipedia page
+     */
     private JButton wikiEnButton = new JButton("English Wikipedia");
 
-    /** URL to czech Wikipedia page about music */
+    /**
+     * URL to czech Wikipedia page about music
+     */
     private String wikiCz;
 
-    /** URL to english Wikipedia page about music */
+    /**
+     * URL to english Wikipedia page about music
+     */
     private String wikiEn;
 
     /**

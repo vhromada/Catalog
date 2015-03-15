@@ -16,25 +16,39 @@ import cz.vhromada.catalog.gui.commons.Picture;
  */
 public class Selector extends JFrame {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 130;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 60;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 40;
 
-    /** Button Catalog */
+    /**
+     * Button Catalog
+     */
     private JButton catalogButton = new JButton("Catalog");
 
-    /** Button Exit */
+    /**
+     * Button Exit
+     */
     private JButton exitButton = new JButton("Exit");
 
-    /** Creates a new instance of Selector. */
+    /**
+     * Creates a new instance of Selector.
+     */
     public Selector() {
         setTitle("Catalog - Selector");
         setIconImage(Picture.CATALOG.getIcon().getImage());
@@ -68,7 +82,9 @@ public class Selector extends JFrame {
         setLocationRelativeTo(getRootPane());
     }
 
-    /** Performs action for button Catalog. */
+    /**
+     * Performs action for button Catalog.
+     */
     private void catalogAction() {
         SwingUtilities.invokeLater(new Runnable() {
 

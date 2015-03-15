@@ -24,37 +24,55 @@ import javax.persistence.Table;
 public class Episode implements Serializable {
 
     /** Name for query - select count of episodes */
-    /** Name for query - find by season */
+    /**
+     * Name for query - find by season
+     */
     public static final String FIND_BY_SEASON = "Episode.findBySeason";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "episode_generator", sequenceName = "episodes_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "episode_generator")
     private Integer id;
 
-    /** Number of episode */
+    /**
+     * Number of episode
+     */
     @Column(name = "episode_number")
     private int number;
 
-    /** Name */
+    /**
+     * Name
+     */
     @Column(name = "episode_name")
     private String name;
 
-    /** Length */
+    /**
+     * Length
+     */
     @Column(name = "episode_length")
     private int length;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** Season */
+    /**
+     * Season
+     */
     @ManyToOne
     @JoinColumn(name = "season", referencedColumnName = "id")
     private Season season;

@@ -10,40 +10,64 @@ import java.util.List;
  */
 public class SerieTO implements Comparable<SerieTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Czech name */
+    /**
+     * Czech name
+     */
     private String czechName;
 
-    /** Original name */
+    /**
+     * Original name
+     */
     private String originalName;
 
-    /** URL to ČSFD page about serie */
+    /**
+     * URL to ČSFD page about serie
+     */
     private String csfd;
 
-    /** IMDB code */
+    /**
+     * IMDB code
+     */
     private int imdbCode;
 
-    /** URL to english Wikipedia page about serie */
+    /**
+     * URL to english Wikipedia page about serie
+     */
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about serie */
+    /**
+     * URL to czech Wikipedia page about serie
+     */
     private String wikiCz;
 
-    /** Path to file with serie's picture */
+    /**
+     * Path to file with serie's picture
+     */
     private String picture;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** List of TO for genre */
+    /**
+     * List of TO for genre
+     */
     private List<GenreTO> genres;
 
     /**

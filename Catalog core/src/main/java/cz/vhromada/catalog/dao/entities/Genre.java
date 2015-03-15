@@ -21,19 +21,27 @@ import javax.persistence.Table;
 @NamedQuery(name = Genre.SELECT_GENRES, query = "SELECT g FROM Genre g ORDER BY g.id")
 public class Genre implements Serializable {
 
-    /** Name for query - select genres */
+    /**
+     * Name for query - select genres
+     */
     public static final String SELECT_GENRES = "Genre.selectGenres";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "genre_generator", sequenceName = "genres_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "genre_generator")
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     @Column(name = "genre_name")
     private String name;
 

@@ -16,46 +16,74 @@ import cz.vhromada.catalog.gui.commons.Picture;
  */
 public class AboutDialog extends JDialog {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size */
+    /**
+     * Horizontal label size
+     */
     private static final int HORIZONTAL_LABEL_SIZE = 200;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 76;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 62;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 20;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 40;
 
-    /** Font size */
+    /**
+     * Font size
+     */
     private static final int FONT_SIZE = 12;
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Catalog", Picture.CATALOG.getIcon(), SwingConstants.LEADING);
 
-    /** Label for version */
+    /**
+     * Label for version
+     */
     private JLabel versionLabel = new JLabel("Version: 1.0.0");
 
-    /** Label for author */
+    /**
+     * Label for author
+     */
     private JLabel authorLabel = new JLabel("Author: Vladimír Hromada");
 
-    /** Label for copyrights */
+    /**
+     * Label for copyrights
+     */
     private JLabel rightsLabel = new JLabel("All rights reserved.");
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Creates a new instance of AboutDialog. */
+    /**
+     * Creates a new instance of AboutDialog.
+     */
     public AboutDialog() {
         super(new JFrame(), "About", true);
 

@@ -16,7 +16,9 @@ import org.dozer.MapperAware;
  */
 public class MediaConverter implements MapperAware, CustomConverter {
 
-    /** Mapper */
+    /**
+     * Mapper
+     */
     private Mapper mapper;
 
     @Override

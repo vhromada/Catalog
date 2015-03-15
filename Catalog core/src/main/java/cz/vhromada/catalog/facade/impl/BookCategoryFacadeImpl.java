@@ -26,37 +26,59 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BookCategoryFacadeImpl implements BookCategoryFacade {
 
-    /** Service for book categories argument */
+    /**
+     * Service for book categories argument
+     */
     private static final String BOOK_CATEGORY_SERVICE_ARGUMENT = "Service for book categories";
 
-    /** Converter argument */
+    /**
+     * Converter argument
+     */
     private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for book category argument */
+    /**
+     * Validator for TO for book category argument
+     */
     private static final String BOOK_CATEGORY_TO_VALIDATOR_ARGUMENT = "Validator for TO for book category";
 
-    /** Book category argument */
+    /**
+     * Book category argument
+     */
     private static final String BOOK_CATEGORY_ARGUMENT = "book category";
 
-    /** TO for book category argument */
+    /**
+     * TO for book category argument
+     */
     private static final String BOOK_CATEGORY_TO_ARGUMENT = "TO for book category";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link FacadeOperationException} */
+    /**
+     * Message for {@link FacadeOperationException}
+     */
     private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-    /** Message for not setting ID */
+    /**
+     * Message for not setting ID
+     */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-    /** Service for book categories */
+    /**
+     * Service for book categories
+     */
     private BookCategoryService bookCategoryService;
 
-    /** Converter */
+    /**
+     * Converter
+     */
     private Converter converter;
 
-    /** Validator for TO for book category */
+    /**
+     * Validator for TO for book category
+     */
     private BookCategoryTOValidator bookCategoryTOValidator;
 
     /**

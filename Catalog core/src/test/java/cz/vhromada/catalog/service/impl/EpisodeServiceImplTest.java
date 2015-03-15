@@ -46,42 +46,60 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of episodes */
+    /**
+     * Cache key for list of episodes
+     */
     private static final String EPISODES_CACHE_KEY = "episodes";
 
-    /** Cache key for episode */
+    /**
+     * Cache key for episode
+     */
     private static final String EPISODE_CACHE_KEY = "episode";
 
-    /** Instance of {@link EpisodeDAO} */
+    /**
+     * Instance of {@link EpisodeDAO}
+     */
     @Mock
     private EpisodeDAO episodeDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache serieCache;
 
-    /** Instance of {@link EpisodeService} */
+    /**
+     * Instance of {@link EpisodeService}
+     */
     private EpisodeService episodeService;
 
-    /** Initializes service for episodes. */
+    /**
+     * Initializes service for episodes.
+     */
     @Before
     public void setUp() {
         episodeService = new EpisodeServiceImpl(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache)} with null DAO for episodes. */
+    /**
+     * Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache)} with null DAO for episodes.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEpisodeDAO() {
         new EpisodeServiceImpl(null, serieCache);
     }
 
-    /** Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache))} with null cache for series. */
+    /**
+     * Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache))} with null cache for series.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieCache() {
         new EpisodeServiceImpl(episodeDAO, null);
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with cached existing episode. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with cached existing episode.
+     */
     @Test
     public void testGetEpisodeWithCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -94,7 +112,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO);
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with cached not existing episode. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with cached not existing episode.
+     */
     @Test
     public void testGetEpisodeWithCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -107,7 +127,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO);
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with not cached existing episode. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with not cached existing episode.
+     */
     @Test
     public void testGetEpisodeWithNotCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -122,7 +144,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with not cached not existing episode. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with not cached not existing episode.
+     */
     @Test
     public void testGetEpisodeWithNotCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -137,7 +161,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with null argument.
+     */
     @Test
     public void testGetEpisodeWithNullArgument() {
         try {
@@ -150,7 +176,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#getEpisode(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#getEpisode(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetEpisodeWithDAOTierException() {
         doThrow(DataStorageException.class).when(episodeDAO).getEpisode(anyInt());
@@ -168,7 +196,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#add(Episode)} with cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#add(Episode)} with cached episodes.
+     */
     @Test
     public void testAddWithCachedEpisodes() {
         final Episode episode = generate(Episode.class);
@@ -187,7 +217,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#add(Episode)} with not cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#add(Episode)} with not cached episodes.
+     */
     @Test
     public void testAddWithNotCachedEpisodes() {
         final Episode episode = generate(Episode.class);
@@ -201,7 +233,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#add(Episode)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#add(Episode)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -214,7 +248,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#add(Episode)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#add(Episode)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Episode episode = generate(Episode.class);
@@ -232,7 +268,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link EpisodeService#update(Episode)}. */
+    /**
+     * Test method for {@link EpisodeService#update(Episode)}.
+     */
     @Test
     public void testUpdate() {
         final Episode episode = generate(Episode.class);
@@ -244,7 +282,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#update(Episode)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#update(Episode)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -257,7 +297,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#update(Episode)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#update(Episode)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Episode episode = generate(Episode.class);
@@ -275,7 +317,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link EpisodeService#remove(Episode)} with cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#remove(Episode)} with cached episodes.
+     */
     @Test
     public void testRemoveWithCachedEpisodes() {
         final Episode episode = generate(Episode.class);
@@ -293,7 +337,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#remove(Episode)} with not cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#remove(Episode)} with not cached episodes.
+     */
     @Test
     public void testRemoveWithNotCachedEpisodes() {
         final Episode episode = generate(Episode.class);
@@ -307,7 +353,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#remove(Episode)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#remove(Episode)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -320,7 +368,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#remove(Episode)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#remove(Episode)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Episode episode = generate(Episode.class);
@@ -338,7 +388,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#duplicate(Episode)} with cached episodes.
+     */
     @Test
     public void testDuplicateWithCachedEpisodes() {
         final Episode episode = generate(Episode.class);
@@ -355,7 +407,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with not cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#duplicate(Episode)} with not cached episodes.
+     */
     @Test
     public void testDuplicateWithNotCachedEpisodes() {
         final Episode episode = generate(Episode.class);
@@ -370,7 +424,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#duplicate(Episode)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -383,7 +439,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#duplicate(Episode)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#duplicate(Episode)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(episodeDAO).add(any(Episode.class));
@@ -400,7 +458,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveUp(Episode)} with cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#moveUp(Episode)} with cached episodes.
+     */
     @Test
     public void testMoveUpWithCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -424,7 +484,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveUp(Episode)} with not cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#moveUp(Episode)} with not cached episodes.
+     */
     @Test
     public void testMoveUpWithNotCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -450,7 +512,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveUp(Episode)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#moveUp(Episode)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -463,7 +527,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveUp(Episode)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#moveUp(Episode)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         final Season season = generate(Season.class);
@@ -484,7 +550,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveDown(Episode)} with cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#moveDown(Episode)} with cached episodes.
+     */
     @Test
     public void testMoveDownWithCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -508,7 +576,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveDown(Episode)} with not cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#moveDown(Episode)} with not cached episodes.
+     */
     @Test
     public void testMoveDownWithNotCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -534,7 +604,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveDown(Episode)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#moveDown(Episode)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -547,7 +619,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#moveDown(Episode)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#moveDown(Episode)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         final Season season = generate(Season.class);
@@ -568,7 +642,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with cached existing episode. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with cached existing episode.
+     */
     @Test
     public void testExistsWithCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -581,7 +657,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO);
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with cached not existing episode. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with cached not existing episode.
+     */
     @Test
     public void testExistsWithCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -594,7 +672,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO);
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with not cached existing episode. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with not cached existing episode.
+     */
     @Test
     public void testExistsWithNotCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -609,7 +689,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with not cached not existing episode. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with not cached not existing episode.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -624,7 +706,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -637,7 +721,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#exists(Episode)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#exists(Episode)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Episode episode = generate(Episode.class);
@@ -656,7 +742,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with cached episodes.
+     */
     @Test
     public void testFindEpisodesBySeasonWithCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -670,7 +758,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO);
     }
 
-    /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with not cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with not cached episodes.
+     */
     @Test
     public void testFindEpisodesBySeasonWithNotCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -686,7 +776,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with null argument.
+     */
     @Test
     public void testFindEpisodesBySeasonWithNullArgument() {
         try {
@@ -699,7 +791,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#findEpisodesBySeason(Season)} with exception in DAO tier.
+     */
     @Test
     public void testFindEpisodesBySeasonWithDAOTierException() {
         final Season season = generate(Season.class);
@@ -718,7 +812,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with cached episodes.
+     */
     @Test
     public void testGetTotalLengthBySeasonWithCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -748,7 +844,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO);
     }
 
-    /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with not cached episodes. */
+    /**
+     * Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with not cached episodes.
+     */
     @Test
     public void testGetTotalLengthBySeasonWithNotCachedEpisodes() {
         final Season season = generate(Season.class);
@@ -780,7 +878,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeDAO, serieCache, episode1, episode2, episode3);
     }
 
-    /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with null argument. */
+    /**
+     * Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with null argument.
+     */
     @Test
     public void testGetTotalLengthBySeasonWithNullArgument() {
         try {
@@ -793,7 +893,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link EpisodeService#getTotalLengthBySeason(Season)} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalLengthBySeasonWithDAOTierException() {
         final Season season = generate(Season.class);

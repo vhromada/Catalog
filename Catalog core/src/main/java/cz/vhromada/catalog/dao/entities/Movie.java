@@ -37,74 +37,108 @@ import org.hibernate.annotations.FetchMode;
 @NamedQuery(name = Movie.SELECT_MOVIES, query = "SELECT m FROM Movie m ORDER BY m.position, m.id")
 public class Movie implements Serializable {
 
-    /** Name for query - select movies */
+    /**
+     * Name for query - select movies
+     */
     public static final String SELECT_MOVIES = "Movie.selectMovies";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "movie_generator", sequenceName = "movies_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_generator")
     private Integer id;
 
-    /** Czech name */
+    /**
+     * Czech name
+     */
     @Column(name = "czech_name")
     private String czechName;
 
-    /** Original name */
+    /**
+     * Original name
+     */
     @Column(name = "original_name")
     private String originalName;
 
-    /** Year */
+    /**
+     * Year
+     */
     @Column(name = "movie_year")
     private int year;
 
-    /** Language */
+    /**
+     * Language
+     */
     @Column(name = "movie_language")
     @Enumerated(EnumType.STRING)
     private Language language;
 
-    /** Subtitles */
+    /**
+     * Subtitles
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "movie_subtitles", joinColumns = @JoinColumn(name = "movie"))
     @Enumerated(EnumType.STRING)
     @Fetch(FetchMode.SELECT)
     private List<Language> subtitles;
 
-    /** Media */
+    /**
+     * Media
+     */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "movie_media", joinColumns = @JoinColumn(name = "movie"), inverseJoinColumns = @JoinColumn(name = "medium"))
     @OrderBy("id")
     @Fetch(FetchMode.SELECT)
     private List<Medium> media;
 
-    /** URL to ČSFD page about movie */
+    /**
+     * URL to ČSFD page about movie
+     */
     private String csfd;
 
-    /** IMDB code */
+    /**
+     * IMDB code
+     */
     @Column(name = "imdb_code")
     private int imdbCode;
 
-    /** URL to english Wikipedia page about movie */
+    /**
+     * URL to english Wikipedia page about movie
+     */
     @Column(name = "wiki_en")
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about movie */
+    /**
+     * URL to czech Wikipedia page about movie
+     */
     @Column(name = "wiki_cz")
     private String wikiCz;
 
-    /** Path to file with movie's picture */
+    /**
+     * Path to file with movie's picture
+     */
     private String picture;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** Genres */
+    /**
+     * Genres
+     */
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie"), inverseJoinColumns = @JoinColumn(name = "genre"))
     @OrderBy("id")

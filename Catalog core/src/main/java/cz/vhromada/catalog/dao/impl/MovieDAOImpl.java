@@ -22,19 +22,29 @@ import org.springframework.stereotype.Component;
 @Component("movieDAO")
 public class MovieDAOImpl implements MovieDAO {
 
-    /** Entity manager argument */
+    /**
+     * Entity manager argument
+     */
     private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
-    /** Movie argument */
+    /**
+     * Movie argument
+     */
     private static final String MOVIE_ARGUMENT = "Movie";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link DataStorageException} */
+    /**
+     * Message for {@link DataStorageException}
+     */
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
-    /** Entity manager */
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager;
 
     /**

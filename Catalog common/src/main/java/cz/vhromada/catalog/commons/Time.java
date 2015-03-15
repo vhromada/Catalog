@@ -13,28 +13,44 @@ import cz.vhromada.validators.Validators;
  */
 public final class Time implements Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Count of hours in day */
+    /**
+     * Count of hours in day
+     */
     private static final int DAY_HOURS = 24;
 
-    /** Count of seconds in hour */
+    /**
+     * Count of seconds in hour
+     */
     private static final int HOUR_SECONDS = 3600;
 
-    /** Count of seconds in minute */
+    /**
+     * Count of seconds in minute
+     */
     private static final int MINUTE_SECONDS = 60;
 
-    /** Minimum minutes or seconds */
+    /**
+     * Minimum minutes or seconds
+     */
     private static final int MIN_TIME = 0;
 
-    /** Maximum minutes or seconds */
+    /**
+     * Maximum minutes or seconds
+     */
     private static final int MAX_TIME = 59;
 
-    /** Time in seconds */
+    /**
+     * Time in seconds
+     */
     private final int length;
 
-    /** Data */
+    /**
+     * Data
+     */
     private final Map<TimeData, Integer> data;
 
     /**
@@ -135,13 +151,19 @@ public final class Time implements Serializable {
      */
     public enum TimeData {
 
-        /** Hour */
+        /**
+         * Hour
+         */
         HOUR,
 
-        /** Minute */
+        /**
+         * Minute
+         */
         MINUTE,
 
-        /** Second */
+        /**
+         * Second
+         */
         SECOND
 
     }

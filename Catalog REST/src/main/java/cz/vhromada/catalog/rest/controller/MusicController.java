@@ -24,7 +24,9 @@ public class MusicController extends JsonController {
     @Qualifier("musicFacade")
     private MusicFacade musicFacade;
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
     public void newData() {
@@ -172,7 +174,9 @@ public class MusicController extends JsonController {
         return serialize(musicFacade.exists(deserialize(music, MusicTO.class)));
     }
 
-    /** Updates positions. */
+    /**
+     * Updates positions.
+     */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     @ResponseBody
     public void updatePositions() {

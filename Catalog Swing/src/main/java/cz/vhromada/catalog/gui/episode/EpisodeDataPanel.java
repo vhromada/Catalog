@@ -14,43 +14,69 @@ import cz.vhromada.validators.Validators;
  */
 public class EpisodeDataPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size */
+    /**
+     * Horizontal label size
+     */
     private static final int HORIZONTAL_LABEL_SIZE = 150;
 
-    /** Horizontal data size */
+    /**
+     * Horizontal data size
+     */
     private static final int HORIZONTAL_DATA_SIZE = 600;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 10;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Label for number */
+    /**
+     * Label for number
+     */
     private JLabel numberLabel = new JLabel("Number of episode");
 
-    /** Label with number */
+    /**
+     * Label with number
+     */
     private JLabel numberData = new JLabel();
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Name");
 
-    /** Label with name */
+    /**
+     * Label with name
+     */
     private JLabel nameData = new JLabel();
 
-    /** Label for length */
+    /**
+     * Label for length
+     */
     private JLabel lengthLabel = new JLabel("Length");
 
-    /** Label with length */
+    /**
+     * Label with length
+     */
     private JLabel lengthData = new JLabel();
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Label with note */
+    /**
+     * Label with note
+     */
     private JLabel noteData = new JLabel();
 
     /**

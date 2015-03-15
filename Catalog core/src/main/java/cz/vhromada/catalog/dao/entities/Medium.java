@@ -19,20 +19,28 @@ import javax.persistence.Table;
 @Table(name = "media")
 public class Medium implements Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Movie's ID */
+    /**
+     * Movie's ID
+     */
     @Id
     @SequenceGenerator(name = "medium_generator", sequenceName = "media_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medium_generator")
     private Integer id;
 
-    /** Medium */
+    /**
+     * Medium
+     */
     @Column(name = "medium_number")
     private int number;
 
-    /** Length */
+    /**
+     * Length
+     */
     @Column(name = "medium_length")
     private int length;
 

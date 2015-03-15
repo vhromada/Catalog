@@ -26,37 +26,59 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProgramFacadeImpl implements ProgramFacade {
 
-    /** Service for programs argument */
+    /**
+     * Service for programs argument
+     */
     private static final String PROGRAM_SERVICE_ARGUMENT = "Service for programs";
 
-    /** Converter argument */
+    /**
+     * Converter argument
+     */
     private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for program argument */
+    /**
+     * Validator for TO for program argument
+     */
     private static final String PROGRAM_TO_VALIDATOR_ARGUMENT = "Validator for TO for program";
 
-    /** Program argument */
+    /**
+     * Program argument
+     */
     private static final String PROGRAM_ARGUMENT = "program";
 
-    /** TO for program argument */
+    /**
+     * TO for program argument
+     */
     private static final String PROGRAM_TO_ARGUMENT = "TO for program";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link FacadeOperationException} */
+    /**
+     * Message for {@link FacadeOperationException}
+     */
     private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-    /** Message for not setting ID */
+    /**
+     * Message for not setting ID
+     */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-    /** Service for programs */
+    /**
+     * Service for programs
+     */
     private ProgramService programService;
 
-    /** Converter */
+    /**
+     * Converter
+     */
     private Converter converter;
 
-    /** Validator for TO for program */
+    /**
+     * Validator for TO for program
+     */
     private ProgramTOValidator programTOValidator;
 
     /**

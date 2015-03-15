@@ -19,73 +19,119 @@ import cz.vhromada.validators.Validators;
  */
 public class MusicInfoDialog extends JDialog {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size in dialog */
+    /**
+     * Horizontal label size in dialog
+     */
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
 
-    /** Horizontal data size in dialog */
+    /**
+     * Horizontal data size in dialog
+     */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** TO for music */
+    /**
+     * TO for music
+     */
     private MusicTO music;
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Name");
 
-    /** Text field for name */
+    /**
+     * Text field for name
+     */
     private JTextField nameData = new JTextField();
 
-    /** Label for czech Wikipedia */
+    /**
+     * Label for czech Wikipedia
+     */
     private JLabel wikiCzLabel = new JLabel("Czech Wikipedia");
 
-    /** Text field for czech Wikipedia */
+    /**
+     * Text field for czech Wikipedia
+     */
     private JTextField wikiCzData = new JTextField();
 
-    /** Label for english Wikipedia */
+    /**
+     * Label for english Wikipedia
+     */
     private JLabel wikiEnLabel = new JLabel("English Wikipedia");
 
-    /** Text field for english Wikipedia */
+    /**
+     * Text field for english Wikipedia
+     */
     private JTextField wikiEnData = new JTextField();
 
-    /** Label for count of media */
+    /**
+     * Label for count of media
+     */
     private JLabel mediaCountLabel = new JLabel("Count of media");
 
-    /** Spinner for count of media */
+    /**
+     * Spinner for count of media
+     */
     private JSpinner mediaCountData = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Text field for note */
+    /**
+     * Text field for note
+     */
     private JTextField noteData = new JTextField();
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Button Cancel */
+    /**
+     * Button Cancel
+     */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Creates a new instance of MusicInfoDialog. */
+    /**
+     * Creates a new instance of MusicInfoDialog.
+     */
     public MusicInfoDialog() {
         this("Add", Picture.ADD);
 
@@ -146,7 +192,9 @@ public class MusicInfoDialog extends JDialog {
         return music;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -205,7 +253,9 @@ public class MusicInfoDialog extends JDialog {
         label.setFocusable(false);
     }
 
-    /** Performs action for button OK. */
+    /**
+     * Performs action for button OK.
+     */
     private void okAction() {
         returnStatus = DialogResult.OK;
         if (music == null) {
@@ -219,7 +269,9 @@ public class MusicInfoDialog extends JDialog {
         close();
     }
 
-    /** Performs action for button Cancel. */
+    /**
+     * Performs action for button Cancel.
+     */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
         music = null;
@@ -325,7 +377,9 @@ public class MusicInfoDialog extends JDialog {
         return !nameData.getText().isEmpty();
     }
 
-    /** Closes dialog. */
+    /**
+     * Closes dialog.
+     */
     private void close() {
         setVisible(false);
         dispose();

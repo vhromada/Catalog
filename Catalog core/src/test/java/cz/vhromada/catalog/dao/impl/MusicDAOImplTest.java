@@ -43,30 +43,42 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class MusicDAOImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Mock
     private EntityManager entityManager;
 
-    /** Query for music */
+    /**
+     * Query for music
+     */
     @Mock
     private TypedQuery<Music> musicQuery;
 
-    /** Instance of {@link MusicDAO} */
+    /**
+     * Instance of {@link MusicDAO}
+     */
     private MusicDAO musicDAO;
 
-    /** Initializes DAO for music. */
+    /**
+     * Initializes DAO for music.
+     */
     @Before
     public void setUp() {
         musicDAO = new MusicDAOImpl(entityManager);
     }
 
-    /** Test method for {@link MusicDAOImpl#MusicDAOImpl(EntityManager)} with null entity manager. */
+    /**
+     * Test method for {@link MusicDAOImpl#MusicDAOImpl(EntityManager)} with null entity manager.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEntityManager() {
         new MusicDAOImpl(null);
     }
 
-    /** Test method for {@link MusicDAO#getMusic()}. */
+    /**
+     * Test method for {@link MusicDAO#getMusic()}.
+     */
     @Test
     public void testGetMusic() {
         final List<Music> music = CollectionUtils.newList(generate(Music.class), generate(Music.class));
@@ -80,7 +92,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, musicQuery);
     }
 
-    /** Test method for {@link MusicDAO#getMusic()} with exception in persistence. */
+    /**
+     * Test method for {@link MusicDAO#getMusic()} with exception in persistence.
+     */
     @Test
     public void testGetMusicWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Music.class));
@@ -97,7 +111,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicQuery);
     }
 
-    /** Test method for {@link MusicDAO#getMusic(Integer)} with existing music. */
+    /**
+     * Test method for {@link MusicDAO#getMusic(Integer)} with existing music.
+     */
     @Test
     public void testGetMusicByIdWithExistingMusic() {
         final int id = generate(Integer.class);
@@ -110,7 +126,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#getMusic(Integer)} with not existing music. */
+    /**
+     * Test method for {@link MusicDAO#getMusic(Integer)} with not existing music.
+     */
     @Test
     public void testGetMusicByIdWithNotExistingMusic() {
         when(entityManager.find(eq(Music.class), anyInt())).thenReturn(null);
@@ -121,7 +139,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#getMusic(Integer)} with null argument. */
+    /**
+     * Test method for {@link MusicDAO#getMusic(Integer)} with null argument.
+     */
     @Test
     public void testGetMusicByIdWithNullArgument() {
         try {
@@ -134,7 +154,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#getMusic(Integer)} with exception in persistence. */
+    /**
+     * Test method for {@link MusicDAO#getMusic(Integer)} with exception in persistence.
+     */
     @Test
     public void testGetMusicByIdWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Music.class), anyInt());
@@ -150,7 +172,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#add(Music)} . */
+    /**
+     * Test method for {@link MusicDAO#add(Music)} .
+     */
     @Test
     public void testAdd() {
         final Music music = generate(Music.class);
@@ -166,7 +190,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#add(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicDAO#add(Music)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -179,7 +205,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#add(Music)} with exception in persistence. */
+    /**
+     * Test method for {@link MusicDAO#add(Music)} with exception in persistence.
+     */
     @Test
     public void testAddWithPersistenceException() {
         final Music music = generate(Music.class);
@@ -196,7 +224,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#update(Music)}. */
+    /**
+     * Test method for {@link MusicDAO#update(Music)}.
+     */
     @Test
     public void testUpdate() {
         final Music music = generate(Music.class);
@@ -207,7 +237,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#update(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicDAO#update(Music)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -220,7 +252,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#update(Music)} with exception in persistence. */
+    /**
+     * Test method for {@link MusicDAO#update(Music)} with exception in persistence.
+     */
     @Test
     public void testUpdateWithPersistenceException() {
         final Music music = generate(Music.class);
@@ -237,7 +271,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#remove(Music)} with managed music. */
+    /**
+     * Test method for {@link MusicDAO#remove(Music)} with managed music.
+     */
     @Test
     public void testRemoveWithManagedMusic() {
         final Music music = generate(Music.class);
@@ -250,7 +286,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#remove(Music)} with not managed music. */
+    /**
+     * Test method for {@link MusicDAO#remove(Music)} with not managed music.
+     */
     @Test
     public void testRemoveWithNotManagedMusic() {
         final Music music = generate(Music.class);
@@ -265,7 +303,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#remove(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicDAO#remove(Music)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -278,7 +318,9 @@ public class MusicDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link MusicDAO#remove(Music)} with exception in persistence. */
+    /**
+     * Test method for {@link MusicDAO#remove(Music)} with exception in persistence.
+     */
     @Test
     public void testRemoveWithPersistenceException() {
         final Music music = generate(Music.class);

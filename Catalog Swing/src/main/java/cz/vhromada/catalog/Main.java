@@ -21,10 +21,14 @@ import org.slf4j.LoggerFactory;
  */
 public final class Main {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    /** Creates a new instance of Main. */
+    /**
+     * Creates a new instance of Main.
+     */
     private Main() {
     }
 
@@ -69,7 +73,9 @@ public final class Main {
         }
     }
 
-    /** A class represents handler for uncaught exception. */
+    /**
+     * A class represents handler for uncaught exception.
+     */
     private static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         @Override

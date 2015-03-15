@@ -16,28 +16,38 @@ import org.junit.Test;
  */
 public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link MusicTOValidator} */
+    /**
+     * Instance of {@link MusicTOValidator}
+     */
     private MusicTOValidator musicTOValidator;
 
-    /** Initializes validator for TO for music. */
+    /**
+     * Initializes validator for TO for music.
+     */
     @Before
     public void setUp() {
         musicTOValidator = new MusicTOValidatorImpl();
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewMusicTOWithNullArgument() {
         musicTOValidator.validateNewMusicTO(null);
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with not null ID. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with not null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithNotNullId() {
         musicTOValidator.validateNewMusicTO(ToGenerator.newMusicWithId(getObjectGenerator()));
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null name. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithNullName() {
         final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
@@ -46,7 +56,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateNewMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with empty string as name. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with empty string as name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithEmptyName() {
         final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
@@ -55,7 +67,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateNewMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null URL to english Wikipedia page about music is null. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null URL to english Wikipedia page about music is null.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithNullWikiEn() {
         final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
@@ -64,7 +78,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateNewMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null URL to czech Wikipedia page about music is null. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null URL to czech Wikipedia page about music is null.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithNullWikiCz() {
         final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
@@ -73,7 +89,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateNewMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with not positive count of media. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with not positive count of media.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithNotPositiveMediaCount() {
         final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
@@ -82,7 +100,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateNewMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null note. */
+    /**
+     * Test method for {@link MusicTOValidator#validateNewMusicTO(MusicTO)} with TO for music with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTOWithNullNote() {
         final MusicTO music = ToGenerator.newMusic(getObjectGenerator());
@@ -91,19 +111,25 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateNewMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingMusicTOWithNullArgument() {
         musicTOValidator.validateExistingMusicTO(null);
     }
 
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null ID. */
+    /**
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTOWithNullId() {
         musicTOValidator.validateExistingMusicTO(ToGenerator.newMusic(getObjectGenerator()));
     }
 
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null name. */
+    /**
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTOWithNullName() {
         final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
@@ -112,7 +138,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateExistingMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with empty string as name. */
+    /**
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with empty string as name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTOWithEmptyName() {
         final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
@@ -122,8 +150,7 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null URL to english Wikipedia page about music is
-     * null.
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null URL to english Wikipedia page about music is null.
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTOWithNullWikiEn() {
@@ -134,8 +161,7 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null URL to czech Wikipedia page about music is
-     * null.
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null URL to czech Wikipedia page about music is null.
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTOWithNullWikiCz() {
@@ -145,7 +171,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateExistingMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with not positive count of media. */
+    /**
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with not positive count of media.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTOWithNotPositiveMediaCount() {
         final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
@@ -154,7 +182,9 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateExistingMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null note. */
+    /**
+     * Test method for {@link MusicTOValidator#validateExistingMusicTO(MusicTO)} with TO for music with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTOWithNullNote() {
         final MusicTO music = ToGenerator.newMusicWithId(getObjectGenerator());
@@ -163,13 +193,17 @@ public class MusicTOValidatorImplTest extends ObjectGeneratorTest {
         musicTOValidator.validateExistingMusicTO(music);
     }
 
-    /** Test method for {@link MusicTOValidator#validateMusicTOWithId(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicTOValidator#validateMusicTOWithId(MusicTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateMusicTOWithIdWithNullArgument() {
         musicTOValidator.validateMusicTOWithId(null);
     }
 
-    /** Test method for {@link MusicTOValidator#validateMusicTOWithId(MusicTO)} with TO for music with null ID. */
+    /**
+     * Test method for {@link MusicTOValidator#validateMusicTOWithId(MusicTO)} with TO for music with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateMusicTOWithIdWithNullId() {
         musicTOValidator.validateMusicTOWithId(ToGenerator.newMusic(getObjectGenerator()));

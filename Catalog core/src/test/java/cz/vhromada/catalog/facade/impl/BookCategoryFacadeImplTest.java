@@ -47,22 +47,32 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link BookCategoryService} */
+    /**
+     * Instance of {@link BookCategoryService}
+     */
     @Mock
     private BookCategoryService bookCategoryService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link BookCategoryTOValidator} */
+    /**
+     * Instance of {@link BookCategoryTOValidator}
+     */
     @Mock
     private BookCategoryTOValidator bookCategoryTOValidator;
 
-    /** Instance of {@link BookCategoryFacade} */
+    /**
+     * Instance of {@link BookCategoryFacade}
+     */
     private BookCategoryFacade bookCategoryFacade;
 
-    /** Initializes facade for book categories. */
+    /**
+     * Initializes facade for book categories.
+     */
     @Before
     public void setUp() {
         bookCategoryFacade = new BookCategoryFacadeImpl(bookCategoryService, converter, bookCategoryTOValidator);
@@ -78,8 +88,7 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link BookCategoryFacadeImpl#BookCategoryFacadeImpl(BookCategoryService, Converter, BookCategoryTOValidator)} with null
-     * converter.
+     * Test method for {@link BookCategoryFacadeImpl#BookCategoryFacadeImpl(BookCategoryService, Converter, BookCategoryTOValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
@@ -95,7 +104,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         new BookCategoryFacadeImpl(bookCategoryService, converter, null);
     }
 
-    /** Test method for {@link BookCategoryFacade#newData()}. */
+    /**
+     * Test method for {@link BookCategoryFacade#newData()}.
+     */
     @Test
     public void testNewData() {
         bookCategoryFacade.newData();
@@ -104,7 +115,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#newData()} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#newData()} with exception in service tier.
+     */
     @Test
     public void testNewDataWithFacadeTierException() {
         doThrow(ServiceOperationException.class).when(bookCategoryService).newData();
@@ -120,7 +133,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBookCategories()}. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBookCategories()}.
+     */
     @Test
     public void testGetBookCategories() {
         final List<BookCategory> bookCategories = CollectionUtils.newList(generate(BookCategory.class), generate(BookCategory.class));
@@ -135,7 +150,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBookCategories()} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBookCategories()} with exception in service tier.
+     */
     @Test
     public void testGetBookCategoriesWithFacadeTierException() {
         doThrow(ServiceOperationException.class).when(bookCategoryService).getBookCategories();
@@ -152,7 +169,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with existing book category. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with existing book category.
+     */
     @Test
     public void testGetBookCategoryWithExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -167,7 +186,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with not existing book category. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with not existing book category.
+     */
     @Test
     public void testGetBookCategoryWithNotExistingBookCategory() {
         when(bookCategoryService.getBookCategory(anyInt())).thenReturn(null);
@@ -180,7 +201,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with null argument.
+     */
     @Test
     public void testGetBookCategoryWithNullArgument() {
         try {
@@ -193,7 +216,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBookCategory(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetBookCategoryWithFacadeTierException() {
         doThrow(ServiceOperationException.class).when(bookCategoryService).getBookCategory(anyInt());
@@ -210,7 +235,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)}. */
+    /**
+     * Test method for {@link BookCategoryFacade#add(BookCategoryTO)}.
+     */
     @Test
     public void testAdd() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -232,7 +259,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(bookCategoryTOValidator).validateNewBookCategoryTO(any(BookCategoryTO.class));
@@ -249,7 +278,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with argument with bad data. */
+    /**
+     * Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -268,7 +299,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -290,7 +323,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#add(BookCategoryTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -313,7 +348,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)}. */
+    /**
+     * Test method for {@link BookCategoryFacade#update(BookCategoryTO)}.
+     */
     @Test
     public void testUpdate() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -330,7 +367,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(bookCategoryTOValidator).validateExistingBookCategoryTO(any(BookCategoryTO.class));
@@ -347,7 +386,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with argument with bad data. */
+    /**
+     * Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -365,7 +406,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with not existing argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -386,7 +429,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#update(BookCategoryTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -407,7 +452,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)}. */
+    /**
+     * Test method for {@link BookCategoryFacade#remove(BookCategoryTO)}.
+     */
     @Test
     public void testRemove() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -422,7 +469,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(bookCategoryTOValidator).validateBookCategoryTOWithId(any(BookCategoryTO.class));
@@ -439,7 +488,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with argument with bad data. */
+    /**
+     * Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -457,7 +508,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with not existing argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -475,7 +528,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#remove(BookCategoryTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -493,7 +548,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)}. */
+    /**
+     * Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)}.
+     */
     @Test
     public void testDuplicate() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -508,7 +565,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(bookCategoryTOValidator).validateBookCategoryTOWithId(any(BookCategoryTO.class));
@@ -525,7 +584,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with argument with bad data. */
+    /**
+     * Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -543,7 +604,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with not existing argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -561,7 +624,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#duplicate(BookCategoryTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -579,7 +644,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)}. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)}.
+     */
     @Test
     public void testMoveUp() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -597,7 +664,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(bookCategoryTOValidator).validateBookCategoryTOWithId(any(BookCategoryTO.class));
@@ -614,7 +683,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with argument with bad data. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with argument with bad data.
+     */
     @Test
     public void testMoveUpWithBadArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -632,7 +703,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not existing argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not existing argument.
+     */
     @Test
     public void testMoveUpWithNotExistingArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -650,7 +723,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not moveable argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not moveable argument.
+     */
     @Test
     public void testMoveUpWithNotMoveableArgument() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -672,7 +747,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with exception in service tier.
+     */
     @Test
     public void testMoveUpWithServiceTierException() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -690,7 +767,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)}. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)}.
+     */
     @Test
     public void testMoveDown() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -708,7 +787,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(bookCategoryTOValidator).validateBookCategoryTOWithId(any(BookCategoryTO.class));
@@ -725,7 +806,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with argument with bad data. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with argument with bad data.
+     */
     @Test
     public void testMoveDownWithBadArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -743,7 +826,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not existing argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not existing argument.
+     */
     @Test
     public void testMoveDownWithNotExistingArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -761,7 +846,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not moveable argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not moveable argument.
+     */
     @Test
     public void testMoveDownWithNotMoveableArgument() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -783,7 +870,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with exception in service tier.
+     */
     @Test
     public void testMoveDownWithServiceTierException() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -801,7 +890,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with existing book category. */
+    /**
+     * Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with existing book category.
+     */
     @Test
     public void testExistsWithExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -817,7 +908,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with not existing book category. */
+    /**
+     * Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with not existing book category.
+     */
     @Test
     public void testExistsWithNotExistingBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -833,7 +926,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with null argument. */
+    /**
+     * Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(bookCategoryTOValidator).validateBookCategoryTOWithId(any(BookCategoryTO.class));
@@ -850,7 +945,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with argument with bad data. */
+    /**
+     * Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final BookCategoryTO bookCategory = generate(BookCategoryTO.class);
@@ -868,7 +965,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(bookCategoryService, converter);
     }
 
-    /** Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#exists(BookCategoryTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -889,7 +988,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService, converter, bookCategoryTOValidator);
     }
 
-    /** Test method for {@link BookCategoryFacade#updatePositions()}. */
+    /**
+     * Test method for {@link BookCategoryFacade#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         bookCategoryFacade.updatePositions();
@@ -898,7 +999,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#updatePositions()} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#updatePositions()} with exception in service tier.
+     */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(bookCategoryService).updatePositions();
@@ -914,7 +1017,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBooksCount()}. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBooksCount()}.
+     */
     @Test
     public void testGetBooksCount() {
         final int count = generate(Integer.class);
@@ -926,7 +1031,9 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(bookCategoryService);
     }
 
-    /** Test method for {@link BookCategoryFacade#getBooksCount()} with exception in service tier. */
+    /**
+     * Test method for {@link BookCategoryFacade#getBooksCount()} with exception in service tier.
+     */
     @Test
     public void testGetBooksCountWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(bookCategoryService).getBooksCount();

@@ -24,7 +24,9 @@ public class MovieController extends JsonController {
     @Qualifier("movieFacade")
     private MovieFacade movieFacade;
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
     public void newData() {
@@ -200,7 +202,9 @@ public class MovieController extends JsonController {
         return serialize(movieFacade.exists(deserialize(movie, MovieTO.class)));
     }
 
-    /** Updates positions. */
+    /**
+     * Updates positions.
+     */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     @ResponseBody
     public void updatePositions() {

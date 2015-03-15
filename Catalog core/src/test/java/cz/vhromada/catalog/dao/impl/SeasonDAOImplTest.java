@@ -44,30 +44,42 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class SeasonDAOImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Mock
     private EntityManager entityManager;
 
-    /** Query for seasons */
+    /**
+     * Query for seasons
+     */
     @Mock
     private TypedQuery<Season> seasonsQuery;
 
-    /** Instance of {@link SeasonDAO} */
+    /**
+     * Instance of {@link SeasonDAO}
+     */
     private SeasonDAO seasonDAO;
 
-    /** Initializes DAO for seasons. */
+    /**
+     * Initializes DAO for seasons.
+     */
     @Before
     public void setUp() {
         seasonDAO = new SeasonDAOImpl(entityManager);
     }
 
-    /** Test method for {@link SeasonDAOImpl#SeasonDAOImpl(EntityManager)} with null entity manager. */
+    /**
+     * Test method for {@link SeasonDAOImpl#SeasonDAOImpl(EntityManager)} with null entity manager.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEntityManager() {
         new SeasonDAOImpl(null);
     }
 
-    /** Test method for {@link SeasonDAO#getSeason(Integer)} with existing season. */
+    /**
+     * Test method for {@link SeasonDAO#getSeason(Integer)} with existing season.
+     */
     @Test
     public void testGetSeasonWithExistingSeason() {
         final int id = generate(Integer.class);
@@ -80,7 +92,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#getSeason(Integer)} with not existing season. */
+    /**
+     * Test method for {@link SeasonDAO#getSeason(Integer)} with not existing season.
+     */
     @Test
     public void testGetSeasonWithNotExistingSeason() {
         when(entityManager.find(eq(Season.class), anyInt())).thenReturn(null);
@@ -91,7 +105,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#getSeason(Integer)} with null argument. */
+    /**
+     * Test method for {@link SeasonDAO#getSeason(Integer)} with null argument.
+     */
     @Test
     public void testGetSeasonWithNullArgument() {
         try {
@@ -104,7 +120,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#getSeason(Integer)} with exception in persistence. */
+    /**
+     * Test method for {@link SeasonDAO#getSeason(Integer)} with exception in persistence.
+     */
     @Test
     public void testGetSeasonWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Season.class), anyInt());
@@ -120,7 +138,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#add(Season)}. */
+    /**
+     * Test method for {@link SeasonDAO#add(Season)}.
+     */
     @Test
     public void testAdd() {
         final Season season = generate(Season.class);
@@ -136,7 +156,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#add(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonDAO#add(Season)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -149,7 +171,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#add(Season)} with exception in persistence. */
+    /**
+     * Test method for {@link SeasonDAO#add(Season)} with exception in persistence.
+     */
     @Test
     public void testAddWithPersistenceException() {
         final Season season = generate(Season.class);
@@ -166,7 +190,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#update(Season)}. */
+    /**
+     * Test method for {@link SeasonDAO#update(Season)}.
+     */
     @Test
     public void testUpdate() {
         final Season season = generate(Season.class);
@@ -177,7 +203,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#update(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonDAO#update(Season)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -190,7 +218,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#update(Season)} with exception in persistence. */
+    /**
+     * Test method for {@link SeasonDAO#update(Season)} with exception in persistence.
+     */
     @Test
     public void testUpdateWithPersistenceException() {
         final Season season = generate(Season.class);
@@ -207,7 +237,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#remove(Season)} with managed season. */
+    /**
+     * Test method for {@link SeasonDAO#remove(Season)} with managed season.
+     */
     @Test
     public void testRemoveWithManagedSeason() {
         final Season season = generate(Season.class);
@@ -220,7 +252,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#remove(Season)} with not managed season. */
+    /**
+     * Test method for {@link SeasonDAO#remove(Season)} with not managed season.
+     */
     @Test
     public void testRemoveWithNotManagedSeason() {
         final Season season = generate(Season.class);
@@ -235,7 +269,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#remove(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonDAO#remove(Season)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -248,7 +284,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#remove(Season)} with exception in persistence. */
+    /**
+     * Test method for {@link SeasonDAO#remove(Season)} with exception in persistence.
+     */
     @Test
     public void testRemoveWithPersistenceException() {
         final Season season = generate(Season.class);
@@ -265,7 +303,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)}. */
+    /**
+     * Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)}.
+     */
     @Test
     public void testFindSeasonsBySerie() {
         final Serie serie = generate(Serie.class);
@@ -281,7 +321,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, seasonsQuery);
     }
 
-    /** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with null argument. */
+    /**
+     * Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with null argument.
+     */
     @Test
     public void testFindSeasonsBySerieWithNullArgument() {
         try {
@@ -294,7 +336,9 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager, seasonsQuery);
     }
 
-    /** Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with exception in persistence. */
+    /**
+     * Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with exception in persistence.
+     */
     @Test
     public void testFindSeasonsBySerieWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Season.class));

@@ -26,37 +26,59 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameFacadeImpl implements GameFacade {
 
-    /** Service for games argument */
+    /**
+     * Service for games argument
+     */
     private static final String GAME_SERVICE_ARGUMENT = "Service for games";
 
-    /** Converter argument */
+    /**
+     * Converter argument
+     */
     private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for game argument */
+    /**
+     * Validator for TO for game argument
+     */
     private static final String GAME_TO_VALIDATOR_ARGUMENT = "Validator for TO for game";
 
-    /** Game argument */
+    /**
+     * Game argument
+     */
     private static final String GAME_ARGUMENT = "game";
 
-    /** TO for game argument */
+    /**
+     * TO for game argument
+     */
     private static final String GAME_TO_ARGUMENT = "TO for game";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link FacadeOperationException} */
+    /**
+     * Message for {@link FacadeOperationException}
+     */
     private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-    /** Message for not setting ID */
+    /**
+     * Message for not setting ID
+     */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-    /** Service for games */
+    /**
+     * Service for games
+     */
     private GameService gameService;
 
-    /** Converter */
+    /**
+     * Converter
+     */
     private Converter converter;
 
-    /** Validator for TO for game */
+    /**
+     * Validator for TO for game
+     */
     private GameTOValidator gameTOValidator;
 
     /**

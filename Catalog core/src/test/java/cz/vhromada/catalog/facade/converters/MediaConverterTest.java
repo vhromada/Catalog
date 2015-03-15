@@ -32,21 +32,29 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class MediaConverterTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link Mapper} */
+    /**
+     * Instance of {@link Mapper}
+     */
     @Mock
     private Mapper mapper;
 
-    /** Instance of {@link MediaConverter} */
+    /**
+     * Instance of {@link MediaConverter}
+     */
     private MediaConverter converter;
 
-    /** Initializes converter. */
+    /**
+     * Initializes converter.
+     */
     @Before
     public void setUp() {
         converter = new MediaConverter();
         converter.setMapper(mapper);
     }
 
-    /** Test method for {@link MediaConverter#convert(Object, Object, Class, Class)} with list of integer argument. */
+    /**
+     * Test method for {@link MediaConverter#convert(Object, Object, Class, Class)} with list of integer argument.
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testConvertWithIntegerListArgument() {
@@ -67,7 +75,9 @@ public class MediaConverterTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(mapper);
     }
 
-    /** Test method for {@link MediaConverter#convert(Object, Object, Class, Class)} with medium argument. */
+    /**
+     * Test method for {@link MediaConverter#convert(Object, Object, Class, Class)} with medium argument.
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testConvertWithMediumArgument() {
@@ -88,7 +98,9 @@ public class MediaConverterTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(mapper);
     }
 
-    /** Test method for {@link MediaConverter#convert(Object, Object, Class, Class)} with null argument. */
+    /**
+     * Test method for {@link MediaConverter#convert(Object, Object, Class, Class)} with null argument.
+     */
     @Test
     public void testConvertWithNullArgument() {
         assertNull(converter.convert(null, null, null, null));

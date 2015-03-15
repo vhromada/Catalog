@@ -19,49 +19,79 @@ import cz.vhromada.validators.Validators;
  */
 public class GenreInfoDialog extends JDialog {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size in dialog */
+    /**
+     * Horizontal label size in dialog
+     */
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
 
-    /** Horizontal data size in dialog */
+    /**
+     * Horizontal data size in dialog
+     */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** TO for genre */
+    /**
+     * TO for genre
+     */
     private GenreTO genre;
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Name");
 
-    /** Text field for name */
+    /**
+     * Text field for name
+     */
     private JTextField nameData = new JTextField();
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Button Cancel */
+    /**
+     * Button Cancel
+     */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Creates a new instance of GenreInfoDialog. */
+    /**
+     * Creates a new instance of GenreInfoDialog.
+     */
     public GenreInfoDialog() {
         this("Add", Picture.ADD);
 
@@ -118,7 +148,9 @@ public class GenreInfoDialog extends JDialog {
         return genre;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -173,7 +205,9 @@ public class GenreInfoDialog extends JDialog {
         label.setFocusable(false);
     }
 
-    /** Performs action for button OK. */
+    /**
+     * Performs action for button OK.
+     */
     private void okAction() {
         returnStatus = DialogResult.OK;
         if (genre == null) {
@@ -183,7 +217,9 @@ public class GenreInfoDialog extends JDialog {
         close();
     }
 
-    /** Performs action for button Cancel. */
+    /**
+     * Performs action for button Cancel.
+     */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
         genre = null;
@@ -277,7 +313,9 @@ public class GenreInfoDialog extends JDialog {
         return !nameData.getText().isEmpty();
     }
 
-    /** Closes dialog. */
+    /**
+     * Closes dialog.
+     */
     private void close() {
         setVisible(false);
         dispose();

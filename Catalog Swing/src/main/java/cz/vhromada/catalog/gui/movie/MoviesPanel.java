@@ -25,67 +25,109 @@ import cz.vhromada.validators.Validators;
  */
 public class MoviesPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal scroll pane size */
+    /**
+     * Horizontal scroll pane size
+     */
     private static final int HORIZONTAL_SCROLL_PANE_SIZE = 200;
 
-    /** Vertical data component size */
+    /**
+     * Vertical data component size
+     */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
-    /** Vertical size for scroll pane for table with stats */
+    /**
+     * Vertical size for scroll pane for table with stats
+     */
     private static final int VERTICAL_STATS_SCROLL_PANE_SIZE = 45;
 
-    /** Popup menu */
+    /**
+     * Popup menu
+     */
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    /** Menu item for adding movie */
+    /**
+     * Menu item for adding movie
+     */
     private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
-    /** Menu item for updating movie */
+    /**
+     * Menu item for updating movie
+     */
     private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
-    /** Menu item for removing movie */
+    /**
+     * Menu item for removing movie
+     */
     private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
-    /** Menu item for duplicating movie */
+    /**
+     * Menu item for duplicating movie
+     */
     private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
-    /** Menu item for moving up movie */
+    /**
+     * Menu item for moving up movie
+     */
     private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
-    /** Menu item for moving down movie */
+    /**
+     * Menu item for moving down movie
+     */
     private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
-    /** List with movies */
+    /**
+     * List with movies
+     */
     private JList<String> list = new JList<>();
 
-    /** ScrollPane for list with movies */
+    /**
+     * ScrollPane for list with movies
+     */
     private JScrollPane listScrollPane = new JScrollPane(list);
 
-    /** Tabbed pane with movie's data */
+    /**
+     * Tabbed pane with movie's data
+     */
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    /** Table with with movies' stats */
+    /**
+     * Table with with movies' stats
+     */
     private JTable statsTable = new JTable();
 
-    /** ScrollPane for table with movies' stats */
+    /**
+     * ScrollPane for table with movies' stats
+     */
     private JScrollPane statsTableScrollPane = new JScrollPane(statsTable);
 
-    /** Facade for movies */
+    /**
+     * Facade for movies
+     */
     private MovieFacade movieFacade;
 
-    /** Facade for genres */
+    /**
+     * Facade for genres
+     */
     private GenreFacade genreFacade;
 
-    /** Data model for list with movies */
+    /**
+     * Data model for list with movies
+     */
     private MoviesListDataModel moviesListDataModel;
 
-    /** Data model for table with stats for movies */
+    /**
+     * Data model for table with stats for movies
+     */
     private MoviesStatsTableDataModel moviesStatsTableDataModel;
 
-    /** True if data is saved */
+    /**
+     * True if data is saved
+     */
     private boolean saved;
 
     /**
@@ -106,7 +148,9 @@ public class MoviesPanel extends JPanel {
         initComponents();
     }
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     public void newData() {
         movieFacade.newData();
         moviesListDataModel.update();
@@ -117,12 +161,16 @@ public class MoviesPanel extends JPanel {
         saved = true;
     }
 
-    /** Clears selection. */
+    /**
+     * Clears selection.
+     */
     public void clearSelection() {
         list.clearSelection();
     }
 
-    /** Saves. */
+    /**
+     * Saves.
+     */
     public void save() {
         saved = true;
     }
@@ -136,7 +184,9 @@ public class MoviesPanel extends JPanel {
         return saved;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
 
@@ -232,7 +282,9 @@ public class MoviesPanel extends JPanel {
         }
     }
 
-    /** Performs action for button Add. */
+    /**
+     * Performs action for button Add.
+     */
     private void addAction() {
         EventQueue.invokeLater(new Runnable() {
 
@@ -254,7 +306,9 @@ public class MoviesPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Update. */
+    /**
+     * Performs action for button Update.
+     */
     private void updateAction() {
         EventQueue.invokeLater(new Runnable() {
 
@@ -278,7 +332,9 @@ public class MoviesPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Remove. */
+    /**
+     * Performs action for button Remove.
+     */
     private void removeAction() {
         movieFacade.remove(moviesListDataModel.getMovieAt(list.getSelectedIndex()));
         moviesListDataModel.update();
@@ -289,7 +345,9 @@ public class MoviesPanel extends JPanel {
         saved = false;
     }
 
-    /** Performs action for button Duplicate. */
+    /**
+     * Performs action for button Duplicate.
+     */
     private void duplicateAction() {
         final int index = list.getSelectedIndex();
         movieFacade.duplicate(moviesListDataModel.getMovieAt(index));
@@ -301,7 +359,9 @@ public class MoviesPanel extends JPanel {
         saved = false;
     }
 
-    /** Performs action for button MoveUp. */
+    /**
+     * Performs action for button MoveUp.
+     */
     private void moveUpAction() {
         final int index = list.getSelectedIndex();
         movieFacade.moveUp(moviesListDataModel.getMovieAt(index));
@@ -311,7 +371,9 @@ public class MoviesPanel extends JPanel {
         saved = false;
     }
 
-    /** Performs action for button MoveDown. */
+    /**
+     * Performs action for button MoveDown.
+     */
     private void moveDownAction() {
         final int index = list.getSelectedIndex();
         movieFacade.moveDown(moviesListDataModel.getMovieAt(index));
@@ -321,7 +383,9 @@ public class MoviesPanel extends JPanel {
         saved = false;
     }
 
-    /** Initializes list. */
+    /**
+     * Initializes list.
+     */
     private void initList() {
         moviesListDataModel = new MoviesListDataModel(movieFacade);
         list.setModel(moviesListDataModel);
@@ -337,7 +401,9 @@ public class MoviesPanel extends JPanel {
         });
     }
 
-    /** Performs action for change of list value. */
+    /**
+     * Performs action for change of list value.
+     */
     private void listValueChangedAction() {
         final boolean isSelectedRow = list.getSelectedIndices().length == 1;
         final int selectedRow = list.getSelectedIndex();

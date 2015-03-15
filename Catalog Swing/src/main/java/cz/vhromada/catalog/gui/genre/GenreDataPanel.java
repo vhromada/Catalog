@@ -13,25 +13,39 @@ import cz.vhromada.validators.Validators;
  */
 public class GenreDataPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size */
+    /**
+     * Horizontal label size
+     */
     private static final int HORIZONTAL_LABEL_SIZE = 150;
 
-    /** Horizontal data size */
+    /**
+     * Horizontal data size
+     */
     private static final int HORIZONTAL_DATA_SIZE = 600;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 10;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Name");
 
-    /** Label with name */
+    /**
+     * Label with name
+     */
     private JLabel nameData = new JLabel();
 
     /**

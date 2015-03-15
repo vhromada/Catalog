@@ -16,22 +16,34 @@ import cz.vhromada.validators.Validators;
  */
 public class MoviesStatsTableDataModel extends AbstractTableModel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Error message for bad column */
+    /**
+     * Error message for bad column
+     */
     private static final String BAD_COLUMN_ERROR_MESSAGE = "Bad column";
 
-    /** Facade for movies */
+    /**
+     * Facade for movies
+     */
     private MovieFacade movieFacade;
 
-    /** List of TO for movie */
+    /**
+     * List of TO for movie
+     */
     private List<MovieTO> movies;
 
-    /** Total length of all movies */
+    /**
+     * Total length of all movies
+     */
     private Time totalLength;
 
-    /** Total count of media */
+    /**
+     * Total count of media
+     */
     private int totalMediaCount;
 
     /**
@@ -128,7 +140,9 @@ public class MoviesStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         movies = movieFacade.getMovies();
         totalLength = movieFacade.getTotalLength();

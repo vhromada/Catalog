@@ -38,36 +38,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SeasonServiceImplSpringTest {
 
-    /** Cache key for list of seasons */
+    /**
+     * Cache key for list of seasons
+     */
     private static final String SEASONS_CACHE_KEY = "seasons";
 
-    /** Cache key for season */
+    /**
+     * Cache key for season
+     */
     private static final String SEASON_CACHE_KEY = "season";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('serieCache')}")
     private Cache serieCache;
 
-    /** Instance of {@link SeasonService} */
+    /**
+     * Instance of {@link SeasonService}
+     */
     @Autowired
     private SeasonService seasonService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequence. */
+    /**
+     * Clears cache and restarts sequence.
+     */
     @Before
     public void setUp() {
         serieCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE seasons_sq RESTART WITH 10").executeUpdate();
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with existing season. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with existing season.
+     */
     @Test
     public void testGetSeasonWithExistingSeason() {
         final List<String> keys = new ArrayList<>();
@@ -89,7 +105,9 @@ public class SeasonServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with not existing season. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with not existing season.
+     */
     @Test
     public void testGetSeasonWithNotExistingSeason() {
         final String key = SEASON_CACHE_KEY + Integer.MAX_VALUE;
@@ -100,7 +118,9 @@ public class SeasonServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, null);
     }
 
-    /** Test method for {@link SeasonService#add(Season)} with empty cache. */
+    /**
+     * Test method for {@link SeasonService#add(Season)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
@@ -115,7 +135,9 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SeasonService#add(Season)} with not empty cache. */
+    /**
+     * Test method for {@link SeasonService#add(Season)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
@@ -136,7 +158,9 @@ public class SeasonServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, keyItem, season);
     }
 
-    /** Test method for {@link SeasonService#update(Season)}. */
+    /**
+     * Test method for {@link SeasonService#update(Season)}.
+     */
     @Test
     public void testUpdate() {
         final Season season = SpringEntitiesUtils.updateSeason(1, objectGenerator, entityManager);
@@ -149,7 +173,9 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SeasonService#remove(Season)} with empty cache. */
+    /**
+     * Test method for {@link SeasonService#remove(Season)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
@@ -163,7 +189,9 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SeasonService#remove(Season)} with not empty cache. */
+    /**
+     * Test method for {@link SeasonService#remove(Season)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
@@ -181,7 +209,9 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SeasonService#duplicate(Season)} with empty cache. */
+    /**
+     * Test method for {@link SeasonService#duplicate(Season)} with empty cache.
+     */
     @Test
     public void testDuplicateWithEmptyCache() {
         final Season season = SpringUtils.getSeason(entityManager, 3);
@@ -200,7 +230,9 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SeasonService#duplicate(Season)} with not empty cache. */
+    /**
+     * Test method for {@link SeasonService#duplicate(Season)} with not empty cache.
+     */
     @Test
     public void testDuplicateWithNotEmptyCache() {
         final Season season = SpringUtils.getSeason(entityManager, 3);
@@ -223,7 +255,9 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SeasonService#moveUp(Season)}. */
+    /**
+     * Test method for {@link SeasonService#moveUp(Season)}.
+     */
     @Test
     public void testMoveUp() {
         final Season season = SpringUtils.getSeason(entityManager, 2);
@@ -245,7 +279,9 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SeasonService#moveDown(Season)}. */
+    /**
+     * Test method for {@link SeasonService#moveDown(Season)}.
+     */
     @Test
     public void testMoveDown() {
         final Season season = SpringUtils.getSeason(entityManager, 1);
@@ -268,7 +304,9 @@ public class SeasonServiceImplSpringTest {
     }
 
 
-    /** Test method for {@link SeasonService#exists(Season)} with existing season. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with existing season.
+     */
     @Test
     public void testExistsWithExistingSeason() {
         final List<String> keys = new ArrayList<>();
@@ -290,7 +328,9 @@ public class SeasonServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with not existing season. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with not existing season.
+     */
     @Test
     public void testExistsWithNotExistingSeason() {
         final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
@@ -303,7 +343,9 @@ public class SeasonServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, null);
     }
 
-    /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)}. */
+    /**
+     * Test method for {@link SeasonService#findSeasonsBySerie(Serie)}.
+     */
     @Test
     public void testFindSeasonsBySerie() {
         final List<String> keys = new ArrayList<>();

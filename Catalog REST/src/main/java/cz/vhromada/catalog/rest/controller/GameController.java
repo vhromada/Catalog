@@ -24,7 +24,9 @@ public class GameController extends JsonController {
     @Qualifier("gameFacade")
     private GameFacade gameFacade;
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
     public void newData() {
@@ -168,7 +170,9 @@ public class GameController extends JsonController {
         return serialize(gameFacade.exists(deserialize(game, GameTO.class)));
     }
 
-    /** Updates positions. */
+    /**
+     * Updates positions.
+     */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     @ResponseBody
     public void updatePositions() {

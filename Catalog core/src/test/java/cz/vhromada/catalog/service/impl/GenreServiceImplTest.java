@@ -43,46 +43,66 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class GenreServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of genres */
+    /**
+     * Cache key for list of genres
+     */
     private static final String GENRES_CACHE_KEY = "genres";
 
-    /** Cache key for genre */
+    /**
+     * Cache key for genre
+     */
     private static final String GENRE_CACHE_KEY = "genre";
 
-    /** Instance of {@link GenreDAO} */
+    /**
+     * Instance of {@link GenreDAO}
+     */
     @Mock
     private GenreDAO genreDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache genreCache;
 
-    /** Instance of {@link List} of {@link String}. */
+    /**
+     * Instance of {@link List} of {@link String}.
+     */
     @Mock
     private List<String> mockNamesList;
 
-    /** Instance of {@link GenreService} */
+    /**
+     * Instance of {@link GenreService}
+     */
     private GenreService genreService;
 
-    /** Initializes service for genres. */
+    /**
+     * Initializes service for genres.
+     */
     @Before
     public void setUp() {
         genreService = new GenreServiceImpl(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with null DAO for genres. */
+    /**
+     * Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with null DAO for genres.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameDAO() {
         new GenreServiceImpl(null, genreCache);
     }
 
-    /** Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with null cache for genres. */
+    /**
+     * Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreDAO, Cache)} with null cache for genres.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGameCache() {
         new GenreServiceImpl(genreDAO, null);
     }
 
-    /** Test method for {@link GenreService#newData()} with cached genres. */
+    /**
+     * Test method for {@link GenreService#newData()} with cached genres.
+     */
     @Test
     public void testNewDataWithCachedGenres() {
         final List<Genre> genres = CollectionUtils.newList(mock(Genre.class), mock(Genre.class));
@@ -98,7 +118,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#newData()} with not cached genres. */
+    /**
+     * Test method for {@link GenreService#newData()} with not cached genres.
+     */
     @Test
     public void testNewDataWithNotCachedGenres() {
         final List<Genre> genres = CollectionUtils.newList(mock(Genre.class), mock(Genre.class));
@@ -116,7 +138,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#newData()} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#newData()} with exception in DAO tier.
+     */
     @Test
     public void testNewDataWithDAOTierException() {
         doThrow(DataStorageException.class).when(genreDAO).getGenres();
@@ -134,7 +158,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#getGenres()} with cached genres. */
+    /**
+     * Test method for {@link GenreService#getGenres()} with cached genres.
+     */
     @Test
     public void testGetGenresWithCachedGenres() {
         final List<Genre> genres = CollectionUtils.newList(mock(Genre.class), mock(Genre.class));
@@ -147,7 +173,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO);
     }
 
-    /** Test method for {@link GenreService#getGenres()} with not cached genres. */
+    /**
+     * Test method for {@link GenreService#getGenres()} with not cached genres.
+     */
     @Test
     public void testGetGenresWithNotCachedGenres() {
         final List<Genre> genres = CollectionUtils.newList(mock(Genre.class), mock(Genre.class));
@@ -162,7 +190,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#getGenres()} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#getGenres()} with exception in DAO tier.
+     */
     @Test
     public void testGetGenresWithDAOTierException() {
         doThrow(DataStorageException.class).when(genreDAO).getGenres();
@@ -180,7 +210,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with cached existing genre. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with cached existing genre.
+     */
     @Test
     public void testGetGenreWithCachedExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -193,7 +225,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with cached not existing genre. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with cached not existing genre.
+     */
     @Test
     public void testGetGenreWithCachedNotExistingGenre() {
         final int id = generate(Integer.class);
@@ -206,7 +240,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with not cached existing genre. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with not cached existing genre.
+     */
     @Test
     public void testGetGenreWithNotCachedExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -221,7 +257,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with not cached not existing genre. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with not cached not existing genre.
+     */
     @Test
     public void testGetGenreWithNotCachedNotExistingGenre() {
         final int id = generate(Integer.class);
@@ -236,7 +274,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with null argument. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with null argument.
+     */
     @Test
     public void testGetGenreWithNullArgument() {
         try {
@@ -249,7 +289,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetGenreWithDAOTierException() {
         doThrow(DataStorageException.class).when(genreDAO).getGenre(anyInt());
@@ -267,7 +309,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(Genre)} with cached genres. */
+    /**
+     * Test method for {@link GenreService#add(Genre)} with cached genres.
+     */
     @Test
     public void testAddWithCachedGenres() {
         final Genre genre = generate(Genre.class);
@@ -286,7 +330,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(Genre)} with not cached genres. */
+    /**
+     * Test method for {@link GenreService#add(Genre)} with not cached genres.
+     */
     @Test
     public void testAddWithNotCachedGenres() {
         final Genre genre = generate(Genre.class);
@@ -300,7 +346,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(Genre)} with null argument. */
+    /**
+     * Test method for {@link GenreService#add(Genre)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -313,7 +361,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(Genre)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#add(Genre)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Genre genre = generate(Genre.class);
@@ -331,7 +381,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreCache);
     }
 
-    /** Test method for {@link GenreService#add(List)}. */
+    /**
+     * Test method for {@link GenreService#add(List)}.
+     */
     @Test
     public void testAddList() {
         final List<String> names = CollectionUtils.newList(generate(String.class), generate(String.class));
@@ -343,7 +395,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(List)} with null argument. */
+    /**
+     * Test method for {@link GenreService#add(List)} with null argument.
+     */
     @Test
     public void testAddListWithNullArgument() {
         try {
@@ -357,7 +411,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#add(List)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#add(List)} with exception in DAO tier.
+     */
     @Test
     public void testAddListWithDAOTierException() {
         doThrow(DataStorageException.class).when(genreDAO).add(any(Genre.class));
@@ -374,7 +430,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreCache);
     }
 
-    /** Test method for {@link GenreService#update(Genre)}. */
+    /**
+     * Test method for {@link GenreService#update(Genre)}.
+     */
     @Test
     public void testUpdate() {
         final Genre genre = generate(Genre.class);
@@ -386,7 +444,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#update(Genre)} with null argument. */
+    /**
+     * Test method for {@link GenreService#update(Genre)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -399,7 +459,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#update(Genre)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#update(Genre)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Genre genre = generate(Genre.class);
@@ -417,7 +479,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreCache);
     }
 
-    /** Test method for {@link GenreService#remove(Genre)} with cached genres. */
+    /**
+     * Test method for {@link GenreService#remove(Genre)} with cached genres.
+     */
     @Test
     public void testRemoveWithCachedGenres() {
         final Genre genre = generate(Genre.class);
@@ -435,7 +499,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#remove(Genre)} with not cached genres. */
+    /**
+     * Test method for {@link GenreService#remove(Genre)} with not cached genres.
+     */
     @Test
     public void testRemoveWithNotCachedGenres() {
         final Genre genre = generate(Genre.class);
@@ -449,7 +515,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#remove(Genre)} with null argument. */
+    /**
+     * Test method for {@link GenreService#remove(Genre)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -462,7 +530,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#remove(Genre)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#remove(Genre)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Genre genre = generate(Genre.class);
@@ -480,7 +550,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreCache);
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with cached existing genre. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with cached existing genre.
+     */
     @Test
     public void testExistsWithCachedExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -493,7 +565,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO);
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with cached not existing genre. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with cached not existing genre.
+     */
     @Test
     public void testExistsWithCachedNotExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -506,7 +580,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO);
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with not cached existing genre. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with not cached existing genre.
+     */
     @Test
     public void testExistsWithNotCachedExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -521,7 +597,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with not cached not existing genre. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with not cached not existing genre.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingGenre() {
         final Genre genre = generate(Genre.class);
@@ -536,7 +614,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with null argument. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -549,7 +629,9 @@ public class GenreServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(genreDAO, genreCache);
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with exception in DAO tier. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Genre genre = generate(Genre.class);

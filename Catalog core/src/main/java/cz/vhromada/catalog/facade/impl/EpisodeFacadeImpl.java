@@ -30,52 +30,84 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EpisodeFacadeImpl implements EpisodeFacade {
 
-    /** Service for seasons argument */
+    /**
+     * Service for seasons argument
+     */
     private static final String SEASON_SERVICE_ARGUMENT = "Service for seasons";
 
-    /** Service for episodes argument */
+    /**
+     * Service for episodes argument
+     */
     private static final String EPISODE_SERVICE_ARGUMENT = "Service for episodes";
 
-    /** Converter argument */
+    /**
+     * Converter argument
+     */
     private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for season field */
+    /**
+     * Validator for TO for season field
+     */
     private static final String SEASON_TO_VALIDATOR_ARGUMENT = "Validator for TO for season";
 
-    /** Validator for TO for episode field */
+    /**
+     * Validator for TO for episode field
+     */
     private static final String EPISODE_TO_VALIDATOR_ARGUMENT = "Validator for TO for episode";
 
-    /** Episode argument */
+    /**
+     * Episode argument
+     */
     private static final String EPISODE_ARGUMENT = "episode";
 
-    /** TO for season argument */
+    /**
+     * TO for season argument
+     */
     private static final String SEASON_TO_ARGUMENT = "TO for season";
 
-    /** TO for episode argument */
+    /**
+     * TO for episode argument
+     */
     private static final String EPISODE_TO_ARGUMENT = "TO for episode";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link FacadeOperationException} */
+    /**
+     * Message for {@link FacadeOperationException}
+     */
     private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-    /** Message for not setting ID */
+    /**
+     * Message for not setting ID
+     */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-    /** Service for seasons */
+    /**
+     * Service for seasons
+     */
     private SeasonService seasonService;
 
-    /** Service for episodes */
+    /**
+     * Service for episodes
+     */
     private EpisodeService episodeService;
 
-    /** Converter */
+    /**
+     * Converter
+     */
     private Converter converter;
 
-    /** Validator for TO for season */
+    /**
+     * Validator for TO for season
+     */
     private SeasonTOValidator seasonTOValidator;
 
-    /** Validator for TO for episode */
+    /**
+     * Validator for TO for episode
+     */
     private EpisodeTOValidator episodeTOValidator;
 
     /**

@@ -7,13 +7,19 @@ package cz.vhromada.catalog.gui.commons;
  */
 public final class CatalogSwingConstants {
 
-    /** Vertical component size */
+    /**
+     * Vertical component size
+     */
     public static final int VERTICAL_COMPONENT_SIZE = 23;
 
-    /** Vertical button size */
+    /**
+     * Vertical button size
+     */
     public static final int VERTICAL_BUTTON_SIZE = 26;
 
-    /** Creates a new instance of CatalogSwingConstant2. */
+    /**
+     * Creates a new instance of CatalogSwingConstant2.
+     */
     private CatalogSwingConstants() {
     }
 

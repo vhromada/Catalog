@@ -44,30 +44,42 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class BookDAOImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Mock
     private EntityManager entityManager;
 
-    /** Query for books */
+    /**
+     * Query for books
+     */
     @Mock
     private TypedQuery<Book> booksQuery;
 
-    /** Instance of {@link BookDAO} */
+    /**
+     * Instance of {@link BookDAO}
+     */
     private BookDAO bookDAO;
 
-    /** Initializes DAO for books. */
+    /**
+     * Initializes DAO for books.
+     */
     @Before
     public void setUp() {
         bookDAO = new BookDAOImpl(entityManager);
     }
 
-    /** Test method for {@link BookDAOImpl#BookDAOImpl(EntityManager)} with null entity manager. */
+    /**
+     * Test method for {@link BookDAOImpl#BookDAOImpl(EntityManager)} with null entity manager.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEntityManager() {
         new BookDAOImpl(null);
     }
 
-    /** Test method for {@link BookDAO#getBook(Integer)} with existing book. */
+    /**
+     * Test method for {@link BookDAO#getBook(Integer)} with existing book.
+     */
     @Test
     public void testGetBookWithExistingBook() {
         final int id = generate(Integer.class);
@@ -80,7 +92,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#getBook(Integer)} with not existing book. */
+    /**
+     * Test method for {@link BookDAO#getBook(Integer)} with not existing book.
+     */
     @Test
     public void testGetBookWithNotExistingBook() {
         when(entityManager.find(eq(Book.class), anyInt())).thenReturn(null);
@@ -91,7 +105,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#getBook(Integer)} with null argument. */
+    /**
+     * Test method for {@link BookDAO#getBook(Integer)} with null argument.
+     */
     @Test
     public void testGetBookWithNullArgument() {
         try {
@@ -104,7 +120,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#getBook(Integer)} with exception in persistence. */
+    /**
+     * Test method for {@link BookDAO#getBook(Integer)} with exception in persistence.
+     */
     @Test
     public void testGetBookWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Book.class), anyInt());
@@ -120,7 +138,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#add(Book)}. */
+    /**
+     * Test method for {@link BookDAO#add(Book)}.
+     */
     @Test
     public void testAdd() {
         final Book book = generate(Book.class);
@@ -136,7 +156,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#add(Book)} with null argument. */
+    /**
+     * Test method for {@link BookDAO#add(Book)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -149,7 +171,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#add(Book)} with exception in persistence. */
+    /**
+     * Test method for {@link BookDAO#add(Book)} with exception in persistence.
+     */
     @Test
     public void testAddWithPersistenceException() {
         final Book book = generate(Book.class);
@@ -166,7 +190,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#update(Book)}. */
+    /**
+     * Test method for {@link BookDAO#update(Book)}.
+     */
     @Test
     public void testUpdate() {
         final Book book = generate(Book.class);
@@ -177,7 +203,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#update(Book)} with null argument. */
+    /**
+     * Test method for {@link BookDAO#update(Book)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -190,7 +218,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#update(Book)} with exception in persistence. */
+    /**
+     * Test method for {@link BookDAO#update(Book)} with exception in persistence.
+     */
     @Test
     public void testUpdateWithPersistenceException() {
         final Book book = generate(Book.class);
@@ -207,7 +237,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#remove(Book)} with managed book. */
+    /**
+     * Test method for {@link BookDAO#remove(Book)} with managed book.
+     */
     @Test
     public void testRemoveWithManagedBook() {
         final Book book = generate(Book.class);
@@ -220,7 +252,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#remove(Book)} with not managed book. */
+    /**
+     * Test method for {@link BookDAO#remove(Book)} with not managed book.
+     */
     @Test
     public void testRemoveWithNotManagedBook() {
         final Book book = generate(Book.class);
@@ -235,7 +269,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#remove(Book)} with null argument. */
+    /**
+     * Test method for {@link BookDAO#remove(Book)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -248,7 +284,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#remove(Book)} with exception in persistence. */
+    /**
+     * Test method for {@link BookDAO#remove(Book)} with exception in persistence.
+     */
     @Test
     public void testRemoveWithPersistenceException() {
         final Book book = generate(Book.class);
@@ -265,7 +303,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)}. */
+    /**
+     * Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)}.
+     */
     @Test
     public void testFindBooksByBookCategory() {
         final BookCategory bookCategory = generate(BookCategory.class);
@@ -281,7 +321,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, booksQuery);
     }
 
-    /** Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)} with null argument. */
+    /**
+     * Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)} with null argument.
+     */
     @Test
     public void testFindBooksByBookCategoryWithNullArgument() {
         try {
@@ -294,7 +336,9 @@ public class BookDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager, booksQuery);
     }
 
-    /** Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)} with exception in persistence. */
+    /**
+     * Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)} with exception in persistence.
+     */
     @Test
     public void testFindBooksByBookCategoryWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Book.class));

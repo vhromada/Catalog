@@ -14,16 +14,24 @@ import org.junit.Test;
  */
 public class CatalogValidatorsTest {
 
-    /** Name */
+    /**
+     * Name
+     */
     private static final String NAME = "Name";
 
-    /** Year */
+    /**
+     * Year
+     */
     private static final int YEAR = 2000;
 
-    /** Message for assertion failure */
+    /**
+     * Message for assertion failure
+     */
     private static final String FAIL_MESSAGE = "Method didn't throw exception.";
 
-    /** Test method for {@link CatalogValidators#validateYear(int, String)}. */
+    /**
+     * Test method for {@link CatalogValidators#validateYear(int, String)}.
+     */
     @Test
     public void testValidateYear() {
         CatalogValidators.validateYear(Constants.MIN_YEAR, NAME);
@@ -32,7 +40,9 @@ public class CatalogValidatorsTest {
         CatalogValidators.validateYear(Constants.CURRENT_YEAR, NAME);
     }
 
-    /** Test method for {@link CatalogValidators#validateYear(int, String)} with not valid data. */
+    /**
+     * Test method for {@link CatalogValidators#validateYear(int, String)} with not valid data.
+     */
     @Test
     public void testValidateYearWithNotValidData() {
         final String errorMessage = NAME + " must be between " + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.';
@@ -50,7 +60,9 @@ public class CatalogValidatorsTest {
         }
     }
 
-    /** Test method for {@link CatalogValidators#validateImdbCode(int, String)}. */
+    /**
+     * Test method for {@link CatalogValidators#validateImdbCode(int, String)}.
+     */
     @Test
     public void testValidateImdbCode() {
         CatalogValidators.validateImdbCode(-1, NAME);
@@ -58,7 +70,9 @@ public class CatalogValidatorsTest {
         CatalogValidators.validateImdbCode(Constants.MAX_IMDB_CODE, NAME);
     }
 
-    /** Test method for {@link CatalogValidators#validateImdbCode(int, String)} with not valid data. */
+    /**
+     * Test method for {@link CatalogValidators#validateImdbCode(int, String)} with not valid data.
+     */
     @Test
     public void testValidateImdbCodeWithNotValidData() {
         final String errorMessage = NAME + " must be between 1 and 9999999 or -1.";
@@ -82,14 +96,18 @@ public class CatalogValidatorsTest {
         }
     }
 
-    /** Test method for {@link CatalogValidators#validateYears(int, int)}. */
+    /**
+     * Test method for {@link CatalogValidators#validateYears(int, int)}.
+     */
     @Test
     public void testValidateYears() {
         CatalogValidators.validateYears(YEAR, YEAR);
         CatalogValidators.validateYears(YEAR, YEAR + 1);
     }
 
-    /** Test method for {@link CatalogValidators#validateYears(int, int)} with not valid data. */
+    /**
+     * Test method for {@link CatalogValidators#validateYears(int, int)} with not valid data.
+     */
     @Test
     public void testValidateYearsWithNotValidData() {
         try {

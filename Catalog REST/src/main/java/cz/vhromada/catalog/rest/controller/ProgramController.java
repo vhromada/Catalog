@@ -24,7 +24,9 @@ public class ProgramController extends JsonController {
     @Qualifier("programFacade")
     private ProgramFacade programFacade;
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
     public void newData() {
@@ -168,7 +170,9 @@ public class ProgramController extends JsonController {
         return serialize(programFacade.exists(deserialize(program, ProgramTO.class)));
     }
 
-    /** Updates positions. */
+    /**
+     * Updates positions.
+     */
     @RequestMapping(value = "/updatePositions", method = RequestMethod.GET)
     @ResponseBody
     public void updatePositions() {

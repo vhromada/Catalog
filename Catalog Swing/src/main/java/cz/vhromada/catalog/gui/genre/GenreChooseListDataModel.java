@@ -15,10 +15,14 @@ import cz.vhromada.validators.Validators;
  */
 public class GenreChooseListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** List of TO for genre */
+    /**
+     * List of TO for genre
+     */
     private List<GenreTO> genres;
 
     /**

@@ -24,7 +24,9 @@ public enum Picture {
     UP(new ImageIcon("pics/up.jpg")),
     UPDATE(new ImageIcon("pics/update.jpg"));
 
-    /** Icon */
+    /**
+     * Icon
+     */
     private ImageIcon icon;
 
     /**

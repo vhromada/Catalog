@@ -34,23 +34,33 @@ import org.springframework.transaction.PlatformTransactionManager;
 @ContextConfiguration("classpath:testFacadeContext.xml")
 public class GameFacadeImplSpringTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link PlatformTransactionManager} */
+    /**
+     * Instance of {@link PlatformTransactionManager}
+     */
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    /** Instance of {@link GameFacade} */
+    /**
+     * Instance of {@link GameFacade}
+     */
     @Autowired
     private GameFacade gameFacade;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Initializes database. */
+    /**
+     * Initializes database.
+     */
     @Before
     public void setUp() {
         SpringUtils.remove(transactionManager, entityManager, Game.class);
@@ -61,7 +71,9 @@ public class GameFacadeImplSpringTest {
         }
     }
 
-    /** Test method for {@link GameFacade#newData()}. */
+    /**
+     * Test method for {@link GameFacade#newData()}.
+     */
     @Test
     public void testNewData() {
         gameFacade.newData();
@@ -69,14 +81,18 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#getGames()}. */
+    /**
+     * Test method for {@link GameFacade#getGames()}.
+     */
     @Test
     public void testGetGames() {
         DeepAsserts.assertEquals(SpringToUtils.getGames(), gameFacade.getGames());
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#getGame(Integer)}. */
+    /**
+     * Test method for {@link GameFacade#getGame(Integer)}.
+     */
     @Test
     public void testGetGame() {
         for (int i = 1; i <= SpringUtils.GAMES_COUNT; i++) {
@@ -88,13 +104,17 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#getGame(Integer)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#getGame(Integer)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testGetGameWithNullArgument() {
         gameFacade.getGame(null);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)}.
+     */
     @Test
     public void testAdd() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -108,19 +128,25 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testAddWithNullArgument() {
         gameFacade.add(null);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with not null ID. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with not null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithNotNullId() {
         gameFacade.add(SpringToUtils.newGameWithId(objectGenerator));
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with null name. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithNullName() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -129,7 +155,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.add(game);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with empty string as name. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with empty string as name.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithEmptyName() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -138,7 +166,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.add(game);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with null URL to english Wikipedia about game. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with null URL to english Wikipedia about game.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithNullWikiEn() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -147,7 +177,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.add(game);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with null URL to czech Wikipedia about game. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with null URL to czech Wikipedia about game.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithNullWikiCz() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -156,7 +188,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.add(game);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with not positive count of media. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with not positive count of media.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithNotPositiveMediaCount() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -165,7 +199,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.add(game);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with null other data. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with null other data.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithNullOtherData() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -174,7 +210,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.add(game);
     }
 
-    /** Test method for {@link GameFacade#add(GameTO)} with game with null note. */
+    /**
+     * Test method for {@link GameFacade#add(GameTO)} with game with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testAddWithGameWithNullNote() {
         final GameTO game = SpringToUtils.newGame(objectGenerator);
@@ -183,7 +221,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.add(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)}.
+     */
     @Test
     public void testUpdate() {
         final GameTO game = SpringToUtils.newGame(objectGenerator, 1);
@@ -195,19 +235,25 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateWithNullArgument() {
         gameFacade.update(null);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with null ID. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithNullId() {
         gameFacade.update(SpringToUtils.newGame(objectGenerator));
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with null name. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithNullName() {
         final GameTO game = SpringToUtils.newGameWithId(objectGenerator);
@@ -216,7 +262,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.update(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with empty string as name. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with empty string as name.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithEmptyName() {
         final GameTO game = SpringToUtils.newGameWithId(objectGenerator);
@@ -225,7 +273,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.update(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with null URL to english Wikipedia about game. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with null URL to english Wikipedia about game.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithNullWikiEn() {
         final GameTO game = SpringToUtils.newGameWithId(objectGenerator);
@@ -234,7 +284,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.update(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with null URL to czech Wikipedia about game. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with null URL to czech Wikipedia about game.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithNullWikiCz() {
         final GameTO game = SpringToUtils.newGameWithId(objectGenerator);
@@ -243,7 +295,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.update(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with not positive count of media. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with not positive count of media.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithNotPositiveMediaCount() {
         final GameTO game = SpringToUtils.newGameWithId(objectGenerator);
@@ -252,7 +306,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.update(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with null other data. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with null other data.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithNullOtherData() {
         final GameTO game = SpringToUtils.newGameWithId(objectGenerator);
@@ -261,7 +317,9 @@ public class GameFacadeImplSpringTest {
         gameFacade.update(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with null note. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testUpdateWithGameWithNullNote() {
         final GameTO game = SpringToUtils.newGameWithId(objectGenerator);
@@ -270,13 +328,17 @@ public class GameFacadeImplSpringTest {
         gameFacade.update(game);
     }
 
-    /** Test method for {@link GameFacade#update(GameTO)} with game with bad ID. */
+    /**
+     * Test method for {@link GameFacade#update(GameTO)} with game with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdateWithGameWithBadId() {
         gameFacade.update(SpringToUtils.newGame(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)}.
+     */
     @Test
     public void testRemove() {
         gameFacade.remove(SpringToUtils.newGame(objectGenerator, 1));
@@ -285,25 +347,33 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT - 1, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveWithNullArgument() {
         gameFacade.remove(null);
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with game with null ID. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)} with game with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testRemoveWithGameWithNullId() {
         gameFacade.remove(SpringToUtils.newGame(objectGenerator));
     }
 
-    /** Test method for {@link GameFacade#remove(GameTO)} with game with bad ID. */
+    /**
+     * Test method for {@link GameFacade#remove(GameTO)} with game with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testRemoveWithGameWithBadId() {
         gameFacade.remove(SpringToUtils.newGame(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Game game = SpringEntitiesUtils.getGame(SpringUtils.GAMES_COUNT);
@@ -316,25 +386,33 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicateWithNullArgument() {
         gameFacade.duplicate(null);
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with game with null ID. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)} with game with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testDuplicateWithGameWithNullId() {
         gameFacade.duplicate(SpringToUtils.newGame(objectGenerator));
     }
 
-    /** Test method for {@link GameFacade#duplicate(GameTO)} with game with bad ID. */
+    /**
+     * Test method for {@link GameFacade#duplicate(GameTO)} with game with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicateWithGameWithBadId() {
         gameFacade.duplicate(SpringToUtils.newGame(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Game game1 = SpringEntitiesUtils.getGame(1);
@@ -351,31 +429,41 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUpWithNullArgument() {
         gameFacade.moveUp(null);
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with game with null ID. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with game with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveUpWithGameWithNullId() {
         gameFacade.moveUp(SpringToUtils.newGame(objectGenerator));
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with not moveable argument. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with not moveable argument.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveUpWithNotMoveableArgument() {
         gameFacade.moveUp(SpringToUtils.newGame(objectGenerator, 1));
     }
 
-    /** Test method for {@link GameFacade#moveUp(GameTO)} with bad ID. */
+    /**
+     * Test method for {@link GameFacade#moveUp(GameTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUpWithBadId() {
         gameFacade.moveUp(SpringToUtils.newGame(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)}. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Game game1 = SpringEntitiesUtils.getGame(1);
@@ -392,31 +480,41 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDownWithNullArgument() {
         gameFacade.moveDown(null);
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with game with null ID. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with game with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveDownWithGameWithNullId() {
         gameFacade.moveDown(SpringToUtils.newGame(objectGenerator));
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with not moveable argument. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with not moveable argument.
+     */
     @Test(expected = ValidationException.class)
     public void testMoveDownWithNotMoveableArgument() {
         gameFacade.moveDown(SpringToUtils.newGame(objectGenerator, SpringUtils.GAMES_COUNT));
     }
 
-    /** Test method for {@link GameFacade#moveDown(GameTO)} with bad ID. */
+    /**
+     * Test method for {@link GameFacade#moveDown(GameTO)} with bad ID.
+     */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDownWithBadId() {
         gameFacade.moveDown(SpringToUtils.newGame(objectGenerator, Integer.MAX_VALUE));
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with existing game. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with existing game.
+     */
     @Test
     public void testExists() {
         for (int i = 1; i <= SpringUtils.GAMES_COUNT; i++) {
@@ -428,19 +526,25 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with null argument. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testExistsWithNullArgument() {
         gameFacade.exists(null);
     }
 
-    /** Test method for {@link GameFacade#exists(GameTO)} with game with null ID. */
+    /**
+     * Test method for {@link GameFacade#exists(GameTO)} with game with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testExistsWithGameWithNullId() {
         gameFacade.exists(SpringToUtils.newGame(objectGenerator));
     }
 
-    /** Test method for {@link GameFacade#updatePositions()}. */
+    /**
+     * Test method for {@link GameFacade#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         gameFacade.updatePositions();
@@ -451,7 +555,9 @@ public class GameFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameFacade#getTotalMediaCount()}. */
+    /**
+     * Test method for {@link GameFacade#getTotalMediaCount()}.
+     */
     @Test
     public void testGetTotalMediaCount() {
         DeepAsserts.assertEquals(6, gameFacade.getTotalMediaCount());

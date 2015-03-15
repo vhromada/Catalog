@@ -9,19 +9,29 @@ import java.io.Serializable;
  */
 public class BookCategoryTO implements Comparable<BookCategoryTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String name;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
     /**

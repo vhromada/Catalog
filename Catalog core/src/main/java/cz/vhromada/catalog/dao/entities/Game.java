@@ -21,66 +21,100 @@ import javax.persistence.Table;
 @NamedQuery(name = Game.SELECT_GAMES, query = "SELECT g FROM Game g ORDER BY g.position, g.id")
 public class Game implements Serializable {
 
-    /** Name for query - select games */
+    /**
+     * Name for query - select games
+     */
     public static final String SELECT_GAMES = "Game.selectGames";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "game_generator", sequenceName = "games_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "game_generator")
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     @Column(name = "game_name")
     private String name;
 
-    /** URL to english Wikipedia page about game */
+    /**
+     * URL to english Wikipedia page about game
+     */
     @Column(name = "wiki_en")
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about game */
+    /**
+     * URL to czech Wikipedia page about game
+     */
     @Column(name = "wiki_cz")
     private String wikiCz;
 
-    /** Count of media */
+    /**
+     * Count of media
+     */
     @Column(name = "media_count")
     private int mediaCount;
 
-    /** True if there is crack */
+    /**
+     * True if there is crack
+     */
     private boolean crack;
 
-    /** True if there is serial key */
+    /**
+     * True if there is serial key
+     */
     @Column(name = "serial_key")
     private boolean serialKey;
 
-    /** True if there is patch */
+    /**
+     * True if there is patch
+     */
     private boolean patch;
 
-    /** True if there is trainer */
+    /**
+     * True if there is trainer
+     */
     private boolean trainer;
 
-    /** True if there is data for trainer */
+    /**
+     * True if there is data for trainer
+     */
     @Column(name = "trainer_data")
     private boolean trainerData;
 
-    /** True if there is editor */
+    /**
+     * True if there is editor
+     */
     @Column(name = "editor")
     private boolean editor;
 
-    /** True if there are saves */
+    /**
+     * True if there are saves
+     */
     private boolean saves;
 
-    /** Other data */
+    /**
+     * Other data
+     */
     @Column(name = "other_data")
     private String otherData;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
     /**

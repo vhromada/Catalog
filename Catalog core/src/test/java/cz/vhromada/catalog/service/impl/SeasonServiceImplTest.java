@@ -46,55 +46,79 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class SeasonServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of seasons */
+    /**
+     * Cache key for list of seasons
+     */
     private static final String SEASONS_CACHE_KEY = "seasons";
 
-    /** Cache key for season */
+    /**
+     * Cache key for season
+     */
     private static final String SEASON_CACHE_KEY = "season";
 
-    /** Cache key for list of episodes */
+    /**
+     * Cache key for list of episodes
+     */
     private static final String EPISODES_CACHE_KEY = "episodes";
 
-    /** Instance of {@link SeasonDAO} */
+    /**
+     * Instance of {@link SeasonDAO}
+     */
     @Mock
     private SeasonDAO seasonDAO;
 
-    /** Instance of {@link EpisodeDAO} */
+    /**
+     * Instance of {@link EpisodeDAO}
+     */
     @Mock
     private EpisodeDAO episodeDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache serieCache;
 
-    /** Instance of {@link SeasonService} */
+    /**
+     * Instance of {@link SeasonService}
+     */
     private SeasonService seasonService;
 
-    /** Initializes service for seasons. */
+    /**
+     * Initializes service for seasons.
+     */
     @Before
     public void setUp() {
         seasonService = new SeasonServiceImpl(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with null DAO for seasons. */
+    /**
+     * Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with null DAO for seasons.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSeasonDAO() {
         new SeasonServiceImpl(null, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with null DAO for episodes. */
+    /**
+     * Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache)} with null DAO for episodes.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEpisodeDAO() {
         new SeasonServiceImpl(seasonDAO, null, serieCache);
     }
 
-    /** Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache))} with null cache for series. */
+    /**
+     * Test method for {@link SeasonServiceImpl#SeasonServiceImpl(SeasonDAO, EpisodeDAO, Cache))} with null cache for series.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieCache() {
         new SeasonServiceImpl(seasonDAO, episodeDAO, null);
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with cached existing season. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with cached existing season.
+     */
     @Test
     public void testGetSeasonWithCachedExistingSeason() {
         final Season season = generate(Season.class);
@@ -107,7 +131,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO);
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with cached not existing season. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with cached not existing season.
+     */
     @Test
     public void testGetSeasonWithCachedNotExistingSeason() {
         final Season season = generate(Season.class);
@@ -120,7 +146,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO);
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with not cached existing season. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with not cached existing season.
+     */
     @Test
     public void testGetSeasonWithNotCachedExistingSeason() {
         final Season season = generate(Season.class);
@@ -135,7 +163,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with not cached not existing season. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with not cached not existing season.
+     */
     @Test
     public void testGetSeasonWithNotCachedNotExistingSeason() {
         final Season season = generate(Season.class);
@@ -150,7 +180,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with null argument.
+     */
     @Test
     public void testGetSeasonWithNullArgument() {
         try {
@@ -163,7 +195,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#getSeason(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#getSeason(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetSeasonWithDAOTierException() {
         doThrow(DataStorageException.class).when(seasonDAO).getSeason(anyInt());
@@ -181,7 +215,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#add(Season)} with cached seasons. */
+    /**
+     * Test method for {@link SeasonService#add(Season)} with cached seasons.
+     */
     @Test
     public void testAddWithCachedSeasons() {
         final Season season = generate(Season.class);
@@ -200,7 +236,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#add(Season)} with not cached seasons. */
+    /**
+     * Test method for {@link SeasonService#add(Season)} with not cached seasons.
+     */
     @Test
     public void testAddWithNotCachedSeasons() {
         final Season season = generate(Season.class);
@@ -214,7 +252,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#add(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#add(Season)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -227,7 +267,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#add(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#add(Season)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Season season = generate(Season.class);
@@ -245,7 +287,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link SeasonService#update(Season)}. */
+    /**
+     * Test method for {@link SeasonService#update(Season)}.
+     */
     @Test
     public void testUpdate() {
         final Season season = generate(Season.class);
@@ -257,7 +301,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#update(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#update(Season)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -270,7 +316,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#update(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#update(Season)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Season season = generate(Season.class);
@@ -288,7 +336,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link SeasonService#remove(Season)} with cached data. */
+    /**
+     * Test method for {@link SeasonService#remove(Season)} with cached data.
+     */
     @Test
     public void testRemoveWithCachedData() {
         final Season season = generate(Season.class);
@@ -306,7 +356,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#remove(Season)} with not cached data. */
+    /**
+     * Test method for {@link SeasonService#remove(Season)} with not cached data.
+     */
     @Test
     public void testRemoveWithNotCachedData() {
         final Season season = generate(Season.class);
@@ -326,7 +378,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#remove(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#remove(Season)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -339,7 +393,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#remove(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#remove(Season)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Season season = generate(Season.class);
@@ -359,7 +415,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO);
     }
 
-    /** Test method for {@link SeasonService#duplicate(Season)} with cached data. */
+    /**
+     * Test method for {@link SeasonService#duplicate(Season)} with cached data.
+     */
     @Test
     public void testDuplicateWithCachedData() {
         final Season season = generate(Season.class);
@@ -377,7 +435,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#duplicate(Season)} with not cached data. */
+    /**
+     * Test method for {@link SeasonService#duplicate(Season)} with not cached data.
+     */
     @Test
     public void testDuplicateWithNotCachedData() {
         final Season season = generate(Season.class);
@@ -397,7 +457,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#duplicate(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#duplicate(Season)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -410,7 +472,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#duplicate(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#duplicate(Season)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(seasonDAO).add(any(Season.class));
@@ -427,7 +491,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveUp(Season)} with cached seasons. */
+    /**
+     * Test method for {@link SeasonService#moveUp(Season)} with cached seasons.
+     */
     @Test
     public void testMoveUpWithCachedSeasons() {
         final Serie serie = generate(Serie.class);
@@ -451,7 +517,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveUp(Season)} with not cached seasons. */
+    /**
+     * Test method for {@link SeasonService#moveUp(Season)} with not cached seasons.
+     */
     @Test
     public void testMoveUpWithNotCachedSeasons() {
         final Serie serie = generate(Serie.class);
@@ -477,7 +545,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveUp(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#moveUp(Season)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -490,7 +560,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveUp(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#moveUp(Season)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         final Serie serie = generate(Serie.class);
@@ -511,7 +583,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveDown(Season)} with cached seasons. */
+    /**
+     * Test method for {@link SeasonService#moveDown(Season)} with cached seasons.
+     */
     @Test
     public void testMoveDownWithCachedSeasons() {
         final Serie serie = generate(Serie.class);
@@ -535,7 +609,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveDown(Season)} with not cached seasons. */
+    /**
+     * Test method for {@link SeasonService#moveDown(Season)} with not cached seasons.
+     */
     @Test
     public void testMoveDownWithNotCachedSeasons() {
         final Serie serie = generate(Serie.class);
@@ -561,7 +637,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveDown(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#moveDown(Season)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -574,7 +652,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#moveDown(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#moveDown(Season)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         final Serie serie = generate(Serie.class);
@@ -595,7 +675,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with cached existing season. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with cached existing season.
+     */
     @Test
     public void testExistsWithCachedExistingSeason() {
         final Season season = generate(Season.class);
@@ -608,7 +690,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO);
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with cached not existing season. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with cached not existing season.
+     */
     @Test
     public void testExistsWithCachedNotExistingSeason() {
         final Season season = generate(Season.class);
@@ -621,7 +705,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO);
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with not cached existing season. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with not cached existing season.
+     */
     @Test
     public void testExistsWithNotCachedExistingSeason() {
         final Season season = generate(Season.class);
@@ -636,7 +722,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with not cached not existing season. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with not cached not existing season.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingSeason() {
         final Season season = generate(Season.class);
@@ -651,7 +739,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -664,7 +754,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#exists(Season)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#exists(Season)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Season season = generate(Season.class);
@@ -683,7 +775,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with cached seasons. */
+    /**
+     * Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with cached seasons.
+     */
     @Test
     public void testFindSeasonsBySerieWithCachedSeasons() {
         final Serie serie = generate(Serie.class);
@@ -697,7 +791,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO);
     }
 
-    /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with not cached seasons. */
+    /**
+     * Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with not cached seasons.
+     */
     @Test
     public void testFindSeasonsBySerieWithNotCachedSeasons() {
         final Serie serie = generate(Serie.class);
@@ -713,7 +809,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with null argument. */
+    /**
+     * Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with null argument.
+     */
     @Test
     public void testFindSeasonsBySerieWithNullArgument() {
         try {
@@ -726,7 +824,9 @@ public class SeasonServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SeasonService#findSeasonsBySerie(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testFindSeasonsBySerieWithDAOTierException() {
         final Serie serie = generate(Serie.class);

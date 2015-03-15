@@ -23,55 +23,89 @@ import cz.vhromada.validators.Validators;
  */
 public class SongsPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal scroll pane size */
+    /**
+     * Horizontal scroll pane size
+     */
     private static final int HORIZONTAL_SCROLL_PANE_SIZE = 200;
 
-    /** Vertical data component size */
+    /**
+     * Vertical data component size
+     */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
-    /** Update property */
+    /**
+     * Update property
+     */
     private static final String UPDATE_PROPERTY = "update";
 
-    /** Popup menu */
+    /**
+     * Popup menu
+     */
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    /** Menu item for adding song */
+    /**
+     * Menu item for adding song
+     */
     private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
-    /** Menu item for updating song */
+    /**
+     * Menu item for updating song
+     */
     private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
-    /** Menu item for removing song */
+    /**
+     * Menu item for removing song
+     */
     private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
-    /** Menu item for duplicating song */
+    /**
+     * Menu item for duplicating song
+     */
     private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
-    /** Menu item for moving up song */
+    /**
+     * Menu item for moving up song
+     */
     private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
-    /** Menu item for moving down song */
+    /**
+     * Menu item for moving down song
+     */
     private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
-    /** List with songs */
+    /**
+     * List with songs
+     */
     private JList<String> list = new JList<>();
 
-    /** ScrollPane for list with songs */
+    /**
+     * ScrollPane for list with songs
+     */
     private JScrollPane listScrollPane = new JScrollPane(list);
 
-    /** Tabbed pane with song's data */
+    /**
+     * Tabbed pane with song's data
+     */
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    /** Facade for songs */
+    /**
+     * Facade for songs
+     */
     private SongFacade songFacade;
 
-    /** Data model for list with songs */
+    /**
+     * Data model for list with songs
+     */
     private SongsListDataModel songsListDataModel;
 
-    /** TO for music */
+    /**
+     * TO for music
+     */
     private MusicTO music;
 
     /**
@@ -103,7 +137,9 @@ public class SongsPanel extends JPanel {
         this.music = music;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
 
@@ -193,7 +229,9 @@ public class SongsPanel extends JPanel {
         }
     }
 
-    /** Performs action for button Add. */
+    /**
+     * Performs action for button Add.
+     */
     private void addAction() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -215,7 +253,9 @@ public class SongsPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Update. */
+    /**
+     * Performs action for button Update.
+     */
     private void updateAction() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -237,7 +277,9 @@ public class SongsPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Remove. */
+    /**
+     * Performs action for button Remove.
+     */
     private void removeAction() {
         songFacade.remove(songsListDataModel.getSongAt(list.getSelectedIndex()));
         songsListDataModel.update();
@@ -246,7 +288,9 @@ public class SongsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button Duplicate. */
+    /**
+     * Performs action for button Duplicate.
+     */
     private void duplicateAction() {
         final int index = list.getSelectedIndex();
         songFacade.duplicate(songsListDataModel.getSongAt(index));
@@ -256,7 +300,9 @@ public class SongsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button MoveUp. */
+    /**
+     * Performs action for button MoveUp.
+     */
     private void moveUpAction() {
         final int index = list.getSelectedIndex();
         songFacade.moveUp(songsListDataModel.getSongAt(index));
@@ -266,7 +312,9 @@ public class SongsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button MoveDown. */
+    /**
+     * Performs action for button MoveDown.
+     */
     private void moveDownAction() {
         final int index = list.getSelectedIndex();
         songFacade.moveDown(songsListDataModel.getSongAt(index));
@@ -276,7 +324,9 @@ public class SongsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Initializes list. */
+    /**
+     * Initializes list.
+     */
     private void initList() {
         songsListDataModel = new SongsListDataModel(songFacade, music);
         list.setModel(songsListDataModel);
@@ -292,7 +342,9 @@ public class SongsPanel extends JPanel {
         });
     }
 
-    /** Performs action for change of list value. */
+    /**
+     * Performs action for change of list value.
+     */
     private void listValueChangedAction() {
         final boolean isSelectedRow = list.getSelectedIndices().length == 1;
         final int selectedRow = list.getSelectedIndex();

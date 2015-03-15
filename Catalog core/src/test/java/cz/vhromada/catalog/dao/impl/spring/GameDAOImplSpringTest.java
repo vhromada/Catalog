@@ -29,32 +29,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameDAOImplSpringTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link GameDAO} */
+    /**
+     * Instance of {@link GameDAO}
+     */
     @Autowired
     private GameDAO gameDAO;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Restarts sequence. */
+    /**
+     * Restarts sequence.
+     */
     @Before
     public void setUp() {
         entityManager.createNativeQuery("ALTER SEQUENCE games_sq RESTART WITH 4").executeUpdate();
     }
 
-    /** Test method for {@link GameDAO#getGames()}. */
+    /**
+     * Test method for {@link GameDAO#getGames()}.
+     */
     @Test
     public void testGetGames() {
         DeepAsserts.assertEquals(SpringEntitiesUtils.getGames(), gameDAO.getGames());
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameDAO#getGame(Integer)}. */
+    /**
+     * Test method for {@link GameDAO#getGame(Integer)}.
+     */
     @Test
     public void testGetGame() {
         for (int i = 1; i <= SpringUtils.GAMES_COUNT; i++) {
@@ -66,7 +78,9 @@ public class GameDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameDAO#add(Game)}. */
+    /**
+     * Test method for {@link GameDAO#add(Game)}.
+     */
     @Test
     public void testAdd() {
         final Game game = SpringEntitiesUtils.newGame(objectGenerator);
@@ -81,7 +95,9 @@ public class GameDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT + 1, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameDAO#update(Game)}. */
+    /**
+     * Test method for {@link GameDAO#update(Game)}.
+     */
     @Test
     public void testUpdate() {
         final Game game = SpringEntitiesUtils.updateGame(1, objectGenerator, entityManager);
@@ -93,7 +109,9 @@ public class GameDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.GAMES_COUNT, SpringUtils.getGamesCount(entityManager));
     }
 
-    /** Test method for {@link GameDAO#remove(Game)}. */
+    /**
+     * Test method for {@link GameDAO#remove(Game)}.
+     */
     @Test
     public void testRemove() {
         gameDAO.remove(SpringUtils.getGame(entityManager, 1));

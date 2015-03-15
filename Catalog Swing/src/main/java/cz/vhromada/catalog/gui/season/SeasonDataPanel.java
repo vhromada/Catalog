@@ -19,64 +19,104 @@ import cz.vhromada.validators.Validators;
  */
 public class SeasonDataPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size */
+    /**
+     * Horizontal label size
+     */
     private static final int HORIZONTAL_LABEL_SIZE = 150;
 
-    /** Horizontal data size */
+    /**
+     * Horizontal data size
+     */
     private static final int HORIZONTAL_DATA_SIZE = 600;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 10;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Facade for episodes */
+    /**
+     * Facade for episodes
+     */
     private EpisodeFacade episodeFacade;
 
-    /** Label for number */
+    /**
+     * Label for number
+     */
     private JLabel numberLabel = new JLabel("Number of season");
 
-    /** Label with number */
+    /**
+     * Label with number
+     */
     private JLabel numberData = new JLabel();
 
-    /** Label for year */
+    /**
+     * Label for year
+     */
     private JLabel yearLabel = new JLabel("Year");
 
-    /** Label with year */
+    /**
+     * Label with year
+     */
     private JLabel yearData = new JLabel();
 
-    /** Label for language */
+    /**
+     * Label for language
+     */
     private JLabel languageLabel = new JLabel("Language");
 
-    /** Label with language */
+    /**
+     * Label with language
+     */
     private JLabel languageData = new JLabel();
 
-    /** Label for subtitles */
+    /**
+     * Label for subtitles
+     */
     private JLabel subtitlesLabel = new JLabel("Subtitles");
 
-    /** Label with subtitles */
+    /**
+     * Label with subtitles
+     */
     private JLabel subtitlesData = new JLabel();
 
-    /** Label for count of episodes */
+    /**
+     * Label for count of episodes
+     */
     private JLabel episodesCountLabel = new JLabel("Count of episodes");
 
-    /** Label with count of episodes */
+    /**
+     * Label with count of episodes
+     */
     private JLabel episodesCountData = new JLabel();
 
-    /** Label for total length */
+    /**
+     * Label for total length
+     */
     private JLabel totalLengthLabel = new JLabel("Total length");
 
-    /** Label with total length */
+    /**
+     * Label with total length
+     */
     private JLabel totalLengthData = new JLabel();
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Label with note */
+    /**
+     * Label with note
+     */
     private JLabel noteData = new JLabel();
 
     /**

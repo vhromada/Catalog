@@ -37,36 +37,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GenreServiceImplSpringTest {
 
-    /** Cache key for list of genres */
+    /**
+     * Cache key for list of genres
+     */
     private static final String GENRES_CACHE_KEY = "genres";
 
-    /** Cache key for genre */
+    /**
+     * Cache key for genre
+     */
     private static final String GENRE_CACHE_KEY = "genre";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('genreCache')}")
     private Cache genreCache;
 
-    /** Instance of {@link GenreService} */
+    /**
+     * Instance of {@link GenreService}
+     */
     @Autowired
     private GenreService genreService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequence. */
+    /**
+     * Clears cache and restarts sequence.
+     */
     @Before
     public void setUp() {
         genreCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE genres_sq RESTART WITH 5").executeUpdate();
     }
 
-    /** Test method for {@link GenreService#newData()}. */
+    /**
+     * Test method for {@link GenreService#newData()}.
+     */
     @Test
     public void testNewData() {
         for (int i = 1; i <= SpringUtils.MOVIES_COUNT; i++) {
@@ -88,7 +104,9 @@ public class GenreServiceImplSpringTest {
         assertTrue(SpringUtils.getCacheKeys(genreCache).isEmpty());
     }
 
-    /** Test method for {@link GenreService#getGenres()}. */
+    /**
+     * Test method for {@link GenreService#getGenres()}.
+     */
     @Test
     public void testGetGenres() {
         final List<Genre> genres = SpringEntitiesUtils.getGenres();
@@ -100,7 +118,9 @@ public class GenreServiceImplSpringTest {
         SpringUtils.assertCacheValue(genreCache, key, genres);
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with existing genre. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with existing genre.
+     */
     @Test
     public void testGetGenreWithExistingGenre() {
         final List<String> keys = new ArrayList<>();
@@ -118,7 +138,9 @@ public class GenreServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link GenreService#getGenre(Integer)} with not existing genre. */
+    /**
+     * Test method for {@link GenreService#getGenre(Integer)} with not existing genre.
+     */
     @Test
     public void testGetGenreWithNotExistingGenre() {
         final String key = GENRE_CACHE_KEY + Integer.MAX_VALUE;
@@ -129,7 +151,9 @@ public class GenreServiceImplSpringTest {
         SpringUtils.assertCacheValue(genreCache, key, null);
     }
 
-    /** Test method for {@link GenreService#add(Genre)} with empty cache. */
+    /**
+     * Test method for {@link GenreService#add(Genre)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
@@ -144,7 +168,9 @@ public class GenreServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
     }
 
-    /** Test method for {@link GenreService#add(Genre)} with not empty cache. */
+    /**
+     * Test method for {@link GenreService#add(Genre)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
@@ -165,7 +191,9 @@ public class GenreServiceImplSpringTest {
         SpringUtils.assertCacheValue(genreCache, keyItem, genre);
     }
 
-    /** Test method for {@link GenreService#add(List)}. */
+    /**
+     * Test method for {@link GenreService#add(List)}.
+     */
     @Test
     public void testAddList() {
         final List<String> names = CollectionUtils.newList(objectGenerator.generate(String.class), objectGenerator.generate(String.class));
@@ -180,7 +208,9 @@ public class GenreServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
     }
 
-    /** Test method for {@link GenreService#update(Genre)}. */
+    /**
+     * Test method for {@link GenreService#update(Genre)}.
+     */
     @Test
     public void testUpdate() {
         final Genre genre = SpringEntitiesUtils.updateGenre(1, objectGenerator, entityManager);
@@ -193,7 +223,9 @@ public class GenreServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
     }
 
-    /** Test method for {@link GenreService#remove(Genre)} with empty cache. */
+    /**
+     * Test method for {@link GenreService#remove(Genre)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
@@ -207,7 +239,9 @@ public class GenreServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(genreCache).size());
     }
 
-    /** Test method for {@link GenreService#remove(Genre)} with not empty cache. */
+    /**
+     * Test method for {@link GenreService#remove(Genre)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);
@@ -226,7 +260,9 @@ public class GenreServiceImplSpringTest {
         SpringUtils.assertCacheValue(genreCache, key, new ArrayList<>());
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with existing genre. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with existing genre.
+     */
     @Test
     public void testExistsWithExistingGenre() {
         final List<String> keys = new ArrayList<>();
@@ -244,7 +280,9 @@ public class GenreServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link GenreService#exists(Genre)} with not existing genre. */
+    /**
+     * Test method for {@link GenreService#exists(Genre)} with not existing genre.
+     */
     @Test
     public void testExistsWithNotExistingGenre() {
         final Genre genre = SpringEntitiesUtils.newGenre(objectGenerator);

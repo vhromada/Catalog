@@ -16,16 +16,24 @@ import cz.vhromada.validators.Validators;
  */
 public class SongsListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for songs */
+    /**
+     * Facade for songs
+     */
     private SongFacade songFacade;
 
-    /** TO for music */
+    /**
+     * TO for music
+     */
     private MusicTO music;
 
-    /** List of TO for song */
+    /**
+     * List of TO for song
+     */
     private List<SongTO> songs;
 
     /**
@@ -76,7 +84,9 @@ public class SongsListDataModel extends AbstractListModel<String> {
         return songs.get(index);
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         songs = songFacade.findSongsByMusic(music);
     }

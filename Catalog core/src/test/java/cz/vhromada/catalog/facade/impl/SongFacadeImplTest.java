@@ -51,30 +51,44 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class SongFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link MusicService} */
+    /**
+     * Instance of {@link MusicService}
+     */
     @Mock
     private MusicService musicService;
 
-    /** Instance of {@link SongService} */
+    /**
+     * Instance of {@link SongService}
+     */
     @Mock
     private SongService songService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link MusicTOValidator} */
+    /**
+     * Instance of {@link MusicTOValidator}
+     */
     @Mock
     private MusicTOValidator musicTOValidator;
 
-    /** Instance of {@link SongTOValidator} */
+    /**
+     * Instance of {@link SongTOValidator}
+     */
     @Mock
     private SongTOValidator songTOValidator;
 
-    /** Instance of (@link SongFacade} */
+    /**
+     * Instance of (@link SongFacade}
+     */
     private SongFacade songFacade;
 
-    /** Initializes facade for songs. */
+    /**
+     * Initializes facade for songs.
+     */
     @Before
     public void setUp() {
         songFacade = new SongFacadeImpl(musicService, songService, converter, musicTOValidator, songTOValidator);
@@ -99,8 +113,7 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, Converter, MusicTOValidator, SongTOValidator)} with null
-     * converter.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, Converter, MusicTOValidator, SongTOValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
@@ -125,7 +138,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         new SongFacadeImpl(musicService, songService, converter, musicTOValidator, null);
     }
 
-    /** Test method for {@link SongFacade#getSong(Integer)} with existing song. */
+    /**
+     * Test method for {@link SongFacade#getSong(Integer)} with existing song.
+     */
     @Test
     public void testGetSongWithExistingSong() {
         final Song song = generate(Song.class);
@@ -140,7 +155,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#getSong(Integer)} with not existing song. */
+    /**
+     * Test method for {@link SongFacade#getSong(Integer)} with not existing song.
+     */
     @Test
     public void testGetSongWithNotExistingSong() {
         when(songService.getSong(anyInt())).thenReturn(null);
@@ -153,7 +170,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#getSong(Integer)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#getSong(Integer)} with null argument.
+     */
     @Test
     public void testGetSongWithNullArgument() {
         try {
@@ -166,7 +185,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#getSong(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#getSong(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetSongWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(songService).getSong(anyInt());
@@ -183,7 +204,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)}.
+     */
     @Test
     public void testAdd() {
         final Song song = generate(Song.class);
@@ -208,7 +231,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, songService, converter, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(songTOValidator).validateNewSongTO(any(SongTO.class));
@@ -225,7 +250,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, songService, converter);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final SongTO song = generate(SongTO.class);
@@ -244,7 +271,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, songService, converter);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with not existing argument. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with not existing argument.
+     */
     @Test
     public void testAddWithNotExistingArgument() {
         final SongTO song = generate(SongTO.class);
@@ -264,7 +293,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final Song song = generate(Song.class);
@@ -288,7 +319,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, songService, converter, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#add(SongTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#add(SongTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final SongTO song = generate(SongTO.class);
@@ -308,7 +341,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)}.
+     */
     @Test
     public void testUpdate() {
         final Song song = generate(Song.class);
@@ -327,7 +362,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, songService, converter, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(songTOValidator).validateExistingSongTO(any(SongTO.class));
@@ -344,7 +381,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, songService, converter);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final SongTO song = generate(SongTO.class);
@@ -362,7 +401,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, songService, converter);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with not existing argument. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final Song song = generate(Song.class);
@@ -384,7 +425,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link SongFacade#update(SongTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#update(SongTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final Song song = generate(Song.class);
@@ -406,7 +449,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)}.
+     */
     @Test
     public void testRemove() {
         final Song song = generate(Song.class);
@@ -421,7 +466,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
@@ -438,7 +485,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final SongTO song = generate(SongTO.class);
@@ -456,7 +505,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with not existing argument. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final SongTO song = generate(SongTO.class);
@@ -474,7 +525,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#remove(SongTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#remove(SongTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final SongTO song = generate(SongTO.class);
@@ -492,7 +545,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Song song = generate(Song.class);
@@ -507,7 +562,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
@@ -524,7 +581,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final SongTO song = generate(SongTO.class);
@@ -542,7 +601,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with not existing argument. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final SongTO song = generate(SongTO.class);
@@ -560,7 +621,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#duplicate(SongTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#duplicate(SongTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final SongTO song = generate(SongTO.class);
@@ -578,7 +641,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Song song = generate(Song.class);
@@ -596,7 +661,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
@@ -613,7 +680,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with argument with bad data.
+     */
     @Test
     public void testMoveUpWithBadArgument() {
         final SongTO song = generate(SongTO.class);
@@ -631,7 +700,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with not existing argument. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with not existing argument.
+     */
     @Test
     public void testMoveUpWithNotExistingArgument() {
         final SongTO song = generate(SongTO.class);
@@ -649,7 +720,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with not moveable argument.
+     */
     @Test
     public void testMoveUpWithNotMoveableArgument() {
         final Song song = generate(Song.class);
@@ -671,7 +744,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveUp(SongTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#moveUp(SongTO)} with exception in service tier.
+     */
     @Test
     public void testMoveUpWithServiceTierException() {
         final SongTO song = generate(SongTO.class);
@@ -689,7 +764,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)}. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Song song = generate(Song.class);
@@ -707,7 +784,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
@@ -724,7 +803,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with argument with bad data.
+     */
     @Test
     public void testMoveDownWithBadArgument() {
         final SongTO song = generate(SongTO.class);
@@ -742,7 +823,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService);
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with not existing argument. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with not existing argument.
+     */
     @Test
     public void testMoveDownWithNotExistingArgument() {
         final SongTO song = generate(SongTO.class);
@@ -760,7 +843,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with not moveable argument. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with not moveable argument.
+     */
     @Test
     public void testMoveDownWithNotMoveableArgument() {
         final Song song = generate(Song.class);
@@ -782,7 +867,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#moveDown(SongTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#moveDown(SongTO)} with exception in service tier.
+     */
     @Test
     public void testMoveDownWithServiceTierException() {
         final SongTO song = generate(SongTO.class);
@@ -800,7 +887,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with existing song. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)} with existing song.
+     */
     @Test
     public void testExistsWithExistingSong() {
         final Song song = generate(Song.class);
@@ -816,7 +905,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, converter, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with not existing song. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)} with not existing song.
+     */
     @Test
     public void testExistsWithNotExistingSong() {
         final Song song = generate(Song.class);
@@ -832,7 +923,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, converter, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(songTOValidator).validateSongTOWithId(any(SongTO.class));
@@ -849,7 +942,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final SongTO song = generate(SongTO.class);
@@ -867,7 +962,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#exists(SongTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#exists(SongTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final Song song = generate(Song.class);
@@ -888,7 +985,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(songService, converter, songTOValidator);
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)}. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)}.
+     */
     @Test
     public void testFindSongsByMusic() {
         final Music music = generate(Music.class);
@@ -908,7 +1007,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, songService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with null argument.
+     */
     @Test
     public void testFindSongsByMusicWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
@@ -925,7 +1026,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, songService, converter);
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testFindSongsByMusicWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -943,7 +1046,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, songService, converter);
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with not existing argument. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with not existing argument.
+     */
     @Test
     public void testFindSongsByMusicWithNotExistingArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -962,7 +1067,9 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songService, converter);
     }
 
-    /** Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testFindSongsByMusicWithServiceTierException() {
         final MusicTO music = generate(MusicTO.class);

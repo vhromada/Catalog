@@ -29,100 +29,164 @@ import cz.vhromada.validators.Validators;
  */
 public class SerieInfoDialog extends JDialog {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size in dialog */
+    /**
+     * Horizontal label size in dialog
+     */
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
 
-    /** Horizontal data size in dialog */
+    /**
+     * Horizontal data size in dialog
+     */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
 
-    /** Horizontal genres button size */
+    /**
+     * Horizontal genres button size
+     */
     private static final int HORIZONTAL_GENRES_BUTTON_SIZE = 310;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** Facade for genres */
+    /**
+     * Facade for genres
+     */
     private GenreFacade genreFacade;
 
-    /** TO for serie */
+    /**
+     * TO for serie
+     */
     private SerieTO serie;
 
-    /** Label for czech name */
+    /**
+     * Label for czech name
+     */
     private JLabel czechNameLabel = new JLabel("Czech name");
 
-    /** Text field for czech name */
+    /**
+     * Text field for czech name
+     */
     private JTextField czechNameData = new JTextField();
 
-    /** Label for original name */
+    /**
+     * Label for original name
+     */
     private JLabel originalNameLabel = new JLabel("Original name");
 
-    /** Text field for original name */
+    /**
+     * Text field for original name
+     */
     private JTextField originalNameData = new JTextField();
 
-    /** Label for ČSFD */
+    /**
+     * Label for ČSFD
+     */
     private JLabel csfdLabel = new JLabel("\u010cSFD");
 
-    /** Text field for ČSFD */
+    /**
+     * Text field for ČSFD
+     */
     private JTextField csfdData = new JTextField();
 
-    /** Check box for IMDB code */
+    /**
+     * Check box for IMDB code
+     */
     private JCheckBox imdbCodeLabel = new JCheckBox("IMDB code");
 
-    /** Spinner for IMDB code */
+    /**
+     * Spinner for IMDB code
+     */
     private JSpinner imdbCodeData = new JSpinner(new SpinnerNumberModel(1, 1, Constants.MAX_IMDB_CODE, 1));
 
-    /** Label for czech Wikipedia */
+    /**
+     * Label for czech Wikipedia
+     */
     private JLabel wikiCzLabel = new JLabel("Czech Wikipedia");
 
-    /** Text field for czech Wikipedia */
+    /**
+     * Text field for czech Wikipedia
+     */
     private JTextField wikiCzData = new JTextField();
 
-    /** Label for english Wikipedia */
+    /**
+     * Label for english Wikipedia
+     */
     private JLabel wikiEnLabel = new JLabel("English Wikipedia");
 
-    /** Text field for english Wikipedia */
+    /**
+     * Text field for english Wikipedia
+     */
     private JTextField wikiEnData = new JTextField();
 
-    /** Label for picture */
+    /**
+     * Label for picture
+     */
     private JLabel pictureLabel = new JLabel("Picture");
 
-    /** Text field for picture */
+    /**
+     * Text field for picture
+     */
     private JTextField pictureData = new JTextField();
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Text field for note */
+    /**
+     * Text field for note
+     */
     private JTextField noteData = new JTextField();
 
-    /** Button for genres */
+    /**
+     * Button for genres
+     */
     private JButton genresButton = new JButton("Genres", Picture.CHOOSE.getIcon());
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Button Cancel */
+    /**
+     * Button Cancel
+     */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** List of TO for genre */
+    /**
+     * List of TO for genre
+     */
     private List<GenreTO> genres = new ArrayList<>();
 
     /**
@@ -212,7 +276,9 @@ public class SerieInfoDialog extends JDialog {
         return serie;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -302,7 +368,9 @@ public class SerieInfoDialog extends JDialog {
         label.setFocusable(false);
     }
 
-    /** Performs action for button OK. */
+    /**
+     * Performs action for button OK.
+     */
     private void okAction() {
         returnStatus = DialogResult.OK;
         if (serie == null) {
@@ -320,14 +388,18 @@ public class SerieInfoDialog extends JDialog {
         close();
     }
 
-    /** Performs action for button Cancel. */
+    /**
+     * Performs action for button Cancel.
+     */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
         serie = null;
         close();
     }
 
-    /** Performs action for button Genres. */
+    /**
+     * Performs action for button Genres.
+     */
     private void genresAction() {
         EventQueue.invokeLater(new Runnable() {
 
@@ -456,7 +528,9 @@ public class SerieInfoDialog extends JDialog {
         return !czechNameData.getText().isEmpty() && !originalNameData.getText().isEmpty() && !genres.isEmpty();
     }
 
-    /** Closes dialog. */
+    /**
+     * Closes dialog.
+     */
     private void close() {
         setVisible(false);
         dispose();

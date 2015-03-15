@@ -21,38 +21,56 @@ import javax.persistence.Table;
 @NamedQuery(name = Music.SELECT_MUSIC, query = "SELECT m FROM Music m ORDER BY m.position, m.id")
 public class Music implements Serializable {
 
-    /** Name for query - select music */
+    /**
+     * Name for query - select music
+     */
     public static final String SELECT_MUSIC = "Music.selectMusic";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "music_generator", sequenceName = "music_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "music_generator")
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     @Column(name = "music_name")
     private String name;
 
-    /** URL to english Wikipedia page about music */
+    /**
+     * URL to english Wikipedia page about music
+     */
     @Column(name = "wiki_en")
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about music */
+    /**
+     * URL to czech Wikipedia page about music
+     */
     @Column(name = "wiki_cz")
     private String wikiCz;
 
-    /** Count of media */
+    /**
+     * Count of media
+     */
     @Column(name = "media_count")
     private int mediaCount;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
     /**

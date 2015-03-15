@@ -24,7 +24,9 @@ public class GenreController extends JsonController {
     @Qualifier("genreFacade")
     private GenreFacade genreFacade;
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     @ResponseBody
     public void newData() {

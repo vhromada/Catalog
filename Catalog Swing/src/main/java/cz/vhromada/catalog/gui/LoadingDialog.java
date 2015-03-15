@@ -23,25 +23,39 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class LoadingDialog extends JDialog {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(LoadingDialog.class);
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size */
+    /**
+     * Horizontal label size
+     */
     private static final int HORIZONTAL_LABEL_SIZE = 130;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** Application context */
+    /**
+     * Application context
+     */
     private ConfigurableApplicationContext context;
 
-    /** Label with time passed. */
+    /**
+     * Label with time passed.
+     */
     private JLabel progress = new JLabel("0 s");
 
-    /** Creates a new instance of LoadingDialog. */
+    /**
+     * Creates a new instance of LoadingDialog.
+     */
     public LoadingDialog() {
         super(new JFrame(), "Loading", true);
 
@@ -104,13 +118,19 @@ public class LoadingDialog extends JDialog {
                 CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
-    /** A class represents swing worker for loading data. */
+    /**
+     * A class represents swing worker for loading data.
+     */
     private class LoadingSwingWorker extends SwingWorker<ConfigurableApplicationContext, Object> {
 
-        /** Timer */
+        /**
+         * Timer
+         */
         private Timer timer;
 
-        /** Passed time */
+        /**
+         * Passed time
+         */
         private int time;
 
         @Override
@@ -146,7 +166,9 @@ public class LoadingDialog extends JDialog {
             progress.setText(chunks.get(chunks.size() - 1) + " s");
         }
 
-        /** Performs action for timer. */
+        /**
+         * Performs action for timer.
+         */
         private void timerAction() {
             time++;
             publish(time);

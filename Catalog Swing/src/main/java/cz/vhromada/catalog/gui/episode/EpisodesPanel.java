@@ -24,55 +24,89 @@ import cz.vhromada.validators.Validators;
  */
 public class EpisodesPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal scroll pane size */
+    /**
+     * Horizontal scroll pane size
+     */
     private static final int HORIZONTAL_SCROLL_PANE_SIZE = 100;
 
-    /** Vertical data component size */
+    /**
+     * Vertical data component size
+     */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
-    /** Update property */
+    /**
+     * Update property
+     */
     private static final String UPDATE_PROPERTY = "update";
 
-    /** Popup menu */
+    /**
+     * Popup menu
+     */
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    /** Menu item for adding episode */
+    /**
+     * Menu item for adding episode
+     */
     private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
-    /** Menu item for updating episode */
+    /**
+     * Menu item for updating episode
+     */
     private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
-    /** Menu item for removing episode */
+    /**
+     * Menu item for removing episode
+     */
     private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
-    /** Menu item for duplicating episode */
+    /**
+     * Menu item for duplicating episode
+     */
     private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
-    /** Menu item for moving up episode */
+    /**
+     * Menu item for moving up episode
+     */
     private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
-    /** Menu item for moving down episode */
+    /**
+     * Menu item for moving down episode
+     */
     private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
-    /** List with episodes */
+    /**
+     * List with episodes
+     */
     private JList<String> list = new JList<>();
 
-    /** ScrollPane for list with episodes */
+    /**
+     * ScrollPane for list with episodes
+     */
     private JScrollPane listScrollPane = new JScrollPane(list);
 
-    /** Tabbed pane with episode's data */
+    /**
+     * Tabbed pane with episode's data
+     */
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    /** Facade for episodes */
+    /**
+     * Facade for episodes
+     */
     private EpisodeFacade episodeFacade;
 
-    /** Data model for list with episodes */
+    /**
+     * Data model for list with episodes
+     */
     private EpisodesListDataModel episodesListDataModel;
 
-    /** TO for season */
+    /**
+     * TO for season
+     */
     private SeasonTO season;
 
     /**
@@ -104,7 +138,9 @@ public class EpisodesPanel extends JPanel {
         this.season = season;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
 
@@ -194,7 +230,9 @@ public class EpisodesPanel extends JPanel {
         }
     }
 
-    /** Performs action for button Add. */
+    /**
+     * Performs action for button Add.
+     */
     private void addAction() {
         EventQueue.invokeLater(new Runnable() {
 
@@ -216,7 +254,9 @@ public class EpisodesPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Update. */
+    /**
+     * Performs action for button Update.
+     */
     private void updateAction() {
         EventQueue.invokeLater(new Runnable() {
 
@@ -238,7 +278,9 @@ public class EpisodesPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Remove. */
+    /**
+     * Performs action for button Remove.
+     */
     private void removeAction() {
         episodeFacade.remove(episodesListDataModel.getEpisodeAt(list.getSelectedIndex()));
         episodesListDataModel.update();
@@ -247,7 +289,9 @@ public class EpisodesPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button Duplicate. */
+    /**
+     * Performs action for button Duplicate.
+     */
     private void duplicateAction() {
         final int index = list.getSelectedIndex();
         episodeFacade.duplicate(episodesListDataModel.getEpisodeAt(index));
@@ -257,7 +301,9 @@ public class EpisodesPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button MoveUp. */
+    /**
+     * Performs action for button MoveUp.
+     */
     private void moveUpAction() {
         final int index = list.getSelectedIndex();
         episodeFacade.moveUp(episodesListDataModel.getEpisodeAt(index));
@@ -267,7 +313,9 @@ public class EpisodesPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button MoveDown. */
+    /**
+     * Performs action for button MoveDown.
+     */
     private void moveDownAction() {
         final int index = list.getSelectedIndex();
         episodeFacade.moveDown(episodesListDataModel.getEpisodeAt(index));
@@ -277,7 +325,9 @@ public class EpisodesPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Initializes list. */
+    /**
+     * Initializes list.
+     */
     private void initList() {
         episodesListDataModel = new EpisodesListDataModel(episodeFacade, season);
         list.setModel(episodesListDataModel);
@@ -293,7 +343,9 @@ public class EpisodesPanel extends JPanel {
         });
     }
 
-    /** Performs action for change of list value. */
+    /**
+     * Performs action for change of list value.
+     */
     private void listValueChangedAction() {
         final boolean isSelectedRow = list.getSelectedIndices().length == 1;
         final int selectedRow = list.getSelectedIndex();

@@ -9,25 +9,39 @@ import java.io.Serializable;
  */
 public class SongTO implements Comparable<SongTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String name;
 
-    /** Length */
+    /**
+     * Length
+     */
     private int length;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** TO for music */
+    /**
+     * TO for music
+     */
     private MusicTO music;
 
     /**

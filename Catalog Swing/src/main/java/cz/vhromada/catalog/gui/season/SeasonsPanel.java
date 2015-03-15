@@ -28,58 +28,94 @@ import cz.vhromada.validators.Validators;
  */
 public class SeasonsPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal scroll pane size */
+    /**
+     * Horizontal scroll pane size
+     */
     private static final int HORIZONTAL_SCROLL_PANE_SIZE = 200;
 
-    /** Vertical data component size */
+    /**
+     * Vertical data component size
+     */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
-    /** Update property */
+    /**
+     * Update property
+     */
     private static final String UPDATE_PROPERTY = "update";
 
-    /** Popup menu */
+    /**
+     * Popup menu
+     */
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    /** Menu item for adding season */
+    /**
+     * Menu item for adding season
+     */
     private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
-    /** Menu item for updating season */
+    /**
+     * Menu item for updating season
+     */
     private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
-    /** Menu item for removing season */
+    /**
+     * Menu item for removing season
+     */
     private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
-    /** Menu item for duplicating season */
+    /**
+     * Menu item for duplicating season
+     */
     private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
-    /** Menu item for moving up season */
+    /**
+     * Menu item for moving up season
+     */
     private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
-    /** Menu item for moving down season */
+    /**
+     * Menu item for moving down season
+     */
     private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
-    /** List with seasons */
+    /**
+     * List with seasons
+     */
     private JList<Integer> list = new JList<>();
 
-    /** ScrollPane for list with seasons */
+    /**
+     * ScrollPane for list with seasons
+     */
     private JScrollPane listScrollPane = new JScrollPane(list);
 
-    /** Tabbed pane with season's data */
+    /**
+     * Tabbed pane with season's data
+     */
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    /** Facade for seasons */
+    /**
+     * Facade for seasons
+     */
     private SeasonFacade seasonFacade;
 
-    /** Facade for episodes */
+    /**
+     * Facade for episodes
+     */
     private EpisodeFacade episodeFacade;
 
-    /** Data model for list with seasons */
+    /**
+     * Data model for list with seasons
+     */
     private SeasonsListDataModel seasonsListDataModel;
 
-    /** TO for serie */
+    /**
+     * TO for serie
+     */
     private SerieTO serie;
 
     /**
@@ -115,7 +151,9 @@ public class SeasonsPanel extends JPanel {
         this.serie = serie;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
 
@@ -204,7 +242,9 @@ public class SeasonsPanel extends JPanel {
         }
     }
 
-    /** Performs action for button Add. */
+    /**
+     * Performs action for button Add.
+     */
     private void addAction() {
         EventQueue.invokeLater(new Runnable() {
 
@@ -226,7 +266,9 @@ public class SeasonsPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Update. */
+    /**
+     * Performs action for button Update.
+     */
     private void updateAction() {
         EventQueue.invokeLater(new Runnable() {
 
@@ -248,7 +290,9 @@ public class SeasonsPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Remove. */
+    /**
+     * Performs action for button Remove.
+     */
     private void removeAction() {
         seasonFacade.remove(seasonsListDataModel.getSeasonAt(list.getSelectedIndex()));
         seasonsListDataModel.update();
@@ -257,7 +301,9 @@ public class SeasonsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button Duplicate. */
+    /**
+     * Performs action for button Duplicate.
+     */
     private void duplicateAction() {
         final int index = list.getSelectedIndex();
         seasonFacade.duplicate(seasonsListDataModel.getSeasonAt(index));
@@ -267,7 +313,9 @@ public class SeasonsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button MoveUp. */
+    /**
+     * Performs action for button MoveUp.
+     */
     private void moveUpAction() {
         final int index = list.getSelectedIndex();
         seasonFacade.moveUp(seasonsListDataModel.getSeasonAt(index));
@@ -277,7 +325,9 @@ public class SeasonsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Performs action for button MoveDown. */
+    /**
+     * Performs action for button MoveDown.
+     */
     private void moveDownAction() {
         final int index = list.getSelectedIndex();
         seasonFacade.moveDown(seasonsListDataModel.getSeasonAt(index));
@@ -287,7 +337,9 @@ public class SeasonsPanel extends JPanel {
         firePropertyChange(UPDATE_PROPERTY, false, true);
     }
 
-    /** Initializes list. */
+    /**
+     * Initializes list.
+     */
     private void initList() {
         seasonsListDataModel = new SeasonsListDataModel(seasonFacade, serie);
         list.setModel(seasonsListDataModel);
@@ -303,7 +355,9 @@ public class SeasonsPanel extends JPanel {
         });
     }
 
-    /** Performs action for change of list value. */
+    /**
+     * Performs action for change of list value.
+     */
     private void listValueChangedAction() {
         final boolean isSelectedRow = list.getSelectedIndices().length == 1;
         final int selectedRow = list.getSelectedIndex();

@@ -39,29 +39,43 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MovieServiceImplSpringTest {
 
-    /** Cache key for list of movies */
+    /**
+     * Cache key for list of movies
+     */
     private static final String MOVIES_CACHE_KEY = "movies";
 
-    /** Cache key for movie */
+    /**
+     * Cache key for movie
+     */
     private static final String MOVIE_CACHE_KEY = "movie";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('movieCache')}")
     private Cache movieCache;
 
-    /** Instance of {@link MovieService} */
+    /**
+     * Instance of {@link MovieService}
+     */
     @Autowired
     private MovieService movieService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequences. */
+    /**
+     * Clears cache and restarts sequences.
+     */
     @Before
     public void setUp() {
         movieCache.clear();
@@ -69,7 +83,9 @@ public class MovieServiceImplSpringTest {
         entityManager.createNativeQuery("ALTER SEQUENCE media_sq RESTART WITH 5").executeUpdate();
     }
 
-    /** Test method for {@link MovieService#newData()}. */
+    /**
+     * Test method for {@link MovieService#newData()}.
+     */
     @Test
     public void testNewData() {
         movieService.newData();
@@ -79,7 +95,9 @@ public class MovieServiceImplSpringTest {
         assertTrue(SpringUtils.getCacheKeys(movieCache).isEmpty());
     }
 
-    /** Test method for {@link MovieService#getMovies()}. */
+    /**
+     * Test method for {@link MovieService#getMovies()}.
+     */
     @Test
     public void testGetMovies() {
         final List<Movie> movies = SpringEntitiesUtils.getMovies();
@@ -92,7 +110,9 @@ public class MovieServiceImplSpringTest {
         SpringUtils.assertCacheValue(movieCache, key, movies);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with existing movie. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with existing movie.
+     */
     @Test
     public void testGetMovieWithExistingMovie() {
         final List<String> keys = new ArrayList<>();
@@ -111,7 +131,9 @@ public class MovieServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with not existing movie. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with not existing movie.
+     */
     @Test
     public void testGetMovieWithNotExistingMovie() {
         final String key = MOVIE_CACHE_KEY + Integer.MAX_VALUE;
@@ -123,7 +145,9 @@ public class MovieServiceImplSpringTest {
         SpringUtils.assertCacheValue(movieCache, key, null);
     }
 
-    /** Test method for {@link MovieService#add(Movie)} with empty cache. */
+    /**
+     * Test method for {@link MovieService#add(Movie)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
@@ -139,7 +163,9 @@ public class MovieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
     }
 
-    /** Test method for {@link MovieService#add(Movie)} with not empty cache. */
+    /**
+     * Test method for {@link MovieService#add(Movie)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
@@ -161,7 +187,9 @@ public class MovieServiceImplSpringTest {
         SpringUtils.assertCacheValue(movieCache, keyItem, movie);
     }
 
-    /** Test method for {@link MovieService#update(Movie)}. */
+    /**
+     * Test method for {@link MovieService#update(Movie)}.
+     */
     @Test
     public void testUpdate() {
         final Movie movie = SpringEntitiesUtils.updateMovie(1, objectGenerator, entityManager);
@@ -175,7 +203,9 @@ public class MovieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
     }
 
-    /** Test method for {@link MovieService#remove(Movie)} with empty cache. */
+    /**
+     * Test method for {@link MovieService#remove(Movie)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
@@ -197,7 +227,9 @@ public class MovieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
     }
 
-    /** Test method for {@link MovieService#remove(Movie)} with not empty cache. */
+    /**
+     * Test method for {@link MovieService#remove(Movie)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
@@ -224,7 +256,9 @@ public class MovieServiceImplSpringTest {
         SpringUtils.assertCacheValue(movieCache, key, new ArrayList<>());
     }
 
-    /** Test method for {@link MovieService#duplicate(Movie)} with empty cache. */
+    /**
+     * Test method for {@link MovieService#duplicate(Movie)} with empty cache.
+     */
     @Test
     public void testDuplicateWithEmptyCache() {
         final Movie movie = SpringUtils.getMovie(entityManager, 3);
@@ -245,7 +279,9 @@ public class MovieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
     }
 
-    /** Test method for {@link MovieService#duplicate(Movie)} with not empty cache. */
+    /**
+     * Test method for {@link MovieService#duplicate(Movie)} with not empty cache.
+     */
     @Test
     public void testDuplicateWithNotEmptyCache() {
         final Movie movie = SpringUtils.getMovie(entityManager, 3);
@@ -272,7 +308,9 @@ public class MovieServiceImplSpringTest {
         SpringUtils.assertCacheValue(movieCache, keyItem, expectedMovie);
     }
 
-    /** Test method for {@link MovieService#moveUp(Movie)}. */
+    /**
+     * Test method for {@link MovieService#moveUp(Movie)}.
+     */
     @Test
     public void testMoveUp() {
         final Movie movie = SpringUtils.getMovie(entityManager, 2);
@@ -293,7 +331,9 @@ public class MovieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
     }
 
-    /** Test method for {@link MovieService#moveDown(Movie)}. */
+    /**
+     * Test method for {@link MovieService#moveDown(Movie)}.
+     */
     @Test
     public void testMoveDown() {
         final Movie movie = SpringUtils.getMovie(entityManager, 1);
@@ -314,7 +354,9 @@ public class MovieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with existing movie. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with existing movie.
+     */
     @Test
     public void testExistsWithExistingMovie() {
         final List<String> keys = new ArrayList<>();
@@ -333,7 +375,9 @@ public class MovieServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with not existing movie. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with not existing movie.
+     */
     @Test
     public void testExistsWithNotExistingMovie() {
         final Movie movie = SpringEntitiesUtils.newMovie(objectGenerator, entityManager);
@@ -347,7 +391,9 @@ public class MovieServiceImplSpringTest {
         SpringUtils.assertCacheValue(movieCache, key, null);
     }
 
-    /** Test method for {@link MovieService#updatePositions()}. */
+    /**
+     * Test method for {@link MovieService#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         final Movie movie = SpringUtils.getMovie(entityManager, SpringUtils.MOVIES_COUNT);
@@ -364,7 +410,9 @@ public class MovieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(movieCache).size());
     }
 
-    /** Test method for {@link MovieService#getTotalMediaCount()}. */
+    /**
+     * Test method for {@link MovieService#getTotalMediaCount()}.
+     */
     @Test
     public void testGetTotalMediaCount() {
         final String key = MOVIES_CACHE_KEY;
@@ -376,7 +424,9 @@ public class MovieServiceImplSpringTest {
         SpringUtils.assertCacheValue(movieCache, key, SpringEntitiesUtils.getMovies());
     }
 
-    /** Test method for {@link MovieService#getTotalLength()}. */
+    /**
+     * Test method for {@link MovieService#getTotalLength()}.
+     */
     @Test
     public void testGetTotalLength() {
         final String key = MOVIES_CACHE_KEY;

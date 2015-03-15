@@ -20,79 +20,129 @@ import cz.vhromada.validators.Validators;
  */
 public class SongInfoDialog extends JDialog {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size in dialog */
+    /**
+     * Horizontal label size in dialog
+     */
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
 
-    /** Horizontal data size in dialog */
+    /**
+     * Horizontal data size in dialog
+     */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
 
-    /** Horizontal time size */
+    /**
+     * Horizontal time size
+     */
     private static final int HORIZONTAL_TIME_SIZE = 60;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Maximum hours */
+    /**
+     * Maximum hours
+     */
     private static final int MAX_HOURS = 23;
 
-    /** Maximum minutes */
+    /**
+     * Maximum minutes
+     */
     private static final int MAX_MINUTES = 59;
 
-    /** Maximum seconds */
+    /**
+     * Maximum seconds
+     */
     private static final int MAX_SECONDS = 59;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** TO for song */
+    /**
+     * TO for song
+     */
     private SongTO song;
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Name");
 
-    /** Text field for name */
+    /**
+     * Text field for name
+     */
     private JTextField nameData = new JTextField();
 
-    /** Label for length */
+    /**
+     * Label for length
+     */
     private JLabel lengthLabel = new JLabel("Length");
 
-    /** Spinner for length - hours */
+    /**
+     * Spinner for length - hours
+     */
     private JSpinner lengthHoursData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_HOURS, 1));
 
-    /** Spinner for length - minutes */
+    /**
+     * Spinner for length - minutes
+     */
     private JSpinner lengthMinutesData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_MINUTES, 1));
 
-    /** Spinner for length - seconds */
+    /**
+     * Spinner for length - seconds
+     */
     private JSpinner lengthSecondsData = new JSpinner(new SpinnerNumberModel(0, 0, MAX_SECONDS, 1));
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Text field for note */
+    /**
+     * Text field for note
+     */
     private JTextField noteData = new JTextField();
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Button Cancel */
+    /**
+     * Button Cancel
+     */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Creates a new instance of SongInfoDialog. */
+    /**
+     * Creates a new instance of SongInfoDialog.
+     */
     public SongInfoDialog() {
         this("Add", Picture.ADD);
 
@@ -154,7 +204,9 @@ public class SongInfoDialog extends JDialog {
         return song;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -211,7 +263,9 @@ public class SongInfoDialog extends JDialog {
         label.setFocusable(false);
     }
 
-    /** Performs action for button OK. */
+    /**
+     * Performs action for button OK.
+     */
     private void okAction() {
         returnStatus = DialogResult.OK;
         if (song == null) {
@@ -226,7 +280,9 @@ public class SongInfoDialog extends JDialog {
         close();
     }
 
-    /** Performs action for button Cancel. */
+    /**
+     * Performs action for button Cancel.
+     */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
         song = null;
@@ -348,7 +404,9 @@ public class SongInfoDialog extends JDialog {
         return !nameData.getText().isEmpty();
     }
 
-    /** Closes dialog. */
+    /**
+     * Closes dialog.
+     */
     private void close() {
         setVisible(false);
         dispose();

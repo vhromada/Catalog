@@ -24,94 +24,154 @@ import cz.vhromada.validators.Validators;
  */
 public class SeasonInfoDialog extends JDialog {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size in dialog */
+    /**
+     * Horizontal label size in dialog
+     */
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
 
-    /** Horizontal data size in dialog */
+    /**
+     * Horizontal data size in dialog
+     */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     private static final int VERTICAL_GAP_SIZE = 10;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** TO for season */
+    /**
+     * TO for season
+     */
     private SeasonTO season;
 
-    /** Label for season's number */
+    /**
+     * Label for season's number
+     */
     private JLabel numberLabel = new JLabel("Number of season");
 
-    /** Spinner for season's number */
+    /**
+     * Spinner for season's number
+     */
     private JSpinner numberData = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
-    /** Label for starting year */
+    /**
+     * Label for starting year
+     */
     private JLabel startYearLabel = new JLabel("Starting year");
 
-    /** Spinner for starting year */
+    /**
+     * Spinner for starting year
+     */
     private JSpinner startYearData = new JSpinner(new SpinnerNumberModel(Constants.CURRENT_YEAR, Constants.MIN_YEAR, Constants.CURRENT_YEAR, 1));
 
-    /** Label for ending year */
+    /**
+     * Label for ending year
+     */
     private JLabel endYearLabel = new JLabel("Ending year");
 
-    /** Spinner for ending year */
+    /**
+     * Spinner for ending year
+     */
     private JSpinner endYearData = new JSpinner(new SpinnerNumberModel(Constants.CURRENT_YEAR, Constants.MIN_YEAR, Constants.CURRENT_YEAR, 1));
 
-    /** Label for language */
+    /**
+     * Label for language
+     */
     private JLabel languageLabel = new JLabel("Language");
 
-    /** Button group for languages */
+    /**
+     * Button group for languages
+     */
     private ButtonGroup languagesButtonGroup = new ButtonGroup();
 
-    /** Radio button for czech language */
+    /**
+     * Radio button for czech language
+     */
     private JRadioButton czechLanguageData = new JRadioButton("Czech", true);
 
-    /** Radio button for english language */
+    /**
+     * Radio button for english language
+     */
     private JRadioButton englishLanguageData = new JRadioButton("English");
 
-    /** Radio button for french language */
+    /**
+     * Radio button for french language
+     */
     private JRadioButton frenchLanguageData = new JRadioButton("French");
 
-    /** Radio button for japanese language */
+    /**
+     * Radio button for japanese language
+     */
     private JRadioButton japaneseLanguageData = new JRadioButton("Japanese");
 
-    /** Label for subtitles */
+    /**
+     * Label for subtitles
+     */
     private JLabel subtitlesLabel = new JLabel("Subtitles");
 
-    /** Check box for czech subtitles */
+    /**
+     * Check box for czech subtitles
+     */
     private JCheckBox czechSubtitlesData = new JCheckBox("Czech");
 
-    /** Check box for english subtitles */
+    /**
+     * Check box for english subtitles
+     */
     private JCheckBox englishSubtitlesData = new JCheckBox("English");
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Text field for note */
+    /**
+     * Text field for note
+     */
     private JTextField noteData = new JTextField();
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Button Cancel */
+    /**
+     * Button Cancel
+     */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Creates a new instance of SeasonInfoDialog. */
+    /**
+     * Creates a new instance of SeasonInfoDialog.
+     */
     public SeasonInfoDialog() {
         this("Add", Picture.ADD);
 
@@ -247,7 +307,9 @@ public class SeasonInfoDialog extends JDialog {
         }
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -327,7 +389,9 @@ public class SeasonInfoDialog extends JDialog {
         }
     }
 
-    /** Performs action for button OK. */
+    /**
+     * Performs action for button OK.
+     */
     private void okAction() {
         returnStatus = DialogResult.OK;
         if (season == null) {
@@ -368,7 +432,9 @@ public class SeasonInfoDialog extends JDialog {
         return subtitles;
     }
 
-    /** Performs action for button Cancel. */
+    /**
+     * Performs action for button Cancel.
+     */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
         season = null;
@@ -483,7 +549,9 @@ public class SeasonInfoDialog extends JDialog {
         return (Integer) startYearData.getValue() <= (Integer) endYearData.getValue();
     }
 
-    /** Closes dialog. */
+    /**
+     * Closes dialog.
+     */
     private void close() {
         setVisible(false);
         dispose();

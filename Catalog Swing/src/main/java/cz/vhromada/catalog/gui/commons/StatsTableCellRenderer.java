@@ -9,10 +9,14 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class StatsTableCellRenderer extends DefaultTableCellRenderer {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Creates a new instance of StatsTableCellRenderer. */
+    /**
+     * Creates a new instance of StatsTableCellRenderer.
+     */
     public StatsTableCellRenderer() {
         setVerticalAlignment(CENTER);
         setHorizontalAlignment(CENTER);

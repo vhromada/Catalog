@@ -22,19 +22,29 @@ import org.springframework.stereotype.Component;
 @Component("genreDAO")
 public class GenreDAOImpl implements GenreDAO {
 
-    /** Entity manager argument */
+    /**
+     * Entity manager argument
+     */
     private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
-    /** Genre argument */
+    /**
+     * Genre argument
+     */
     private static final String GENRE_ARGUMENT = "Genre";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link DataStorageException} */
+    /**
+     * Message for {@link DataStorageException}
+     */
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
-    /** Entity manager */
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager;
 
     /**

@@ -30,52 +30,84 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SongFacadeImpl implements SongFacade {
 
-    /** Service for music argument */
+    /**
+     * Service for music argument
+     */
     private static final String MUSIC_SERVICE_ARGUMENT = "Service for music";
 
-    /** Service for songs argument */
+    /**
+     * Service for songs argument
+     */
     private static final String SONG_SERVICE_ARGUMENT = "Service for songs";
 
-    /** Converter argument */
+    /**
+     * Converter argument
+     */
     private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for music argument */
+    /**
+     * Validator for TO for music argument
+     */
     private static final String MUSIC_TO_VALIDATOR_ARGUMENT = "Validator for TO for music";
 
-    /** Validator for TO for song argument */
+    /**
+     * Validator for TO for song argument
+     */
     private static final String SONG_TO_VALIDATOR_ARGUMENT = "Validator for TO for song";
 
-    /** Song argument */
+    /**
+     * Song argument
+     */
     private static final String SONG_ARGUMENT = "song";
 
-    /** TO for music argument */
+    /**
+     * TO for music argument
+     */
     private static final String MUSIC_TO_ARGUMENT = "TO for music";
 
-    /** TO for song argument */
+    /**
+     * TO for song argument
+     */
     private static final String SONG_TO_ARGUMENT = "TO for song";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link FacadeOperationException} */
+    /**
+     * Message for {@link FacadeOperationException}
+     */
     private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-    /** Message for not setting ID */
+    /**
+     * Message for not setting ID
+     */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-    /** Service for music */
+    /**
+     * Service for music
+     */
     private MusicService musicService;
 
-    /** Service for songs */
+    /**
+     * Service for songs
+     */
     private SongService songService;
 
-    /** Converter */
+    /**
+     * Converter
+     */
     private Converter converter;
 
-    /** Validator for TO for music */
+    /**
+     * Validator for TO for music
+     */
     private MusicTOValidator musicTOValidator;
 
-    /** Validator for TO for song */
+    /**
+     * Validator for TO for song
+     */
     private SongTOValidator songTOValidator;
 
     /**

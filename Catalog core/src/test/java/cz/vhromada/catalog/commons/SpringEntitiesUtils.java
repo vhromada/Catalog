@@ -28,7 +28,9 @@ import org.joda.time.DateTime;
  */
 public final class SpringEntitiesUtils {
 
-    /** Creates a new instance of SpringEntitiesUtils. */
+    /**
+     * Creates a new instance of SpringEntitiesUtils.
+     */
     private SpringEntitiesUtils() {
     }
 

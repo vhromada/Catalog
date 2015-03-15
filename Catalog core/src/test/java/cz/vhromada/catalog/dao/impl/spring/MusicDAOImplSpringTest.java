@@ -29,32 +29,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MusicDAOImplSpringTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link MusicDAO} */
+    /**
+     * Instance of {@link MusicDAO}
+     */
     @Autowired
     private MusicDAO musicDAO;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Restarts sequence. */
+    /**
+     * Restarts sequence.
+     */
     @Before
     public void setUp() {
         entityManager.createNativeQuery("ALTER SEQUENCE music_sq RESTART WITH 4").executeUpdate();
     }
 
-    /** Test method for {@link MusicDAO#getMusic()}. */
+    /**
+     * Test method for {@link MusicDAO#getMusic()}.
+     */
     @Test
     public void testGetMusic() {
         DeepAsserts.assertEquals(SpringEntitiesUtils.getMusic(), musicDAO.getMusic());
         DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
     }
 
-    /** Test method for {@link MusicDAO#getMusic(Integer)}. */
+    /**
+     * Test method for {@link MusicDAO#getMusic(Integer)}.
+     */
     @Test
     public void testGetMusicById() {
         for (int i = 1; i <= SpringUtils.MUSIC_COUNT; i++) {
@@ -66,7 +78,9 @@ public class MusicDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
     }
 
-    /** Test method for {@link MusicDAO#add(Music)}. */
+    /**
+     * Test method for {@link MusicDAO#add(Music)}.
+     */
     @Test
     public void testAdd() {
         final Music music = SpringEntitiesUtils.newMusic(objectGenerator);
@@ -81,7 +95,9 @@ public class MusicDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT + 1, SpringUtils.getMusicCount(entityManager));
     }
 
-    /** Test method for {@link MusicDAO#update(Music)}. */
+    /**
+     * Test method for {@link MusicDAO#update(Music)}.
+     */
     @Test
     public void testUpdate() {
         final Music music = SpringEntitiesUtils.updateMusic(1, objectGenerator, entityManager);
@@ -93,7 +109,9 @@ public class MusicDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.MUSIC_COUNT, SpringUtils.getMusicCount(entityManager));
     }
 
-    /** Test method for {@link MusicDAO#remove(Music)}. */
+    /**
+     * Test method for {@link MusicDAO#remove(Music)}.
+     */
     @Test
     public void testRemove() {
         final Music music = SpringEntitiesUtils.newMusic(objectGenerator);

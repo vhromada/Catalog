@@ -43,30 +43,42 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class GameDAOImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Mock
     private EntityManager entityManager;
 
-    /** Query for games */
+    /**
+     * Query for games
+     */
     @Mock
     private TypedQuery<Game> gamesQuery;
 
-    /** Instance of {@link GameDAO} */
+    /**
+     * Instance of {@link GameDAO}
+     */
     private GameDAO gameDAO;
 
-    /** Initializes DAO for games. */
+    /**
+     * Initializes DAO for games.
+     */
     @Before
     public void setUp() {
         gameDAO = new GameDAOImpl(entityManager);
     }
 
-    /** Test method for {@link GameDAOImpl#GameDAOImpl(EntityManager)} with null entity manager. */
+    /**
+     * Test method for {@link GameDAOImpl#GameDAOImpl(EntityManager)} with null entity manager.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEntityManager() {
         new GameDAOImpl(null);
     }
 
-    /** Test method for {@link GameDAO#getGames()}. */
+    /**
+     * Test method for {@link GameDAO#getGames()}.
+     */
     @Test
     public void testGetGames() {
         final List<Game> games = CollectionUtils.newList(generate(Game.class), generate(Game.class));
@@ -80,7 +92,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, gamesQuery);
     }
 
-    /** Test method for {@link GameDAO#getGames()} with exception in persistence. */
+    /**
+     * Test method for {@link GameDAO#getGames()} with exception in persistence.
+     */
     @Test
     public void testGetGamesWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Game.class));
@@ -97,7 +111,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(gamesQuery);
     }
 
-    /** Test method for {@link GameDAO#getGame(Integer)} with existing game. */
+    /**
+     * Test method for {@link GameDAO#getGame(Integer)} with existing game.
+     */
     @Test
     public void testGetGameWithExistingGame() {
         final int id = generate(Integer.class);
@@ -110,7 +126,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#getGame(Integer)} with not existing game. */
+    /**
+     * Test method for {@link GameDAO#getGame(Integer)} with not existing game.
+     */
     @Test
     public void testGetGameWithNotExistingGame() {
         when(entityManager.find(eq(Game.class), anyInt())).thenReturn(null);
@@ -121,7 +139,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#getGame(Integer)} with null argument. */
+    /**
+     * Test method for {@link GameDAO#getGame(Integer)} with null argument.
+     */
     @Test
     public void testGetGameWithNullArgument() {
         try {
@@ -134,7 +154,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#getGame(Integer)} with exception in persistence. */
+    /**
+     * Test method for {@link GameDAO#getGame(Integer)} with exception in persistence.
+     */
     @Test
     public void testGetGameWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Game.class), anyInt());
@@ -150,7 +172,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#add(Game)}. */
+    /**
+     * Test method for {@link GameDAO#add(Game)}.
+     */
     @Test
     public void testAdd() {
         final Game game = generate(Game.class);
@@ -166,7 +190,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#add(Game)} with null argument. */
+    /**
+     * Test method for {@link GameDAO#add(Game)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -179,7 +205,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#add(Game)} with exception in persistence. */
+    /**
+     * Test method for {@link GameDAO#add(Game)} with exception in persistence.
+     */
     @Test
     public void testAddWithPersistenceException() {
         final Game game = generate(Game.class);
@@ -196,7 +224,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#update(Game)}. */
+    /**
+     * Test method for {@link GameDAO#update(Game)}.
+     */
     @Test
     public void testUpdate() {
         final Game game = generate(Game.class);
@@ -207,7 +237,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#update(Game)} with null argument. */
+    /**
+     * Test method for {@link GameDAO#update(Game)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -220,7 +252,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#update(Game)} with exception in persistence. */
+    /**
+     * Test method for {@link GameDAO#update(Game)} with exception in persistence.
+     */
     @Test
     public void testUpdateWithPersistenceException() {
         final Game game = generate(Game.class);
@@ -237,7 +271,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#remove(Game)} with managed game. */
+    /**
+     * Test method for {@link GameDAO#remove(Game)} with managed game.
+     */
     @Test
     public void testRemoveWithManagedGame() {
         final Game game = generate(Game.class);
@@ -250,7 +286,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#remove(Game)} with not managed game. */
+    /**
+     * Test method for {@link GameDAO#remove(Game)} with not managed game.
+     */
     @Test
     public void testRemoveWithNotManagedGame() {
         final Game game = generate(Game.class);
@@ -265,7 +303,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#remove(Game)} with null argument. */
+    /**
+     * Test method for {@link GameDAO#remove(Game)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -278,7 +318,9 @@ public class GameDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link GameDAO#remove(Game)} with exception in persistence. */
+    /**
+     * Test method for {@link GameDAO#remove(Game)} with exception in persistence.
+     */
     @Test
     public void testRemoveWithPersistenceException() {
         final Game game = generate(Game.class);

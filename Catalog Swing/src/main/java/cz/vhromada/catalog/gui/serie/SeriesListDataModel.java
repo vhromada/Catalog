@@ -15,13 +15,19 @@ import cz.vhromada.validators.Validators;
  */
 public class SeriesListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for series */
+    /**
+     * Facade for series
+     */
     private SerieFacade serieFacade;
 
-    /** List of TO for serie */
+    /**
+     * List of TO for serie
+     */
     private List<SerieTO> series;
 
     /**
@@ -69,7 +75,9 @@ public class SeriesListDataModel extends AbstractListModel<String> {
         return series.get(index);
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         series = serieFacade.getSeries();
     }

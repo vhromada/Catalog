@@ -10,7 +10,9 @@ import cz.vhromada.validators.exceptions.ValidationException;
  */
 public final class CatalogValidators {
 
-    /** Creates a new instance of CatalogValidators. */
+    /**
+     * Creates a new instance of CatalogValidators.
+     */
     private CatalogValidators() {
     }
 

@@ -23,58 +23,94 @@ import cz.vhromada.validators.Validators;
  */
 public class GenresPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal scroll pane size */
+    /**
+     * Horizontal scroll pane size
+     */
     private static final int HORIZONTAL_SCROLL_PANE_SIZE = 200;
 
-    /** Vertical data component size */
+    /**
+     * Vertical data component size
+     */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
-    /** Vertical size for scroll pane for table with stats */
+    /**
+     * Vertical size for scroll pane for table with stats
+     */
     private static final int VERTICAL_STATS_SCROLL_PANE_SIZE = 45;
 
-    /** Popup menu */
+    /**
+     * Popup menu
+     */
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    /** Menu item for adding genre */
+    /**
+     * Menu item for adding genre
+     */
     private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
-    /** Menu item for updating genre */
+    /**
+     * Menu item for updating genre
+     */
     private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
-    /** Menu item for removing genre */
+    /**
+     * Menu item for removing genre
+     */
     private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
-    /** Menu item for duplicating genre */
+    /**
+     * Menu item for duplicating genre
+     */
     private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
-    /** List with genres */
+    /**
+     * List with genres
+     */
     private JList<String> list = new JList<>();
 
-    /** ScrollPane for list with genres */
+    /**
+     * ScrollPane for list with genres
+     */
     private JScrollPane listScrollPane = new JScrollPane(list);
 
-    /** Tabbed pane with genre's data */
+    /**
+     * Tabbed pane with genre's data
+     */
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    /** Table with with genres' stats */
+    /**
+     * Table with with genres' stats
+     */
     private JTable statsTable = new JTable();
 
-    /** ScrollPane for table with genres' stats */
+    /**
+     * ScrollPane for table with genres' stats
+     */
     private JScrollPane statsTableScrollPane = new JScrollPane(statsTable);
 
-    /** Facade for genres */
+    /**
+     * Facade for genres
+     */
     private GenreFacade genreFacade;
 
-    /** Data model for list with genres */
+    /**
+     * Data model for list with genres
+     */
     private GenresListDataModel genresListDataModel;
 
-    /** Data model for table with stats for genres */
+    /**
+     * Data model for table with stats for genres
+     */
     private GenresStatsTableDataModel genresStatsTableDataModel;
 
-    /** True if data is saved */
+    /**
+     * True if data is saved
+     */
     private boolean saved;
 
     /**
@@ -91,7 +127,9 @@ public class GenresPanel extends JPanel {
         initComponents();
     }
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     public void newData() {
         genreFacade.newData();
         genresListDataModel.update();
@@ -102,12 +140,16 @@ public class GenresPanel extends JPanel {
         saved = true;
     }
 
-    /** Clears selection. */
+    /**
+     * Clears selection.
+     */
     public void clearSelection() {
         list.clearSelection();
     }
 
-    /** Saves. */
+    /**
+     * Saves.
+     */
     public void save() {
         saved = true;
     }
@@ -121,7 +163,9 @@ public class GenresPanel extends JPanel {
         return saved;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem);
 
@@ -194,7 +238,9 @@ public class GenresPanel extends JPanel {
         }
     }
 
-    /** Performs action for button Add. */
+    /**
+     * Performs action for button Add.
+     */
     private void addAction() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -216,7 +262,9 @@ public class GenresPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Update. */
+    /**
+     * Performs action for button Update.
+     */
     private void updateAction() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -239,7 +287,9 @@ public class GenresPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Remove. */
+    /**
+     * Performs action for button Remove.
+     */
     private void removeAction() {
         genreFacade.remove(genresListDataModel.getGenreAt(list.getSelectedIndex()));
         genresListDataModel.update();
@@ -250,7 +300,9 @@ public class GenresPanel extends JPanel {
         saved = false;
     }
 
-    /** Performs action for button Duplicate. */
+    /**
+     * Performs action for button Duplicate.
+     */
     private void duplicateAction() {
         final int index = list.getSelectedIndex();
         genreFacade.duplicate(genresListDataModel.getGenreAt(index));
@@ -262,7 +314,9 @@ public class GenresPanel extends JPanel {
         saved = false;
     }
 
-    /** Initializes list. */
+    /**
+     * Initializes list.
+     */
     private void initList() {
         genresListDataModel = new GenresListDataModel(genreFacade);
         list.setModel(genresListDataModel);
@@ -278,7 +332,9 @@ public class GenresPanel extends JPanel {
         });
     }
 
-    /** Performs action for change of list value. */
+    /**
+     * Performs action for change of list value.
+     */
     private void listValueChangedAction() {
         final boolean isSelectedRow = list.getSelectedIndices().length == 1;
         final int selectedRow = list.getSelectedIndex();

@@ -48,46 +48,64 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link MusicService} */
+    /**
+     * Instance of {@link MusicService}
+     */
     @Mock
     private MusicService musicService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link MusicTOValidator} */
+    /**
+     * Instance of {@link MusicTOValidator}
+     */
     @Mock
     private MusicTOValidator musicTOValidator;
 
-    /** Instance of {@link MusicFacade} */
+    /**
+     * Instance of {@link MusicFacade}
+     */
     private MusicFacade musicFacade;
 
-    /** Initializes facade for music. */
+    /**
+     * Initializes facade for music.
+     */
     @Before
     public void setUp() {
         musicFacade = new MusicFacadeImpl(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MusicService, Converter, MusicTOValidator)} with null service for music. */
+    /**
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MusicService, Converter, MusicTOValidator)} with null service for music.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMusicService() {
         new MusicFacadeImpl(null, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MusicService, Converter, MusicTOValidator)} with null converter. */
+    /**
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MusicService, Converter, MusicTOValidator)} with null converter.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
         new MusicFacadeImpl(musicService, null, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MusicService, Converter, MusicTOValidator)} with null validator for TO for music. */
+    /**
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MusicService, Converter, MusicTOValidator)} with null validator for TO for music.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMusicTOValidator() {
         new MusicFacadeImpl(musicService, converter, null);
     }
 
-    /** Test method for {@link MusicFacade#newData()}. */
+    /**
+     * Test method for {@link MusicFacade#newData()}.
+     */
     @Test
     public void testNewData() {
         musicFacade.newData();
@@ -96,7 +114,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#newData()} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#newData()} with exception in service tier.
+     */
     @Test
     public void testNewDataWithFacadeTierException() {
         doThrow(ServiceOperationException.class).when(musicService).newData();
@@ -112,7 +132,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#getMusic()}. */
+    /**
+     * Test method for {@link MusicFacade#getMusic()}.
+     */
     @Test
     public void testGetMusic() {
         final List<Music> music = CollectionUtils.newList(generate(Music.class), generate(Music.class));
@@ -127,7 +149,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#getMusic()} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#getMusic()} with exception in service tier.
+     */
     @Test
     public void testGetMusicWithFacadeTierException() {
         doThrow(ServiceOperationException.class).when(musicService).getMusic();
@@ -144,7 +168,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link MusicFacade#getMusic(Integer)} with existing music. */
+    /**
+     * Test method for {@link MusicFacade#getMusic(Integer)} with existing music.
+     */
     @Test
     public void testGetMusicByIdWithExistingMusic() {
         final Music music = generate(Music.class);
@@ -159,7 +185,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#getMusic(Integer)} with not existing music. */
+    /**
+     * Test method for {@link MusicFacade#getMusic(Integer)} with not existing music.
+     */
     @Test
     public void testGetMusicByIdWithNotExistingMusic() {
         when(musicService.getMusic(anyInt())).thenReturn(null);
@@ -172,7 +200,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#getMusic(Integer)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#getMusic(Integer)} with null argument.
+     */
     @Test
     public void testGetMusicByIdWithNullArgument() {
         try {
@@ -185,7 +215,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#getMusic(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#getMusic(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetMusicByIdWithFacadeTierException() {
         doThrow(ServiceOperationException.class).when(musicService).getMusic(anyInt());
@@ -202,7 +234,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link MusicFacade#add(MusicTO)}. */
+    /**
+     * Test method for {@link MusicFacade#add(MusicTO)}.
+     */
     @Test
     public void testAdd() {
         final Music music = generate(Music.class);
@@ -224,7 +258,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#add(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#add(MusicTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateNewMusicTO(any(MusicTO.class));
@@ -241,7 +277,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#add(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link MusicFacade#add(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -260,7 +298,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#add(MusicTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link MusicFacade#add(MusicTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final Music music = generate(Music.class);
@@ -282,7 +322,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#add(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#add(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final Music music = generate(Music.class);
@@ -305,7 +347,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#update(MusicTO)}. */
+    /**
+     * Test method for {@link MusicFacade#update(MusicTO)}.
+     */
     @Test
     public void testUpdate() {
         final Music music = generate(Music.class);
@@ -322,7 +366,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#update(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#update(MusicTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateExistingMusicTO(any(MusicTO.class));
@@ -339,7 +385,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#update(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link MusicFacade#update(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -357,7 +405,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#update(MusicTO)} with not existing argument. */
+    /**
+     * Test method for {@link MusicFacade#update(MusicTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final Music music = generate(Music.class);
@@ -378,7 +428,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#update(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#update(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final Music music = generate(Music.class);
@@ -399,7 +451,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#remove(MusicTO)}. */
+    /**
+     * Test method for {@link MusicFacade#remove(MusicTO)}.
+     */
     @Test
     public void testRemove() {
         final Music music = generate(Music.class);
@@ -414,7 +468,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#remove(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#remove(MusicTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
@@ -431,7 +487,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#remove(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link MusicFacade#remove(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -449,7 +507,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#remove(MusicTO)} with not existing argument. */
+    /**
+     * Test method for {@link MusicFacade#remove(MusicTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -467,7 +527,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#remove(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#remove(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final MusicTO music = generate(MusicTO.class);
@@ -485,7 +547,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#duplicate(MusicTO)}. */
+    /**
+     * Test method for {@link MusicFacade#duplicate(MusicTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Music music = generate(Music.class);
@@ -500,7 +564,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#duplicate(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#duplicate(MusicTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
@@ -517,7 +583,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#duplicate(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link MusicFacade#duplicate(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -535,7 +603,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#duplicate(MusicTO)} with not existing argument. */
+    /**
+     * Test method for {@link MusicFacade#duplicate(MusicTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -553,7 +623,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#duplicate(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#duplicate(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final MusicTO music = generate(MusicTO.class);
@@ -571,7 +643,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveUp(MusicTO)}. */
+    /**
+     * Test method for {@link MusicFacade#moveUp(MusicTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Music music = generate(Music.class);
@@ -589,7 +663,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveUp(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#moveUp(MusicTO)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
@@ -606,7 +682,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#moveUp(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link MusicFacade#moveUp(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testMoveUpWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -624,7 +702,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#moveUp(MusicTO)} with not existing argument. */
+    /**
+     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not existing argument.
+     */
     @Test
     public void testMoveUpWithNotExistingArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -642,7 +722,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveUp(MusicTO)} with not moveable argument. */
+    /**
+     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not moveable argument.
+     */
     @Test
     public void testMoveUpWithNotMoveableArgument() {
         final Music music = generate(Music.class);
@@ -664,7 +746,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveUp(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#moveUp(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testMoveUpWithServiceTierException() {
         final MusicTO music = generate(MusicTO.class);
@@ -682,7 +766,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveDown(MusicTO)}. */
+    /**
+     * Test method for {@link MusicFacade#moveDown(MusicTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Music music = generate(Music.class);
@@ -700,7 +786,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveDown(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#moveDown(MusicTO)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
@@ -717,7 +805,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#moveDown(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link MusicFacade#moveDown(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testMoveDownWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -735,7 +825,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#moveDown(MusicTO)} with not existing argument. */
+    /**
+     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not existing argument.
+     */
     @Test
     public void testMoveDownWithNotExistingArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -753,7 +845,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveDown(MusicTO)} with not moveable argument. */
+    /**
+     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not moveable argument.
+     */
     @Test
     public void testMoveDownWithNotMoveableArgument() {
         final Music music = generate(Music.class);
@@ -775,7 +869,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#moveDown(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#moveDown(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testMoveDownWithServiceTierException() {
         final MusicTO music = generate(MusicTO.class);
@@ -793,7 +889,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#exists(MusicTO)} with existing music. */
+    /**
+     * Test method for {@link MusicFacade#exists(MusicTO)} with existing music.
+     */
     @Test
     public void testExistsWithExistingMusic() {
         final Music music = generate(Music.class);
@@ -809,7 +907,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#exists(MusicTO)} with not existing music. */
+    /**
+     * Test method for {@link MusicFacade#exists(MusicTO)} with not existing music.
+     */
     @Test
     public void testExistsWithNotExistingMusic() {
         final Music music = generate(Music.class);
@@ -825,7 +925,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#exists(MusicTO)} with null argument. */
+    /**
+     * Test method for {@link MusicFacade#exists(MusicTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
@@ -842,7 +944,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#exists(MusicTO)} with argument with bad data. */
+    /**
+     * Test method for {@link MusicFacade#exists(MusicTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final MusicTO music = generate(MusicTO.class);
@@ -860,7 +964,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicService, converter);
     }
 
-    /** Test method for {@link MusicFacade#exists(MusicTO)} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#exists(MusicTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final Music music = generate(Music.class);
@@ -881,7 +987,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
     }
 
-    /** Test method for {@link MusicFacade#updatePositions()}. */
+    /**
+     * Test method for {@link MusicFacade#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         musicFacade.updatePositions();
@@ -890,7 +998,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#updatePositions()} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#updatePositions()} with exception in service tier.
+     */
     @Test
     public void testUpdatePositionsWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(musicService).updatePositions();
@@ -906,7 +1016,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#getTotalMediaCount()}. */
+    /**
+     * Test method for {@link MusicFacade#getTotalMediaCount()}.
+     */
     @Test
     public void testGetTotalMediaCount() {
         final int count = generate(Integer.class);
@@ -918,7 +1030,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#getTotalMediaCount()} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#getTotalMediaCount()} with exception in service tier.
+     */
     @Test
     public void testGetTotalMediaCountWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(musicService).getTotalMediaCount();
@@ -934,7 +1048,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#getTotalLength()}. */
+    /**
+     * Test method for {@link MusicFacade#getTotalLength()}.
+     */
     @Test
     public void testGetTotalLength() {
         final Time length = generate(Time.class);
@@ -946,7 +1062,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#getTotalLength()} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#getTotalLength()} with exception in service tier.
+     */
     @Test
     public void testGetTotalLengthWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(musicService).getTotalLength();
@@ -962,7 +1080,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#getSongsCount()}. */
+    /**
+     * Test method for {@link MusicFacade#getSongsCount()}.
+     */
     @Test
     public void testGetSongsCount() {
         final int count = generate(Integer.class);
@@ -974,7 +1094,9 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicService);
     }
 
-    /** Test method for {@link MusicFacade#getSongsCount()} with exception in service tier. */
+    /**
+     * Test method for {@link MusicFacade#getSongsCount()} with exception in service tier.
+     */
     @Test
     public void testGetSongsCountWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(musicService).getSongsCount();

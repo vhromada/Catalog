@@ -23,64 +23,104 @@ import cz.vhromada.validators.Validators;
  */
 public class ProgramsPanel extends JPanel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal scroll pane size */
+    /**
+     * Horizontal scroll pane size
+     */
     private static final int HORIZONTAL_SCROLL_PANE_SIZE = 200;
 
-    /** Vertical data component size */
+    /**
+     * Vertical data component size
+     */
     private static final int VERTICAL_DATA_COMPONENT_SIZE = 200;
 
-    /** Vertical size for scroll pane for table with stats */
+    /**
+     * Vertical size for scroll pane for table with stats
+     */
     private static final int VERTICAL_STATS_SCROLL_PANE_SIZE = 45;
 
-    /** Popup menu */
+    /**
+     * Popup menu
+     */
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    /** Menu item for adding program */
+    /**
+     * Menu item for adding program
+     */
     private JMenuItem addPopupMenuItem = new JMenuItem("Add", Picture.ADD.getIcon());
 
-    /** Menu item for updating program */
+    /**
+     * Menu item for updating program
+     */
     private JMenuItem updatePopupMenuItem = new JMenuItem("Update", Picture.UPDATE.getIcon());
 
-    /** Menu item for removing program */
+    /**
+     * Menu item for removing program
+     */
     private JMenuItem removePopupMenuItem = new JMenuItem("Remove", Picture.REMOVE.getIcon());
 
-    /** Menu item for duplicating program */
+    /**
+     * Menu item for duplicating program
+     */
     private JMenuItem duplicatePopupMenuItem = new JMenuItem("Duplicate", Picture.DUPLICATE.getIcon());
 
-    /** Menu item for moving up program */
+    /**
+     * Menu item for moving up program
+     */
     private JMenuItem moveUpPopupMenuItem = new JMenuItem("Move up", Picture.UP.getIcon());
 
-    /** Menu item for moving down program */
+    /**
+     * Menu item for moving down program
+     */
     private JMenuItem moveDownPopupMenuItem = new JMenuItem("Move down", Picture.DOWN.getIcon());
 
-    /** List with programs */
+    /**
+     * List with programs
+     */
     private JList<String> list = new JList<>();
 
-    /** ScrollPane for list with programs */
+    /**
+     * ScrollPane for list with programs
+     */
     private JScrollPane listScrollPane = new JScrollPane(list);
 
-    /** Tabbed pane with program's data */
+    /**
+     * Tabbed pane with program's data
+     */
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    /** Table with with programs' stats */
+    /**
+     * Table with with programs' stats
+     */
     private JTable statsTable = new JTable();
 
-    /** ScrollPane for table with programs' stats */
+    /**
+     * ScrollPane for table with programs' stats
+     */
     private JScrollPane statsTableScrollPane = new JScrollPane(statsTable);
 
-    /** Facade for programs */
+    /**
+     * Facade for programs
+     */
     private ProgramFacade programFacade;
 
-    /** Data model for list with programs */
+    /**
+     * Data model for list with programs
+     */
     private ProgramsListDataModel programsListDataModel;
 
-    /** Data model for table with stats for programs */
+    /**
+     * Data model for table with stats for programs
+     */
     private ProgramsStatsTableDataModel programsStatsTableDataModel;
 
-    /** True if data is saved */
+    /**
+     * True if data is saved
+     */
     private boolean saved;
 
     /**
@@ -97,7 +137,9 @@ public class ProgramsPanel extends JPanel {
         initComponents();
     }
 
-    /** Creates new data. */
+    /**
+     * Creates new data.
+     */
     public void newData() {
         programFacade.newData();
         programsListDataModel.update();
@@ -108,12 +150,16 @@ public class ProgramsPanel extends JPanel {
         saved = true;
     }
 
-    /** Clears selection. */
+    /**
+     * Clears selection.
+     */
     public void clearSelection() {
         list.clearSelection();
     }
 
-    /** Saves. */
+    /**
+     * Saves.
+     */
     public void save() {
         saved = true;
     }
@@ -127,7 +173,9 @@ public class ProgramsPanel extends JPanel {
         return saved;
     }
 
-    /** Initializes components. */
+    /**
+     * Initializes components.
+     */
     private void initComponents() {
         initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
 
@@ -222,7 +270,9 @@ public class ProgramsPanel extends JPanel {
         }
     }
 
-    /** Performs action for button Add. */
+    /**
+     * Performs action for button Add.
+     */
     private void addAction() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -244,7 +294,9 @@ public class ProgramsPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Update. */
+    /**
+     * Performs action for button Update.
+     */
     private void updateAction() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -267,7 +319,9 @@ public class ProgramsPanel extends JPanel {
         });
     }
 
-    /** Performs action for button Remove. */
+    /**
+     * Performs action for button Remove.
+     */
     private void removeAction() {
         programFacade.remove(programsListDataModel.getProgramAt(list.getSelectedIndex()));
         programsListDataModel.update();
@@ -278,7 +332,9 @@ public class ProgramsPanel extends JPanel {
         saved = false;
     }
 
-    /** Performs action for button Duplicate. */
+    /**
+     * Performs action for button Duplicate.
+     */
     private void duplicateAction() {
         final int index = list.getSelectedIndex();
         programFacade.duplicate(programsListDataModel.getProgramAt(index));
@@ -290,7 +346,9 @@ public class ProgramsPanel extends JPanel {
         saved = false;
     }
 
-    /** Performs action for button MoveUp. */
+    /**
+     * Performs action for button MoveUp.
+     */
     private void moveUpAction() {
         final int index = list.getSelectedIndex();
         programFacade.moveUp(programsListDataModel.getProgramAt(index));
@@ -300,7 +358,9 @@ public class ProgramsPanel extends JPanel {
         saved = false;
     }
 
-    /** Performs action for button MoveDown. */
+    /**
+     * Performs action for button MoveDown.
+     */
     private void moveDownAction() {
         final int index = list.getSelectedIndex();
         programFacade.moveDown(programsListDataModel.getProgramAt(index));
@@ -310,7 +370,9 @@ public class ProgramsPanel extends JPanel {
         saved = false;
     }
 
-    /** Initializes list. */
+    /**
+     * Initializes list.
+     */
     private void initList() {
         programsListDataModel = new ProgramsListDataModel(programFacade);
         list.setModel(programsListDataModel);
@@ -326,7 +388,9 @@ public class ProgramsPanel extends JPanel {
         });
     }
 
-    /** Performs action for change of list value. */
+    /**
+     * Performs action for change of list value.
+     */
     private void listValueChangedAction() {
         final boolean isSelectedRow = list.getSelectedIndices().length == 1;
         final int selectedRow = list.getSelectedIndex();

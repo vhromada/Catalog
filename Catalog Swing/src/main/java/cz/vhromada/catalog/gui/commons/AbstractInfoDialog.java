@@ -15,52 +15,84 @@ import cz.vhromada.validators.Validators;
  */
 public abstract class AbstractInfoDialog<T> extends JDialog {
 
-    /** Horizontal check box size */
+    /**
+     * Horizontal check box size
+     */
     protected static final int HORIZONTAL_CHECK_BOX_SIZE = 310;
 
-    /** Vertical gap size */
+    /**
+     * Vertical gap size
+     */
     protected static final int VERTICAL_GAP_SIZE = 10;
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Horizontal label size in dialog */
+    /**
+     * Horizontal label size in dialog
+     */
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
 
-    /** Horizontal data size in dialog */
+    /**
+     * Horizontal data size in dialog
+     */
     private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
 
-    /** Horizontal button size */
+    /**
+     * Horizontal button size
+     */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
 
-    /** Horizontal size of gap between label and data */
+    /**
+     * Horizontal size of gap between label and data
+     */
     private static final int HORIZONTAL_DATA_GAP_SIZE = 10;
 
-    /** Horizontal button gap size */
+    /**
+     * Horizontal button gap size
+     */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
-    /** Horizontal size of gap between button */
+    /**
+     * Horizontal size of gap between button
+     */
     private static final int HORIZONTAL_BUTTONS_GAP_SIZE = 54;
 
-    /** Horizontal gap size */
+    /**
+     * Horizontal gap size
+     */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
-    /** Vertical long gap size */
+    /**
+     * Vertical long gap size
+     */
     private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
-    /** Return status */
+    /**
+     * Return status
+     */
     private DialogResult returnStatus = DialogResult.CANCEL;
 
-    /** Data */
+    /**
+     * Data
+     */
     private T data;
 
-    /** Button OK */
+    /**
+     * Button OK
+     */
     private JButton okButton = new JButton("OK", Picture.OK.getIcon());
 
-    /** Button Cancel */
+    /**
+     * Button Cancel
+     */
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
-    /** Creates a new instance of AbstractInfoDialog. */
+    /**
+     * Creates a new instance of AbstractInfoDialog.
+     */
     public AbstractInfoDialog() {
         this("Add", Picture.ADD);
 
@@ -225,21 +257,27 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
                         CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
-    /** Performs action for button OK. */
+    /**
+     * Performs action for button OK.
+     */
     private void okAction() {
         returnStatus = DialogResult.OK;
         data = processData(data);
         close();
     }
 
-    /** Performs action for button Cancel. */
+    /**
+     * Performs action for button Cancel.
+     */
     private void cancelAction() {
         returnStatus = DialogResult.CANCEL;
         data = null;
         close();
     }
 
-    /** Closes dialog. */
+    /**
+     * Closes dialog.
+     */
     private void close() {
         setVisible(false);
         dispose();

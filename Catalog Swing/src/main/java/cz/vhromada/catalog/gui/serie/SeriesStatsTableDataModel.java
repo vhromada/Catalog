@@ -16,25 +16,39 @@ import cz.vhromada.validators.Validators;
  */
 public class SeriesStatsTableDataModel extends AbstractTableModel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Error message for bad column */
+    /**
+     * Error message for bad column
+     */
     private static final String BAD_COLUMN_ERROR_MESSAGE = "Bad column";
 
-    /** Facade for series */
+    /**
+     * Facade for series
+     */
     private SerieFacade serieFacade;
 
-    /** List of TO for serie */
+    /**
+     * List of TO for serie
+     */
     private List<SerieTO> series;
 
-    /** Count of seasons from all series */
+    /**
+     * Count of seasons from all series
+     */
     private int seasonsCount;
 
-    /** Count of episodes from all series */
+    /**
+     * Count of episodes from all series
+     */
     private int episodesCount;
 
-    /** Total length of all series */
+    /**
+     * Total length of all series
+     */
     private Time totalLength;
 
     /**
@@ -137,7 +151,9 @@ public class SeriesStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         series = serieFacade.getSeries();
         seasonsCount = serieFacade.getSeasonsCount();

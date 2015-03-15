@@ -38,35 +38,53 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SerieServiceImplSpringTest {
 
-    /** Cache key for list of series */
+    /**
+     * Cache key for list of series
+     */
     private static final String SERIES_CACHE_KEY = "series";
 
-    /** Cache key for book serie */
+    /**
+     * Cache key for book serie
+     */
     private static final String SERIE_CACHE_KEY = "serie";
 
-    /** Cache key for list of seasons */
+    /**
+     * Cache key for list of seasons
+     */
     private static final String SEASONS_CACHE_KEY = "seasons";
 
-    /** Cache key for list of episodes */
+    /**
+     * Cache key for list of episodes
+     */
     private static final String EPISODES_CACHE_KEY = "episodes";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('serieCache')}")
     private Cache serieCache;
 
-    /** Instance of {@link SerieService} */
+    /**
+     * Instance of {@link SerieService}
+     */
     @Autowired
     private SerieService serieService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequences. */
+    /**
+     * Clears cache and restarts sequences.
+     */
     @Before
     public void setUp() {
         serieCache.clear();
@@ -75,7 +93,9 @@ public class SerieServiceImplSpringTest {
         entityManager.createNativeQuery("ALTER SEQUENCE episodes_sq RESTART WITH 28").executeUpdate();
     }
 
-    /** Test method for {@link SerieService#newData()}. */
+    /**
+     * Test method for {@link SerieService#newData()}.
+     */
     @Test
     public void testNewData() {
         serieService.newData();
@@ -86,7 +106,9 @@ public class SerieServiceImplSpringTest {
         assertTrue(SpringUtils.getCacheKeys(serieCache).isEmpty());
     }
 
-    /** Test method for {@link SerieService#getSeries()}. */
+    /**
+     * Test method for {@link SerieService#getSeries()}.
+     */
     @Test
     public void testGetSeries() {
         final List<Serie> series = SpringEntitiesUtils.getSeries();
@@ -98,7 +120,9 @@ public class SerieServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, series);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with existing serie. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with existing serie.
+     */
     @Test
     public void testGetSerieWithExistingSerie() {
         final List<String> keys = new ArrayList<>();
@@ -116,7 +140,9 @@ public class SerieServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with not existing serie. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with not existing serie.
+     */
     @Test
     public void testGetSerieWithNotExistingSerie() {
         final String key = SERIE_CACHE_KEY + Integer.MAX_VALUE;
@@ -127,7 +153,9 @@ public class SerieServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, null);
     }
 
-    /** Test method for {@link SerieService#add(Serie)} with empty cache. */
+    /**
+     * Test method for {@link SerieService#add(Serie)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
@@ -142,7 +170,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#add(Serie)} with not empty cache. */
+    /**
+     * Test method for {@link SerieService#add(Serie)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
@@ -163,7 +193,9 @@ public class SerieServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, keyItem, serie);
     }
 
-    /** Test method for {@link SerieService#update(Serie)}. */
+    /**
+     * Test method for {@link SerieService#update(Serie)}.
+     */
     @Test
     public void testUpdate() {
         final Serie serie = SpringEntitiesUtils.updateSerie(1, objectGenerator, entityManager);
@@ -176,7 +208,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#remove(Serie)} with empty cache. */
+    /**
+     * Test method for {@link SerieService#remove(Serie)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
@@ -190,7 +224,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#remove(Serie)} with not empty cache. */
+    /**
+     * Test method for {@link SerieService#remove(Serie)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Serie serie = objectGenerator.generate(Serie.class);
@@ -210,7 +246,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#duplicate(Serie)} with empty cache. */
+    /**
+     * Test method for {@link SerieService#duplicate(Serie)} with empty cache.
+     */
     @Test
     public void testDuplicateWithEmptyCache() {
         final Serie serie = SpringUtils.getSerie(entityManager, 3);
@@ -227,7 +265,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#duplicate(Serie)} with not empty cache. */
+    /**
+     * Test method for {@link SerieService#duplicate(Serie)} with not empty cache.
+     */
     @Test
     public void testDuplicateWithNotEmptyCache() {
         final Serie serie = SpringUtils.getSerie(entityManager, 3);
@@ -248,7 +288,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#moveUp(Serie)}. */
+    /**
+     * Test method for {@link SerieService#moveUp(Serie)}.
+     */
     @Test
     public void testMoveUp() {
         final Serie serie = SpringUtils.getSerie(entityManager, 2);
@@ -268,7 +310,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#moveDown(Serie)}. */
+    /**
+     * Test method for {@link SerieService#moveDown(Serie)}.
+     */
     @Test
     public void testMoveDown() {
         final Serie serie = SpringUtils.getSerie(entityManager, 1);
@@ -289,7 +333,9 @@ public class SerieServiceImplSpringTest {
     }
 
 
-    /** Test method for {@link SerieService#exists(Serie)} with existing serie. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with existing serie.
+     */
     @Test
     public void testExistsWithExistingSerie() {
         final List<String> keys = new ArrayList<>();
@@ -307,7 +353,9 @@ public class SerieServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SerieService#exists(Serie)} with not existing serie. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with not existing serie.
+     */
     @Test
     public void testExistsWithNotExistingSerie() {
         final Serie serie = SpringEntitiesUtils.newSerie(objectGenerator, entityManager);
@@ -320,7 +368,9 @@ public class SerieServiceImplSpringTest {
         SpringUtils.assertCacheValue(serieCache, key, null);
     }
 
-    /** Test method for {@link SerieService#updatePositions()}. */
+    /**
+     * Test method for {@link SerieService#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         final Serie serie = SpringUtils.getSerie(entityManager, SpringUtils.SERIES_COUNT);
@@ -336,7 +386,9 @@ public class SerieServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
     }
 
-    /** Test method for {@link SerieService#getTotalLength()}. */
+    /**
+     * Test method for {@link SerieService#getTotalLength()}.
+     */
     @Test
     public void testGetTotalLength() {
         final String keyList = SERIES_CACHE_KEY;
@@ -370,7 +422,9 @@ public class SerieServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SerieService#getSeasonsCount()}. */
+    /**
+     * Test method for {@link SerieService#getSeasonsCount()}.
+     */
     @Test
     public void testGetSeasonsCount() {
         final String keyList = SERIES_CACHE_KEY;
@@ -392,7 +446,9 @@ public class SerieServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SerieService#getEpisodesCount()}. */
+    /**
+     * Test method for {@link SerieService#getEpisodesCount()}.
+     */
     @Test
     public void testGetEpisodesCount() {
         final String keyList = SERIES_CACHE_KEY;

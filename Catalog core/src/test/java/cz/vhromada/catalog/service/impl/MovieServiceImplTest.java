@@ -46,42 +46,60 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class MovieServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of movies */
+    /**
+     * Cache key for list of movies
+     */
     private static final String MOVIES_CACHE_KEY = "movies";
 
-    /** Cache key for movie */
+    /**
+     * Cache key for movie
+     */
     private static final String MOVIE_CACHE_KEY = "movie";
 
-    /** Instance of {@link MovieDAO} */
+    /**
+     * Instance of {@link MovieDAO}
+     */
     @Mock
     private MovieDAO movieDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache movieCache;
 
-    /** Instance of {@link MovieService} */
+    /**
+     * Instance of {@link MovieService}
+     */
     private MovieService movieService;
 
-    /** Initializes service for movies. */
+    /**
+     * Initializes service for movies.
+     */
     @Before
     public void setUp() {
         movieService = new MovieServiceImpl(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with null DAO for movies. */
+    /**
+     * Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with null DAO for movies.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMovieDAO() {
         new MovieServiceImpl(null, movieCache);
     }
 
-    /** Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with null cache for movies. */
+    /**
+     * Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieDAO, Cache)} with null cache for movies.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMovieCache() {
         new MovieServiceImpl(movieDAO, null);
     }
 
-    /** Test method for {@link MovieService#newData()} with cached movies. */
+    /**
+     * Test method for {@link MovieService#newData()} with cached movies.
+     */
     @Test
     public void testNewDataWithCachedMovies() {
         final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), mock(Movie.class));
@@ -97,7 +115,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#newData()} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#newData()} with not cached movies.
+     */
     @Test
     public void testNewDataWithNotCachedMovies() {
         final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), mock(Movie.class));
@@ -115,7 +135,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#newData()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#newData()} with exception in DAO tier.
+     */
     @Test
     public void testNewDataWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovies();
@@ -133,7 +155,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getMovies()} with cached movies. */
+    /**
+     * Test method for {@link MovieService#getMovies()} with cached movies.
+     */
     @Test
     public void testGetMoviesWithCachedMovies() {
         final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), mock(Movie.class));
@@ -146,7 +170,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO);
     }
 
-    /** Test method for {@link MovieService#getMovies()} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#getMovies()} with not cached movies.
+     */
     @Test
     public void testGetMoviesWithNotCachedMovies() {
         final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), mock(Movie.class));
@@ -161,7 +187,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getMovies()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#getMovies()} with exception in DAO tier.
+     */
     @Test
     public void testGetMoviesWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovies();
@@ -179,7 +207,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with cached existing movie. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with cached existing movie.
+     */
     @Test
     public void testGetMovieWithCachedExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -192,7 +222,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with cached not existing movie. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with cached not existing movie.
+     */
     @Test
     public void testGetMovieWithCachedNotExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -205,7 +237,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with not cached existing movie. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with not cached existing movie.
+     */
     @Test
     public void testGetMovieWithNotCachedExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -220,7 +254,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with not cached not existing movie. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with not cached not existing movie.
+     */
     @Test
     public void testGetMovieWithNotCachedNotExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -235,7 +271,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with null argument. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with null argument.
+     */
     @Test
     public void testGetMovieWithNullArgument() {
         try {
@@ -248,7 +286,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getMovie(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#getMovie(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetMovieWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovie(anyInt());
@@ -266,7 +306,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#add(Movie)} with cached movies. */
+    /**
+     * Test method for {@link MovieService#add(Movie)} with cached movies.
+     */
     @Test
     public void testAddWithCachedMovies() {
         final Movie movie = generate(Movie.class);
@@ -285,7 +327,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#add(Movie)} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#add(Movie)} with not cached movies.
+     */
     @Test
     public void testAddWithNotCachedMovies() {
         final Movie movie = generate(Movie.class);
@@ -299,7 +343,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#add(Movie)} with null argument. */
+    /**
+     * Test method for {@link MovieService#add(Movie)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -312,7 +358,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#add(Movie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#add(Movie)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Movie movie = generate(Movie.class);
@@ -330,7 +378,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieCache);
     }
 
-    /** Test method for {@link MovieService#update(Movie)}. */
+    /**
+     * Test method for {@link MovieService#update(Movie)}.
+     */
     @Test
     public void testUpdate() {
         final Movie movie = generate(Movie.class);
@@ -342,7 +392,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#update(Movie)} with null argument. */
+    /**
+     * Test method for {@link MovieService#update(Movie)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -355,7 +407,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#update(Movie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#update(Movie)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Movie movie = generate(Movie.class);
@@ -373,7 +427,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieCache);
     }
 
-    /** Test method for {@link MovieService#remove(Movie)} with cached movies. */
+    /**
+     * Test method for {@link MovieService#remove(Movie)} with cached movies.
+     */
     @Test
     public void testRemoveWithCachedMovies() {
         final Movie movie = generate(Movie.class);
@@ -392,7 +448,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#remove(Movie)} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#remove(Movie)} with not cached movies.
+     */
     @Test
     public void testRemoveWithNotCachedMovies() {
         final Movie movie = generate(Movie.class);
@@ -406,7 +464,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#remove(Movie)} with null argument. */
+    /**
+     * Test method for {@link MovieService#remove(Movie)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -419,7 +479,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#remove(Movie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#remove(Movie)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Movie movie = generate(Movie.class);
@@ -437,7 +499,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieCache);
     }
 
-    /** Test method for {@link MovieService#duplicate(Movie)} with cached movies. */
+    /**
+     * Test method for {@link MovieService#duplicate(Movie)} with cached movies.
+     */
     @Test
     public void testDuplicateWithCachedMovies() {
         when(movieCache.get(anyString())).thenReturn(new SimpleValueWrapper(CollectionUtils.newList(mock(Movie.class), mock(Movie.class))));
@@ -453,7 +517,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#duplicate(Movie)} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#duplicate(Movie)} with not cached movies.
+     */
     @Test
     public void testDuplicateWithNotCachedMovies() {
         when(movieCache.get(anyString())).thenReturn(null);
@@ -467,7 +533,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#duplicate(Movie)} with null argument. */
+    /**
+     * Test method for {@link MovieService#duplicate(Movie)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -480,7 +548,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#duplicate(Movie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#duplicate(Movie)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).add(any(Movie.class));
@@ -497,7 +567,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieCache);
     }
 
-    /** Test method for {@link MovieService#moveUp(Movie)} with cached movies. */
+    /**
+     * Test method for {@link MovieService#moveUp(Movie)} with cached movies.
+     */
     @Test
     public void testMoveUpWithCachedMovies() {
         final Movie movie1 = generate(Movie.class);
@@ -518,7 +590,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveUp(Movie)} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#moveUp(Movie)} with not cached movies.
+     */
     @Test
     public void testMoveUpWithNotCachedMovies() {
         final Movie movie1 = generate(Movie.class);
@@ -541,7 +615,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveUp(Movie)} with null argument. */
+    /**
+     * Test method for {@link MovieService#moveUp(Movie)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -554,7 +630,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveUp(Movie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#moveUp(Movie)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovies();
@@ -572,7 +650,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveDown(Movie)} with cached movies. */
+    /**
+     * Test method for {@link MovieService#moveDown(Movie)} with cached movies.
+     */
     @Test
     public void testMoveDownWithCachedMovies() {
         final Movie movie1 = generate(Movie.class);
@@ -593,7 +673,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveDown(Movie)} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#moveDown(Movie)} with not cached movies.
+     */
     @Test
     public void testMoveDownWithNotCachedMovies() {
         final Movie movie1 = generate(Movie.class);
@@ -616,7 +698,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveDown(Movie)} with null argument. */
+    /**
+     * Test method for {@link MovieService#moveDown(Movie)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -629,7 +713,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#moveDown(Movie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#moveDown(Movie)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovies();
@@ -647,7 +733,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with cached existing movie. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with cached existing movie.
+     */
     @Test
     public void testExistsWithCachedExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -660,7 +748,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO);
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with cached not existing movie. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with cached not existing movie.
+     */
     @Test
     public void testExistsWithCachedNotExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -673,7 +763,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO);
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with not cached existing movie. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with not cached existing movie.
+     */
     @Test
     public void testExistsWithNotCachedExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -688,7 +780,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with not cached not existing movie. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with not cached not existing movie.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingMovie() {
         final Movie movie = generate(Movie.class);
@@ -703,7 +797,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with null argument. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -716,7 +812,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#exists(Movie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#exists(Movie)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Movie movie = generate(Movie.class);
@@ -735,7 +833,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#updatePositions()} with cached movies. */
+    /**
+     * Test method for {@link MovieService#updatePositions()} with cached movies.
+     */
     @Test
     public void testUpdatePositionsWithCachedMovies() {
         final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
@@ -753,7 +853,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#updatePositions()} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#updatePositions()} with not cached movies.
+     */
     @Test
     public void testUpdatePositionsWithNotCachedMovies() {
         final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
@@ -773,7 +875,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#updatePositions()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#updatePositions()} with exception in DAO tier.
+     */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovies();
@@ -791,7 +895,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getTotalMediaCount()} with cached movies. */
+    /**
+     * Test method for {@link MovieService#getTotalMediaCount()} with cached movies.
+     */
     @Test
     public void testGetTotalMediaCountWithCachedMovies() {
         final Movie movie1 = mock(Movie.class);
@@ -813,7 +919,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO);
     }
 
-    /** Test method for {@link MovieService#getTotalMediaCount()} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#getTotalMediaCount()} with not cached movies.
+     */
     @Test
     public void testGetTotalMediaCountWithNotCachedMovies() {
         final Movie movie1 = mock(Movie.class);
@@ -837,7 +945,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache, movie1, movie2, movie3);
     }
 
-    /** Test method for {@link MovieService#getTotalMediaCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#getTotalMediaCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalMediaCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovies();
@@ -855,7 +965,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache);
     }
 
-    /** Test method for {@link MovieService#getTotalLength()} with cached movies. */
+    /**
+     * Test method for {@link MovieService#getTotalLength()} with cached movies.
+     */
     @Test
     public void testGetTotalLengthWithCachedMovies() {
         final Movie movie1 = mock(Movie.class);
@@ -891,7 +1003,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(movieDAO);
     }
 
-    /** Test method for {@link MovieService#getTotalLength()} with not cached movies. */
+    /**
+     * Test method for {@link MovieService#getTotalLength()} with not cached movies.
+     */
     @Test
     public void testGetTotalLengthWithNotCachedMovies() {
         final Movie movie1 = mock(Movie.class);
@@ -929,7 +1043,9 @@ public class MovieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(movieDAO, movieCache, movie1, movie2, movie3);
     }
 
-    /** Test method for {@link MovieService#getTotalLength()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MovieService#getTotalLength()} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalLengthWithDAOTierException() {
         doThrow(DataStorageException.class).when(movieDAO).getMovies();

@@ -34,49 +34,71 @@ import org.hibernate.annotations.FetchMode;
 @NamedQuery(name = Season.FIND_BY_SERIE, query = "SELECT s FROM Season s WHERE s.serie.id = :serie ORDER BY s.position, s.id")
 public class Season implements Serializable {
 
-    /** Name for query - find by serie */
+    /**
+     * Name for query - find by serie
+     */
     public static final String FIND_BY_SERIE = "Season.findBySerie";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "season_generator", sequenceName = "seasons_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "season_generator")
     private Integer id;
 
-    /** Number of season */
+    /**
+     * Number of season
+     */
     @Column(name = "season_number")
     private int number;
 
-    /** Starting year */
+    /**
+     * Starting year
+     */
     @Column(name = "start_year")
     private int startYear;
 
-    /** Ending year */
+    /**
+     * Ending year
+     */
     @Column(name = "end_year")
     private int endYear;
 
-    /** Language */
+    /**
+     * Language
+     */
     @Column(name = "season_language")
     @Enumerated(EnumType.STRING)
     private Language language;
 
-    /** Subtitles */
+    /**
+     * Subtitles
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "season_subtitles", joinColumns = @JoinColumn(name = "season"))
     @Enumerated(EnumType.STRING)
     @Fetch(FetchMode.SELECT)
     private List<Language> subtitles;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
-    /** Serie */
+    /**
+     * Serie
+     */
     @ManyToOne
     @JoinColumn(name = "serie", referencedColumnName = "id")
     private Serie serie;

@@ -37,36 +37,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProgramServiceImplSpringTest {
 
-    /** Cache key for list of programs */
+    /**
+     * Cache key for list of programs
+     */
     private static final String PROGRAMS_CACHE_KEY = "programs";
 
-    /** Cache key for program */
+    /**
+     * Cache key for program
+     */
     private static final String PROGRAM_CACHE_KEY = "program";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('programCache')}")
     private Cache programCache;
 
-    /** Instance of {@link ProgramService} */
+    /**
+     * Instance of {@link ProgramService}
+     */
     @Autowired
     private ProgramService programService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequence. */
+    /**
+     * Clears cache and restarts sequence.
+     */
     @Before
     public void setUp() {
         programCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE programs_sq RESTART WITH 4").executeUpdate();
     }
 
-    /** Test method for {@link ProgramService#newData()}. */
+    /**
+     * Test method for {@link ProgramService#newData()}.
+     */
     @Test
     public void testNewData() {
         programService.newData();
@@ -75,7 +91,9 @@ public class ProgramServiceImplSpringTest {
         assertTrue(SpringUtils.getCacheKeys(programCache).isEmpty());
     }
 
-    /** Test method for {@link ProgramService#getPrograms()}. */
+    /**
+     * Test method for {@link ProgramService#getPrograms()}.
+     */
     @Test
     public void testGetPrograms() {
         final List<Program> programs = SpringEntitiesUtils.getPrograms();
@@ -87,7 +105,9 @@ public class ProgramServiceImplSpringTest {
         SpringUtils.assertCacheValue(programCache, key, programs);
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with existing program. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with existing program.
+     */
     @Test
     public void testGetProgramWithExistingProgram() {
         final List<String> keys = new ArrayList<>();
@@ -105,7 +125,9 @@ public class ProgramServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link ProgramService#getProgram(Integer)} with not existing program. */
+    /**
+     * Test method for {@link ProgramService#getProgram(Integer)} with not existing program.
+     */
     @Test
     public void testGetProgramWithNotExistingProgram() {
         final String key = PROGRAM_CACHE_KEY + Integer.MAX_VALUE;
@@ -116,7 +138,9 @@ public class ProgramServiceImplSpringTest {
         SpringUtils.assertCacheValue(programCache, key, null);
     }
 
-    /** Test method for {@link ProgramService#add(Program)} with empty cache. */
+    /**
+     * Test method for {@link ProgramService#add(Program)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
@@ -131,7 +155,9 @@ public class ProgramServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
     }
 
-    /** Test method for {@link ProgramService#add(Program)} with not empty cache. */
+    /**
+     * Test method for {@link ProgramService#add(Program)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
@@ -152,7 +178,9 @@ public class ProgramServiceImplSpringTest {
         SpringUtils.assertCacheValue(programCache, keyItem, program);
     }
 
-    /** Test method for {@link ProgramService#update(Program)}. */
+    /**
+     * Test method for {@link ProgramService#update(Program)}.
+     */
     @Test
     public void testUpdate() {
         final Program program = SpringEntitiesUtils.updateProgram(1, objectGenerator, entityManager);
@@ -165,7 +193,9 @@ public class ProgramServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
     }
 
-    /** Test method for {@link ProgramService#remove(Program)} with empty cache. */
+    /**
+     * Test method for {@link ProgramService#remove(Program)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
@@ -179,7 +209,9 @@ public class ProgramServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
     }
 
-    /** Test method for {@link ProgramService#remove(Program)} with not empty cache. */
+    /**
+     * Test method for {@link ProgramService#remove(Program)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
@@ -198,7 +230,9 @@ public class ProgramServiceImplSpringTest {
         SpringUtils.assertCacheValue(programCache, key, new ArrayList<>());
     }
 
-    /** Test method for {@link ProgramService#duplicate(Program)}. */
+    /**
+     * Test method for {@link ProgramService#duplicate(Program)}.
+     */
     @Test
     public void testDuplicate() {
         final Program program = SpringUtils.getProgram(entityManager, 3);
@@ -215,7 +249,9 @@ public class ProgramServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
     }
 
-    /** Test method for {@link ProgramService#moveUp(Program)}. */
+    /**
+     * Test method for {@link ProgramService#moveUp(Program)}.
+     */
     @Test
     public void testMoveUp() {
         final Program program = SpringUtils.getProgram(entityManager, 2);
@@ -235,7 +271,9 @@ public class ProgramServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
     }
 
-    /** Test method for {@link ProgramService#moveDown(Program)}. */
+    /**
+     * Test method for {@link ProgramService#moveDown(Program)}.
+     */
     @Test
     public void testMoveDown() {
         final Program program = SpringUtils.getProgram(entityManager, 1);
@@ -256,7 +294,9 @@ public class ProgramServiceImplSpringTest {
     }
 
 
-    /** Test method for {@link ProgramService#exists(Program)} with existing program. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with existing program.
+     */
     @Test
     public void testExistsWithExistingProgram() {
         final List<String> keys = new ArrayList<>();
@@ -274,7 +314,9 @@ public class ProgramServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link ProgramService#exists(Program)} with not existing program. */
+    /**
+     * Test method for {@link ProgramService#exists(Program)} with not existing program.
+     */
     @Test
     public void testExistsWithNotExistingProgram() {
         final Program program = SpringEntitiesUtils.newProgram(objectGenerator);
@@ -287,7 +329,9 @@ public class ProgramServiceImplSpringTest {
         SpringUtils.assertCacheValue(programCache, key, null);
     }
 
-    /** Test method for {@link ProgramService#updatePositions()}. */
+    /**
+     * Test method for {@link ProgramService#updatePositions()}.
+     */
     @Test
     public void testUpdatePositions() {
         final Program program = SpringUtils.getProgram(entityManager, SpringUtils.PROGRAMS_COUNT);
@@ -303,7 +347,9 @@ public class ProgramServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(programCache).size());
     }
 
-    /** Test method for {@link ProgramService#getTotalMediaCount()}. */
+    /**
+     * Test method for {@link ProgramService#getTotalMediaCount()}.
+     */
     @Test
     public void testGetTotalMediaCount() {
         final String key = PROGRAMS_CACHE_KEY;

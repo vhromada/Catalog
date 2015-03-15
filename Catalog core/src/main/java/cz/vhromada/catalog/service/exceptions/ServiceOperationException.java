@@ -7,7 +7,9 @@ package cz.vhromada.catalog.service.exceptions;
  */
 public class ServiceOperationException extends RuntimeException {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
     /**

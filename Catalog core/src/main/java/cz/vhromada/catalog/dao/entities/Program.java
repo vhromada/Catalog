@@ -21,49 +21,73 @@ import javax.persistence.Table;
 @NamedQuery(name = Program.SELECT_PROGRAMS, query = "SELECT p FROM Program p ORDER BY p.position, p.id")
 public class Program implements Serializable {
 
-    /** Name for query - select programs */
+    /**
+     * Name for query - select programs
+     */
     public static final String SELECT_PROGRAMS = "Program.selectPrograms";
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     @Id
     @SequenceGenerator(name = "program_generator", sequenceName = "programs_sq", allocationSize = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_generator")
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     @Column(name = "program_name")
     private String name;
 
-    /** URL to english Wikipedia page about program */
+    /**
+     * URL to english Wikipedia page about program
+     */
     @Column(name = "wiki_en")
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about program */
+    /**
+     * URL to czech Wikipedia page about program
+     */
     @Column(name = "wiki_cz")
     private String wikiCz;
 
-    /** Count of media */
+    /**
+     * Count of media
+     */
     @Column(name = "media_count")
     private int mediaCount;
 
-    /** True if there is crack */
+    /**
+     * True if there is crack
+     */
     private boolean crack;
 
-    /** True if there is serial key */
+    /**
+     * True if there is serial key
+     */
     @Column(name = "serial_key")
     private boolean serialKey;
 
-    /** Other data */
+    /**
+     * Other data
+     */
     @Column(name = "other_data")
     private String otherData;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
     /**

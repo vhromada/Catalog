@@ -30,25 +30,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BookDAOImplSpringTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link BookDAO} */
+    /**
+     * Instance of {@link BookDAO}
+     */
     @Autowired
     private BookDAO bookDAO;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Restarts sequence. */
+    /**
+     * Restarts sequence.
+     */
     @Before
     public void setUp() {
         entityManager.createNativeQuery("ALTER SEQUENCE books_sq RESTART WITH 10").executeUpdate();
     }
 
-    /** Test method for {@link BookDAO#getBook(Integer)}. */
+    /**
+     * Test method for {@link BookDAO#getBook(Integer)}.
+     */
     @Test
     public void testGetBook() {
         for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
@@ -62,7 +72,9 @@ public class BookDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
     }
 
-    /** Test method for {@link BookDAO#add(Book)}. */
+    /**
+     * Test method for {@link BookDAO#add(Book)}.
+     */
     @Test
     public void testAdd() {
         final Book book = SpringEntitiesUtils.newBook(objectGenerator, entityManager);
@@ -77,7 +89,9 @@ public class BookDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
     }
 
-    /** Test method for {@link BookDAO#update(Book)}. */
+    /**
+     * Test method for {@link BookDAO#update(Book)}.
+     */
     @Test
     public void testUpdate() {
         final Book book = SpringEntitiesUtils.updateBook(1, objectGenerator, entityManager);
@@ -89,7 +103,9 @@ public class BookDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
     }
 
-    /** Test method for {@link BookDAO#remove(Book)}. */
+    /**
+     * Test method for {@link BookDAO#remove(Book)}.
+     */
     @Test
     public void testRemove() {
         bookDAO.remove(SpringUtils.getBook(entityManager, 1));
@@ -98,7 +114,9 @@ public class BookDAOImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT - 1, SpringUtils.getBooksCount(entityManager));
     }
 
-    /** Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)}. */
+    /**
+     * Test method for {@link BookDAO#findBooksByBookCategory(BookCategory)}.
+     */
     @Test
     public void testFindBooksByBookCategory() {
         for (int i = 1; i <= SpringUtils.BOOK_CATEGORIES_COUNT; i++) {

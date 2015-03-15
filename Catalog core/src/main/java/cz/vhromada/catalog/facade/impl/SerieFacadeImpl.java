@@ -29,46 +29,74 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SerieFacadeImpl implements SerieFacade {
 
-    /** Service for series argument */
+    /**
+     * Service for series argument
+     */
     private static final String SERIE_SERVICE_ARGUMENT = "Service for series";
 
-    /** Service for genres argument */
+    /**
+     * Service for genres argument
+     */
     private static final String GENRE_SERVICE_ARGUMENT = "Service for genres";
 
-    /** Converter argument */
+    /**
+     * Converter argument
+     */
     private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for serie argument */
+    /**
+     * Validator for TO for serie argument
+     */
     private static final String SERIE_TO_VALIDATOR_ARGUMENT = "Validator for TO for serie";
 
-    /** Serie argument */
+    /**
+     * Serie argument
+     */
     private static final String SERIE_ARGUMENT = "serie";
 
-    /** TO for serie argument */
+    /**
+     * TO for serie argument
+     */
     private static final String SERIE_TO_ARGUMENT = "TO for serie";
 
-    /** TO for genre argument */
+    /**
+     * TO for genre argument
+     */
     private static final String GENRE_TO_ARGUMENT = "TO for genre";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link FacadeOperationException} */
+    /**
+     * Message for {@link FacadeOperationException}
+     */
     private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-    /** Message for not setting ID */
+    /**
+     * Message for not setting ID
+     */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-    /** Service for series */
+    /**
+     * Service for series
+     */
     private SerieService serieService;
 
-    /** Service for genres */
+    /**
+     * Service for genres
+     */
     private GenreService genreService;
 
-    /** Converter */
+    /**
+     * Converter
+     */
     private Converter converter;
 
-    /** Validator for TO for serie */
+    /**
+     * Validator for TO for serie
+     */
     private SerieTOValidator serieTOValidator;
 
     /**

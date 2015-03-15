@@ -15,13 +15,19 @@ import cz.vhromada.validators.Validators;
  */
 public class ProgramsListDataModel extends AbstractListModel<String> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for programs */
+    /**
+     * Facade for programs
+     */
     private ProgramFacade programFacade;
 
-    /** List of TO for program */
+    /**
+     * List of TO for program
+     */
     private List<ProgramTO> programs;
 
     /**
@@ -68,7 +74,9 @@ public class ProgramsListDataModel extends AbstractListModel<String> {
         return programs.get(index);
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         programs = programFacade.getPrograms();
     }

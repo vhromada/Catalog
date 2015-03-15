@@ -51,30 +51,44 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link SeasonService} */
+    /**
+     * Instance of {@link SeasonService}
+     */
     @Mock
     private SeasonService seasonService;
 
-    /** Instance of {@link EpisodeService} */
+    /**
+     * Instance of {@link EpisodeService}
+     */
     @Mock
     private EpisodeService episodeService;
 
-    /** Instance of {@link Converter} */
+    /**
+     * Instance of {@link Converter}
+     */
     @Mock
     private Converter converter;
 
-    /** Instance of {@link SeasonTOValidator} */
+    /**
+     * Instance of {@link SeasonTOValidator}
+     */
     @Mock
     private SeasonTOValidator seasonTOValidator;
 
-    /** Instance of {@link EpisodeTOValidator} */
+    /**
+     * Instance of {@link EpisodeTOValidator}
+     */
     @Mock
     private EpisodeTOValidator episodeTOValidator;
 
-    /** Instance of (@link EpisodeFacade} */
+    /**
+     * Instance of (@link EpisodeFacade}
+     */
     private EpisodeFacade episodeFacade;
 
-    /** Initializes facade for episodes. */
+    /**
+     * Initializes facade for episodes.
+     */
     @Before
     public void setUp() {
         episodeFacade = new EpisodeFacadeImpl(seasonService, episodeService, converter, seasonTOValidator, episodeTOValidator);
@@ -125,7 +139,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         new EpisodeFacadeImpl(seasonService, episodeService, converter, seasonTOValidator, null);
     }
 
-    /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with existing episode. */
+    /**
+     * Test method for {@link EpisodeFacade#getEpisode(Integer)} with existing episode.
+     */
     @Test
     public void testGetEpisodeWithExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -140,7 +156,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with not existing episode. */
+    /**
+     * Test method for {@link EpisodeFacade#getEpisode(Integer)} with not existing episode.
+     */
     @Test
     public void testGetEpisodeWithNotExistingEpisode() {
         when(episodeService.getEpisode(anyInt())).thenReturn(null);
@@ -153,7 +171,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#getEpisode(Integer)} with null argument.
+     */
     @Test
     public void testGetEpisodeWithNullArgument() {
         try {
@@ -166,7 +186,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#getEpisode(Integer)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#getEpisode(Integer)} with exception in service tier.
+     */
     @Test
     public void testGetEpisodeWithServiceTierException() {
         doThrow(ServiceOperationException.class).when(episodeService).getEpisode(anyInt());
@@ -183,7 +205,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(converter);
     }
 
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)}. */
+    /**
+     * Test method for {@link EpisodeFacade#add(EpisodeTO)}.
+     */
     @Test
     public void testAdd() {
         final Episode episode = generate(Episode.class);
@@ -208,7 +232,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, episodeService, converter, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#add(EpisodeTO)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateNewEpisodeTO(any(EpisodeTO.class));
@@ -225,7 +251,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService, episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#add(EpisodeTO)} with argument with bad data.
+     */
     @Test
     public void testAddWithBadArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -244,7 +272,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService, episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with not existing argument. */
+    /**
+     * Test method for {@link EpisodeFacade#add(EpisodeTO)} with not existing argument.
+     */
     @Test
     public void testAddWithNotExistingArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -264,7 +294,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with service tier not setting ID. */
+    /**
+     * Test method for {@link EpisodeFacade#add(EpisodeTO)} with service tier not setting ID.
+     */
     @Test
     public void testAddWithNotServiceTierSettingID() {
         final Episode episode = generate(Episode.class);
@@ -288,7 +320,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, episodeService, converter, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#add(EpisodeTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#add(EpisodeTO)} with exception in service tier.
+     */
     @Test
     public void testAddWithServiceTierException() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -308,7 +342,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)}. */
+    /**
+     * Test method for {@link EpisodeFacade#update(EpisodeTO)}.
+     */
     @Test
     public void testUpdate() {
         final Episode episode = generate(Episode.class);
@@ -327,7 +363,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, episodeService, converter, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#update(EpisodeTO)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
@@ -344,7 +382,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService, episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#update(EpisodeTO)} with argument with bad data.
+     */
     @Test
     public void testUpdateWithBadArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -362,7 +402,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService, episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with not existing argument. */
+    /**
+     * Test method for {@link EpisodeFacade#update(EpisodeTO)} with not existing argument.
+     */
     @Test
     public void testUpdateWithNotExistingArgument() {
         final Episode episode = generate(Episode.class);
@@ -384,7 +426,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService);
     }
 
-    /** Test method for {@link EpisodeFacade#update(EpisodeTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#update(EpisodeTO)} with exception in service tier.
+     */
     @Test
     public void testUpdateWithServiceTierException() {
         final Episode episode = generate(Episode.class);
@@ -406,7 +450,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService);
     }
 
-    /** Test method for {@link EpisodeFacade#remove(EpisodeTO)}. */
+    /**
+     * Test method for {@link EpisodeFacade#remove(EpisodeTO)}.
+     */
     @Test
     public void testRemove() {
         final Episode episode = generate(Episode.class);
@@ -421,7 +467,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#remove(EpisodeTO)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
@@ -438,7 +486,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#remove(EpisodeTO)} with argument with bad data.
+     */
     @Test
     public void testRemoveWithBadArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -456,7 +506,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with not existing argument. */
+    /**
+     * Test method for {@link EpisodeFacade#remove(EpisodeTO)} with not existing argument.
+     */
     @Test
     public void testRemoveWithNotExistingArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -474,7 +526,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#remove(EpisodeTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#remove(EpisodeTO)} with exception in service tier.
+     */
     @Test
     public void testRemoveWithServiceTierException() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -492,7 +546,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)}. */
+    /**
+     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)}.
+     */
     @Test
     public void testDuplicate() {
         final Episode episode = generate(Episode.class);
@@ -507,7 +563,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
@@ -524,7 +582,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with argument with bad data.
+     */
     @Test
     public void testDuplicateWithBadArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -542,7 +602,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with not existing argument. */
+    /**
+     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with not existing argument.
+     */
     @Test
     public void testDuplicateWithNotExistingArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -560,7 +622,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with exception in service tier.
+     */
     @Test
     public void testDuplicateWithServiceTierException() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -578,7 +642,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)}. */
+    /**
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)}.
+     */
     @Test
     public void testMoveUp() {
         final Episode episode = generate(Episode.class);
@@ -596,7 +662,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
@@ -613,7 +681,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with argument with bad data.
+     */
     @Test
     public void testMoveUpWithBadArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -631,7 +701,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not existing argument. */
+    /**
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not existing argument.
+     */
     @Test
     public void testMoveUpWithNotExistingArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -649,7 +721,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not moveable argument. */
+    /**
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not moveable argument.
+     */
     @Test
     public void testMoveUpWithNotMoveableArgument() {
         final Episode episode = generate(Episode.class);
@@ -671,7 +745,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with exception in service tier.
+     */
     @Test
     public void testMoveUpWithServiceTierException() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -689,7 +765,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)}. */
+    /**
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)}.
+     */
     @Test
     public void testMoveDown() {
         final Episode episode = generate(Episode.class);
@@ -707,7 +785,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
@@ -724,7 +804,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with argument with bad data.
+     */
     @Test
     public void testMoveDownWithBadArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -742,7 +824,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService);
     }
 
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not existing argument. */
+    /**
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not existing argument.
+     */
     @Test
     public void testMoveDownWithNotExistingArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -760,7 +844,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not moveable argument. */
+    /**
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not moveable argument.
+     */
     @Test
     public void testMoveDownWithNotMoveableArgument() {
         final Episode episode = generate(Episode.class);
@@ -782,7 +868,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with exception in service tier.
+     */
     @Test
     public void testMoveDownWithServiceTierException() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -800,7 +888,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with existing episode. */
+    /**
+     * Test method for {@link EpisodeFacade#exists(EpisodeTO)} with existing episode.
+     */
     @Test
     public void testExistsWithExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -816,7 +906,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, converter, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with not existing episode. */
+    /**
+     * Test method for {@link EpisodeFacade#exists(EpisodeTO)} with not existing episode.
+     */
     @Test
     public void testExistsWithNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
@@ -832,7 +924,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, converter, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#exists(EpisodeTO)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
@@ -849,7 +943,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#exists(EpisodeTO)} with argument with bad data.
+     */
     @Test
     public void testExistsWithBadArgument() {
         final EpisodeTO episode = generate(EpisodeTO.class);
@@ -867,7 +963,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#exists(EpisodeTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#exists(EpisodeTO)} with exception in service tier.
+     */
     @Test
     public void testExistsWithServiceTierException() {
         final Episode episode = generate(Episode.class);
@@ -888,7 +986,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(episodeService, converter, episodeTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)}. */
+    /**
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)}.
+     */
     @Test
     public void testFindEpisodesBySeason() {
         final Season season = generate(Season.class);
@@ -908,7 +1008,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(seasonService, episodeService, converter, seasonTOValidator);
     }
 
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with null argument. */
+    /**
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with null argument.
+     */
     @Test
     public void testFindEpisodesBySeasonWithNullArgument() {
         doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
@@ -925,7 +1027,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService, episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with argument with bad data. */
+    /**
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with argument with bad data.
+     */
     @Test
     public void testFindEpisodesBySeasonWithBadArgument() {
         final SeasonTO season = generate(SeasonTO.class);
@@ -943,7 +1047,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonService, episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not existing argument. */
+    /**
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not existing argument.
+     */
     @Test
     public void testFindEpisodesBySeasonWithNotExistingArgument() {
         final SeasonTO season = generate(SeasonTO.class);
@@ -962,7 +1068,9 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(episodeService, converter);
     }
 
-    /** Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with exception in service tier. */
+    /**
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with exception in service tier.
+     */
     @Test
     public void testFindEpisodesBySeasonWithServiceTierException() {
         final SeasonTO season = generate(SeasonTO.class);

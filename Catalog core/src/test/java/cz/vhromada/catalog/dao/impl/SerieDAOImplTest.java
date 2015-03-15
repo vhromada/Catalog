@@ -43,30 +43,42 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class SerieDAOImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Mock
     private EntityManager entityManager;
 
-    /** Query for series */
+    /**
+     * Query for series
+     */
     @Mock
     private TypedQuery<Serie> seriesQuery;
 
-    /** Instance of {@link SerieDAO} */
+    /**
+     * Instance of {@link SerieDAO}
+     */
     private SerieDAO serieDAO;
 
-    /** Initializes DAO for series. */
+    /**
+     * Initializes DAO for series.
+     */
     @Before
     public void setUp() {
         serieDAO = new SerieDAOImpl(entityManager);
     }
 
-    /** Test method for {@link SerieDAOImpl#SerieDAOImpl(EntityManager)} with null entity manager. */
+    /**
+     * Test method for {@link SerieDAOImpl#SerieDAOImpl(EntityManager)} with null entity manager.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEntityManager() {
         new SerieDAOImpl(null);
     }
 
-    /** Test method for {@link SerieDAO#getSeries()}. */
+    /**
+     * Test method for {@link SerieDAO#getSeries()}.
+     */
     @Test
     public void testGetSeries() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -80,7 +92,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager, seriesQuery);
     }
 
-    /** Test method for {@link SerieDAO#getSeries()} with exception in persistence. */
+    /**
+     * Test method for {@link SerieDAO#getSeries()} with exception in persistence.
+     */
     @Test
     public void testGetSeriesWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Serie.class));
@@ -97,7 +111,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seriesQuery);
     }
 
-    /** Test method for {@link SerieDAO#getSerie(Integer)} with existing serie. */
+    /**
+     * Test method for {@link SerieDAO#getSerie(Integer)} with existing serie.
+     */
     @Test
     public void testGetSerieWithExistingSerie() {
         final int id = generate(Integer.class);
@@ -110,7 +126,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#getSerie(Integer)} with not existing serie. */
+    /**
+     * Test method for {@link SerieDAO#getSerie(Integer)} with not existing serie.
+     */
     @Test
     public void testGetSerieWithNotExistingSerie() {
         when(entityManager.find(eq(Serie.class), anyInt())).thenReturn(null);
@@ -121,7 +139,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#getSerie(Integer)} with null argument. */
+    /**
+     * Test method for {@link SerieDAO#getSerie(Integer)} with null argument.
+     */
     @Test
     public void testGetSerieWithNullArgument() {
         try {
@@ -134,7 +154,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#getSerie(Integer)} with exception in persistence. */
+    /**
+     * Test method for {@link SerieDAO#getSerie(Integer)} with exception in persistence.
+     */
     @Test
     public void testGetSerieWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Serie.class), anyInt());
@@ -150,7 +172,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#add(Serie)}. */
+    /**
+     * Test method for {@link SerieDAO#add(Serie)}.
+     */
     @Test
     public void testAdd() {
         final Serie serie = generate(Serie.class);
@@ -166,7 +190,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#add(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieDAO#add(Serie)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -179,7 +205,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#add(Serie)} with exception in persistence. */
+    /**
+     * Test method for {@link SerieDAO#add(Serie)} with exception in persistence.
+     */
     @Test
     public void testAddWithPersistenceException() {
         final Serie serie = generate(Serie.class);
@@ -196,7 +224,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#update(Serie)}. */
+    /**
+     * Test method for {@link SerieDAO#update(Serie)}.
+     */
     @Test
     public void testUpdate() {
         final Serie serie = generate(Serie.class);
@@ -207,7 +237,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#update(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieDAO#update(Serie)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -220,7 +252,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#update(Serie)} with exception in persistence. */
+    /**
+     * Test method for {@link SerieDAO#update(Serie)} with exception in persistence.
+     */
     @Test
     public void testUpdateWithPersistenceException() {
         final Serie serie = generate(Serie.class);
@@ -237,7 +271,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#remove(Serie)} with managed serie. */
+    /**
+     * Test method for {@link SerieDAO#remove(Serie)} with managed serie.
+     */
     @Test
     public void testRemoveWithManagedSerie() {
         final Serie serie = generate(Serie.class);
@@ -250,7 +286,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#remove(Serie)} with not managed serie. */
+    /**
+     * Test method for {@link SerieDAO#remove(Serie)} with not managed serie.
+     */
     @Test
     public void testRemoveWithNotManagedSerie() {
         final Serie serie = generate(Serie.class);
@@ -265,7 +303,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#remove(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieDAO#remove(Serie)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -278,7 +318,9 @@ public class SerieDAOImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(entityManager);
     }
 
-    /** Test method for {@link SerieDAO#remove(Serie)} with exception in persistence. */
+    /**
+     * Test method for {@link SerieDAO#remove(Serie)} with exception in persistence.
+     */
     @Test
     public void testRemoveWithPersistenceException() {
         final Serie serie = generate(Serie.class);

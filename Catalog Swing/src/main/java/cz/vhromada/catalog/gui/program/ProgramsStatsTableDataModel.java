@@ -15,16 +15,24 @@ import cz.vhromada.validators.Validators;
  */
 public class ProgramsStatsTableDataModel extends AbstractTableModel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Facade for programs */
+    /**
+     * Facade for programs
+     */
     private ProgramFacade programFacade;
 
-    /** List of TO for program */
+    /**
+     * List of TO for program
+     */
     private List<ProgramTO> programs;
 
-    /** Total count of media */
+    /**
+     * Total count of media
+     */
     private int totalMediaCount;
 
     /**
@@ -108,7 +116,9 @@ public class ProgramsStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         programs = programFacade.getPrograms();
         totalMediaCount = programFacade.getTotalMediaCount();

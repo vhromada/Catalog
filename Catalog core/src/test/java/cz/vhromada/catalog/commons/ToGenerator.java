@@ -22,7 +22,9 @@ import org.joda.time.DateTime;
  */
 public final class ToGenerator {
 
-    /** Creates a new instance of ToGenerator. */
+    /**
+     * Creates a new instance of ToGenerator.
+     */
     private ToGenerator() {
     }
 

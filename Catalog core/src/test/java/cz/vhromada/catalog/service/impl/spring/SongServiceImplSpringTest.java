@@ -39,36 +39,52 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SongServiceImplSpringTest {
 
-    /** Cache key for list of songs */
+    /**
+     * Cache key for list of songs
+     */
     private static final String SONGS_CACHE_KEY = "songs";
 
-    /** Cache key for song */
+    /**
+     * Cache key for song
+     */
     private static final String SONG_CACHE_KEY = "song";
 
-    /** Instance of {@link EntityManager} */
+    /**
+     * Instance of {@link EntityManager}
+     */
     @Autowired
     private EntityManager entityManager;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Value("#{cacheManager.getCache('musicCache')}")
     private Cache musicCache;
 
-    /** Instance of {@link SongService} */
+    /**
+     * Instance of {@link SongService}
+     */
     @Autowired
     private SongService songService;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     @Autowired
     private ObjectGenerator objectGenerator;
 
-    /** Clears cache and restarts sequence. */
+    /**
+     * Clears cache and restarts sequence.
+     */
     @Before
     public void setUp() {
         musicCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE songs_sq RESTART WITH 10").executeUpdate();
     }
 
-    /** Test method for {@link SongService#getSong(Integer)} with existing song. */
+    /**
+     * Test method for {@link SongService#getSong(Integer)} with existing song.
+     */
     @Test
     public void testGetSongWithExistingSong() {
         final List<String> keys = new ArrayList<>();
@@ -90,7 +106,9 @@ public class SongServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SongService#getSong(Integer)} with not existing song. */
+    /**
+     * Test method for {@link SongService#getSong(Integer)} with not existing song.
+     */
     @Test
     public void testGetSongWithNotExistingSong() {
         final String key = SONG_CACHE_KEY + Integer.MAX_VALUE;
@@ -101,7 +119,9 @@ public class SongServiceImplSpringTest {
         SpringUtils.assertCacheValue(musicCache, key, null);
     }
 
-    /** Test method for {@link SongService#add(Song)} with empty cache. */
+    /**
+     * Test method for {@link SongService#add(Song)} with empty cache.
+     */
     @Test
     public void testAddWithEmptyCache() {
         final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
@@ -116,7 +136,9 @@ public class SongServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
     }
 
-    /** Test method for {@link SongService#add(Song)} with not empty cache. */
+    /**
+     * Test method for {@link SongService#add(Song)} with not empty cache.
+     */
     @Test
     public void testAddWithNotEmptyCache() {
         final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
@@ -137,7 +159,9 @@ public class SongServiceImplSpringTest {
         SpringUtils.assertCacheValue(musicCache, keyItem, song);
     }
 
-    /** Test method for {@link SongService#update(Song)}. */
+    /**
+     * Test method for {@link SongService#update(Song)}.
+     */
     @Test
     public void testUpdate() {
         final Song song = SpringEntitiesUtils.updateSong(1, objectGenerator, entityManager);
@@ -150,7 +174,9 @@ public class SongServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
     }
 
-    /** Test method for {@link SongService#remove(Song)} with empty cache. */
+    /**
+     * Test method for {@link SongService#remove(Song)} with empty cache.
+     */
     @Test
     public void testRemoveWithEmptyCache() {
         final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
@@ -164,7 +190,9 @@ public class SongServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
     }
 
-    /** Test method for {@link SongService#remove(Song)} with not empty cache. */
+    /**
+     * Test method for {@link SongService#remove(Song)} with not empty cache.
+     */
     @Test
     public void testRemoveWithNotEmptyCache() {
         final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
@@ -183,7 +211,9 @@ public class SongServiceImplSpringTest {
         SpringUtils.assertCacheValue(musicCache, key, new ArrayList<>());
     }
 
-    /** Test method for {@link SongService#duplicate(Song)} with empty cache. */
+    /**
+     * Test method for {@link SongService#duplicate(Song)} with empty cache.
+     */
     @Test
     public void testDuplicateWithEmptyCache() {
         final Song song = SpringUtils.getSong(entityManager, 3);
@@ -202,7 +232,9 @@ public class SongServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
     }
 
-    /** Test method for {@link SongService#duplicate(Song)} with not empty cache. */
+    /**
+     * Test method for {@link SongService#duplicate(Song)} with not empty cache.
+     */
     @Test
     public void testDuplicateWithNotEmptyCache() {
         final Song song = SpringUtils.getSong(entityManager, 3);
@@ -227,7 +259,9 @@ public class SongServiceImplSpringTest {
         SpringUtils.assertCacheValue(musicCache, keyItem, expectedSong);
     }
 
-    /** Test method for {@link SongService#moveUp(Song)}. */
+    /**
+     * Test method for {@link SongService#moveUp(Song)}.
+     */
     @Test
     public void testMoveUp() {
         final Song song = SpringUtils.getSong(entityManager, 2);
@@ -249,7 +283,9 @@ public class SongServiceImplSpringTest {
         DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(musicCache).size());
     }
 
-    /** Test method for {@link SongService#moveDown(Song)}. */
+    /**
+     * Test method for {@link SongService#moveDown(Song)}.
+     */
     @Test
     public void testMoveDown() {
         final Song song = SpringUtils.getSong(entityManager, 1);
@@ -272,7 +308,9 @@ public class SongServiceImplSpringTest {
     }
 
 
-    /** Test method for {@link SongService#exists(Song)} with existing song. */
+    /**
+     * Test method for {@link SongService#exists(Song)} with existing song.
+     */
     @Test
     public void testExistsWithExistingSong() {
         final List<String> keys = new ArrayList<>();
@@ -294,7 +332,9 @@ public class SongServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SongService#exists(Song)} with not existing song. */
+    /**
+     * Test method for {@link SongService#exists(Song)} with not existing song.
+     */
     @Test
     public void testExistsWithNotExistingSong() {
         final Song song = SpringEntitiesUtils.newSong(objectGenerator, entityManager);
@@ -307,7 +347,9 @@ public class SongServiceImplSpringTest {
         SpringUtils.assertCacheValue(musicCache, key, null);
     }
 
-    /** Test method for {@link SongService#findSongsByMusic(Music)}. */
+    /**
+     * Test method for {@link SongService#findSongsByMusic(Music)}.
+     */
     @Test
     public void testFindSongsByMusic() {
         final List<String> keys = new ArrayList<>();
@@ -326,7 +368,9 @@ public class SongServiceImplSpringTest {
         }
     }
 
-    /** Test method for {@link SongService#getTotalLengthByMusic(Music)}. */
+    /**
+     * Test method for {@link SongService#getTotalLengthByMusic(Music)}.
+     */
     @Test
     public void testGetTotalLengthByMusic() {
         final List<String> keys = new ArrayList<>();

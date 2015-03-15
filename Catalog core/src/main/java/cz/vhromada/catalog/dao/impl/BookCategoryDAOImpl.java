@@ -22,19 +22,29 @@ import org.springframework.stereotype.Component;
 @Component("bookCategoryDAO")
 public class BookCategoryDAOImpl implements BookCategoryDAO {
 
-    /** Entity manager argument */
+    /**
+     * Entity manager argument
+     */
     private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
-    /** Book category argument */
+    /**
+     * Book category argument
+     */
     private static final String BOOK_CATEGORY_ARGUMENT = "Book category";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link DataStorageException} */
+    /**
+     * Message for {@link DataStorageException}
+     */
     private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
 
-    /** Entity manager */
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager;
 
     /**

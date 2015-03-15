@@ -17,28 +17,44 @@ import org.springframework.cache.Cache;
  */
 public abstract class AbstractSerieService extends AbstractInnerService<Serie, Season> {
 
-    /** Cache for series argument */
+    /**
+     * Cache for series argument
+     */
     private static final String SERIE_CACHE_ARGUMENT = "Cache for series";
 
-    /** Cache key for list of series */
+    /**
+     * Cache key for list of series
+     */
     private static final String SERIES_CACHE_KEY = "series";
 
-    /** Cache key for book serie */
+    /**
+     * Cache key for book serie
+     */
     private static final String SERIE_CACHE_KEY = "serie";
 
-    /** Cache key for list of seasons */
+    /**
+     * Cache key for list of seasons
+     */
     private static final String SEASONS_CACHE_KEY = "seasons";
 
-    /** Cache key for season */
+    /**
+     * Cache key for season
+     */
     private static final String SEASON_CACHE_KEY = "season";
 
-    /** Cache key for list of episodes */
+    /**
+     * Cache key for list of episodes
+     */
     private static final String EPISODES_CACHE_KEY = "episodes";
 
-    /** Cache key for episode */
+    /**
+     * Cache key for episode
+     */
     private static final String EPISODE_CACHE_KEY = "episode";
 
-    /** Cache for series */
+    /**
+     * Cache for series
+     */
     private Cache serieCache;
 
     /**
@@ -53,7 +69,9 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
         this.serieCache = serieCache;
     }
 
-    /** Remove all mappings from the cache for series. */
+    /**
+     * Remove all mappings from the cache for series.
+     */
     protected void clearCache() {
         serieCache.clear();
     }

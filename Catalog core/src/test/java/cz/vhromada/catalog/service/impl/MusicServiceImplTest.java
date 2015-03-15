@@ -46,55 +46,79 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class MusicServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of music */
+    /**
+     * Cache key for list of music
+     */
     private static final String MUSIC_LIST_CACHE_KEY = "music";
 
-    /** Cache key for music */
+    /**
+     * Cache key for music
+     */
     private static final String MUSIC_CACHE_KEY = "musicItem";
 
-    /** Cache key for list of songs */
+    /**
+     * Cache key for list of songs
+     */
     private static final String SONGS_CACHE_KEY = "songs";
 
-    /** Instance of {@link MusicDAO} */
+    /**
+     * Instance of {@link MusicDAO}
+     */
     @Mock
     private MusicDAO musicDAO;
 
-    /** Instance of {@link SongDAO} */
+    /**
+     * Instance of {@link SongDAO}
+     */
     @Mock
     private SongDAO songDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache musicCache;
 
-    /** Instance of {@link MusicService} */
+    /**
+     * Instance of {@link MusicService}
+     */
     private MusicService musicService;
 
-    /** Initializes service for music. */
+    /**
+     * Initializes service for music.
+     */
     @Before
     public void setUp() {
         musicService = new MusicServiceImpl(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache)} with null DAO for music. */
+    /**
+     * Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache)} with null DAO for music.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMusicDAO() {
         new MusicServiceImpl(null, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache)} with null DAO for songs. */
+    /**
+     * Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache)} with null DAO for songs.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSongDAO() {
         new MusicServiceImpl(musicDAO, null, musicCache);
     }
 
-    /** Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache))} with null cache for music. */
+    /**
+     * Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicDAO, SongDAO, Cache))} with null cache for music.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMusicCache() {
         new MusicServiceImpl(musicDAO, songDAO, null);
     }
 
-    /** Test method for {@link MusicService#newData()} with cached data. */
+    /**
+     * Test method for {@link MusicService#newData()} with cached data.
+     */
     @Test
     public void testNewDataWithCachedData() {
         final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
@@ -118,7 +142,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#newData()} with not cached data. */
+    /**
+     * Test method for {@link MusicService#newData()} with not cached data.
+     */
     @Test
     public void testNewDataWithNotCachedData() {
         final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
@@ -143,7 +169,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#newData()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#newData()} with exception in DAO tier.
+     */
     @Test
     public void testNewDataWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();
@@ -162,7 +190,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songDAO);
     }
 
-    /** Test method for {@link MusicService#getMusic()} with cached music. */
+    /**
+     * Test method for {@link MusicService#getMusic()} with cached music.
+     */
     @Test
     public void testGetMusicWithCachedMusic() {
         final List<Music> music = CollectionUtils.newList(mock(Music.class), mock(Music.class));
@@ -175,7 +205,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO);
     }
 
-    /** Test method for {@link MusicService#getMusic()} with not cached music. */
+    /**
+     * Test method for {@link MusicService#getMusic()} with not cached music.
+     */
     @Test
     public void testGetMusicWithNotCachedMusic() {
         final List<Music> music = CollectionUtils.newList(mock(Music.class), mock(Music.class));
@@ -190,7 +222,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getMusic()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#getMusic()} with exception in DAO tier.
+     */
     @Test
     public void testGetMusicWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();
@@ -208,7 +242,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getMusic(Integer)} with cached existing music. */
+    /**
+     * Test method for {@link MusicService#getMusic(Integer)} with cached existing music.
+     */
     @Test
     public void testGetMusicByIdWithCachedExistingMusic() {
         final Music music = generate(Music.class);
@@ -221,7 +257,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO);
     }
 
-    /** Test method for {@link MusicService#getMusic(Integer)} with cached not existing music. */
+    /**
+     * Test method for {@link MusicService#getMusic(Integer)} with cached not existing music.
+     */
     @Test
     public void testGetMusicByIdWithCachedNotExistingMusic() {
         final Music music = generate(Music.class);
@@ -234,7 +272,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO);
     }
 
-    /** Test method for {@link MusicService#getMusic(Integer)} with not cached existing music. */
+    /**
+     * Test method for {@link MusicService#getMusic(Integer)} with not cached existing music.
+     */
     @Test
     public void testGetMusicByIdWithNotCachedExistingMusic() {
         final Music music = generate(Music.class);
@@ -249,7 +289,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getMusic(Integer)} with not cached not existing music. */
+    /**
+     * Test method for {@link MusicService#getMusic(Integer)} with not cached not existing music.
+     */
     @Test
     public void testGetMusicByIdWithNotCachedNotExistingMusic() {
         final Music music = generate(Music.class);
@@ -264,7 +306,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getMusic(Integer)} with null argument. */
+    /**
+     * Test method for {@link MusicService#getMusic(Integer)} with null argument.
+     */
     @Test
     public void testGetMusicByIdWithNullArgument() {
         try {
@@ -277,7 +321,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getMusic(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#getMusic(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetMusicByIdWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic(anyInt());
@@ -295,7 +341,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#add(Music)} with cached music. */
+    /**
+     * Test method for {@link MusicService#add(Music)} with cached music.
+     */
     @Test
     public void testAddWithCachedMusic() {
         final Music music = generate(Music.class);
@@ -314,7 +362,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#add(Music)} with not cached music. */
+    /**
+     * Test method for {@link MusicService#add(Music)} with not cached music.
+     */
     @Test
     public void testAddWithNotCachedMusic() {
         final Music music = generate(Music.class);
@@ -328,7 +378,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#add(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicService#add(Music)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -341,7 +393,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#add(Music)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#add(Music)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Music music = generate(Music.class);
@@ -359,7 +413,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicCache);
     }
 
-    /** Test method for {@link MusicService#update(Music)}. */
+    /**
+     * Test method for {@link MusicService#update(Music)}.
+     */
     @Test
     public void testUpdate() {
         final Music music = generate(Music.class);
@@ -371,7 +427,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#update(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicService#update(Music)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -384,7 +442,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#update(Music)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#update(Music)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Music music = generate(Music.class);
@@ -402,7 +462,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicCache);
     }
 
-    /** Test method for {@link MusicService#remove(Music)} with cached songs. */
+    /**
+     * Test method for {@link MusicService#remove(Music)} with cached songs.
+     */
     @Test
     public void testRemoveWithCachedSongs() {
         final Music music = generate(Music.class);
@@ -420,7 +482,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#remove(Music)} with not cached songs. */
+    /**
+     * Test method for {@link MusicService#remove(Music)} with not cached songs.
+     */
     @Test
     public void testRemoveWithNotCachedSongs() {
         final Music music = generate(Music.class);
@@ -440,7 +504,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#remove(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicService#remove(Music)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -453,7 +519,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#remove(Music)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#remove(Music)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Music music = generate(Music.class);
@@ -473,7 +541,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO);
     }
 
-    /** Test method for {@link MusicService#duplicate(Music)} with cached songs. */
+    /**
+     * Test method for {@link MusicService#duplicate(Music)} with cached songs.
+     */
     @Test
     public void testDuplicateWithCachedSongs() {
         final Music music = generate(Music.class);
@@ -491,7 +561,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#duplicate(Music)} with not cached songs. */
+    /**
+     * Test method for {@link MusicService#duplicate(Music)} with not cached songs.
+     */
     @Test
     public void testDuplicateWithNotCachedSongs() {
         final Music music = generate(Music.class);
@@ -511,7 +583,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#duplicate(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicService#duplicate(Music)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -524,7 +598,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#duplicate(Music)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#duplicate(Music)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).add(any(Music.class));
@@ -541,7 +617,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveUp(Music)} with cached music. */
+    /**
+     * Test method for {@link MusicService#moveUp(Music)} with cached music.
+     */
     @Test
     public void testMoveUpWithCachedMusic() {
         final Music music1 = generate(Music.class);
@@ -562,7 +640,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveUp(Music)} with not cached music. */
+    /**
+     * Test method for {@link MusicService#moveUp(Music)} with not cached music.
+     */
     @Test
     public void testMoveUpWithNotCachedMusic() {
         final Music music1 = generate(Music.class);
@@ -585,7 +665,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveUp(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicService#moveUp(Music)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -598,7 +680,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveUp(Music)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#moveUp(Music)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();
@@ -616,7 +700,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveDown(Music)} with cached music. */
+    /**
+     * Test method for {@link MusicService#moveDown(Music)} with cached music.
+     */
     @Test
     public void testMoveDownWithCachedMusic() {
         final Music music1 = generate(Music.class);
@@ -637,7 +723,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveDown(Music)} with not cached music. */
+    /**
+     * Test method for {@link MusicService#moveDown(Music)} with not cached music.
+     */
     @Test
     public void testMoveDownWithNotCachedMusic() {
         final Music music1 = generate(Music.class);
@@ -660,7 +748,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveDown(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicService#moveDown(Music)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -673,7 +763,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#moveDown(Music)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#moveDown(Music)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();
@@ -691,7 +783,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#exists(Music)} with cached existing music. */
+    /**
+     * Test method for {@link MusicService#exists(Music)} with cached existing music.
+     */
     @Test
     public void testExistsWithCachedExistingMusic() {
         final Music music = generate(Music.class);
@@ -704,7 +798,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO);
     }
 
-    /** Test method for {@link MusicService#exists(Music)} with cached not existing music. */
+    /**
+     * Test method for {@link MusicService#exists(Music)} with cached not existing music.
+     */
     @Test
     public void testExistsWithCachedNotExistingMusic() {
         final Music music = generate(Music.class);
@@ -717,7 +813,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO);
     }
 
-    /** Test method for {@link MusicService#exists(Music)} with not cached existing music. */
+    /**
+     * Test method for {@link MusicService#exists(Music)} with not cached existing music.
+     */
     @Test
     public void testExistsWithNotCachedExistingMusic() {
         final Music music = generate(Music.class);
@@ -732,7 +830,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#exists(Music)} with not cached not existing music. */
+    /**
+     * Test method for {@link MusicService#exists(Music)} with not cached not existing music.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingMusic() {
         final Music music = generate(Music.class);
@@ -747,7 +847,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#exists(Music)} with null argument. */
+    /**
+     * Test method for {@link MusicService#exists(Music)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -760,7 +862,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#exists(Music)} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#exists(Music)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Music music = generate(Music.class);
@@ -779,7 +883,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#updatePositions()} with cached data. */
+    /**
+     * Test method for {@link MusicService#updatePositions()} with cached data.
+     */
     @Test
     public void testUpdatePositionsWithCachedData() {
         final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
@@ -807,7 +913,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#updatePositions()} with not cached data. */
+    /**
+     * Test method for {@link MusicService#updatePositions()} with not cached data.
+     */
     @Test
     public void testUpdatePositionsWithNotCachedData() {
         final List<Music> musicList = CollectionUtils.newList(generate(Music.class), generate(Music.class));
@@ -836,7 +944,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#updatePositions()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#updatePositions()} with exception in DAO tier.
+     */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();
@@ -855,7 +965,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songDAO);
     }
 
-    /** Test method for {@link MusicService#getTotalMediaCount()} with cached music. */
+    /**
+     * Test method for {@link MusicService#getTotalMediaCount()} with cached music.
+     */
     @Test
     public void testGetTotalMediaCountWithCachedMusic() {
         final Music music1 = mock(Music.class);
@@ -877,7 +989,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO);
     }
 
-    /** Test method for {@link MusicService#getTotalMediaCount()} with not cached music. */
+    /**
+     * Test method for {@link MusicService#getTotalMediaCount()} with not cached music.
+     */
     @Test
     public void testGetTotalMediaCountWithNotCachedMusic() {
         final Music music1 = mock(Music.class);
@@ -901,7 +1015,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache, music1, music2, music3);
     }
 
-    /** Test method for {@link MusicService#getTotalMediaCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#getTotalMediaCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalMediaCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();
@@ -919,7 +1035,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getTotalLength()} with cached data. */
+    /**
+     * Test method for {@link MusicService#getTotalLength()} with cached data.
+     */
     @Test
     public void testGetTotalLengthWithCachedData() {
         final Music music1 = generate(Music.class);
@@ -956,7 +1074,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, songDAO);
     }
 
-    /** Test method for {@link MusicService#getTotalLength()} with not cached data. */
+    /**
+     * Test method for {@link MusicService#getTotalLength()} with not cached data.
+     */
     @Test
     public void testGetTotalLengthWithNotCachedMusic() {
         final Music music1 = generate(Music.class);
@@ -999,7 +1119,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache, song1, song2, song3);
     }
 
-    /** Test method for {@link MusicService#getTotalLength()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#getTotalLength()} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalLengthWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();
@@ -1018,7 +1140,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(songDAO);
     }
 
-    /** Test method for {@link MusicService#getSongsCount()} with cached data. */
+    /**
+     * Test method for {@link MusicService#getSongsCount()} with cached data.
+     */
     @Test
     public void testGetSongsCountWithCachedData() {
         final Music music1 = generate(Music.class);
@@ -1039,7 +1163,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(musicDAO, songDAO);
     }
 
-    /** Test method for {@link MusicService#getSongsCount()} with not cached data. */
+    /**
+     * Test method for {@link MusicService#getSongsCount()} with not cached data.
+     */
     @Test
     public void testGetSongsCountWithNotCachedMusic() {
         final Music music1 = generate(Music.class);
@@ -1066,7 +1192,9 @@ public class MusicServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(musicDAO, songDAO, musicCache);
     }
 
-    /** Test method for {@link MusicService#getSongsCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link MusicService#getSongsCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetSongsCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(musicDAO).getMusic();

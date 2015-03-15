@@ -30,52 +30,84 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BookFacadeImpl implements BookFacade {
 
-    /** Service for book categories argument */
+    /**
+     * Service for book categories argument
+     */
     private static final String BOOK_CATEGORY_SERVICE_ARGUMENT = "Service for book categories";
 
-    /** Service for books argument */
+    /**
+     * Service for books argument
+     */
     private static final String BOOK_SERVICE_ARGUMENT = "Service for books";
 
-    /** Converter argument */
+    /**
+     * Converter argument
+     */
     private static final String CONVERTER_ARGUMENT = "Converter";
 
-    /** Validator for TO for book category field */
+    /**
+     * Validator for TO for book category field
+     */
     private static final String BOOK_CATEGORY_TO_VALIDATOR_ARGUMENT = "Validator for TO for book category";
 
-    /** Validator for TO for book field */
+    /**
+     * Validator for TO for book field
+     */
     private static final String BOOK_TO_VALIDATOR_ARGUMENT = "Validator for TO for book";
 
-    /** Book argument */
+    /**
+     * Book argument
+     */
     private static final String BOOK_ARGUMENT = "book";
 
-    /** TO for book category argument */
+    /**
+     * TO for book category argument
+     */
     private static final String BOOK_CATEGORY_TO_ARGUMENT = "TO for book category";
 
-    /** TO for book  argument */
+    /**
+     * TO for book  argument
+     */
     private static final String BOOK_TO_ARGUMENT = "TO for book";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link FacadeOperationException} */
+    /**
+     * Message for {@link FacadeOperationException}
+     */
     private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
 
-    /** Message for not setting ID */
+    /**
+     * Message for not setting ID
+     */
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
-    /** Service for book categories */
+    /**
+     * Service for book categories
+     */
     private BookCategoryService bookCategoryService;
 
-    /** Service for books */
+    /**
+     * Service for books
+     */
     private BookService bookService;
 
-    /** Converter */
+    /**
+     * Converter
+     */
     private Converter converter;
 
-    /** Validator for TO for book category */
+    /**
+     * Validator for TO for book category
+     */
     private BookCategoryTOValidator bookCategoryTOValidator;
 
-    /** Validator for TO for book */
+    /**
+     * Validator for TO for book
+     */
     private BookTOValidator bookTOValidator;
 
     /**

@@ -48,68 +48,98 @@ import org.springframework.cache.support.SimpleValueWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class SerieServiceImplTest extends ObjectGeneratorTest {
 
-    /** Cache key for list of series */
+    /**
+     * Cache key for list of series
+     */
     private static final String SERIES_CACHE_KEY = "series";
 
-    /** Cache key for book serie */
+    /**
+     * Cache key for book serie
+     */
     private static final String SERIE_CACHE_KEY = "serie";
 
-    /** Cache key for list of seasons */
+    /**
+     * Cache key for list of seasons
+     */
     private static final String SEASONS_CACHE_KEY = "seasons";
 
-    /** Cache key for list of episodes */
+    /**
+     * Cache key for list of episodes
+     */
     private static final String EPISODES_CACHE_KEY = "episodes";
 
-    /** Instance of {@link SerieDAO} */
+    /**
+     * Instance of {@link SerieDAO}
+     */
     @Mock
     private SerieDAO serieDAO;
 
-    /** Instance of {@link SeasonDAO} */
+    /**
+     * Instance of {@link SeasonDAO}
+     */
     @Mock
     private SeasonDAO seasonDAO;
 
-    /** Instance of {@link EpisodeDAO} */
+    /**
+     * Instance of {@link EpisodeDAO}
+     */
     @Mock
     private EpisodeDAO episodeDAO;
 
-    /** Instance of {@link Cache} */
+    /**
+     * Instance of {@link Cache}
+     */
     @Mock
     private Cache serieCache;
 
-    /** Instance of {@link SerieService} */
+    /**
+     * Instance of {@link SerieService}
+     */
     private SerieService serieService;
 
-    /** Initializes service for series. */
+    /**
+     * Initializes service for series.
+     */
     @Before
     public void setUp() {
         serieService = new SerieServiceImpl(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for series. */
+    /**
+     * Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for series.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieDAO() {
         new SerieServiceImpl(null, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for seasons. */
+    /**
+     * Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for seasons.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSeasonDAO() {
         new SerieServiceImpl(serieDAO, null, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for episodes. */
+    /**
+     * Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache)} with null DAO for episodes.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEpisodeDAO() {
         new SerieServiceImpl(serieDAO, seasonDAO, null, serieCache);
     }
 
-    /** Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache))} with null cache for series. */
+    /**
+     * Test method for {@link SerieServiceImpl#SerieServiceImpl(SerieDAO, SeasonDAO, EpisodeDAO, Cache))} with null cache for series.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSerieCache() {
         new SerieServiceImpl(serieDAO, seasonDAO, episodeDAO, null);
     }
 
-    /** Test method for {@link SerieService#newData()} with cached data. */
+    /**
+     * Test method for {@link SerieService#newData()} with cached data.
+     */
     @Test
     public void testNewDataWithCachedData() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -141,7 +171,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#newData()} with not cached data. */
+    /**
+     * Test method for {@link SerieService#newData()} with not cached data.
+     */
     @Test
     public void testNewDataWithNotCachedData() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -173,7 +205,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#newData()} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#newData()} with exception in DAO tier.
+     */
     @Test
     public void testNewDataWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();
@@ -192,7 +226,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, episodeDAO);
     }
 
-    /** Test method for {@link SerieService#getSeries()} with cached series. */
+    /**
+     * Test method for {@link SerieService#getSeries()} with cached series.
+     */
     @Test
     public void testGetSeriesWithCachedSeries() {
         final List<Serie> series = CollectionUtils.newList(mock(Serie.class), mock(Serie.class));
@@ -205,7 +241,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO);
     }
 
-    /** Test method for {@link SerieService#getSeries()} with not cached series. */
+    /**
+     * Test method for {@link SerieService#getSeries()} with not cached series.
+     */
     @Test
     public void testGetSeriesWithNotCachedSeries() {
         final List<Serie> series = CollectionUtils.newList(mock(Serie.class), mock(Serie.class));
@@ -220,7 +258,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSeries()} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#getSeries()} with exception in DAO tier.
+     */
     @Test
     public void testGetSeriesWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();
@@ -238,7 +278,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with cached existing serie. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with cached existing serie.
+     */
     @Test
     public void testGetSerieWithCachedExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -251,7 +293,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with cached not existing serie. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with cached not existing serie.
+     */
     @Test
     public void testGetSerieWithCachedNotExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -264,7 +308,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with not cached existing serie. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with not cached existing serie.
+     */
     @Test
     public void testGetSerieWithNotCachedExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -279,7 +325,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with not cached not existing serie. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with not cached not existing serie.
+     */
     @Test
     public void testGetSerieWithNotCachedNotExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -294,7 +342,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with null argument. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with null argument.
+     */
     @Test
     public void testGetSerieWithNullArgument() {
         try {
@@ -307,7 +357,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSerie(Integer)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#getSerie(Integer)} with exception in DAO tier.
+     */
     @Test
     public void testGetSerieWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSerie(anyInt());
@@ -325,7 +377,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#add(Serie)} with cached series. */
+    /**
+     * Test method for {@link SerieService#add(Serie)} with cached series.
+     */
     @Test
     public void testAddWithCachedSeries() {
         final Serie serie = generate(Serie.class);
@@ -344,7 +398,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#add(Serie)} with not cached series. */
+    /**
+     * Test method for {@link SerieService#add(Serie)} with not cached series.
+     */
     @Test
     public void testAddWithNotCachedSeries() {
         final Serie serie = generate(Serie.class);
@@ -358,7 +414,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#add(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieService#add(Serie)} with null argument.
+     */
     @Test
     public void testAddWithNullArgument() {
         try {
@@ -371,7 +429,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#add(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#add(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testAddWithDAOTierException() {
         final Serie serie = generate(Serie.class);
@@ -389,7 +449,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link SerieService#update(Serie)}. */
+    /**
+     * Test method for {@link SerieService#update(Serie)}.
+     */
     @Test
     public void testUpdate() {
         final Serie serie = generate(Serie.class);
@@ -401,7 +463,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#update(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieService#update(Serie)} with null argument.
+     */
     @Test
     public void testUpdateWithNullArgument() {
         try {
@@ -414,7 +478,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#update(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#update(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testUpdateWithDAOTierException() {
         final Serie serie = generate(Serie.class);
@@ -432,7 +498,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieCache);
     }
 
-    /** Test method for {@link SerieService#remove(Serie)} with cached data. */
+    /**
+     * Test method for {@link SerieService#remove(Serie)} with cached data.
+     */
     @Test
     public void testRemoveWithCachedData() {
         final Serie serie = generate(Serie.class);
@@ -458,7 +526,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#remove(Serie)} with not cached data. */
+    /**
+     * Test method for {@link SerieService#remove(Serie)} with not cached data.
+     */
     @Test
     public void testRemoveWithNotCachedData() {
         final Serie serie = generate(Serie.class);
@@ -485,7 +555,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#remove(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieService#remove(Serie)} with null argument.
+     */
     @Test
     public void testRemoveWithNullArgument() {
         try {
@@ -498,7 +570,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#remove(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#remove(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testRemoveWithDAOTierException() {
         final Serie serie = generate(Serie.class);
@@ -518,7 +592,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, episodeDAO);
     }
 
-    /** Test method for {@link SerieService#duplicate(Serie)} with cached data. */
+    /**
+     * Test method for {@link SerieService#duplicate(Serie)} with cached data.
+     */
     @Test
     public void testDuplicateWithCachedData() {
         final Serie serie = generate(Serie.class);
@@ -545,7 +621,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#duplicate(Serie)} with not cached data. */
+    /**
+     * Test method for {@link SerieService#duplicate(Serie)} with not cached data.
+     */
     @Test
     public void testDuplicateWithNotCachedData() {
         final Serie serie = generate(Serie.class);
@@ -575,7 +653,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#duplicate(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieService#duplicate(Serie)} with null argument.
+     */
     @Test
     public void testDuplicateWithNullArgument() {
         try {
@@ -588,7 +668,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#duplicate(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#duplicate(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testDuplicateWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).add(any(Serie.class));
@@ -605,7 +687,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveUp(Serie)} with cached series. */
+    /**
+     * Test method for {@link SerieService#moveUp(Serie)} with cached series.
+     */
     @Test
     public void testMoveUpWithCachedSeries() {
         final Serie serie1 = generate(Serie.class);
@@ -626,7 +710,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveUp(Serie)} with not cached series. */
+    /**
+     * Test method for {@link SerieService#moveUp(Serie)} with not cached series.
+     */
     @Test
     public void testMoveUpWithNotCachedSeries() {
         final Serie serie1 = generate(Serie.class);
@@ -649,7 +735,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveUp(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieService#moveUp(Serie)} with null argument.
+     */
     @Test
     public void testMoveUpWithNullArgument() {
         try {
@@ -662,7 +750,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveUp(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#moveUp(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testMoveUpWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();
@@ -680,7 +770,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveDown(Serie)} with cached series. */
+    /**
+     * Test method for {@link SerieService#moveDown(Serie)} with cached series.
+     */
     @Test
     public void testMoveDownWithCachedSeries() {
         final Serie serie1 = generate(Serie.class);
@@ -701,7 +793,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveDown(Serie)} with not cached series. */
+    /**
+     * Test method for {@link SerieService#moveDown(Serie)} with not cached series.
+     */
     @Test
     public void testMoveDownWithNotCachedSeries() {
         final Serie serie1 = generate(Serie.class);
@@ -724,7 +818,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveDown(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieService#moveDown(Serie)} with null argument.
+     */
     @Test
     public void testMoveDownWithNullArgument() {
         try {
@@ -737,7 +833,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#moveDown(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#moveDown(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testMoveDownWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();
@@ -755,7 +853,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#exists(Serie)} with cached existing serie. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with cached existing serie.
+     */
     @Test
     public void testExistsWithCachedExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -768,7 +868,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO);
     }
 
-    /** Test method for {@link SerieService#exists(Serie)} with cached not existing serie. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with cached not existing serie.
+     */
     @Test
     public void testExistsWithCachedNotExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -781,7 +883,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO);
     }
 
-    /** Test method for {@link SerieService#exists(Serie)} with not cached existing serie. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with not cached existing serie.
+     */
     @Test
     public void testExistsWithNotCachedExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -796,7 +900,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#exists(Serie)} with not cached not existing serie. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with not cached not existing serie.
+     */
     @Test
     public void testExistsWithNotCachedNotExistingSerie() {
         final Serie serie = generate(Serie.class);
@@ -811,7 +917,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#exists(Serie)} with null argument. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with null argument.
+     */
     @Test
     public void testExistsWithNullArgument() {
         try {
@@ -824,7 +932,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#exists(Serie)} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#exists(Serie)} with exception in DAO tier.
+     */
     @Test
     public void testExistsWithDAOTierException() {
         final Serie serie = generate(Serie.class);
@@ -843,7 +953,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#updatePositions()} with cached data. */
+    /**
+     * Test method for {@link SerieService#updatePositions()} with cached data.
+     */
     @Test
     public void testUpdatePositionsWithCachedData() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -881,7 +993,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#updatePositions()} with not cached data. */
+    /**
+     * Test method for {@link SerieService#updatePositions()} with not cached data.
+     */
     @Test
     public void testUpdatePositionsWithNotCachedData() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -919,7 +1033,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#updatePositions()} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#updatePositions()} with exception in DAO tier.
+     */
     @Test
     public void testUpdatePositionsWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();
@@ -938,7 +1054,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO, episodeDAO);
     }
 
-    /** Test method for {@link SerieService#getTotalLength()} with cached series. */
+    /**
+     * Test method for {@link SerieService#getTotalLength()} with cached series.
+     */
     @Test
     public void testGetTotalLengthWithCachedSeries() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -978,7 +1096,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, seasonDAO, episodeDAO);
     }
 
-    /** Test method for {@link SerieService#getTotalLength()} with not cached series. */
+    /**
+     * Test method for {@link SerieService#getTotalLength()} with not cached series.
+     */
     @Test
     public void testGetTotalLengthWithNotCachedSeries() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -1020,7 +1140,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache, episode1, episode2);
     }
 
-    /** Test method for {@link SerieService#getTotalLength()} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#getTotalLength()} with exception in DAO tier.
+     */
     @Test
     public void testGetTotalLengthWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();
@@ -1038,7 +1160,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSeasonsCount()} with cached data. */
+    /**
+     * Test method for {@link SerieService#getSeasonsCount()} with cached data.
+     */
     @Test
     public void testGetSeasonsCountWithCachedData() {
         final Serie serie1 = generate(Serie.class);
@@ -1059,7 +1183,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, seasonDAO);
     }
 
-    /** Test method for {@link SerieService#getSeasonsCount()} with not cached data. */
+    /**
+     * Test method for {@link SerieService#getSeasonsCount()} with not cached data.
+     */
     @Test
     public void testGetSeasonsCountWithNotCachedSeasonCategories() {
         final Serie serie1 = generate(Serie.class);
@@ -1086,7 +1212,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getSeasonsCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#getSeasonsCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetSeasonsCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();
@@ -1105,7 +1233,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(seasonDAO);
     }
 
-    /** Test method for {@link SerieService#getEpisodesCount()} with cached data. */
+    /**
+     * Test method for {@link SerieService#getEpisodesCount()} with cached data.
+     */
     @Test
     public void testGetEpisodesCountWithCachedData() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -1132,7 +1262,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyZeroInteractions(serieDAO, seasonDAO, episodeDAO);
     }
 
-    /** Test method for {@link SerieService#getEpisodesCount()} with not cached data. */
+    /**
+     * Test method for {@link SerieService#getEpisodesCount()} with not cached data.
+     */
     @Test
     public void testGetEpisodesCountWithNotCachedSeasonCategories() {
         final List<Serie> series = CollectionUtils.newList(generate(Serie.class), generate(Serie.class));
@@ -1161,7 +1293,9 @@ public class SerieServiceImplTest extends ObjectGeneratorTest {
         verifyNoMoreInteractions(serieDAO, seasonDAO, episodeDAO, serieCache);
     }
 
-    /** Test method for {@link SerieService#getEpisodesCount()} with exception in DAO tier. */
+    /**
+     * Test method for {@link SerieService#getEpisodesCount()} with exception in DAO tier.
+     */
     @Test
     public void testGetEpisodesCountWithDAOTierException() {
         doThrow(DataStorageException.class).when(serieDAO).getSeries();

@@ -14,20 +14,28 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public abstract class ObjectGeneratorTest {
 
-    /** Instance of {@link ConfigurableApplicationContext} */
+    /**
+     * Instance of {@link ConfigurableApplicationContext}
+     */
     private static ConfigurableApplicationContext applicationContext;
 
-    /** Instance of {@link ObjectGenerator} */
+    /**
+     * Instance of {@link ObjectGenerator}
+     */
     private static ObjectGenerator objectGenerator;
 
-    /** Initialize instance of {@link ObjectGenerator}. */
+    /**
+     * Initialize instance of {@link ObjectGenerator}.
+     */
     @BeforeClass
     public static void setUpClass() {
         applicationContext = new ClassPathXmlApplicationContext("testGeneratorContext.xml");
         objectGenerator = applicationContext.getBean(ObjectGenerator.class);
     }
 
-    /** Closes application context. */
+    /**
+     * Closes application context.
+     */
     @AfterClass
     public static void tearDownClass() {
         applicationContext.close();

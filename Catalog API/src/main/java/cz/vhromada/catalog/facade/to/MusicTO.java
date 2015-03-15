@@ -9,28 +9,44 @@ import java.io.Serializable;
  */
 public class MusicTO implements Comparable<MusicTO>, Serializable {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String name;
 
-    /** URL to english Wikipedia page about music */
+    /**
+     * URL to english Wikipedia page about music
+     */
     private String wikiEn;
 
-    /** URL to czech Wikipedia page about music */
+    /**
+     * URL to czech Wikipedia page about music
+     */
     private String wikiCz;
 
-    /** Count of media */
+    /**
+     * Count of media
+     */
     private int mediaCount;
 
-    /** Note */
+    /**
+     * Note
+     */
     private String note;
 
-    /** Position */
+    /**
+     * Position
+     */
     private int position;
 
     /**

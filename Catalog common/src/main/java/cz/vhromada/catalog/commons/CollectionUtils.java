@@ -11,7 +11,9 @@ import java.util.List;
  */
 public final class CollectionUtils {
 
-    /** Creates a new instance of CollectionUtils. */
+    /**
+     * Creates a new instance of CollectionUtils.
+     */
     private CollectionUtils() {
     }
 

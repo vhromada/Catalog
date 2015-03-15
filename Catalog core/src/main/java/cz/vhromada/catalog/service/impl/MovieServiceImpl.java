@@ -25,31 +25,49 @@ import org.springframework.stereotype.Component;
 @Component("movieService")
 public class MovieServiceImpl extends AbstractService<Movie> implements MovieService {
 
-    /** DAO for movies field */
+    /**
+     * DAO for movies field
+     */
     private static final String MOVIE_DAO_ARGUMENT = "DAO for movies";
 
-    /** Cache for movies field */
+    /**
+     * Cache for movies field
+     */
     private static final String MOVIE_CACHE_ARGUMENT = "Cache for movies";
 
-    /** Movie argument */
+    /**
+     * Movie argument
+     */
     private static final String MOVIE_ARGUMENT = "Movie";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link ServiceOperationException} */
+    /**
+     * Message for {@link ServiceOperationException}
+     */
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
-    /** Cache key for list of movies */
+    /**
+     * Cache key for list of movies
+     */
     private static final String MOVIES_CACHE_KEY = "movies";
 
-    /** Cache key for movie */
+    /**
+     * Cache key for movie
+     */
     private static final String MOVIE_CACHE_KEY = "movie";
 
-    /** DAO for movies */
+    /**
+     * DAO for movies
+     */
     private MovieDAO movieDAO;
 
-    /** Cache for movies */
+    /**
+     * Cache for movies
+     */
     private Cache movieCache;
 
     /**

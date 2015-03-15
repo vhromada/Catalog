@@ -22,34 +22,54 @@ import org.springframework.stereotype.Component;
 @Component("genreService")
 public class GenreServiceImpl extends AbstractService<Genre> implements GenreService {
 
-    /** DAO for genres field */
+    /**
+     * DAO for genres field
+     */
     private static final String GENRE_DAO_ARGUMENT = "DAO for genres";
 
-    /** Cache for genres field */
+    /**
+     * Cache for genres field
+     */
     private static final String GENRE_CACHE_ARGUMENT = "Cache for genres";
 
-    /** Genre argument */
+    /**
+     * Genre argument
+     */
     private static final String GENRE_ARGUMENT = "Genre";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Genre names argument */
+    /**
+     * Genre names argument
+     */
     private static final String GENRE_NAMES_ARGUMENT = "List of genre names";
 
-    /** Message for {@link ServiceOperationException} */
+    /**
+     * Message for {@link ServiceOperationException}
+     */
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
-    /** Cache key for list of genres */
+    /**
+     * Cache key for list of genres
+     */
     private static final String GENRES_CACHE_KEY = "genres";
 
-    /** Cache key for genre */
+    /**
+     * Cache key for genre
+     */
     private static final String GENRE_CACHE_KEY = "genre";
 
-    /** DAO for genres */
+    /**
+     * DAO for genres
+     */
     private GenreDAO genreDAO;
 
-    /** Cache for genres */
+    /**
+     * Cache for genres
+     */
     private Cache genreCache;
 
     /**

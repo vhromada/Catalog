@@ -7,7 +7,9 @@ package cz.vhromada.catalog.service.domain;
  */
 public final class CacheValue<T> {
 
-    /** Value */
+    /**
+     * Value
+     */
     private T value;
 
     /**

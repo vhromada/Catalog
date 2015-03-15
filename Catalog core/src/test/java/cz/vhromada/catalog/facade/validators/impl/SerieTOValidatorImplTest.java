@@ -19,10 +19,14 @@ import org.junit.Test;
  */
 public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
 
-    /** Instance of {@link SerieTOValidator} */
+    /**
+     * Instance of {@link SerieTOValidator}
+     */
     private SerieTOValidator serieTOValidator;
 
-    /** Initializes validator for TO for serie. */
+    /**
+     * Initializes validator for TO for serie.
+     */
     @Before
     public void setUp() {
         serieTOValidator = new SerieTOValidatorImpl(new GenreTOValidatorImpl());
@@ -37,19 +41,25 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         new SerieTOValidatorImpl(null);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewSerieTOWithNullArgument() {
         serieTOValidator.validateNewSerieTO(null);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with not null ID. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with not null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNotNullId() {
         serieTOValidator.validateNewSerieTO(ToGenerator.newSerieWithId(getObjectGenerator()));
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null czech name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null czech name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullCzechName() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -58,7 +68,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with empty string as czech name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with empty string as czech name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithEmptyCzechName() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -67,7 +79,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null original name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null original name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullOriginalName() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -76,7 +90,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with empty string as original name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with empty string as original name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithEmptyOriginalName() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -85,7 +101,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null URL to ČSFD page about serie. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null URL to ČSFD page about serie.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullCsfd() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -94,7 +112,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with bad minimal IMDB code. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with bad minimal IMDB code.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithBadMinimalImdb() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -103,7 +123,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with bad divider IMDB code. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with bad divider IMDB code.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithBadDividerImdb() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -112,7 +134,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with bad maximal IMDB code. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with bad maximal IMDB code.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithBadMaximalImdb() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -121,7 +145,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null URL to english Wikipedia page about serie. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null URL to english Wikipedia page about serie.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullWikiEn() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -130,7 +156,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null URL to czech Wikipedia page about serie. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null URL to czech Wikipedia page about serie.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullWikiCz() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -139,7 +167,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null path to file with serie's picture. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null path to file with serie's picture.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullPicture() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -147,7 +177,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null note. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullNote() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -156,7 +188,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with genres with null value. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with genres with null value.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithBadGenres() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -165,7 +199,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with genres with genre with null ID. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with genres with genre with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithGenresWithGenreWithNullId() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -174,7 +210,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with genres with genre with null name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateNewSerieTO(SerieTO)} with TO for serie with genres with genre with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithGenresWithGenreWithNullName() {
         final SerieTO serie = ToGenerator.newSerie(getObjectGenerator());
@@ -185,19 +223,25 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateNewSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingSerieTOWithNullArgument() {
         serieTOValidator.validateExistingSerieTO(null);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null ID. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateNewSerieTOWithNullId() {
         serieTOValidator.validateExistingSerieTO(ToGenerator.newSerie(getObjectGenerator()));
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null czech name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null czech name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullCzechName() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -206,7 +250,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with empty string as czech name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with empty string as czech name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithEmptyCzechName() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -215,7 +261,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null original name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null original name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullOriginalName() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -224,7 +272,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with empty string as original name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with empty string as original name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithEmptyOriginalName() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -233,7 +283,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null URL to ČSFD page about serie. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null URL to ČSFD page about serie.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullCsfd() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -242,7 +294,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with bad minimal IMDB code. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with bad minimal IMDB code.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithBadMinimalImdb() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -251,7 +305,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with bad divider IMDB code. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with bad divider IMDB code.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithBadDividerImdb() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -260,7 +316,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with bad maximal IMDB code. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with bad maximal IMDB code.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithBadMaximalImdb() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -269,7 +327,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null URL to english Wikipedia page about serie. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null URL to english Wikipedia page about serie.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullWikiEn() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -278,7 +338,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null URL to czech Wikipedia page about serie. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null URL to czech Wikipedia page about serie.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullWikiCz() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -287,7 +349,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null path to file with serie's picture. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null path to file with serie's picture.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullPicture() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -296,7 +360,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null note. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null note.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullNote() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -305,7 +371,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null genres. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with null genres.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithNullGenres() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -314,7 +382,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with genres with null value. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with genres with null value.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithBadGenres() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -323,7 +393,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with genres with genre with null ID. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with genres with genre with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithGenresWithGenreWithNullId() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -332,7 +404,9 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with genres with genre with null name. */
+    /**
+     * Test method for {@link SerieTOValidator#validateExistingSerieTO(SerieTO)} with TO for serie with genres with genre with null name.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSerieTOWithGenresWithGenreWithNullName() {
         final SerieTO serie = ToGenerator.newSerieWithId(getObjectGenerator());
@@ -343,13 +417,17 @@ public class SerieTOValidatorImplTest extends ObjectGeneratorTest {
         serieTOValidator.validateExistingSerieTO(serie);
     }
 
-    /** Test method for {@link SerieTOValidator#validateSerieTOWithId(SerieTO)} with null argument. */
+    /**
+     * Test method for {@link SerieTOValidator#validateSerieTOWithId(SerieTO)} with null argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateSerieTOWithIdWithNullArgument() {
         serieTOValidator.validateSerieTOWithId(null);
     }
 
-    /** Test method for {@link SerieTOValidator#validateSerieTOWithId(SerieTO)} with TO for serie with null ID. */
+    /**
+     * Test method for {@link SerieTOValidator#validateSerieTOWithId(SerieTO)} with TO for serie with null ID.
+     */
     @Test(expected = ValidationException.class)
     public void testValidateSerieTOWithIdWithNullId() {
         serieTOValidator.validateSerieTOWithId(ToGenerator.newSerie(getObjectGenerator()));

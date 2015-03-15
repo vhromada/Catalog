@@ -24,22 +24,34 @@ import org.springframework.stereotype.Component;
 @Component("bookService")
 public class BookServiceImpl extends AbstractBookService implements BookService {
 
-    /** DAO for books field */
+    /**
+     * DAO for books field
+     */
     private static final String BOOK_DAO_ARGUMENT = "DAO for books";
 
-    /** Book category argument */
+    /**
+     * Book category argument
+     */
     private static final String BOOK_CATEGORY_ARGUMENT = "Book category";
 
-    /** Book argument */
+    /**
+     * Book argument
+     */
     private static final String BOOK_ARGUMENT = "Book";
 
-    /** ID argument */
+    /**
+     * ID argument
+     */
     private static final String ID_ARGUMENT = "ID";
 
-    /** Message for {@link ServiceOperationException} */
+    /**
+     * Message for {@link ServiceOperationException}
+     */
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
-    /** DAO for books */
+    /**
+     * DAO for books
+     */
     private BookDAO bookDAO;
 
     /**

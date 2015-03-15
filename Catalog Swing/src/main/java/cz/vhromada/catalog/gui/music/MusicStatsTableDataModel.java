@@ -16,25 +16,39 @@ import cz.vhromada.validators.Validators;
  */
 public class MusicStatsTableDataModel extends AbstractTableModel {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Error message for bad column */
+    /**
+     * Error message for bad column
+     */
     private static final String BAD_COLUMN_ERROR_MESSAGE = "Bad column";
 
-    /** Facade for music */
+    /**
+     * Facade for music
+     */
     private MusicFacade musicFacade;
 
-    /** List of TO for music */
+    /**
+     * List of TO for music
+     */
     private List<MusicTO> musicList;
 
-    /** Total count of media */
+    /**
+     * Total count of media
+     */
     private int totalMediaCount;
 
-    /** Cunt of songs from all music */
+    /**
+     * Cunt of songs from all music
+     */
     private int songsCount;
 
-    /** Total length of all songs */
+    /**
+     * Total length of all songs
+     */
     private Time totalLength;
 
     /**
@@ -137,7 +151,9 @@ public class MusicStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /** Updates model. */
+    /**
+     * Updates model.
+     */
     public final void update() {
         musicList = musicFacade.getMusic();
         totalMediaCount = musicFacade.getTotalMediaCount();

@@ -14,67 +14,109 @@ import cz.vhromada.catalog.gui.commons.InputValidator;
  */
 public class GameInfoDialog extends AbstractInfoDialog<GameTO> {
 
-    /** SerialVersionUID */
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
-    /** Label for name */
+    /**
+     * Label for name
+     */
     private JLabel nameLabel = new JLabel("Name");
 
-    /** Text field for name */
+    /**
+     * Text field for name
+     */
     private JTextField nameData = new JTextField();
 
-    /** Label for czech Wikipedia */
+    /**
+     * Label for czech Wikipedia
+     */
     private JLabel wikiCzLabel = new JLabel("Czech Wikipedia");
 
-    /** Text field for czech Wikipedia */
+    /**
+     * Text field for czech Wikipedia
+     */
     private JTextField wikiCzData = new JTextField();
 
-    /** Label for english Wikipedia */
+    /**
+     * Label for english Wikipedia
+     */
     private JLabel wikiEnLabel = new JLabel("English Wikipedia");
 
-    /** Text field for english Wikipedia */
+    /**
+     * Text field for english Wikipedia
+     */
     private JTextField wikiEnData = new JTextField();
 
-    /** Label for count of media */
+    /**
+     * Label for count of media
+     */
     private JLabel mediaCountLabel = new JLabel("Count of media");
 
-    /** Spinner for count of media */
+    /**
+     * Spinner for count of media
+     */
     private JSpinner mediaCountData = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
-    /** Check box for crack */
+    /**
+     * Check box for crack
+     */
     private JCheckBox crackData = new JCheckBox("Crack");
 
-    /** Check box for serial key */
+    /**
+     * Check box for serial key
+     */
     private JCheckBox serialData = new JCheckBox("Serial key");
 
-    /** Check box for patch */
+    /**
+     * Check box for patch
+     */
     private JCheckBox patchData = new JCheckBox("Patch");
 
-    /** Check box for trainer */
+    /**
+     * Check box for trainer
+     */
     private JCheckBox trainerData = new JCheckBox("Trainer");
 
-    /** Check box for data for trainer */
+    /**
+     * Check box for data for trainer
+     */
     private JCheckBox trainerDataData = new JCheckBox("Data for trainer");
 
-    /** Check box for editor */
+    /**
+     * Check box for editor
+     */
     private JCheckBox editorData = new JCheckBox("Editor");
 
-    /** Check box for saves */
+    /**
+     * Check box for saves
+     */
     private JCheckBox savesData = new JCheckBox("Saves");
 
-    /** Label for other data */
+    /**
+     * Label for other data
+     */
     private JLabel otherDataLabel = new JLabel("Other data");
 
-    /** Text field for other data */
+    /**
+     * Text field for other data
+     */
     private JTextField otherDataData = new JTextField();
 
-    /** Label for note */
+    /**
+     * Label for note
+     */
     private JLabel noteLabel = new JLabel("Note");
 
-    /** Text field for note */
+    /**
+     * Text field for note
+     */
     private JTextField noteData = new JTextField();
 
-    /** Creates a new instance of GameInfoDialog. */
+    /**
+     * Creates a new instance of GameInfoDialog.
+     */
     public GameInfoDialog() {
         super();
 

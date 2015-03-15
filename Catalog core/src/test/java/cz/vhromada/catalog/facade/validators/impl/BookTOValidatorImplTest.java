@@ -7,6 +7,7 @@ import cz.vhromada.catalog.commons.ToGenerator;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.validators.BookTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 

@@ -15,8 +15,7 @@ public interface MovieService {
     /**
      * Creates new data.
      *
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *          if there was error in working with DAO tier
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void newData();
 
@@ -24,8 +23,7 @@ public interface MovieService {
      * Returns list of movies.
      *
      * @return list of movies
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *          if there was error in working with DAO tier
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     List<Movie> getMovies();
 
@@ -34,9 +32,8 @@ public interface MovieService {
      *
      * @param id ID
      * @return movie with ID or null if there isn't such movie
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *          if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if ID is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     Movie getMovie(Integer id);
 
@@ -44,9 +41,8 @@ public interface MovieService {
      * Adds movie. Sets new ID and position.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if movie is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void add(Movie movie);
 
@@ -54,9 +50,8 @@ public interface MovieService {
      * Updates movie.
      *
      * @param movie new value of movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if movie is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void update(Movie movie);
 
@@ -64,9 +59,8 @@ public interface MovieService {
      * Removes movie.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if movie is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void remove(Movie movie);
 
@@ -74,9 +68,8 @@ public interface MovieService {
      * Duplicates movie.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if movie is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void duplicate(Movie movie);
 
@@ -84,9 +77,8 @@ public interface MovieService {
      * Moves movie in list one position up.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if movie is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void moveUp(Movie movie);
 
@@ -94,9 +86,8 @@ public interface MovieService {
      * Moves movie in list one position down.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if movie is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void moveDown(Movie movie);
 
@@ -105,17 +96,15 @@ public interface MovieService {
      *
      * @param movie movie
      * @return true if movie exists
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if movie is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     boolean exists(Movie movie);
 
     /**
      * Updates positions.
      *
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *          if there was error in working with DAO tier
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void updatePositions();
 
@@ -123,8 +112,7 @@ public interface MovieService {
      * Returns total count of media.
      *
      * @return total count of media
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *          if there was error in working with DAO tier
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     int getTotalMediaCount();
 
@@ -132,8 +120,7 @@ public interface MovieService {
      * Returns total length of all movies.
      *
      * @return total length of all movies
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *          if there was error in working with DAO tier
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     Time getTotalLength();
 

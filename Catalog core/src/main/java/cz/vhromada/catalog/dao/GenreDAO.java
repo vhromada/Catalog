@@ -15,8 +15,7 @@ public interface GenreDAO {
      * Returns list of genres.
      *
      * @return list of genres
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *          if there was error with working with data storage
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     List<Genre> getGenres();
 
@@ -25,9 +24,8 @@ public interface GenreDAO {
      *
      * @param id ID
      * @return genre with ID or null if there isn't such genre
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if ID is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     Genre getGenre(Integer id);
 
@@ -35,9 +33,8 @@ public interface GenreDAO {
      * Adds genre. Sets new ID.
      *
      * @param genre genre
-     * @throws IllegalArgumentException if genre is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if genre is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void add(Genre genre);
 
@@ -45,9 +42,8 @@ public interface GenreDAO {
      * Updates genre.
      *
      * @param genre new value of genre
-     * @throws IllegalArgumentException if genre is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if genre is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void update(Genre genre);
 
@@ -55,9 +51,8 @@ public interface GenreDAO {
      * Removes genre.
      *
      * @param genre genre
-     * @throws IllegalArgumentException if genre is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if genre is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void remove(Genre genre);
 

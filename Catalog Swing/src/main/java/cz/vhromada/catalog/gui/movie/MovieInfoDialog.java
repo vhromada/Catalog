@@ -217,9 +217,9 @@ public class MovieInfoDialog extends JDialog {
      * Creates a new instance of MovieInfoDialog.
      *
      * @param genreFacade facade for genres
-     * @param movie TO for movie
+     * @param movie       TO for movie
      * @throws IllegalArgumentException if facade for genres is null
-     * or TO for serie is null
+     *                                  or TO for serie is null
      */
     public MovieInfoDialog(final GenreFacade genreFacade, final MovieTO movie) {
         this("Update", Picture.UPDATE, genreFacade);
@@ -275,8 +275,8 @@ public class MovieInfoDialog extends JDialog {
     /**
      * Creates a new instance of MovieInfoDialog.
      *
-     * @param name    name
-     * @param picture picture
+     * @param name        name
+     * @param picture     picture
      * @param genreFacade facade for genres
      * @throws IllegalArgumentException if facade for genres is null
      */
@@ -543,7 +543,7 @@ public class MovieInfoDialog extends JDialog {
     /**
      * Returns medium.
      *
-     * @param hoursData data for hours
+     * @param hoursData   data for hours
      * @param minutesData data for minutes
      * @param secondsData data for seconds
      * @return medium

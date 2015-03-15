@@ -64,11 +64,11 @@ public class GenreChooseDialog extends JDialog {
 
     /**
      * Creates a new instance of GenreChooseDialog.
-
+     *
      * @param genreFacade facade for genres
-     * @param genres list of TO for genre
+     * @param genres      list of TO for genre
      * @throws IllegalArgumentException if facade for genres is null
-     * or list of TO for genre is null
+     *                                  or list of TO for genre is null
      */
     public GenreChooseDialog(final GenreFacade genreFacade, final List<GenreTO> genres) {
         super(new JFrame(), "Choose", true);

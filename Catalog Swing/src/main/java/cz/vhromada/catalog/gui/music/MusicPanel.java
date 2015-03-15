@@ -95,7 +95,7 @@ public class MusicPanel extends JPanel {
      * Creates a new instance of MusicPanel.
      *
      * @param musicFacade facade for music
-     * @param songFacade facade for songs
+     * @param songFacade  facade for songs
      * @throws IllegalArgumentException if facade for music is null
      *                                  or facade for songs is null
      */

@@ -15,8 +15,7 @@ public interface ProgramDAO {
      * Returns list of programs.
      *
      * @return list of programs
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *          if there was error with working with data storage
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     List<Program> getPrograms();
 
@@ -25,9 +24,8 @@ public interface ProgramDAO {
      *
      * @param id ID
      * @return program with ID or null if there isn't such program
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if ID is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     Program getProgram(Integer id);
 
@@ -35,9 +33,8 @@ public interface ProgramDAO {
      * Adds program. Sets new ID and position.
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if program is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void add(Program program);
 
@@ -45,9 +42,8 @@ public interface ProgramDAO {
      * Updates program.
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if program is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void update(Program program);
 
@@ -55,9 +51,8 @@ public interface ProgramDAO {
      * Removes program.
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if program is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void remove(Program program);
 

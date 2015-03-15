@@ -79,7 +79,7 @@ public class EpisodesPanel extends JPanel {
      * Creates a new instance of EpisodesPanel.
      *
      * @param episodeFacade facade for episodes
-     * @param season       TO for season
+     * @param season        TO for season
      * @throws IllegalArgumentException if facade for episodes is null
      *                                  or TO for season is null
      */

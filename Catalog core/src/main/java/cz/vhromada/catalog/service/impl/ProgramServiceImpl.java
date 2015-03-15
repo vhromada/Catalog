@@ -8,6 +8,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.ProgramService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -51,7 +52,7 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     /**
      * Creates a new instance of ProgramServiceImpl.
      *
-     * @param programDAO DAO for programs
+     * @param programDAO   DAO for programs
      * @param programCache cache for programs
      * @throws IllegalArgumentException if DAO for programs is null
      *                                  or cache for programs is null

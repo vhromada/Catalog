@@ -82,7 +82,7 @@ public class SeasonDataPanel extends JPanel {
     /**
      * Creates a new instance of SeasonDataPanel.
      *
-     * @param season TO for season
+     * @param season        TO for season
      * @param episodeFacade facade for episodes
      * @throws IllegalArgumentException if TO for season is null
      *                                  or facade for episodes is null

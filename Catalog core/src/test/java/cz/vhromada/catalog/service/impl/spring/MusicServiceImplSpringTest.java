@@ -17,6 +17,7 @@ import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.service.MusicService;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

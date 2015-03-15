@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.test.DeepAsserts;
+
 import org.dozer.MappingException;
 import org.junit.Before;
 import org.junit.Test;

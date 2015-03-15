@@ -16,6 +16,7 @@ import cz.vhromada.catalog.service.SongService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,11 +81,11 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * Creates a new instance of SongFacadeImpl.
      *
-     * @param musicService service for music
-     * @param songService service for songs
-     * @param converter converter
+     * @param musicService     service for music
+     * @param songService      service for songs
+     * @param converter        converter
      * @param musicTOValidator validator for TO for music
-     * @param songTOValidator validator for TO for song
+     * @param songTOValidator  validator for TO for song
      * @throws IllegalArgumentException if service for music is null
      *                                  or service for songs is null
      *                                  or converter is null
@@ -131,12 +132,10 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void add(final SongTO song) {
@@ -161,12 +160,10 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void update(final SongTO song) {
@@ -187,12 +184,10 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void remove(final SongTO song) {
@@ -210,12 +205,10 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void duplicate(final SongTO song) {
@@ -233,12 +226,10 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final SongTO song) {
@@ -258,12 +249,10 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveDown(final SongTO song) {
@@ -283,10 +272,9 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
@@ -303,12 +291,10 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)

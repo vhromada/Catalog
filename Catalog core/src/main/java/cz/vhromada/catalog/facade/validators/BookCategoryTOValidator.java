@@ -13,12 +13,11 @@ public interface BookCategoryTOValidator {
      * Validates new TO for book category.
      *
      * @param bookCategory validating TO for book category
-     * @throws IllegalArgumentException if TO for book category is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or note is null
+     * @throws IllegalArgumentException                              if TO for book category is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
+     *                                                               or name is null
+     *                                                               or name is empty string
+     *                                                               or note is null
      */
     void validateNewBookCategoryTO(BookCategoryTO bookCategory);
 
@@ -26,12 +25,11 @@ public interface BookCategoryTOValidator {
      * Validates existing TO for book category.
      *
      * @param bookCategory validating TO for book category
-     * @throws IllegalArgumentException if TO for book category is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or note is null
+     * @throws IllegalArgumentException                              if TO for book category is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if ID is null
+     *                                                               or name is null
+     *                                                               or name is empty string
+     *                                                               or note is null
      */
     void validateExistingBookCategoryTO(BookCategoryTO bookCategory);
 
@@ -39,9 +37,8 @@ public interface BookCategoryTOValidator {
      * Validates TO for book category with ID.
      *
      * @param bookCategory validating TO for book category
-     * @throws IllegalArgumentException if TO for book is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
+     * @throws IllegalArgumentException                              if TO for book is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if ID is null
      */
     void validateBookCategoryTOWithId(BookCategoryTO bookCategory);
 

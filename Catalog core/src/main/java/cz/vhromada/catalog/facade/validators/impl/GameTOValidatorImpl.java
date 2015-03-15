@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.validators.GameTOValidator;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,9 +17,8 @@ public class GameTOValidatorImpl implements GameTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateNewGameTO(final GameTO game) {
@@ -29,9 +29,8 @@ public class GameTOValidatorImpl implements GameTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateExistingGameTO(final GameTO game) {
@@ -42,9 +41,8 @@ public class GameTOValidatorImpl implements GameTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateGameTOWithId(final GameTO game) {
@@ -56,15 +54,14 @@ public class GameTOValidatorImpl implements GameTOValidator {
      * Validates TO for game.
      *
      * @param game TO for game
-     * @throws IllegalArgumentException if TO for game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about game is null
-     *                                  or URL to czech Wikipedia page about game is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @throws IllegalArgumentException                              if TO for game is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if name is null
+     *                                                               or name is empty string
+     *                                                               or URL to english Wikipedia page about game is null
+     *                                                               or URL to czech Wikipedia page about game is null
+     *                                                               or count of media isn't positive number
+     *                                                               or other data is null
+     *                                                               or note is null
      */
     private static void validateGameTO(final GameTO game) {
         Validators.validateArgumentNotNull(game, "TO for game");

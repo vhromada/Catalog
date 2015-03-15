@@ -13,6 +13,7 @@ import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +93,7 @@ public class MusicDataPanel extends JPanel {
     /**
      * Creates a new instance of MusicDataPanel.
      *
-     * @param music TO for music
+     * @param music      TO for music
      * @param songFacade facade for songs
      * @throws IllegalArgumentException if TO for music is null
      *                                  or facade for songs is null

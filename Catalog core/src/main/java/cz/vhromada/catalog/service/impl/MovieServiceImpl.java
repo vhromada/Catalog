@@ -11,6 +11,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.MovieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -54,7 +55,7 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     /**
      * Creates a new instance of MovieServiceImpl.
      *
-     * @param movieDAO DAO for movies
+     * @param movieDAO   DAO for movies
      * @param movieCache cache for movies
      * @throws IllegalArgumentException if DAO for movies is null
      *                                  or cache for movies is null

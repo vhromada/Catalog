@@ -9,6 +9,7 @@ import javax.swing.*;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,8 +193,8 @@ public class GameDataPanel extends JPanel {
      * Adds data to result.
      *
      * @param result result
-     * @param value value
-     * @param data data
+     * @param value  value
+     * @param data   data
      */
     private static void addToResult(final StringBuilder result, final boolean value, final String data) {
         if (value) {

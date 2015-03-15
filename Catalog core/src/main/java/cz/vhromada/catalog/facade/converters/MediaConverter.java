@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Medium;
+
 import org.dozer.CustomConverter;
 import org.dozer.Mapper;
 import org.dozer.MapperAware;

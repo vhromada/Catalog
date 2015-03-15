@@ -15,6 +15,7 @@ import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,9 +74,9 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * Creates a new instance of SerieFacadeImpl.
      *
-     * @param serieService service for series
-     * @param genreService service for genres
-     * @param converter converter
+     * @param serieService     service for series
+     * @param genreService     service for genres
+     * @param converter        converter
      * @param serieTOValidator validator for TO for serie
      * @throws IllegalArgumentException if service for series is null
      *                                  or service for genres is null
@@ -150,10 +151,9 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     public void add(final SerieTO serie) {
@@ -178,12 +178,10 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void update(final SerieTO serie) {
@@ -204,12 +202,10 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void remove(final SerieTO serie) {
@@ -227,10 +223,9 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     public void duplicate(final SerieTO serie) {
@@ -248,12 +243,10 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final SerieTO serie) {
@@ -273,12 +266,10 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveDown(final SerieTO serie) {
@@ -298,10 +289,9 @@ public class SerieFacadeImpl implements SerieFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)

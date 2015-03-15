@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.BookTO;
 import cz.vhromada.catalog.facade.validators.BookTOValidator;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,9 +17,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateNewBookTO(final BookTO book) {
@@ -29,9 +29,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateExistingBookTO(final BookTO book) {
@@ -42,9 +41,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateBookTOWithId(final BookTO book) {
@@ -56,19 +54,18 @@ public class BookTOValidatorImpl implements BookTOValidator {
      * Validates TO for book.
      *
      * @param book validating TO for book
-     * @throws IllegalArgumentException if TO for book is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if author is null
-     *                                  or author is empty string
-     *                                  or title is null
-     *                                  or title is empty string
-     *                                  or languages are null
-     *                                  or languages contain null value
-     *                                  or category is null
-     *                                  or category is empty string
-     *                                  or note is null
-     *                                  or TO for book category is null
-     *                                  or TO for book category ID is null
+     * @throws IllegalArgumentException                              if TO for book is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if author is null
+     *                                                               or author is empty string
+     *                                                               or title is null
+     *                                                               or title is empty string
+     *                                                               or languages are null
+     *                                                               or languages contain null value
+     *                                                               or category is null
+     *                                                               or category is empty string
+     *                                                               or note is null
+     *                                                               or TO for book category is null
+     *                                                               or TO for book category ID is null
      */
     private static void validateBookTO(final BookTO book) {
         Validators.validateArgumentNotNull(book, "TO for book");

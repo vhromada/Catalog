@@ -16,6 +16,7 @@ import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.test.DeepAsserts;
+
 import org.dozer.Mapper;
 import org.junit.Before;
 import org.junit.Test;

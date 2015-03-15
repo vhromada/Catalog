@@ -16,6 +16,7 @@ import cz.vhromada.catalog.service.BookService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,11 +81,11 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * Creates a new instance of BookFacadeImpl.
      *
-     * @param bookCategoryService service for book categories
-     * @param bookService service for book
-     * @param converter converter
+     * @param bookCategoryService     service for book categories
+     * @param bookService             service for book
+     * @param converter               converter
      * @param bookCategoryTOValidator validator for TO for book category
-     * @param bookTOValidator validator for TO for book
+     * @param bookTOValidator         validator for TO for book
      * @throws IllegalArgumentException if service for book categories is null
      *                                  or service for books is null
      *                                  or converter is null
@@ -130,12 +131,10 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void add(final BookTO book) {
@@ -160,12 +159,10 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void update(final BookTO book) {
@@ -186,12 +183,10 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void remove(final BookTO book) {
@@ -209,12 +204,10 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void duplicate(final BookTO book) {
@@ -232,12 +225,10 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final BookTO book) {
@@ -257,12 +248,10 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveDown(final BookTO book) {
@@ -282,10 +271,9 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
@@ -302,12 +290,10 @@ public class BookFacadeImpl implements BookFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)

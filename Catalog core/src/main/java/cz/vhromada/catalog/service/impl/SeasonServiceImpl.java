@@ -12,6 +12,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -52,7 +53,7 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     /**
      * Creates a new instance of SeasonServiceImpl.
      *
-     * @param seasonDAO DAO for seasons
+     * @param seasonDAO  DAO for seasons
      * @param episodeDAO DAO for episodes
      * @param serieCache cache for series
      * @throws IllegalArgumentException if DAO for seasons is null

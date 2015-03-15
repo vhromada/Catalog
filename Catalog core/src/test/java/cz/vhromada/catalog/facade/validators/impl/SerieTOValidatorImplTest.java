@@ -8,6 +8,7 @@ import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.facade.validators.SerieTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 

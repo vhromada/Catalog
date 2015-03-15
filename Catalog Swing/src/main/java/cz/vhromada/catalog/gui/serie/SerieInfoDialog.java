@@ -143,9 +143,9 @@ public class SerieInfoDialog extends JDialog {
      * Creates a new instance of SerieInfoDialog.
      *
      * @param genreFacade facade for genres
-     * @param serie TO for serie
+     * @param serie       TO for serie
      * @throws IllegalArgumentException if facade for genres is null
-     * or TO for serie is null
+     *                                  or TO for serie is null
      */
     public SerieInfoDialog(final GenreFacade genreFacade, final SerieTO serie) {
         this("Update", Picture.UPDATE, genreFacade);
@@ -176,8 +176,8 @@ public class SerieInfoDialog extends JDialog {
     /**
      * Creates a new instance of SerieInfoDialog.
      *
-     * @param name    name
-     * @param picture picture
+     * @param name        name
+     * @param picture     picture
      * @param genreFacade facade for genres
      * @throws IllegalArgumentException if facade for genres is null
      */

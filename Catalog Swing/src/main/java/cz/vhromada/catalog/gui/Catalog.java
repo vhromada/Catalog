@@ -29,6 +29,7 @@ import cz.vhromada.catalog.gui.music.MusicPanel;
 import cz.vhromada.catalog.gui.program.ProgramsPanel;
 import cz.vhromada.catalog.gui.serie.SeriesPanel;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**

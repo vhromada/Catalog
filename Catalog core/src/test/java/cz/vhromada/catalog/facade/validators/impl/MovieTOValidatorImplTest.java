@@ -9,6 +9,7 @@ import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.validators.MovieTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,8 +30,8 @@ public class MovieTOValidatorImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link MovieTOValidatorImpl#MovieTOValidatorImpl(cz.vhromada.catalog.facade.validators.GenreTOValidator)} with null validator for 
-     * TO for genre. 
+     * Test method for {@link MovieTOValidatorImpl#MovieTOValidatorImpl(cz.vhromada.catalog.facade.validators.GenreTOValidator)} with null validator for
+     * TO for genre.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullGenreTOValidator() {

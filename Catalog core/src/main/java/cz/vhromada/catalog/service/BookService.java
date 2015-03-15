@@ -17,9 +17,8 @@ public interface BookService {
      *
      * @param id ID
      * @return book with ID or null if there isn't such book
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if ID is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     Book getBook(Integer id);
 
@@ -27,9 +26,8 @@ public interface BookService {
      * Adds book. Sets new ID and position.
      *
      * @param book book
-     * @throws IllegalArgumentException if book is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void add(Book book);
 
@@ -37,9 +35,8 @@ public interface BookService {
      * Updates book.
      *
      * @param book new value of book
-     * @throws IllegalArgumentException if book is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void update(Book book);
 
@@ -47,9 +44,8 @@ public interface BookService {
      * Removes book.
      *
      * @param book book
-     * @throws IllegalArgumentException if book is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void remove(Book book);
 
@@ -57,9 +53,8 @@ public interface BookService {
      * Duplicates book.
      *
      * @param book book
-     * @throws IllegalArgumentException if book is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void duplicate(Book book);
 
@@ -67,9 +62,8 @@ public interface BookService {
      * Moves book in list one position up.
      *
      * @param book book
-     * @throws IllegalArgumentException if book is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void moveUp(Book book);
 
@@ -77,9 +71,8 @@ public interface BookService {
      * Moves book in list one position down.
      *
      * @param book book
-     * @throws IllegalArgumentException if book is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void moveDown(Book book);
 
@@ -88,9 +81,8 @@ public interface BookService {
      *
      * @param book book
      * @return true if book exists
-     * @throws IllegalArgumentException if book is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     boolean exists(Book book);
 
@@ -99,9 +91,8 @@ public interface BookService {
      *
      * @param bookCategory book category
      * @return list of books for specified book category
-     * @throws IllegalArgumentException if book category is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if book category is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     List<Book> findBooksByBookCategory(BookCategory bookCategory);
 

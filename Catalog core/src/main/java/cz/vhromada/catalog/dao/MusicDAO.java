@@ -15,8 +15,7 @@ public interface MusicDAO {
      * Returns list of music.
      *
      * @return list of music
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *          if there was error with working with data storage
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     List<Music> getMusic();
 
@@ -25,9 +24,8 @@ public interface MusicDAO {
      *
      * @param id ID
      * @return music with ID or null if there isn't such music
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if ID is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     Music getMusic(Integer id);
 
@@ -35,9 +33,8 @@ public interface MusicDAO {
      * Adds music. Sets new ID and position.
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if music is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void add(Music music);
 
@@ -45,9 +42,8 @@ public interface MusicDAO {
      * Updates music.
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if music is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void update(Music music);
 
@@ -55,9 +51,8 @@ public interface MusicDAO {
      * Removes music.
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if music is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void remove(Music music);
 

@@ -32,7 +32,7 @@ public class EpisodesListDataModel extends AbstractListModel<String> {
      * Creates a new instance of EpisodesListDataModel.
      *
      * @param episodeFacade facade for episodes
-     * @param season       TO for season
+     * @param season        TO for season
      * @throws IllegalArgumentException if facade for episodes is null
      *                                  or TO for season is null
      */

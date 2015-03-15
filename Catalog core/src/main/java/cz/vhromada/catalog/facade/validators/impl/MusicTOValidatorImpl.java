@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,9 +17,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateNewMusicTO(final MusicTO music) {
@@ -29,9 +29,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateExistingMusicTO(final MusicTO music) {
@@ -42,9 +41,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateMusicTOWithId(final MusicTO music) {
@@ -56,14 +54,13 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
      * Validates TO for music.
      *
      * @param music validating TO for music
-     * @throws IllegalArgumentException if TO for music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about music is null
-     *                                  or URL to czech Wikipedia page about music is null
-     *                                  or count of media isn't positive number
-     *                                  or note is null
+     * @throws IllegalArgumentException                              if TO for music is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if name is null
+     *                                                               or name is empty string
+     *                                                               or URL to english Wikipedia page about music is null
+     *                                                               or URL to czech Wikipedia page about music is null
+     *                                                               or count of media isn't positive number
+     *                                                               or note is null
      */
     private static void validateMusicTO(final MusicTO music) {
         Validators.validateArgumentNotNull(music, "TO for music");

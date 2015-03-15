@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.dao.impl;
 
 import cz.vhromada.catalog.dao.impl.spring.DAOImplSpringSuite;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

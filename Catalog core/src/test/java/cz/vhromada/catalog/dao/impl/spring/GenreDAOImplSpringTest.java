@@ -10,6 +10,7 @@ import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

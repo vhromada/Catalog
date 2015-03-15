@@ -8,6 +8,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.GenreService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -54,7 +55,7 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     /**
      * Creates a new instance of GenreServiceImpl.
      *
-     * @param genreDAO DAO for genres
+     * @param genreDAO   DAO for genres
      * @param genreCache cache for genres
      * @throws IllegalArgumentException if DAO for genres is null
      *                                  or cache for genres is null

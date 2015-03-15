@@ -18,9 +18,8 @@ public interface SongService {
      *
      * @param id ID
      * @return song with ID or null if there isn't such song
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if ID is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     Song getSong(Integer id);
 
@@ -28,9 +27,8 @@ public interface SongService {
      * Adds song. Sets new ID and position.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if song is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void add(Song song);
 
@@ -38,9 +36,8 @@ public interface SongService {
      * Updates song.
      *
      * @param song new value of song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if song is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void update(Song song);
 
@@ -48,9 +45,8 @@ public interface SongService {
      * Removes song.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if song is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void remove(Song song);
 
@@ -58,9 +54,8 @@ public interface SongService {
      * Duplicates song.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if song is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void duplicate(Song song);
 
@@ -68,9 +63,8 @@ public interface SongService {
      * Moves song in list one position up.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if song is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void moveUp(Song song);
 
@@ -78,9 +72,8 @@ public interface SongService {
      * Moves song in list one position down.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if song is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     void moveDown(Song song);
 
@@ -89,9 +82,8 @@ public interface SongService {
      *
      * @param song song
      * @return true if song exists
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if song is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     boolean exists(Song song);
 
@@ -100,9 +92,8 @@ public interface SongService {
      *
      * @param music music
      * @return list of songs for specified music
-     * @throws IllegalArgumentException if music is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error in working with DAO tier
+     * @throws IllegalArgumentException                                         if music is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     List<Song> findSongsByMusic(Music music);
 
@@ -111,9 +102,8 @@ public interface SongService {
      *
      * @param music music
      * @return total length of songs for specified music
-     * @throws IllegalArgumentException if music is null
-     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException
-     *                                  if there was error with working with DAO tier
+     * @throws IllegalArgumentException                                         if music is null
+     * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error with working with DAO tier
      */
     Time getTotalLengthByMusic(Music music);
 

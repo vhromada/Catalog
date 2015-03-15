@@ -16,6 +16,7 @@ import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.validators.Validators;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,8 +132,8 @@ public class SerieDataPanel extends JPanel {
     /**
      * Creates a new instance of SerieDataPanel.
      *
-     * @param serie TO for serie
-     * @param seasonFacade facade for seasons
+     * @param serie         TO for serie
+     * @param seasonFacade  facade for seasons
      * @param episodeFacade facade for episodes
      * @throws IllegalArgumentException if serie is null
      *                                  or facade for seasons is null

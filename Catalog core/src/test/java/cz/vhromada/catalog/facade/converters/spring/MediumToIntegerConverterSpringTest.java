@@ -6,6 +6,7 @@ import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

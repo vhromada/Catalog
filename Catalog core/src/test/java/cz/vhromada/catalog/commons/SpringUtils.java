@@ -20,6 +20,7 @@ import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.test.DeepAsserts;
+
 import net.sf.ehcache.Ehcache;
 import org.springframework.cache.Cache;
 import org.springframework.transaction.PlatformTransactionManager;

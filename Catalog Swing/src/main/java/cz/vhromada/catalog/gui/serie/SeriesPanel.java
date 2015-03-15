@@ -102,10 +102,10 @@ public class SeriesPanel extends JPanel {
     /**
      * Creates a new instance of SeriesPanel.
      *
-     * @param serieFacade facade for series
-     * @param seasonFacade facade for episodes
+     * @param serieFacade   facade for series
+     * @param seasonFacade  facade for episodes
      * @param episodeFacade facade for episodes
-     * @param genreFacade facade for genres
+     * @param genreFacade   facade for genres
      * @throws IllegalArgumentException if facade for series is null
      *                                  or facade for seasons is null
      *                                  or facade for episodes is null

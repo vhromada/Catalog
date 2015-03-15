@@ -10,6 +10,7 @@ import cz.vhromada.catalog.dao.BookCategoryDAO;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +53,7 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
     /**
      * {@inheritDoc}
      *
-     * @throws DataStorageException  {@inheritDoc}
+     * @throws DataStorageException {@inheritDoc}
      */
     @Override
     public List<BookCategory> getBookCategories() {

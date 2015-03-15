@@ -34,6 +34,7 @@ import cz.vhromada.converters.Converter;
 import cz.vhromada.test.DeepAsserts;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,7 +82,7 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
 
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, Converter, MusicTOValidator, SongTOValidator)} with null
-     * service for music. 
+     * service for music.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMusicService() {
@@ -90,8 +91,8 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
 
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, Converter, MusicTOValidator, SongTOValidator)} with null
-     * service for songs. 
-     * */
+     * service for songs.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSongService() {
         new SongFacadeImpl(musicService, null, converter, musicTOValidator, songTOValidator);
@@ -100,7 +101,7 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, Converter, MusicTOValidator, SongTOValidator)} with null
      * converter.
-     * */
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
         new SongFacadeImpl(musicService, songService, null, musicTOValidator, songTOValidator);
@@ -108,7 +109,7 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
 
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(MusicService, SongService, Converter, MusicTOValidator, SongTOValidator)} with null
-     * validator for TO for music. 
+     * validator for TO for music.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullMusicTOValidator() {

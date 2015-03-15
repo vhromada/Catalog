@@ -12,6 +12,7 @@ import cz.vhromada.catalog.service.BookCategoryService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +62,8 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * Creates a new instance of BookCategoryFacadeImpl.
      *
-     * @param bookCategoryService service for book categories
-     * @param converter converter
+     * @param bookCategoryService     service for book categories
+     * @param converter               converter
      * @param bookCategoryTOValidator validator for TO for book category
      * @throws IllegalArgumentException if service for book categories is null
      *                                  or converter is null
@@ -133,10 +134,9 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     public void add(final BookCategoryTO bookCategory) {
@@ -158,12 +158,10 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void update(final BookCategoryTO bookCategory) {
@@ -181,12 +179,10 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void remove(final BookCategoryTO bookCategory) {
@@ -204,12 +200,10 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void duplicate(final BookCategoryTO bookCategory) {
@@ -227,12 +221,10 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final BookCategoryTO bookCategory) {
@@ -252,12 +244,10 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveDown(final BookCategoryTO bookCategory) {
@@ -277,10 +267,9 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)

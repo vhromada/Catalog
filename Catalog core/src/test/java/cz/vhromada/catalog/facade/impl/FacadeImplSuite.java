@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
 import cz.vhromada.catalog.facade.impl.spring.FacadeImplSpringSuite;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

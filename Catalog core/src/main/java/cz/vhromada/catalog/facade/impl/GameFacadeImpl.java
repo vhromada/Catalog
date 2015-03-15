@@ -12,6 +12,7 @@ import cz.vhromada.catalog.service.GameService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +62,8 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * Creates a new instance of GameFacadeImpl.
      *
-     * @param gameService service for games
-     * @param converter converter
+     * @param gameService     service for games
+     * @param converter       converter
      * @param gameTOValidator validator for TO for game
      * @throws IllegalArgumentException if service for games is null
      *                                  or converter is null
@@ -133,10 +134,9 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     public void add(final GameTO game) {
@@ -158,12 +158,10 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void update(final GameTO game) {
@@ -181,12 +179,10 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void remove(final GameTO game) {
@@ -204,12 +200,10 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void duplicate(final GameTO game) {
@@ -227,12 +221,10 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final GameTO game) {
@@ -252,12 +244,10 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveDown(final GameTO game) {
@@ -277,10 +267,9 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)

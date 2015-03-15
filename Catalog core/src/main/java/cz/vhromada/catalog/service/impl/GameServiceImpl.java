@@ -8,6 +8,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.GameService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -51,7 +52,7 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     /**
      * Creates a new instance of GameServiceImpl.
      *
-     * @param gameDAO DAO for games
+     * @param gameDAO   DAO for games
      * @param gameCache cache for games
      * @throws IllegalArgumentException if DAO for games is null
      *                                  or cache for games is null

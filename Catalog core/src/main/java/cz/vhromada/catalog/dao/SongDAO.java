@@ -17,9 +17,8 @@ public interface SongDAO {
      *
      * @param id ID
      * @return song with ID or null if there isn't such song
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if ID is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     Song getSong(Integer id);
 
@@ -27,9 +26,8 @@ public interface SongDAO {
      * Adds song. Sets new ID and position.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if song is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void add(Song song);
 
@@ -37,9 +35,8 @@ public interface SongDAO {
      * Updates song.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if song is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void update(Song song);
 
@@ -47,9 +44,8 @@ public interface SongDAO {
      * Removes song.
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if song is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void remove(Song song);
 
@@ -58,9 +54,8 @@ public interface SongDAO {
      *
      * @param music music
      * @return list of songs for specified music
-     * @throws IllegalArgumentException if music is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if music is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     List<Song> findSongsByMusic(Music music);
 

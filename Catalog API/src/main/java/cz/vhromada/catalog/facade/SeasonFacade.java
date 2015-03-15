@@ -17,9 +17,8 @@ public interface SeasonFacade {
      *
      * @param id ID
      * @return TO for season with ID or null if there isn't such TO for season
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if ID is null
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     SeasonTO getSeason(Integer id);
 
@@ -27,23 +26,20 @@ public interface SeasonFacade {
      * Adds TO for season. Sets new ID and position.
      *
      * @param season TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID isn't null
-     *                                  or number of season isn't positive number
-     *                                  or starting year isn't between 1940 and current year
-     *                                  or ending year isn't between 1940 and current year
-     *                                  or starting year is greater than ending year
-     *                                  or language is null
-     *                                  or subtitles are null
-     *                                  or subtitles contain null value
-     *                                  or note is null
-     *                                  or TO for serie is null
-     *                                  or TO for serie ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  if TO for serie doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID isn't null
+     *                                                                        or number of season isn't positive number
+     *                                                                        or starting year isn't between 1940 and current year
+     *                                                                        or ending year isn't between 1940 and current year
+     *                                                                        or starting year is greater than ending year
+     *                                                                        or language is null
+     *                                                                        or subtitles are null
+     *                                                                        or subtitles contain null value
+     *                                                                        or note is null
+     *                                                                        or TO for serie is null
+     *                                                                        or TO for serie ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for serie doesn't exist in data storage
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void add(SeasonTO season);
 
@@ -51,24 +47,21 @@ public interface SeasonFacade {
      * Updates TO for season.
      *
      * @param season new value of TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     *                                  or number of season isn't positive number
-     *                                  or starting year isn't between 1940 and current year
-     *                                  or ending year isn't between 1940 and current year
-     *                                  or starting year is greater than ending year
-     *                                  or language is null
-     *                                  or subtitles are null
-     *                                  or subtitles contain null value
-     *                                  or note is null
-     *                                  or TO for serie is null
-     *                                  or TO for serie ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  if TO for season doesn't exist in data storage
-     *                                  or TO for serie doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
+     *                                                                        or number of season isn't positive number
+     *                                                                        or starting year isn't between 1940 and current year
+     *                                                                        or ending year isn't between 1940 and current year
+     *                                                                        or starting year is greater than ending year
+     *                                                                        or language is null
+     *                                                                        or subtitles are null
+     *                                                                        or subtitles contain null value
+     *                                                                        or note is null
+     *                                                                        or TO for serie is null
+     *                                                                        or TO for serie ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for season doesn't exist in data storage
+     *                                                                        or TO for serie doesn't exist in data storage
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void update(SeasonTO season);
 
@@ -76,13 +69,10 @@ public interface SeasonFacade {
      * Removes TO for season.
      *
      * @param season TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  if TO for season doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for season doesn't exist in data storage
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void remove(SeasonTO season);
 
@@ -90,13 +80,10 @@ public interface SeasonFacade {
      * Duplicates TO for season.
      *
      * @param season TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  if TO for season doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for season doesn't exist in data storage
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void duplicate(SeasonTO season);
 
@@ -104,14 +91,11 @@ public interface SeasonFacade {
      * Moves TO for season in list one position up.
      *
      * @param season TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     *                                  or TO for season can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  if TO for season doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
+     *                                                                        or TO for season can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for season doesn't exist in data storage
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void moveUp(SeasonTO season);
 
@@ -119,14 +103,11 @@ public interface SeasonFacade {
      * Moves TO for season in list one position down.
      *
      * @param season TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     *                                  or TO for season can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  if TO for season doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
+     *                                                                        or TO for season can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for season doesn't exist in data storage
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void moveDown(SeasonTO season);
 
@@ -135,11 +116,9 @@ public interface SeasonFacade {
      *
      * @param season TO for season
      * @return true if TO for season exists
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     boolean exists(SeasonTO season);
 
@@ -148,13 +127,10 @@ public interface SeasonFacade {
      *
      * @param serie TO for serie
      * @return list of TO for seasons for specified TO for serie
-     * @throws IllegalArgumentException if TO for serie is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException
-     *                                  if TO for serie doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException
-     *                                  if there was error in working with service tier
+     * @throws IllegalArgumentException                                       if TO for serie is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for serie doesn't exist in data storage
+     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     List<SeasonTO> findSeasonsBySerie(SerieTO serie);
 

@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,9 +17,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateNewProgramTO(final ProgramTO program) {
@@ -29,9 +29,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateExistingProgramTO(final ProgramTO program) {
@@ -42,9 +41,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateProgramTOWithId(final ProgramTO program) {
@@ -56,15 +54,14 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
      * Validates TO for program.
      *
      * @param program TO for program
-     * @throws IllegalArgumentException if TO for program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about program is null
-     *                                  or URL to czech Wikipedia page about program is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @throws IllegalArgumentException                              if TO for program is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if name is null
+     *                                                               or name is empty string
+     *                                                               or URL to english Wikipedia page about program is null
+     *                                                               or URL to czech Wikipedia page about program is null
+     *                                                               or count of media isn't positive number
+     *                                                               or other data is null
+     *                                                               or note is null
      */
     private static void validateProgramTO(final ProgramTO program) {
         Validators.validateArgumentNotNull(program, "TO for program");

@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.commons;
 
 import cz.vhromada.generator.ObjectGenerator;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.springframework.context.ConfigurableApplicationContext;

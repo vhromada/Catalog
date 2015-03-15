@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.catalog.facade.validators.SongTOValidator;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,9 +17,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateNewSongTO(final SongTO song) {
@@ -29,9 +29,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateExistingSongTO(final SongTO song) {
@@ -42,9 +41,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateSongTOWithId(final SongTO song) {
@@ -56,14 +54,13 @@ public class SongTOValidatorImpl implements SongTOValidator {
      * Validates TO for song.
      *
      * @param song validating TO for song
-     * @throws IllegalArgumentException if TO for song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if name is null
-     *                                  or name is empty string
-     *                                  or length of song is negative value
-     *                                  or note is null
-     *                                  or TO for music is null
-     *                                  or TO for music ID is null
+     * @throws IllegalArgumentException                              if TO for song is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if name is null
+     *                                                               or name is empty string
+     *                                                               or length of song is negative value
+     *                                                               or note is null
+     *                                                               or TO for music is null
+     *                                                               or TO for music ID is null
      */
     private static void validateSongTO(final SongTO song) {
         Validators.validateArgumentNotNull(song, "TO for song");

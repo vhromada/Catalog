@@ -11,6 +11,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.MusicService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -48,8 +49,8 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     /**
      * Creates a new instance of MusicServiceImpl.
      *
-     * @param musicDAO DAO for music
-     * @param songDAO DAO for songs
+     * @param musicDAO   DAO for music
+     * @param songDAO    DAO for songs
      * @param musicCache cache for music
      * @throws IllegalArgumentException if DAO for music is null
      *                                  or DAO for songs is null

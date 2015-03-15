@@ -10,6 +10,7 @@ import java.util.Properties;
 import javax.swing.*;
 
 import cz.vhromada.catalog.gui.Selector;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

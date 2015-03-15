@@ -87,7 +87,7 @@ public class SeasonsPanel extends JPanel {
      *
      * @param seasonFacade  facade for seasons
      * @param episodeFacade facade for episodes
-     * @param serie        TO for serie
+     * @param serie         TO for serie
      * @throws IllegalArgumentException if facade for seasons is null
      *                                  or facade for episodes is null
      *                                  or TO for serie is null

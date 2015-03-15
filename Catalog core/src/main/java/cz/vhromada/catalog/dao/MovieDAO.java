@@ -15,8 +15,7 @@ public interface MovieDAO {
      * Returns list of movies.
      *
      * @return list of movies
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *          if there was error with working with data storage
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     List<Movie> getMovies();
 
@@ -25,9 +24,8 @@ public interface MovieDAO {
      *
      * @param id ID
      * @return movie with ID or null if there isn't such movie
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if ID is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     Movie getMovie(Integer id);
 
@@ -35,9 +33,8 @@ public interface MovieDAO {
      * Adds movie. Sets new ID and position.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if movie is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void add(Movie movie);
 
@@ -45,9 +42,8 @@ public interface MovieDAO {
      * Updates movie.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if movie is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void update(Movie movie);
 
@@ -55,9 +51,8 @@ public interface MovieDAO {
      * Removes movie.
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if movie is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void remove(Movie movie);
 

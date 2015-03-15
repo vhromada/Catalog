@@ -14,6 +14,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.SerieService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -57,8 +58,8 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     /**
      * Creates a new instance of SerieServiceImpl.
      *
-     * @param serieDAO DAO for series
-     * @param seasonDAO DAO for seasons
+     * @param serieDAO   DAO for series
+     * @param seasonDAO  DAO for seasons
      * @param episodeDAO DAO for episodes
      * @param serieCache cache for series
      * @throws IllegalArgumentException if DAO for series is null

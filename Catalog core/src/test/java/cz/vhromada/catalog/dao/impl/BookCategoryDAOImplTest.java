@@ -26,6 +26,7 @@ import cz.vhromada.catalog.dao.BookCategoryDAO;
 import cz.vhromada.catalog.dao.entities.BookCategory;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

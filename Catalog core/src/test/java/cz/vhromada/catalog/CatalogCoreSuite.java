@@ -3,6 +3,7 @@ package cz.vhromada.catalog;
 import cz.vhromada.catalog.dao.impl.DAOImplSuite;
 import cz.vhromada.catalog.facade.FacadeSuite;
 import cz.vhromada.catalog.service.impl.ServiceImplSuite;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

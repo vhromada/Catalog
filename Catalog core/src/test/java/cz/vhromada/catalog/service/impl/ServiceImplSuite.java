@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.service.impl;
 
 import cz.vhromada.catalog.service.impl.spring.ServiceImplSpringSuite;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

@@ -7,6 +7,7 @@ import cz.vhromada.catalog.dao.entities.Season;
 import cz.vhromada.catalog.dao.entities.Serie;
 import cz.vhromada.catalog.service.domain.CacheValue;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.cache.Cache;
 
 /**

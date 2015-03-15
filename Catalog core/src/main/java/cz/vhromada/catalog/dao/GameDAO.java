@@ -15,8 +15,7 @@ public interface GameDAO {
      * Returns list of games.
      *
      * @return list of games
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *          if there was error with working with data storage
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     List<Game> getGames();
 
@@ -25,9 +24,8 @@ public interface GameDAO {
      *
      * @param id ID
      * @return game with ID or null if there isn't such game
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if ID is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     Game getGame(Integer id);
 
@@ -35,9 +33,8 @@ public interface GameDAO {
      * Adds game. Sets new ID and position.
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if game is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void add(Game game);
 
@@ -45,9 +42,8 @@ public interface GameDAO {
      * Updates game.
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if game is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void update(Game game);
 
@@ -55,9 +51,8 @@ public interface GameDAO {
      * Removes game.
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if game is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void remove(Game game);
 

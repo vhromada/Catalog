@@ -15,8 +15,7 @@ public interface SerieDAO {
      * Returns list of series.
      *
      * @return list of series
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *          if there was error with working with data storage
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     List<Serie> getSeries();
 
@@ -25,9 +24,8 @@ public interface SerieDAO {
      *
      * @param id ID
      * @return serie with ID or null if there isn't such serie
-     * @throws IllegalArgumentException if ID is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if ID is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     Serie getSerie(Integer id);
 
@@ -35,9 +33,8 @@ public interface SerieDAO {
      * Adds serie. Sets new ID and position.
      *
      * @param serie serie
-     * @throws IllegalArgumentException if serie is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if serie is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void add(Serie serie);
 
@@ -45,9 +42,8 @@ public interface SerieDAO {
      * Updates serie.
      *
      * @param serie serie
-     * @throws IllegalArgumentException if serie is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if serie is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void update(Serie serie);
 
@@ -55,9 +51,8 @@ public interface SerieDAO {
      * Removes serie.
      *
      * @param serie serie
-     * @throws IllegalArgumentException if serie is null
-     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException
-     *                                  if there was error with working with data storage
+     * @throws IllegalArgumentException                                if serie is null
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
     void remove(Serie serie);
 

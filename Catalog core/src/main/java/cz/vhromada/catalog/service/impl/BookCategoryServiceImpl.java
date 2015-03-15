@@ -11,6 +11,7 @@ import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.BookCategoryService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -49,8 +50,8 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
      * Creates a new instance of BookCategoryServiceImpl.
      *
      * @param bookCategoryDAO DAO for book categories
-     * @param bookDAO DAO for books
-     * @param bookCache cache for books
+     * @param bookDAO         DAO for books
+     * @param bookCache       cache for books
      * @throws IllegalArgumentException if DAO for book categories is null
      *                                  or DAO for books is null
      *                                  or cache for books is null

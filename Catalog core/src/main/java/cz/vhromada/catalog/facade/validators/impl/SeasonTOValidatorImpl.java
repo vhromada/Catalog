@@ -4,6 +4,7 @@ import cz.vhromada.catalog.commons.CatalogValidators;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
 import cz.vhromada.validators.Validators;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,9 +18,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateNewSeasonTO(final SeasonTO season) {
@@ -30,9 +30,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateExistingSeasonTO(final SeasonTO season) {
@@ -43,9 +42,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     /**
      * {@inheritDoc}
      *
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void validateSeasonTOWithId(final SeasonTO season) {
@@ -57,18 +55,17 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
      * Validates TO for season.
      *
      * @param season validating TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException
-     *                                  if number of season isn't positive number
-     *                                  or starting year isn't between 1940 and current year
-     *                                  or ending year isn't between 1940 and current year
-     *                                  or starting year is greater than ending year
-     *                                  or language is null
-     *                                  or subtitles are null
-     *                                  or subtitles contain null value
-     *                                  or note is null
-     *                                  or TO for serie is null
-     *                                  or TO for serie ID is null
+     * @throws IllegalArgumentException                              if TO for season is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if number of season isn't positive number
+     *                                                               or starting year isn't between 1940 and current year
+     *                                                               or ending year isn't between 1940 and current year
+     *                                                               or starting year is greater than ending year
+     *                                                               or language is null
+     *                                                               or subtitles are null
+     *                                                               or subtitles contain null value
+     *                                                               or note is null
+     *                                                               or TO for serie is null
+     *                                                               or TO for serie ID is null
      */
     private static void validateSeasonTO(final SeasonTO season) {
         Validators.validateArgumentNotNull(season, "TO for season");

@@ -10,8 +10,8 @@ import cz.vhromada.validators.Validators;
 /**
  * An abstract class represents dialog for adding or updating data.
  *
- * @author Vladimir Hromada
  * @param <T> type of data
+ * @author Vladimir Hromada
  */
 public abstract class AbstractInfoDialog<T> extends JDialog {
 
@@ -145,16 +145,18 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
 
     /**
      * Returns horizontal layout with added components.
+     *
      * @param layout horizontal layout
-     * @param group group in vertical layout
+     * @param group  group in vertical layout
      * @return horizontal layout with added components
      */
     protected abstract GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group);
 
     /**
      * Returns vertical layout with added components.
+     *
      * @param layout vertical layout
-     * @param group group in vertical layout
+     * @param group  group in vertical layout
      * @return vertical layout with added components
      */
     protected abstract GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group);
@@ -172,6 +174,7 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
 
     /**
      * Returns button OK.
+     *
      * @return button OK
      */
     protected final JButton getOkButton() {
@@ -194,9 +197,9 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
     /**
      * Returns horizontal layout for label component with data component.
      *
-     * @param layout layout
-     * @param labelComponent  label component
-     * @param dataComponent   data component
+     * @param layout         layout
+     * @param labelComponent label component
+     * @param dataComponent  data component
      * @return horizontal layout for label component with data component
      */
     protected final GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent labelComponent, final JComponent dataComponent) {
@@ -209,9 +212,9 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
     /**
      * Returns vertical layout for label component with data component.
      *
-     * @param layout layout
-     * @param labelComponent  label component
-     * @param dataComponent   data component
+     * @param layout         layout
+     * @param labelComponent label component
+     * @param dataComponent  data component
      * @return vertical layout for label component with data component
      */
     protected final GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent labelComponent, final JComponent dataComponent) {

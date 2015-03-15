@@ -28,7 +28,8 @@ public enum Picture {
     private ImageIcon icon;
 
     /**
-     * Creates a new instance of Pictures. 
+     * Creates a new instance of Pictures.
+     *
      * @param icon icon
      */
     private Picture(final ImageIcon icon) {

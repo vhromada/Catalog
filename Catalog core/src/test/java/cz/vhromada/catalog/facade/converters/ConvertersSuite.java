@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade.converters;
 
 import cz.vhromada.catalog.facade.converters.spring.ConvertersSpringSuite;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

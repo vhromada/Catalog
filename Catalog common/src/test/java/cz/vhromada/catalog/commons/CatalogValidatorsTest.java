@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import cz.vhromada.validators.exceptions.ValidationException;
+
 import org.junit.Test;
 
 /**

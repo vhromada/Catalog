@@ -249,7 +249,7 @@ public class SongsPanel extends JPanel {
                 final SongInfoDialog dialog = new SongInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final SongTO song = dialog.getSong();
+                    final SongTO song = dialog.getData();
                     song.setMusic(music);
                     songFacade.add(song);
                     songsListDataModel.update();
@@ -274,7 +274,7 @@ public class SongsPanel extends JPanel {
                 final SongInfoDialog dialog = new SongInfoDialog(song);
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final SongTO updatedSong = dialog.getSong();
+                    final SongTO updatedSong = dialog.getData();
                     songFacade.update(updatedSong);
                     songsListDataModel.update();
                     list.updateUI();

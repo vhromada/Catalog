@@ -306,7 +306,7 @@ public class MusicPanel extends JPanel {
                 final MusicInfoDialog dialog = new MusicInfoDialog();
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    musicFacade.add(dialog.getMusic());
+                    musicFacade.add(dialog.getData());
                     musicListDataModel.update();
                     list.updateUI();
                     list.setSelectedIndex(list.getModel().getSize() - 1);
@@ -331,7 +331,7 @@ public class MusicPanel extends JPanel {
                 final MusicInfoDialog dialog = new MusicInfoDialog(musicListDataModel.getMusicAt(index));
                 dialog.setVisible(true);
                 if (dialog.getReturnStatus() == DialogResult.OK) {
-                    final MusicTO music = dialog.getMusic();
+                    final MusicTO music = dialog.getData();
                     musicFacade.update(music);
                     musicListDataModel.update();
                     list.updateUI();

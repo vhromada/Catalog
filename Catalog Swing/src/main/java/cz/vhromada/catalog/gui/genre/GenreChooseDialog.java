@@ -230,6 +230,35 @@ public class GenreChooseDialog extends JDialog {
     }
 
     /**
+     * Closes dialog.
+     */
+    private void close() {
+        setVisible(false);
+        dispose();
+    }
+
+    /**
+     * Returns selected indexes.
+     *
+     * @return selected indexes
+     */
+    private int[] getSelectedIndexes() {
+        final List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < genreListDataModel.getSize(); i++) {
+            if (genres.contains(genreListDataModel.getObjectAt(i))) {
+                indexes.add(i);
+            }
+        }
+
+        final int[] result = new int[indexes.size()];
+        for (int i = 0; i < indexes.size(); i++) {
+            result[i] = indexes.get(i);
+        }
+
+        return result;
+    }
+
+    /**
      * Returns horizontal layout of components.
      *
      * @param layout layout
@@ -273,35 +302,6 @@ public class GenreChooseDialog extends JDialog {
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(buttons)
                 .addGap(VERTICAL_GAP_SIZE);
-    }
-
-    /**
-     * Closes dialog.
-     */
-    private void close() {
-        setVisible(false);
-        dispose();
-    }
-
-    /**
-     * Returns selected indexes.
-     *
-     * @return selected indexes
-     */
-    private int[] getSelectedIndexes() {
-        final List<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < genreListDataModel.getSize(); i++) {
-            if (genres.contains(genreListDataModel.getObjectAt(i))) {
-                indexes.add(i);
-            }
-        }
-
-        final int[] result = new int[indexes.size()];
-        for (int i = 0; i < indexes.size(); i++) {
-            result[i] = indexes.get(i);
-        }
-
-        return result;
     }
 
 }

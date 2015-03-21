@@ -17,13 +17,15 @@ import cz.vhromada.validators.Validators;
 public class TimeDataPanel extends JPanel {
 
     /**
-     * Horizontal label size
-     */
-    protected static final int HORIZONTAL_LABEL_SIZE = 100;
-    /**
      * SerialVersionUID
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Horizontal label size
+     */
+    private static final int HORIZONTAL_LABEL_SIZE = 100;
+
     /**
      * Horizontal time size
      */

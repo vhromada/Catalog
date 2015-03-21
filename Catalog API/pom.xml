@@ -6,8 +6,8 @@
 
 	<parent>
 		<groupId>cz.vhromada.catalog</groupId>
-		<artifactId>catalog-parent</artifactId>
-		<version>1.0.0</version>
+		<artifactId>catalog</artifactId>
+		<version>1.1.0</version>
 	</parent>
 
 	<artifactId>catalog-api</artifactId>

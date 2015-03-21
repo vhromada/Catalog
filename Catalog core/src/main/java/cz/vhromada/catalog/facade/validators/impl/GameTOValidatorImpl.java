@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class GameTOValidatorImpl implements GameTOValidator {
 
     /**
+     * TO for game argument
+     */
+    private static final String GAME_TO_ARGUMENT = "TO for game";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class GameTOValidatorImpl implements GameTOValidator {
     @Override
     public void validateNewGameTO(final GameTO game) {
         validateGameTO(game);
-        Validators.validateNull(game.getId(), "ID");
+        Validators.validateNull(game.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class GameTOValidatorImpl implements GameTOValidator {
     @Override
     public void validateExistingGameTO(final GameTO game) {
         validateGameTO(game);
-        Validators.validateNotNull(game.getId(), "ID");
+        Validators.validateNotNull(game.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class GameTOValidatorImpl implements GameTOValidator {
      */
     @Override
     public void validateGameTOWithId(final GameTO game) {
-        Validators.validateArgumentNotNull(game, "TO for game");
-        Validators.validateNotNull(game.getId(), "ID");
+        Validators.validateArgumentNotNull(game, GAME_TO_ARGUMENT);
+        Validators.validateNotNull(game.getId(), ID_FIELD);
     }
 
     /**
@@ -64,7 +74,7 @@ public class GameTOValidatorImpl implements GameTOValidator {
      *                                                               or note is null
      */
     private static void validateGameTO(final GameTO game) {
-        Validators.validateArgumentNotNull(game, "TO for game");
+        Validators.validateArgumentNotNull(game, GAME_TO_ARGUMENT);
         Validators.validateNotNull(game.getName(), "Name");
         Validators.validateNotEmptyString(game.getName(), "Name");
         Validators.validateNotNull(game.getWikiEn(), "URL to english Wikipedia page about game");

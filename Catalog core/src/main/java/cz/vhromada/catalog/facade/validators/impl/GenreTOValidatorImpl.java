@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class GenreTOValidatorImpl implements GenreTOValidator {
 
     /**
+     * TO for genre argument
+     */
+    private static final String GENRE_TO_ARGUMENT = "TO for genre";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
     @Override
     public void validateNewGenreTO(final GenreTO genre) {
         validateGenreTO(genre);
-        Validators.validateNull(genre.getId(), "ID");
+        Validators.validateNull(genre.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
     @Override
     public void validateExistingGenreTO(final GenreTO genre) {
         validateGenreTO(genre);
-        Validators.validateNotNull(genre.getId(), "ID");
+        Validators.validateNotNull(genre.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
      */
     @Override
     public void validateGenreTOWithId(final GenreTO genre) {
-        Validators.validateArgumentNotNull(genre, "GenreTO");
-        Validators.validateNotNull(genre.getId(), "ID");
+        Validators.validateArgumentNotNull(genre, GENRE_TO_ARGUMENT);
+        Validators.validateNotNull(genre.getId(), ID_FIELD);
     }
 
     /**
@@ -59,7 +69,7 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
      *                                                               or name is empty string
      */
     private static void validateGenreTO(final GenreTO genre) {
-        Validators.validateArgumentNotNull(genre, "TO for genre");
+        Validators.validateArgumentNotNull(genre, GENRE_TO_ARGUMENT);
         Validators.validateNotNull(genre.getName(), "Name");
         Validators.validateNotEmptyString(genre.getName(), "Name");
     }

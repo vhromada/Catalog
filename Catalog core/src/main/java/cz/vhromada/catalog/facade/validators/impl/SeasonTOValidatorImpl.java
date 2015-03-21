@@ -16,6 +16,16 @@ import org.springframework.stereotype.Component;
 public class SeasonTOValidatorImpl implements SeasonTOValidator {
 
     /**
+     * TO for season argument
+     */
+    private static final String SEASON_TO_ARGUMENT = "TO for season";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -24,7 +34,7 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     @Override
     public void validateNewSeasonTO(final SeasonTO season) {
         validateSeasonTO(season);
-        Validators.validateNull(season.getId(), "ID");
+        Validators.validateNull(season.getId(), ID_FIELD);
     }
 
     /**
@@ -36,7 +46,7 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     @Override
     public void validateExistingSeasonTO(final SeasonTO season) {
         validateSeasonTO(season);
-        Validators.validateNotNull(season.getId(), "ID");
+        Validators.validateNotNull(season.getId(), ID_FIELD);
     }
 
     /**
@@ -47,8 +57,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
      */
     @Override
     public void validateSeasonTOWithId(final SeasonTO season) {
-        Validators.validateArgumentNotNull(season, "TO for season");
-        Validators.validateNotNull(season.getId(), "ID");
+        Validators.validateArgumentNotNull(season, SEASON_TO_ARGUMENT);
+        Validators.validateNotNull(season.getId(), ID_FIELD);
     }
 
     /**
@@ -68,7 +78,7 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
      *                                                               or TO for serie ID is null
      */
     private static void validateSeasonTO(final SeasonTO season) {
-        Validators.validateArgumentNotNull(season, "TO for season");
+        Validators.validateArgumentNotNull(season, SEASON_TO_ARGUMENT);
         Validators.validatePositiveNumber(season.getNumber(), "Number of season");
         CatalogValidators.validateYear(season.getStartYear(), "Starting year");
         CatalogValidators.validateYear(season.getEndYear(), "Ending year");

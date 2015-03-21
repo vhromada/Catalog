@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
 
     /**
+     * TO for episode argument
+     */
+    private static final String EPISODE_TO_ARGUMENT = "TO for episode";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
     @Override
     public void validateNewEpisodeTO(final EpisodeTO episode) {
         validateEpisodeTO(episode);
-        Validators.validateNull(episode.getId(), "ID");
+        Validators.validateNull(episode.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
     @Override
     public void validateExistingEpisodeTO(final EpisodeTO episode) {
         validateEpisodeTO(episode);
-        Validators.validateNotNull(episode.getId(), "ID");
+        Validators.validateNotNull(episode.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
      */
     @Override
     public void validateEpisodeTOWithId(final EpisodeTO episode) {
-        Validators.validateArgumentNotNull(episode, "TO for episode");
-        Validators.validateNotNull(episode.getId(), "ID");
+        Validators.validateArgumentNotNull(episode, EPISODE_TO_ARGUMENT);
+        Validators.validateNotNull(episode.getId(), ID_FIELD);
     }
 
     /**
@@ -64,7 +74,7 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
      *                                                               or TO for season ID is null
      */
     private static void validateEpisodeTO(final EpisodeTO episode) {
-        Validators.validateArgumentNotNull(episode, "TO for episode");
+        Validators.validateArgumentNotNull(episode, EPISODE_TO_ARGUMENT);
         Validators.validatePositiveNumber(episode.getNumber(), "Number of episode");
         Validators.validateNotNull(episode.getName(), "Name");
         Validators.validateNotEmptyString(episode.getName(), "Name");

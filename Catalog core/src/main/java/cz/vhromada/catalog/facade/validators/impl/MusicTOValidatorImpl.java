@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class MusicTOValidatorImpl implements MusicTOValidator {
 
     /**
+     * TO for music argument
+     */
+    private static final String MUSIC_TO_ARGUMENT = "TO for music";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
     @Override
     public void validateNewMusicTO(final MusicTO music) {
         validateMusicTO(music);
-        Validators.validateNull(music.getId(), "ID");
+        Validators.validateNull(music.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
     @Override
     public void validateExistingMusicTO(final MusicTO music) {
         validateMusicTO(music);
-        Validators.validateNotNull(music.getId(), "ID");
+        Validators.validateNotNull(music.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
      */
     @Override
     public void validateMusicTOWithId(final MusicTO music) {
-        Validators.validateArgumentNotNull(music, "TO for music");
-        Validators.validateNotNull(music.getId(), "ID");
+        Validators.validateArgumentNotNull(music, MUSIC_TO_ARGUMENT);
+        Validators.validateNotNull(music.getId(), ID_FIELD);
     }
 
     /**
@@ -63,7 +73,7 @@ public class MusicTOValidatorImpl implements MusicTOValidator {
      *                                                               or note is null
      */
     private static void validateMusicTO(final MusicTO music) {
-        Validators.validateArgumentNotNull(music, "TO for music");
+        Validators.validateArgumentNotNull(music, MUSIC_TO_ARGUMENT);
         Validators.validateNotNull(music.getName(), "Name");
         Validators.validateNotEmptyString(music.getName(), "Name");
         Validators.validateNotNull(music.getWikiEn(), "URL to english Wikipedia page about music");

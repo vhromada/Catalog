@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class SongTOValidatorImpl implements SongTOValidator {
 
     /**
+     * TO for song argument
+     */
+    private static final String SONG_TO_ARGUMENT = "TO for song";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class SongTOValidatorImpl implements SongTOValidator {
     @Override
     public void validateNewSongTO(final SongTO song) {
         validateSongTO(song);
-        Validators.validateNull(song.getId(), "ID");
+        Validators.validateNull(song.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class SongTOValidatorImpl implements SongTOValidator {
     @Override
     public void validateExistingSongTO(final SongTO song) {
         validateSongTO(song);
-        Validators.validateNotNull(song.getId(), "ID");
+        Validators.validateNotNull(song.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class SongTOValidatorImpl implements SongTOValidator {
      */
     @Override
     public void validateSongTOWithId(final SongTO song) {
-        Validators.validateArgumentNotNull(song, "TO for song");
-        Validators.validateNotNull(song.getId(), "ID");
+        Validators.validateArgumentNotNull(song, SONG_TO_ARGUMENT);
+        Validators.validateNotNull(song.getId(), ID_FIELD);
     }
 
     /**
@@ -63,7 +73,7 @@ public class SongTOValidatorImpl implements SongTOValidator {
      *                                                               or TO for music ID is null
      */
     private static void validateSongTO(final SongTO song) {
-        Validators.validateArgumentNotNull(song, "TO for song");
+        Validators.validateArgumentNotNull(song, SONG_TO_ARGUMENT);
         Validators.validateNotNull(song.getName(), "Name");
         Validators.validateNotEmptyString(song.getName(), "Name");
         Validators.validateNotNegativeNumber(song.getLength(), "Length");

@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class ProgramTOValidatorImpl implements ProgramTOValidator {
 
     /**
+     * TO for program argument
+     */
+    private static final String PROGRAM_TO_ARGUMENT = "TO for program";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
     @Override
     public void validateNewProgramTO(final ProgramTO program) {
         validateProgramTO(program);
-        Validators.validateNull(program.getId(), "ID");
+        Validators.validateNull(program.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
     @Override
     public void validateExistingProgramTO(final ProgramTO program) {
         validateProgramTO(program);
-        Validators.validateNotNull(program.getId(), "ID");
+        Validators.validateNotNull(program.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
      */
     @Override
     public void validateProgramTOWithId(final ProgramTO program) {
-        Validators.validateArgumentNotNull(program, "TO for program");
-        Validators.validateNotNull(program.getId(), "ID");
+        Validators.validateArgumentNotNull(program, PROGRAM_TO_ARGUMENT);
+        Validators.validateNotNull(program.getId(), ID_FIELD);
     }
 
     /**
@@ -64,7 +74,7 @@ public class ProgramTOValidatorImpl implements ProgramTOValidator {
      *                                                               or note is null
      */
     private static void validateProgramTO(final ProgramTO program) {
-        Validators.validateArgumentNotNull(program, "TO for program");
+        Validators.validateArgumentNotNull(program, PROGRAM_TO_ARGUMENT);
         Validators.validateNotNull(program.getName(), "Name");
         Validators.validateNotEmptyString(program.getName(), "Name");
         Validators.validateNotNull(program.getWikiEn(), "URL to english Wikipedia page about program");

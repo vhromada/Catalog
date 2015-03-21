@@ -19,6 +19,16 @@ import org.springframework.stereotype.Component;
 public class SerieTOValidatorImpl implements SerieTOValidator {
 
     /**
+     * TO for serie argument
+     */
+    private static final String SERIE_TO_ARGUMENT = "TO for serie";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * Validator for TO for genre
      */
     private GenreTOValidator genreTOValidator;
@@ -45,7 +55,7 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
     @Override
     public void validateNewSerieTO(final SerieTO serie) {
         validateSerieTO(serie);
-        Validators.validateNull(serie.getId(), "ID");
+        Validators.validateNull(serie.getId(), ID_FIELD);
     }
 
     /**
@@ -57,7 +67,7 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
     @Override
     public void validateExistingSerieTO(final SerieTO serie) {
         validateSerieTO(serie);
-        Validators.validateNotNull(serie.getId(), "ID");
+        Validators.validateNotNull(serie.getId(), ID_FIELD);
     }
 
     /**
@@ -68,8 +78,8 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
      */
     @Override
     public void validateSerieTOWithId(final SerieTO serie) {
-        Validators.validateArgumentNotNull(serie, "TO for serie");
-        Validators.validateNotNull(serie.getId(), "ID");
+        Validators.validateArgumentNotNull(serie, SERIE_TO_ARGUMENT);
+        Validators.validateNotNull(serie.getId(), ID_FIELD);
     }
 
     /**
@@ -94,7 +104,7 @@ public class SerieTOValidatorImpl implements SerieTOValidator {
      *                                                               or genre name is empty string
      */
     private void validateSerieTO(final SerieTO serie) {
-        Validators.validateArgumentNotNull(serie, "TO for serie");
+        Validators.validateArgumentNotNull(serie, SERIE_TO_ARGUMENT);
         Validators.validateNotNull(serie.getCzechName(), "Czech name");
         Validators.validateNotEmptyString(serie.getCzechName(), "Czech name");
         Validators.validateNotNull(serie.getOriginalName(), "Original name");

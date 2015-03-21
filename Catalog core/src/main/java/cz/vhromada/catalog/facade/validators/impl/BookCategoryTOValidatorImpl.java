@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class BookCategoryTOValidatorImpl implements BookCategoryTOValidator {
 
     /**
+     * TO for book category argument
+     */
+    private static final String BOOK_CATEGORY_TO_ARGUMENT = "TO for book category";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class BookCategoryTOValidatorImpl implements BookCategoryTOValidator {
     @Override
     public void validateNewBookCategoryTO(final BookCategoryTO bookCategory) {
         validateBookCategoryTO(bookCategory);
-        Validators.validateNull(bookCategory.getId(), "ID");
+        Validators.validateNull(bookCategory.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class BookCategoryTOValidatorImpl implements BookCategoryTOValidator {
     @Override
     public void validateExistingBookCategoryTO(final BookCategoryTO bookCategory) {
         validateBookCategoryTO(bookCategory);
-        Validators.validateNotNull(bookCategory.getId(), "ID");
+        Validators.validateNotNull(bookCategory.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class BookCategoryTOValidatorImpl implements BookCategoryTOValidator {
      */
     @Override
     public void validateBookCategoryTOWithId(final BookCategoryTO bookCategory) {
-        Validators.validateArgumentNotNull(bookCategory, "TO for book category");
-        Validators.validateNotNull(bookCategory.getId(), "ID");
+        Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_TO_ARGUMENT);
+        Validators.validateNotNull(bookCategory.getId(), ID_FIELD);
     }
 
     /**
@@ -60,7 +70,7 @@ public class BookCategoryTOValidatorImpl implements BookCategoryTOValidator {
      *                                                               or note is null
      */
     private static void validateBookCategoryTO(final BookCategoryTO bookCategory) {
-        Validators.validateArgumentNotNull(bookCategory, "TO for book category");
+        Validators.validateArgumentNotNull(bookCategory, BOOK_CATEGORY_TO_ARGUMENT);
         Validators.validateNotNull(bookCategory.getName(), "Name");
         Validators.validateNotEmptyString(bookCategory.getName(), "Name");
         Validators.validateNotNull(bookCategory.getNote(), "Note");

@@ -15,6 +15,16 @@ import org.springframework.stereotype.Component;
 public class BookTOValidatorImpl implements BookTOValidator {
 
     /**
+     * TO for book argument
+     */
+    private static final String BOOK_TO_ARGUMENT = "TO for book";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException                              {@inheritDoc}
@@ -23,7 +33,7 @@ public class BookTOValidatorImpl implements BookTOValidator {
     @Override
     public void validateNewBookTO(final BookTO book) {
         validateBookTO(book);
-        Validators.validateNull(book.getId(), "ID");
+        Validators.validateNull(book.getId(), ID_FIELD);
     }
 
     /**
@@ -35,7 +45,7 @@ public class BookTOValidatorImpl implements BookTOValidator {
     @Override
     public void validateExistingBookTO(final BookTO book) {
         validateBookTO(book);
-        Validators.validateNotNull(book.getId(), "ID");
+        Validators.validateNotNull(book.getId(), ID_FIELD);
     }
 
     /**
@@ -46,8 +56,8 @@ public class BookTOValidatorImpl implements BookTOValidator {
      */
     @Override
     public void validateBookTOWithId(final BookTO book) {
-        Validators.validateArgumentNotNull(book, "TO for book");
-        Validators.validateNotNull(book.getId(), "ID");
+        Validators.validateArgumentNotNull(book, BOOK_TO_ARGUMENT);
+        Validators.validateNotNull(book.getId(), ID_FIELD);
     }
 
     /**
@@ -68,7 +78,7 @@ public class BookTOValidatorImpl implements BookTOValidator {
      *                                                               or TO for book category ID is null
      */
     private static void validateBookTO(final BookTO book) {
-        Validators.validateArgumentNotNull(book, "TO for book");
+        Validators.validateArgumentNotNull(book, BOOK_TO_ARGUMENT);
         Validators.validateNotNull(book.getAuthor(), "Author");
         Validators.validateNotEmptyString(book.getAuthor(), "Author");
         Validators.validateNotNull(book.getTitle(), "Title");

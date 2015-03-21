@@ -19,6 +19,16 @@ import org.springframework.stereotype.Component;
 public class MovieTOValidatorImpl implements MovieTOValidator {
 
     /**
+     * TO for movie argument
+     */
+    private static final String MOVIE_TO_ARGUMENT = "TO for movie";
+
+    /**
+     * Field ID
+     */
+    private static final String ID_FIELD = "ID";
+
+    /**
      * Validator for TO for genre
      */
     private GenreTOValidator genreTOValidator;
@@ -45,7 +55,7 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
     @Override
     public void validateNewMovieTO(final MovieTO movie) {
         validateMovieTO(movie);
-        Validators.validateNull(movie.getId(), "ID");
+        Validators.validateNull(movie.getId(), ID_FIELD);
     }
 
     /**
@@ -57,7 +67,7 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
     @Override
     public void validateExistingMovieTO(final MovieTO movie) {
         validateMovieTO(movie);
-        Validators.validateNotNull(movie.getId(), "ID");
+        Validators.validateNotNull(movie.getId(), ID_FIELD);
     }
 
     /**
@@ -68,8 +78,8 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
      */
     @Override
     public void validateMovieTOWithId(final MovieTO movie) {
-        Validators.validateArgumentNotNull(movie, "TO for movie");
-        Validators.validateNotNull(movie.getId(), "ID");
+        Validators.validateArgumentNotNull(movie, MOVIE_TO_ARGUMENT);
+        Validators.validateNotNull(movie.getId(), ID_FIELD);
     }
 
     /**
@@ -100,7 +110,7 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
      *                                                               or genre name is empty string
      */
     private void validateMovieTO(final MovieTO movie) {
-        Validators.validateArgumentNotNull(movie, "TO for movie");
+        Validators.validateArgumentNotNull(movie, MOVIE_TO_ARGUMENT);
         Validators.validateNotNull(movie.getCzechName(), "Czech name");
         Validators.validateNotEmptyString(movie.getCzechName(), "Czech name");
         Validators.validateNotNull(movie.getOriginalName(), "Original name");

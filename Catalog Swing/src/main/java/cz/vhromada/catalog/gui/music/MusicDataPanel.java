@@ -165,7 +165,8 @@ public class MusicDataPanel extends AbstractDataPanel<MusicTO> {
 
     @Override
     protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createHorizontalDataComponents(layout, nameLabel, nameData))
+        return group
+                .addGroup(createHorizontalDataComponents(layout, nameLabel, nameData))
                 .addGroup(createHorizontalDataComponents(layout, mediaCountLabel, mediaCountData))
                 .addGroup(createHorizontalDataComponents(layout, songsCountLabel, songsCountData))
                 .addGroup(createHorizontalDataComponents(layout, totalLengthLabel, totalLengthData))
@@ -175,7 +176,8 @@ public class MusicDataPanel extends AbstractDataPanel<MusicTO> {
 
     @Override
     protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createVerticalComponents(layout, nameLabel, nameData))
+        return group
+                .addGroup(createVerticalComponents(layout, nameLabel, nameData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, mediaCountLabel, mediaCountData))
                 .addGap(VERTICAL_GAP_SIZE)

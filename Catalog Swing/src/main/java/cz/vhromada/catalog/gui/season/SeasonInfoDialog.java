@@ -181,6 +181,7 @@ public class SeasonInfoDialog extends AbstractInfoDialog<SeasonTO> {
         languagesButtonGroup.add(frenchLanguageData);
         languagesButtonGroup.add(japaneseLanguageData);
 
+        languageLabel.setFocusable(false);
         subtitlesLabel.setFocusable(false);
 
         addSpinnerValidator(startYearData);

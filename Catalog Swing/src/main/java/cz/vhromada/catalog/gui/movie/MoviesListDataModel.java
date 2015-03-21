@@ -2,10 +2,9 @@ package cz.vhromada.catalog.gui.movie;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -13,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class MoviesListDataModel extends AbstractListModel<String> {
+public class MoviesListDataModel extends AbstractListDataModel<MovieTO> {
 
     /**
      * SerialVersionUID
@@ -24,11 +23,6 @@ public class MoviesListDataModel extends AbstractListModel<String> {
      * Facade for movies
      */
     private MovieFacade movieFacade;
-
-    /**
-     * List of TO for movie
-     */
-    private List<MovieTO> movies;
 
     /**
      * Creates a new instance of MoviesListDataModel.
@@ -43,42 +37,14 @@ public class MoviesListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
     @Override
-    public int getSize() {
-        return movies.size();
+    protected List<MovieTO> getData() {
+        return movieFacade.getMovies();
     }
 
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
-    public String getElementAt(final int index) {
-        return getMovieAt(index).getCzechName();
-    }
-
-    /**
-     * Returns TO for movie at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for movie at index
-     */
-    public MovieTO getMovieAt(final int index) {
-        return movies.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        movies = movieFacade.getMovies();
+    protected String getDisplayValue(final MovieTO dataObject) {
+        return dataObject.getCzechName();
     }
 
 }

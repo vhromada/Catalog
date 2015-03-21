@@ -106,7 +106,8 @@ public class EpisodeDataPanel extends AbstractDataPanel<EpisodeTO> {
 
     @Override
     protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createHorizontalDataComponents(layout, numberLabel, numberData))
+        return group
+                .addGroup(createHorizontalDataComponents(layout, numberLabel, numberData))
                 .addGroup(createHorizontalDataComponents(layout, nameLabel, nameData))
                 .addGroup(createHorizontalDataComponents(layout, lengthLabel, lengthData))
                 .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData));
@@ -114,7 +115,8 @@ public class EpisodeDataPanel extends AbstractDataPanel<EpisodeTO> {
 
     @Override
     protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createVerticalComponents(layout, numberLabel, numberData))
+        return group
+                .addGroup(createVerticalComponents(layout, numberLabel, numberData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, nameLabel, nameData))
                 .addGap(VERTICAL_GAP_SIZE)

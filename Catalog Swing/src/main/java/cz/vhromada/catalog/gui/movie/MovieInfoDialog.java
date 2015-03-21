@@ -12,17 +12,13 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentListener;
 
 import cz.vhromada.catalog.commons.Constants;
 import cz.vhromada.catalog.commons.Language;
@@ -30,9 +26,9 @@ import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
 import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
 import cz.vhromada.catalog.gui.commons.DialogResult;
-import cz.vhromada.catalog.gui.commons.InputValidator;
 import cz.vhromada.catalog.gui.commons.Picture;
 import cz.vhromada.catalog.gui.genre.GenreChooseDialog;
 import cz.vhromada.validators.Validators;
@@ -42,7 +38,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class MovieInfoDialog extends JDialog {
+public class MovieInfoDialog extends AbstractInfoDialog<MovieTO> {
 
     /**
      * SerialVersionUID
@@ -55,44 +51,14 @@ public class MovieInfoDialog extends JDialog {
     private static final int HORIZONTAL_LABEL_DIALOG_SIZE = 100;
 
     /**
-     * Horizontal data size in dialog
-     */
-    private static final int HORIZONTAL_DATA_DIALOG_SIZE = 200;
-
-    /**
      * Horizontal time size
      */
     private static final int HORIZONTAL_TIME_SIZE = 60;
 
     /**
-     * Horizontal genres button size
-     */
-    private static final int HORIZONTAL_GENRES_BUTTON_SIZE = 310;
-
-    /**
-     * Horizontal button size
-     */
-    private static final int HORIZONTAL_BUTTON_SIZE = 96;
-
-    /**
-     * Horizontal button gap size
-     */
-    private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
-
-    /**
      * Horizontal gap size
      */
     private static final int HORIZONTAL_GAP_SIZE = 20;
-
-    /**
-     * Vertical gap size
-     */
-    private static final int VERTICAL_GAP_SIZE = 10;
-
-    /**
-     * Vertical long gap size
-     */
-    private static final int VERTICAL_LONG_GAP_SIZE = 20;
 
     /**
      * Maximum hours
@@ -110,19 +76,14 @@ public class MovieInfoDialog extends JDialog {
     private static final int MAX_SECONDS = 59;
 
     /**
-     * Return status
-     */
-    private DialogResult returnStatus = DialogResult.CANCEL;
-
-    /**
      * Facade for genres
      */
     private GenreFacade genreFacade;
 
     /**
-     * TO for movie
+     * List of TO for genre
      */
-    private MovieTO movie;
+    private List<GenreTO> genres = new ArrayList<>();
 
     /**
      * Label for czech name
@@ -242,7 +203,7 @@ public class MovieInfoDialog extends JDialog {
     /**
      * Label for ČSFD
      */
-    private JLabel csfdLabel = new JLabel("\u010cSFD");
+    private JLabel csfdLabel = new JLabel("ČSFD");
 
     /**
      * Text field for ČSFD
@@ -300,24 +261,19 @@ public class MovieInfoDialog extends JDialog {
     private JTextField noteData = new JTextField();
 
     /**
+     * Label for genres
+     */
+    private JLabel genreLabel = new JLabel("Genres");
+
+    /**
+     * Data with genres
+     */
+    private JLabel genreData = new JLabel();
+
+    /**
      * Button for genres
      */
-    private JButton genresButton = new JButton("Genres", Picture.CHOOSE.getIcon());
-
-    /**
-     * Button OK
-     */
-    private JButton okButton = new JButton("OK", Picture.OK.getIcon());
-
-    /**
-     * Button Cancel
-     */
-    private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
-
-    /**
-     * List of TO for genre
-     */
-    private List<GenreTO> genres = new ArrayList<>();
+    private JButton genresButton = new JButton("Change genres", Picture.CHOOSE.getIcon());
 
     /**
      * Creates a new instance of MovieInfoDialog.
@@ -326,14 +282,12 @@ public class MovieInfoDialog extends JDialog {
      * @throws IllegalArgumentException if facade for genres is null
      */
     public MovieInfoDialog(final GenreFacade genreFacade) {
-        this("Add", Picture.ADD, genreFacade);
-
+        init();
+        setGenreFacade(genreFacade);
         imdbCodeData.setEnabled(false);
         medium2HoursData.setEnabled(false);
         medium2MinutesData.setEnabled(false);
         medium2SecondsData.setEnabled(false);
-        okButton.setEnabled(false);
-        czechNameData.requestFocusInWindow();
     }
 
     /**
@@ -345,11 +299,11 @@ public class MovieInfoDialog extends JDialog {
      *                                  or TO for serie is null
      */
     public MovieInfoDialog(final GenreFacade genreFacade, final MovieTO movie) {
-        this("Update", Picture.UPDATE, genreFacade);
+        super(movie);
 
-        Validators.validateArgumentNotNull(movie, "TO for movie");
-
-        this.movie = movie;
+        init();
+        setGenreFacade(genreFacade);
+        this.genres = movie.getGenres();
         this.czechNameData.setText(movie.getCzechName());
         this.originalNameData.setText(movie.getOriginalName());
         this.yearData.setValue(movie.getYear());
@@ -369,7 +323,7 @@ public class MovieInfoDialog extends JDialog {
             default:
                 throw new IndexOutOfBoundsException("Bad language");
         }
-        for (Language subtitles : movie.getSubtitles()) {
+        for (final Language subtitles : movie.getSubtitles()) {
             initSubtitles(subtitles);
         }
         initTime(movie.getMedia().get(0), this.medium1HoursData, this.medium1MinutesData, this.medium1SecondsData);
@@ -390,48 +344,221 @@ public class MovieInfoDialog extends JDialog {
         this.wikiEnData.setText(movie.getWikiEn());
         this.pictureData.setText(movie.getPicture());
         this.noteData.setText(movie.getNote());
-        this.genres = movie.getGenres();
-        this.okButton.setEnabled(true);
-        this.okButton.requestFocusInWindow();
+        this.genreData.setText(getGenres());
+    }
+
+    @Override
+    protected void initComponents() {
+        initLabelComponent(czechNameLabel, czechNameData);
+        initLabelComponent(originalNameLabel, originalNameData);
+        initLabelComponent(yearLabel, yearData);
+        initLabelComponent(csfdLabel, csfdData);
+        initLabelComponent(wikiCzLabel, wikiCzData);
+        initLabelComponent(wikiEnLabel, wikiEnData);
+        initLabelComponent(pictureLabel, pictureData);
+        initLabelComponent(noteLabel, noteData);
+        initLabelComponent(genreLabel, genreData);
+
+        addInputValidator(czechNameData);
+        addInputValidator(originalNameData);
+
+        languagesButtonGroup.add(czechLanguageData);
+        languagesButtonGroup.add(englishLanguageData);
+        languagesButtonGroup.add(frenchLanguageData);
+        languagesButtonGroup.add(japaneseLanguageData);
+
+        languageLabel.setFocusable(false);
+        subtitlesLabel.setFocusable(false);
+        medium1Label.setFocusable(false);
+        genreData.setFocusable(false);
+
+        medium2Label.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(final ChangeEvent e) {
+                medium2StateValueChangedAction();
+            }
+
+        });
+
+        imdbCodeLabel.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(final ChangeEvent e) {
+                imdbCodeData.setEnabled(imdbCodeLabel.isSelected());
+            }
+
+        });
+
+        genresButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                genresAction();
+            }
+
+        });
+    }
+
+    @Override
+    protected MovieTO processData(final MovieTO objectData) {
+        final MovieTO movie = objectData == null ? new MovieTO() : objectData;
+        movie.setCzechName(czechNameData.getText());
+        movie.setOriginalName(originalNameData.getText());
+        movie.setYear((Integer) yearData.getValue());
+        final Language language;
+        final ButtonModel model = languagesButtonGroup.getSelection();
+        if (model.equals(czechLanguageData.getModel())) {
+            language = Language.CZ;
+        } else if (model.equals(englishLanguageData.getModel())) {
+            language = Language.EN;
+        } else {
+            language = model.equals(frenchLanguageData.getModel()) ? Language.FR : Language.JP;
+        }
+        movie.setLanguage(language);
+        movie.setSubtitles(getSelectedSubtitles());
+        movie.setMedia(getMedia());
+        movie.setCsfd(csfdData.getText());
+        movie.setImdbCode(imdbCodeLabel.isSelected() ? (Integer) imdbCodeData.getValue() : -1);
+        movie.setWikiCz(wikiCzData.getText());
+        movie.setWikiEn(wikiEnData.getText());
+        movie.setPicture(pictureData.getText());
+        movie.setNote(noteData.getText());
+        movie.setGenres(genres);
+
+        return movie;
     }
 
     /**
-     * Creates a new instance of MovieInfoDialog.
+     * Returns true if input is valid: czech name isn't empty string, original name isn't empty string, genres isn't empty collection.
      *
-     * @param name        name
-     * @param picture     picture
-     * @param genreFacade facade for genres
+     * @return true if input is valid: czech name isn't empty string, original name isn't empty string, genres isn't empty collection
+     */
+    @Override
+    protected boolean isInputValid() {
+        return !czechNameData.getText().isEmpty() && !originalNameData.getText().isEmpty() && !genres.isEmpty();
+    }
+
+    @Override
+    protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group
+                .addGroup(createHorizontalComponents(layout, czechNameLabel, czechNameData))
+                .addGroup(createHorizontalComponents(layout, originalNameLabel, originalNameData))
+                .addGroup(createHorizontalComponents(layout, yearLabel, yearData))
+                .addGroup(createHorizontalComponents(layout, languageLabel, czechLanguageData))
+                .addGroup(createHorizontalSelectableComponent(layout, englishLanguageData))
+                .addGroup(createHorizontalSelectableComponent(layout, frenchLanguageData))
+                .addGroup(createHorizontalSelectableComponent(layout, japaneseLanguageData))
+                .addGroup(createHorizontalComponents(layout, subtitlesLabel, czechSubtitlesData))
+                .addGroup(createHorizontalSelectableComponent(layout, englishSubtitlesData))
+                .addGroup(createHorizontalLengthComponents(layout, medium1Label, medium1HoursData, medium1MinutesData, medium1SecondsData))
+                .addGroup(createHorizontalLengthComponents(layout, medium2Label, medium2HoursData, medium2MinutesData, medium2SecondsData))
+                .addGroup(createHorizontalComponents(layout, csfdLabel, csfdData))
+                .addGroup(createHorizontalComponents(layout, imdbCodeLabel, imdbCodeData))
+                .addGroup(createHorizontalComponents(layout, wikiCzLabel, wikiCzData))
+                .addGroup(createHorizontalComponents(layout, wikiEnLabel, wikiEnData))
+                .addGroup(createHorizontalComponents(layout, pictureLabel, pictureData))
+                .addGroup(createHorizontalComponents(layout, noteLabel, noteData))
+                .addGroup(createHorizontalComponents(layout, genreLabel, genreData))
+                .addComponent(genresButton, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE, HORIZONTAL_LONG_COMPONENT_SIZE);
+    }
+
+    @Override
+    protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group
+                .addGroup(createVerticalComponents(layout, czechNameLabel, czechNameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, originalNameLabel, originalNameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, yearLabel, yearData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, languageLabel, czechLanguageData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(englishLanguageData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(frenchLanguageData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(japaneseLanguageData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, subtitlesLabel, czechSubtitlesData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(englishSubtitlesData, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
+                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalLengthComponents(layout, medium1Label, medium1HoursData, medium1MinutesData, medium1SecondsData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalLengthComponents(layout, medium2Label, medium2HoursData, medium2MinutesData, medium2SecondsData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, csfdLabel, csfdData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, imdbCodeLabel, imdbCodeData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, wikiCzLabel, wikiCzData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, wikiEnLabel, wikiEnData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, pictureLabel, pictureData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, genreLabel, genreData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(genresButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
+                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
+    }
+
+    /**
+     * Initializes facade for genres.
+     *
      * @throws IllegalArgumentException if facade for genres is null
      */
-    private MovieInfoDialog(final String name, final Picture picture, final GenreFacade genreFacade) {
-        super(new JFrame(), name, true);
-
+    private void setGenreFacade(final GenreFacade genreFacade) {
         Validators.validateArgumentNotNull(genreFacade, "Facade for genres");
 
         this.genreFacade = genreFacade;
-        initComponents();
-        setIconImage(picture.getIcon().getImage());
     }
 
     /**
-     * Returns return status.
+     * Returns genres.
      *
-     * @return return status
+     * @return genres
      */
-    public DialogResult getReturnStatus() {
-        return returnStatus;
+    private String getGenres() {
+        if (genres == null || genres.isEmpty()) {
+            return "";
+        }
+
+        final StringBuilder subtitlesString = new StringBuilder();
+        for (final GenreTO genre : genres) {
+            subtitlesString.append(genre.getName());
+            subtitlesString.append(", ");
+        }
+
+        return subtitlesString.substring(0, subtitlesString.length() - 2);
     }
 
     /**
-     * Returns TO for movie.
-     *
-     * @return TO for movie
-     * @throws IllegalStateException if TO for movie hasn't been set
+     * Performs action for button Genres.
      */
-    public MovieTO getMovie() {
-        Validators.validateFieldNotNull(movie, "TO for movie");
+    private void genresAction() {
+        EventQueue.invokeLater(new Runnable() {
 
-        return movie;
+            @Override
+            public void run() {
+                final GenreChooseDialog dialog = new GenreChooseDialog(genreFacade, new ArrayList<>(genres));
+                dialog.setVisible(true);
+                if (dialog.getReturnStatus() == DialogResult.OK) {
+                    genres.clear();
+                    genres.addAll(dialog.getGenres());
+                    genreData.setText(getGenres());
+                    setOkButtonEnabled(isInputValid());
+                }
+            }
+
+        });
     }
 
     /**
@@ -462,135 +589,11 @@ public class MovieInfoDialog extends JDialog {
      * @param minutes minutes
      * @param seconds seconds
      */
-    private void initTime(final int length, final JSpinner hours, final JSpinner minutes, final JSpinner seconds) {
+    private static void initTime(final int length, final JSpinner hours, final JSpinner minutes, final JSpinner seconds) {
         final Time time = new Time(length);
         hours.setValue(time.getData(Time.TimeData.HOUR));
         minutes.setValue(time.getData(Time.TimeData.MINUTE));
         seconds.setValue(time.getData(Time.TimeData.SECOND));
-    }
-
-    /**
-     * Initializes components.
-     */
-    private void initComponents() {
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
-
-        final DocumentListener inputValidator = new InputValidator(okButton) {
-
-            @Override
-            public boolean isInputValid() {
-                return MovieInfoDialog.this.isInputValid();
-            }
-
-        };
-        initLabelTextFieldWithValidator(czechNameLabel, czechNameData, inputValidator);
-        initLabelTextFieldWithValidator(originalNameLabel, originalNameData, inputValidator);
-        initLabelComponent(yearLabel, yearData);
-        initButtonGroup(czechLanguageData, englishLanguageData, frenchLanguageData, japaneseLanguageData);
-        initLabelComponent(csfdLabel, csfdData);
-        initLabelComponent(wikiCzLabel, wikiCzData);
-        initLabelComponent(wikiEnLabel, wikiEnData);
-        initLabelComponent(pictureLabel, pictureData);
-        initLabelComponent(noteLabel, noteData);
-        initComponentsFocusable(languageLabel, subtitlesLabel, medium1Label);
-
-        medium2Label.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                medium2StateValueChangedAction();
-            }
-
-        });
-        imdbCodeLabel.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                imdbCodeData.setEnabled(imdbCodeLabel.isSelected());
-            }
-
-        });
-
-        genresButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                genresAction();
-            }
-
-        });
-
-        okButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                okAction();
-            }
-
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                cancelAction();
-            }
-
-        });
-
-        final GroupLayout layout = new GroupLayout(getRootPane());
-        getRootPane().setLayout(layout);
-        layout.setHorizontalGroup(createHorizontalLayout(layout));
-        layout.setVerticalGroup(createVerticalLayout(layout));
-
-        pack();
-        setLocationRelativeTo(getRootPane());
-    }
-
-    /**
-     * Initializes label with text field and input validator.
-     *
-     * @param label          label
-     * @param textField      text field
-     * @param inputValidator input validator
-     */
-    private void initLabelTextFieldWithValidator(final JLabel label, final JTextField textField, final DocumentListener inputValidator) {
-        initLabelComponent(label, textField);
-        textField.getDocument().addDocumentListener(inputValidator);
-    }
-
-    /**
-     * Initializes label with component.
-     *
-     * @param label     label
-     * @param component component
-     */
-    private void initLabelComponent(final JLabel label, final JComponent component) {
-        label.setLabelFor(component);
-        label.setFocusable(false);
-    }
-
-    /**
-     * Initializes components.
-     *
-     * @param components components
-     */
-    private void initComponentsFocusable(final JComponent... components) {
-        for (JComponent component : components) {
-            component.setFocusable(false);
-        }
-    }
-
-    /**
-     * Initializes button group.
-     *
-     * @param buttons buttons in button group
-     */
-    private void initButtonGroup(final JRadioButton... buttons) {
-        for (JRadioButton button : buttons) {
-            languagesButtonGroup.add(button);
-        }
     }
 
     /**
@@ -601,40 +604,7 @@ public class MovieInfoDialog extends JDialog {
         medium2HoursData.setEnabled(selected);
         medium2MinutesData.setEnabled(selected);
         medium2SecondsData.setEnabled(selected);
-        okButton.setEnabled(isInputValid());
-    }
-
-    /**
-     * Performs action for button OK.
-     */
-    private void okAction() {
-        returnStatus = DialogResult.OK;
-        if (movie == null) {
-            movie = new MovieTO();
-        }
-        movie.setCzechName(czechNameData.getText());
-        movie.setOriginalName(originalNameData.getText());
-        movie.setYear((Integer) yearData.getValue());
-        final Language language;
-        final ButtonModel model = languagesButtonGroup.getSelection();
-        if (model.equals(czechLanguageData.getModel())) {
-            language = Language.CZ;
-        } else if (model.equals(englishLanguageData.getModel())) {
-            language = Language.EN;
-        } else {
-            language = model.equals(frenchLanguageData.getModel()) ? Language.FR : Language.JP;
-        }
-        movie.setLanguage(language);
-        movie.setSubtitles(getSelectedSubtitles());
-        movie.setMedia(getMedia());
-        movie.setCsfd(csfdData.getText());
-        movie.setImdbCode(imdbCodeLabel.isSelected() ? (Integer) imdbCodeData.getValue() : -1);
-        movie.setWikiCz(wikiCzData.getText());
-        movie.setWikiEn(wikiEnData.getText());
-        movie.setPicture(pictureData.getText());
-        movie.setNote(noteData.getText());
-        movie.setGenres(genres);
-        close();
+        setOkButtonEnabled(isInputValid());
     }
 
     /**
@@ -677,113 +647,12 @@ public class MovieInfoDialog extends JDialog {
      * @param secondsData data for seconds
      * @return medium
      */
-    private int getMedium(final JSpinner hoursData, final JSpinner minutesData, final JSpinner secondsData) {
+    private static int getMedium(final JSpinner hoursData, final JSpinner minutesData, final JSpinner secondsData) {
         final int hours = (Integer) hoursData.getValue();
         final int minutes = (Integer) minutesData.getValue();
         final int seconds = (Integer) secondsData.getValue();
 
         return new Time(hours, minutes, seconds).getLength();
-    }
-
-    /**
-     * Performs action for button Cancel.
-     */
-    private void cancelAction() {
-        returnStatus = DialogResult.CANCEL;
-        movie = null;
-        close();
-    }
-
-    /**
-     * Performs action for button Genres.
-     */
-    private void genresAction() {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final GenreChooseDialog dialog = new GenreChooseDialog(genreFacade, new ArrayList<>(genres));
-                dialog.setVisible(true);
-                if (dialog.getReturnStatus() == DialogResult.OK) {
-                    genres.clear();
-                    genres.addAll(dialog.getGenres());
-                    okButton.setEnabled(isInputValid());
-                }
-            }
-
-        });
-    }
-
-    /**
-     * Returns horizontal layout of components.
-     *
-     * @param layout layout
-     * @return horizontal layout of components
-     */
-    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-        final GroupLayout.Group buttons = layout.createSequentialGroup()
-                .addGap(HORIZONTAL_BUTTON_GAP_SIZE)
-                .addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(54)
-                .addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(HORIZONTAL_BUTTON_GAP_SIZE);
-
-        final GroupLayout.Group componentsGroup = layout.createParallelGroup()
-                .addGroup(createHorizontalComponents(layout, czechNameLabel, czechNameData))
-                .addGroup(createHorizontalComponents(layout, originalNameLabel, originalNameData))
-                .addGroup(createHorizontalComponents(layout, yearLabel, yearData))
-                .addGroup(createHorizontalComponents(layout, languageLabel, czechLanguageData))
-                .addGroup(createHorizontalSelectableComponents(layout, englishLanguageData, frenchLanguageData, japaneseLanguageData))
-                .addGroup(createHorizontalComponents(layout, subtitlesLabel, czechSubtitlesData))
-                .addGroup(createHorizontalSelectableComponents(layout, englishSubtitlesData))
-                .addGroup(createHorizontalLengthComponents(layout, medium1Label, medium1HoursData, medium1MinutesData, medium1SecondsData))
-                .addGroup(createHorizontalLengthComponents(layout, medium2Label, medium2HoursData, medium2MinutesData, medium2SecondsData))
-                .addGroup(createHorizontalComponents(layout, csfdLabel, csfdData))
-                .addGroup(createHorizontalComponents(layout, imdbCodeLabel, imdbCodeData))
-                .addGroup(createHorizontalComponents(layout, wikiCzLabel, wikiCzData))
-                .addGroup(createHorizontalComponents(layout, wikiEnLabel, wikiEnData))
-                .addGroup(createHorizontalComponents(layout, pictureLabel, pictureData))
-                .addGroup(createHorizontalComponents(layout, noteLabel, noteData))
-                .addComponent(genresButton, HORIZONTAL_GENRES_BUTTON_SIZE, HORIZONTAL_GENRES_BUTTON_SIZE, HORIZONTAL_GENRES_BUTTON_SIZE)
-                .addGroup(buttons);
-
-        return layout.createSequentialGroup()
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addGroup(componentsGroup)
-                .addGap(HORIZONTAL_GAP_SIZE);
-    }
-
-    /**
-     * Returns horizontal layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label component
-     * @param data   data component
-     * @return horizontal layout for label component with data component
-     */
-    private GroupLayout.Group createHorizontalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-        return layout.createSequentialGroup()
-                .addComponent(label, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
-                .addGap(10)
-                .addComponent(data, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
-    }
-
-    /**
-     * Returns horizontal layout for selectable components.
-     *
-     * @param layout     layout
-     * @param components components
-     * @return horizontal layout for selectable components
-     */
-    private GroupLayout.Group createHorizontalSelectableComponents(final GroupLayout layout, final JComponent... components) {
-        final GroupLayout.Group result = layout.createParallelGroup();
-        for (JComponent component : components) {
-            final GroupLayout.Group group = layout.createSequentialGroup()
-                    .addGap(110)
-                    .addComponent(component, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
-            result.addGroup(group);
-        }
-        return result;
     }
 
     /**
@@ -809,94 +678,6 @@ public class MovieInfoDialog extends JDialog {
                 .addComponent(label, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE, HORIZONTAL_LABEL_DIALOG_SIZE)
                 .addGap(HORIZONTAL_GAP_SIZE)
                 .addGroup(lengthData);
-    }
-
-    /**
-     * Returns vertical layout of components.
-     *
-     * @param layout layout
-     * @return vertical layout of components
-     */
-    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-        final GroupLayout.Group buttons = layout.createParallelGroup()
-                .addComponent(okButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
-                .addComponent(cancelButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
-
-        return layout.createSequentialGroup()
-                .addGap(VERTICAL_LONG_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, czechNameLabel, czechNameData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, originalNameLabel, originalNameData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, yearLabel, yearData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, languageLabel, czechLanguageData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalSelectableComponents(layout, englishLanguageData, frenchLanguageData, japaneseLanguageData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, subtitlesLabel, czechSubtitlesData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalSelectableComponents(layout, englishSubtitlesData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalLengthComponents(layout, medium1Label, medium1HoursData, medium1MinutesData, medium1SecondsData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalLengthComponents(layout, medium2Label, medium2HoursData, medium2MinutesData, medium2SecondsData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, csfdLabel, csfdData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, imdbCodeLabel, imdbCodeData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, wikiCzLabel, wikiCzData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, wikiEnLabel, wikiEnData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, pictureLabel, pictureData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(genresButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
-                .addGap(VERTICAL_LONG_GAP_SIZE)
-                .addGroup(buttons)
-                .addGap(VERTICAL_LONG_GAP_SIZE);
-    }
-
-    /**
-     * Returns vertical layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label component
-     * @param data   data component
-     * @return vertical layout for label component with data component
-     */
-    private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-        return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
-                .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
-    }
-
-    /**
-     * Returns vertical layout for selectable components.
-     *
-     * @param layout     layout
-     * @param components components
-     * @return vertical layout for selectable components
-     */
-    private GroupLayout.Group createVerticalSelectableComponents(final GroupLayout layout, final JComponent... components) {
-        final GroupLayout.Group result = layout.createSequentialGroup();
-        for (JComponent component : components) {
-            result.addComponent(component, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                    CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
-            if (!component.equals(components[components.length - 1])) {
-                result.addGap(VERTICAL_GAP_SIZE);
-            }
-        }
-        return result;
     }
 
     /**
@@ -926,24 +707,6 @@ public class MovieInfoDialog extends JDialog {
                         CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(lengthComponents);
-    }
-
-
-    /**
-     * Returns true if input is valid: czech name isn't empty string, original name isn't empty string, genres isn't empty collection.
-     *
-     * @return true if input is valid: czech name isn't empty string, original name isn't empty string, genres isn't empty collection
-     */
-    private boolean isInputValid() {
-        return !czechNameData.getText().isEmpty() && !originalNameData.getText().isEmpty() && !genres.isEmpty();
-    }
-
-    /**
-     * Closes dialog.
-     */
-    private void close() {
-        setVisible(false);
-        dispose();
     }
 
 }

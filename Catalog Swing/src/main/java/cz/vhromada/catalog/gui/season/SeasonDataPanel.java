@@ -159,7 +159,8 @@ public class SeasonDataPanel extends AbstractDataPanel<SeasonTO> {
 
     @Override
     protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createHorizontalDataComponents(layout, numberLabel, numberData))
+        return group
+                .addGroup(createHorizontalDataComponents(layout, numberLabel, numberData))
                 .addGroup(createHorizontalDataComponents(layout, yearLabel, yearData))
                 .addGroup(createHorizontalDataComponents(layout, languageLabel, languageData))
                 .addGroup(createHorizontalDataComponents(layout, subtitlesLabel, subtitlesData))
@@ -170,7 +171,8 @@ public class SeasonDataPanel extends AbstractDataPanel<SeasonTO> {
 
     @Override
     protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createVerticalComponents(layout, numberLabel, numberData))
+        return group
+                .addGroup(createVerticalComponents(layout, numberLabel, numberData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, yearLabel, yearData))
                 .addGap(VERTICAL_GAP_SIZE)

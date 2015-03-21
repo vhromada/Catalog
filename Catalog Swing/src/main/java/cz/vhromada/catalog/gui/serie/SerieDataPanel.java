@@ -174,10 +174,6 @@ public class SerieDataPanel extends AbstractDataPanel<SerieTO> {
 
         updateData(serie);
 
-        final String picture = serie.getPicture();
-        if (!picture.isEmpty()) {
-            pictureData.setIcon(new ImageIcon("posters/" + picture));
-        }
         pictureData.setFocusable(false);
 
         initData(czechNameLabel, czechNameData);
@@ -246,7 +242,8 @@ public class SerieDataPanel extends AbstractDataPanel<SerieTO> {
 
     @Override
     protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addComponent(pictureData, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE)
+        return group
+                .addComponent(pictureData, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE)
                 .addGroup(createHorizontalDataComponents(layout, czechNameLabel, czechNameData))
                 .addGroup(createHorizontalDataComponents(layout, originalNameLabel, originalNameData))
                 .addGroup(createHorizontalDataComponents(layout, genreLabel, genreData))
@@ -259,7 +256,8 @@ public class SerieDataPanel extends AbstractDataPanel<SerieTO> {
 
     @Override
     protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addComponent(pictureData, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE)
+        return group
+                .addComponent(pictureData, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE)
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, czechNameLabel, czechNameData))
                 .addGap(VERTICAL_GAP_SIZE)

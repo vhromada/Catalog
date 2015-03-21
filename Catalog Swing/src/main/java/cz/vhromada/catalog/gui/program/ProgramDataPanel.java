@@ -136,7 +136,8 @@ public class ProgramDataPanel extends AbstractDataPanel<ProgramTO> {
 
     @Override
     protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createHorizontalDataComponents(layout, nameLabel, nameData))
+        return group
+                .addGroup(createHorizontalDataComponents(layout, nameLabel, nameData))
                 .addGroup(createHorizontalDataComponents(layout, dataLabel, dataData))
                 .addGroup(createHorizontalDataComponents(layout, mediaCountLabel, mediaCountData))
                 .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData))
@@ -145,7 +146,8 @@ public class ProgramDataPanel extends AbstractDataPanel<ProgramTO> {
 
     @Override
     protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
-        return group.addGroup(createVerticalComponents(layout, nameLabel, nameData))
+        return group
+                .addGroup(createVerticalComponents(layout, nameLabel, nameData))
                 .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(createVerticalComponents(layout, dataLabel, dataData))
                 .addGap(VERTICAL_GAP_SIZE)

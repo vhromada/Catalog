@@ -61,6 +61,11 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
     private static final int HORIZONTAL_DATA_GAP_SIZE = 10;
 
     /**
+     * Horizontal selectable component gap size
+     */
+    private static final int HORIZONTAL_SELECTABLE_COMPONENT_GAP_SIZE = 110;
+
+    /**
      * Horizontal button gap size
      */
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
@@ -313,7 +318,7 @@ public abstract class AbstractInfoDialog<T> extends JDialog {
      */
     protected final GroupLayout.Group createHorizontalSelectableComponent(final GroupLayout layout, final JComponent component) {
         return layout.createSequentialGroup()
-                .addGap(110)
+                .addGap(HORIZONTAL_SELECTABLE_COMPONENT_GAP_SIZE)
                 .addComponent(component, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE, HORIZONTAL_DATA_DIALOG_SIZE);
     }
 

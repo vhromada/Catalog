@@ -2,11 +2,10 @@ package cz.vhromada.catalog.gui.movie;
 
 import java.util.List;
 
-import javax.swing.table.AbstractTableModel;
-
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.catalog.gui.commons.AbstractStatsTableDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -14,7 +13,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class MoviesStatsTableDataModel extends AbstractTableModel {
+public class MoviesStatsTableDataModel extends AbstractStatsTableDataModel {
 
     /**
      * SerialVersionUID
@@ -59,13 +58,6 @@ public class MoviesStatsTableDataModel extends AbstractTableModel {
         update();
     }
 
-    /**
-     * Returns the value for the cell at columnIndex and rowIndex.
-     *
-     * @param rowIndex    the row whose value is to be queried
-     * @param columnIndex the column whose value is to be queried
-     * @return the value at the specified cell
-     */
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         switch (columnIndex) {
@@ -80,32 +72,16 @@ public class MoviesStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /**
-     * Returns the number of columns in the model.
-     *
-     * @return the number of columns in the model
-     */
     @Override
     public int getColumnCount() {
         return 3;
     }
 
-    /**
-     * Returns the number of rows in the model.
-     *
-     * @return the number of rows in the model
-     */
     @Override
     public int getRowCount() {
         return 1;
     }
 
-    /**
-     * Returns class of data regardless of columnIndex.
-     *
-     * @param columnIndex the column being queried
-     * @return class of data
-     */
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
         switch (columnIndex) {
@@ -120,12 +96,6 @@ public class MoviesStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /**
-     * Returns a default name for the column.
-     *
-     * @param column the column being queried
-     * @return a string containing the default name of column
-     */
     @Override
     public String getColumnName(final int column) {
         switch (column) {
@@ -140,9 +110,7 @@ public class MoviesStatsTableDataModel extends AbstractTableModel {
         }
     }
 
-    /**
-     * Updates model.
-     */
+    @Override
     public final void update() {
         movies = movieFacade.getMovies();
         totalLength = movieFacade.getTotalLength();

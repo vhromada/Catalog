@@ -1,78 +1,31 @@
 package cz.vhromada.catalog.gui.movie;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
-import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
+import cz.vhromada.catalog.gui.commons.WebPageButtonType;
 import cz.vhromada.validators.Validators;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A class represents panel with movie's data.
  *
  * @author Vladimir Hromada
  */
-public class MovieDataPanel extends JPanel {
-
-    /**
-     * Logger
-     */
-    private static final Logger logger = LoggerFactory.getLogger(MovieDataPanel.class);
+public class MovieDataPanel extends AbstractDataPanel<MovieTO> {
 
     /**
      * SerialVersionUID
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Horizontal label size
-     */
-    private static final int HORIZONTAL_LABEL_SIZE = 150;
-
-    /**
-     * Horizontal data size
-     */
-    private static final int HORIZONTAL_DATA_SIZE = 600;
-
-    /**
-     * Horizontal button size
-     */
-    private static final int HORIZONTAL_BUTTON_SIZE = 90;
-
-    /**
-     * Horizontal picture size
-     */
-    private static final int HORIZONTAL_PICTURE_SIZE = 200;
-
-    /**
-     * Horizontal gap size
-     */
-    private static final int HORIZONTAL_GAP_SIZE = 10;
-
-    /**
-     * Vertical picture size
-     */
-    private static final int VERTICAL_PICTURE_SIZE = 180;
-
-    /**
-     * Vertical gap size
-     */
-    private static final int VERTICAL_GAP_SIZE = 10;
 
     /**
      * Label for picture
@@ -172,7 +125,7 @@ public class MovieDataPanel extends JPanel {
     /**
      * Button for showing movie's ČSFD page
      */
-    private JButton csfdButton = new JButton("\u010cSFD");
+    private JButton csfdButton = new JButton("ČSFD");
 
     /**
      * Button for showing movie's IMDB page
@@ -216,92 +169,119 @@ public class MovieDataPanel extends JPanel {
      * @throws IllegalArgumentException if movie is null
      */
     public MovieDataPanel(final MovieTO movie) {
+        updateData(movie);
+
         Validators.validateArgumentNotNull(movie, "TO for movie");
 
-        final String picture = movie.getPicture();
-        if (!picture.isEmpty()) {
-            pictureData.setIcon(new ImageIcon("posters/" + picture));
-        }
         pictureData.setFocusable(false);
 
-        initData(czechNameLabel, czechNameData, movie.getCzechName());
-        initData(originalNameLabel, originalNameData, movie.getOriginalName());
-        initData(genreLabel, genreData, getGenres(movie));
-        initData(yearLabel, yearData, Integer.toString(movie.getYear()));
-        initData(languageLabel, languageData, movie.getLanguage().toString());
-        initData(subtitlesLabel, subtitlesData, getSubtitles(movie));
-        initData(mediaLabel, mediaData, getMedia(movie));
-        initData(totalLengthLabel, totalLengthData, getMovieLength(movie));
-        initData(noteLabel, noteData, movie.getNote());
+        initData(czechNameLabel, czechNameData);
+        initData(originalNameLabel, originalNameData);
+        initData(genreLabel, genreData);
+        initData(yearLabel, yearData);
+        initData(languageLabel, languageData);
+        initData(subtitlesLabel, subtitlesData);
+        initData(mediaLabel, mediaData);
+        initData(totalLengthLabel, totalLengthData);
+        initData(noteLabel, noteData);
 
-        csfd = movie.getCsfd();
-        csfdButton.setEnabled(!csfd.isEmpty());
-        csfdButton.addActionListener(createActionListener("http://www.csfd.cz/film/" + csfd, "\u010cSFD"));
+        initButton(csfdButton, WebPageButtonType.CSFD);
+        initButton(imdbButton, WebPageButtonType.IMDB);
+        initButton(wikiCzButton, WebPageButtonType.WIKI_CZ);
+        initButton(wikiEnButton, WebPageButtonType.WIKI_EN);
 
-        imdb = movie.getImdbCode();
-        imdbButton.setEnabled(imdb > 0);
-        imdbButton.addActionListener(createActionListener("http://www.imdb.com/title/tt" + imdb, "IMDB"));
-
-        wikiCz = movie.getWikiCz();
-        wikiCzButton.setEnabled(!wikiCz.isEmpty());
-        wikiCzButton.addActionListener(createActionListener("http://cs.wikipedia.org/wiki/" + wikiCz, "czech Wikipedia"));
-
-        wikiEn = movie.getWikiEn();
-        wikiEnButton.setEnabled(!wikiEn.isEmpty());
-        wikiEnButton.addActionListener(createActionListener("http://en.wikipedia.org/wiki/" + wikiEn, "english Wikipedia"));
-
-        final GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
-        layout.setHorizontalGroup(createHorizontalLayout(layout));
-        layout.setVerticalGroup(createVerticalLayout(layout));
+        createLayout();
     }
 
-    /**
-     * Updates TO for movie.
-     *
-     * @param movie TO for movie
-     * @throws IllegalArgumentException if TO for movie is null
-     */
-    public void updateMovie(final MovieTO movie) {
-        Validators.validateArgumentNotNull(movie, "TO for movie");
+    @Override
+    protected void updateComponentData(final MovieTO data) {
+        Validators.validateArgumentNotNull(data, "TO for movie");
 
-        final String picture = movie.getPicture();
-        if (!picture.isEmpty()) {
-            pictureData.setIcon(new ImageIcon("posters/" + picture));
-        } else {
+        final String picture = data.getPicture();
+        if (picture.isEmpty()) {
             pictureData.setIcon(null);
+        } else {
+            pictureData.setIcon(new ImageIcon("posters/" + picture));
         }
-        czechNameData.setText(movie.getCzechName());
-        originalNameData.setText(movie.getOriginalName());
-        genreData.setText(getGenres(movie));
-        yearData.setText(Integer.toString(movie.getYear()));
-        languageData.setText(movie.getLanguage().toString());
-        subtitlesData.setText(getSubtitles(movie));
-        mediaData.setText(getMedia(movie));
-        totalLengthData.setText(getMovieLength(movie));
-        noteData.setText(movie.getNote());
-        csfd = movie.getCsfd();
+        czechNameData.setText(data.getCzechName());
+        originalNameData.setText(data.getOriginalName());
+        genreData.setText(getGenres(data));
+        yearData.setText(Integer.toString(data.getYear()));
+        languageData.setText(data.getLanguage().toString());
+        subtitlesData.setText(getSubtitles(data));
+        mediaData.setText(getMedia(data));
+        totalLengthData.setText(getMovieLength(data));
+        noteData.setText(data.getNote());
+
+        csfd = data.getCsfd();
+        imdb = data.getImdbCode();
+        wikiCz = data.getWikiCz();
+        wikiEn = data.getWikiEn();
+
         csfdButton.setEnabled(!csfd.isEmpty());
-        imdb = movie.getImdbCode();
         imdbButton.setEnabled(imdb > 0);
-        wikiCz = movie.getWikiCz();
         wikiCzButton.setEnabled(!wikiCz.isEmpty());
-        wikiEn = movie.getWikiEn();
         wikiEnButton.setEnabled(!wikiEn.isEmpty());
     }
 
-    /**
-     * Initializes data.
-     *
-     * @param label label
-     * @param data  data
-     * @param text  text for data
-     */
-    private static void initData(final JLabel label, final JLabel data, final String text) {
-        label.setFocusable(false);
-        label.setLabelFor(data);
-        data.setText(text);
-        data.setFocusable(false);
+    @Override
+    protected String getCzWikiUrl() {
+        return wikiCz;
+    }
+
+    @Override
+    protected String getEnWikiUrl() {
+        return wikiEn;
+    }
+
+    @Override
+    protected String getCsfdUrl() {
+        return csfd;
+    }
+
+    @Override
+    protected int getImdbUrl() {
+        return imdb;
+    }
+
+    @Override
+    protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group.addComponent(pictureData, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE)
+                .addGroup(createHorizontalDataComponents(layout, czechNameLabel, czechNameData))
+                .addGroup(createHorizontalDataComponents(layout, originalNameLabel, originalNameData))
+                .addGroup(createHorizontalDataComponents(layout, genreLabel, genreData))
+                .addGroup(createHorizontalDataComponents(layout, yearLabel, yearData))
+                .addGroup(createHorizontalDataComponents(layout, languageLabel, languageData))
+                .addGroup(createHorizontalDataComponents(layout, subtitlesLabel, subtitlesData))
+                .addGroup(createHorizontalDataComponents(layout, mediaLabel, mediaData))
+                .addGroup(createHorizontalDataComponents(layout, totalLengthLabel, totalLengthData))
+                .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData))
+                .addGroup(createHorizontalButtons(layout, csfdButton, imdbButton, wikiCzButton, wikiEnButton));
+    }
+
+    @Override
+    protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group.addComponent(pictureData, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, czechNameLabel, czechNameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, originalNameLabel, originalNameData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, genreLabel, genreData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, yearLabel, yearData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, languageLabel, languageData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, subtitlesLabel, subtitlesData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, mediaLabel, mediaData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, totalLengthLabel, totalLengthData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalButtons(layout, csfdButton, imdbButton, wikiCzButton, wikiEnButton));
     }
 
     /**
@@ -363,7 +343,7 @@ public class MovieDataPanel extends JPanel {
 
         final StringBuilder subtitlesString = new StringBuilder();
         for (final Integer medium : media) {
-            subtitlesString.append(new Time(medium).toString());
+            subtitlesString.append(new Time(medium));
             subtitlesString.append(", ");
         }
 
@@ -374,7 +354,7 @@ public class MovieDataPanel extends JPanel {
      * Returns total length of movie.
      *
      * @param movie TO for movie
-     * @return total length of amovie
+     * @return total length of movie
      */
     private static String getMovieLength(final MovieTO movie) {
         final List<Integer> media = movie.getMedia();
@@ -384,144 +364,10 @@ public class MovieDataPanel extends JPanel {
         }
 
         int totalLength = 0;
-        for (Integer medium : media) {
+        for (final Integer medium : media) {
             totalLength += medium;
         }
         return new Time(totalLength).toString();
-    }
-
-    /**
-     * Returns action listener.
-     *
-     * @param url  URL to web page
-     * @param name name of web page
-     * @return action listener
-     */
-    private ActionListener createActionListener(final String url, final String name) {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                try {
-                    Runtime.getRuntime().exec("rundll32.exe url.dll,FileProtocolHandler " + url);
-                } catch (final IOException ex) {
-                    logger.error("Error in showing {} page.", name, ex);
-                }
-
-            }
-
-        };
-    }
-
-    /**
-     * Returns horizontal layout of components.
-     *
-     * @param layout layout
-     * @return horizontal layout of components
-     */
-    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-        final GroupLayout.Group buttons = layout.createSequentialGroup()
-                .addComponent(csfdButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addComponent(imdbButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addComponent(wikiCzButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addComponent(wikiEnButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE);
-
-        final GroupLayout.Group components = layout.createParallelGroup()
-                .addComponent(pictureData, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE, HORIZONTAL_PICTURE_SIZE)
-                .addGroup(createHorizontalDataComponents(layout, czechNameLabel, czechNameData))
-                .addGroup(createHorizontalDataComponents(layout, originalNameLabel, originalNameData))
-                .addGroup(createHorizontalDataComponents(layout, genreLabel, genreData))
-                .addGroup(createHorizontalDataComponents(layout, yearLabel, yearData))
-                .addGroup(createHorizontalDataComponents(layout, languageLabel, languageData))
-                .addGroup(createHorizontalDataComponents(layout, subtitlesLabel, subtitlesData))
-                .addGroup(createHorizontalDataComponents(layout, mediaLabel, mediaData))
-                .addGroup(createHorizontalDataComponents(layout, totalLengthLabel, totalLengthData))
-                .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData))
-                .addGroup(buttons);
-
-        return layout.createSequentialGroup()
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addGroup(components)
-                .addGap(HORIZONTAL_GAP_SIZE);
-
-    }
-
-    /**
-     * Returns horizontal layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label
-     * @param data   data
-     * @return horizontal layout for label component with data component
-     */
-    private GroupLayout.Group createHorizontalDataComponents(final GroupLayout layout, final JLabel label, final JLabel data) {
-        return layout.createSequentialGroup()
-                .addComponent(label, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE)
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addComponent(data, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE);
-    }
-
-    /**
-     * Returns vertical layout of components.
-     *
-     * @param layout layout
-     * @return vertical layout of components
-     */
-    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-        final GroupLayout.Group buttons = layout.createParallelGroup()
-                .addComponent(csfdButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
-                .addComponent(imdbButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
-                .addComponent(wikiCzButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE)
-                .addComponent(wikiEnButton, CatalogSwingConstants.VERTICAL_BUTTON_SIZE, CatalogSwingConstants.VERTICAL_BUTTON_SIZE,
-                        CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
-
-        return layout.createSequentialGroup()
-                .addGap(5)
-                .addComponent(pictureData, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE, VERTICAL_PICTURE_SIZE)
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, czechNameLabel, czechNameData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, originalNameLabel, originalNameData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, genreLabel, genreData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, yearLabel, yearData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, languageLabel, languageData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, subtitlesLabel, subtitlesData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, mediaLabel, mediaData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, totalLengthLabel, totalLengthData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(buttons)
-                .addGap(5);
-    }
-
-    /**
-     * Returns vertical layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label component
-     * @param data   data component
-     * @return vertical layout for label component with data component
-     */
-    private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-        return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
-                .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
 }

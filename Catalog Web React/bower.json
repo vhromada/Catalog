@@ -1,9 +1,0 @@
-{
-  "name": "Catalog",
-  "version": "0.0.0",
-  "private": true,
-  "dependencies": {
-    "este-library": "git://github.com/steida/este-library.git#~9.0.0",
-    "bootstrap": "^3.2.0"
-  }
-}

@@ -11,8 +11,8 @@ import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
-import cz.vhromada.catalog.gui.commons.AbstractInnerDataPanel;
 import cz.vhromada.catalog.gui.episode.EpisodesPanel;
 import cz.vhromada.validators.Validators;
 
@@ -21,7 +21,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SeasonsPanel extends AbstractInnerDataPanel<SeasonTO> {
+public class SeasonsPanel extends AbstractDataPanel<SeasonTO> {
 
     /**
      * SerialVersionUID
@@ -76,6 +76,26 @@ public class SeasonsPanel extends AbstractInnerDataPanel<SeasonTO> {
     }
 
     @Override
+    public void newData() {
+        throw new UnsupportedOperationException("Calling newData is not allowed for seasons.");
+    }
+
+    @Override
+    public void clearSelection() {
+        throw new UnsupportedOperationException("Calling clearSelection is not allowed for seasons.");
+    }
+
+    @Override
+    public void save() {
+        throw new UnsupportedOperationException("Calling save is not allowed for seasons.");
+    }
+
+    @Override
+    public boolean isSaved() {
+        throw new UnsupportedOperationException("Calling isSaved is not allowed for seasons.");
+    }
+
+    @Override
     protected AbstractInfoDialog<SeasonTO> getInfoDialog(final boolean add, final SeasonTO data) {
         return add ? new SeasonInfoDialog() : new SeasonInfoDialog(data);
     }
@@ -84,6 +104,11 @@ public class SeasonsPanel extends AbstractInnerDataPanel<SeasonTO> {
     protected void addData(final SeasonTO data) {
         data.setSerie(serie);
         seasonFacade.add(data);
+    }
+
+    @Override
+    protected void deleteData() {
+        throw new UnsupportedOperationException("Calling deleteData is not allowed for seasons.");
     }
 
     @Override

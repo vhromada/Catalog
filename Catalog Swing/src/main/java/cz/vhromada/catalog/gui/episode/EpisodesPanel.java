@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
+import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
-import cz.vhromada.catalog.gui.commons.AbstractInnerDataPanel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -16,7 +16,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class EpisodesPanel extends AbstractInnerDataPanel<EpisodeTO> {
+public class EpisodesPanel extends AbstractDataPanel<EpisodeTO> {
 
     /**
      * SerialVersionUID
@@ -61,6 +61,26 @@ public class EpisodesPanel extends AbstractInnerDataPanel<EpisodeTO> {
     }
 
     @Override
+    public void newData() {
+        throw new UnsupportedOperationException("Calling newData is not allowed for episodes.");
+    }
+
+    @Override
+    public void clearSelection() {
+        throw new UnsupportedOperationException("Calling clearSelection is not allowed for episodes.");
+    }
+
+    @Override
+    public void save() {
+        throw new UnsupportedOperationException("Calling save is not allowed for episodes.");
+    }
+
+    @Override
+    public boolean isSaved() {
+        throw new UnsupportedOperationException("Calling isSaved is not allowed for episodes.");
+    }
+
+    @Override
     protected AbstractInfoDialog<EpisodeTO> getInfoDialog(final boolean add, final EpisodeTO data) {
         return add ? new EpisodeInfoDialog() : new EpisodeInfoDialog(data);
     }
@@ -69,6 +89,11 @@ public class EpisodesPanel extends AbstractInnerDataPanel<EpisodeTO> {
     protected void addData(final EpisodeTO data) {
         data.setSeason(season);
         episodeFacade.add(data);
+    }
+
+    @Override
+    protected void deleteData() {
+        throw new UnsupportedOperationException("Calling deleteData is not allowed for episodes.");
     }
 
     @Override

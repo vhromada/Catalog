@@ -61,6 +61,11 @@ public abstract class AbstractDataPanel<T> extends JPanel {
     private static final int VERTICAL_GAP_SIZE = 2;
 
     /**
+     * Update property
+     */
+    private static final String UPDATE_PROPERTY = "update";
+
+    /**
      * Popup menu
      */
     private JPopupMenu popupMenu = new JPopupMenu();
@@ -134,6 +139,19 @@ public abstract class AbstractDataPanel<T> extends JPanel {
      * True if data is saved
      */
     private boolean saved;
+
+    /**
+     * Creates a new instance of AbstractDataPanel.
+     *
+     * @param listDataModel data model for list
+     * @throws IllegalArgumentException if data model for list is null
+     */
+    public AbstractDataPanel(final AbstractListDataModel<T> listDataModel) {
+        Validators.validateArgumentNotNull(listDataModel, "Data model for list");
+
+        this.listDataModel = listDataModel;
+        initComponents();
+    }
 
     /**
      * Creates a new instance of AbstractDataPanel.
@@ -281,9 +299,13 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         listDataModel.update();
         list.updateUI();
         updateDataPanel(tabbedPane.getComponentAt(0), data);
-        statsTableDataModel.update();
-        statsTable.updateUI();
-        saved = false;
+        if (statsTableDataModel == null) {
+            firePropertyChange(UPDATE_PROPERTY, false, true);
+        } else {
+            statsTableDataModel.update();
+            statsTable.updateUI();
+            saved = false;
+        }
     }
 
     /**
@@ -369,12 +391,14 @@ public abstract class AbstractDataPanel<T> extends JPanel {
 
         });
 
-        statsTable.setModel(statsTableDataModel);
-        statsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        statsTable.setEnabled(false);
-        statsTable.setRowSelectionAllowed(false);
-        statsTable.setDefaultRenderer(Integer.class, new StatsTableCellRenderer());
-        statsTable.setDefaultRenderer(String.class, new StatsTableCellRenderer());
+        if (statsTableDataModel != null) {
+            statsTable.setModel(statsTableDataModel);
+            statsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            statsTable.setEnabled(false);
+            statsTable.setRowSelectionAllowed(false);
+            statsTable.setDefaultRenderer(Integer.class, new StatsTableCellRenderer());
+            statsTable.setDefaultRenderer(String.class, new StatsTableCellRenderer());
+        }
 
         final GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -408,9 +432,13 @@ public abstract class AbstractDataPanel<T> extends JPanel {
                     listDataModel.update();
                     list.updateUI();
                     list.setSelectedIndex(list.getModel().getSize() - 1);
-                    statsTableDataModel.update();
-                    statsTable.updateUI();
-                    saved = false;
+                    if (statsTableDataModel == null) {
+                        firePropertyChange(UPDATE_PROPERTY, false, true);
+                    } else {
+                        statsTableDataModel.update();
+                        statsTable.updateUI();
+                        saved = false;
+                    }
                 }
             }
 
@@ -445,9 +473,13 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         listDataModel.update();
         list.updateUI();
         list.clearSelection();
-        statsTableDataModel.update();
-        statsTable.updateUI();
-        saved = false;
+        if (statsTableDataModel == null) {
+            firePropertyChange(UPDATE_PROPERTY, false, true);
+        } else {
+            statsTableDataModel.update();
+            statsTable.updateUI();
+            saved = false;
+        }
     }
 
     /**
@@ -459,9 +491,13 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         listDataModel.update();
         list.updateUI();
         list.setSelectedIndex(index + 1);
-        statsTableDataModel.update();
-        statsTable.updateUI();
-        saved = false;
+        if (statsTableDataModel == null) {
+            firePropertyChange(UPDATE_PROPERTY, false, true);
+        } else {
+            statsTableDataModel.update();
+            statsTable.updateUI();
+            saved = false;
+        }
     }
 
     /**
@@ -474,6 +510,9 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         list.updateUI();
         list.setSelectedIndex(index - 1);
         saved = false;
+        if (statsTableDataModel == null) {
+            firePropertyChange(UPDATE_PROPERTY, false, true);
+        }
     }
 
     /**
@@ -486,6 +525,9 @@ public abstract class AbstractDataPanel<T> extends JPanel {
         list.updateUI();
         list.setSelectedIndex(index + 1);
         saved = false;
+        if (statsTableDataModel == null) {
+            firePropertyChange(UPDATE_PROPERTY, false, true);
+        }
     }
 
     /**
@@ -529,9 +571,13 @@ public abstract class AbstractDataPanel<T> extends JPanel {
                 .addGap(HORIZONTAL_GAP_SIZE)
                 .addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
 
-        return layout.createParallelGroup()
-                .addGroup(data)
-                .addComponent(statsTableScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        if (statsTableDataModel == null) {
+            return data;
+        } else {
+            return layout.createParallelGroup()
+                    .addGroup(data)
+                    .addComponent(statsTableScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        }
     }
 
     /**
@@ -545,10 +591,14 @@ public abstract class AbstractDataPanel<T> extends JPanel {
                 .addComponent(listScrollPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE)
                 .addComponent(tabbedPane, VERTICAL_DATA_COMPONENT_SIZE, VERTICAL_DATA_COMPONENT_SIZE, Short.MAX_VALUE);
 
-        return layout.createSequentialGroup()
-                .addGroup(data)
-                .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(statsTableScrollPane, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE);
+        if (statsTableDataModel == null) {
+            return data;
+        } else {
+            return layout.createSequentialGroup()
+                    .addGroup(data)
+                    .addGap(VERTICAL_GAP_SIZE)
+                    .addComponent(statsTableScrollPane, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE, VERTICAL_STATS_SCROLL_PANE_SIZE);
+        }
     }
 
 }

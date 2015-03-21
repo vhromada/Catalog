@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
+import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
-import cz.vhromada.catalog.gui.commons.AbstractInnerDataPanel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -16,7 +16,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SongsPanel extends AbstractInnerDataPanel<SongTO> {
+public class SongsPanel extends AbstractDataPanel<SongTO> {
 
     /**
      * SerialVersionUID
@@ -61,6 +61,26 @@ public class SongsPanel extends AbstractInnerDataPanel<SongTO> {
     }
 
     @Override
+    public void newData() {
+        throw new UnsupportedOperationException("Calling newData is not allowed for songs.");
+    }
+
+    @Override
+    public void clearSelection() {
+        throw new UnsupportedOperationException("Calling clearSelection is not allowed for songs.");
+    }
+
+    @Override
+    public void save() {
+        throw new UnsupportedOperationException("Calling save is not allowed for songs.");
+    }
+
+    @Override
+    public boolean isSaved() {
+        throw new UnsupportedOperationException("Calling isSaved is not allowed for songs.");
+    }
+
+    @Override
     protected AbstractInfoDialog<SongTO> getInfoDialog(final boolean add, final SongTO data) {
         return add ? new SongInfoDialog() : new SongInfoDialog(data);
     }
@@ -69,6 +89,11 @@ public class SongsPanel extends AbstractInnerDataPanel<SongTO> {
     protected void addData(final SongTO data) {
         data.setMusic(music);
         songFacade.add(data);
+    }
+
+    @Override
+    protected void deleteData() {
+        throw new UnsupportedOperationException("Calling deleteData is not allowed for songs.");
     }
 
     @Override

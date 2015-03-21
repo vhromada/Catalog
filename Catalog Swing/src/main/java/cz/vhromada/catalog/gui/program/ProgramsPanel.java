@@ -32,7 +32,7 @@ public class ProgramsPanel extends AbstractOverviewDataPanel<ProgramTO> {
      * @throws IllegalArgumentException if facade for programs is null
      */
     public ProgramsPanel(final ProgramFacade programFacade) {
-        super(getProgramListDataModel(programFacade), getProgramsStatsTableDataModel(programFacade));
+        super(getProgramsListDataModel(programFacade), getProgramsStatsTableDataModel(programFacade));
 
         this.programFacade = programFacade;
     }
@@ -93,7 +93,7 @@ public class ProgramsPanel extends AbstractOverviewDataPanel<ProgramTO> {
      * @return data model for list with programs
      * @throws IllegalArgumentException if facade for programs is null
      */
-    private static ProgramsListDataModel getProgramListDataModel(final ProgramFacade facade) {
+    private static ProgramsListDataModel getProgramsListDataModel(final ProgramFacade facade) {
         return new ProgramsListDataModel(facade);
     }
 

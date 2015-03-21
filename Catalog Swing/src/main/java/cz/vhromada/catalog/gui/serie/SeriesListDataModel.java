@@ -38,13 +38,13 @@ public class SeriesListDataModel extends AbstractListDataModel<SerieTO> {
     }
 
     @Override
-    public String getElementAt(final int index) {
-        return getObjectAt(index).getCzechName();
+    protected List<SerieTO> getData() {
+        return serieFacade.getSeries();
     }
 
     @Override
-    protected List<SerieTO> getData() {
-        return serieFacade.getSeries();
+    protected String getDisplayValue(final SerieTO dataObject) {
+        return dataObject.getCzechName();
     }
 
 }

@@ -27,6 +27,11 @@ public abstract class AbstractListDataModel<T> extends AbstractListModel<String>
         return data.size();
     }
 
+    @Override
+    public String getElementAt(final int index) {
+        return getDisplayValue(getObjectAt(index));
+    }
+
     /**
      * Returns data object at the specified index.
      *
@@ -50,5 +55,13 @@ public abstract class AbstractListDataModel<T> extends AbstractListModel<String>
      * @return data.
      */
     protected abstract List<T> getData();
+
+    /**
+     * Returns display value for data.
+     *
+     * @param dataObject data
+     * @return display value for data
+     */
+    protected abstract String getDisplayValue(final T dataObject);
 
 }

@@ -38,13 +38,13 @@ public class MusicListDataModel extends AbstractListDataModel<MusicTO> {
     }
 
     @Override
-    public String getElementAt(final int index) {
-        return getObjectAt(index).getName();
+    protected List<MusicTO> getData() {
+        return musicFacade.getMusic();
     }
 
     @Override
-    protected List<MusicTO> getData() {
-        return musicFacade.getMusic();
+    protected String getDisplayValue(final MusicTO dataObject) {
+        return dataObject.getName();
     }
 
 }

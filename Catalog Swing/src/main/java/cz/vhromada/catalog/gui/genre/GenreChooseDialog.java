@@ -36,6 +36,11 @@ public class GenreChooseDialog extends JDialog {
     private static final long serialVersionUID = 1L;
 
     /**
+     * Horizontal scroll pane size
+     */
+    private static final int HORIZONTAL_SCROLL_PANE_SIZE = 310;
+
+    /**
      * Horizontal button size
      */
     private static final int HORIZONTAL_BUTTON_SIZE = 96;
@@ -46,14 +51,24 @@ public class GenreChooseDialog extends JDialog {
     private static final int HORIZONTAL_BUTTON_GAP_SIZE = 32;
 
     /**
+     * Horizontal size of gap between button
+     */
+    private static final int HORIZONTAL_BUTTONS_GAP_SIZE = 54;
+
+    /**
      * Horizontal gap size
      */
     private static final int HORIZONTAL_GAP_SIZE = 20;
 
     /**
-     * Vertical long gap size
+     * Vertical scroll pane size
      */
-    private static final int VERTICAL_LONG_GAP_SIZE = 20;
+    private static final int VERTICAL_SCROLL_PANE_SIZE = 300;
+
+    /**
+     * Vertical gap size
+     */
+    private static final int VERTICAL_GAP_SIZE = 20;
 
     /**
      * Return status
@@ -91,9 +106,9 @@ public class GenreChooseDialog extends JDialog {
     private JButton cancelButton = new JButton("Cancel", Picture.CANCEL.getIcon());
 
     /**
-     * Data model for list for choosing genres
+     * Data model for list for genres
      */
-    private GenreChooseListDataModel genreChooseListDataModel;
+    private GenresListDataModel genreListDataModel;
 
     /**
      * Creates a new instance of GenreChooseDialog.
@@ -143,8 +158,8 @@ public class GenreChooseDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        genreChooseListDataModel = new GenreChooseListDataModel(genreFacade);
-        list.setModel(genreChooseListDataModel);
+        genreListDataModel = new GenresListDataModel(genreFacade);
+        list.setModel(genreListDataModel);
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         list.setSelectedIndices(getSelectedIndexes());
         list.addListSelectionListener(new ListSelectionListener() {
@@ -192,7 +207,7 @@ public class GenreChooseDialog extends JDialog {
         genres.clear();
         final int[] indexes = list.getSelectedIndices();
         for (final int index : indexes) {
-            genres.add(genreChooseListDataModel.getGenreAt(index));
+            genres.add(genreListDataModel.getObjectAt(index));
         }
         close();
     }
@@ -224,13 +239,13 @@ public class GenreChooseDialog extends JDialog {
         final GroupLayout.Group buttons = layout.createSequentialGroup()
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE)
                 .addComponent(okButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
-                .addGap(54)
+                .addGap(HORIZONTAL_BUTTONS_GAP_SIZE)
                 .addComponent(cancelButton, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE, HORIZONTAL_BUTTON_SIZE)
                 .addGap(HORIZONTAL_BUTTON_GAP_SIZE);
 
 
         final GroupLayout.Group components = layout.createParallelGroup()
-                .addComponent(listScrollPane, 310, 310, 310)
+                .addComponent(listScrollPane, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE, HORIZONTAL_SCROLL_PANE_SIZE)
                 .addGroup(buttons);
 
         return layout.createSequentialGroup()
@@ -253,11 +268,11 @@ public class GenreChooseDialog extends JDialog {
                         CatalogSwingConstants.VERTICAL_BUTTON_SIZE);
 
         return layout.createSequentialGroup()
-                .addGap(VERTICAL_LONG_GAP_SIZE)
-                .addComponent(listScrollPane, 300, 300, 300)
-                .addGap(VERTICAL_LONG_GAP_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
+                .addComponent(listScrollPane, VERTICAL_SCROLL_PANE_SIZE, VERTICAL_SCROLL_PANE_SIZE, VERTICAL_SCROLL_PANE_SIZE)
+                .addGap(VERTICAL_GAP_SIZE)
                 .addGroup(buttons)
-                .addGap(VERTICAL_LONG_GAP_SIZE);
+                .addGap(VERTICAL_GAP_SIZE);
     }
 
     /**
@@ -275,8 +290,8 @@ public class GenreChooseDialog extends JDialog {
      */
     private int[] getSelectedIndexes() {
         final List<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < genreChooseListDataModel.getSize(); i++) {
-            if (genres.contains(genreChooseListDataModel.getGenreAt(i))) {
+        for (int i = 0; i < genreListDataModel.getSize(); i++) {
+            if (genres.contains(genreListDataModel.getObjectAt(i))) {
                 indexes.add(i);
             }
         }

@@ -38,13 +38,13 @@ public class ProgramsListDataModel extends AbstractListDataModel<ProgramTO> {
     }
 
     @Override
-    public String getElementAt(final int index) {
-        return getObjectAt(index).getName();
+    protected List<ProgramTO> getData() {
+        return programFacade.getPrograms();
     }
 
     @Override
-    protected List<ProgramTO> getData() {
-        return programFacade.getPrograms();
+    protected String getDisplayValue(final ProgramTO dataObject) {
+        return dataObject.getName();
     }
 
 }

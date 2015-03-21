@@ -2,10 +2,9 @@ package cz.vhromada.catalog.gui.genre;
 
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.gui.commons.AbstractListDataModel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -13,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class GenresListDataModel extends AbstractListModel<String> {
+public class GenresListDataModel extends AbstractListDataModel<GenreTO> {
 
     /**
      * SerialVersionUID
@@ -24,11 +23,6 @@ public class GenresListDataModel extends AbstractListModel<String> {
      * Facade for genres
      */
     private GenreFacade genreFacade;
-
-    /**
-     * List of TO for genre
-     */
-    private List<GenreTO> genres;
 
     /**
      * Creates a new instance of GenresListDataModel.
@@ -43,42 +37,14 @@ public class GenresListDataModel extends AbstractListModel<String> {
         update();
     }
 
-    /**
-     * Returns the length of the list.
-     *
-     * @return the length of the list
-     */
     @Override
-    public int getSize() {
-        return genres.size();
+    protected List<GenreTO> getData() {
+        return genreFacade.getGenres();
     }
 
-    /**
-     * Returns the value at the specified index.
-     *
-     * @param index the requested index
-     * @return the value at index
-     */
     @Override
-    public String getElementAt(final int index) {
-        return getGenreAt(index).getName();
-    }
-
-    /**
-     * Returns TO for genre at the specified index.
-     *
-     * @param index the requested index
-     * @return TO for genre at index
-     */
-    public GenreTO getGenreAt(final int index) {
-        return genres.get(index);
-    }
-
-    /**
-     * Updates model.
-     */
-    public final void update() {
-        genres = genreFacade.getGenres();
+    protected String getDisplayValue(final GenreTO dataObject) {
+        return dataObject.getName();
     }
 
 }

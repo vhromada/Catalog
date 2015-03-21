@@ -140,6 +140,11 @@ public abstract class AbstractOverviewDataPanel<T> extends JPanel {
     private boolean saved;
 
     /**
+     * True if data can be moved up or down
+     */
+    private boolean movable;
+
+    /**
      * Creates a new instance of AbstractDataPanel.
      *
      * @param listDataModel data model for list
@@ -150,6 +155,8 @@ public abstract class AbstractOverviewDataPanel<T> extends JPanel {
 
         this.listDataModel = listDataModel;
         this.statsTableDataModel = null;
+        this.saved = true;
+        this.movable = true;
         initComponents();
     }
 
@@ -162,12 +169,27 @@ public abstract class AbstractOverviewDataPanel<T> extends JPanel {
      *                                  or data model for table with stats is null
      */
     public AbstractOverviewDataPanel(final AbstractListDataModel<T> listDataModel, final AbstractStatsTableDataModel statsTableDataModel) {
+        this(listDataModel, statsTableDataModel, true);
+    }
+
+    /**
+     * Creates a new instance of AbstractDataPanel.
+     *
+     * @param listDataModel       data model for list
+     * @param statsTableDataModel data model for table with stats
+     * @param movable             true if data can be moved up or down
+     * @throws IllegalArgumentException if data model for list is null
+     *                                  or data model for table with stats is null
+     */
+    public AbstractOverviewDataPanel(final AbstractListDataModel<T> listDataModel, final AbstractStatsTableDataModel statsTableDataModel,
+            final boolean movable) {
         Validators.validateArgumentNotNull(listDataModel, "Data model for list");
         Validators.validateArgumentNotNull(statsTableDataModel, "Data model for table with stats");
 
         this.listDataModel = listDataModel;
         this.statsTableDataModel = statsTableDataModel;
         this.saved = true;
+        this.movable = movable;
         initComponents();
     }
 
@@ -303,7 +325,11 @@ public abstract class AbstractOverviewDataPanel<T> extends JPanel {
      * Initializes components.
      */
     private void initComponents() {
-        initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
+        if (movable) {
+            initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem, moveUpPopupMenuItem, moveDownPopupMenuItem);
+        } else {
+            initPopupMenu(addPopupMenuItem, updatePopupMenuItem, removePopupMenuItem, duplicatePopupMenuItem);
+        }
 
         addPopupMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
         addPopupMenuItem.addActionListener(new ActionListener() {

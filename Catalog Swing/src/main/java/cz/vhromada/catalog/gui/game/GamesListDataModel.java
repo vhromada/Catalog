@@ -38,13 +38,13 @@ public class GamesListDataModel extends AbstractListDataModel<GameTO> {
     }
 
     @Override
-    public String getElementAt(final int index) {
-        return getObjectAt(index).getName();
+    protected List<GameTO> getData() {
+        return gameFacade.getGames();
     }
 
     @Override
-    protected List<GameTO> getData() {
-        return gameFacade.getGames();
+    protected String getDisplayValue(final GameTO dataObject) {
+        return dataObject.getName();
     }
 
 }

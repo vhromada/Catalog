@@ -48,13 +48,13 @@ public class SongsListDataModel extends AbstractListDataModel<SongTO> {
     }
 
     @Override
-    public String getElementAt(final int index) {
-        return getObjectAt(index).getName();
+    protected List<SongTO> getData() {
+        return songFacade.findSongsByMusic(music);
     }
 
     @Override
-    protected List<SongTO> getData() {
-        return songFacade.findSongsByMusic(music);
+    protected String getDisplayValue(final SongTO dataObject) {
+        return dataObject.getName();
     }
 
 }

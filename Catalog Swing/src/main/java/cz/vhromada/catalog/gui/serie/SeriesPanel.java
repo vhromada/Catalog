@@ -61,7 +61,7 @@ public class SeriesPanel extends AbstractOverviewDataPanel<SerieTO> {
      *                                  or facade for genres is null
      */
     public SeriesPanel(final SerieFacade serieFacade, final SeasonFacade seasonFacade, final EpisodeFacade episodeFacade, final GenreFacade genreFacade) {
-        super(getSerieListDataModel(serieFacade), getSeriesStatsTableDataModel(serieFacade));
+        super(getSeriesListDataModel(serieFacade), getSeriesStatsTableDataModel(serieFacade));
 
         Validators.validateArgumentNotNull(seasonFacade, "Facade for seasons");
         Validators.validateArgumentNotNull(episodeFacade, "Facade for episodes");
@@ -141,7 +141,7 @@ public class SeriesPanel extends AbstractOverviewDataPanel<SerieTO> {
      * @return data model for list with series
      * @throws IllegalArgumentException if facade for series is null
      */
-    private static SeriesListDataModel getSerieListDataModel(final SerieFacade facade) {
+    private static SeriesListDataModel getSeriesListDataModel(final SerieFacade facade) {
         return new SeriesListDataModel(facade);
     }
 

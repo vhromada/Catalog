@@ -32,7 +32,7 @@ public class GamesPanel extends AbstractOverviewDataPanel<GameTO> {
      * @throws IllegalArgumentException if facade for games is null
      */
     public GamesPanel(final GameFacade gameFacade) {
-        super(getGameListDataModel(gameFacade), getGamesStatsTableDataModel(gameFacade));
+        super(getGamesListDataModel(gameFacade), getGamesStatsTableDataModel(gameFacade));
 
         this.gameFacade = gameFacade;
     }
@@ -93,7 +93,7 @@ public class GamesPanel extends AbstractOverviewDataPanel<GameTO> {
      * @return data model for list with games
      * @throws IllegalArgumentException if facade for games is null
      */
-    private static GamesListDataModel getGameListDataModel(final GameFacade facade) {
+    private static GamesListDataModel getGamesListDataModel(final GameFacade facade) {
         return new GamesListDataModel(facade);
     }
 

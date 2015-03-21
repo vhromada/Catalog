@@ -48,13 +48,13 @@ public class EpisodesListDataModel extends AbstractListDataModel<EpisodeTO> {
     }
 
     @Override
-    public String getElementAt(final int index) {
-        return getObjectAt(index).getName();
+    protected List<EpisodeTO> getData() {
+        return episodeFacade.findEpisodesBySeason(season);
     }
 
     @Override
-    protected List<EpisodeTO> getData() {
-        return episodeFacade.findEpisodesBySeason(season);
+    protected String getDisplayValue(final EpisodeTO dataObject) {
+        return dataObject.getName();
     }
 
 }

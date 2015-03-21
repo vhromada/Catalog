@@ -1,20 +1,19 @@
 package cz.vhromada.catalog.gui.program;
 
-import java.awt.Component;
-
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.to.ProgramTO;
-import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
+import cz.vhromada.catalog.gui.commons.AbstractOverviewDataPanel;
 
 /**
  * A class represents panel with programs' data.
  *
  * @author Vladimir Hromada
  */
-public class ProgramsPanel extends AbstractDataPanel<ProgramTO> {
+public class ProgramsPanel extends AbstractOverviewDataPanel<ProgramTO> {
 
     /**
      * SerialVersionUID
@@ -79,13 +78,12 @@ public class ProgramsPanel extends AbstractDataPanel<ProgramTO> {
     }
 
     @Override
-    protected void updateDataPanel(final Component dataPanel, final ProgramTO data) {
-        ((ProgramDataPanel) dataPanel).updateProgram(data);
+    protected JPanel getDataPanel(final ProgramTO data) {
+        return new ProgramDataPanel(data);
     }
 
     @Override
-    protected JPanel getDataPanel(final ProgramTO data) {
-        return new ProgramDataPanel(data);
+    protected void updateDataOnChange(final JTabbedPane dataPanel, final ProgramTO data) {
     }
 
     /**

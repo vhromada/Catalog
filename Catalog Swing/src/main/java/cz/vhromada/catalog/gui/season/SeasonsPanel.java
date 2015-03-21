@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.gui.season;
 
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -11,8 +10,8 @@ import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
+import cz.vhromada.catalog.gui.commons.AbstractOverviewDataPanel;
 import cz.vhromada.catalog.gui.episode.EpisodesPanel;
 import cz.vhromada.validators.Validators;
 
@@ -21,7 +20,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SeasonsPanel extends AbstractDataPanel<SeasonTO> {
+public class SeasonsPanel extends AbstractOverviewDataPanel<SeasonTO> {
 
     /**
      * SerialVersionUID
@@ -77,22 +76,22 @@ public class SeasonsPanel extends AbstractDataPanel<SeasonTO> {
 
     @Override
     public void newData() {
-        throw new UnsupportedOperationException("Calling newData is not allowed for seasons.");
+        throw new UnsupportedOperationException("Creating new data is not allowed for seasons.");
     }
 
     @Override
     public void clearSelection() {
-        throw new UnsupportedOperationException("Calling clearSelection is not allowed for seasons.");
+        throw new UnsupportedOperationException("Clearing selection is not allowed for seasons.");
     }
 
     @Override
     public void save() {
-        throw new UnsupportedOperationException("Calling save is not allowed for seasons.");
+        throw new UnsupportedOperationException("Saving data is not allowed for seasons.");
     }
 
     @Override
     public boolean isSaved() {
-        throw new UnsupportedOperationException("Calling isSaved is not allowed for seasons.");
+        throw new UnsupportedOperationException("Testing if data are saved is not allowed for seasons.");
     }
 
     @Override
@@ -108,7 +107,7 @@ public class SeasonsPanel extends AbstractDataPanel<SeasonTO> {
 
     @Override
     protected void deleteData() {
-        throw new UnsupportedOperationException("Calling deleteData is not allowed for seasons.");
+        throw new UnsupportedOperationException("Deleting data is not allowed for seasons.");
     }
 
     @Override
@@ -137,19 +136,12 @@ public class SeasonsPanel extends AbstractDataPanel<SeasonTO> {
     }
 
     @Override
-    protected void updateDataPanel(final Component dataPanel, final SeasonTO data) {
-        ((SeasonDataPanel) dataPanel).updateSeason(data);
-    }
-
-    @Override
     protected JPanel getDataPanel(final SeasonTO data) {
         return new SeasonDataPanel(data, episodeFacade);
     }
 
     @Override
     protected void updateDataOnChange(final JTabbedPane dataPanel, final SeasonTO data) {
-        super.updateDataOnChange(dataPanel, data);
-
         final EpisodesPanel episodesPanel = new EpisodesPanel(episodeFacade, data);
         episodesPanel.addPropertyChangeListener("update", new PropertyChangeListener() {
 

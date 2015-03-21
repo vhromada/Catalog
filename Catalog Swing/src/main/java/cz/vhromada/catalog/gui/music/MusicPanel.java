@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.gui.music;
 
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -10,8 +9,8 @@ import javax.swing.JTabbedPane;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
-import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
+import cz.vhromada.catalog.gui.commons.AbstractOverviewDataPanel;
 import cz.vhromada.catalog.gui.song.SongsPanel;
 import cz.vhromada.validators.Validators;
 
@@ -20,7 +19,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class MusicPanel extends AbstractDataPanel<MusicTO> {
+public class MusicPanel extends AbstractOverviewDataPanel<MusicTO> {
 
     /**
      * SerialVersionUID
@@ -95,19 +94,12 @@ public class MusicPanel extends AbstractDataPanel<MusicTO> {
     }
 
     @Override
-    protected void updateDataPanel(final Component dataPanel, final MusicTO data) {
-        ((MusicDataPanel) dataPanel).updateMusic(data);
-    }
-
-    @Override
     protected JPanel getDataPanel(final MusicTO data) {
         return new MusicDataPanel(data, songFacade);
     }
 
     @Override
     protected void updateDataOnChange(final JTabbedPane dataPanel, final MusicTO data) {
-        super.updateDataOnChange(dataPanel, data);
-
         final SongsPanel songsPanel = new SongsPanel(songFacade, data);
         songsPanel.addPropertyChangeListener("update", new PropertyChangeListener() {
 

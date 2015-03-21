@@ -12,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class ProgramsStatsTableDataModel extends AbstractStatsTableDataModel<ProgramTO> {
+public class ProgramsStatsTableDataModel extends AbstractStatsTableDataModel {
 
     /**
      * SerialVersionUID

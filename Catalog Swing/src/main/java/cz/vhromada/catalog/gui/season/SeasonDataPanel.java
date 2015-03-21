@@ -3,16 +3,14 @@ package cz.vhromada.catalog.gui.season;
 import java.util.List;
 
 import javax.swing.GroupLayout;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.gui.commons.CatalogSwingConstants;
+import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -20,32 +18,12 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SeasonDataPanel extends JPanel {
+public class SeasonDataPanel extends AbstractDataPanel<SeasonTO> {
 
     /**
      * SerialVersionUID
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Horizontal label size
-     */
-    private static final int HORIZONTAL_LABEL_SIZE = 150;
-
-    /**
-     * Horizontal data size
-     */
-    private static final int HORIZONTAL_DATA_SIZE = 600;
-
-    /**
-     * Horizontal gap size
-     */
-    private static final int HORIZONTAL_GAP_SIZE = 10;
-
-    /**
-     * Vertical gap size
-     */
-    private static final int VERTICAL_GAP_SIZE = 10;
 
     /**
      * Facade for episodes
@@ -131,55 +109,81 @@ public class SeasonDataPanel extends JPanel {
      *                                  or facade for episodes is null
      */
     public SeasonDataPanel(final SeasonTO season, final EpisodeFacade episodeFacade) {
-        Validators.validateArgumentNotNull(season, "TO for season");
         Validators.validateArgumentNotNull(episodeFacade, "Facade for episodes");
 
         this.episodeFacade = episodeFacade;
 
-        initData(numberLabel, numberData, Integer.toString(season.getNumber()));
-        initData(yearLabel, yearData, getYear(season));
-        initData(languageLabel, languageData, season.getLanguage().toString());
-        initData(subtitlesLabel, subtitlesData, getSubtitles(season));
-        initData(episodesCountLabel, episodesCountData, getEpisodesCount(season));
-        initData(totalLengthLabel, totalLengthData, getSeasonLength(season));
-        initData(noteLabel, noteData, season.getNote());
+        updateData(season);
 
-        final GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
-        layout.setHorizontalGroup(createHorizontalLayout(layout));
-        layout.setVerticalGroup(createVerticalLayout(layout));
+        initData(numberLabel, numberData);
+        initData(yearLabel, yearData);
+        initData(languageLabel, languageData);
+        initData(subtitlesLabel, subtitlesData);
+        initData(episodesCountLabel, episodesCountData);
+        initData(totalLengthLabel, totalLengthData);
+        initData(noteLabel, noteData);
+
+        createLayout();
     }
 
-    /**
-     * Updates TO for season.
-     *
-     * @param season TO for season
-     * @throws IllegalArgumentException if TO for season is null
-     */
-    public void updateSeason(final SeasonTO season) {
-        Validators.validateArgumentNotNull(season, "TO for season");
-
-        numberData.setText(Integer.toString(season.getNumber()));
-        yearData.setText(getYear(season));
-        languageData.setText(season.getLanguage().toString());
-        subtitlesData.setText(getSubtitles(season));
-        episodesCountData.setText(getEpisodesCount(season));
-        totalLengthData.setText(getSeasonLength(season));
-        noteData.setText(season.getNote());
+    @Override
+    protected void updateComponentData(final SeasonTO data) {
+        numberData.setText(Integer.toString(data.getNumber()));
+        yearData.setText(getYear(data));
+        languageData.setText(data.getLanguage().toString());
+        subtitlesData.setText(getSubtitles(data));
+        episodesCountData.setText(getEpisodesCount(data));
+        totalLengthData.setText(getSeasonLength(data));
+        noteData.setText(data.getNote());
     }
 
-    /**
-     * Initializes data.
-     *
-     * @param label label
-     * @param data  data
-     * @param text  text for data
-     */
-    private static void initData(final JLabel label, final JLabel data, final String text) {
-        label.setFocusable(false);
-        label.setLabelFor(data);
-        data.setText(text);
-        data.setFocusable(false);
+    @Override
+    protected String getCzWikiUrl() {
+        throw new IllegalStateException("Getting URL to czech Wikipedia page is not allowed for seasons.");
+    }
+
+    @Override
+    protected String getEnWikiUrl() {
+        throw new IllegalStateException("Getting URL to english Wikipedia page is not allowed for seasons.");
+    }
+
+    @Override
+    protected String getCsfdUrl() {
+        throw new IllegalStateException("Getting URL to ČSFD page is not allowed for seasons.");
+    }
+
+    @Override
+    protected int getImdbUrl() {
+        throw new IllegalStateException("Getting URL to IMDB page is not allowed for seasons.");
+    }
+
+    @Override
+    protected GroupLayout.Group getHorizontalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group.addGroup(createHorizontalDataComponents(layout, numberLabel, numberData))
+                .addGroup(createHorizontalDataComponents(layout, yearLabel, yearData))
+                .addGroup(createHorizontalDataComponents(layout, languageLabel, languageData))
+                .addGroup(createHorizontalDataComponents(layout, subtitlesLabel, subtitlesData))
+                .addGroup(createHorizontalDataComponents(layout, episodesCountLabel, episodesCountData))
+                .addGroup(createHorizontalDataComponents(layout, totalLengthLabel, totalLengthData))
+                .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData));
+    }
+
+    @Override
+    protected GroupLayout.Group getVerticalLayoutWithComponents(final GroupLayout layout, final GroupLayout.Group group) {
+        return group.addGroup(createVerticalComponents(layout, numberLabel, numberData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, yearLabel, yearData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, languageLabel, languageData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, subtitlesLabel, subtitlesData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, episodesCountLabel, episodesCountData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, totalLengthLabel, totalLengthData))
+                .addGap(VERTICAL_GAP_SIZE)
+                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
+                .addGap(VERTICAL_GAP_SIZE);
     }
 
     /**
@@ -241,85 +245,6 @@ public class SeasonDataPanel extends JPanel {
             totalLength += episode.getLength();
         }
         return new Time(totalLength).toString();
-    }
-
-    /**
-     * Returns horizontal layout for components.
-     *
-     * @param layout layout
-     * @return horizontal layout for components
-     */
-    private GroupLayout.Group createHorizontalLayout(final GroupLayout layout) {
-        final GroupLayout.Group components = layout.createParallelGroup()
-                .addGroup(createHorizontalDataComponents(layout, numberLabel, numberData))
-                .addGroup(createHorizontalDataComponents(layout, yearLabel, yearData))
-                .addGroup(createHorizontalDataComponents(layout, languageLabel, languageData))
-                .addGroup(createHorizontalDataComponents(layout, subtitlesLabel, subtitlesData))
-                .addGroup(createHorizontalDataComponents(layout, episodesCountLabel, episodesCountData))
-                .addGroup(createHorizontalDataComponents(layout, totalLengthLabel, totalLengthData))
-                .addGroup(createHorizontalDataComponents(layout, noteLabel, noteData));
-
-        return layout.createSequentialGroup()
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addGroup(components)
-                .addGap(HORIZONTAL_GAP_SIZE);
-    }
-
-    /**
-     * Returns horizontal layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label
-     * @param data   data
-     * @return horizontal layout for label component with data component
-     */
-    private GroupLayout.Group createHorizontalDataComponents(final GroupLayout layout, final JLabel label, final JLabel data) {
-        return layout.createSequentialGroup()
-                .addComponent(label, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE, HORIZONTAL_LABEL_SIZE)
-                .addGap(HORIZONTAL_GAP_SIZE)
-                .addComponent(data, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE, HORIZONTAL_DATA_SIZE);
-    }
-
-    /**
-     * Returns vertical layout of components.
-     *
-     * @param layout layout
-     * @return vertical layout of components
-     */
-    private GroupLayout.Group createVerticalLayout(final GroupLayout layout) {
-        return layout.createSequentialGroup()
-                .addGap(5)
-                .addGroup(createVerticalComponents(layout, numberLabel, numberData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, yearLabel, yearData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, languageLabel, languageData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, subtitlesLabel, subtitlesData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, episodesCountLabel, episodesCountData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, totalLengthLabel, totalLengthData))
-                .addGap(VERTICAL_GAP_SIZE)
-                .addGroup(createVerticalComponents(layout, noteLabel, noteData))
-                .addGap(VERTICAL_GAP_SIZE);
-    }
-
-    /**
-     * Returns vertical layout for label component with data component.
-     *
-     * @param layout layout
-     * @param label  label component
-     * @param data   data component
-     * @return vertical layout for label component with data component
-     */
-    private GroupLayout.Group createVerticalComponents(final GroupLayout layout, final JComponent label, final JComponent data) {
-        return layout.createParallelGroup()
-                .addComponent(label, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE)
-                .addGap(VERTICAL_GAP_SIZE)
-                .addComponent(data, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE, CatalogSwingConstants.VERTICAL_COMPONENT_SIZE,
-                        CatalogSwingConstants.VERTICAL_COMPONENT_SIZE);
     }
 
 }

@@ -1,20 +1,19 @@
 package cz.vhromada.catalog.gui.game;
 
-import java.awt.Component;
-
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.facade.to.GameTO;
-import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
+import cz.vhromada.catalog.gui.commons.AbstractOverviewDataPanel;
 
 /**
  * A class represents panel with games' data.
  *
  * @author Vladimir Hromada
  */
-public class GamesPanel extends AbstractDataPanel<GameTO> {
+public class GamesPanel extends AbstractOverviewDataPanel<GameTO> {
 
     /**
      * SerialVersionUID
@@ -79,13 +78,12 @@ public class GamesPanel extends AbstractDataPanel<GameTO> {
     }
 
     @Override
-    protected void updateDataPanel(final Component dataPanel, final GameTO data) {
-        ((GameDataPanel) dataPanel).updateGame(data);
+    protected JPanel getDataPanel(final GameTO data) {
+        return new GameDataPanel(data);
     }
 
     @Override
-    protected JPanel getDataPanel(final GameTO data) {
-        return new GameDataPanel(data);
+    protected void updateDataOnChange(final JTabbedPane dataPanel, final GameTO data) {
     }
 
     /**

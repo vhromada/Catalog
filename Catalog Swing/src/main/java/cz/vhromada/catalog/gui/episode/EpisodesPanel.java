@@ -1,14 +1,13 @@
 package cz.vhromada.catalog.gui.episode;
 
-import java.awt.Component;
-
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
+import cz.vhromada.catalog.gui.commons.AbstractOverviewDataPanel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -16,7 +15,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class EpisodesPanel extends AbstractDataPanel<EpisodeTO> {
+public class EpisodesPanel extends AbstractOverviewDataPanel<EpisodeTO> {
 
     /**
      * SerialVersionUID
@@ -62,22 +61,22 @@ public class EpisodesPanel extends AbstractDataPanel<EpisodeTO> {
 
     @Override
     public void newData() {
-        throw new UnsupportedOperationException("Calling newData is not allowed for episodes.");
+        throw new UnsupportedOperationException("Creating new data is not allowed for episodes.");
     }
 
     @Override
     public void clearSelection() {
-        throw new UnsupportedOperationException("Calling clearSelection is not allowed for episodes.");
+        throw new UnsupportedOperationException("Clearing selection is not allowed for episodes.");
     }
 
     @Override
     public void save() {
-        throw new UnsupportedOperationException("Calling save is not allowed for episodes.");
+        throw new UnsupportedOperationException("Saving data is not allowed for episodes.");
     }
 
     @Override
     public boolean isSaved() {
-        throw new UnsupportedOperationException("Calling isSaved is not allowed for episodes.");
+        throw new UnsupportedOperationException("Testing if data are saved is not allowed for episodes.");
     }
 
     @Override
@@ -93,7 +92,7 @@ public class EpisodesPanel extends AbstractDataPanel<EpisodeTO> {
 
     @Override
     protected void deleteData() {
-        throw new UnsupportedOperationException("Calling deleteData is not allowed for episodes.");
+        throw new UnsupportedOperationException("Deleting data is not allowed for episodes.");
     }
 
     @Override
@@ -122,13 +121,12 @@ public class EpisodesPanel extends AbstractDataPanel<EpisodeTO> {
     }
 
     @Override
-    protected void updateDataPanel(final Component dataPanel, final EpisodeTO data) {
-        ((EpisodeDataPanel) dataPanel).updateEpisode(data);
+    protected JPanel getDataPanel(final EpisodeTO data) {
+        return new EpisodeDataPanel(data);
     }
 
     @Override
-    protected JPanel getDataPanel(final EpisodeTO data) {
-        return new EpisodeDataPanel(data);
+    protected void updateDataOnChange(final JTabbedPane dataPanel, final EpisodeTO data) {
     }
 
     /**

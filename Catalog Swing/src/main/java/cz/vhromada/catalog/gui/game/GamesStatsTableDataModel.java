@@ -12,7 +12,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class GamesStatsTableDataModel extends AbstractStatsTableDataModel<GameTO> {
+public class GamesStatsTableDataModel extends AbstractStatsTableDataModel {
 
     /**
      * SerialVersionUID

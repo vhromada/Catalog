@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.gui.serie;
 
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -12,8 +11,8 @@ import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.SerieFacade;
 import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
+import cz.vhromada.catalog.gui.commons.AbstractOverviewDataPanel;
 import cz.vhromada.catalog.gui.season.SeasonsPanel;
 import cz.vhromada.validators.Validators;
 
@@ -22,7 +21,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SeriesPanel extends AbstractDataPanel<SerieTO> {
+public class SeriesPanel extends AbstractOverviewDataPanel<SerieTO> {
 
     /**
      * SerialVersionUID
@@ -115,19 +114,12 @@ public class SeriesPanel extends AbstractDataPanel<SerieTO> {
     }
 
     @Override
-    protected void updateDataPanel(final Component dataPanel, final SerieTO data) {
-        ((SerieDataPanel) dataPanel).updateSerie(data);
-    }
-
-    @Override
     protected JPanel getDataPanel(final SerieTO data) {
         return new SerieDataPanel(data, seasonFacade, episodeFacade);
     }
 
     @Override
     protected void updateDataOnChange(final JTabbedPane dataPanel, final SerieTO data) {
-        super.updateDataOnChange(dataPanel, data);
-
         final SeasonsPanel seasonsPanel = new SeasonsPanel(seasonFacade, episodeFacade, data);
         seasonsPanel.addPropertyChangeListener("update", new PropertyChangeListener() {
 

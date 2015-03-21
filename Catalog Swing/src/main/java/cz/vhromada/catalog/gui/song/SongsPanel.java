@@ -1,14 +1,13 @@
 package cz.vhromada.catalog.gui.song;
 
-import java.awt.Component;
-
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
-import cz.vhromada.catalog.gui.commons.AbstractDataPanel;
 import cz.vhromada.catalog.gui.commons.AbstractInfoDialog;
+import cz.vhromada.catalog.gui.commons.AbstractOverviewDataPanel;
 import cz.vhromada.validators.Validators;
 
 /**
@@ -16,7 +15,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class SongsPanel extends AbstractDataPanel<SongTO> {
+public class SongsPanel extends AbstractOverviewDataPanel<SongTO> {
 
     /**
      * SerialVersionUID
@@ -62,22 +61,22 @@ public class SongsPanel extends AbstractDataPanel<SongTO> {
 
     @Override
     public void newData() {
-        throw new UnsupportedOperationException("Calling newData is not allowed for songs.");
+        throw new UnsupportedOperationException("Creating new data is not allowed for songs.");
     }
 
     @Override
     public void clearSelection() {
-        throw new UnsupportedOperationException("Calling clearSelection is not allowed for songs.");
+        throw new UnsupportedOperationException("Clearing selection is not allowed for songs.");
     }
 
     @Override
     public void save() {
-        throw new UnsupportedOperationException("Calling save is not allowed for songs.");
+        throw new UnsupportedOperationException("Saving data is not allowed for songs.");
     }
 
     @Override
     public boolean isSaved() {
-        throw new UnsupportedOperationException("Calling isSaved is not allowed for songs.");
+        throw new UnsupportedOperationException("Testing if data are saved is not allowed for songs.");
     }
 
     @Override
@@ -93,7 +92,7 @@ public class SongsPanel extends AbstractDataPanel<SongTO> {
 
     @Override
     protected void deleteData() {
-        throw new UnsupportedOperationException("Calling deleteData is not allowed for songs.");
+        throw new UnsupportedOperationException("Deleting data is not allowed for songs.");
     }
 
     @Override
@@ -122,13 +121,12 @@ public class SongsPanel extends AbstractDataPanel<SongTO> {
     }
 
     @Override
-    protected void updateDataPanel(final Component dataPanel, final SongTO data) {
-        ((SongDataPanel) dataPanel).updateSong(data);
+    protected JPanel getDataPanel(final SongTO data) {
+        return new SongDataPanel(data);
     }
 
     @Override
-    protected JPanel getDataPanel(final SongTO data) {
-        return new SongDataPanel(data);
+    protected void updateDataOnChange(final JTabbedPane dataPanel, final SongTO data) {
     }
 
     /**

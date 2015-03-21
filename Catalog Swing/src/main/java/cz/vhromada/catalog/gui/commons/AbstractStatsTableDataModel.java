@@ -5,10 +5,9 @@ import javax.swing.table.AbstractTableModel;
 /**
  * An abstract class represents data model for table with stats.
  *
- * @param <T> type of data
  * @author Vladimir Hromada
  */
-public abstract class AbstractStatsTableDataModel<T> extends AbstractTableModel {
+public abstract class AbstractStatsTableDataModel extends AbstractTableModel {
 
     /**
      * SerialVersionUID

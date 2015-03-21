@@ -13,7 +13,7 @@ import cz.vhromada.validators.Validators;
  *
  * @author Vladimir Hromada
  */
-public class MusicStatsTableDataModel extends AbstractStatsTableDataModel<MusicTO> {
+public class MusicStatsTableDataModel extends AbstractStatsTableDataModel {
 
     /**
      * SerialVersionUID

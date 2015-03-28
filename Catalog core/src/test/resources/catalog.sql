@@ -78,7 +78,7 @@ CREATE TABLE tv_show_genres (
 
 CREATE TABLE seasons (
   id              INTEGER      NOT NULL CONSTRAINT seasons_pk PRIMARY KEY,
-  tv_show INTEGER NOT NULL CONSTRAINT seasons_tv_show_fk REFERENCES tv_shows (id),
+  tv_show         INTEGER      NOT NULL CONSTRAINT seasons_tv_show_fk REFERENCES tv_shows (id),
   season_number   INTEGER      NOT NULL CONSTRAINT seasons_season_number_ck CHECK (season_number > 0),
   start_year      INTEGER      NOT NULL CONSTRAINT seasons_start_year_ck CHECK (start_year BETWEEN 1930 AND 2100),
   end_year        INTEGER      NOT NULL CONSTRAINT seasons_end_year_ck CHECK (end_year BETWEEN 1930 AND 2100),

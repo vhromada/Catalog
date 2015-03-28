@@ -47,8 +47,6 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
@@ -59,8 +57,6 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
@@ -71,8 +67,6 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */

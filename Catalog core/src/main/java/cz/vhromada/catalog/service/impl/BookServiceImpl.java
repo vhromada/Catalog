@@ -73,8 +73,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -90,8 +88,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -108,8 +104,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -126,8 +120,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -144,8 +136,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -170,8 +160,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -192,8 +180,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -215,8 +201,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
 
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -232,8 +216,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */

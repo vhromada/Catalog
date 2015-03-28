@@ -60,7 +60,7 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
      * Creates a new instance of EpisodeServiceImpl.
      *
      * @param episodeDAO DAO for episodes
-     * @param showCache cache for shows
+     * @param showCache  cache for shows
      * @throws IllegalArgumentException if DAO for episodes is null
      *                                  or cache for shows is null
      */
@@ -75,8 +75,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -92,8 +90,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -110,8 +106,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -128,8 +122,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -146,8 +138,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -172,8 +162,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -194,8 +182,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -216,8 +202,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -233,8 +217,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -250,8 +232,6 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */

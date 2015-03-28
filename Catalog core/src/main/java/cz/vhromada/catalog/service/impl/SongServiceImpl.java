@@ -74,8 +74,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -91,8 +89,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -109,8 +105,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -127,8 +121,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -145,8 +137,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -170,8 +160,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -192,8 +180,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -215,8 +201,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
 
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -232,8 +216,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -249,8 +231,6 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */

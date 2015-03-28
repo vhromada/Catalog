@@ -26,8 +26,6 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     private static final String ID_FIELD = "ID";
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
@@ -38,8 +36,6 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
@@ -50,8 +46,6 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */

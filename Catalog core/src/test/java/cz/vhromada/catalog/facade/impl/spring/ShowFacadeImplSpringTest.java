@@ -676,10 +676,10 @@ public class ShowFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with not moveable argument.
+     * Test method for {@link ShowFacade#moveUp(ShowTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         showFacade.moveUp(SpringToUtils.newShow(objectGenerator, 1));
     }
 
@@ -727,10 +727,10 @@ public class ShowFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with not moveable argument.
+     * Test method for {@link ShowFacade#moveDown(ShowTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final ShowTO show = objectGenerator.generate(ShowTO.class);
         show.setId(SpringUtils.SHOWS_COUNT);
 

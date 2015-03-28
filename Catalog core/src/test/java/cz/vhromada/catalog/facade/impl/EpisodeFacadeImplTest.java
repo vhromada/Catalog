@@ -722,10 +722,10 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not moveable argument.
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Episode episode = generate(Episode.class);
         final List<Episode> episodes = CollectionUtils.newList(episode, mock(Episode.class));
         final EpisodeTO episodeTO = generate(EpisodeTO.class);
@@ -734,7 +734,7 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             episodeFacade.moveUp(episodeTO);
-            fail("Can't move up episode with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up episode with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -845,10 +845,10 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not moveable argument.
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Episode episode = generate(Episode.class);
         final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), episode);
         final EpisodeTO episodeTO = generate(EpisodeTO.class);
@@ -857,7 +857,7 @@ public class EpisodeFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             episodeFacade.moveDown(episodeTO);
-            fail("Can't move down episode with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down episode with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

@@ -751,10 +751,10 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not moveable argument.
+     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Movie movie = generate(Movie.class);
         final List<Movie> movies = CollectionUtils.newList(movie, mock(Movie.class));
         final MovieTO movieTO = generate(MovieTO.class);
@@ -763,7 +763,7 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             movieFacade.moveUp(movieTO);
-            fail("Can't move up movie with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up movie with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -874,10 +874,10 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not moveable argument.
+     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Movie movie = generate(Movie.class);
         final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), movie);
         final MovieTO movieTO = generate(MovieTO.class);
@@ -886,7 +886,7 @@ public class MovieFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             movieFacade.moveDown(movieTO);
-            fail("Can't move down movie with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down movie with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

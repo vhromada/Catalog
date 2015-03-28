@@ -509,10 +509,10 @@ public class BookFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link BookFacade#moveUp(BookTO)} with not moveable argument.
+     * Test method for {@link BookFacade#moveUp(BookTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         bookFacade.moveUp(SpringToUtils.newBook(objectGenerator, 1));
     }
 
@@ -562,10 +562,10 @@ public class BookFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link BookFacade#moveDown(BookTO)} with not moveable argument.
+     * Test method for {@link BookFacade#moveDown(BookTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         bookFacade.moveDown(SpringToUtils.newBook(objectGenerator, SpringUtils.BOOKS_COUNT));
     }
 

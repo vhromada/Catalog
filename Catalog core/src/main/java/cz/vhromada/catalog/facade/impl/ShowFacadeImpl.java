@@ -103,8 +103,8 @@ public class ShowFacadeImpl implements ShowFacade {
      * Creates a new instance of ShowFacadeImpl.
      *
      * @param showService     service for shows
-     * @param genreService     service for genres
-     * @param converter        converter
+     * @param genreService    service for genres
+     * @param converter       converter
      * @param showTOValidator validator for TO for show
      * @throws IllegalArgumentException if service for shows is null
      *                                  or service for genres is null
@@ -128,8 +128,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -142,8 +140,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -159,8 +155,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -177,8 +171,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -204,8 +196,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -228,8 +218,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -249,8 +237,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -269,8 +255,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -292,8 +276,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -315,8 +297,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -334,8 +314,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -348,8 +326,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -363,8 +339,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -378,8 +352,6 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override

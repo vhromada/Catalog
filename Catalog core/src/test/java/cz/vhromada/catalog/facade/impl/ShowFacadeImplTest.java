@@ -751,10 +751,10 @@ public class ShowFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with not moveable argument.
+     * Test method for {@link ShowFacade#moveUp(ShowTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Show show = generate(Show.class);
         final List<Show> shows = CollectionUtils.newList(show, mock(Show.class));
         final ShowTO showTO = generate(ShowTO.class);
@@ -763,7 +763,7 @@ public class ShowFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             showFacade.moveUp(showTO);
-            fail("Can't move up show with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up show with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -874,10 +874,10 @@ public class ShowFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with not moveable argument.
+     * Test method for {@link ShowFacade#moveDown(ShowTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Show show = generate(Show.class);
         final List<Show> shows = CollectionUtils.newList(mock(Show.class), show);
         final ShowTO showTO = generate(ShowTO.class);
@@ -886,7 +886,7 @@ public class ShowFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             showFacade.moveDown(showTO);
-            fail("Can't move down show with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down show with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -1141,7 +1141,7 @@ public class ShowFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Sets show's ID and position.
+     * Sets show ID and position.
      *
      * @param id       ID
      * @param position position

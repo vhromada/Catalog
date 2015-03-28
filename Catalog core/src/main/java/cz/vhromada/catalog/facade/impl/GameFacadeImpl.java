@@ -105,8 +105,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -119,8 +117,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -136,8 +132,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -154,8 +148,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -178,8 +170,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -199,8 +189,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -220,8 +208,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -241,8 +227,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -264,8 +248,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -287,8 +269,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -306,8 +286,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -320,8 +298,6 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override

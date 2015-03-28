@@ -86,8 +86,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -103,8 +101,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -117,8 +113,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -134,8 +128,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -153,8 +145,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -171,8 +161,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -190,8 +178,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -219,8 +205,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -241,8 +225,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -263,8 +245,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -280,8 +260,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -300,8 +278,6 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override

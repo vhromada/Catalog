@@ -61,8 +61,6 @@ public class GenreDAOImpl implements GenreDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws DataStorageException {@inheritDoc}
      */
     @Override
@@ -75,8 +73,6 @@ public class GenreDAOImpl implements GenreDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -92,8 +88,6 @@ public class GenreDAOImpl implements GenreDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -109,8 +103,6 @@ public class GenreDAOImpl implements GenreDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -126,8 +118,6 @@ public class GenreDAOImpl implements GenreDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */

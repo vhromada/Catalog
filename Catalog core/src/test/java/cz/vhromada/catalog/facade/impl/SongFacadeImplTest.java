@@ -721,10 +721,10 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveUp(SongTO)} with not moveable argument.
+     * Test method for {@link SongFacade#moveUp(SongTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Song song = generate(Song.class);
         final List<Song> songs = CollectionUtils.newList(song, mock(Song.class));
         final SongTO songTO = generate(SongTO.class);
@@ -733,7 +733,7 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             songFacade.moveUp(songTO);
-            fail("Can't move up song with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up song with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -844,10 +844,10 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveDown(SongTO)} with not moveable argument.
+     * Test method for {@link SongFacade#moveDown(SongTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Song song = generate(Song.class);
         final List<Song> songs = CollectionUtils.newList(mock(Song.class), song);
         final SongTO songTO = generate(SongTO.class);
@@ -856,7 +856,7 @@ public class SongFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             songFacade.moveDown(songTO);
-            fail("Can't move down song with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down song with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

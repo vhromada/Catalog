@@ -86,8 +86,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -103,8 +101,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -117,8 +113,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -134,8 +128,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -153,8 +145,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -171,8 +161,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -190,8 +178,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -224,8 +210,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -246,8 +230,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -268,8 +250,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -285,8 +265,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -305,8 +283,6 @@ public class GameServiceImpl extends AbstractService<Game> implements GameServic
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override

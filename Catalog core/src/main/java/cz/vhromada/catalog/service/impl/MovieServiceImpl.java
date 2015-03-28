@@ -89,8 +89,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -106,8 +104,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -120,8 +116,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -137,8 +131,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -155,8 +147,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -173,8 +163,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -192,8 +180,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -226,8 +212,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -248,8 +232,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -270,8 +252,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -287,8 +267,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -307,8 +285,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -326,8 +302,6 @@ public class MovieServiceImpl extends AbstractService<Movie> implements MovieSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override

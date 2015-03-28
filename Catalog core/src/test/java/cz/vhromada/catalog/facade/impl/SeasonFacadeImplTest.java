@@ -723,10 +723,10 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not moveable argument.
+     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Season season = generate(Season.class);
         final List<Season> seasons = CollectionUtils.newList(season, mock(Season.class));
         final SeasonTO seasonTO = generate(SeasonTO.class);
@@ -735,7 +735,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             seasonFacade.moveUp(seasonTO);
-            fail("Can't move up season with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up season with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -843,10 +843,10 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not moveable argument.
+     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Season season = generate(Season.class);
         final List<Season> seasons = CollectionUtils.newList(mock(Season.class), season);
         final SeasonTO seasonTO = generate(SeasonTO.class);
@@ -855,7 +855,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             seasonFacade.moveDown(seasonTO);
-            fail("Can't move down season with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down season with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

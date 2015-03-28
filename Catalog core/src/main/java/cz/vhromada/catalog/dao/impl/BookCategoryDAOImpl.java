@@ -61,8 +61,6 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws DataStorageException {@inheritDoc}
      */
     @Override
@@ -75,8 +73,6 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -92,8 +88,6 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -111,8 +105,6 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -128,8 +120,6 @@ public class BookCategoryDAOImpl implements BookCategoryDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */

@@ -25,8 +25,6 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
     private static final String ID_FIELD = "ID";
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
@@ -37,8 +35,6 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
@@ -49,8 +45,6 @@ public class GenreTOValidatorImpl implements GenreTOValidator {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */

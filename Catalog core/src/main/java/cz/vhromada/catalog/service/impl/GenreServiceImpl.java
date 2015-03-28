@@ -91,8 +91,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -108,8 +106,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -122,8 +118,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -139,8 +133,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -158,8 +150,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -180,8 +170,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -198,8 +186,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -217,8 +203,6 @@ public class GenreServiceImpl extends AbstractService<Genre> implements GenreSer
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */

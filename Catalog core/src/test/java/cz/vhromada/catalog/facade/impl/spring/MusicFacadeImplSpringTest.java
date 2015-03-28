@@ -434,10 +434,10 @@ public class MusicFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not moveable argument.
+     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         musicFacade.moveUp(SpringToUtils.newMusic(objectGenerator, 1));
     }
 
@@ -485,10 +485,10 @@ public class MusicFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not moveable argument.
+     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         musicFacade.moveDown(SpringToUtils.newMusic(objectGenerator, SpringUtils.MUSIC_COUNT));
     }
 

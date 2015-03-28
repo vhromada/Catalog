@@ -510,10 +510,10 @@ public class EpisodeFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not moveable argument.
+     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         episodeFacade.moveUp(SpringToUtils.newEpisode(objectGenerator, 1));
     }
 
@@ -564,10 +564,10 @@ public class EpisodeFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not moveable argument.
+     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         episodeFacade.moveDown(SpringToUtils.newEpisode(objectGenerator, SpringUtils.EPISODES_COUNT));
     }
 

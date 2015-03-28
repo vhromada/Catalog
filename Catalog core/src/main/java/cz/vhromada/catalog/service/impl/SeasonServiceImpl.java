@@ -71,7 +71,7 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
      *
      * @param seasonDAO  DAO for seasons
      * @param episodeDAO DAO for episodes
-     * @param showCache cache for shows
+     * @param showCache  cache for shows
      * @throws IllegalArgumentException if DAO for seasons is null
      *                                  or DAO for episodes is null
      *                                  or cache for shows is null
@@ -90,8 +90,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -107,8 +105,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -125,8 +121,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -143,8 +137,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -164,8 +156,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -194,8 +184,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -216,8 +204,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -238,8 +224,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -255,8 +239,6 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */

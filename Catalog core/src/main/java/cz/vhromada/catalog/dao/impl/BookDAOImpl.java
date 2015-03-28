@@ -67,8 +67,6 @@ public class BookDAOImpl implements BookDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -84,8 +82,6 @@ public class BookDAOImpl implements BookDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -103,8 +99,6 @@ public class BookDAOImpl implements BookDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -120,8 +114,6 @@ public class BookDAOImpl implements BookDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */
@@ -141,8 +133,6 @@ public class BookDAOImpl implements BookDAO {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws DataStorageException     {@inheritDoc}
      */

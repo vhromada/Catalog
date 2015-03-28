@@ -89,7 +89,7 @@ public abstract class AbstractShowService extends AbstractInnerService<Show, Sea
     /**
      * Returns list of seasons for specified show.
      *
-     * @param show  show
+     * @param show   show
      * @param cached true if returned data from DAO should be cached
      * @return list of seasons for specified show
      */

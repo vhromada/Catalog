@@ -724,10 +724,10 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not moveable argument.
+     * Test method for {@link BookCategoryFacade#moveUp(BookCategoryTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final BookCategory bookCategory = generate(BookCategory.class);
         final List<BookCategory> bookCategories = CollectionUtils.newList(bookCategory, mock(BookCategory.class));
         final BookCategoryTO bookCategoryTO = generate(BookCategoryTO.class);
@@ -736,7 +736,7 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             bookCategoryFacade.moveUp(bookCategoryTO);
-            fail("Can't move up book category with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up book category with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -847,10 +847,10 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not moveable argument.
+     * Test method for {@link BookCategoryFacade#moveDown(BookCategoryTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final BookCategory bookCategory = generate(BookCategory.class);
         final List<BookCategory> bookCategories = CollectionUtils.newList(mock(BookCategory.class), bookCategory);
         final BookCategoryTO bookCategoryTO = generate(BookCategoryTO.class);
@@ -859,7 +859,7 @@ public class BookCategoryFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             bookCategoryFacade.moveDown(bookCategoryTO);
-            fail("Can't move down book category with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down book category with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

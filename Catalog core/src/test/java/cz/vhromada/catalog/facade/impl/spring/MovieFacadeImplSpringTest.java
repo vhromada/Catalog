@@ -846,10 +846,10 @@ public class MovieFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not moveable argument.
+     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         movieFacade.moveUp(SpringToUtils.newMovie(objectGenerator, 1));
     }
 
@@ -897,10 +897,10 @@ public class MovieFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not moveable argument.
+     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         movieFacade.moveDown(SpringToUtils.newMovie(objectGenerator, SpringUtils.MOVIES_COUNT));
     }
 

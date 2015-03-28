@@ -721,10 +721,10 @@ public class BookFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link BookFacade#moveUp(BookTO)} with not moveable argument.
+     * Test method for {@link BookFacade#moveUp(BookTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Book book = generate(Book.class);
         final List<Book> books = CollectionUtils.newList(book, mock(Book.class));
         final BookTO bookTO = generate(BookTO.class);
@@ -733,7 +733,7 @@ public class BookFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             bookFacade.moveUp(bookTO);
-            fail("Can't move up book with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up book with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -844,10 +844,10 @@ public class BookFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link BookFacade#moveDown(BookTO)} with not moveable argument.
+     * Test method for {@link BookFacade#moveDown(BookTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Book book = generate(Book.class);
         final List<Book> books = CollectionUtils.newList(mock(Book.class), book);
         final BookTO bookTO = generate(BookTO.class);
@@ -856,7 +856,7 @@ public class BookFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             bookFacade.moveDown(bookTO);
-            fail("Can't move down book with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down book with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

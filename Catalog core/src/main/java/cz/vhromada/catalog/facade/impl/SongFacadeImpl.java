@@ -144,8 +144,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -162,8 +160,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -190,8 +186,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -214,8 +208,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -235,8 +227,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -256,8 +246,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -279,8 +267,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -302,8 +288,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -321,8 +305,6 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}

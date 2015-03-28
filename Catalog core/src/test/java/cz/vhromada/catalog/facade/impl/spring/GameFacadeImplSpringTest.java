@@ -446,10 +446,10 @@ public class GameFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(GameTO)} with not moveable argument.
+     * Test method for {@link GameFacade#moveUp(GameTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         gameFacade.moveUp(SpringToUtils.newGame(objectGenerator, 1));
     }
 
@@ -497,10 +497,10 @@ public class GameFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(GameTO)} with not moveable argument.
+     * Test method for {@link GameFacade#moveDown(GameTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         gameFacade.moveDown(SpringToUtils.newGame(objectGenerator, SpringUtils.GAMES_COUNT));
     }
 

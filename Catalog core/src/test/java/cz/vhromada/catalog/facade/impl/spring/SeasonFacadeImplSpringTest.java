@@ -622,10 +622,10 @@ public class SeasonFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not moveable argument.
+     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         seasonFacade.moveUp(SpringToUtils.newSeason(objectGenerator, 1));
     }
 
@@ -675,10 +675,10 @@ public class SeasonFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not moveable argument.
+     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         seasonFacade.moveDown(SpringToUtils.newSeason(objectGenerator, SpringUtils.SEASONS_COUNT));
     }
 

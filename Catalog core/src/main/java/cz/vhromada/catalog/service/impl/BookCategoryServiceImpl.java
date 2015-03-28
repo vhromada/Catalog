@@ -84,8 +84,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -102,8 +100,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -116,8 +112,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -133,8 +127,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -151,8 +143,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -169,8 +159,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -187,8 +175,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -222,8 +208,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -245,7 +229,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
 
     /**
      * /**
-     * {@inheritDoc}
      *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
@@ -267,8 +250,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -284,8 +265,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -310,8 +289,6 @@ public class BookCategoryServiceImpl extends AbstractBookService implements Book
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override

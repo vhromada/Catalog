@@ -106,8 +106,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -120,8 +118,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -137,8 +133,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -155,8 +149,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -179,8 +171,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -200,8 +190,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -220,8 +208,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -240,8 +226,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -262,8 +246,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -284,8 +266,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -303,8 +283,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -317,8 +295,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -332,8 +308,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
@@ -347,8 +321,6 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws FacadeOperationException {@inheritDoc}
      */
     @Override

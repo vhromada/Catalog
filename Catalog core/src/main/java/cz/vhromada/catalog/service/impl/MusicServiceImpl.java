@@ -84,8 +84,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -101,8 +99,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -115,8 +111,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -132,8 +126,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -150,8 +142,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -168,8 +158,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -186,8 +174,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -223,8 +209,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -245,8 +229,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -267,8 +249,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -284,8 +264,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -310,8 +288,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -328,8 +304,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -348,8 +322,6 @@ public class MusicServiceImpl extends AbstractMusicService implements MusicServi
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override

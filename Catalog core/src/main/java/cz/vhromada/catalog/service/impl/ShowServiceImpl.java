@@ -76,10 +76,10 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     /**
      * Creates a new instance of ShowServiceImpl.
      *
-     * @param showDAO   DAO for shows
+     * @param showDAO    DAO for shows
      * @param seasonDAO  DAO for seasons
      * @param episodeDAO DAO for episodes
-     * @param showCache cache for shows
+     * @param showCache  cache for shows
      * @throws IllegalArgumentException if DAO for shows is null
      *                                  or DAO for seasons is null
      *                                  or DAO for episodes is null
@@ -102,8 +102,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -119,8 +117,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -133,8 +129,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -150,8 +144,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -168,8 +160,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -186,8 +176,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -204,8 +192,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -241,8 +227,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -263,8 +247,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -285,8 +267,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException  {@inheritDoc}
      * @throws ServiceOperationException {@inheritDoc}
      */
@@ -302,8 +282,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -334,8 +312,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -356,8 +332,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
@@ -374,8 +348,6 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override

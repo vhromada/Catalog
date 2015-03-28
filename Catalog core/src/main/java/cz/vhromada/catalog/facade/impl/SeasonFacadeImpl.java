@@ -113,10 +113,10 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * Creates a new instance of SeasonFacadeImpl.
      *
-     * @param showService      service for shows
+     * @param showService       service for shows
      * @param seasonService     service for seasons
      * @param converter         converter
-     * @param showTOValidator  validator for TO for show
+     * @param showTOValidator   validator for TO for show
      * @param seasonTOValidator validator for TO for season
      * @throws IllegalArgumentException if service for shows is null
      *                                  or service for seasons is null
@@ -144,8 +144,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException {@inheritDoc}
      * @throws FacadeOperationException {@inheritDoc}
      */
@@ -162,8 +160,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -190,8 +186,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -214,8 +208,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -235,8 +227,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -256,8 +246,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -279,8 +267,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
@@ -302,8 +288,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                              {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      * @throws FacadeOperationException                              {@inheritDoc}
@@ -321,8 +305,6 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}

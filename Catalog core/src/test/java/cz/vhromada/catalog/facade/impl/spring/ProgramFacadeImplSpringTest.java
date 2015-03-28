@@ -446,10 +446,10 @@ public class ProgramFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not moveable argument.
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         programFacade.moveUp(SpringToUtils.newProgram(objectGenerator, 1));
     }
 
@@ -497,10 +497,10 @@ public class ProgramFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not moveable argument.
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         programFacade.moveDown(SpringToUtils.newProgram(objectGenerator, SpringUtils.PROGRAMS_COUNT));
     }
 

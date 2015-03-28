@@ -723,10 +723,10 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not moveable argument.
+     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Music music = generate(Music.class);
         final List<Music> musicList = CollectionUtils.newList(music, mock(Music.class));
         final MusicTO musicTO = generate(MusicTO.class);
@@ -735,7 +735,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             musicFacade.moveUp(musicTO);
-            fail("Can't move up music with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up music with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -846,10 +846,10 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not moveable argument.
+     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Music music = generate(Music.class);
         final List<Music> musicList = CollectionUtils.newList(mock(Music.class), music);
         final MusicTO musicTO = generate(MusicTO.class);
@@ -858,7 +858,7 @@ public class MusicFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             musicFacade.moveDown(musicTO);
-            fail("Can't move down music with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down music with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

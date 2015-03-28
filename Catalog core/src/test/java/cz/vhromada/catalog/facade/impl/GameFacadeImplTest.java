@@ -722,10 +722,10 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(GameTO)} with not moveable argument.
+     * Test method for {@link GameFacade#moveUp(GameTO)} with not movable argument.
      */
     @Test
-    public void testMoveUpWithNotMoveableArgument() {
+    public void testMoveUpWithNotMovableArgument() {
         final Game game = generate(Game.class);
         final List<Game> games = CollectionUtils.newList(game, mock(Game.class));
         final GameTO gameTO = generate(GameTO.class);
@@ -734,7 +734,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             gameFacade.moveUp(gameTO);
-            fail("Can't move up game with not thrown ValidationException for not moveable argument.");
+            fail("Can't move up game with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }
@@ -845,10 +845,10 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(GameTO)} with not moveable argument.
+     * Test method for {@link GameFacade#moveDown(GameTO)} with not movable argument.
      */
     @Test
-    public void testMoveDownWithNotMoveableArgument() {
+    public void testMoveDownWithNotMovableArgument() {
         final Game game = generate(Game.class);
         final List<Game> games = CollectionUtils.newList(mock(Game.class), game);
         final GameTO gameTO = generate(GameTO.class);
@@ -857,7 +857,7 @@ public class GameFacadeImplTest extends ObjectGeneratorTest {
 
         try {
             gameFacade.moveDown(gameTO);
-            fail("Can't move down game with not thrown ValidationException for not moveable argument.");
+            fail("Can't move down game with not thrown ValidationException for not movable argument.");
         } catch (final ValidationException ex) {
             // OK
         }

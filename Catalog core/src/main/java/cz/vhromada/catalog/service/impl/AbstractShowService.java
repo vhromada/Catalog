@@ -4,33 +4,33 @@ import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.service.domain.CacheValue;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.cache.Cache;
 
 /**
- * An abstract class represents service with serie cache.
+ * An abstract class represents service with show cache.
  *
  * @author Vladimir Hromada
  */
-public abstract class AbstractSerieService extends AbstractInnerService<Serie, Season> {
+public abstract class AbstractShowService extends AbstractInnerService<Show, Season> {
 
     /**
-     * Cache for series argument
+     * Cache for shows argument
      */
-    private static final String SERIE_CACHE_ARGUMENT = "Cache for series";
+    private static final String SHOW_CACHE_ARGUMENT = "Cache for shows";
 
     /**
-     * Cache key for list of series
+     * Cache key for list of shows
      */
-    private static final String SERIES_CACHE_KEY = "series";
+    private static final String SHOWS_CACHE_KEY = "shows";
 
     /**
-     * Cache key for book serie
+     * Cache key for book show
      */
-    private static final String SERIE_CACHE_KEY = "serie";
+    private static final String SHOW_CACHE_KEY = "show";
 
     /**
      * Cache key for list of seasons
@@ -53,48 +53,48 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
     private static final String EPISODE_CACHE_KEY = "episode";
 
     /**
-     * Cache for series
+     * Cache for shows
      */
-    private Cache serieCache;
+    private Cache showCache;
 
     /**
-     * Creates a new instance of AbstractSerieService.
+     * Creates a new instance of AbstractShowService.
      *
-     * @param serieCache cache for series
-     * @throws IllegalArgumentException if cache for series is null
+     * @param showCache cache for shows
+     * @throws IllegalArgumentException if cache for shows is null
      */
-    public AbstractSerieService(final Cache serieCache) {
-        Validators.validateArgumentNotNull(serieCache, SERIE_CACHE_ARGUMENT);
+    public AbstractShowService(final Cache showCache) {
+        Validators.validateArgumentNotNull(showCache, SHOW_CACHE_ARGUMENT);
 
-        this.serieCache = serieCache;
+        this.showCache = showCache;
     }
 
     /**
-     * Remove all mappings from the cache for series.
+     * Remove all mappings from the cache for shows.
      */
     protected void clearCache() {
-        serieCache.clear();
+        showCache.clear();
     }
 
     /**
-     * Returns list of series.
+     * Returns list of shows.
      *
      * @param cached true if returned data from DAO should be cached
-     * @return list of series
+     * @return list of shows
      */
-    protected List<Serie> getCachedSeries(final boolean cached) {
-        return getCachedObjects(serieCache, SERIES_CACHE_KEY, cached);
+    protected List<Show> getCachedShows(final boolean cached) {
+        return getCachedObjects(showCache, SHOWS_CACHE_KEY, cached);
     }
 
     /**
-     * Returns list of seasons for specified serie.
+     * Returns list of seasons for specified show.
      *
-     * @param serie  serie
+     * @param show  show
      * @param cached true if returned data from DAO should be cached
-     * @return list of seasons for specified serie
+     * @return list of seasons for specified show
      */
-    protected List<Season> getCachedSeasons(final Serie serie, final boolean cached) {
-        return getCachedInnerObjects(serieCache, SEASONS_CACHE_KEY + serie.getId(), cached, serie);
+    protected List<Season> getCachedSeasons(final Show show, final boolean cached) {
+        return getCachedInnerObjects(showCache, SEASONS_CACHE_KEY + show.getId(), cached, show);
     }
 
     /**
@@ -106,11 +106,11 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
      */
     protected List<Episode> getCachedEpisodes(final Season season, final boolean cached) {
         final String key = EPISODES_CACHE_KEY + season.getId();
-        final CacheValue<List<Episode>> cachedData = getObjectFromCache(serieCache, key);
+        final CacheValue<List<Episode>> cachedData = getObjectFromCache(showCache, key);
         if (cachedData == null) {
             final List<Episode> data = getDAOEpisodes(season);
             if (cached) {
-                serieCache.put(key, data);
+                showCache.put(key, data);
             }
             return data;
         }
@@ -118,13 +118,13 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
     }
 
     /**
-     * Returns serie with ID or null if there isn't such serie.
+     * Returns show with ID or null if there isn't such show.
      *
      * @param id ID
-     * @return serie with ID or null if there isn't such serie
+     * @return show with ID or null if there isn't such show
      */
-    protected Serie getCachedSerie(final Integer id) {
-        return getCachedObject(serieCache, SERIE_CACHE_KEY, id, true);
+    protected Show getCachedShow(final Integer id) {
+        return getCachedObject(showCache, SHOW_CACHE_KEY, id, true);
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
      * @return season with ID or null if there isn't such season
      */
     protected Season getCachedSeason(final Integer id) {
-        return getCachedInnerObject(serieCache, SEASON_CACHE_KEY, id);
+        return getCachedInnerObject(showCache, SEASON_CACHE_KEY, id);
     }
 
     /**
@@ -145,23 +145,23 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
      */
     protected Episode getCachedEpisode(final Integer id) {
         final String key = EPISODE_CACHE_KEY + id;
-        final CacheValue<Episode> cachedData = getObjectFromCache(serieCache, key);
+        final CacheValue<Episode> cachedData = getObjectFromCache(showCache, key);
         if (cachedData == null) {
             final Episode data = getDAOEpisode(id);
-            serieCache.put(key, data);
+            showCache.put(key, data);
             return data;
         }
         return cachedData.getValue();
     }
 
     /**
-     * Adds serie to cache.
+     * Adds show to cache.
      *
-     * @param serie serie
+     * @param show show
      */
-    protected void addSerieToCache(final Serie serie) {
-        addObjectToListCache(serieCache, SERIES_CACHE_KEY, serie);
-        addObjectToCache(serieCache, SERIE_CACHE_KEY + serie.getId(), serie);
+    protected void addShowToCache(final Show show) {
+        addObjectToListCache(showCache, SHOWS_CACHE_KEY, show);
+        addObjectToCache(showCache, SHOW_CACHE_KEY + show.getId(), show);
     }
 
     /**
@@ -170,8 +170,8 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
      * @param season season
      */
     protected void addSeasonToCache(final Season season) {
-        addInnerObjectToListCache(serieCache, SEASONS_CACHE_KEY + season.getSerie().getId(), season);
-        addInnerObjectToCache(serieCache, SEASON_CACHE_KEY + season.getId(), season);
+        addInnerObjectToListCache(showCache, SEASONS_CACHE_KEY + season.getShow().getId(), season);
+        addInnerObjectToCache(showCache, SEASON_CACHE_KEY + season.getId(), season);
     }
 
     /**
@@ -181,16 +181,16 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
      */
     protected void addEpisodeToCache(final Episode episode) {
         final String keyList = EPISODES_CACHE_KEY + episode.getSeason().getId();
-        final CacheValue<List<Episode>> cacheDataList = getObjectFromCache(serieCache, keyList);
+        final CacheValue<List<Episode>> cacheDataList = getObjectFromCache(showCache, keyList);
         if (cacheDataList != null) {
             final List<Episode> data = cacheDataList.getValue();
             data.add(episode);
-            serieCache.put(keyList, data);
+            showCache.put(keyList, data);
         }
         final String keyItem = EPISODE_CACHE_KEY + episode.getId();
-        final CacheValue<Episode> cacheData = getObjectFromCache(serieCache, keyItem);
+        final CacheValue<Episode> cacheData = getObjectFromCache(showCache, keyItem);
         if (cacheData != null) {
-            serieCache.put(keyItem, episode);
+            showCache.put(keyItem, episode);
         }
     }
 
@@ -201,27 +201,27 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
      */
     protected void removeEpisodeFromCache(final Episode episode) {
         final String key = EPISODES_CACHE_KEY + episode.getSeason().getId();
-        final CacheValue<List<Episode>> cacheData = getObjectFromCache(serieCache, key);
+        final CacheValue<List<Episode>> cacheData = getObjectFromCache(showCache, key);
         if (cacheData != null) {
             final List<Episode> data = cacheData.getValue();
             data.remove(episode);
-            serieCache.put(key, data);
+            showCache.put(key, data);
         }
-        serieCache.evict(EPISODE_CACHE_KEY + episode.getId());
+        showCache.evict(EPISODE_CACHE_KEY + episode.getId());
     }
 
     @Override
-    protected List<Serie> getData() {
-        return getDAOSeries();
+    protected List<Show> getData() {
+        return getDAOShows();
     }
 
     @Override
-    protected Serie getData(final Integer id) {
-        return getDAOSerie(id);
+    protected Show getData(final Integer id) {
+        return getDAOShow(id);
     }
 
     @Override
-    protected List<Season> getInnerData(final Serie parent) {
+    protected List<Season> getInnerData(final Show parent) {
         return getDAOSeasons(parent);
     }
 
@@ -231,19 +231,19 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
     }
 
     /**
-     * Returns list of series from DAO tier.
+     * Returns list of shows from DAO tier.
      *
-     * @return list of series from DAO tier
+     * @return list of shows from DAO tier
      */
-    protected abstract List<Serie> getDAOSeries();
+    protected abstract List<Show> getDAOShows();
 
     /**
-     * Returns list of seasons for specified serie from DAO tier.
+     * Returns list of seasons for specified show from DAO tier.
      *
-     * @param serie serie
-     * @return list of seasons for specified serie from DAO tier
+     * @param show show
+     * @return list of seasons for specified show from DAO tier
      */
-    protected abstract List<Season> getDAOSeasons(final Serie serie);
+    protected abstract List<Season> getDAOSeasons(final Show show);
 
     /**
      * Returns list of episodes for specified season from DAO tier.
@@ -254,12 +254,12 @@ public abstract class AbstractSerieService extends AbstractInnerService<Serie, S
     protected abstract List<Episode> getDAOEpisodes(final Season season);
 
     /**
-     * Returns serie with ID from DAO tier.
+     * Returns show with ID from DAO tier.
      *
      * @param id ID
-     * @return serie with ID from DAO tier
+     * @return show with ID from DAO tier
      */
-    protected abstract Serie getDAOSerie(final Integer id);
+    protected abstract Show getDAOShow(final Integer id);
 
     /**
      * Returns season with ID from DAO tier.

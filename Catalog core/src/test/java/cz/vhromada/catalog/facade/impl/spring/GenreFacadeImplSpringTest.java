@@ -16,7 +16,7 @@ import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.generator.ObjectGenerator;
@@ -73,7 +73,7 @@ public class GenreFacadeImplSpringTest {
         SpringUtils.remove(transactionManager, entityManager, Movie.class);
         SpringUtils.remove(transactionManager, entityManager, Episode.class);
         SpringUtils.remove(transactionManager, entityManager, Season.class);
-        SpringUtils.remove(transactionManager, entityManager, Serie.class);
+        SpringUtils.remove(transactionManager, entityManager, Show.class);
         SpringUtils.remove(transactionManager, entityManager, Genre.class);
         SpringUtils.updateSequence(transactionManager, entityManager, "genres_sq");
         for (final Genre genre : SpringEntitiesUtils.getGenres()) {

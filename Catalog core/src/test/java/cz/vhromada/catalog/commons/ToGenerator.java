@@ -9,7 +9,7 @@ import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.facade.to.ShowTO;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.generator.ObjectGenerator;
 
@@ -49,23 +49,23 @@ public final class ToGenerator {
     }
 
     /**
-     * Returns new TO for serie.
+     * Returns new TO for show.
      *
      * @param objectGenerator object generator
-     * @return new TO for serie
+     * @return new TO for show
      */
-    public static SerieTO newSerie(final ObjectGenerator objectGenerator) {
-        return newSerie(objectGenerator, false);
+    public static ShowTO newShow(final ObjectGenerator objectGenerator) {
+        return newShow(objectGenerator, false);
     }
 
     /**
-     * Returns new TO for serie with ID.
+     * Returns new TO for show with ID.
      *
      * @param objectGenerator object generator
-     * @return new TO for serie with ID
+     * @return new TO for show with ID
      */
-    public static SerieTO newSerieWithId(final ObjectGenerator objectGenerator) {
-        return newSerie(objectGenerator, true);
+    public static ShowTO newShowWithId(final ObjectGenerator objectGenerator) {
+        return newShow(objectGenerator, true);
     }
 
     /**
@@ -266,19 +266,19 @@ public final class ToGenerator {
     }
 
     /**
-     * Returns new TO for serie.
+     * Returns new TO for show.
      *
      * @param objectGenerator object generator
      * @param id              true if id should be generated
-     * @return new TO for serie
+     * @return new TO for show
      */
-    private static SerieTO newSerie(final ObjectGenerator objectGenerator, final boolean id) {
-        final SerieTO serie = objectGenerator.generate(SerieTO.class);
+    private static ShowTO newShow(final ObjectGenerator objectGenerator, final boolean id) {
+        final ShowTO show = objectGenerator.generate(ShowTO.class);
         if (!id) {
-            serie.setId(null);
+            show.setId(null);
         }
 
-        return serie;
+        return show;
     }
 
     /**

@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * A class represents TO for serie.
+ * A class represents TO for show.
  *
  * @author Vladimir Hromada
  */
-public class SerieTO implements Comparable<SerieTO>, Serializable {
+public class ShowTO implements Comparable<ShowTO>, Serializable {
 
     /**
      * SerialVersionUID
@@ -31,7 +31,7 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
     private String originalName;
 
     /**
-     * URL to ČSFD page about serie
+     * URL to ČSFD page about show
      */
     private String csfd;
 
@@ -41,17 +41,17 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
     private int imdbCode;
 
     /**
-     * URL to english Wikipedia page about serie
+     * URL to english Wikipedia page about show
      */
     private String wikiEn;
 
     /**
-     * URL to czech Wikipedia page about serie
+     * URL to czech Wikipedia page about show
      */
     private String wikiCz;
 
     /**
-     * Path to file with serie's picture
+     * Path to file with show picture
      */
     private String picture;
 
@@ -125,16 +125,16 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
     }
 
     /**
-     * Returns URL to ČSFD page about serie.
+     * Returns URL to ČSFD page about show.
      *
-     * @return URL to ČSFD page about serie
+     * @return URL to ČSFD page about show
      */
     public String getCsfd() {
         return csfd;
     }
 
     /**
-     * Sets a new value to URL to ČSFD page about serie.
+     * Sets a new value to URL to ČSFD page about show.
      *
      * @param csfd new value
      */
@@ -161,16 +161,16 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
     }
 
     /**
-     * Returns URL to english Wikipedia page about serie.
+     * Returns URL to english Wikipedia page about show.
      *
-     * @return URL to english Wikipedia page about serie
+     * @return URL to english Wikipedia page about show
      */
     public String getWikiEn() {
         return wikiEn;
     }
 
     /**
-     * Sets a new value to URL to english Wikipedia page about serie.
+     * Sets a new value to URL to english Wikipedia page about show.
      *
      * @param wikiEn new value
      */
@@ -179,16 +179,16 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
     }
 
     /**
-     * Returns URL to czech Wikipedia page about serie.
+     * Returns URL to czech Wikipedia page about show.
      *
-     * @return URL to czech Wikipedia page about serie
+     * @return URL to czech Wikipedia page about show
      */
     public String getWikiCz() {
         return wikiCz;
     }
 
     /**
-     * Sets a new value to URL to czech Wikipedia page about serie.
+     * Sets a new value to URL to czech Wikipedia page about show.
      *
      * @param wikiCz new value
      */
@@ -197,16 +197,16 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
     }
 
     /**
-     * Returns path to file with serie's picture.
+     * Returns path to file with show picture.
      *
-     * @return path to file with serie's picture
+     * @return path to file with show picture
      */
     public String getPicture() {
         return picture;
     }
 
     /**
-     * Sets a new value to path to file with serie's picture.
+     * Sets a new value to path to file with show picture.
      *
      * @param picture new value
      */
@@ -273,11 +273,11 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof SerieTO) || id == null) {
+        if (obj == null || !(obj instanceof ShowTO) || id == null) {
             return false;
         }
-        final SerieTO serie = (SerieTO) obj;
-        return id.equals(serie.id);
+        final ShowTO show = (ShowTO) obj;
+        return id.equals(show.id);
     }
 
     @Override
@@ -287,12 +287,12 @@ public class SerieTO implements Comparable<SerieTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("SerieTO [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
+        return String.format("ShowTO [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
                 + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }
 
     @Override
-    public int compareTo(final SerieTO o) {
+    public int compareTo(final ShowTO o) {
         final int result = position - o.position;
         return result == 0 ? id - o.id : result;
     }

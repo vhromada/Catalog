@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ MovieServiceImplSpringTest.class, SerieServiceImplSpringTest.class, SeasonServiceImplSpringTest.class, EpisodeServiceImplSpringTest.class,
+@Suite.SuiteClasses({ MovieServiceImplSpringTest.class, ShowServiceImplSpringTest.class, SeasonServiceImplSpringTest.class, EpisodeServiceImplSpringTest.class,
         GameServiceImplSpringTest.class, MusicServiceImplSpringTest.class, SongServiceImplSpringTest.class, ProgramServiceImplSpringTest.class,
         BookCategoryServiceImplSpringTest.class, BookServiceImplSpringTest.class, GenreServiceImplSpringTest.class })
 public class ServiceImplSpringSuite {

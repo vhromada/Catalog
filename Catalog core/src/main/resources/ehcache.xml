@@ -14,7 +14,7 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="serieCache"
+    <cache name="showCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"

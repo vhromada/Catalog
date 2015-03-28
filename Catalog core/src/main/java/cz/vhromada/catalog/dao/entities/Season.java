@@ -31,13 +31,13 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "seasons")
-@NamedQuery(name = Season.FIND_BY_SERIE, query = "SELECT s FROM Season s WHERE s.serie.id = :serie ORDER BY s.position, s.id")
+@NamedQuery(name = Season.FIND_BY_SHOW, query = "SELECT s FROM Season s WHERE s.show.id = :show ORDER BY s.position, s.id")
 public class Season implements Serializable {
 
     /**
-     * Name for query - find by serie
+     * Name for query - find by show
      */
-    public static final String FIND_BY_SERIE = "Season.findBySerie";
+    public static final String FIND_BY_SHOW = "Season.findByShow";
 
     /**
      * SerialVersionUID
@@ -97,11 +97,11 @@ public class Season implements Serializable {
     private int position;
 
     /**
-     * Serie
+     * Show
      */
     @ManyToOne
-    @JoinColumn(name = "serie", referencedColumnName = "id")
-    private Serie serie;
+    @JoinColumn(name = "tv_show", referencedColumnName = "id")
+    private Show show;
 
     /**
      * Returns ID.
@@ -249,21 +249,21 @@ public class Season implements Serializable {
     }
 
     /**
-     * Returns serie.
+     * Returns show.
      *
-     * @return serie
+     * @return show
      */
-    public Serie getSerie() {
-        return serie;
+    public Show getShow() {
+        return show;
     }
 
     /**
-     * Sets a new value to serie.
+     * Sets a new value to show.
      *
-     * @param serie new value
+     * @param show new value
      */
-    public void setSerie(final Serie serie) {
-        this.serie = serie;
+    public void setShow(final Show show) {
+        this.show = show;
     }
 
     @Override
@@ -285,8 +285,8 @@ public class Season implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, serie=%s]", id, number,
-                startYear, endYear, language, subtitles, note, position, serie);
+        return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, show=%s]", id, number,
+                startYear, endYear, language, subtitles, note, position, show);
     }
 
 }

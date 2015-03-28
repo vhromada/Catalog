@@ -20,15 +20,15 @@ import java.util.List;
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.facade.to.ShowTO;
 import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
-import cz.vhromada.catalog.facade.validators.SerieTOValidator;
+import cz.vhromada.catalog.facade.validators.ShowTOValidator;
 import cz.vhromada.catalog.service.SeasonService;
-import cz.vhromada.catalog.service.SerieService;
+import cz.vhromada.catalog.service.ShowService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.test.DeepAsserts;
@@ -52,10 +52,10 @@ import org.mockito.stubbing.Answer;
 public class SeasonFacadeImplTest extends ObjectGeneratorTest {
 
     /**
-     * Instance of {@link SerieService}
+     * Instance of {@link ShowService}
      */
     @Mock
-    private SerieService serieService;
+    private ShowService showService;
 
     /**
      * Instance of {@link SeasonService}
@@ -70,10 +70,10 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
     private Converter converter;
 
     /**
-     * Instance of {@link SerieTOValidator}
+     * Instance of {@link ShowTOValidator}
      */
     @Mock
-    private SerieTOValidator serieTOValidator;
+    private ShowTOValidator showTOValidator;
 
     /**
      * Instance of {@link SeasonTOValidator}
@@ -91,52 +91,52 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
      */
     @Before
     public void setUp() {
-        seasonFacade = new SeasonFacadeImpl(serieService, seasonService, converter, serieTOValidator, seasonTOValidator);
+        seasonFacade = new SeasonFacadeImpl(showService, seasonService, converter, showTOValidator, seasonTOValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, Converter, SerieTOValidator, SeasonTOValidator)} with null
-     * service for series.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(ShowService, SeasonService, Converter, ShowTOValidator, SeasonTOValidator)} with null
+     * service for shows.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullSerieService() {
-        new SeasonFacadeImpl(null, seasonService, converter, serieTOValidator, seasonTOValidator);
+    public void testConstructorWithNullShowService() {
+        new SeasonFacadeImpl(null, seasonService, converter, showTOValidator, seasonTOValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, Converter, SerieTOValidator, SeasonTOValidator)} with null
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(ShowService, SeasonService, Converter, ShowTOValidator, SeasonTOValidator)} with null
      * service for seasons.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSeasonService() {
-        new SeasonFacadeImpl(serieService, null, converter, serieTOValidator, seasonTOValidator);
+        new SeasonFacadeImpl(showService, null, converter, showTOValidator, seasonTOValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, Converter, SerieTOValidator, SeasonTOValidator)} with null
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(ShowService, SeasonService, Converter, ShowTOValidator, SeasonTOValidator)} with null
      * converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullConverter() {
-        new SeasonFacadeImpl(serieService, seasonService, null, serieTOValidator, seasonTOValidator);
+        new SeasonFacadeImpl(showService, seasonService, null, showTOValidator, seasonTOValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, Converter, SerieTOValidator, SeasonTOValidator)} with null
-     * validator for TO for serie.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(ShowService, SeasonService, Converter, ShowTOValidator, SeasonTOValidator)} with null
+     * validator for TO for show.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullSerieTOValidator() {
-        new SeasonFacadeImpl(serieService, seasonService, converter, null, seasonTOValidator);
+    public void testConstructorWithNullShowTOValidator() {
+        new SeasonFacadeImpl(showService, seasonService, converter, null, seasonTOValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(SerieService, SeasonService, Converter, SerieTOValidator, SeasonTOValidator)} with null
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(ShowService, SeasonService, Converter, ShowTOValidator, SeasonTOValidator)} with null
      * validator for TO for season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullSeasonTOValidator() {
-        new SeasonFacadeImpl(serieService, seasonService, converter, serieTOValidator, null);
+        new SeasonFacadeImpl(showService, seasonService, converter, showTOValidator, null);
     }
 
     /**
@@ -216,7 +216,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         seasonTO.setId(null);
         final int id = generate(Integer.class);
         final int position = generate(Integer.class);
-        when(serieService.getSerie(anyInt())).thenReturn(generate(Serie.class));
+        when(showService.getShow(anyInt())).thenReturn(generate(Show.class));
         doAnswer(setSeasonIdAndPosition(id, position)).when(seasonService).add(any(Season.class));
         when(converter.convert(any(SeasonTO.class), eq(Season.class))).thenReturn(season);
 
@@ -225,11 +225,11 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         DeepAsserts.assertEquals(id, season.getId());
         DeepAsserts.assertEquals(position, season.getPosition());
 
-        verify(serieService).getSerie(seasonTO.getSerie().getId());
+        verify(showService).getShow(seasonTO.getShow().getId());
         verify(seasonService).add(season);
         verify(converter).convert(seasonTO, Season.class);
         verify(seasonTOValidator).validateNewSeasonTO(seasonTO);
-        verifyNoMoreInteractions(serieService, seasonService, converter, seasonTOValidator);
+        verifyNoMoreInteractions(showService, seasonService, converter, seasonTOValidator);
     }
 
     /**
@@ -248,7 +248,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
 
         verify(seasonTOValidator).validateNewSeasonTO(null);
         verifyNoMoreInteractions(seasonTOValidator);
-        verifyZeroInteractions(serieService, seasonService, converter);
+        verifyZeroInteractions(showService, seasonService, converter);
     }
 
     /**
@@ -269,7 +269,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
 
         verify(seasonTOValidator).validateNewSeasonTO(season);
         verifyNoMoreInteractions(seasonTOValidator);
-        verifyZeroInteractions(serieService, seasonService, converter);
+        verifyZeroInteractions(showService, seasonService, converter);
     }
 
     /**
@@ -279,7 +279,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
     public void testAddWithNotExistingArgument() {
         final SeasonTO season = generate(SeasonTO.class);
         season.setId(null);
-        when(serieService.getSerie(anyInt())).thenReturn(null);
+        when(showService.getShow(anyInt())).thenReturn(null);
 
         try {
             seasonFacade.add(season);
@@ -288,9 +288,9 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verify(serieService).getSerie(season.getSerie().getId());
+        verify(showService).getShow(season.getShow().getId());
         verify(seasonTOValidator).validateNewSeasonTO(season);
-        verifyNoMoreInteractions(serieService, seasonTOValidator);
+        verifyNoMoreInteractions(showService, seasonTOValidator);
         verifyZeroInteractions(seasonService, converter);
     }
 
@@ -303,7 +303,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         season.setId(null);
         final SeasonTO seasonTO = generate(SeasonTO.class);
         seasonTO.setId(null);
-        when(serieService.getSerie(anyInt())).thenReturn(generate(Serie.class));
+        when(showService.getShow(anyInt())).thenReturn(generate(Show.class));
         when(converter.convert(any(SeasonTO.class), eq(Season.class))).thenReturn(season);
 
         try {
@@ -313,11 +313,11 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verify(serieService).getSerie(seasonTO.getSerie().getId());
+        verify(showService).getShow(seasonTO.getShow().getId());
         verify(seasonService).add(season);
         verify(converter).convert(seasonTO, Season.class);
         verify(seasonTOValidator).validateNewSeasonTO(seasonTO);
-        verifyNoMoreInteractions(serieService, seasonService, converter, seasonTOValidator);
+        verifyNoMoreInteractions(showService, seasonService, converter, seasonTOValidator);
     }
 
     /**
@@ -327,7 +327,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
     public void testAddWithServiceTierException() {
         final SeasonTO season = generate(SeasonTO.class);
         season.setId(null);
-        doThrow(ServiceOperationException.class).when(serieService).getSerie(anyInt());
+        doThrow(ServiceOperationException.class).when(showService).getShow(anyInt());
 
         try {
             seasonFacade.add(season);
@@ -336,9 +336,9 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verify(serieService).getSerie(season.getSerie().getId());
+        verify(showService).getShow(season.getShow().getId());
         verify(seasonTOValidator).validateNewSeasonTO(season);
-        verifyNoMoreInteractions(serieService, seasonTOValidator);
+        verifyNoMoreInteractions(showService, seasonTOValidator);
         verifyZeroInteractions(seasonService, converter);
     }
 
@@ -347,21 +347,21 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
      */
     @Test
     public void testUpdate() {
-        final Serie serie = generate(Serie.class);
+        final Show show = generate(Show.class);
         final Season season = generate(Season.class);
         final SeasonTO seasonTO = generate(SeasonTO.class);
-        when(serieService.getSerie(anyInt())).thenReturn(serie);
+        when(showService.getShow(anyInt())).thenReturn(show);
         when(seasonService.exists(any(Season.class))).thenReturn(true);
         when(converter.convert(any(SeasonTO.class), eq(Season.class))).thenReturn(season);
 
         seasonFacade.update(seasonTO);
 
-        verify(serieService).getSerie(seasonTO.getSerie().getId());
+        verify(showService).getShow(seasonTO.getShow().getId());
         verify(seasonService).exists(season);
         verify(seasonService).update(season);
         verify(converter).convert(seasonTO, Season.class);
         verify(seasonTOValidator).validateExistingSeasonTO(seasonTO);
-        verifyNoMoreInteractions(serieService, seasonService, converter, seasonTOValidator);
+        verifyNoMoreInteractions(showService, seasonService, converter, seasonTOValidator);
     }
 
     /**
@@ -380,7 +380,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
 
         verify(seasonTOValidator).validateExistingSeasonTO(null);
         verifyNoMoreInteractions(seasonTOValidator);
-        verifyZeroInteractions(serieService, seasonService, converter);
+        verifyZeroInteractions(showService, seasonService, converter);
     }
 
     /**
@@ -400,7 +400,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
 
         verify(seasonTOValidator).validateExistingSeasonTO(season);
         verifyNoMoreInteractions(seasonTOValidator);
-        verifyZeroInteractions(serieService, seasonService, converter);
+        verifyZeroInteractions(showService, seasonService, converter);
     }
 
     /**
@@ -424,7 +424,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verify(converter).convert(seasonTO, Season.class);
         verify(seasonTOValidator).validateExistingSeasonTO(seasonTO);
         verifyNoMoreInteractions(seasonService, converter, seasonTOValidator);
-        verifyZeroInteractions(serieService);
+        verifyZeroInteractions(showService);
     }
 
     /**
@@ -448,7 +448,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         verify(converter).convert(seasonTO, Season.class);
         verify(seasonTOValidator).validateExistingSeasonTO(seasonTO);
         verifyNoMoreInteractions(seasonService, converter, seasonTOValidator);
-        verifyZeroInteractions(serieService);
+        verifyZeroInteractions(showService);
     }
 
     /**
@@ -652,12 +652,12 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         final List<Season> seasons = CollectionUtils.newList(mock(Season.class), season);
         final SeasonTO seasonTO = generate(SeasonTO.class);
         when(seasonService.getSeason(anyInt())).thenReturn(season);
-        when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
+        when(seasonService.findSeasonsByShow(any(Show.class))).thenReturn(seasons);
 
         seasonFacade.moveUp(seasonTO);
 
         verify(seasonService).getSeason(seasonTO.getId());
-        verify(seasonService).findSeasonsBySerie(season.getSerie());
+        verify(seasonService).findSeasonsByShow(season.getShow());
         verify(seasonService).moveUp(season);
         verify(seasonTOValidator).validateSeasonTOWithId(seasonTO);
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
@@ -731,7 +731,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         final List<Season> seasons = CollectionUtils.newList(season, mock(Season.class));
         final SeasonTO seasonTO = generate(SeasonTO.class);
         when(seasonService.getSeason(anyInt())).thenReturn(season);
-        when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
+        when(seasonService.findSeasonsByShow(any(Show.class))).thenReturn(seasons);
 
         try {
             seasonFacade.moveUp(seasonTO);
@@ -741,7 +741,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(seasonService).getSeason(seasonTO.getId());
-        verify(seasonService).findSeasonsBySerie(season.getSerie());
+        verify(seasonService).findSeasonsByShow(season.getShow());
         verify(seasonTOValidator).validateSeasonTOWithId(seasonTO);
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
     }
@@ -775,12 +775,12 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         final List<Season> seasons = CollectionUtils.newList(season, mock(Season.class));
         final SeasonTO seasonTO = generate(SeasonTO.class);
         when(seasonService.getSeason(anyInt())).thenReturn(season);
-        when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
+        when(seasonService.findSeasonsByShow(any(Show.class))).thenReturn(seasons);
 
         seasonFacade.moveDown(seasonTO);
 
         verify(seasonService).getSeason(seasonTO.getId());
-        verify(seasonService).findSeasonsBySerie(season.getSerie());
+        verify(seasonService).findSeasonsByShow(season.getShow());
         verify(seasonService).moveDown(season);
         verify(seasonTOValidator).validateSeasonTOWithId(seasonTO);
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
@@ -851,7 +851,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         final List<Season> seasons = CollectionUtils.newList(mock(Season.class), season);
         final SeasonTO seasonTO = generate(SeasonTO.class);
         when(seasonService.getSeason(anyInt())).thenReturn(season);
-        when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
+        when(seasonService.findSeasonsByShow(any(Show.class))).thenReturn(seasons);
 
         try {
             seasonFacade.moveDown(seasonTO);
@@ -861,7 +861,7 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
         }
 
         verify(seasonService).getSeason(seasonTO.getId());
-        verify(seasonService).findSeasonsBySerie(season.getSerie());
+        verify(seasonService).findSeasonsByShow(season.getShow());
         verify(seasonTOValidator).validateSeasonTOWithId(seasonTO);
         verifyNoMoreInteractions(seasonService, seasonTOValidator);
     }
@@ -985,105 +985,105 @@ public class SeasonFacadeImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)}.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)}.
      */
     @Test
-    public void testFindSeasonsBySerie() {
-        final Serie serie = generate(Serie.class);
+    public void testFindSeasonsByShow() {
+        final Show show = generate(Show.class);
         final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
-        final SerieTO serieTO = generate(SerieTO.class);
+        final ShowTO showTO = generate(ShowTO.class);
         final List<SeasonTO> seasonsList = CollectionUtils.newList(generate(SeasonTO.class), generate(SeasonTO.class));
-        when(serieService.getSerie(anyInt())).thenReturn(serie);
-        when(seasonService.findSeasonsBySerie(any(Serie.class))).thenReturn(seasons);
+        when(showService.getShow(anyInt())).thenReturn(show);
+        when(seasonService.findSeasonsByShow(any(Show.class))).thenReturn(seasons);
         when(converter.convertCollection(seasons, SeasonTO.class)).thenReturn(seasonsList);
 
-        DeepAsserts.assertEquals(seasonsList, seasonFacade.findSeasonsBySerie(serieTO));
+        DeepAsserts.assertEquals(seasonsList, seasonFacade.findSeasonsByShow(showTO));
 
-        verify(serieService).getSerie(serieTO.getId());
-        verify(seasonService).findSeasonsBySerie(serie);
+        verify(showService).getShow(showTO.getId());
+        verify(seasonService).findSeasonsByShow(show);
         verify(converter).convertCollection(seasons, SeasonTO.class);
-        verify(serieTOValidator).validateSerieTOWithId(serieTO);
-        verifyNoMoreInteractions(serieService, seasonService, converter, serieTOValidator);
+        verify(showTOValidator).validateShowTOWithId(showTO);
+        verifyNoMoreInteractions(showService, seasonService, converter, showTOValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with null argument.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with null argument.
      */
     @Test
-    public void testFindSeasonsBySerieWithNullArgument() {
-        doThrow(IllegalArgumentException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
+    public void testFindSeasonsByShowWithNullArgument() {
+        doThrow(IllegalArgumentException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
 
         try {
-            seasonFacade.findSeasonsBySerie(null);
-            fail("Can't find seasons by serie with not thrown IllegalArgumentException for null argument.");
+            seasonFacade.findSeasonsByShow(null);
+            fail("Can't find seasons by show with not thrown IllegalArgumentException for null argument.");
         } catch (final IllegalArgumentException ex) {
             // OK
         }
 
-        verify(serieTOValidator).validateSerieTOWithId(null);
-        verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, seasonService, converter);
+        verify(showTOValidator).validateShowTOWithId(null);
+        verifyNoMoreInteractions(showTOValidator);
+        verifyZeroInteractions(showService, seasonService, converter);
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with argument with bad data.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with argument with bad data.
      */
     @Test
-    public void testFindSeasonsBySerieWithBadArgument() {
-        final SerieTO serie = generate(SerieTO.class);
-        doThrow(ValidationException.class).when(serieTOValidator).validateSerieTOWithId(any(SerieTO.class));
+    public void testFindSeasonsByShowWithBadArgument() {
+        final ShowTO show = generate(ShowTO.class);
+        doThrow(ValidationException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
 
         try {
-            seasonFacade.findSeasonsBySerie(serie);
-            fail("Can't find seasons by serie with not thrown ValidationException for argument with bad data.");
+            seasonFacade.findSeasonsByShow(show);
+            fail("Can't find seasons by show with not thrown ValidationException for argument with bad data.");
         } catch (final ValidationException ex) {
             // OK
         }
 
-        verify(serieTOValidator).validateSerieTOWithId(serie);
-        verifyNoMoreInteractions(serieTOValidator);
-        verifyZeroInteractions(serieService, seasonService, converter);
+        verify(showTOValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showTOValidator);
+        verifyZeroInteractions(showService, seasonService, converter);
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with not existing argument.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with not existing argument.
      */
     @Test
-    public void testFindSeasonsBySerieWithNotExistingArgument() {
-        final SerieTO serie = generate(SerieTO.class);
-        when(serieService.getSerie(anyInt())).thenReturn(null);
+    public void testFindSeasonsByShowWithNotExistingArgument() {
+        final ShowTO show = generate(ShowTO.class);
+        when(showService.getShow(anyInt())).thenReturn(null);
 
         try {
-            seasonFacade.findSeasonsBySerie(serie);
-            fail("Can't find seasons by serie with not thrown RecordNotFoundException for not existing argument.");
+            seasonFacade.findSeasonsByShow(show);
+            fail("Can't find seasons by show with not thrown RecordNotFoundException for not existing argument.");
         } catch (final RecordNotFoundException ex) {
             // OK
         }
 
-        verify(serieService).getSerie(serie.getId());
-        verify(serieTOValidator).validateSerieTOWithId(serie);
-        verifyNoMoreInteractions(serieService, serieTOValidator);
+        verify(showService).getShow(show.getId());
+        verify(showTOValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showService, showTOValidator);
         verifyZeroInteractions(seasonService, converter);
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(SerieTO)} with exception in service tier.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with exception in service tier.
      */
     @Test
-    public void testFindSeasonsBySerieWithServiceTierException() {
-        final SerieTO serie = generate(SerieTO.class);
-        doThrow(ServiceOperationException.class).when(serieService).getSerie(anyInt());
+    public void testFindSeasonsByShowWithServiceTierException() {
+        final ShowTO show = generate(ShowTO.class);
+        doThrow(ServiceOperationException.class).when(showService).getShow(anyInt());
 
         try {
-            seasonFacade.findSeasonsBySerie(serie);
-            fail("Can't find seasons by serie with not thrown FacadeOperationException for service tier exception.");
+            seasonFacade.findSeasonsByShow(show);
+            fail("Can't find seasons by show with not thrown FacadeOperationException for service tier exception.");
         } catch (final FacadeOperationException ex) {
             // OK
         }
 
-        verify(serieService).getSerie(serie.getId());
-        verify(serieTOValidator).validateSerieTOWithId(serie);
-        verifyNoMoreInteractions(serieService, serieTOValidator);
+        verify(showService).getShow(show.getId());
+        verify(showTOValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showService, showTOValidator);
         verifyZeroInteractions(seasonService, converter);
     }
 

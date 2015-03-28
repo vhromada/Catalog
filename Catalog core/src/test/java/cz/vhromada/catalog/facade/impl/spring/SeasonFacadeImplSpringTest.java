@@ -16,7 +16,7 @@ import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.generator.ObjectGenerator;
@@ -102,22 +102,22 @@ public class SeasonFacadeImplSpringTest {
     public void setUp() {
         SpringUtils.remove(transactionManager, entityManager, Episode.class);
         SpringUtils.remove(transactionManager, entityManager, Season.class);
-        SpringUtils.remove(transactionManager, entityManager, Serie.class);
-        SpringUtils.updateSequence(transactionManager, entityManager, "series_sq");
+        SpringUtils.remove(transactionManager, entityManager, Show.class);
+        SpringUtils.updateSequence(transactionManager, entityManager, "tv_shows_sq");
         SpringUtils.updateSequence(transactionManager, entityManager, "seasons_sq");
         SpringUtils.updateSequence(transactionManager, entityManager, "episodes_sq");
-        for (final Serie serie : SpringEntitiesUtils.getSeries()) {
-            serie.setId(null);
-            SpringUtils.persist(transactionManager, entityManager, serie);
+        for (final Show show : SpringEntitiesUtils.getShows()) {
+            show.setId(null);
+            SpringUtils.persist(transactionManager, entityManager, show);
         }
-        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+        for (int i = 1; i <= SpringUtils.SHOWS_COUNT; i++) {
             for (final Season season : SpringEntitiesUtils.getSeasons(i)) {
                 season.setId(null);
                 SpringUtils.persist(transactionManager, entityManager, season);
             }
         }
-        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
-            for (int j = 1; j <= SpringUtils.SEASONS_PER_SERIE_COUNT; j++) {
+        for (int i = 1; i <= SpringUtils.SHOWS_COUNT; i++) {
+            for (int j = 1; j <= SpringUtils.SEASONS_PER_SHOW_COUNT; j++) {
                 for (final Episode episode : SpringEntitiesUtils.getEpisodes(i, j)) {
                     episode.setId(null);
                     SpringUtils.persist(transactionManager, entityManager, episode);
@@ -132,9 +132,9 @@ public class SeasonFacadeImplSpringTest {
     @Test
     public void testGetSeason() {
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringToUtils.getSeason(serieNumber, seasonNumber), seasonFacade.getSeason(i + 1), SEASONS_COUNT_FIELD,
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringToUtils.getSeason(showNumber, seasonNumber), seasonFacade.getSeason(i + 1), SEASONS_COUNT_FIELD,
                     EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD);
         }
 
@@ -296,34 +296,34 @@ public class SeasonFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with null TO for serie.
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with null TO for show.
      */
     @Test(expected = ValidationException.class)
-    public void testAddWithNullSerie() {
+    public void testAddWithNullShow() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-        season.setSerie(null);
+        season.setShow(null);
 
         seasonFacade.add(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with TO for serie with null ID.
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with TO for show with null ID.
      */
     @Test(expected = ValidationException.class)
-    public void testAddWithSerieWithNullId() {
+    public void testAddWithShowWithNullId() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-        season.getSerie().setId(null);
+        season.getShow().setId(null);
 
         seasonFacade.add(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with not existing serie.
+     * Test method for {@link SeasonFacade#add(SeasonTO)} with season with not existing show.
      */
     @Test(expected = RecordNotFoundException.class)
-    public void testAddWithSeasonWithNotExistingSerie() {
+    public void testAddWithSeasonWithNotExistingShow() {
         final SeasonTO season = SpringToUtils.newSeason(objectGenerator);
-        season.getSerie().setId(Integer.MAX_VALUE);
+        season.getShow().setId(Integer.MAX_VALUE);
 
         seasonFacade.add(season);
     }
@@ -470,23 +470,23 @@ public class SeasonFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null TO for serie.
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null TO for show.
      */
     @Test(expected = ValidationException.class)
-    public void testUpdateWithNullSerie() {
+    public void testUpdateWithNullShow() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-        season.setSerie(null);
+        season.setShow(null);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with TO for serie with null ID.
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with TO for show with null ID.
      */
     @Test(expected = ValidationException.class)
-    public void testUpdateWithSerieWithNullId() {
+    public void testUpdateWithShowWithNullId() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-        season.getSerie().setId(null);
+        season.getShow().setId(null);
 
         seasonFacade.update(season);
     }
@@ -500,12 +500,12 @@ public class SeasonFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with not existing serie.
+     * Test method for {@link SeasonFacade#update(SeasonTO)} with not existing show.
      */
     @Test(expected = RecordNotFoundException.class)
-    public void testUpdateWithNotExistingSerie() {
+    public void testUpdateWithNotExistingShow() {
         final SeasonTO season = SpringToUtils.newSeasonWithId(objectGenerator);
-        season.getSerie().setId(Integer.MAX_VALUE);
+        season.getShow().setId(Integer.MAX_VALUE);
 
         seasonFacade.update(season);
     }
@@ -550,7 +550,7 @@ public class SeasonFacadeImplSpringTest {
      */
     @Test
     public void testDuplicate() {
-        final Season season = SpringEntitiesUtils.getSeason(SpringUtils.SERIES_COUNT, SpringUtils.SEASONS_PER_SERIE_COUNT);
+        final Season season = SpringEntitiesUtils.getSeason(SpringUtils.SHOWS_COUNT, SpringUtils.SEASONS_PER_SHOW_COUNT);
         season.setId(SpringUtils.SEASONS_COUNT + 1);
 
         seasonFacade.duplicate(SpringToUtils.newSeason(objectGenerator, SpringUtils.SEASONS_COUNT));
@@ -598,9 +598,9 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(season1, SpringUtils.getSeason(entityManager, 1));
         DeepAsserts.assertEquals(season2, SpringUtils.getSeason(entityManager, 2));
         for (int i = 2; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
@@ -651,9 +651,9 @@ public class SeasonFacadeImplSpringTest {
         DeepAsserts.assertEquals(season1, SpringUtils.getSeason(entityManager, 1));
         DeepAsserts.assertEquals(season2, SpringUtils.getSeason(entityManager, 2));
         for (int i = 2; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
@@ -721,40 +721,40 @@ public class SeasonFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)}.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)}.
      */
     @Test
-    public void testFindSeasonsBySerie() {
-        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+    public void testFindSeasonsByShow() {
+        for (int i = 1; i <= SpringUtils.SHOWS_COUNT; i++) {
             final List<SeasonTO> expectedSeasons = SpringToUtils.getSeasons(i);
-            final List<SeasonTO> actualSeasons = seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator, i));
+            final List<SeasonTO> actualSeasons = seasonFacade.findSeasonsByShow(SpringToUtils.newShow(objectGenerator, i));
             DeepAsserts.assertEquals(expectedSeasons, actualSeasons, SEASONS_COUNT_FIELD, EPISODES_COUNT_FIELD, TOTAL_LENGTH_FIELD);
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with null argument.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testFindSeasonsBySerieWithNullArgument() {
-        seasonFacade.findSeasonsBySerie(null);
+    public void testFindSeasonsByShowWithNullArgument() {
+        seasonFacade.findSeasonsByShow(null);
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with serie with null ID.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
-    public void testFindSeasonsBySerieWithNullId() {
-        seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator));
+    public void testFindSeasonsByShowWithNullId() {
+        seasonFacade.findSeasonsByShow(SpringToUtils.newShow(objectGenerator));
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsBySerie(cz.vhromada.catalog.facade.to.SerieTO)} with bad ID.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
-    public void testFindSeasonsBySerieWithBadId() {
-        seasonFacade.findSeasonsBySerie(SpringToUtils.newSerie(objectGenerator, Integer.MAX_VALUE));
+    public void testFindSeasonsByShowWithBadId() {
+        seasonFacade.findSeasonsByShow(SpringToUtils.newShow(objectGenerator, Integer.MAX_VALUE));
     }
 
 }

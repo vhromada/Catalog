@@ -74,8 +74,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
      *                                                               or subtitles are null
      *                                                               or subtitles contain null value
      *                                                               or note is null
-     *                                                               or TO for serie is null
-     *                                                               or TO for serie ID is null
+     *                                                               or TO for show is null
+     *                                                               or TO for show ID is null
      */
     private static void validateSeasonTO(final SeasonTO season) {
         Validators.validateArgumentNotNull(season, SEASON_TO_ARGUMENT);
@@ -87,8 +87,8 @@ public class SeasonTOValidatorImpl implements SeasonTOValidator {
         Validators.validateNotNull(season.getSubtitles(), "Subtitles");
         Validators.validateCollectionNotContainNull(season.getSubtitles(), "Subtitles");
         Validators.validateNotNull(season.getNote(), "Note");
-        Validators.validateNotNull(season.getSerie(), "TO for serie");
-        Validators.validateNotNull(season.getSerie().getId(), "TO for serie ID");
+        Validators.validateNotNull(season.getShow(), "TO for show");
+        Validators.validateNotNull(season.getShow().getId(), "TO for show ID");
     }
 
 }

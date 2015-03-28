@@ -6,12 +6,12 @@ import java.util.List;
 import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.SeasonDAO;
-import cz.vhromada.catalog.dao.SerieDAO;
+import cz.vhromada.catalog.dao.ShowDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
-import cz.vhromada.catalog.service.SerieService;
+import cz.vhromada.catalog.service.ShowService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.validators.Validators;
 
@@ -21,17 +21,17 @@ import org.springframework.cache.Cache;
 import org.springframework.stereotype.Component;
 
 /**
- * A class represents implementation of service for series.
+ * A class represents implementation of service for shows.
  *
  * @author Vladimir Hromada
  */
-@Component("serieService")
-public class SerieServiceImpl extends AbstractSerieService implements SerieService {
+@Component("showService")
+public class ShowServiceImpl extends AbstractShowService implements ShowService {
 
     /**
-     * DAO for series field
+     * DAO for shows field
      */
-    private static final String SERIE_DAO_ARGUMENT = "DAO for series";
+    private static final String SHOW_DAO_ARGUMENT = "DAO for shows";
 
     /**
      * DAO for seasons field
@@ -44,9 +44,9 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     private static final String EPISODE_DAO_ARGUMENT = "DAO for episodes";
 
     /**
-     * Serie argument
+     * Show argument
      */
-    private static final String SERIE_ARGUMENT = "Serie";
+    private static final String SHOW_ARGUMENT = "Show";
 
     /**
      * ID argument
@@ -59,9 +59,9 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     private static final String SERVICE_OPERATION_EXCEPTION_MESSAGE = "Error in working with DAO tier.";
 
     /**
-     * DAO for series
+     * DAO for shows
      */
-    private SerieDAO serieDAO;
+    private ShowDAO showDAO;
 
     /**
      * DAO for seasons
@@ -74,29 +74,29 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     private EpisodeDAO episodeDAO;
 
     /**
-     * Creates a new instance of SerieServiceImpl.
+     * Creates a new instance of ShowServiceImpl.
      *
-     * @param serieDAO   DAO for series
+     * @param showDAO   DAO for shows
      * @param seasonDAO  DAO for seasons
      * @param episodeDAO DAO for episodes
-     * @param serieCache cache for series
-     * @throws IllegalArgumentException if DAO for series is null
+     * @param showCache cache for shows
+     * @throws IllegalArgumentException if DAO for shows is null
      *                                  or DAO for seasons is null
      *                                  or DAO for episodes is null
-     *                                  or cache for series is null
+     *                                  or cache for shows is null
      */
     @Autowired
-    public SerieServiceImpl(final SerieDAO serieDAO,
+    public ShowServiceImpl(final ShowDAO showDAO,
             final SeasonDAO seasonDAO,
             final EpisodeDAO episodeDAO,
-            @Value("#{cacheManager.getCache('serieCache')}") final Cache serieCache) {
-        super(serieCache);
+            @Value("#{cacheManager.getCache('showCache')}") final Cache showCache) {
+        super(showCache);
 
-        Validators.validateArgumentNotNull(serieDAO, SERIE_DAO_ARGUMENT);
+        Validators.validateArgumentNotNull(showDAO, SHOW_DAO_ARGUMENT);
         Validators.validateArgumentNotNull(seasonDAO, SEASON_DAO_ARGUMENT);
         Validators.validateArgumentNotNull(episodeDAO, EPISODE_DAO_ARGUMENT);
 
-        this.serieDAO = serieDAO;
+        this.showDAO = showDAO;
         this.seasonDAO = seasonDAO;
         this.episodeDAO = episodeDAO;
     }
@@ -109,8 +109,8 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     @Override
     public void newData() {
         try {
-            for (final Serie serie : getCachedSeries(false)) {
-                removeSerie(serie);
+            for (final Show show : getCachedShows(false)) {
+                removeShow(show);
             }
             clearCache();
         } catch (final DataStorageException ex) {
@@ -124,9 +124,9 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public List<Serie> getSeries() {
+    public List<Show> getShows() {
         try {
-            return getCachedSeries(true);
+            return getCachedShows(true);
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -139,11 +139,11 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public Serie getSerie(final Integer id) {
+    public Show getShow(final Integer id) {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return getCachedSerie(id);
+            return getCachedShow(id);
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -156,12 +156,12 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public void add(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void add(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            serieDAO.add(serie);
-            addSerieToCache(serie);
+            showDAO.add(show);
+            addShowToCache(show);
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -174,11 +174,11 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public void update(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void update(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            serieDAO.update(serie);
+            showDAO.update(show);
             clearCache();
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -192,11 +192,11 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public void remove(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void remove(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            removeSerie(serie);
+            removeShow(show);
             clearCache();
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -210,18 +210,18 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public void duplicate(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void duplicate(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            final Serie newSerie = createSerie(serie);
-            serieDAO.add(newSerie);
-            newSerie.setPosition(serie.getPosition());
-            serieDAO.update(newSerie);
+            final Show newShow = createShow(show);
+            showDAO.add(newShow);
+            newShow.setPosition(show.getPosition());
+            showDAO.update(newShow);
 
-            for (final Season season : getCachedSeasons(serie, false)) {
+            for (final Season season : getCachedSeasons(show, false)) {
                 final Season newSeason = createSeason(season);
-                newSeason.setSerie(newSerie);
+                newSeason.setShow(newShow);
                 seasonDAO.add(newSeason);
                 newSeason.setPosition(season.getPosition());
                 seasonDAO.update(newSeason);
@@ -247,15 +247,15 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public void moveUp(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void moveUp(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            final List<Serie> series = getCachedSeries(false);
-            final Serie otherSerie = series.get(series.indexOf(serie) - 1);
-            switchPosition(serie, otherSerie);
-            serieDAO.update(serie);
-            serieDAO.update(otherSerie);
+            final List<Show> shows = getCachedShows(false);
+            final Show otherShow = shows.get(shows.indexOf(show) - 1);
+            switchPosition(show, otherShow);
+            showDAO.update(show);
+            showDAO.update(otherShow);
             clearCache();
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -269,15 +269,15 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public void moveDown(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void moveDown(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            final List<Serie> series = getCachedSeries(false);
-            final Serie otherSerie = series.get(series.indexOf(serie) + 1);
-            switchPosition(serie, otherSerie);
-            serieDAO.update(serie);
-            serieDAO.update(otherSerie);
+            final List<Show> shows = getCachedShows(false);
+            final Show otherShow = shows.get(shows.indexOf(show) + 1);
+            switchPosition(show, otherShow);
+            showDAO.update(show);
+            showDAO.update(otherShow);
             clearCache();
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -291,11 +291,11 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public boolean exists(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public boolean exists(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            return getCachedSerie(serie.getId()) != null;
+            return getCachedShow(show.getId()) != null;
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -309,12 +309,12 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     @Override
     public void updatePositions() {
         try {
-            final List<Serie> series = getCachedSeries(false);
-            for (int i = 0; i < series.size(); i++) {
-                final Serie serie = series.get(i);
-                serie.setPosition(i);
-                serieDAO.update(serie);
-                final List<Season> seasons = getCachedSeasons(serie, false);
+            final List<Show> shows = getCachedShows(false);
+            for (int i = 0; i < shows.size(); i++) {
+                final Show show = shows.get(i);
+                show.setPosition(i);
+                showDAO.update(show);
+                final List<Season> seasons = getCachedSeasons(show, false);
                 for (int j = 0; j < seasons.size(); j++) {
                     final Season season = seasons.get(j);
                     season.setPosition(j);
@@ -342,8 +342,8 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     public Time getTotalLength() {
         try {
             int sum = 0;
-            for (final Serie serie : getCachedSeries(true)) {
-                for (final Season season : getCachedSeasons(serie, true)) {
+            for (final Show show : getCachedShows(true)) {
+                for (final Season season : getCachedSeasons(show, true)) {
                     for (final Episode episode : getCachedEpisodes(season, true)) {
                         sum += episode.getLength();
                     }
@@ -364,8 +364,8 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     public int getSeasonsCount() {
         try {
             int sum = 0;
-            for (final Serie serie : getCachedSeries(true)) {
-                sum += getCachedSeasons(serie, true).size();
+            for (final Show show : getCachedShows(true)) {
+                sum += getCachedSeasons(show, true).size();
             }
             return sum;
         } catch (final DataStorageException ex) {
@@ -382,8 +382,8 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     public int getEpisodesCount() {
         try {
             int sum = 0;
-            for (final Serie serie : getCachedSeries(true)) {
-                for (final Season season : getCachedSeasons(serie, true)) {
+            for (final Show show : getCachedShows(true)) {
+                for (final Season season : getCachedSeasons(show, true)) {
                     sum += getCachedEpisodes(season, true).size();
                 }
             }
@@ -394,13 +394,13 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     }
 
     @Override
-    protected List<Serie> getDAOSeries() {
-        return serieDAO.getSeries();
+    protected List<Show> getDAOShows() {
+        return showDAO.getShows();
     }
 
     @Override
-    protected List<Season> getDAOSeasons(final Serie serie) {
-        return seasonDAO.findSeasonsBySerie(serie);
+    protected List<Season> getDAOSeasons(final Show show) {
+        return seasonDAO.findSeasonsByShow(show);
     }
 
     @Override
@@ -409,8 +409,8 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     }
 
     @Override
-    protected Serie getDAOSerie(final Integer id) {
-        return serieDAO.getSerie(id);
+    protected Show getDAOShow(final Integer id) {
+        return showDAO.getShow(id);
     }
 
     @Override
@@ -424,38 +424,38 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     }
 
     /**
-     * Removes serie.
+     * Removes show.
      *
-     * @param serie serie
+     * @param show show
      */
-    private void removeSerie(final Serie serie) {
-        for (final Season season : getCachedSeasons(serie, false)) {
+    private void removeShow(final Show show) {
+        for (final Season season : getCachedSeasons(show, false)) {
             for (final Episode episode : getCachedEpisodes(season, false)) {
                 episodeDAO.remove(episode);
             }
             seasonDAO.remove(season);
         }
-        serieDAO.remove(serie);
+        showDAO.remove(show);
     }
 
     /**
-     * Creates new copy of serie from another serie.
+     * Creates new copy of show from another show.
      *
-     * @param serie serie
-     * @return new copy of serie
+     * @param show show
+     * @return new copy of show
      */
-    private static Serie createSerie(final Serie serie) {
-        final Serie newSerie = new Serie();
-        newSerie.setCzechName(serie.getCzechName());
-        newSerie.setOriginalName(serie.getOriginalName());
-        newSerie.setCsfd(serie.getCsfd());
-        newSerie.setImdbCode(serie.getImdbCode());
-        newSerie.setWikiEn(serie.getWikiEn());
-        newSerie.setWikiCz(serie.getWikiCz());
-        newSerie.setPicture(serie.getPicture());
-        newSerie.setNote(serie.getNote());
-        newSerie.setGenres(new ArrayList<>(serie.getGenres()));
-        return newSerie;
+    private static Show createShow(final Show show) {
+        final Show newShow = new Show();
+        newShow.setCzechName(show.getCzechName());
+        newShow.setOriginalName(show.getOriginalName());
+        newShow.setCsfd(show.getCsfd());
+        newShow.setImdbCode(show.getImdbCode());
+        newShow.setWikiEn(show.getWikiEn());
+        newShow.setWikiCz(show.getWikiCz());
+        newShow.setPicture(show.getPicture());
+        newShow.setNote(show.getNote());
+        newShow.setGenres(new ArrayList<>(show.getGenres()));
+        return newShow;
     }
 
     /**
@@ -491,15 +491,15 @@ public class SerieServiceImpl extends AbstractSerieService implements SerieServi
     }
 
     /**
-     * Switch position of series.
+     * Switch position of shows.
      *
-     * @param serie1 1st serie
-     * @param serie2 2nd serie
+     * @param show1 1st show
+     * @param show2 2nd show
      */
-    private static void switchPosition(final Serie serie1, final Serie serie2) {
-        final int position = serie1.getPosition();
-        serie1.setPosition(serie2.getPosition());
-        serie2.setPosition(position);
+    private static void switchPosition(final Show show1, final Show show2) {
+        final int position = show1.getPosition();
+        show1.setPosition(show2.getPosition());
+        show2.setPosition(position);
     }
 
 }

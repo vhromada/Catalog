@@ -3,10 +3,10 @@ package cz.vhromada.catalog.service;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 
 /**
- * An interface represents service for series.
+ * An interface represents service for shows.
  *
  * @author Vladimir Hromada
  */
@@ -87,13 +87,13 @@ public interface SeasonService {
     boolean exists(Season season);
 
     /**
-     * Returns list of season for specified serie.
+     * Returns list of season for specified show.
      *
-     * @param serie serie
-     * @return list of seasons for specified serie
-     * @throws IllegalArgumentException                                         if serie is null
+     * @param show show
+     * @return list of seasons for specified show
+     * @throws IllegalArgumentException                                         if show is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    List<Season> findSeasonsBySerie(Serie serie);
+    List<Season> findSeasonsByShow(Show show);
 
 }

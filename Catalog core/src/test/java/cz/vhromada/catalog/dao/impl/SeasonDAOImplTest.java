@@ -24,7 +24,7 @@ import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 import cz.vhromada.catalog.dao.SeasonDAO;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.test.DeepAsserts;
 
@@ -304,31 +304,31 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)}.
+     * Test method for {@link SeasonDAO#findSeasonsByShow(Show)}.
      */
     @Test
-    public void testFindSeasonsBySerie() {
-        final Serie serie = generate(Serie.class);
+    public void testFindSeasonsByShow() {
+        final Show show = generate(Show.class);
         final List<Season> seasons = CollectionUtils.newList(generate(Season.class), generate(Season.class));
         when(entityManager.createNamedQuery(anyString(), eq(Season.class))).thenReturn(seasonsQuery);
         when(seasonsQuery.getResultList()).thenReturn(seasons);
 
-        DeepAsserts.assertEquals(seasons, seasonDAO.findSeasonsBySerie(serie));
+        DeepAsserts.assertEquals(seasons, seasonDAO.findSeasonsByShow(show));
 
-        verify(entityManager).createNamedQuery(Season.FIND_BY_SERIE, Season.class);
+        verify(entityManager).createNamedQuery(Season.FIND_BY_SHOW, Season.class);
         verify(seasonsQuery).getResultList();
-        verify(seasonsQuery).setParameter("serie", serie.getId());
+        verify(seasonsQuery).setParameter("show", show.getId());
         verifyNoMoreInteractions(entityManager, seasonsQuery);
     }
 
     /**
-     * Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with null argument.
+     * Test method for {@link SeasonDAO#findSeasonsByShow(Show)} with null argument.
      */
     @Test
-    public void testFindSeasonsBySerieWithNullArgument() {
+    public void testFindSeasonsByShowWithNullArgument() {
         try {
-            seasonDAO.findSeasonsBySerie(null);
-            fail("Can't find seasons by serie with null argument.");
+            seasonDAO.findSeasonsByShow(null);
+            fail("Can't find seasons by show with null argument.");
         } catch (final IllegalArgumentException ex) {
             // OK
         }
@@ -337,20 +337,20 @@ public class SeasonDAOImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)} with exception in persistence.
+     * Test method for {@link SeasonDAO#findSeasonsByShow(Show)} with exception in persistence.
      */
     @Test
-    public void testFindSeasonsBySerieWithPersistenceException() {
+    public void testFindSeasonsByShowWithPersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Season.class));
 
         try {
-            seasonDAO.findSeasonsBySerie(generate(Serie.class));
-            fail("Can't find seasons by serie with not thrown DataStorageException for exception in persistence.");
+            seasonDAO.findSeasonsByShow(generate(Show.class));
+            fail("Can't find seasons by show with not thrown DataStorageException for exception in persistence.");
         } catch (final DataStorageException ex) {
             // OK
         }
 
-        verify(entityManager).createNamedQuery(Season.FIND_BY_SERIE, Season.class);
+        verify(entityManager).createNamedQuery(Season.FIND_BY_SHOW, Season.class);
         verifyNoMoreInteractions(entityManager);
         verifyZeroInteractions(seasonsQuery);
     }

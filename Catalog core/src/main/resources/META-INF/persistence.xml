@@ -5,7 +5,7 @@
     <persistence-unit name="CatalogPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>cz.vhromada.catalog.dao.entities.Movie</class>
-        <class>cz.vhromada.catalog.dao.entities.Serie</class>
+        <class>cz.vhromada.catalog.dao.entities.Show</class>
         <class>cz.vhromada.catalog.dao.entities.Season</class>
         <class>cz.vhromada.catalog.dao.entities.Episode</class>
         <class>cz.vhromada.catalog.dao.entities.Game</class>

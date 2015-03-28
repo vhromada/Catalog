@@ -62,10 +62,10 @@ public class EpisodeDAOImplSpringTest {
     @Test
     public void testGetEpisode() {
         for (int i = 0; i < SpringUtils.EPISODES_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.EPISODES_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.EPISODES_PER_SERIE_COUNT / SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
+            final int showNumber = i / SpringUtils.EPISODES_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.EPISODES_PER_SHOW_COUNT / SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
             final int episodeNumber = i % SpringUtils.EPISODES_PER_SEASON_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getEpisode(serieNumber, seasonNumber, episodeNumber), episodeDAO.getEpisode(i + 1));
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getEpisode(showNumber, seasonNumber, episodeNumber), episodeDAO.getEpisode(i + 1));
         }
 
         assertNull(episodeDAO.getEpisode(Integer.MAX_VALUE));
@@ -122,9 +122,8 @@ public class EpisodeDAOImplSpringTest {
     public void testFindEpisodesBySeason() {
         for (int i = 1; i <= SpringUtils.SEASONS_COUNT; i++) {
             final Season season = SpringUtils.getSeason(entityManager, i);
-            final int seasonNumber = (i - 1) % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getEpisodes(season.getSerie().getId(), seasonNumber),
-                    episodeDAO.findEpisodesBySeason(season));
+            final int seasonNumber = (i - 1) % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getEpisodes(season.getShow().getId(), seasonNumber), episodeDAO.findEpisodesBySeason(season));
         }
         DeepAsserts.assertEquals(SpringUtils.EPISODES_COUNT, SpringUtils.getEpisodesCount(entityManager));
     }

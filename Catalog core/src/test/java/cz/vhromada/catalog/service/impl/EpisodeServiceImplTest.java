@@ -66,7 +66,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
      * Instance of {@link Cache}
      */
     @Mock
-    private Cache serieCache;
+    private Cache showCache;
 
     /**
      * Instance of {@link EpisodeService}
@@ -78,7 +78,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
      */
     @Before
     public void setUp() {
-        episodeService = new EpisodeServiceImpl(episodeDAO, serieCache);
+        episodeService = new EpisodeServiceImpl(episodeDAO, showCache);
     }
 
     /**
@@ -86,14 +86,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithNullEpisodeDAO() {
-        new EpisodeServiceImpl(null, serieCache);
+        new EpisodeServiceImpl(null, showCache);
     }
 
     /**
-     * Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache))} with null cache for series.
+     * Test method for {@link EpisodeServiceImpl#EpisodeServiceImpl(EpisodeDAO, Cache))} with null cache for shows.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullSerieCache() {
+    public void testConstructorWithNullShowCache() {
         new EpisodeServiceImpl(episodeDAO, null);
     }
 
@@ -103,12 +103,12 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testGetEpisodeWithCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episode));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episode));
 
         DeepAsserts.assertEquals(episode, episodeService.getEpisode(episode.getId()));
 
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(showCache);
         verifyZeroInteractions(episodeDAO);
     }
 
@@ -118,12 +118,12 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testGetEpisodeWithCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
         assertNull(episodeService.getEpisode(episode.getId()));
 
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(showCache);
         verifyZeroInteractions(episodeDAO);
     }
 
@@ -134,14 +134,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testGetEpisodeWithNotCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
         when(episodeDAO.getEpisode(anyInt())).thenReturn(episode);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         DeepAsserts.assertEquals(episode, episodeService.getEpisode(episode.getId()));
 
         verify(episodeDAO).getEpisode(episode.getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verify(serieCache).put(EPISODE_CACHE_KEY + episode.getId(), episode);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verify(showCache).put(EPISODE_CACHE_KEY + episode.getId(), episode);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -151,14 +151,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testGetEpisodeWithNotCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
         when(episodeDAO.getEpisode(anyInt())).thenReturn(null);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         assertNull(episodeService.getEpisode(episode.getId()));
 
         verify(episodeDAO).getEpisode(episode.getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verify(serieCache).put(EPISODE_CACHE_KEY + episode.getId(), null);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verify(showCache).put(EPISODE_CACHE_KEY + episode.getId(), null);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -173,7 +173,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -182,7 +182,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testGetEpisodeWithDAOTierException() {
         doThrow(DataStorageException.class).when(episodeDAO).getEpisode(anyInt());
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         try {
             episodeService.getEpisode(Integer.MAX_VALUE);
@@ -192,8 +192,8 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         }
 
         verify(episodeDAO).getEpisode(Integer.MAX_VALUE);
-        verify(serieCache).get(EPISODE_CACHE_KEY + Integer.MAX_VALUE);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + Integer.MAX_VALUE);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -205,16 +205,16 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
         final List<Episode> episodesList = new ArrayList<>(episodes);
         episodesList.add(episode);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
         episodeService.add(episode);
 
         verify(episodeDAO).add(episode);
-        verify(serieCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verify(serieCache).put(EPISODES_CACHE_KEY + episode.getSeason().getId(), episodesList);
-        verify(serieCache).put(EPISODE_CACHE_KEY + episode.getId(), episode);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verify(showCache).put(EPISODES_CACHE_KEY + episode.getSeason().getId(), episodesList);
+        verify(showCache).put(EPISODE_CACHE_KEY + episode.getId(), episode);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -223,14 +223,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testAddWithNotCachedEpisodes() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         episodeService.add(episode);
 
         verify(episodeDAO).add(episode);
-        verify(serieCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -245,7 +245,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -265,7 +265,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
         verify(episodeDAO).add(episode);
         verifyNoMoreInteractions(episodeDAO);
-        verifyZeroInteractions(serieCache);
+        verifyZeroInteractions(showCache);
     }
 
     /**
@@ -278,8 +278,8 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         episodeService.update(episode);
 
         verify(episodeDAO).update(episode);
-        verify(serieCache).clear();
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).clear();
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -294,7 +294,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -314,7 +314,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
         verify(episodeDAO).update(episode);
         verifyNoMoreInteractions(episodeDAO);
-        verifyZeroInteractions(serieCache);
+        verifyZeroInteractions(showCache);
     }
 
     /**
@@ -326,15 +326,15 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
         final List<Episode> episodesList = new ArrayList<>(episodes);
         episodesList.add(episode);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodesList));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodesList));
 
         episodeService.remove(episode);
 
         verify(episodeDAO).remove(episode);
-        verify(serieCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
-        verify(serieCache).put(EPISODES_CACHE_KEY + episode.getSeason().getId(), episodes);
-        verify(serieCache).evict(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
+        verify(showCache).put(EPISODES_CACHE_KEY + episode.getSeason().getId(), episodes);
+        verify(showCache).evict(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -343,14 +343,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testRemoveWithNotCachedEpisodes() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         episodeService.remove(episode);
 
         verify(episodeDAO).remove(episode);
-        verify(serieCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
-        verify(serieCache).evict(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
+        verify(showCache).evict(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -365,7 +365,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -385,7 +385,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
         verify(episodeDAO).remove(episode);
         verifyNoMoreInteractions(episodeDAO);
-        verifyZeroInteractions(serieCache);
+        verifyZeroInteractions(showCache);
     }
 
     /**
@@ -394,17 +394,17 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testDuplicateWithCachedEpisodes() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(CollectionUtils.newList(mock(Episode.class), mock(Episode.class))));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(CollectionUtils.newList(mock(Episode.class), mock(Episode.class))));
 
         episodeService.duplicate(episode);
 
         verify(episodeDAO).add(any(Episode.class));
         verify(episodeDAO).update(any(Episode.class));
-        verify(serieCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + null);
-        verify(serieCache).put(eq(EPISODES_CACHE_KEY + episode.getSeason().getId()), anyListOf(Episode.class));
-        verify(serieCache).put(eq(EPISODE_CACHE_KEY + null), any(Episode.class));
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
+        verify(showCache).get(EPISODE_CACHE_KEY + null);
+        verify(showCache).put(eq(EPISODES_CACHE_KEY + episode.getSeason().getId()), anyListOf(Episode.class));
+        verify(showCache).put(eq(EPISODE_CACHE_KEY + null), any(Episode.class));
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -413,15 +413,15 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testDuplicateWithNotCachedEpisodes() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         episodeService.duplicate(episode);
 
         verify(episodeDAO).add(any(Episode.class));
         verify(episodeDAO).update(any(Episode.class));
-        verify(serieCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + null);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + episode.getSeason().getId());
+        verify(showCache).get(EPISODE_CACHE_KEY + null);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -436,7 +436,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -455,7 +455,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
         verify(episodeDAO).add(any(Episode.class));
         verifyNoMoreInteractions(episodeDAO);
-        verifyZeroInteractions(serieCache);
+        verifyZeroInteractions(showCache);
     }
 
     /**
@@ -471,7 +471,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         episode2.setSeason(season);
         final int position2 = episode2.getPosition();
         final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
         episodeService.moveUp(episode2);
         DeepAsserts.assertEquals(position2, episode1.getPosition());
@@ -479,9 +479,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
         verify(episodeDAO).update(episode1);
         verify(episodeDAO).update(episode2);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verify(serieCache).clear();
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verify(showCache).clear();
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -498,7 +498,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         final int position2 = episode2.getPosition();
         final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
         when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         episodeService.moveUp(episode2);
         DeepAsserts.assertEquals(position2, episode1.getPosition());
@@ -507,9 +507,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(episodeDAO).update(episode1);
         verify(episodeDAO).update(episode2);
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verify(serieCache).clear();
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verify(showCache).clear();
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -524,7 +524,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -536,7 +536,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         final Episode episode = generate(Episode.class);
         episode.setSeason(season);
         doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         try {
             episodeService.moveUp(episode);
@@ -546,8 +546,8 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         }
 
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -563,7 +563,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         episode2.setSeason(season);
         final int position2 = episode2.getPosition();
         final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
         episodeService.moveDown(episode1);
         DeepAsserts.assertEquals(position2, episode1.getPosition());
@@ -571,9 +571,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
 
         verify(episodeDAO).update(episode1);
         verify(episodeDAO).update(episode2);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verify(serieCache).clear();
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verify(showCache).clear();
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -590,7 +590,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         final int position2 = episode2.getPosition();
         final List<Episode> episodes = CollectionUtils.newList(episode1, episode2);
         when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         episodeService.moveDown(episode1);
         DeepAsserts.assertEquals(position2, episode1.getPosition());
@@ -599,9 +599,9 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         verify(episodeDAO).update(episode1);
         verify(episodeDAO).update(episode2);
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verify(serieCache).clear();
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verify(showCache).clear();
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -616,7 +616,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -628,7 +628,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         final Episode episode = generate(Episode.class);
         episode.setSeason(season);
         doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         try {
             episodeService.moveDown(episode);
@@ -638,8 +638,8 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         }
 
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -648,12 +648,12 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testExistsWithCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episode));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episode));
 
         assertTrue(episodeService.exists(episode));
 
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(showCache);
         verifyZeroInteractions(episodeDAO);
     }
 
@@ -663,12 +663,12 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     @Test
     public void testExistsWithCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(null));
 
         assertFalse(episodeService.exists(episode));
 
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(showCache);
         verifyZeroInteractions(episodeDAO);
     }
 
@@ -679,14 +679,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testExistsWithNotCachedExistingEpisode() {
         final Episode episode = generate(Episode.class);
         when(episodeDAO.getEpisode(anyInt())).thenReturn(episode);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         assertTrue(episodeService.exists(episode));
 
         verify(episodeDAO).getEpisode(episode.getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verify(serieCache).put(EPISODE_CACHE_KEY + episode.getId(), episode);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verify(showCache).put(EPISODE_CACHE_KEY + episode.getId(), episode);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -696,14 +696,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testExistsWithNotCachedNotExistingEpisode() {
         final Episode episode = generate(Episode.class);
         when(episodeDAO.getEpisode(anyInt())).thenReturn(null);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         assertFalse(episodeService.exists(episode));
 
         verify(episodeDAO).getEpisode(episode.getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verify(serieCache).put(EPISODE_CACHE_KEY + episode.getId(), null);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verify(showCache).put(EPISODE_CACHE_KEY + episode.getId(), null);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -718,7 +718,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -728,7 +728,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testExistsWithDAOTierException() {
         final Episode episode = generate(Episode.class);
         doThrow(DataStorageException.class).when(episodeDAO).getEpisode(anyInt());
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         try {
             episodeService.exists(episode);
@@ -738,8 +738,8 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         }
 
         verify(episodeDAO).getEpisode(episode.getId());
-        verify(serieCache).get(EPISODE_CACHE_KEY + episode.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODE_CACHE_KEY + episode.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -749,12 +749,12 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testFindEpisodesBySeasonWithCachedEpisodes() {
         final Season season = generate(Season.class);
         final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
 
         DeepAsserts.assertEquals(episodes, episodeService.findEpisodesBySeason(season));
 
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verifyNoMoreInteractions(serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verifyNoMoreInteractions(showCache);
         verifyZeroInteractions(episodeDAO);
     }
 
@@ -766,14 +766,14 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         final Season season = generate(Season.class);
         final List<Episode> episodes = CollectionUtils.newList(mock(Episode.class), mock(Episode.class));
         when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         DeepAsserts.assertEquals(episodes, episodeService.findEpisodesBySeason(season));
 
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verify(serieCache).put(EPISODES_CACHE_KEY + season.getId(), episodes);
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verify(showCache).put(EPISODES_CACHE_KEY + season.getId(), episodes);
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -788,7 +788,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -798,7 +798,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testFindEpisodesBySeasonWithDAOTierException() {
         final Season season = generate(Season.class);
         doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         try {
             episodeService.findEpisodesBySeason(season);
@@ -808,8 +808,8 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         }
 
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -829,18 +829,18 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             lengths[i] = length;
             totalLength += length;
         }
-        when(serieCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
+        when(showCache.get(anyString())).thenReturn(new SimpleValueWrapper(episodes));
         when(episode1.getLength()).thenReturn(lengths[0]);
         when(episode2.getLength()).thenReturn(lengths[1]);
         when(episode3.getLength()).thenReturn(lengths[2]);
 
         DeepAsserts.assertEquals(new Time(totalLength), episodeService.getTotalLengthBySeason(season));
 
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
         verify(episode1).getLength();
         verify(episode2).getLength();
         verify(episode3).getLength();
-        verifyNoMoreInteractions(serieCache, episode1, episode2, episode3);
+        verifyNoMoreInteractions(showCache, episode1, episode2, episode3);
         verifyZeroInteractions(episodeDAO);
     }
 
@@ -862,7 +862,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             totalLength += length;
         }
         when(episodeDAO.findEpisodesBySeason(any(Season.class))).thenReturn(episodes);
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
         when(episode1.getLength()).thenReturn(lengths[0]);
         when(episode2.getLength()).thenReturn(lengths[1]);
         when(episode3.getLength()).thenReturn(lengths[2]);
@@ -870,12 +870,12 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         DeepAsserts.assertEquals(new Time(totalLength), episodeService.getTotalLengthBySeason(season));
 
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verify(serieCache).put(EPISODES_CACHE_KEY + season.getId(), episodes);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verify(showCache).put(EPISODES_CACHE_KEY + season.getId(), episodes);
         verify(episode1).getLength();
         verify(episode2).getLength();
         verify(episode3).getLength();
-        verifyNoMoreInteractions(episodeDAO, serieCache, episode1, episode2, episode3);
+        verifyNoMoreInteractions(episodeDAO, showCache, episode1, episode2, episode3);
     }
 
     /**
@@ -890,7 +890,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
             // OK
         }
 
-        verifyZeroInteractions(episodeDAO, serieCache);
+        verifyZeroInteractions(episodeDAO, showCache);
     }
 
     /**
@@ -900,7 +900,7 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
     public void testGetTotalLengthBySeasonWithDAOTierException() {
         final Season season = generate(Season.class);
         doThrow(DataStorageException.class).when(episodeDAO).findEpisodesBySeason(any(Season.class));
-        when(serieCache.get(anyString())).thenReturn(null);
+        when(showCache.get(anyString())).thenReturn(null);
 
         try {
             episodeService.getTotalLengthBySeason(season);
@@ -910,8 +910,8 @@ public class EpisodeServiceImplTest extends ObjectGeneratorTest {
         }
 
         verify(episodeDAO).findEpisodesBySeason(season);
-        verify(serieCache).get(EPISODES_CACHE_KEY + season.getId());
-        verifyNoMoreInteractions(episodeDAO, serieCache);
+        verify(showCache).get(EPISODES_CACHE_KEY + season.getId());
+        verifyNoMoreInteractions(episodeDAO, showCache);
     }
 
 }

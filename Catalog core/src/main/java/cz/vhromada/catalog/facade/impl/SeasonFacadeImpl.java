@@ -4,15 +4,15 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.facade.to.ShowTO;
 import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
-import cz.vhromada.catalog.facade.validators.SerieTOValidator;
+import cz.vhromada.catalog.facade.validators.ShowTOValidator;
 import cz.vhromada.catalog.service.SeasonService;
-import cz.vhromada.catalog.service.SerieService;
+import cz.vhromada.catalog.service.ShowService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
@@ -31,9 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class SeasonFacadeImpl implements SeasonFacade {
 
     /**
-     * Service for series argument
+     * Service for shows argument
      */
-    private static final String SERIE_SERVICE_ARGUMENT = "Service for series";
+    private static final String SHOW_SERVICE_ARGUMENT = "Service for shows";
 
     /**
      * Service for seasons argument
@@ -46,9 +46,9 @@ public class SeasonFacadeImpl implements SeasonFacade {
     private static final String CONVERTER_ARGUMENT = "Converter";
 
     /**
-     * Validator for TO for serie argument
+     * Validator for TO for show argument
      */
-    private static final String SERIE_TO_VALIDATOR_ARGUMENT = "Validator for TO for serie";
+    private static final String SHOW_TO_VALIDATOR_ARGUMENT = "Validator for TO for show";
 
     /**
      * Validator for TO for season argument
@@ -61,9 +61,9 @@ public class SeasonFacadeImpl implements SeasonFacade {
     private static final String SEASON_ARGUMENT = "season";
 
     /**
-     * TO for serie argument
+     * TO for show argument
      */
-    private static final String SERIE_TO_ARGUMENT = "TO for serie";
+    private static final String SHOW_TO_ARGUMENT = "TO for show";
 
     /**
      * TO for season argument
@@ -86,9 +86,9 @@ public class SeasonFacadeImpl implements SeasonFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /**
-     * Service for series
+     * Service for shows
      */
-    private SerieService serieService;
+    private ShowService showService;
 
     /**
      * Service for seasons
@@ -101,9 +101,9 @@ public class SeasonFacadeImpl implements SeasonFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for serie
+     * Validator for TO for show
      */
-    private SerieTOValidator serieTOValidator;
+    private ShowTOValidator showTOValidator;
 
     /**
      * Validator for TO for season
@@ -113,33 +113,33 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * Creates a new instance of SeasonFacadeImpl.
      *
-     * @param serieService      service for series
+     * @param showService      service for shows
      * @param seasonService     service for seasons
      * @param converter         converter
-     * @param serieTOValidator  validator for TO for serie
+     * @param showTOValidator  validator for TO for show
      * @param seasonTOValidator validator for TO for season
-     * @throws IllegalArgumentException if service for series is null
+     * @throws IllegalArgumentException if service for shows is null
      *                                  or service for seasons is null
      *                                  or converter is null
-     *                                  or validator for TO for serie is null
+     *                                  or validator for TO for show is null
      *                                  or validator for TO for season is null
      */
     @Autowired
-    public SeasonFacadeImpl(final SerieService serieService,
+    public SeasonFacadeImpl(final ShowService showService,
             final SeasonService seasonService,
             final Converter converter,
-            final SerieTOValidator serieTOValidator,
+            final ShowTOValidator showTOValidator,
             final SeasonTOValidator seasonTOValidator) {
-        Validators.validateArgumentNotNull(serieService, SERIE_SERVICE_ARGUMENT);
+        Validators.validateArgumentNotNull(showService, SHOW_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(seasonService, SEASON_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
-        Validators.validateArgumentNotNull(serieTOValidator, SERIE_TO_VALIDATOR_ARGUMENT);
+        Validators.validateArgumentNotNull(showTOValidator, SHOW_TO_VALIDATOR_ARGUMENT);
         Validators.validateArgumentNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_ARGUMENT);
 
-        this.serieService = serieService;
+        this.showService = showService;
         this.seasonService = seasonService;
         this.converter = converter;
-        this.serieTOValidator = serieTOValidator;
+        this.showTOValidator = showTOValidator;
         this.seasonTOValidator = seasonTOValidator;
     }
 
@@ -173,11 +173,11 @@ public class SeasonFacadeImpl implements SeasonFacade {
     public void add(final SeasonTO season) {
         seasonTOValidator.validateNewSeasonTO(season);
         try {
-            final Serie serie = serieService.getSerie(season.getSerie().getId());
-            Validators.validateExists(serie, SERIE_TO_ARGUMENT);
+            final Show show = showService.getShow(season.getShow().getId());
+            Validators.validateExists(show, SHOW_TO_ARGUMENT);
 
             final Season seasonEntity = converter.convert(season, Season.class);
-            seasonEntity.setSerie(serie);
+            seasonEntity.setShow(show);
             seasonService.add(seasonEntity);
             if (seasonEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -203,10 +203,10 @@ public class SeasonFacadeImpl implements SeasonFacade {
         try {
             final Season seasonEntity = converter.convert(season, Season.class);
             Validators.validateExists(seasonService.exists(seasonEntity), SEASON_TO_ARGUMENT);
-            final Serie serie = serieService.getSerie(season.getSerie().getId());
-            Validators.validateExists(serie, SERIE_TO_ARGUMENT);
+            final Show show = showService.getShow(season.getShow().getId());
+            Validators.validateExists(show, SHOW_TO_ARGUMENT);
 
-            seasonEntity.setSerie(serie);
+            seasonEntity.setShow(show);
             seasonService.update(seasonEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -269,7 +269,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());
             Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
-            final List<Season> seasons = seasonService.findSeasonsBySerie(seasonEntity.getSerie());
+            final List<Season> seasons = seasonService.findSeasonsByShow(seasonEntity.getShow());
             Validators.validateMoveUp(seasons, seasonEntity, SEASON_ARGUMENT);
 
             seasonService.moveUp(seasonEntity);
@@ -292,7 +292,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());
             Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
-            final List<Season> seasons = seasonService.findSeasonsBySerie(seasonEntity.getSerie());
+            final List<Season> seasons = seasonService.findSeasonsByShow(seasonEntity.getShow());
             Validators.validateMoveDown(seasons, seasonEntity, SEASON_ARGUMENT);
 
             seasonService.moveDown(seasonEntity);
@@ -330,13 +330,13 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<SeasonTO> findSeasonsBySerie(final SerieTO serie) {
-        serieTOValidator.validateSerieTOWithId(serie);
+    public List<SeasonTO> findSeasonsByShow(final ShowTO show) {
+        showTOValidator.validateShowTOWithId(show);
         try {
-            final Serie serieEntity = serieService.getSerie(serie.getId());
-            Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
+            final Show showEntity = showService.getShow(show.getId());
+            Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
 
-            final List<SeasonTO> seasons = converter.convertCollection(seasonService.findSeasonsBySerie(serieEntity), SeasonTO.class);
+            final List<SeasonTO> seasons = converter.convertCollection(seasonService.findSeasonsByShow(showEntity), SeasonTO.class);
             Collections.sort(seasons);
             return seasons;
         } catch (final ServiceOperationException ex) {

@@ -6,8 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 
-import cz.vhromada.catalog.dao.SerieDAO;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.ShowDAO;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.validators.Validators;
 
@@ -15,12 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * A class represents implementation of DAO for series.
+ * A class represents implementation of DAO for shows.
  *
  * @author Vladimir Hromada
  */
-@Component("serieDAO")
-public class SerieDAOImpl implements SerieDAO {
+@Component("showDAO")
+public class ShowDAOImpl implements ShowDAO {
 
     /**
      * Entity manager argument
@@ -28,9 +28,9 @@ public class SerieDAOImpl implements SerieDAO {
     private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
     /**
-     * Serie argument
+     * Show argument
      */
-    private static final String SERIE_ARGUMENT = "Serie";
+    private static final String SHOW_ARGUMENT = "Show";
 
     /**
      * ID argument
@@ -48,13 +48,13 @@ public class SerieDAOImpl implements SerieDAO {
     private EntityManager entityManager;
 
     /**
-     * Creates a new instance of SerieDAOImpl.
+     * Creates a new instance of ShowDAOImpl.
      *
      * @param entityManager entity manager
      * @throws IllegalArgumentException if entity manager is null
      */
     @Autowired
-    public SerieDAOImpl(final EntityManager entityManager) {
+    public ShowDAOImpl(final EntityManager entityManager) {
         Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
 
         this.entityManager = entityManager;
@@ -66,9 +66,9 @@ public class SerieDAOImpl implements SerieDAO {
      * @throws DataStorageException {@inheritDoc}
      */
     @Override
-    public List<Serie> getSeries() {
+    public List<Show> getShows() {
         try {
-            return new ArrayList<>(entityManager.createNamedQuery(Serie.SELECT_SERIES, Serie.class).getResultList());
+            return new ArrayList<>(entityManager.createNamedQuery(Show.SELECT_SHOWS, Show.class).getResultList());
         } catch (final PersistenceException ex) {
             throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
         }
@@ -81,11 +81,11 @@ public class SerieDAOImpl implements SerieDAO {
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
-    public Serie getSerie(final Integer id) {
+    public Show getShow(final Integer id) {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return entityManager.find(Serie.class, id);
+            return entityManager.find(Show.class, id);
         } catch (final PersistenceException ex) {
             throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
         }
@@ -98,13 +98,13 @@ public class SerieDAOImpl implements SerieDAO {
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
-    public void add(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void add(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            entityManager.persist(serie);
-            serie.setPosition(serie.getId() - 1);
-            entityManager.merge(serie);
+            entityManager.persist(show);
+            show.setPosition(show.getId() - 1);
+            entityManager.merge(show);
         } catch (final PersistenceException ex) {
             throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
         }
@@ -117,11 +117,11 @@ public class SerieDAOImpl implements SerieDAO {
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
-    public void update(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void update(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            entityManager.merge(serie);
+            entityManager.merge(show);
         } catch (final PersistenceException ex) {
             throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
         }
@@ -134,14 +134,14 @@ public class SerieDAOImpl implements SerieDAO {
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
-    public void remove(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public void remove(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            if (entityManager.contains(serie)) {
-                entityManager.remove(serie);
+            if (entityManager.contains(show)) {
+                entityManager.remove(show);
             } else {
-                entityManager.remove(entityManager.getReference(Serie.class, serie.getId()));
+                entityManager.remove(entityManager.getReference(Show.class, show.getId()));
             }
         } catch (final PersistenceException ex) {
             throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);

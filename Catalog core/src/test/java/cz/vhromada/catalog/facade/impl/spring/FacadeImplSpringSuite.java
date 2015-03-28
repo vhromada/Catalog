@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ MovieFacadeImplSpringTest.class, SerieFacadeImplSpringTest.class, SeasonFacadeImplSpringTest.class, EpisodeFacadeImplSpringTest.class,
+@Suite.SuiteClasses({ MovieFacadeImplSpringTest.class, ShowFacadeImplSpringTest.class, SeasonFacadeImplSpringTest.class, EpisodeFacadeImplSpringTest.class,
         GameFacadeImplSpringTest.class, MusicFacadeImplSpringTest.class, SongFacadeImplSpringTest.class, ProgramFacadeImplSpringTest.class,
         BookCategoryFacadeImplSpringTest.class, BookFacadeImplSpringTest.class, GenreFacadeImplSpringTest.class })
 public class FacadeImplSpringSuite {

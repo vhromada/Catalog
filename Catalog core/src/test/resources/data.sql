@@ -20,22 +20,28 @@ INSERT INTO movie_genres (movie, genre) VALUES (1, 1);
 INSERT INTO movie_genres (movie, genre) VALUES (2, 2);
 INSERT INTO movie_genres (movie, genre) VALUES (3, 3);
 INSERT INTO movie_genres (movie, genre) VALUES (3, 4);
-INSERT INTO series (id, czech_name, original_name, csfd, imdb_code, wiki_en, wiki_cz, picture, note, position) VALUES (1, 'Serie 1 czech name', 'Serie 1 original name', 'Serie 1 CSFD', 100, 'Serie 1 English Wikipedia', 'Serie 1 Czech Wikipedia', 'Serie 1 pc', '', 0);
-INSERT INTO series (id, czech_name, original_name, csfd, imdb_code, wiki_en, wiki_cz, picture, note, position) VALUES (2, 'Serie 2 czech name', 'Serie 2 original name', 'Serie 2 CSFD', 200, 'Serie 2 English Wikipedia', 'Serie 2 Czech Wikipedia', 'Serie 2 pc', 'Serie 2 note', 1);
-INSERT INTO series (id, czech_name, original_name, csfd, imdb_code, wiki_en, wiki_cz, picture, note, position) VALUES (3, 'Serie 3 czech name', 'Serie 3 original name', 'Serie 3 CSFD', 300, 'Serie 3 English Wikipedia', 'Serie 3 Czech Wikipedia', 'Serie 3 pc', '', 2);
-INSERT INTO serie_genres (serie, genre) VALUES (1, 1);
-INSERT INTO serie_genres (serie, genre) VALUES (2, 2);
-INSERT INTO serie_genres (serie, genre) VALUES (3, 3);
-INSERT INTO serie_genres (serie, genre) VALUES (3, 4);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (1, 1, 1, 1981, 1982, 'EN', '', 0);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (2, 1, 2, 1982, 1982, 'FR', 'Serie 1 Season 2 note', 1);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (3, 1, 3, 1983, 1984, 'JP', '', 2);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (4, 2, 1, 1981, 1982, 'EN', '', 0);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (5, 2, 2, 1982, 1982, 'FR', 'Serie 2 Season 2 note', 1);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (6, 2, 3, 1983, 1984, 'JP', '', 2);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (7, 3, 1, 1981, 1982, 'EN', '', 0);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (8, 3, 2, 1982, 1982, 'FR', 'Serie 3 Season 2 note', 1);
-INSERT INTO seasons (id, serie, season_number, start_year, end_year, season_language, note, position) VALUES (9, 3, 3, 1983, 1984, 'JP', '', 2);
+INSERT INTO tv_shows (id, czech_name, original_name, csfd, imdb_code, wiki_en, wiki_cz, picture, note, position)
+VALUES (1, 'Show 1 czech name', 'Show 1 original name', 'Show 1 CSFD', 100, 'Show 1 English Wikipedia', 'Show 1 Czech Wikipedia', 'Show 1 pc', '', 0);
+INSERT INTO tv_shows (id, czech_name, original_name, csfd, imdb_code, wiki_en, wiki_cz, picture, note, position) VALUES
+  (2, 'Show 2 czech name', 'Show 2 original name', 'Show 2 CSFD', 200, 'Show 2 English Wikipedia', 'Show 2 Czech Wikipedia', 'Show 2 pc', 'Show 2 note', 1);
+INSERT INTO tv_shows (id, czech_name, original_name, csfd, imdb_code, wiki_en, wiki_cz, picture, note, position)
+VALUES (3, 'Show 3 czech name', 'Show 3 original name', 'Show 3 CSFD', 300, 'Show 3 English Wikipedia', 'Show 3 Czech Wikipedia', 'Show 3 pc', '', 2);
+INSERT INTO tv_show_genres (tv_show, genre) VALUES (1, 1);
+INSERT INTO tv_show_genres (tv_show, genre) VALUES (2, 2);
+INSERT INTO tv_show_genres (tv_show, genre) VALUES (3, 3);
+INSERT INTO tv_show_genres (tv_show, genre) VALUES (3, 4);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position) VALUES (1, 1, 1, 1981, 1982, 'EN', '', 0);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position)
+VALUES (2, 1, 2, 1982, 1982, 'FR', 'Show 1 Season 2 note', 1);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position) VALUES (3, 1, 3, 1983, 1984, 'JP', '', 2);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position) VALUES (4, 2, 1, 1981, 1982, 'EN', '', 0);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position)
+VALUES (5, 2, 2, 1982, 1982, 'FR', 'Show 2 Season 2 note', 1);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position) VALUES (6, 2, 3, 1983, 1984, 'JP', '', 2);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position) VALUES (7, 3, 1, 1981, 1982, 'EN', '', 0);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position)
+VALUES (8, 3, 2, 1982, 1982, 'FR', 'Show 3 Season 2 note', 1);
+INSERT INTO seasons (id, tv_show, season_number, start_year, end_year, season_language, note, position) VALUES (9, 3, 3, 1983, 1984, 'JP', '', 2);
 INSERT INTO season_subtitles (season, subtitles) VALUES (1, 'CZ');
 INSERT INTO season_subtitles (season, subtitles) VALUES (1, 'EN');
 INSERT INTO season_subtitles (season, subtitles) VALUES (3, 'EN');
@@ -45,36 +51,49 @@ INSERT INTO season_subtitles (season, subtitles) VALUES (6, 'EN');
 INSERT INTO season_subtitles (season, subtitles) VALUES (7, 'CZ');
 INSERT INTO season_subtitles (season, subtitles) VALUES (7, 'EN');
 INSERT INTO season_subtitles (season, subtitles) VALUES (9, 'EN');
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (1, 1, 1, 'Serie 1 Season 1 Episode 1', 1, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (2, 1, 2, 'Serie 1 Season 1 Episode 2', 2, 'Serie 1 Season 1 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (3, 1, 3, 'Serie 1 Season 1 Episode 3', 3, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (4, 2, 1, 'Serie 1 Season 2 Episode 1', 10, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (5, 2, 2, 'Serie 1 Season 2 Episode 2', 20, 'Serie 1 Season 2 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (6, 2, 3, 'Serie 1 Season 2 Episode 3', 30, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (7, 3, 1, 'Serie 1 Season 3 Episode 1', 100, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (8, 3, 2, 'Serie 1 Season 3 Episode 2', 200, 'Serie 1 Season 3 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (9, 3, 3, 'Serie 1 Season 3 Episode 3', 300, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (10, 4, 1, 'Serie 2 Season 1 Episode 1', 1, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (11, 4, 2, 'Serie 2 Season 1 Episode 2', 2, 'Serie 2 Season 1 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (12, 4, 3, 'Serie 2 Season 1 Episode 3', 3, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (13, 5, 1, 'Serie 2 Season 2 Episode 1', 10, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (14, 5, 2, 'Serie 2 Season 2 Episode 2', 20, 'Serie 2 Season 2 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (15, 5, 3, 'Serie 2 Season 2 Episode 3', 30, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (16, 6, 1, 'Serie 2 Season 3 Episode 1', 100, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (17, 6, 2, 'Serie 2 Season 3 Episode 2', 200, 'Serie 2 Season 3 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (18, 6, 3, 'Serie 2 Season 3 Episode 3', 300, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (19, 7, 1, 'Serie 3 Season 1 Episode 1', 1, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (20, 7, 2, 'Serie 3 Season 1 Episode 2', 2, 'Serie 3 Season 1 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (21, 7, 3, 'Serie 3 Season 1 Episode 3', 3, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (22, 8, 1, 'Serie 3 Season 2 Episode 1', 10, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (23, 8, 2, 'Serie 3 Season 2 Episode 2', 20, 'Serie 3 Season 2 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (24, 8, 3, 'Serie 3 Season 2 Episode 3', 30, '', 2);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (25, 9, 1, 'Serie 3 Season 3 Episode 1', 100, '', 0);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (26, 9, 2, 'Serie 3 Season 3 Episode 2', 200, 'Serie 3 Season 3 Episode 2 note', 1);
-INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (27, 9, 3, 'Serie 3 Season 3 Episode 3', 300, '', 2);
-INSERT INTO games (id, game_name, wiki_en, wiki_cz, media_count, crack, serial_key, patch, trainer, trainer_data, editor, saves, other_data, note, position) VALUES (1, 'Game 1 name', 'Game 1 English Wikipedia', 'Game 1 Czech Wikipedia', 1, false, false, false, false, false, false, false, '', '', 0);
-INSERT INTO games (id, game_name, wiki_en, wiki_cz, media_count, crack, serial_key, patch, trainer, trainer_data, editor, saves, other_data, note, position) VALUES (2, 'Game 2 name', 'Game 2 English Wikipedia', 'Game 2 Czech Wikipedia', 2, true, true, true, true, false, false, false, '', '', 1);
-INSERT INTO games (id, game_name, wiki_en, wiki_cz, media_count, crack, serial_key, patch, trainer, trainer_data, editor, saves, other_data, note, position) VALUES (3, 'Game 3 name', 'Game 3 English Wikipedia', 'Game 3 Czech Wikipedia', 3, true, true, true, true, true, true, true, 'Game 3 other data', 'Game 3 note', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (1, 1, 1, 'Show 1 Season 1 Episode 1', 1, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (2, 1, 2, 'Show 1 Season 1 Episode 2', 2, 'Show 1 Season 1 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (3, 1, 3, 'Show 1 Season 1 Episode 3', 3, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (4, 2, 1, 'Show 1 Season 2 Episode 1', 10, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (5, 2, 2, 'Show 1 Season 2 Episode 2', 20, 'Show 1 Season 2 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (6, 2, 3, 'Show 1 Season 2 Episode 3', 30, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (7, 3, 1, 'Show 1 Season 3 Episode 1', 100, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (8, 3, 2, 'Show 1 Season 3 Episode 2', 200, 'Show 1 Season 3 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (9, 3, 3, 'Show 1 Season 3 Episode 3', 300, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (10, 4, 1, 'Show 2 Season 1 Episode 1', 1, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (11, 4, 2, 'Show 2 Season 1 Episode 2', 2, 'Show 2 Season 1 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (12, 4, 3, 'Show 2 Season 1 Episode 3', 3, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (13, 5, 1, 'Show 2 Season 2 Episode 1', 10, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (14, 5, 2, 'Show 2 Season 2 Episode 2', 20, 'Show 2 Season 2 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (15, 5, 3, 'Show 2 Season 2 Episode 3', 30, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (16, 6, 1, 'Show 2 Season 3 Episode 1', 100, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (17, 6, 2, 'Show 2 Season 3 Episode 2', 200, 'Show 2 Season 3 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (18, 6, 3, 'Show 2 Season 3 Episode 3', 300, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (19, 7, 1, 'Show 3 Season 1 Episode 1', 1, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (20, 7, 2, 'Show 3 Season 1 Episode 2', 2, 'Show 3 Season 1 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (21, 7, 3, 'Show 3 Season 1 Episode 3', 3, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (22, 8, 1, 'Show 3 Season 2 Episode 1', 10, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (23, 8, 2, 'Show 3 Season 2 Episode 2', 20, 'Show 3 Season 2 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (24, 8, 3, 'Show 3 Season 2 Episode 3', 30, '', 2);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (25, 9, 1, 'Show 3 Season 3 Episode 1', 100, '', 0);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position)
+VALUES (26, 9, 2, 'Show 3 Season 3 Episode 2', 200, 'Show 3 Season 3 Episode 2 note', 1);
+INSERT INTO episodes (id, season, episode_number, episode_name, episode_length, note, position) VALUES (27, 9, 3, 'Show 3 Season 3 Episode 3', 300, '', 2);
+INSERT INTO games (id, game_name, wiki_en, wiki_cz, media_count, crack, serial_key, patch, trainer, trainer_data, editor, saves, other_data, note, position)
+VALUES (1, 'Game 1 name', 'Game 1 English Wikipedia', 'Game 1 Czech Wikipedia', 1, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, '', '', 0);
+INSERT INTO games (id, game_name, wiki_en, wiki_cz, media_count, crack, serial_key, patch, trainer, trainer_data, editor, saves, other_data, note, position)
+VALUES (2, 'Game 2 name', 'Game 2 English Wikipedia', 'Game 2 Czech Wikipedia', 2, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, '', '', 1);
+INSERT INTO games (id, game_name, wiki_en, wiki_cz, media_count, crack, serial_key, patch, trainer, trainer_data, editor, saves, other_data, note, position)
+VALUES
+  (3, 'Game 3 name', 'Game 3 English Wikipedia', 'Game 3 Czech Wikipedia', 3, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, 'Game 3 other data', 'Game 3 note', 2);
 INSERT INTO music (id, music_name, wiki_en, wiki_cz, media_count, note, position) VALUES (1, 'Music 1 name', 'Music 1 English Wikipedia', 'Music 1 Czech Wikipedia', 10, '', 0);
 INSERT INTO music (id, music_name, wiki_en, wiki_cz, media_count, note, position) VALUES (2, 'Music 2 name', 'Music 2 English Wikipedia', 'Music 2 Czech Wikipedia', 20, 'Music 2 note', 1);
 INSERT INTO music (id, music_name, wiki_en, wiki_cz, media_count, note, position) VALUES (3, 'Music 3 name', 'Music 3 English Wikipedia', 'Music 3 Czech Wikipedia', 30, '', 2);
@@ -120,7 +139,7 @@ INSERT INTO book_languages (book, book_language) VALUES (9, 'FR');
 
 ALTER SEQUENCE movies_sq RESTART WITH 4;
 ALTER SEQUENCE media_sq RESTART WITH 5;
-ALTER SEQUENCE series_sq RESTART WITH 4;
+ALTER SEQUENCE tv_shows_sq RESTART WITH 4;
 ALTER SEQUENCE seasons_sq RESTART WITH 10;
 ALTER SEQUENCE episodes_sq RESTART WITH 28;
 ALTER SEQUENCE games_sq RESTART WITH 4;

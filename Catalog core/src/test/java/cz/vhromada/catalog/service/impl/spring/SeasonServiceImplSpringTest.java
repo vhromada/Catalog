@@ -13,7 +13,7 @@ import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
@@ -57,8 +57,8 @@ public class SeasonServiceImplSpringTest {
     /**
      * Instance of {@link Cache}
      */
-    @Value("#{cacheManager.getCache('serieCache')}")
-    private Cache serieCache;
+    @Value("#{cacheManager.getCache('showCache')}")
+    private Cache showCache;
 
     /**
      * Instance of {@link SeasonService}
@@ -77,7 +77,7 @@ public class SeasonServiceImplSpringTest {
      */
     @Before
     public void setUp() {
-        serieCache.clear();
+        showCache.clear();
         entityManager.createNativeQuery("ALTER SEQUENCE seasons_sq RESTART WITH 10").executeUpdate();
     }
 
@@ -92,16 +92,16 @@ public class SeasonServiceImplSpringTest {
         }
 
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), seasonService.getSeason(i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), seasonService.getSeason(i + 1));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
+        DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(showCache));
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            SpringUtils.assertCacheValue(serieCache, keys.get(i), SpringEntitiesUtils.getSeason(serieNumber, seasonNumber));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            SpringUtils.assertCacheValue(showCache, keys.get(i), SpringEntitiesUtils.getSeason(showNumber, seasonNumber));
         }
     }
 
@@ -114,8 +114,8 @@ public class SeasonServiceImplSpringTest {
 
         assertNull(seasonService.getSeason(Integer.MAX_VALUE));
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(serieCache));
-        SpringUtils.assertCacheValue(serieCache, key, null);
+        DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(showCache));
+        SpringUtils.assertCacheValue(showCache, key, null);
     }
 
     /**
@@ -132,7 +132,7 @@ public class SeasonServiceImplSpringTest {
         final Season addedSeason = SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1);
         DeepAsserts.assertEquals(season, addedSeason);
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
     /**
@@ -141,10 +141,10 @@ public class SeasonServiceImplSpringTest {
     @Test
     public void testAddWithNotEmptyCache() {
         final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
-        final String keyList = SEASONS_CACHE_KEY + season.getSerie().getId();
+        final String keyList = SEASONS_CACHE_KEY + season.getShow().getId();
         final String keyItem = SEASON_CACHE_KEY + (SpringUtils.SEASONS_COUNT + 1);
-        serieCache.put(keyList, new ArrayList<>());
-        serieCache.put(keyItem, null);
+        showCache.put(keyList, new ArrayList<>());
+        showCache.put(keyItem, null);
 
         seasonService.add(season);
 
@@ -153,9 +153,9 @@ public class SeasonServiceImplSpringTest {
         final Season addedSeason = SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1);
         DeepAsserts.assertEquals(season, addedSeason);
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(serieCache));
-        SpringUtils.assertCacheValue(serieCache, keyList, CollectionUtils.newList(season));
-        SpringUtils.assertCacheValue(serieCache, keyItem, season);
+        DeepAsserts.assertEquals(CollectionUtils.newList(keyList, keyItem), SpringUtils.getCacheKeys(showCache));
+        SpringUtils.assertCacheValue(showCache, keyList, CollectionUtils.newList(season));
+        SpringUtils.assertCacheValue(showCache, keyItem, season);
     }
 
     /**
@@ -170,7 +170,7 @@ public class SeasonServiceImplSpringTest {
         final Season updatedSeason = SpringUtils.getSeason(entityManager, 1);
         DeepAsserts.assertEquals(season, updatedSeason);
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
     /**
@@ -186,7 +186,7 @@ public class SeasonServiceImplSpringTest {
 
         assertNull(SpringUtils.getSeason(entityManager, season.getId()));
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
     /**
@@ -197,16 +197,16 @@ public class SeasonServiceImplSpringTest {
         final Season season = SpringEntitiesUtils.newSeason(objectGenerator, entityManager);
         entityManager.persist(season);
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
-        final String key = SEASONS_CACHE_KEY + season.getSerie().getId();
+        final String key = SEASONS_CACHE_KEY + season.getShow().getId();
         final List<Season> cacheSeasons = new ArrayList<>();
         cacheSeasons.add(season);
-        serieCache.put(key, cacheSeasons);
+        showCache.put(key, cacheSeasons);
 
         seasonService.remove(season);
 
         assertNull(SpringUtils.getSeason(entityManager, season.getId()));
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
     /**
@@ -222,12 +222,12 @@ public class SeasonServiceImplSpringTest {
 
         DeepAsserts.assertEquals(expectedSeason, SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1));
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
     /**
@@ -238,21 +238,21 @@ public class SeasonServiceImplSpringTest {
         final Season season = SpringUtils.getSeason(entityManager, 3);
         final Season expectedSeason = SpringEntitiesUtils.getSeason(1, 3);
         expectedSeason.setId(SpringUtils.SEASONS_COUNT + 1);
-        final String keyList = SEASONS_CACHE_KEY + season.getSerie().getId();
+        final String keyList = SEASONS_CACHE_KEY + season.getShow().getId();
         final String keyItem = SEASON_CACHE_KEY + (SpringUtils.SEASONS_COUNT + 1);
-        serieCache.put(keyList, new ArrayList<>());
-        serieCache.put(keyItem, null);
+        showCache.put(keyList, new ArrayList<>());
+        showCache.put(keyItem, null);
 
         seasonService.duplicate(season);
 
         DeepAsserts.assertEquals(expectedSeason, SpringUtils.getSeason(entityManager, SpringUtils.SEASONS_COUNT + 1));
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT + 1, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
     /**
@@ -271,12 +271,12 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(expectedSeason1, SpringUtils.getSeason(entityManager, 1));
         DeepAsserts.assertEquals(expectedSeason2, SpringUtils.getSeason(entityManager, 2));
         for (int i = 2; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
     /**
@@ -295,12 +295,12 @@ public class SeasonServiceImplSpringTest {
         DeepAsserts.assertEquals(expectedSeason1, SpringUtils.getSeason(entityManager, 1));
         DeepAsserts.assertEquals(expectedSeason2, SpringUtils.getSeason(entityManager, 2));
         for (int i = 2; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), SpringUtils.getSeason(entityManager, i + 1));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(serieCache).size());
+        DeepAsserts.assertEquals(0, SpringUtils.getCacheKeys(showCache).size());
     }
 
 
@@ -315,16 +315,16 @@ public class SeasonServiceImplSpringTest {
         }
 
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            assertTrue(seasonService.exists(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber)));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            assertTrue(seasonService.exists(SpringEntitiesUtils.getSeason(showNumber, seasonNumber)));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
+        DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(showCache));
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            SpringUtils.assertCacheValue(serieCache, keys.get(i), SpringEntitiesUtils.getSeason(serieNumber, seasonNumber));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            SpringUtils.assertCacheValue(showCache, keys.get(i), SpringEntitiesUtils.getSeason(showNumber, seasonNumber));
         }
     }
 
@@ -339,28 +339,28 @@ public class SeasonServiceImplSpringTest {
 
         assertFalse(seasonService.exists(season));
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(serieCache));
-        SpringUtils.assertCacheValue(serieCache, key, null);
+        DeepAsserts.assertEquals(CollectionUtils.newList(key), SpringUtils.getCacheKeys(showCache));
+        SpringUtils.assertCacheValue(showCache, key, null);
     }
 
     /**
-     * Test method for {@link SeasonService#findSeasonsBySerie(Serie)}.
+     * Test method for {@link SeasonService#findSeasonsByShow(Show)}.
      */
     @Test
-    public void testFindSeasonsBySerie() {
+    public void testFindSeasonsByShow() {
         final List<String> keys = new ArrayList<>();
-        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
+        for (int i = 1; i <= SpringUtils.SHOWS_COUNT; i++) {
             keys.add(SEASONS_CACHE_KEY + i);
         }
 
-        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
-            final Serie serie = SpringUtils.getSerie(entityManager, i);
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeasons(i), seasonService.findSeasonsBySerie(serie));
+        for (int i = 1; i <= SpringUtils.SHOWS_COUNT; i++) {
+            final Show show = SpringUtils.getShow(entityManager, i);
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeasons(i), seasonService.findSeasonsByShow(show));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
-        DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(serieCache));
-        for (int i = 0; i < SpringUtils.SERIES_COUNT; i++) {
-            SpringUtils.assertCacheValue(serieCache, keys.get(i), SpringEntitiesUtils.getSeasons(i + 1));
+        DeepAsserts.assertEquals(keys, SpringUtils.getCacheKeys(showCache));
+        for (int i = 0; i < SpringUtils.SHOWS_COUNT; i++) {
+            SpringUtils.assertCacheValue(showCache, keys.get(i), SpringEntitiesUtils.getSeasons(i + 1));
         }
     }
 

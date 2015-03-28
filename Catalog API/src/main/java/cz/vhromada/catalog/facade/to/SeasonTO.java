@@ -58,9 +58,9 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
     private int position;
 
     /**
-     * TO for serie
+     * TO for show
      */
-    private SerieTO serie;
+    private ShowTO show;
 
     /**
      * Returns ID.
@@ -208,21 +208,21 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
     }
 
     /**
-     * Returns TO for serie.
+     * Returns TO for show.
      *
-     * @return TO for serie
+     * @return TO for show
      */
-    public SerieTO getSerie() {
-        return serie;
+    public ShowTO getShow() {
+        return show;
     }
 
     /**
-     * Sets a new value to TO for serie.
+     * Sets a new value to TO for show.
      *
-     * @param serie new value
+     * @param show new value
      */
-    public void setSerie(final SerieTO serie) {
-        this.serie = serie;
+    public void setShow(final ShowTO show) {
+        this.show = show;
     }
 
     @Override
@@ -244,8 +244,8 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("SeasonTO [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, serie=%s]", id, number,
-                startYear, endYear, language, subtitles, note, position, serie);
+        return String.format("SeasonTO [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, show=%s]", id, number,
+                startYear, endYear, language, subtitles, note, position, show);
     }
 
     @Override

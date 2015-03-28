@@ -94,8 +94,8 @@ public class GenreServiceImplSpringTest {
         for (int i = 1; i <= SpringUtils.SEASONS_COUNT; i++) {
             entityManager.remove(SpringUtils.getSeason(entityManager, i));
         }
-        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
-            entityManager.remove(SpringUtils.getSerie(entityManager, i));
+        for (int i = 1; i <= SpringUtils.SHOWS_COUNT; i++) {
+            entityManager.remove(SpringUtils.getShow(entityManager, i));
         }
 
         genreService.newData();

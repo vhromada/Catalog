@@ -6,7 +6,7 @@ import cz.vhromada.catalog.commons.Time;
 import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.EpisodeService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("episodeService")
-public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeService {
+public class EpisodeServiceImpl extends AbstractShowService implements EpisodeService {
 
     /**
      * DAO for episodes field
@@ -60,14 +60,14 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
      * Creates a new instance of EpisodeServiceImpl.
      *
      * @param episodeDAO DAO for episodes
-     * @param serieCache cache for series
+     * @param showCache cache for shows
      * @throws IllegalArgumentException if DAO for episodes is null
-     *                                  or cache for series is null
+     *                                  or cache for shows is null
      */
     @Autowired
     public EpisodeServiceImpl(final EpisodeDAO episodeDAO,
-            @Value("#{cacheManager.getCache('serieCache')}") final Cache serieCache) {
-        super(serieCache);
+            @Value("#{cacheManager.getCache('showCache')}") final Cache showCache) {
+        super(showCache);
 
         Validators.validateArgumentNotNull(episodeDAO, EPISODE_DAO_ARGUMENT);
 
@@ -272,12 +272,12 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
 
 
     @Override
-    protected List<Serie> getDAOSeries() {
+    protected List<Show> getDAOShows() {
         return null;
     }
 
     @Override
-    protected List<Season> getDAOSeasons(final Serie serie) {
+    protected List<Season> getDAOSeasons(final Show show) {
         return null;
     }
 
@@ -287,7 +287,7 @@ public class EpisodeServiceImpl extends AbstractSerieService implements EpisodeS
     }
 
     @Override
-    protected Serie getDAOSerie(final Integer id) {
+    protected Show getDAOShow(final Integer id) {
         return null;
     }
 

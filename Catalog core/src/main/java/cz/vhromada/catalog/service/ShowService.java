@@ -3,14 +3,14 @@ package cz.vhromada.catalog.service;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 
 /**
- * An interface represents service for series.
+ * An interface represents service for shows.
  *
  * @author Vladimir Hromada
  */
-public interface SerieService {
+public interface ShowService {
 
     /**
      * Creates new data.
@@ -20,85 +20,85 @@ public interface SerieService {
     void newData();
 
     /**
-     * Returns list of serie.
+     * Returns list of show.
      *
-     * @return list of serie
+     * @return list of show
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    List<Serie> getSeries();
+    List<Show> getShows();
 
     /**
-     * Returns serie with ID or null if there isn't such serie.
+     * Returns show with ID or null if there isn't such show.
      *
      * @param id ID
-     * @return serie with ID or null if there isn't such serie
+     * @return show with ID or null if there isn't such show
      * @throws IllegalArgumentException                                         if ID is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    Serie getSerie(Integer id);
+    Show getShow(Integer id);
 
     /**
-     * Adds serie. Sets new ID and position.
+     * Adds show. Sets new ID and position.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                         if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                         if show is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    void add(Serie serie);
+    void add(Show show);
 
     /**
-     * Updates serie.
+     * Updates show.
      *
-     * @param serie new value of serie
-     * @throws IllegalArgumentException                                         if serie is null
+     * @param show new value of show
+     * @throws IllegalArgumentException                                         if show is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    void update(Serie serie);
+    void update(Show show);
 
     /**
-     * Removes serie.
+     * Removes show.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                         if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                         if show is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    void remove(Serie serie);
+    void remove(Show show);
 
     /**
-     * Duplicates serie.
+     * Duplicates show.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                         if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                         if show is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    void duplicate(Serie serie);
+    void duplicate(Show show);
 
     /**
-     * Moves serie in list one position up.
+     * Moves show in list one position up.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                         if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                         if show is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    void moveUp(Serie serie);
+    void moveUp(Show show);
 
     /**
-     * Moves serie in list one position down.
+     * Moves show in list one position down.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                         if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                         if show is null
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    void moveDown(Serie serie);
+    void moveDown(Show show);
 
     /**
-     * Returns true if serie exists.
+     * Returns true if show exists.
      *
-     * @param serie serie
-     * @return true if serie exists
+     * @param show show
+     * @return true if show exists
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
-    boolean exists(Serie serie);
+    boolean exists(Show show);
 
     /**
      * Updates positions.
@@ -108,25 +108,25 @@ public interface SerieService {
     void updatePositions();
 
     /**
-     * Returns total length of all series.
+     * Returns total length of all shows.
      *
-     * @return total length of all series
+     * @return total length of all shows
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     Time getTotalLength();
 
     /**
-     * Returns count of seasons from all series.
+     * Returns count of seasons from all shows.
      *
-     * @return count of seasons from all series
+     * @return count of seasons from all shows
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     int getSeasonsCount();
 
     /**
-     * Returns count of episodes from all series.
+     * Returns count of episodes from all shows.
      *
-     * @return count of episodes from all series
+     * @return count of episodes from all shows
      * @throws cz.vhromada.catalog.service.exceptions.ServiceOperationException if there was error in working with DAO tier
      */
     int getEpisodesCount();

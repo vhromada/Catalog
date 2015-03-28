@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ MovieServiceImplTest.class, SerieServiceImplTest.class, SeasonServiceImplTest.class, EpisodeServiceImplTest.class,
+@Suite.SuiteClasses({ MovieServiceImplTest.class, ShowServiceImplTest.class, SeasonServiceImplTest.class, EpisodeServiceImplTest.class,
         GameServiceImplTest.class, MusicServiceImplTest.class, SongServiceImplTest.class, ProgramServiceImplTest.class, BookCategoryServiceImplTest.class,
         BookServiceImplTest.class, GenreServiceImplTest.class, ServiceImplSpringSuite.class })
 public class ServiceImplSuite {

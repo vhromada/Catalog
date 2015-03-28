@@ -3,7 +3,7 @@ package cz.vhromada.catalog.dao;
 import java.util.List;
 
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 
 /**
  * An interface represents DAO for seasons.
@@ -50,13 +50,13 @@ public interface SeasonDAO {
     void remove(Season season);
 
     /**
-     * Returns list of seasons for specified serie.
+     * Returns list of seasons for specified show.
      *
-     * @param serie serie
-     * @return list of seasons for specified serie
-     * @throws IllegalArgumentException                                if serie is null
+     * @param show show
+     * @return list of seasons for specified show
+     * @throws IllegalArgumentException                                if show is null
      * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
-    List<Season> findSeasonsBySerie(Serie serie);
+    List<Season> findSeasonsByShow(Show show);
 
 }

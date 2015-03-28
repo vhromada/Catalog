@@ -17,7 +17,7 @@ import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.entities.Program;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.dao.entities.Song;
 import cz.vhromada.test.DeepAsserts;
 
@@ -40,9 +40,9 @@ public final class SpringUtils {
     public static final int MOVIES_COUNT = 3;
 
     /**
-     * Count of series
+     * Count of shows
      */
-    public static final int SERIES_COUNT = 3;
+    public static final int SHOWS_COUNT = 3;
 
     /**
      * Count of seasons
@@ -50,9 +50,9 @@ public final class SpringUtils {
     public static final int SEASONS_COUNT = 9;
 
     /**
-     * Count of seasons in serie
+     * Count of seasons in show
      */
-    public static final int SEASONS_PER_SERIE_COUNT = 3;
+    public static final int SEASONS_PER_SHOW_COUNT = 3;
 
     /**
      * Count of episodes
@@ -60,9 +60,9 @@ public final class SpringUtils {
     public static final int EPISODES_COUNT = 27;
 
     /**
-     * Count of episodes in serie
+     * Count of episodes in show
      */
-    public static final int EPISODES_PER_SERIE_COUNT = 9;
+    public static final int EPISODES_PER_SHOW_COUNT = 9;
 
     /**
      * Count of episodes in season
@@ -152,24 +152,24 @@ public final class SpringUtils {
     }
 
     /**
-     * Returns count of series.
+     * Returns count of shows.
      *
      * @param entityManager entity manager
-     * @return count of series
+     * @return count of shows
      */
-    public static int getSeriesCount(final EntityManager entityManager) {
-        return entityManager.createQuery("SELECT COUNT(s.id) FROM Serie s", Long.class).getSingleResult().intValue();
+    public static int getShowsCount(final EntityManager entityManager) {
+        return entityManager.createQuery("SELECT COUNT(s.id) FROM Show s", Long.class).getSingleResult().intValue();
     }
 
     /**
-     * Returns serie.
+     * Returns show.
      *
      * @param entityManager entity manager
-     * @param id            serie ID
-     * @return serie
+     * @param id            show ID
+     * @return show
      */
-    public static Serie getSerie(final EntityManager entityManager, final int id) {
-        return entityManager.find(Serie.class, id);
+    public static Show getShow(final EntityManager entityManager, final int id) {
+        return entityManager.find(Show.class, id);
     }
 
     /**

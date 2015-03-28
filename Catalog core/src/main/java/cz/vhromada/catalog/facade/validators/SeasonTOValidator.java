@@ -23,8 +23,8 @@ public interface SeasonTOValidator {
      *                                                               or subtitles are null
      *                                                               or subtitles contain null value
      *                                                               or note is null
-     *                                                               or TO for serie is null
-     *                                                               or TO for serie ID is null
+     *                                                               or TO for show is null
+     *                                                               or TO for show ID is null
      */
     void validateNewSeasonTO(SeasonTO season);
 
@@ -42,8 +42,8 @@ public interface SeasonTOValidator {
      *                                                               or subtitles are null
      *                                                               or subtitles contain null value
      *                                                               or note is null
-     *                                                               or TO for serie is null
-     *                                                               or TO for serie ID is null
+     *                                                               or TO for show is null
+     *                                                               or TO for show ID is null
      */
     void validateExistingSeasonTO(SeasonTO season);
 

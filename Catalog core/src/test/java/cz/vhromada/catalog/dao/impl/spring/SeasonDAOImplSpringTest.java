@@ -8,7 +8,7 @@ import cz.vhromada.catalog.commons.SpringEntitiesUtils;
 import cz.vhromada.catalog.commons.SpringUtils;
 import cz.vhromada.catalog.dao.SeasonDAO;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.generator.ObjectGenerator;
 import cz.vhromada.test.DeepAsserts;
 
@@ -62,9 +62,9 @@ public class SeasonDAOImplSpringTest {
     @Test
     public void testGetSeason() {
         for (int i = 0; i < SpringUtils.SEASONS_COUNT; i++) {
-            final int serieNumber = i / SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            final int seasonNumber = i % SpringUtils.SEASONS_PER_SERIE_COUNT + 1;
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(serieNumber, seasonNumber), seasonDAO.getSeason(i + 1));
+            final int showNumber = i / SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            final int seasonNumber = i % SpringUtils.SEASONS_PER_SHOW_COUNT + 1;
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeason(showNumber, seasonNumber), seasonDAO.getSeason(i + 1));
         }
 
         assertNull(seasonDAO.getSeason(Integer.MAX_VALUE));
@@ -119,13 +119,13 @@ public class SeasonDAOImplSpringTest {
     }
 
     /**
-     * Test method for {@link SeasonDAO#findSeasonsBySerie(Serie)}.
+     * Test method for {@link SeasonDAO#findSeasonsByShow(Show)}.
      */
     @Test
-    public void testFindSeasonsBySerie() {
-        for (int i = 1; i <= SpringUtils.SERIES_COUNT; i++) {
-            final Serie serie = SpringUtils.getSerie(entityManager, i);
-            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeasons(i), seasonDAO.findSeasonsBySerie(serie));
+    public void testFindSeasonsByShow() {
+        for (int i = 1; i <= SpringUtils.SHOWS_COUNT; i++) {
+            final Show show = SpringUtils.getShow(entityManager, i);
+            DeepAsserts.assertEquals(SpringEntitiesUtils.getSeasons(i), seasonDAO.findSeasonsByShow(show));
         }
         DeepAsserts.assertEquals(SpringUtils.SEASONS_COUNT, SpringUtils.getSeasonsCount(entityManager));
     }

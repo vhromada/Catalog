@@ -159,23 +159,23 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with null TO for serie.
+     * Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with null TO for show.
      */
     @Test(expected = ValidationException.class)
-    public void testValidateNewSeasonTOWithNullSerieTO() {
+    public void testValidateNewSeasonTOWithNullShowTO() {
         final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-        season.setSerie(null);
+        season.setShow(null);
 
         seasonTOValidator.validateNewSeasonTO(season);
     }
 
     /**
-     * Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with TO for serie with null ID.
+     * Test method for {@link SeasonTOValidator#validateNewSeasonTO(SeasonTO)} with TO for season with TO for show with null ID.
      */
     @Test(expected = ValidationException.class)
-    public void testValidateNewSeasonTOWithSerieTOWithNullId() {
+    public void testValidateNewSeasonTOWithShowTOWithNullId() {
         final SeasonTO season = ToGenerator.newSeason(getObjectGenerator());
-        season.getSerie().setId(null);
+        season.getShow().setId(null);
 
         seasonTOValidator.validateNewSeasonTO(season);
     }
@@ -307,23 +307,23 @@ public class SeasonTOValidatorImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link SeasonTOValidator#validateExistingSeasonTO(SeasonTO)} with TO for season with null TO for serie.
+     * Test method for {@link SeasonTOValidator#validateExistingSeasonTO(SeasonTO)} with TO for season with null TO for show.
      */
     @Test(expected = ValidationException.class)
-    public void testValidateExistingSeasonTOWithNullSerieTO() {
+    public void testValidateExistingSeasonTOWithNullShowTO() {
         final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-        season.setSerie(null);
+        season.setShow(null);
 
         seasonTOValidator.validateExistingSeasonTO(season);
     }
 
     /**
-     * Test method for {@link SeasonTOValidator#validateExistingSeasonTO(SeasonTO)} with TO for season with TO for serie with null ID.
+     * Test method for {@link SeasonTOValidator#validateExistingSeasonTO(SeasonTO)} with TO for season with TO for show with null ID.
      */
     @Test(expected = ValidationException.class)
-    public void testValidateExistingSeasonTOWithSerieTOWithNullId() {
+    public void testValidateExistingSeasonTOWithShowTOWithNullId() {
         final SeasonTO season = ToGenerator.newSeasonWithId(getObjectGenerator());
-        season.getSerie().setId(null);
+        season.getShow().setId(null);
 
         seasonTOValidator.validateExistingSeasonTO(season);
     }

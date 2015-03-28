@@ -8,8 +8,8 @@ DROP TABLE games;
 DROP TABLE episodes;
 DROP TABLE season_subtitles;
 DROP TABLE seasons;
-DROP TABLE serie_genres;
-DROP TABLE series;
+DROP TABLE tv_show_genres;
+DROP TABLE tv_shows;
 DROP TABLE movie_subtitles;
 DROP TABLE movie_media;
 DROP TABLE movie_genres;
@@ -58,27 +58,27 @@ CREATE TABLE movie_genres (
   genre INTEGER NOT NULL CONSTRAINT movie_genres_genre_fk REFERENCES genres (id)
 );
 
-CREATE TABLE series (
-  id            INTEGER      NOT NULL CONSTRAINT series_pk PRIMARY KEY,
-  czech_name    VARCHAR(200) NOT NULL CONSTRAINT series_czech_name_ck CHECK (LENGTH(czech_name) > 0),
-  original_name VARCHAR(100) NOT NULL CONSTRAINT series_original_name_ck CHECK (LENGTH(original_name) > 0),
+CREATE TABLE tv_shows (
+  id            INTEGER      NOT NULL CONSTRAINT tv_shows_pk PRIMARY KEY,
+  czech_name    VARCHAR(200) NOT NULL CONSTRAINT tv_shows_czech_name_ck CHECK (LENGTH(czech_name) > 0),
+  original_name VARCHAR(100) NOT NULL CONSTRAINT tv_shows_original_name_ck CHECK (LENGTH(original_name) > 0),
   csfd          VARCHAR(100) NOT NULL,
-  imdb_code     INTEGER      NOT NULL CONSTRAINT series_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
+  imdb_code     INTEGER      NOT NULL CONSTRAINT tv_shows_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
   wiki_en       VARCHAR(100) NOT NULL,
   wiki_cz       VARCHAR(100) NOT NULL,
   picture       VARCHAR(20)  NOT NULL,
   note          VARCHAR(100) NOT NULL,
-  position      INTEGER      NOT NULL CONSTRAINT series_position_ck CHECK (position >= 0)
+  position      INTEGER      NOT NULL CONSTRAINT tv_shows_position_ck CHECK (position >= 0)
 );
 
-CREATE TABLE serie_genres (
-  serie INTEGER NOT NULL CONSTRAINT serie_genres_serie_fk REFERENCES series (id),
-  genre INTEGER NOT NULL CONSTRAINT serie_genres_genre_fk REFERENCES genres (id)
+CREATE TABLE tv_show_genres (
+  tv_show INTEGER NOT NULL CONSTRAINT tv_show_genres_show_fk REFERENCES tv_shows (id),
+  genre   INTEGER NOT NULL CONSTRAINT tv_show_genres_genre_fk REFERENCES genres (id)
 );
 
 CREATE TABLE seasons (
   id              INTEGER      NOT NULL CONSTRAINT seasons_pk PRIMARY KEY,
-  serie           INTEGER      NOT NULL CONSTRAINT seasons_serie_fk REFERENCES series (id),
+  tv_show INTEGER NOT NULL CONSTRAINT seasons_tv_show_fk REFERENCES tv_shows (id),
   season_number   INTEGER      NOT NULL CONSTRAINT seasons_season_number_ck CHECK (season_number > 0),
   start_year      INTEGER      NOT NULL CONSTRAINT seasons_start_year_ck CHECK (start_year BETWEEN 1930 AND 2100),
   end_year        INTEGER      NOT NULL CONSTRAINT seasons_end_year_ck CHECK (end_year BETWEEN 1930 AND 2100),
@@ -176,7 +176,7 @@ CREATE TABLE book_languages (
 
 DROP SEQUENCE movies_sq;
 DROP SEQUENCE media_sq;
-DROP SEQUENCE series_sq;
+DROP SEQUENCE tv_shows_sq;
 DROP SEQUENCE seasons_sq;
 DROP SEQUENCE episodes_sq;
 DROP SEQUENCE games_sq;
@@ -189,7 +189,7 @@ DROP SEQUENCE genres_sq;
 
 CREATE SEQUENCE movies_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE media_sq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE series_sq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE tv_shows_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seasons_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE episodes_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE games_sq START WITH 1 INCREMENT BY 1;

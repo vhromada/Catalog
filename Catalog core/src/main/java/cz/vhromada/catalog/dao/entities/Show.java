@@ -20,19 +20,19 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 /**
- * A class represents serie.
+ * A class represents show.
  *
  * @author Vladimir Hromada
  */
 @Entity
-@Table(name = "series")
-@NamedQuery(name = Serie.SELECT_SERIES, query = "SELECT s FROM Serie s ORDER BY s.position, s.id")
-public class Serie implements Serializable {
+@Table(name = "tv_shows")
+@NamedQuery(name = Show.SELECT_SHOWS, query = "SELECT s FROM Show s ORDER BY s.position, s.id")
+public class Show implements Serializable {
 
     /**
-     * Name for query - select series
+     * Name for query - select shows
      */
-    public static final String SELECT_SERIES = "Serie.selectSeries";
+    public static final String SELECT_SHOWS = "Show.selectShows";
 
     /**
      * SerialVersionUID
@@ -43,8 +43,8 @@ public class Serie implements Serializable {
      * ID
      */
     @Id
-    @SequenceGenerator(name = "serie_generator", sequenceName = "series_sq", allocationSize = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "serie_generator")
+    @SequenceGenerator(name = "show_generator", sequenceName = "tv_shows_sq", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "show_generator")
     private Integer id;
 
     /**
@@ -60,7 +60,7 @@ public class Serie implements Serializable {
     private String originalName;
 
     /**
-     * URL to ČSFD page about serie
+     * URL to ČSFD page about show
      */
     private String csfd;
 
@@ -71,19 +71,19 @@ public class Serie implements Serializable {
     private int imdbCode;
 
     /**
-     * URL to english Wikipedia page about serie
+     * URL to english Wikipedia page about show
      */
     @Column(name = "wiki_en")
     private String wikiEn;
 
     /**
-     * URL to czech Wikipedia page about serie
+     * URL to czech Wikipedia page about show
      */
     @Column(name = "wiki_cz")
     private String wikiCz;
 
     /**
-     * Path to file with serie's picture
+     * Path to file with show picture
      */
     private String picture;
 
@@ -101,7 +101,7 @@ public class Serie implements Serializable {
      * Genres
      */
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "serie_genres", joinColumns = @JoinColumn(name = "serie"), inverseJoinColumns = @JoinColumn(name = "genre"))
+    @JoinTable(name = "tv_show_genres", joinColumns = @JoinColumn(name = "tv_show"), inverseJoinColumns = @JoinColumn(name = "genre"))
     @Fetch(FetchMode.SELECT)
     private List<Genre> genres;
 
@@ -160,16 +160,16 @@ public class Serie implements Serializable {
     }
 
     /**
-     * Returns URL to ČSFD page about serie.
+     * Returns URL to ČSFD page about show.
      *
-     * @return URL to ČSFD page about serie
+     * @return URL to ČSFD page about show
      */
     public String getCsfd() {
         return csfd;
     }
 
     /**
-     * Sets a new value to URL to ČSFD page about serie.
+     * Sets a new value to URL to ČSFD page about show.
      *
      * @param csfd new value
      */
@@ -196,16 +196,16 @@ public class Serie implements Serializable {
     }
 
     /**
-     * Returns URL to english Wikipedia page about serie.
+     * Returns URL to english Wikipedia page about show.
      *
-     * @return URL to english Wikipedia page about serie
+     * @return URL to english Wikipedia page about show
      */
     public String getWikiEn() {
         return wikiEn;
     }
 
     /**
-     * Sets a new value to URL to english Wikipedia page about serie.
+     * Sets a new value to URL to english Wikipedia page about show.
      *
      * @param wikiEn new value
      */
@@ -214,16 +214,16 @@ public class Serie implements Serializable {
     }
 
     /**
-     * Returns URL to czech Wikipedia page about serie.
+     * Returns URL to czech Wikipedia page about show.
      *
-     * @return URL to czech Wikipedia page about serie
+     * @return URL to czech Wikipedia page about show
      */
     public String getWikiCz() {
         return wikiCz;
     }
 
     /**
-     * Sets a new value to URL to czech Wikipedia page about serie.
+     * Sets a new value to URL to czech Wikipedia page about show.
      *
      * @param wikiCz new value
      */
@@ -232,16 +232,16 @@ public class Serie implements Serializable {
     }
 
     /**
-     * Returns path to file with serie's picture.
+     * Returns path to file with show picture.
      *
-     * @return path to file with serie's picture
+     * @return path to file with show picture
      */
     public String getPicture() {
         return picture;
     }
 
     /**
-     * Sets a new value to path to file with serie's picture.
+     * Sets a new value to path to file with show picture.
      *
      * @param picture new value
      */
@@ -308,11 +308,11 @@ public class Serie implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof Serie) || id == null) {
+        if (obj == null || !(obj instanceof Show) || id == null) {
             return false;
         }
-        final Serie serie = (Serie) obj;
-        return id.equals(serie.id);
+        final Show show = (Show) obj;
+        return id.equals(show.id);
     }
 
     @Override
@@ -322,7 +322,7 @@ public class Serie implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Serie [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
+        return String.format("Show [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
                 + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }
 

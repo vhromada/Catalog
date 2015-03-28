@@ -3,10 +3,10 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.facade.to.ShowTO;
 
 /**
- * An interface represents facade for series.
+ * An interface represents facade for shows.
  *
  * @author Vladimir Hromada
  */
@@ -36,9 +36,9 @@ public interface SeasonFacade {
      *                                                                        or subtitles are null
      *                                                                        or subtitles contain null value
      *                                                                        or note is null
-     *                                                                        or TO for serie is null
-     *                                                                        or TO for serie ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for serie doesn't exist in data storage
+     *                                                                        or TO for show is null
+     *                                                                        or TO for show ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for show doesn't exist in data storage
      * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void add(SeasonTO season);
@@ -57,10 +57,10 @@ public interface SeasonFacade {
      *                                                                        or subtitles are null
      *                                                                        or subtitles contain null value
      *                                                                        or note is null
-     *                                                                        or TO for serie is null
-     *                                                                        or TO for serie ID is null
+     *                                                                        or TO for show is null
+     *                                                                        or TO for show ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for season doesn't exist in data storage
-     *                                                                        or TO for serie doesn't exist in data storage
+     *                                                                        or TO for show doesn't exist in data storage
      * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void update(SeasonTO season);
@@ -123,15 +123,15 @@ public interface SeasonFacade {
     boolean exists(SeasonTO season);
 
     /**
-     * Returns list of TO for season for specified TO for serie.
+     * Returns list of TO for season for specified TO for show.
      *
-     * @param serie TO for serie
-     * @return list of TO for seasons for specified TO for serie
-     * @throws IllegalArgumentException                                       if TO for serie is null
+     * @param show TO for show
+     * @return list of TO for seasons for specified TO for show
+     * @throws IllegalArgumentException                                       if TO for show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for serie doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for show doesn't exist in data storage
      * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
-    List<SeasonTO> findSeasonsBySerie(SerieTO serie);
+    List<SeasonTO> findSeasonsByShow(ShowTO show);
 
 }

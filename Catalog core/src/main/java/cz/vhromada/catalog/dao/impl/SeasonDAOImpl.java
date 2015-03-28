@@ -8,7 +8,7 @@ import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.dao.SeasonDAO;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.validators.Validators;
 
@@ -29,9 +29,9 @@ public class SeasonDAOImpl implements SeasonDAO {
     private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
 
     /**
-     * Serie argument
+     * Show argument
      */
-    private static final String SERIE_ARGUMENT = "Serie";
+    private static final String SHOW_ARGUMENT = "Show";
 
     /**
      * Season argument
@@ -147,12 +147,12 @@ public class SeasonDAOImpl implements SeasonDAO {
      * @throws DataStorageException     {@inheritDoc}
      */
     @Override
-    public List<Season> findSeasonsBySerie(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public List<Season> findSeasonsByShow(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            final TypedQuery<Season> query = entityManager.createNamedQuery(Season.FIND_BY_SERIE, Season.class);
-            query.setParameter("serie", serie.getId());
+            final TypedQuery<Season> query = entityManager.createNamedQuery(Season.FIND_BY_SHOW, Season.class);
+            query.setParameter("show", show.getId());
             return query.getResultList();
         } catch (final PersistenceException ex) {
             throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);

@@ -12,7 +12,7 @@ import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.SerieTO;
+import cz.vhromada.catalog.facade.to.ShowTO;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.generator.ObjectGenerator;
 
@@ -132,91 +132,91 @@ public final class SpringToUtils {
     }
 
     /**
-     * Returns series.
+     * Returns shows.
      *
-     * @return series
+     * @return shows
      */
-    public static List<SerieTO> getSeries() {
-        final List<SerieTO> series = new ArrayList<>();
-        for (int i = 0; i < SpringUtils.SERIES_COUNT; i++) {
-            series.add(getSerie(i + 1));
+    public static List<ShowTO> getShows() {
+        final List<ShowTO> shows = new ArrayList<>();
+        for (int i = 0; i < SpringUtils.SHOWS_COUNT; i++) {
+            shows.add(getShow(i + 1));
         }
-        return series;
+        return shows;
     }
 
     /**
-     * Returns TO for serie for index.
+     * Returns TO for show for index.
      *
      * @param index index
-     * @return TO for serie for index
+     * @return TO for show for index
      */
-    public static SerieTO getSerie(final int index) {
-        final SerieTO serie = new SerieTO();
-        serie.setId(index);
-        serie.setCzechName("Serie " + index + " czech name");
-        serie.setOriginalName("Serie " + index + " original name");
-        serie.setCsfd("Serie " + index + " CSFD");
-        serie.setImdbCode(index * 100);
-        serie.setWikiEn("Serie " + index + " English Wikipedia");
-        serie.setWikiCz("Serie " + index + " Czech Wikipedia");
-        serie.setPicture("Serie " + index + " pc");
-        serie.setNote(index == 2 ? "Serie 2 note" : "");
-        serie.setPosition(index - 1);
+    public static ShowTO getShow(final int index) {
+        final ShowTO show = new ShowTO();
+        show.setId(index);
+        show.setCzechName("Show " + index + " czech name");
+        show.setOriginalName("Show " + index + " original name");
+        show.setCsfd("Show " + index + " CSFD");
+        show.setImdbCode(index * 100);
+        show.setWikiEn("Show " + index + " English Wikipedia");
+        show.setWikiCz("Show " + index + " Czech Wikipedia");
+        show.setPicture("Show " + index + " pc");
+        show.setNote(index == 2 ? "Show 2 note" : "");
+        show.setPosition(index - 1);
         final List<GenreTO> genres = new ArrayList<>();
         genres.add(getGenre(index));
         if (index == 3) {
             genres.add(getGenre(4));
         }
-        serie.setGenres(genres);
+        show.setGenres(genres);
 
-        return serie;
+        return show;
     }
 
     /**
-     * Returns new TO for serie.
+     * Returns new TO for show.
      *
      * @param objectGenerator object generator
-     * @return new TO for serie
+     * @return new TO for show
      */
-    public static SerieTO newSerie(final ObjectGenerator objectGenerator) {
-        return newSerie(objectGenerator, null);
+    public static ShowTO newShow(final ObjectGenerator objectGenerator) {
+        return newShow(objectGenerator, null);
     }
 
     /**
-     * Returns new TO for serie with ID.
+     * Returns new TO for show with ID.
      *
      * @param objectGenerator object generator
-     * @return new TO for serie  with ID
+     * @return new TO for show  with ID
      */
-    public static SerieTO newSerieWithId(final ObjectGenerator objectGenerator) {
-        return newSerie(objectGenerator, objectGenerator.generate(Integer.class));
+    public static ShowTO newShowWithId(final ObjectGenerator objectGenerator) {
+        return newShow(objectGenerator, objectGenerator.generate(Integer.class));
     }
 
     /**
-     * Returns new TO for serie with specified ID.
+     * Returns new TO for show with specified ID.
      *
      * @param objectGenerator object generator
-     * @param id              serie ID
-     * @return new TO for serie with specified ID
+     * @param id              show ID
+     * @return new TO for show with specified ID
      */
-    public static SerieTO newSerie(final ObjectGenerator objectGenerator, final Integer id) {
-        final SerieTO serie = objectGenerator.generate(SerieTO.class);
-        serie.setId(id);
-        serie.setGenres(CollectionUtils.newList(getGenre(4)));
+    public static ShowTO newShow(final ObjectGenerator objectGenerator, final Integer id) {
+        final ShowTO show = objectGenerator.generate(ShowTO.class);
+        show.setId(id);
+        show.setGenres(CollectionUtils.newList(getGenre(4)));
 
-        return serie;
+        return show;
     }
 
     /**
      * Returns seasons.
      *
-     * @param serie index of TO for serie
+     * @param show index of TO for show
      * @return seasons
      */
-    public static List<SeasonTO> getSeasons(final int serie) {
+    public static List<SeasonTO> getSeasons(final int show) {
         final List<SeasonTO> seasons = new ArrayList<>();
-        for (int i = 0; i < SpringUtils.SEASONS_PER_SERIE_COUNT; i++) {
-            seasons.add(getSeason(serie, i + 1));
+        for (int i = 0; i < SpringUtils.SEASONS_PER_SHOW_COUNT; i++) {
+            seasons.add(getSeason(show, i + 1));
         }
         return seasons;
     }
@@ -224,19 +224,19 @@ public final class SpringToUtils {
     /**
      * Returns TO for season for indexes.
      *
-     * @param serieIndex  TO for serie index
+     * @param showIndex  TO for show index
      * @param seasonIndex TO for season index
      * @return TO for season for indexes
      */
-    public static SeasonTO getSeason(final int serieIndex, final int seasonIndex) {
+    public static SeasonTO getSeason(final int showIndex, final int seasonIndex) {
         final SeasonTO season = new SeasonTO();
-        season.setId((serieIndex - 1) * SpringUtils.SEASONS_PER_SERIE_COUNT + seasonIndex);
+        season.setId((showIndex - 1) * SpringUtils.SEASONS_PER_SHOW_COUNT + seasonIndex);
         season.setNumber(seasonIndex);
         season.setStartYear(1980 + seasonIndex);
         season.setEndYear(seasonIndex == 3 ? 1984 : 1982);
-        season.setNote(seasonIndex == 2 ? "Serie " + serieIndex + " Season 2 note" : "");
+        season.setNote(seasonIndex == 2 ? "Show " + showIndex + " Season 2 note" : "");
         season.setPosition(seasonIndex - 1);
-        season.setSerie(getSerie(serieIndex));
+        season.setShow(getShow(showIndex));
         final List<Language> subtitles = new ArrayList<>();
         final Language language;
         switch (seasonIndex) {
@@ -293,7 +293,7 @@ public final class SpringToUtils {
         season.setId(id);
         season.setStartYear(objectGenerator.generate(DateTime.class).getYear());
         season.setEndYear(objectGenerator.generate(DateTime.class).getYear());
-        season.setSerie(getSerie(1));
+        season.setShow(getShow(1));
 
         return season;
     }
@@ -301,14 +301,14 @@ public final class SpringToUtils {
     /**
      * Returns episodes.
      *
-     * @param serie  index of TO for serie
+     * @param show  index of TO for show
      * @param season index of TO for season
      * @return episodes
      */
-    public static List<EpisodeTO> getEpisodes(final int serie, final int season) {
+    public static List<EpisodeTO> getEpisodes(final int show, final int season) {
         final List<EpisodeTO> episodes = new ArrayList<>();
         for (int i = 0; i < SpringUtils.EPISODES_PER_SEASON_COUNT; i++) {
-            episodes.add(getEpisode(serie, season, i + 1));
+            episodes.add(getEpisode(show, season, i + 1));
         }
         return episodes;
     }
@@ -316,20 +316,20 @@ public final class SpringToUtils {
     /**
      * Returns TO for episode for indexes.
      *
-     * @param serieIndex   TO for serie index
+     * @param showIndex   TO for show index
      * @param seasonIndex  TO for season index
      * @param episodeIndex TO for episode index
      * @return TO for episode for indexes
      */
-    public static EpisodeTO getEpisode(final int serieIndex, final int seasonIndex, final int episodeIndex) {
+    public static EpisodeTO getEpisode(final int showIndex, final int seasonIndex, final int episodeIndex) {
         final EpisodeTO episode = new EpisodeTO();
-        episode.setId((serieIndex - 1) * SpringUtils.EPISODES_PER_SERIE_COUNT + (seasonIndex - 1) * SpringUtils.EPISODES_PER_SEASON_COUNT + episodeIndex);
+        episode.setId((showIndex - 1) * SpringUtils.EPISODES_PER_SHOW_COUNT + (seasonIndex - 1) * SpringUtils.EPISODES_PER_SEASON_COUNT + episodeIndex);
         episode.setNumber(episodeIndex);
-        episode.setName("Serie " + serieIndex + " Season " + seasonIndex + " Episode " + episodeIndex);
+        episode.setName("Show " + showIndex + " Season " + seasonIndex + " Episode " + episodeIndex);
         episode.setLength(episodeIndex * SpringUtils.LENGTH_MULTIPLIERS[seasonIndex - 1]);
-        episode.setNote(episodeIndex == 2 ? "Serie " + serieIndex + " Season " + seasonIndex + " Episode 2 note" : "");
+        episode.setNote(episodeIndex == 2 ? "Show " + showIndex + " Season " + seasonIndex + " Episode 2 note" : "");
         episode.setPosition(episodeIndex - 1);
-        episode.setSeason(getSeason(serieIndex, seasonIndex));
+        episode.setSeason(getSeason(showIndex, seasonIndex));
 
         return episode;
     }

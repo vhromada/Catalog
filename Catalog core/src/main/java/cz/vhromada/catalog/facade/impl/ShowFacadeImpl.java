@@ -4,14 +4,14 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.dao.entities.Serie;
-import cz.vhromada.catalog.facade.SerieFacade;
+import cz.vhromada.catalog.dao.entities.Show;
+import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.GenreTO;
-import cz.vhromada.catalog.facade.to.SerieTO;
-import cz.vhromada.catalog.facade.validators.SerieTOValidator;
+import cz.vhromada.catalog.facade.to.ShowTO;
+import cz.vhromada.catalog.facade.validators.ShowTOValidator;
 import cz.vhromada.catalog.service.GenreService;
-import cz.vhromada.catalog.service.SerieService;
+import cz.vhromada.catalog.service.ShowService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
@@ -21,18 +21,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents implementation of facade for series.
+ * A class represents implementation of facade for shows.
  *
  * @author Vladimir Hromada
  */
-@Component("serieFacade")
+@Component("showFacade")
 @Transactional
-public class SerieFacadeImpl implements SerieFacade {
+public class ShowFacadeImpl implements ShowFacade {
 
     /**
-     * Service for series argument
+     * Service for shows argument
      */
-    private static final String SERIE_SERVICE_ARGUMENT = "Service for series";
+    private static final String SHOW_SERVICE_ARGUMENT = "Service for shows";
 
     /**
      * Service for genres argument
@@ -45,19 +45,19 @@ public class SerieFacadeImpl implements SerieFacade {
     private static final String CONVERTER_ARGUMENT = "Converter";
 
     /**
-     * Validator for TO for serie argument
+     * Validator for TO for show argument
      */
-    private static final String SERIE_TO_VALIDATOR_ARGUMENT = "Validator for TO for serie";
+    private static final String SHOW_TO_VALIDATOR_ARGUMENT = "Validator for TO for show";
 
     /**
-     * Serie argument
+     * Show argument
      */
-    private static final String SERIE_ARGUMENT = "serie";
+    private static final String SHOW_ARGUMENT = "show";
 
     /**
-     * TO for serie argument
+     * TO for show argument
      */
-    private static final String SERIE_TO_ARGUMENT = "TO for serie";
+    private static final String SHOW_TO_ARGUMENT = "TO for show";
 
     /**
      * TO for genre argument
@@ -80,9 +80,9 @@ public class SerieFacadeImpl implements SerieFacade {
     private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
 
     /**
-     * Service for series
+     * Service for shows
      */
-    private SerieService serieService;
+    private ShowService showService;
 
     /**
      * Service for genres
@@ -95,36 +95,36 @@ public class SerieFacadeImpl implements SerieFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for serie
+     * Validator for TO for show
      */
-    private SerieTOValidator serieTOValidator;
+    private ShowTOValidator showTOValidator;
 
     /**
-     * Creates a new instance of SerieFacadeImpl.
+     * Creates a new instance of ShowFacadeImpl.
      *
-     * @param serieService     service for series
+     * @param showService     service for shows
      * @param genreService     service for genres
      * @param converter        converter
-     * @param serieTOValidator validator for TO for serie
-     * @throws IllegalArgumentException if service for series is null
+     * @param showTOValidator validator for TO for show
+     * @throws IllegalArgumentException if service for shows is null
      *                                  or service for genres is null
      *                                  or converter is null
-     *                                  or validator for TO for serie is null
+     *                                  or validator for TO for show is null
      */
     @Autowired
-    public SerieFacadeImpl(final SerieService serieService,
+    public ShowFacadeImpl(final ShowService showService,
             final GenreService genreService,
             final Converter converter,
-            final SerieTOValidator serieTOValidator) {
-        Validators.validateArgumentNotNull(serieService, SERIE_SERVICE_ARGUMENT);
+            final ShowTOValidator showTOValidator) {
+        Validators.validateArgumentNotNull(showService, SHOW_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
-        Validators.validateArgumentNotNull(serieTOValidator, SERIE_TO_VALIDATOR_ARGUMENT);
+        Validators.validateArgumentNotNull(showTOValidator, SHOW_TO_VALIDATOR_ARGUMENT);
 
-        this.serieService = serieService;
+        this.showService = showService;
         this.genreService = genreService;
         this.converter = converter;
-        this.serieTOValidator = serieTOValidator;
+        this.showTOValidator = showTOValidator;
     }
 
     /**
@@ -135,7 +135,7 @@ public class SerieFacadeImpl implements SerieFacade {
     @Override
     public void newData() {
         try {
-            serieService.newData();
+            showService.newData();
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -148,11 +148,11 @@ public class SerieFacadeImpl implements SerieFacade {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<SerieTO> getSeries() {
+    public List<ShowTO> getShows() {
         try {
-            final List<SerieTO> series = converter.convertCollection(serieService.getSeries(), SerieTO.class);
-            Collections.sort(series);
-            return series;
+            final List<ShowTO> shows = converter.convertCollection(showService.getShows(), ShowTO.class);
+            Collections.sort(shows);
+            return shows;
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -166,11 +166,11 @@ public class SerieFacadeImpl implements SerieFacade {
      */
     @Override
     @Transactional(readOnly = true)
-    public SerieTO getSerie(final Integer id) {
+    public ShowTO getShow(final Integer id) {
         Validators.validateArgumentNotNull(id, ID_ARGUMENT);
 
         try {
-            return converter.convert(serieService.getSerie(id), SerieTO.class);
+            return converter.convert(showService.getShow(id), ShowTO.class);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -184,20 +184,20 @@ public class SerieFacadeImpl implements SerieFacade {
      * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
-    public void add(final SerieTO serie) {
-        serieTOValidator.validateNewSerieTO(serie);
+    public void add(final ShowTO show) {
+        showTOValidator.validateNewShowTO(show);
         try {
-            for (final GenreTO genre : serie.getGenres()) {
+            for (final GenreTO genre : show.getGenres()) {
                 Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
             }
 
-            final Serie serieEntity = converter.convert(serie, Serie.class);
-            serieService.add(serieEntity);
-            if (serieEntity.getId() == null) {
+            final Show showEntity = converter.convert(show, Show.class);
+            showService.add(showEntity);
+            if (showEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
             }
-            serie.setId(serieEntity.getId());
-            serie.setPosition(serieEntity.getPosition());
+            show.setId(showEntity.getId());
+            show.setPosition(showEntity.getPosition());
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -212,16 +212,16 @@ public class SerieFacadeImpl implements SerieFacade {
      * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    public void update(final SerieTO serie) {
-        serieTOValidator.validateExistingSerieTO(serie);
+    public void update(final ShowTO show) {
+        showTOValidator.validateExistingShowTO(show);
         try {
-            final Serie serieEntity = converter.convert(serie, Serie.class);
-            Validators.validateExists(serieService.exists(serieEntity), SERIE_TO_ARGUMENT);
-            for (final GenreTO genre : serie.getGenres()) {
+            final Show showEntity = converter.convert(show, Show.class);
+            Validators.validateExists(showService.exists(showEntity), SHOW_TO_ARGUMENT);
+            for (final GenreTO genre : show.getGenres()) {
                 Validators.validateExists(genreService.getGenre(genre.getId()), GENRE_TO_ARGUMENT);
             }
 
-            serieService.update(serieEntity);
+            showService.update(showEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -236,13 +236,13 @@ public class SerieFacadeImpl implements SerieFacade {
      * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    public void remove(final SerieTO serie) {
-        serieTOValidator.validateSerieTOWithId(serie);
+    public void remove(final ShowTO show) {
+        showTOValidator.validateShowTOWithId(show);
         try {
-            final Serie serieEntity = serieService.getSerie(serie.getId());
-            Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
+            final Show showEntity = showService.getShow(show.getId());
+            Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
 
-            serieService.remove(serieEntity);
+            showService.remove(showEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -256,13 +256,13 @@ public class SerieFacadeImpl implements SerieFacade {
      * @throws FacadeOperationException                              {@inheritDoc}
      */
     @Override
-    public void duplicate(final SerieTO serie) {
-        serieTOValidator.validateSerieTOWithId(serie);
+    public void duplicate(final ShowTO show) {
+        showTOValidator.validateShowTOWithId(show);
         try {
-            final Serie oldSerie = serieService.getSerie(serie.getId());
-            Validators.validateExists(oldSerie, SERIE_TO_ARGUMENT);
+            final Show oldShow = showService.getShow(show.getId());
+            Validators.validateExists(oldShow, SHOW_TO_ARGUMENT);
 
-            serieService.duplicate(oldSerie);
+            showService.duplicate(oldShow);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -277,15 +277,15 @@ public class SerieFacadeImpl implements SerieFacade {
      * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    public void moveUp(final SerieTO serie) {
-        serieTOValidator.validateSerieTOWithId(serie);
+    public void moveUp(final ShowTO show) {
+        showTOValidator.validateShowTOWithId(show);
         try {
-            final Serie serieEntity = serieService.getSerie(serie.getId());
-            Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
-            final List<Serie> series = serieService.getSeries();
-            Validators.validateMoveUp(series, serieEntity, SERIE_ARGUMENT);
+            final Show showEntity = showService.getShow(show.getId());
+            Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+            final List<Show> shows = showService.getShows();
+            Validators.validateMoveUp(shows, showEntity, SHOW_ARGUMENT);
 
-            serieService.moveUp(serieEntity);
+            showService.moveUp(showEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -300,15 +300,15 @@ public class SerieFacadeImpl implements SerieFacade {
      * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    public void moveDown(final SerieTO serie) {
-        serieTOValidator.validateSerieTOWithId(serie);
+    public void moveDown(final ShowTO show) {
+        showTOValidator.validateShowTOWithId(show);
         try {
-            final Serie serieEntity = serieService.getSerie(serie.getId());
-            Validators.validateExists(serieEntity, SERIE_TO_ARGUMENT);
-            final List<Serie> series = serieService.getSeries();
-            Validators.validateMoveDown(series, serieEntity, SERIE_ARGUMENT);
+            final Show showEntity = showService.getShow(show.getId());
+            Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+            final List<Show> shows = showService.getShows();
+            Validators.validateMoveDown(shows, showEntity, SHOW_ARGUMENT);
 
-            serieService.moveDown(serieEntity);
+            showService.moveDown(showEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -323,11 +323,11 @@ public class SerieFacadeImpl implements SerieFacade {
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean exists(final SerieTO serie) {
-        serieTOValidator.validateSerieTOWithId(serie);
+    public boolean exists(final ShowTO show) {
+        showTOValidator.validateShowTOWithId(show);
         try {
 
-            return serieService.exists(converter.convert(serie, Serie.class));
+            return showService.exists(converter.convert(show, Show.class));
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -341,7 +341,7 @@ public class SerieFacadeImpl implements SerieFacade {
     @Override
     public void updatePositions() {
         try {
-            serieService.updatePositions();
+            showService.updatePositions();
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -356,7 +356,7 @@ public class SerieFacadeImpl implements SerieFacade {
     @Transactional(readOnly = true)
     public Time getTotalLength() {
         try {
-            return serieService.getTotalLength();
+            return showService.getTotalLength();
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -371,7 +371,7 @@ public class SerieFacadeImpl implements SerieFacade {
     @Transactional(readOnly = true)
     public int getSeasonsCount() {
         try {
-            return serieService.getSeasonsCount();
+            return showService.getSeasonsCount();
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
@@ -386,7 +386,7 @@ public class SerieFacadeImpl implements SerieFacade {
     @Transactional(readOnly = true)
     public int getEpisodesCount() {
         try {
-            return serieService.getEpisodesCount();
+            return showService.getEpisodesCount();
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
         }

@@ -2,58 +2,58 @@ package cz.vhromada.catalog.dao;
 
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 
 /**
- * An interface represents DAO for series.
+ * An interface represents DAO for shows.
  *
  * @author Vladimir Hromada
  */
-public interface SerieDAO {
+public interface ShowDAO {
 
     /**
-     * Returns list of series.
+     * Returns list of shows.
      *
-     * @return list of series
+     * @return list of shows
      * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
-    List<Serie> getSeries();
+    List<Show> getShows();
 
     /**
-     * Returns serie with ID or null if there isn't such serie.
+     * Returns show with ID or null if there isn't such show.
      *
      * @param id ID
-     * @return serie with ID or null if there isn't such serie
+     * @return show with ID or null if there isn't such show
      * @throws IllegalArgumentException                                if ID is null
      * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
-    Serie getSerie(Integer id);
+    Show getShow(Integer id);
 
     /**
-     * Adds serie. Sets new ID and position.
+     * Adds show. Sets new ID and position.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                if show is null
      * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
-    void add(Serie serie);
+    void add(Show show);
 
     /**
-     * Updates serie.
+     * Updates show.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                if show is null
      * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
-    void update(Serie serie);
+    void update(Show show);
 
     /**
-     * Removes serie.
+     * Removes show.
      *
-     * @param serie serie
-     * @throws IllegalArgumentException                                if serie is null
+     * @param show show
+     * @throws IllegalArgumentException                                if show is null
      * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException if there was error with working with data storage
      */
-    void remove(Serie serie);
+    void remove(Show show);
 
 }

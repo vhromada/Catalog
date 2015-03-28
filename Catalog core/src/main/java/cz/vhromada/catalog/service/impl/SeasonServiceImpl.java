@@ -7,7 +7,7 @@ import cz.vhromada.catalog.dao.EpisodeDAO;
 import cz.vhromada.catalog.dao.SeasonDAO;
 import cz.vhromada.catalog.dao.entities.Episode;
 import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Serie;
+import cz.vhromada.catalog.dao.entities.Show;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.catalog.service.SeasonService;
 import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("seasonService")
-public class SeasonServiceImpl extends AbstractSerieService implements SeasonService {
+public class SeasonServiceImpl extends AbstractShowService implements SeasonService {
 
     /**
      * DAO for seasons field
@@ -37,9 +37,9 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     private static final String EPISODE_DAO_ARGUMENT = "DAO for episodes";
 
     /**
-     * Serie argument
+     * Show argument
      */
-    private static final String SERIE_ARGUMENT = "Serie";
+    private static final String SHOW_ARGUMENT = "Show";
 
     /**
      * Season argument
@@ -71,16 +71,16 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
      *
      * @param seasonDAO  DAO for seasons
      * @param episodeDAO DAO for episodes
-     * @param serieCache cache for series
+     * @param showCache cache for shows
      * @throws IllegalArgumentException if DAO for seasons is null
      *                                  or DAO for episodes is null
-     *                                  or cache for series is null
+     *                                  or cache for shows is null
      */
     @Autowired
     public SeasonServiceImpl(final SeasonDAO seasonDAO,
             final EpisodeDAO episodeDAO,
-            @Value("#{cacheManager.getCache('serieCache')}") final Cache serieCache) {
-        super(serieCache);
+            @Value("#{cacheManager.getCache('showCache')}") final Cache showCache) {
+        super(showCache);
 
         Validators.validateArgumentNotNull(seasonDAO, SEASON_DAO_ARGUMENT);
         Validators.validateArgumentNotNull(episodeDAO, EPISODE_DAO_ARGUMENT);
@@ -175,7 +175,7 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
 
         try {
             final Season newSeason = createSeason(season);
-            newSeason.setSerie(season.getSerie());
+            newSeason.setShow(season.getShow());
             seasonDAO.add(newSeason);
             newSeason.setPosition(season.getPosition());
             seasonDAO.update(newSeason);
@@ -204,7 +204,7 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
-            final List<Season> seasons = getCachedSeasons(season.getSerie(), false);
+            final List<Season> seasons = getCachedSeasons(season.getShow(), false);
             final Season otherSeason = seasons.get(seasons.indexOf(season) - 1);
             switchPosition(season, otherSeason);
             seasonDAO.update(season);
@@ -226,7 +226,7 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
-            final List<Season> seasons = getCachedSeasons(season.getSerie(), false);
+            final List<Season> seasons = getCachedSeasons(season.getShow(), false);
             final Season otherSeason = seasons.get(seasons.indexOf(season) + 1);
             switchPosition(season, otherSeason);
             seasonDAO.update(season);
@@ -261,24 +261,24 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
      * @throws ServiceOperationException {@inheritDoc}
      */
     @Override
-    public List<Season> findSeasonsBySerie(final Serie serie) {
-        Validators.validateArgumentNotNull(serie, SERIE_ARGUMENT);
+    public List<Season> findSeasonsByShow(final Show show) {
+        Validators.validateArgumentNotNull(show, SHOW_ARGUMENT);
 
         try {
-            return getCachedSeasons(serie, true);
+            return getCachedSeasons(show, true);
         } catch (final DataStorageException ex) {
             throw new ServiceOperationException(SERVICE_OPERATION_EXCEPTION_MESSAGE, ex);
         }
     }
 
     @Override
-    protected List<Serie> getDAOSeries() {
+    protected List<Show> getDAOShows() {
         return null;
     }
 
     @Override
-    protected List<Season> getDAOSeasons(final Serie serie) {
-        return seasonDAO.findSeasonsBySerie(serie);
+    protected List<Season> getDAOSeasons(final Show show) {
+        return seasonDAO.findSeasonsByShow(show);
     }
 
     @Override
@@ -287,7 +287,7 @@ public class SeasonServiceImpl extends AbstractSerieService implements SeasonSer
     }
 
     @Override
-    protected Serie getDAOSerie(final Integer id) {
+    protected Show getDAOShow(final Integer id) {
         return null;
     }
 

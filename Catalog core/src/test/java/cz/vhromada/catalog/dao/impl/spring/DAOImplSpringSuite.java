@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ MovieDAOImplSpringTest.class, SerieDAOImplSpringTest.class, SeasonDAOImplSpringTest.class, EpisodeDAOImplSpringTest.class,
+@Suite.SuiteClasses({ MovieDAOImplSpringTest.class, ShowDAOImplSpringTest.class, SeasonDAOImplSpringTest.class, EpisodeDAOImplSpringTest.class,
         GameDAOImplSpringTest.class, MusicDAOImplSpringTest.class, SongDAOImplSpringTest.class, ProgramDAOImplSpringTest.class,
         BookCategoryDAOImplSpringTest.class, BookDAOImplSpringTest.class, GenreDAOImplSpringTest.class })
 public class DAOImplSpringSuite {

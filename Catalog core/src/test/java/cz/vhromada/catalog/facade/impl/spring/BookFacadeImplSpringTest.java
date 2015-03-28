@@ -90,7 +90,7 @@ public class BookFacadeImplSpringTest {
         for (int i = 0; i < SpringUtils.BOOKS_COUNT; i++) {
             final int bookCategoryNumber = i / SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
             final int bookNumber = i % SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + 1;
-            DeepAsserts.assertEquals(SpringToUtils.getBook(bookCategoryNumber, bookNumber), bookFacade.getBook(i + 1), "booksCount");
+            DeepAsserts.assertEquals(SpringToUtils.getBook(bookCategoryNumber, bookNumber), bookFacade.getBook(i + 1));
         }
 
         assertNull(bookFacade.getBook(Integer.MAX_VALUE));
@@ -119,7 +119,7 @@ public class BookFacadeImplSpringTest {
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, book.getId());
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, book.getPosition());
         final Book addedBook = SpringUtils.getBook(entityManager, SpringUtils.BOOKS_COUNT + 1);
-        DeepAsserts.assertEquals(book, addedBook, "booksCount");
+        DeepAsserts.assertEquals(book, addedBook);
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT + 1, SpringUtils.getBooksCount(entityManager));
     }
 
@@ -259,7 +259,7 @@ public class BookFacadeImplSpringTest {
         bookFacade.update(book);
 
         final Book updatedBook = SpringUtils.getBook(entityManager, 1);
-        DeepAsserts.assertEquals(book, updatedBook, "booksCount");
+        DeepAsserts.assertEquals(book, updatedBook);
         DeepAsserts.assertEquals(SpringUtils.BOOKS_COUNT, SpringUtils.getBooksCount(entityManager));
     }
 

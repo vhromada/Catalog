@@ -12,7 +12,7 @@ public final class Constants {
     /**
      * Minimal year
      */
-    public static final int MIN_YEAR = 1940;
+    public static final int MIN_YEAR = 1930;
 
     /**
      * Current year

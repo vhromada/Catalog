@@ -25,6 +25,11 @@ public enum Language {
     /**
      * Japanese language
      */
-    JP
+    JP,
+
+    /**
+     * Slovak language
+     */
+    SK
 
 }

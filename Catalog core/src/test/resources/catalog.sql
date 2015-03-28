@@ -18,12 +18,12 @@ DROP TABLE media;
 DROP TABLE genres;
 
 CREATE TABLE genres (
-  id INTEGER NOT NULL CONSTRAINT genres_pk PRIMARY KEY,
+  id         INTEGER      NOT NULL CONSTRAINT genres_pk PRIMARY KEY,
   genre_name VARCHAR(200) NOT NULL CONSTRAINT genres_genre_name_ck CHECK (LENGTH(genre_name) > 0)
 );
 
 CREATE TABLE media (
-  id INTEGER NOT NULL CONSTRAINT media_pk PRIMARY KEY,
+  id            INTEGER NOT NULL CONSTRAINT media_pk PRIMARY KEY,
   medium_number INTEGER NOT NULL CONSTRAINT media_medium_number_ck CHECK (medium_number > 0),
   medium_length INTEGER NOT NULL CONSTRAINT media_medium_length_ck CHECK (medium_length >= 0)
 );
@@ -32,8 +32,8 @@ CREATE TABLE movies (
   id             INTEGER      NOT NULL CONSTRAINT movies_pk PRIMARY KEY,
   czech_name     VARCHAR(200) NOT NULL CONSTRAINT movies_czech_name_ck CHECK (LENGTH(czech_name) > 0),
   original_name  VARCHAR(100) NOT NULL CONSTRAINT movies_original_name_ck CHECK (LENGTH(original_name) > 0),
-  movie_year     INTEGER      NOT NULL CONSTRAINT movies_movie_year_ck CHECK (movie_year BETWEEN 1940 AND 2100),
-  movie_language VARCHAR(2)   NOT NULL CONSTRAINT movies_movie_language_ck CHECK (movie_language IN ('CZ', 'EN', 'FR', 'JP')),
+  movie_year     INTEGER      NOT NULL CONSTRAINT movies_movie_year_ck CHECK (movie_year BETWEEN 1930 AND 2100),
+  movie_language VARCHAR(2)   NOT NULL CONSTRAINT movies_movie_language_ck CHECK (movie_language IN ('CZ', 'EN', 'FR', 'JP', 'SK')),
   csfd           VARCHAR(100) NOT NULL,
   imdb_code      INTEGER      NOT NULL CONSTRAINT movies_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
   wiki_en        VARCHAR(100) NOT NULL,
@@ -44,12 +44,12 @@ CREATE TABLE movies (
 );
 
 CREATE TABLE movie_subtitles (
-  movie INTEGER NOT NULL CONSTRAINT movie_subtitles_movie_fk REFERENCES movies (id),
-  subtitles VARCHAR(2) NOT NULL CONSTRAINT movie_subtitles_subtitles_ck CHECK (subtitles IN ('CZ', 'EN', 'FR', 'JP'))
+  movie     INTEGER    NOT NULL CONSTRAINT movie_subtitles_movie_fk REFERENCES movies (id),
+  subtitles VARCHAR(2) NOT NULL CONSTRAINT movie_subtitles_subtitles_ck CHECK (subtitles IN ('CZ', 'EN', 'FR', 'JP', 'SK'))
 );
 
 CREATE TABLE movie_media (
-  movie INTEGER NOT NULL CONSTRAINT movie_media_movie_fk REFERENCES movies (id),
+  movie  INTEGER NOT NULL CONSTRAINT movie_media_movie_fk REFERENCES movies (id),
   medium INTEGER NOT NULL CONSTRAINT movie_media_medium_fk REFERENCES media (id)
 );
 
@@ -59,16 +59,16 @@ CREATE TABLE movie_genres (
 );
 
 CREATE TABLE series (
-  id         INTEGER      NOT NULL CONSTRAINT series_pk PRIMARY KEY,
-  czech_name VARCHAR(200) NOT NULL CONSTRAINT series_czech_name_ck CHECK (LENGTH(czech_name) > 0),
+  id            INTEGER      NOT NULL CONSTRAINT series_pk PRIMARY KEY,
+  czech_name    VARCHAR(200) NOT NULL CONSTRAINT series_czech_name_ck CHECK (LENGTH(czech_name) > 0),
   original_name VARCHAR(100) NOT NULL CONSTRAINT series_original_name_ck CHECK (LENGTH(original_name) > 0),
-  csfd       VARCHAR(100) NOT NULL,
-  imdb_code  INTEGER      NOT NULL CONSTRAINT series_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
-  wiki_en    VARCHAR(100) NOT NULL,
-  wiki_cz    VARCHAR(100) NOT NULL,
-  picture    VARCHAR(20)  NOT NULL,
-  note       VARCHAR(100) NOT NULL,
-  position   INTEGER      NOT NULL CONSTRAINT series_position_ck CHECK (position >= 0)
+  csfd          VARCHAR(100) NOT NULL,
+  imdb_code     INTEGER      NOT NULL CONSTRAINT series_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
+  wiki_en       VARCHAR(100) NOT NULL,
+  wiki_cz       VARCHAR(100) NOT NULL,
+  picture       VARCHAR(20)  NOT NULL,
+  note          VARCHAR(100) NOT NULL,
+  position      INTEGER      NOT NULL CONSTRAINT series_position_ck CHECK (position >= 0)
 );
 
 CREATE TABLE serie_genres (
@@ -80,8 +80,8 @@ CREATE TABLE seasons (
   id              INTEGER      NOT NULL CONSTRAINT seasons_pk PRIMARY KEY,
   serie           INTEGER      NOT NULL CONSTRAINT seasons_serie_fk REFERENCES series (id),
   season_number   INTEGER      NOT NULL CONSTRAINT seasons_season_number_ck CHECK (season_number > 0),
-  start_year      INTEGER      NOT NULL CONSTRAINT seasons_start_year_ck CHECK (start_year BETWEEN 1940 AND 2100),
-  end_year        INTEGER      NOT NULL CONSTRAINT seasons_end_year_ck CHECK (end_year BETWEEN 1940 AND 2100),
+  start_year      INTEGER      NOT NULL CONSTRAINT seasons_start_year_ck CHECK (start_year BETWEEN 1930 AND 2100),
+  end_year        INTEGER      NOT NULL CONSTRAINT seasons_end_year_ck CHECK (end_year BETWEEN 1930 AND 2100),
   season_language VARCHAR(2)   NOT NULL CONSTRAINT seasons_season_language_ck CHECK (season_language IN ('CZ', 'EN', 'FR', 'JP', 'SK')),
   note            VARCHAR(100) NOT NULL,
   position        INTEGER      NOT NULL CONSTRAINT seasons_position_ck CHECK (position >= 0),
@@ -89,8 +89,8 @@ CREATE TABLE seasons (
 );
 
 CREATE TABLE season_subtitles (
-  season INTEGER NOT NULL CONSTRAINT season_subtitles_fk REFERENCES seasons (id),
-  subtitles VARCHAR(2) NOT NULL CONSTRAINT season_subtitles_subtitles_ck CHECK (subtitles IN ('CZ', 'EN', 'FR', 'JP'))
+  season    INTEGER    NOT NULL CONSTRAINT season_subtitles_fk REFERENCES seasons (id),
+  subtitles VARCHAR(2) NOT NULL CONSTRAINT season_subtitles_subtitles_ck CHECK (subtitles IN ('CZ', 'EN', 'FR', 'JP', 'SK'))
 );
 
 CREATE TABLE episodes (
@@ -141,23 +141,23 @@ CREATE TABLE songs (
 );
 
 CREATE TABLE programs (
-  id          INTEGER      NOT NULL CONSTRAINT programs_pk PRIMARY KEY,
+  id           INTEGER      NOT NULL CONSTRAINT programs_pk PRIMARY KEY,
   program_name VARCHAR(200) NOT NULL CONSTRAINT programs_program_name_ck CHECK (LENGTH(program_name) > 0),
-  wiki_en     VARCHAR(100) NOT NULL,
-  wiki_cz     VARCHAR(100) NOT NULL,
-  media_count INTEGER      NOT NULL CONSTRAINT programs_media_count_ck CHECK (media_count > 0),
-  crack       BOOLEAN      NOT NULL,
-  serial_key  BOOLEAN      NOT NULL,
-  other_data  VARCHAR(100) NOT NULL,
-  note        VARCHAR(100) NOT NULL,
-  position    INTEGER      NOT NULL CONSTRAINT programs_position_ck CHECK (position >= 0)
+  wiki_en      VARCHAR(100) NOT NULL,
+  wiki_cz      VARCHAR(100) NOT NULL,
+  media_count  INTEGER      NOT NULL CONSTRAINT programs_media_count_ck CHECK (media_count > 0),
+  crack        BOOLEAN      NOT NULL,
+  serial_key   BOOLEAN      NOT NULL,
+  other_data   VARCHAR(100) NOT NULL,
+  note         VARCHAR(100) NOT NULL,
+  position     INTEGER      NOT NULL CONSTRAINT programs_position_ck CHECK (position >= 0)
 );
 
 CREATE TABLE book_categories (
-  id       INTEGER      NOT NULL CONSTRAINT book_categories_pk PRIMARY KEY,
+  id                 INTEGER      NOT NULL CONSTRAINT book_categories_pk PRIMARY KEY,
   book_category_name VARCHAR(200) NOT NULL CONSTRAINT book_categories_book_category_name_ck CHECK (LENGTH(book_category_name) > 0),
-  note     VARCHAR(100) NOT NULL,
-  position INTEGER      NOT NULL CONSTRAINT book_categories_position_ck CHECK (position >= 0)
+  note               VARCHAR(100) NOT NULL,
+  position           INTEGER      NOT NULL CONSTRAINT book_categories_position_ck CHECK (position >= 0)
 );
 
 CREATE TABLE books (
@@ -171,8 +171,8 @@ CREATE TABLE books (
 );
 
 CREATE TABLE book_languages (
-  book INTEGER NOT NULL CONSTRAINT book_languages_book_fk REFERENCES books (id),
-  book_language VARCHAR(2) NOT NULL CONSTRAINT book_languages_book_language_ck CHECK (book_language IN ('CZ', 'EN', 'FR', 'JP'))
+  book          INTEGER    NOT NULL CONSTRAINT book_languages_book_fk REFERENCES books (id),
+  book_language VARCHAR(2) NOT NULL CONSTRAINT book_languages_book_language_ck CHECK (book_language IN ('CZ', 'EN', 'FR', 'JP', 'SK'))
 );
 
 DROP SEQUENCE movies_sq;

@@ -71,8 +71,6 @@ public class BookTOValidatorImpl implements BookTOValidator {
      *                                                               or title is empty string
      *                                                               or languages are null
      *                                                               or languages contain null value
-     *                                                               or category is null
-     *                                                               or category is empty string
      *                                                               or note is null
      *                                                               or TO for book category is null
      *                                                               or TO for book category ID is null
@@ -85,8 +83,6 @@ public class BookTOValidatorImpl implements BookTOValidator {
         Validators.validateNotEmptyString(book.getTitle(), "Title");
         Validators.validateNotNull(book.getLanguages(), "Languages");
         Validators.validateCollectionNotContainNull(book.getLanguages(), "Languages");
-        Validators.validateNotNull(book.getCategory(), "Category");
-        Validators.validateNotEmptyString(book.getCategory(), "Category");
         Validators.validateNotNull(book.getNote(), "Note");
         Validators.validateNotNull(book.getBookCategory(), "TO for book category");
         Validators.validateNotNull(book.getBookCategory().getId(), "TO for book category ID");

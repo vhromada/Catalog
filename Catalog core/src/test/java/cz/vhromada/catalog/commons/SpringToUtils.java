@@ -735,7 +735,6 @@ public final class SpringToUtils {
         book.setId((bookCategoryIndex - 1) * SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + bookIndex);
         book.setAuthor("Book category " + bookCategoryIndex + " Book " + bookIndex + " author");
         book.setTitle("Book category " + bookCategoryIndex + " Book " + bookIndex + " title");
-        book.setCategory("Book category " + bookCategoryIndex + " Book " + bookIndex + " category");
         book.setNote(bookIndex == 3 ? "Book category " + bookCategoryIndex + " Book 3 note" : "");
         book.setPosition(bookIndex - 1);
         book.setBookCategory(getBookCategory(bookCategoryIndex));

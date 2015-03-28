@@ -34,8 +34,6 @@ public interface BookFacade {
      *                                                                        or title is empty string
      *                                                                        or languages are null
      *                                                                        or languages contain null value
-     *                                                                        or category is null
-     *                                                                        or category is empty string
      *                                                                        or note is null
      *                                                                        or TO for book category is null
      *                                                                        or TO for book category ID is null
@@ -56,8 +54,6 @@ public interface BookFacade {
      *                                                                        or title is empty string
      *                                                                        or languages are null
      *                                                                        or languages contain null value
-     *                                                                        or category is null
-     *                                                                        or category is empty string
      *                                                                        or note is null
      *                                                                        or TO for book category is null
      *                                                                        or TO for book category ID is null

@@ -752,7 +752,6 @@ public final class SpringEntitiesUtils {
         book.setId((bookCategoryIndex - 1) * SpringUtils.BOOKS_PER_BOOK_CATEGORY_COUNT + bookIndex);
         book.setAuthor("Book category " + bookCategoryIndex + " Book " + bookIndex + " author");
         book.setTitle("Book category " + bookCategoryIndex + " Book " + bookIndex + " title");
-        book.setCategory("Book category " + bookCategoryIndex + " Book " + bookIndex + " category");
         book.setNote(bookIndex == 3 ? "Book category " + bookCategoryIndex + " Book 3 note" : "");
         book.setPosition(bookIndex - 1);
         book.setBookCategory(getBookCategory(bookCategoryIndex));
@@ -804,7 +803,6 @@ public final class SpringEntitiesUtils {
         book.setAuthor(objectGenerator.generate(String.class));
         book.setTitle(objectGenerator.generate(String.class));
         book.setLanguages(CollectionUtils.newList(objectGenerator.generate(Language.class), objectGenerator.generate(Language.class)));
-        book.setCategory(objectGenerator.generate(String.class));
         book.setNote(objectGenerator.generate(String.class));
         book.setPosition(objectGenerator.generate(Integer.class));
 

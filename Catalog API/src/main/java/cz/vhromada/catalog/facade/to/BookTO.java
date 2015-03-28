@@ -38,11 +38,6 @@ public class BookTO implements Comparable<BookTO>, Serializable {
     private List<Language> languages;
 
     /**
-     * Category
-     */
-    private String category;
-
-    /**
      * Note
      */
     private String note;
@@ -130,24 +125,6 @@ public class BookTO implements Comparable<BookTO>, Serializable {
     }
 
     /**
-     * Returns category.
-     *
-     * @return category
-     */
-    public String getCategory() {
-        return category;
-    }
-
-    /**
-     * Sets a new value to category.
-     *
-     * @param category new value
-     */
-    public void setCategory(final String category) {
-        this.category = category;
-    }
-
-    /**
      * Returns note.
      *
      * @return note
@@ -220,8 +197,8 @@ public class BookTO implements Comparable<BookTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("BookTO [id=%d, author=%s, title=%s, languages=%s, category=%s, note=%s, position=%d, bookCategory=%s]", id, author, title,
-                languages, category, note, position, bookCategory);
+        return String.format("BookTO [id=%d, author=%s, title=%s, languages=%s, note=%s, position=%d, bookCategory=%s]", id, author, title, languages, note,
+                position, bookCategory);
     }
 
     @Override

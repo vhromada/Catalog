@@ -114,28 +114,6 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
     }
 
     /**
-     * Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewBookTOWithNullCategory() {
-        final BookTO book = ToGenerator.newBook(getObjectGenerator());
-        book.setCategory(null);
-
-        bookTOValidator.validateNewBookTO(book);
-    }
-
-    /**
-     * Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with empty string as category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewBookTOWithEmptyCategory() {
-        final BookTO book = ToGenerator.newBook(getObjectGenerator());
-        book.setCategory("");
-
-        bookTOValidator.validateNewBookTO(book);
-    }
-
-    /**
      * Test method for {@link BookTOValidator#validateNewBookTO(BookTO)} with TO for book with null note.
      */
     @Test(expected = ValidationException.class)
@@ -246,28 +224,6 @@ public class BookTOValidatorImplTest extends ObjectGeneratorTest {
     public void testValidateExistingBookTOWithBadLanguages() {
         final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
         book.setLanguages(CollectionUtils.newList(generate(Language.class), null));
-
-        bookTOValidator.validateExistingBookTO(book);
-    }
-
-    /**
-     * Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with null category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingBookTOWithNullCategory() {
-        final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
-        book.setCategory(null);
-
-        bookTOValidator.validateExistingBookTO(book);
-    }
-
-    /**
-     * Test method for {@link BookTOValidator#validateExistingBookTO(BookTO)} with TO for book with empty string as category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingBookTOWithEmptyCategory() {
-        final BookTO book = ToGenerator.newBookWithId(getObjectGenerator());
-        book.setCategory("");
 
         bookTOValidator.validateExistingBookTO(book);
     }

@@ -93,15 +93,18 @@ INSERT INTO programs (id, program_name, wiki_en, wiki_cz, media_count, crack, se
 INSERT INTO book_categories (id, book_category_name, note, position) VALUES (1, 'Book category 1 name', 'Book category 1 note', 0);
 INSERT INTO book_categories (id, book_category_name, note, position) VALUES (2, 'Book category 2 name', '', 1);
 INSERT INTO book_categories (id, book_category_name, note, position) VALUES (3, 'Book category 3 name', '', 2);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (1, 1, 'Book category 1 Book 1 author', 'Book category 1 Book 1 title', 'Book category 1 Book 1 category', '', 0);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (2, 1, 'Book category 1 Book 2 author', 'Book category 1 Book 2 title', 'Book category 1 Book 2 category', '', 1);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (3, 1, 'Book category 1 Book 3 author', 'Book category 1 Book 3 title', 'Book category 1 Book 3 category', 'Book category 1 Book 3 note', 2);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (4, 2, 'Book category 2 Book 1 author', 'Book category 2 Book 1 title', 'Book category 2 Book 1 category', '', 0);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (5, 2, 'Book category 2 Book 2 author', 'Book category 2 Book 2 title', 'Book category 2 Book 2 category', '', 1);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (6, 2, 'Book category 2 Book 3 author', 'Book category 2 Book 3 title', 'Book category 2 Book 3 category', 'Book category 2 Book 3 note', 2);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (7, 3, 'Book category 3 Book 1 author', 'Book category 3 Book 1 title', 'Book category 3 Book 1 category', '', 0);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (8, 3, 'Book category 3 Book 2 author', 'Book category 3 Book 2 title', 'Book category 3 Book 2 category', '', 1);
-INSERT INTO books (id, book_category, author, title, category, note, position) VALUES (9, 3, 'Book category 3 Book 3 author', 'Book category 3 Book 3 title', 'Book category 3 Book 3 category', 'Book category 3 Book 3 note', 2);
+INSERT INTO books (id, book_category, author, title, note, position) VALUES (1, 1, 'Book category 1 Book 1 author', 'Book category 1 Book 1 title', '', 0);
+INSERT INTO books (id, book_category, author, title, note, position) VALUES (2, 1, 'Book category 1 Book 2 author', 'Book category 1 Book 2 title', '', 1);
+INSERT INTO books (id, book_category, author, title, note, position)
+VALUES (3, 1, 'Book category 1 Book 3 author', 'Book category 1 Book 3 title', 'Book category 1 Book 3 note', 2);
+INSERT INTO books (id, book_category, author, title, note, position) VALUES (4, 2, 'Book category 2 Book 1 author', 'Book category 2 Book 1 title', '', 0);
+INSERT INTO books (id, book_category, author, title, note, position) VALUES (5, 2, 'Book category 2 Book 2 author', 'Book category 2 Book 2 title', '', 1);
+INSERT INTO books (id, book_category, author, title, note, position)
+VALUES (6, 2, 'Book category 2 Book 3 author', 'Book category 2 Book 3 title', 'Book category 2 Book 3 note', 2);
+INSERT INTO books (id, book_category, author, title, note, position) VALUES (7, 3, 'Book category 3 Book 1 author', 'Book category 3 Book 1 title', '', 0);
+INSERT INTO books (id, book_category, author, title, note, position) VALUES (8, 3, 'Book category 3 Book 2 author', 'Book category 3 Book 2 title', '', 1);
+INSERT INTO books (id, book_category, author, title, note, position)
+VALUES (9, 3, 'Book category 3 Book 3 author', 'Book category 3 Book 3 title', 'Book category 3 Book 3 note', 2);
 INSERT INTO book_languages (book, book_language) VALUES (1, 'CZ');
 INSERT INTO book_languages (book, book_language) VALUES (2, 'EN');
 INSERT INTO book_languages (book, book_language) VALUES (2, 'JP');

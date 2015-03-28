@@ -206,28 +206,6 @@ public class BookFacadeImplSpringTest {
     }
 
     /**
-     * Test method for {@link BookFacade#add(BookTO)} with book with null category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testAddWithBookWithNullCategory() {
-        final BookTO book = SpringToUtils.newBook(objectGenerator);
-        book.setCategory(null);
-
-        bookFacade.add(book);
-    }
-
-    /**
-     * Test method for {@link BookFacade#add(BookTO)} with book with empty string as category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testAddWithBookWithEmptyCategory() {
-        final BookTO book = SpringToUtils.newBook(objectGenerator);
-        book.setCategory("");
-
-        bookFacade.add(book);
-    }
-
-    /**
      * Test method for {@link BookFacade#add(BookTO)} with book with null note.
      */
     @Test(expected = ValidationException.class)
@@ -363,28 +341,6 @@ public class BookFacadeImplSpringTest {
     public void testUpdateWithBookWithBadLanguages() {
         final BookTO book = SpringToUtils.newBookWithId(objectGenerator);
         book.setLanguages(CollectionUtils.newList(objectGenerator.generate(Language.class), null));
-
-        bookFacade.update(book);
-    }
-
-    /**
-     * Test method for {@link BookFacade#update(BookTO)} with book with null category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithBookWithNullCategory() {
-        final BookTO book = SpringToUtils.newBookWithId(objectGenerator);
-        book.setCategory(null);
-
-        bookFacade.update(book);
-    }
-
-    /**
-     * Test method for {@link BookFacade#update(BookTO)} with book with empty string as category.
-     */
-    @Test(expected = ValidationException.class)
-    public void testUpdateWithBookWithEmptyCategory() {
-        final BookTO book = SpringToUtils.newBookWithId(objectGenerator);
-        book.setCategory("");
 
         bookFacade.update(book);
     }

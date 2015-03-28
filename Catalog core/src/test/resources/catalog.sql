@@ -165,7 +165,6 @@ CREATE TABLE books (
   book_category INTEGER      NOT NULL CONSTRAINT books_book_category_fk REFERENCES book_categories (id),
   author        VARCHAR(200) NOT NULL CONSTRAINT books_author_ck CHECK (LENGTH(author) > 0),
   title         VARCHAR(100) NOT NULL CONSTRAINT books_title_ck CHECK (LENGTH(title) > 0),
-  category      VARCHAR(100) NOT NULL CONSTRAINT books_category_ck CHECK (LENGTH(category) > 0),
   note          VARCHAR(100) NOT NULL,
   position      INTEGER      NOT NULL CONSTRAINT books_position_ck CHECK (position >= 0)
 );

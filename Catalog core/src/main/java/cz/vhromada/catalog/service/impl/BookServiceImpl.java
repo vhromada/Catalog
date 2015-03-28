@@ -158,7 +158,6 @@ public class BookServiceImpl extends AbstractBookService implements BookService 
             newBook.setAuthor(book.getAuthor());
             newBook.setTitle(book.getTitle());
             newBook.setLanguages(new ArrayList<>(book.getLanguages()));
-            newBook.setCategory(book.getCategory());
             newBook.setNote(book.getNote());
             newBook.setBookCategory(book.getBookCategory());
             bookDAO.add(newBook);

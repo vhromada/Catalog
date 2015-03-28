@@ -3,10 +3,10 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<import resource="testDAOContext.xml"/>
+    <import resource="testDAOContext.xml"/>
 
-	<import resource="cacheContext.xml"/>
+    <import resource="cacheContext.xml"/>
 
-	<import resource="serviceContext.xml"/>
+    <import resource="serviceContext.xml"/>
 
 </beans>

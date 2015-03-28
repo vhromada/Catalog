@@ -3,8 +3,8 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<import resource="dozerMappingContext.xml"/>
+    <import resource="dozerMappingContext.xml"/>
 
-	<import resource="testGeneratorContext.xml"/>
+    <import resource="testGeneratorContext.xml"/>
 
 </beans>

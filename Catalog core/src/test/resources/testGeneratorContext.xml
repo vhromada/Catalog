@@ -3,25 +3,25 @@
        xmlns:utils="http://www.springframework.org/schema/util"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	   					   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+                              http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-	<bean id="objectGeneratorConfiguration" class="cz.vhromada.generator.configuration.Configuration">
-		<property name="startingYear">
-			<utils:constant static-field="cz.vhromada.catalog.commons.Constants.MIN_YEAR"/>
-		</property>
-		<property name="endingYear">
-			<utils:constant static-field="cz.vhromada.catalog.commons.Constants.CURRENT_YEAR"/>
-		</property>
-		<property name="rules">
-			<list>
-				<bean class="cz.vhromada.catalog.commons.TimeRule"/>
-			</list>
-		</property>
+    <bean id="objectGeneratorConfiguration" class="cz.vhromada.generator.configuration.Configuration">
+        <property name="startingYear">
+            <utils:constant static-field="cz.vhromada.catalog.commons.Constants.MIN_YEAR"/>
+        </property>
+        <property name="endingYear">
+            <utils:constant static-field="cz.vhromada.catalog.commons.Constants.CURRENT_YEAR"/>
+        </property>
+        <property name="rules">
+            <list>
+                <bean class="cz.vhromada.catalog.commons.TimeRule"/>
+            </list>
+        </property>
         <property name="collectionSize" value="2"/>
-	</bean>
+    </bean>
 
-	<bean id="objectGenerator" class="cz.vhromada.generator.ObjectGenerator">
-		<constructor-arg ref="objectGeneratorConfiguration"/>
-	</bean>
+    <bean id="objectGenerator" class="cz.vhromada.generator.ObjectGenerator">
+        <constructor-arg ref="objectGeneratorConfiguration"/>
+    </bean>
 
 </beans>

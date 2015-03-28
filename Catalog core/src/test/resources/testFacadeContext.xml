@@ -3,8 +3,8 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<import resource="testServiceContext.xml"/>
+    <import resource="testServiceContext.xml"/>
 
-	<import resource="facadeContext.xml"/>
+    <import resource="facadeContext.xml"/>
 
 </beans>

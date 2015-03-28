@@ -2,27 +2,27 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>cz.vhromada.catalog</groupId>
-		<artifactId>catalog</artifactId>
-		<version>1.2.0</version>
-	</parent>
+    <parent>
+        <groupId>cz.vhromada.catalog</groupId>
+        <artifactId>catalog</artifactId>
+        <version>1.2.0</version>
+    </parent>
 
-	<artifactId>catalog-common</artifactId>
+    <artifactId>catalog-common</artifactId>
 
-	<name>Catalog common</name>
+    <name>Catalog common</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>cz.vhromada.validators</groupId>
-			<artifactId>validators</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cz.vhromada.test</groupId>
-			<artifactId>deep-assert</artifactId>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>cz.vhromada.validators</groupId>
+            <artifactId>validators</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cz.vhromada.test</groupId>
+            <artifactId>deep-assert</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -3,9 +3,9 @@
          xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
          updateCheck="false">
 
-	<diskStore path="java.io.tmpdir"/>
+    <diskStore path="java.io.tmpdir"/>
 
-	<cache name="movieCache"
+    <cache name="movieCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
@@ -14,7 +14,7 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="serieCache"
+    <cache name="serieCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
@@ -23,7 +23,7 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="gameCache"
+    <cache name="gameCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
@@ -32,7 +32,7 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="musicCache"
+    <cache name="musicCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
@@ -41,7 +41,7 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="programCache"
+    <cache name="programCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
@@ -50,7 +50,7 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="bookCache"
+    <cache name="bookCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
@@ -59,7 +59,7 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-	<cache name="genreCache"
+    <cache name="genreCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"

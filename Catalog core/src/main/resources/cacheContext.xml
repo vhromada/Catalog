@@ -3,17 +3,17 @@
        xmlns:ehcache="http://www.springframework.org/schema/cache"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-     					   http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+                            http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<ehcache:annotation-driven cache-manager="cacheManager"/>
+    <ehcache:annotation-driven cache-manager="cacheManager"/>
 
-	<bean id="cacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-		<property name="configLocation" value="classpath:ehcache.xml"/>
-		<property name="shared" value="true"/>
-	</bean>
+    <bean id="cacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+        <property name="shared" value="true"/>
+    </bean>
 
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-		<property name="cacheManager" ref="cacheManagerFactoryBean"/>
-	</bean>
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="cacheManagerFactoryBean"/>
+    </bean>
 
 </beans>

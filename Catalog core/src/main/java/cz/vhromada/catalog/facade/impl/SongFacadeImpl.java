@@ -18,6 +18,7 @@ import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,7 +128,7 @@ public class SongFacadeImpl implements SongFacade {
     @Autowired
     public SongFacadeImpl(final MusicService musicService,
             final SongService songService,
-            final Converter converter,
+            @Qualifier("catalogDozerConverter") final Converter converter,
             final MusicTOValidator musicTOValidator,
             final SongTOValidator songTOValidator) {
         Validators.validateArgumentNotNull(musicService, MUSIC_SERVICE_ARGUMENT);

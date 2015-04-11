@@ -14,6 +14,7 @@ import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,7 +94,7 @@ public class BookCategoryFacadeImpl implements BookCategoryFacade {
      */
     @Autowired
     public BookCategoryFacadeImpl(final BookCategoryService bookCategoryService,
-            final Converter converter,
+            @Qualifier("catalogDozerConverter") final Converter converter,
             final BookCategoryTOValidator bookCategoryTOValidator) {
         Validators.validateArgumentNotNull(bookCategoryService, BOOK_CATEGORY_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);

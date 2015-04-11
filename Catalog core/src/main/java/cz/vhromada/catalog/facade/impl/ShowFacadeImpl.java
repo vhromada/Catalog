@@ -17,6 +17,7 @@ import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,7 +115,7 @@ public class ShowFacadeImpl implements ShowFacade {
     @Autowired
     public ShowFacadeImpl(final ShowService showService,
             final GenreService genreService,
-            final Converter converter,
+            @Qualifier("catalogDozerConverter") final Converter converter,
             final ShowTOValidator showTOValidator) {
         Validators.validateArgumentNotNull(showService, SHOW_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);

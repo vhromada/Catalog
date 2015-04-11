@@ -14,6 +14,7 @@ import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,7 +94,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Autowired
     public GenreFacadeImpl(final GenreService genreService,
-            final Converter converter,
+            @Qualifier("catalogDozerConverter") final Converter converter,
             final GenreTOValidator genreTOValidator) {
         Validators.validateArgumentNotNull(genreService, GENRE_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);

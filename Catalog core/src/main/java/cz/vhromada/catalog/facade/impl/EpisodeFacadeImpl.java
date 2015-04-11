@@ -18,6 +18,7 @@ import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,7 +128,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Autowired
     public EpisodeFacadeImpl(final SeasonService seasonService,
             final EpisodeService episodeService,
-            final Converter converter,
+            @Qualifier("catalogDozerConverter") final Converter converter,
             final SeasonTOValidator seasonTOValidator,
             final EpisodeTOValidator episodeTOValidator) {
         Validators.validateArgumentNotNull(seasonService, SEASON_SERVICE_ARGUMENT);

@@ -14,6 +14,7 @@ import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,7 +94,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Autowired
     public ProgramFacadeImpl(final ProgramService programService,
-            final Converter converter,
+            @Qualifier("catalogDozerConverter") final Converter converter,
             final ProgramTOValidator programTOValidator) {
         Validators.validateArgumentNotNull(programService, PROGRAM_SERVICE_ARGUMENT);
         Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);

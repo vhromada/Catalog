@@ -191,8 +191,8 @@ public class ProgramServiceImpl extends AbstractService<Program> implements Prog
             newProgram.setWikiEn(program.getWikiEn());
             newProgram.setWikiCz(program.getWikiCz());
             newProgram.setMediaCount(program.getMediaCount());
-            newProgram.setCrack(program.hasCrack());
-            newProgram.setSerialKey(program.hasSerialKey());
+            newProgram.setCrack(program.getCrack());
+            newProgram.setSerialKey(program.getSerialKey());
             newProgram.setOtherData(program.getOtherData());
             newProgram.setNote(program.getNote());
             programDAO.add(newProgram);

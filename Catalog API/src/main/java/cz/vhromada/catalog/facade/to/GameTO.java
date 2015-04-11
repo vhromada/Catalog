@@ -186,7 +186,7 @@ public class GameTO implements Comparable<GameTO>, Serializable {
      *
      * @return true if there is crack
      */
-    public boolean hasCrack() {
+    public boolean getCrack() {
         return crack;
     }
 
@@ -204,7 +204,7 @@ public class GameTO implements Comparable<GameTO>, Serializable {
      *
      * @return true if there is serial key
      */
-    public boolean hasSerialKey() {
+    public boolean getSerialKey() {
         return serialKey;
     }
 
@@ -222,7 +222,7 @@ public class GameTO implements Comparable<GameTO>, Serializable {
      *
      * @return true if there is patch
      */
-    public boolean hasPatch() {
+    public boolean getPatch() {
         return patch;
     }
 
@@ -240,7 +240,7 @@ public class GameTO implements Comparable<GameTO>, Serializable {
      *
      * @return true if there is trainer
      */
-    public boolean hasTrainer() {
+    public boolean getTrainer() {
         return trainer;
     }
 
@@ -258,7 +258,7 @@ public class GameTO implements Comparable<GameTO>, Serializable {
      *
      * @return true if there is data for trainer
      */
-    public boolean hasTrainerData() {
+    public boolean getTrainerData() {
         return trainerData;
     }
 
@@ -276,7 +276,7 @@ public class GameTO implements Comparable<GameTO>, Serializable {
      *
      * @return true if there is editor
      */
-    public boolean hasEditor() {
+    public boolean getEditor() {
         return editor;
     }
 
@@ -294,7 +294,7 @@ public class GameTO implements Comparable<GameTO>, Serializable {
      *
      * @return true if there are saves
      */
-    public boolean haveSaves() {
+    public boolean getSaves() {
         return saves;
     }
 

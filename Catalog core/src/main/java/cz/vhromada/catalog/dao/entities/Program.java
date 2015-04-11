@@ -185,7 +185,7 @@ public class Program implements Serializable {
      *
      * @return true if there is crack
      */
-    public boolean hasCrack() {
+    public boolean getCrack() {
         return crack;
     }
 
@@ -203,7 +203,7 @@ public class Program implements Serializable {
      *
      * @return true if there is serial key
      */
-    public boolean hasSerialKey() {
+    public boolean getSerialKey() {
         return serialKey;
     }
 

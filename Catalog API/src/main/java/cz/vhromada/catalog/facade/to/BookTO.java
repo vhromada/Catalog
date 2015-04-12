@@ -28,7 +28,7 @@ public class BookTO implements Comparable<BookTO>, Serializable {
     private String author;
 
     /**
-     * Name
+     * Title
      */
     private String title;
 

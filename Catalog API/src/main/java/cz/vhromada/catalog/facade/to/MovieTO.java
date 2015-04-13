@@ -12,6 +12,9 @@ import cz.vhromada.catalog.commons.Language;
  */
 public class MovieTO implements Comparable<MovieTO>, Serializable {
 
+    /**
+     * SerialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
     /**

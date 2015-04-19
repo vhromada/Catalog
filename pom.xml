@@ -56,13 +56,13 @@
             <dependency>
                 <groupId>cz.vhromada.converters</groupId>
                 <artifactId>converters-dozer</artifactId>
-                <version>1.1.0</version>
+                <version>1.1.2</version>
             </dependency>
             <!--Validators-->
             <dependency>
                 <groupId>cz.vhromada.validators</groupId>
                 <artifactId>validators</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.1</version>
             </dependency>
             <!--Spring-->
             <dependency>
@@ -147,14 +147,14 @@
             <dependency>
                 <groupId>cz.vhromada.test</groupId>
                 <artifactId>deep-assert</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.1</version>
                 <scope>test</scope>
             </dependency>
             <!--Object generator-->
             <dependency>
                 <groupId>cz.vhromada.generator</groupId>
                 <artifactId>object-generator</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.1</version>
                 <scope>test</scope>
             </dependency>
             <!--Mockito-->

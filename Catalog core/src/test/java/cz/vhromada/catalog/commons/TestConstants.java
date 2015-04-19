@@ -42,6 +42,12 @@ public final class TestConstants {
      */
     private static final Logger logger = LoggerFactory.getLogger(TestConstants.class);
 
+    /**
+     * Creates a new instance of TestConstants.
+     */
+    private TestConstants() {
+    }
+
     static {
         try {
             final Field length = Time.class.getDeclaredField("length");
@@ -50,12 +56,6 @@ public final class TestConstants {
         } catch (IllegalAccessException | NoSuchFieldException ex) {
             logger.error("Time with negative length can't be created.", ex);
         }
-    }
-
-    /**
-     * Creates a new instance of TestConstants.
-     */
-    private TestConstants() {
     }
 
 }

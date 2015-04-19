@@ -224,7 +224,7 @@ public final class SpringToUtils {
     /**
      * Returns TO for season for indexes.
      *
-     * @param showIndex  TO for show index
+     * @param showIndex   TO for show index
      * @param seasonIndex TO for season index
      * @return TO for season for indexes
      */
@@ -301,7 +301,7 @@ public final class SpringToUtils {
     /**
      * Returns episodes.
      *
-     * @param show  index of TO for show
+     * @param show   index of TO for show
      * @param season index of TO for season
      * @return episodes
      */
@@ -316,7 +316,7 @@ public final class SpringToUtils {
     /**
      * Returns TO for episode for indexes.
      *
-     * @param showIndex   TO for show index
+     * @param showIndex    TO for show index
      * @param seasonIndex  TO for season index
      * @param episodeIndex TO for episode index
      * @return TO for episode for indexes

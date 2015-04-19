@@ -239,7 +239,7 @@ public final class SpringEntitiesUtils {
     /**
      * Returns season for indexes.
      *
-     * @param showIndex  show index
+     * @param showIndex   show index
      * @param seasonIndex season index
      * @return season for indexes
      */
@@ -317,7 +317,7 @@ public final class SpringEntitiesUtils {
     /**
      * Returns episodes.
      *
-     * @param show  index of show
+     * @param show   index of show
      * @param season index of season
      * @return episodes
      */
@@ -332,7 +332,7 @@ public final class SpringEntitiesUtils {
     /**
      * Returns episode for indexes.
      *
-     * @param showIndex   show index
+     * @param showIndex    show index
      * @param seasonIndex  season index
      * @param episodeIndex episode index
      * @return episode for indexes

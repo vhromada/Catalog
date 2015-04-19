@@ -20,7 +20,7 @@
     <logger name="ch.qos" level="warn"/>
     <logger name="net.sf.ehcache" level="warn"/>
     <logger name="org.dozer" level="warn"/>
-    <logger name="cz.vhromada.catalog" level="all"/>
+    <logger name="cz.vhromada" level="all"/>
     <root level="all">
         <appender-ref ref="FILE"/>
         <appender-ref ref="CONSOLE"/>

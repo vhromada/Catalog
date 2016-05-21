@@ -1,17 +1,15 @@
 package cz.vhromada.catalog.dao.impl;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -21,17 +19,15 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.MovieUtils;
 import cz.vhromada.catalog.dao.MovieDAO;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
-import cz.vhromada.test.DeepAsserts;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
@@ -41,7 +37,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MovieDAOImplTest extends ObjectGeneratorTest {
+public class MovieDAOImplTest {
 
     /**
      * Instance of {@link EntityManager}
@@ -72,7 +68,7 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
      * Test method for {@link MovieDAOImpl#MovieDAOImpl(EntityManager)} with null entity manager.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullEntityManager() {
+    public void testConstructor_NullEntityManager() {
         new MovieDAOImpl(null);
     }
 
@@ -81,11 +77,12 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
      */
     @Test
     public void testGetMovies() {
-        final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
         when(entityManager.createNamedQuery(anyString(), eq(Movie.class))).thenReturn(moviesQuery);
-        when(moviesQuery.getResultList()).thenReturn(movies);
+        when(moviesQuery.getResultList()).thenReturn(CollectionUtils.newList(MovieUtils.newMovie(MovieUtils.ID), MovieUtils.newMovie(2)));
 
-        DeepAsserts.assertEquals(movies, movieDAO.getMovies());
+        final List<Movie> movies = movieDAO.getMovies();
+
+        MovieUtils.assertMoviesDeepEquals(CollectionUtils.newList(MovieUtils.newMovie(MovieUtils.ID), MovieUtils.newMovie(2)), movies);
 
         verify(entityManager).createNamedQuery(Movie.SELECT_MOVIES, Movie.class);
         verify(moviesQuery).getResultList();
@@ -95,34 +92,25 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link MovieDAO#getMovies()} with exception in persistence.
      */
-    @Test
-    public void testGetMoviesWithPersistenceException() {
+    @Test(expected = DataStorageException.class)
+    public void testGetMovies_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Movie.class));
 
-        try {
-            movieDAO.getMovies();
-            fail("Can't get movies with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).createNamedQuery(Movie.SELECT_MOVIES, Movie.class);
-        verifyNoMoreInteractions(entityManager);
-        verifyZeroInteractions(moviesQuery);
+        movieDAO.getMovies();
     }
 
     /**
      * Test method for {@link MovieDAO#getMovie(Integer)} with existing movie.
      */
     @Test
-    public void testGetMovieWithExistingMovie() {
-        final int id = generate(Integer.class);
-        final Movie movie = mock(Movie.class);
-        when(entityManager.find(eq(Movie.class), anyInt())).thenReturn(movie);
+    public void testGetMovie_ExistingMovie() {
+        when(entityManager.find(eq(Movie.class), anyInt())).thenReturn(MovieUtils.newMovie(MovieUtils.ID));
 
-        DeepAsserts.assertEquals(movie, movieDAO.getMovie(id));
+        final Movie movie = movieDAO.getMovie(MovieUtils.ID);
 
-        verify(entityManager).find(Movie.class, id);
+        MovieUtils.assertMovieDeepEquals(MovieUtils.newMovie(MovieUtils.ID), movie);
+
+        verify(entityManager).find(Movie.class, MovieUtils.ID);
         verifyNoMoreInteractions(entityManager);
     }
 
@@ -130,10 +118,12 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
      * Test method for {@link MovieDAO#getMovie(Integer)} with not existing movie.
      */
     @Test
-    public void testGetMovieWithNotExistingMovie() {
+    public void testGetMovie_NotExistingMovie() {
         when(entityManager.find(eq(Movie.class), anyInt())).thenReturn(null);
 
-        assertNull(movieDAO.getMovie(Integer.MAX_VALUE));
+        final Movie movie = movieDAO.getMovie(Integer.MAX_VALUE);
+
+        assertNull(movie);
 
         verify(entityManager).find(Movie.class, Integer.MAX_VALUE);
         verifyNoMoreInteractions(entityManager);
@@ -142,34 +132,19 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link MovieDAO#getMovie(Integer)} with null argument.
      */
-    @Test
-    public void testGetMovieWithNullArgument() {
-        try {
-            movieDAO.getMovie(null);
-            fail("Can't get movie with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetMovie_NullArgument() {
+        movieDAO.getMovie(null);
     }
 
     /**
      * Test method for {@link MovieDAO#getMovie(Integer)} with exception in persistence.
      */
-    @Test
-    public void testGetMovieWithPersistenceException() {
+    @Test(expected = DataStorageException.class)
+    public void testGetMovie_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Movie.class), anyInt());
 
-        try {
-            movieDAO.getMovie(Integer.MAX_VALUE);
-            fail("Can't get movie with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).find(Movie.class, Integer.MAX_VALUE);
-        verifyNoMoreInteractions(entityManager);
+        movieDAO.getMovie(Integer.MAX_VALUE);
     }
 
     /**
@@ -177,13 +152,13 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
      */
     @Test
     public void testAdd() {
-        final Movie movie = generate(Movie.class);
-        final int id = generate(Integer.class);
-        doAnswer(setId(id)).when(entityManager).persist(any(Movie.class));
+        final Movie movie = MovieUtils.newMovie(MovieUtils.ID);
+        doAnswer(setId(MovieUtils.ID)).when(entityManager).persist(any(Movie.class));
 
         movieDAO.add(movie);
-        DeepAsserts.assertEquals(id, movie.getId());
-        DeepAsserts.assertEquals(id - 1, movie.getPosition());
+
+        assertEquals(MovieUtils.ID, movie.getId());
+        assertEquals(MovieUtils.ID - 1, movie.getPosition());
 
         verify(entityManager).persist(movie);
         verify(entityManager).merge(movie);
@@ -193,35 +168,19 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link MovieDAO#add(Movie)} with null argument.
      */
-    @Test
-    public void testAddWithNullArgument() {
-        try {
-            movieDAO.add(null);
-            fail("Can't add movie with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testAdd_NullArgument() {
+        movieDAO.add(null);
     }
 
     /**
      * Test method for {@link MovieDAO#add(Movie)} with exception in persistence.
      */
-    @Test
-    public void testAddWithPersistenceException() {
-        final Movie movie = generate(Movie.class);
+    @Test(expected = DataStorageException.class)
+    public void testAdd_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).persist(any(Movie.class));
 
-        try {
-            movieDAO.add(movie);
-            fail("Can't add movie with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).persist(movie);
-        verifyNoMoreInteractions(entityManager);
+        movieDAO.add(MovieUtils.newMovie(MovieUtils.ID));
     }
 
     /**
@@ -229,7 +188,7 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
      */
     @Test
     public void testUpdate() {
-        final Movie movie = generate(Movie.class);
+        final Movie movie = MovieUtils.newMovie(MovieUtils.ID);
 
         movieDAO.update(movie);
 
@@ -240,43 +199,27 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link MovieDAO#update(Movie)} with null argument.
      */
-    @Test
-    public void testUpdateWithNullArgument() {
-        try {
-            movieDAO.update(null);
-            fail("Can't update movie with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdate_NullArgument() {
+        movieDAO.update(null);
     }
 
     /**
      * Test method for {@link MovieDAO#update(Movie)} with exception in persistence.
      */
-    @Test
-    public void testUpdateWithPersistenceException() {
-        final Movie movie = generate(Movie.class);
+    @Test(expected = DataStorageException.class)
+    public void testUpdate_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).merge(any(Movie.class));
 
-        try {
-            movieDAO.update(movie);
-            fail("Can't update movie with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).merge(movie);
-        verifyNoMoreInteractions(entityManager);
+        movieDAO.update(MovieUtils.newMovie(MovieUtils.ID));
     }
 
     /**
      * Test method for {@link MovieDAO#remove(Movie)} with managed movie.
      */
     @Test
-    public void testRemoveWithManagedMovie() {
-        final Movie movie = generate(Movie.class);
+    public void testRemove_ManagedMovie() {
+        final Movie movie = MovieUtils.newMovie(MovieUtils.ID);
         when(entityManager.contains(any(Movie.class))).thenReturn(true);
 
         movieDAO.remove(movie);
@@ -290,8 +233,8 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
      * Test method for {@link MovieDAO#remove(Movie)} with not managed movie.
      */
     @Test
-    public void testRemoveWithNotManagedMovie() {
-        final Movie movie = generate(Movie.class);
+    public void testRemove_NotManagedMovie() {
+        final Movie movie = MovieUtils.newMovie(MovieUtils.ID);
         when(entityManager.contains(any(Movie.class))).thenReturn(false);
         when(entityManager.getReference(eq(Movie.class), anyInt())).thenReturn(movie);
 
@@ -306,35 +249,19 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link MovieDAO#remove(Movie)} with null argument.
      */
-    @Test
-    public void testRemoveWithNullArgument() {
-        try {
-            movieDAO.remove(null);
-            fail("Can't remove movie with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemove_NullArgument() {
+        movieDAO.remove(null);
     }
 
     /**
      * Test method for {@link MovieDAO#remove(Movie)} with exception in persistence.
      */
-    @Test
-    public void testRemoveWithPersistenceException() {
-        final Movie movie = generate(Movie.class);
+    @Test(expected = DataStorageException.class)
+    public void testRemove_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).contains(any(Movie.class));
 
-        try {
-            movieDAO.remove(movie);
-            fail("Can't remove movie with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).contains(movie);
-        verifyNoMoreInteractions(entityManager);
+        movieDAO.remove(MovieUtils.newMovie(MovieUtils.ID));
     }
 
     /**
@@ -344,14 +271,9 @@ public class MovieDAOImplTest extends ObjectGeneratorTest {
      * @return mocked answer
      */
     private static Answer<Void> setId(final Integer id) {
-        return new Answer<Void>() {
-
-            @Override
-            public Void answer(final InvocationOnMock invocation) {
-                ((Movie) invocation.getArguments()[0]).setId(id);
-                return null;
-            }
-
+        return invocation -> {
+            ((Movie) invocation.getArguments()[0]).setId(id);
+            return null;
         };
     }
 

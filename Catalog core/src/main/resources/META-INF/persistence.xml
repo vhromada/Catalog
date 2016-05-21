@@ -14,8 +14,6 @@
         <class>cz.vhromada.catalog.dao.entities.Music</class>
         <class>cz.vhromada.catalog.dao.entities.Song</class>
         <class>cz.vhromada.catalog.dao.entities.Program</class>
-        <class>cz.vhromada.catalog.dao.entities.Book</class>
-        <class>cz.vhromada.catalog.dao.entities.BookCategory</class>
         <class>cz.vhromada.catalog.dao.entities.Genre</class>
     </persistence-unit>
 

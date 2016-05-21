@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -20,10 +18,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "episodes")
-@NamedQuery(name = Episode.FIND_BY_SEASON, query = "SELECT e FROM Episode e WHERE e.season.id = :season ORDER BY e.position, e.id")
+@NamedQuery(name = Episode.FIND_BY_SEASON, query = "SELECT e FROM Episode e WHERE e.season = :season ORDER BY e.position, e.id")
 public class Episode implements Serializable {
 
-    /** Name for query - select count of episodes */
     /**
      * Name for query - find by season
      */
@@ -73,9 +70,7 @@ public class Episode implements Serializable {
     /**
      * Season
      */
-    @ManyToOne
-    @JoinColumn(name = "season", referencedColumnName = "id")
-    private Season season;
+    private Integer season;
 
     /**
      * Returns ID.
@@ -190,7 +185,7 @@ public class Episode implements Serializable {
      *
      * @return season
      */
-    public Season getSeason() {
+    public Integer getSeason() {
         return season;
     }
 
@@ -199,7 +194,7 @@ public class Episode implements Serializable {
      *
      * @param season new value
      */
-    public void setSeason(final Season season) {
+    public void setSeason(final Integer season) {
         this.season = season;
     }
 
@@ -222,7 +217,7 @@ public class Episode implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Episode [id=%d, number=%d, name=%s, length=%d, note=%s, position=%d, season=%s]", id, number, name, length, note, position,
+        return String.format("Episode [id=%d, number=%d, name=%s, length=%d, note=%s, position=%d, season=%d]", id, number, name, length, note, position,
                 season);
     }
 

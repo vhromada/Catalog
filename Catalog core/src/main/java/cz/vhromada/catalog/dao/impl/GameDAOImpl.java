@@ -1,15 +1,11 @@
 package cz.vhromada.catalog.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 
 import cz.vhromada.catalog.dao.GameDAO;
 import cz.vhromada.catalog.dao.entities.Game;
-import cz.vhromada.catalog.dao.exceptions.DataStorageException;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,32 +16,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("gameDAO")
-public class GameDAOImpl implements GameDAO {
-
-    /**
-     * Entity manager argument
-     */
-    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
-
-    /**
-     * Game argument
-     */
-    private static final String GAME_ARGUMENT = "Game";
-
-    /**
-     * ID argument
-     */
-    private static final String ID_ARGUMENT = "ID";
-
-    /**
-     * Message for {@link DataStorageException}
-     */
-    private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
-
-    /**
-     * Entity manager
-     */
-    private EntityManager entityManager;
+public class GameDAOImpl extends AbstractDAO<Game> implements GameDAO {
 
     /**
      * Creates a new instance of GameDAOImpl.
@@ -55,87 +26,51 @@ public class GameDAOImpl implements GameDAO {
      */
     @Autowired
     public GameDAOImpl(final EntityManager entityManager) {
-        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
-
-        this.entityManager = entityManager;
+        super(entityManager, Game.class, "Game");
     }
 
     /**
-     * @throws DataStorageException {@inheritDoc}
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException {@inheritDoc}
      */
     @Override
     public List<Game> getGames() {
-        try {
-            return new ArrayList<>(entityManager.createNamedQuery(Game.SELECT_GAMES, Game.class).getResultList());
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        return getData(Game.SELECT_GAMES);
     }
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws DataStorageException     {@inheritDoc}
+     * @throws IllegalArgumentException                                {@inheritDoc}
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException {@inheritDoc}
      */
     @Override
     public Game getGame(final Integer id) {
-        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
-
-        try {
-            return entityManager.find(Game.class, id);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        return getItem(id);
     }
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws DataStorageException     {@inheritDoc}
+     * @throws IllegalArgumentException                                {@inheritDoc}
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException {@inheritDoc}
      */
     @Override
     public void add(final Game game) {
-        Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
-
-        try {
-            entityManager.persist(game);
-            game.setPosition(game.getId() - 1);
-            entityManager.merge(game);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        addItem(game);
     }
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws DataStorageException     {@inheritDoc}
+     * @throws IllegalArgumentException                                {@inheritDoc}
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException {@inheritDoc}
      */
     @Override
     public void update(final Game game) {
-        Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
-
-        try {
-            entityManager.merge(game);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        updateItem(game);
     }
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws DataStorageException     {@inheritDoc}
+     * @throws IllegalArgumentException                                {@inheritDoc}
+     * @throws cz.vhromada.catalog.dao.exceptions.DataStorageException {@inheritDoc}
      */
     @Override
     public void remove(final Game game) {
-        Validators.validateArgumentNotNull(game, GAME_ARGUMENT);
-
-        try {
-            if (entityManager.contains(game)) {
-                entityManager.remove(game);
-            } else {
-                entityManager.remove(entityManager.getReference(Game.class, game.getId()));
-            }
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        removeItem(game);
     }
 
 }

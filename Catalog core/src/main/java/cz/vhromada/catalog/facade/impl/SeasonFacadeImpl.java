@@ -174,7 +174,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
             Validators.validateExists(show, SHOW_TO_ARGUMENT);
 
             final Season seasonEntity = converter.convert(season, Season.class);
-            seasonEntity.setShow(show);
+//            seasonEntity.setShow(show);
             seasonService.add(seasonEntity);
             if (seasonEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -201,7 +201,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
             final Show show = showService.getShow(season.getShow().getId());
             Validators.validateExists(show, SHOW_TO_ARGUMENT);
 
-            seasonEntity.setShow(show);
+//            seasonEntity.setShow(show);
             seasonService.update(seasonEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -258,7 +258,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());
             Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
-            final List<Season> seasons = seasonService.findSeasonsByShow(seasonEntity.getShow());
+            final List<Season> seasons = null;//seasonService.findSeasonsByShow(seasonEntity.getShow());
             Validators.validateMoveUp(seasons, seasonEntity, SEASON_ARGUMENT);
 
             seasonService.moveUp(seasonEntity);
@@ -279,7 +279,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
         try {
             final Season seasonEntity = seasonService.getSeason(season.getId());
             Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
-            final List<Season> seasons = seasonService.findSeasonsByShow(seasonEntity.getShow());
+            final List<Season> seasons = null;//seasonService.findSeasonsByShow(seasonEntity.getShow());
             Validators.validateMoveDown(seasons, seasonEntity, SEASON_ARGUMENT);
 
             seasonService.moveDown(seasonEntity);

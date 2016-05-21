@@ -50,15 +50,6 @@
            timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="bookCache"
-           eternal="false"
-           maxElementsInMemory="1000"
-           overflowToDisk="false"
-           diskPersistent="false"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="300"
-           memoryStoreEvictionPolicy="LRU"/>
-
     <cache name="genreCache"
            eternal="false"
            maxElementsInMemory="1000"

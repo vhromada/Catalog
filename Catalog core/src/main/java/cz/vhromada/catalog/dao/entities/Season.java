@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -31,7 +30,7 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "seasons")
-@NamedQuery(name = Season.FIND_BY_SHOW, query = "SELECT s FROM Season s WHERE s.show.id = :show ORDER BY s.position, s.id")
+@NamedQuery(name = Season.FIND_BY_SHOW, query = "SELECT s FROM Season s WHERE s.show = :show ORDER BY s.position, s.id")
 public class Season implements Serializable {
 
     /**
@@ -99,9 +98,7 @@ public class Season implements Serializable {
     /**
      * Show
      */
-    @ManyToOne
-    @JoinColumn(name = "tv_show", referencedColumnName = "id")
-    private Show show;
+    private Integer show;
 
     /**
      * Returns ID.
@@ -253,7 +250,7 @@ public class Season implements Serializable {
      *
      * @return show
      */
-    public Show getShow() {
+    public Integer getShow() {
         return show;
     }
 
@@ -262,7 +259,7 @@ public class Season implements Serializable {
      *
      * @param show new value
      */
-    public void setShow(final Show show) {
+    public void setShow(final Integer show) {
         this.show = show;
     }
 
@@ -285,7 +282,7 @@ public class Season implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, show=%s]", id, number,
+        return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, show=%d]", id, number,
                 startYear, endYear, language, subtitles, note, position, show);
     }
 

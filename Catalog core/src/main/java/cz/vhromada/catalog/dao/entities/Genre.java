@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.dao.entities;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,8 +16,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "genres")
-@NamedQuery(name = Genre.SELECT_GENRES, query = "SELECT g FROM Genre g ORDER BY g.id")
-public class Genre implements Serializable {
+@NamedQuery(name = Genre.SELECT_GENRES, query = "SELECT g FROM Genre g ORDER BY g.position, g.id")
+public class Genre implements Movable {
 
     /**
      * Name for query - select genres
@@ -46,19 +44,16 @@ public class Genre implements Serializable {
     private String name;
 
     /**
-     * Returns ID.
-     *
-     * @return ID
+     * Position
      */
+    private int position;
+
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -82,15 +77,26 @@ public class Genre implements Serializable {
     }
 
     @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(final int position) {
+        this.position = position;
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Genre) || id == null) {
             return false;
         }
-        final Genre genre = (Genre) obj;
-        return id.equals(genre.id);
+
+        return id.equals(((Genre) obj).id);
     }
 
     @Override
@@ -100,7 +106,7 @@ public class Genre implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Genre [id=%d, name=%s]", id, name);
+        return String.format("Genre [id=%d, name=%s, position=%d]", id, name, position);
     }
 
 }

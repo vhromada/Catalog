@@ -7,6 +7,4 @@
 
     <import resource="daoContext.xml"/>
 
-    <import resource="testGeneratorContext.xml"/>
-
 </beans>

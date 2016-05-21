@@ -170,7 +170,7 @@ public abstract class AbstractShowService extends AbstractInnerService<Show, Sea
      * @param season season
      */
     protected void addSeasonToCache(final Season season) {
-        addInnerObjectToListCache(showCache, SEASONS_CACHE_KEY + season.getShow().getId(), season);
+//        addInnerObjectToListCache(showCache, SEASONS_CACHE_KEY + season.getShow().getId(), season);
         addInnerObjectToCache(showCache, SEASON_CACHE_KEY + season.getId(), season);
     }
 
@@ -180,7 +180,7 @@ public abstract class AbstractShowService extends AbstractInnerService<Show, Sea
      * @param episode episode
      */
     protected void addEpisodeToCache(final Episode episode) {
-        final String keyList = EPISODES_CACHE_KEY + episode.getSeason().getId();
+        final String keyList = null;//EPISODES_CACHE_KEY + episode.getSeason().getId();
         final CacheValue<List<Episode>> cacheDataList = getObjectFromCache(showCache, keyList);
         if (cacheDataList != null) {
             final List<Episode> data = cacheDataList.getValue();
@@ -200,7 +200,7 @@ public abstract class AbstractShowService extends AbstractInnerService<Show, Sea
      * @param episode episode
      */
     protected void removeEpisodeFromCache(final Episode episode) {
-        final String key = EPISODES_CACHE_KEY + episode.getSeason().getId();
+        final String key = null;//EPISODES_CACHE_KEY + episode.getSeason().getId();
         final CacheValue<List<Episode>> cacheData = getObjectFromCache(showCache, key);
         if (cacheData != null) {
             final List<Episode> data = cacheData.getValue();

@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.dao.entities;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "programs")
 @NamedQuery(name = Program.SELECT_PROGRAMS, query = "SELECT p FROM Program p ORDER BY p.position, p.id")
-public class Program implements Serializable {
+public class Program implements Movable {
 
     /**
      * Name for query - select programs
@@ -90,20 +88,12 @@ public class Program implements Serializable {
      */
     private int position;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -252,20 +242,12 @@ public class Program implements Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }
@@ -275,11 +257,12 @@ public class Program implements Serializable {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Program) || id == null) {
             return false;
         }
-        final Program program = (Program) obj;
-        return id.equals(program.id);
+
+        return id.equals(((Program) obj).id);
     }
 
     @Override

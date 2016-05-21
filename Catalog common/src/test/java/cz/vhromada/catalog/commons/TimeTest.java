@@ -2,11 +2,10 @@ package cz.vhromada.catalog.commons;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import cz.vhromada.test.DeepAsserts;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +76,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad length.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithBadLength() {
+    public void testConstructor_BadLength() {
         new Time(-1);
     }
 
@@ -85,7 +84,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad hours.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithBadHours() {
+    public void testConstructor_BadHours() {
         new Time(-1, MINUTES, SECONDS);
     }
 
@@ -93,7 +92,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with negative minutes.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNegativeMinutes() {
+    public void testConstructor_NegativeMinutes() {
         new Time(HOURS, -1, SECONDS);
     }
 
@@ -101,7 +100,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad minutes.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithBadMinutes() {
+    public void testConstructor_BadMinutes() {
         new Time(HOURS, BAD_MAX_TIME, SECONDS);
     }
 
@@ -109,7 +108,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with negative seconds.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNegativeSeconds() {
+    public void testConstructor_NegativeSeconds() {
         new Time(HOURS, MINUTES, -1);
     }
 
@@ -117,7 +116,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad seconds.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithBadSeconds() {
+    public void testConstructor_BadSeconds() {
         new Time(HOURS, MINUTES, BAD_MAX_TIME);
     }
 
@@ -126,8 +125,8 @@ public class TimeTest {
      */
     @Test
     public void testGetLength() {
-        DeepAsserts.assertEquals(LENGTH, timeLength.getLength());
-        DeepAsserts.assertEquals(LENGTH, timeHMS.getLength());
+        assertEquals(LENGTH, timeLength.getLength());
+        assertEquals(LENGTH, timeHMS.getLength());
     }
 
     /**
@@ -135,19 +134,19 @@ public class TimeTest {
      */
     @Test
     public void testGetData() {
-        DeepAsserts.assertEquals(HOURS, timeLength.getData(Time.TimeData.HOUR));
-        DeepAsserts.assertEquals(MINUTES, timeLength.getData(Time.TimeData.MINUTE));
-        DeepAsserts.assertEquals(SECONDS, timeLength.getData(Time.TimeData.SECOND));
-        DeepAsserts.assertEquals(HOURS, timeHMS.getData(Time.TimeData.HOUR));
-        DeepAsserts.assertEquals(MINUTES, timeHMS.getData(Time.TimeData.MINUTE));
-        DeepAsserts.assertEquals(SECONDS, timeHMS.getData(Time.TimeData.SECOND));
+        assertEquals(HOURS, timeLength.getData(Time.TimeData.HOUR));
+        assertEquals(MINUTES, timeLength.getData(Time.TimeData.MINUTE));
+        assertEquals(SECONDS, timeLength.getData(Time.TimeData.SECOND));
+        assertEquals(HOURS, timeHMS.getData(Time.TimeData.HOUR));
+        assertEquals(MINUTES, timeHMS.getData(Time.TimeData.MINUTE));
+        assertEquals(SECONDS, timeHMS.getData(Time.TimeData.SECOND));
     }
 
     /**
      * Test method for {@link Time#getData(Time.TimeData)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testGetDataWithNegativeArgument() {
+    public void testGetData_NegativeArgument() {
         timeLength.getData(null);
     }
 
@@ -185,11 +184,11 @@ public class TimeTest {
      */
     @Test
     public void testToString() {
-        DeepAsserts.assertEquals("2:35:26", timeLength.toString());
-        DeepAsserts.assertEquals("2:35:26", timeHMS.toString());
+        assertEquals("2:35:26", timeLength.toString());
+        assertEquals("2:35:26", timeHMS.toString());
         assertTrue(TIME_LENGTHS.length == TIME_STRINGS.length);
         for (int i = 0; i < TIME_LENGTHS.length; i++) {
-            DeepAsserts.assertEquals(TIME_STRINGS[i], new Time(TIME_LENGTHS[i]).toString());
+            assertEquals(TIME_STRINGS[i], new Time(TIME_LENGTHS[i]).toString());
         }
     }
 

@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -20,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "songs")
-@NamedQuery(name = Song.FIND_BY_MUSIC, query = "SELECT s FROM Song s WHERE s.music.id = :music ORDER BY s.position, s.id")
+@NamedQuery(name = Song.FIND_BY_MUSIC, query = "SELECT s FROM Song s WHERE s.music = :music ORDER BY s.position, s.id")
 public class Song implements Serializable {
 
     /**
@@ -66,9 +64,7 @@ public class Song implements Serializable {
     /**
      * Music
      */
-    @ManyToOne
-    @JoinColumn(name = "music", referencedColumnName = "id")
-    private Music music;
+    private Integer music;
 
     /**
      * Returns ID.
@@ -165,7 +161,7 @@ public class Song implements Serializable {
      *
      * @return music
      */
-    public Music getMusic() {
+    public Integer getMusic() {
         return music;
     }
 
@@ -174,7 +170,7 @@ public class Song implements Serializable {
      *
      * @param music new value
      */
-    public void setMusic(final Music music) {
+    public void setMusic(final Integer music) {
         this.music = music;
     }
 
@@ -197,7 +193,7 @@ public class Song implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Song [id=%d, name=%s, length=%d, note=%s, position=%d, music=%s]", id, name, length, note, position, music);
+        return String.format("Song [id=%d, name=%s, length=%d, note=%s, position=%d, music=%d]", id, name, length, note, position, music);
     }
 
 }

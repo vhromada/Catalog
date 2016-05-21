@@ -172,7 +172,7 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
 
             for (final Episode episode : getCachedEpisodes(season, false)) {
                 final Episode newEpisode = createEpisode(episode);
-                newEpisode.setSeason(newSeason);
+//                newEpisode.setSeason(newSeason);
                 episodeDAO.add(newEpisode);
                 newEpisode.setPosition(episode.getPosition());
                 episodeDAO.update(newEpisode);
@@ -192,7 +192,7 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
-            final List<Season> seasons = getCachedSeasons(season.getShow(), false);
+            final List<Season> seasons = null;//getCachedSeasons(season.getShow(), false);
             final Season otherSeason = seasons.get(seasons.indexOf(season) - 1);
             switchPosition(season, otherSeason);
             seasonDAO.update(season);
@@ -212,7 +212,7 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
         Validators.validateArgumentNotNull(season, SEASON_ARGUMENT);
 
         try {
-            final List<Season> seasons = getCachedSeasons(season.getShow(), false);
+            final List<Season> seasons = null;//getCachedSeasons(season.getShow(), false);
             final Season otherSeason = seasons.get(seasons.indexOf(season) + 1);
             switchPosition(season, otherSeason);
             seasonDAO.update(season);

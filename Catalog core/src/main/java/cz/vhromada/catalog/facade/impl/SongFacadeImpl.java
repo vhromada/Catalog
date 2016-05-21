@@ -174,7 +174,7 @@ public class SongFacadeImpl implements SongFacade {
             Validators.validateExists(music, MUSIC_TO_ARGUMENT);
 
             final Song songEntity = converter.convert(song, Song.class);
-            songEntity.setMusic(music);
+//            songEntity.setMusic(music);
             songService.add(songEntity);
             if (songEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -201,7 +201,7 @@ public class SongFacadeImpl implements SongFacade {
             final Music music = musicService.getMusic(song.getMusic().getId());
             Validators.validateExists(music, MUSIC_TO_ARGUMENT);
 
-            songEntity.setMusic(music);
+//            songEntity.setMusic(music);
             songService.update(songEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -258,7 +258,7 @@ public class SongFacadeImpl implements SongFacade {
         try {
             final Song songEntity = songService.getSong(song.getId());
             Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
-            final List<Song> songs = songService.findSongsByMusic(songEntity.getMusic());
+            final List<Song> songs = null;//songService.findSongsByMusic(songEntity.getMusic());
             Validators.validateMoveUp(songs, songEntity, SONG_ARGUMENT);
 
             songService.moveUp(songEntity);
@@ -279,7 +279,7 @@ public class SongFacadeImpl implements SongFacade {
         try {
             final Song songEntity = songService.getSong(song.getId());
             Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
-            final List<Song> songs = songService.findSongsByMusic(songEntity.getMusic());
+            final List<Song> songs = null;//songService.findSongsByMusic(songEntity.getMusic());
             Validators.validateMoveDown(songs, songEntity, SONG_ARGUMENT);
 
             songService.moveDown(songEntity);

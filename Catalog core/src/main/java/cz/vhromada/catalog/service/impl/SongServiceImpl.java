@@ -168,7 +168,7 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
-            final List<Song> songs = getCachedSongs(song.getMusic(), false);
+            final List<Song> songs = null;//getCachedSongs(song.getMusic(), false);
             final Song otherSong = songs.get(songs.indexOf(song) - 1);
             switchPosition(song, otherSong);
             songDAO.update(song);
@@ -188,7 +188,7 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
         Validators.validateArgumentNotNull(song, SONG_ARGUMENT);
 
         try {
-            final List<Song> songs = getCachedSongs(song.getMusic(), false);
+            final List<Song> songs = null;//getCachedSongs(song.getMusic(), false);
             final Song otherSong = songs.get(songs.indexOf(song) + 1);
             switchPosition(song, otherSong);
             songDAO.update(song);

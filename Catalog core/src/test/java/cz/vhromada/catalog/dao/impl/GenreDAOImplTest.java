@@ -1,17 +1,15 @@
 package cz.vhromada.catalog.dao.impl;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -21,17 +19,15 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.ObjectGeneratorTest;
+import cz.vhromada.catalog.commons.GenreUtils;
 import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
-import cz.vhromada.test.DeepAsserts;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
@@ -41,7 +37,7 @@ import org.mockito.stubbing.Answer;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GenreDAOImplTest extends ObjectGeneratorTest {
+public class GenreDAOImplTest {
 
     /**
      * Instance of {@link EntityManager}
@@ -72,7 +68,7 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
      * Test method for {@link GenreDAOImpl#GenreDAOImpl(EntityManager)} with null entity manager.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullEntityManager() {
+    public void testConstructor_NullEntityManager() {
         new GenreDAOImpl(null);
     }
 
@@ -81,11 +77,12 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
      */
     @Test
     public void testGetGenres() {
-        final List<Genre> genres = CollectionUtils.newList(generate(Genre.class), generate(Genre.class));
         when(entityManager.createNamedQuery(anyString(), eq(Genre.class))).thenReturn(genresQuery);
-        when(genresQuery.getResultList()).thenReturn(genres);
+        when(genresQuery.getResultList()).thenReturn(CollectionUtils.newList(GenreUtils.newGenre(GenreUtils.ID), GenreUtils.newGenre(2)));
 
-        DeepAsserts.assertEquals(genres, genreDAO.getGenres());
+        final List<Genre> genres = genreDAO.getGenres();
+
+        GenreUtils.assertGenresDeepEquals(CollectionUtils.newList(GenreUtils.newGenre(GenreUtils.ID), GenreUtils.newGenre(2)), genres);
 
         verify(entityManager).createNamedQuery(Genre.SELECT_GENRES, Genre.class);
         verify(genresQuery).getResultList();
@@ -95,34 +92,25 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link GenreDAO#getGenres()} with exception in persistence.
      */
-    @Test
-    public void testGetGenresWithPersistenceException() {
+    @Test(expected = DataStorageException.class)
+    public void testGetGenres_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).createNamedQuery(anyString(), eq(Genre.class));
 
-        try {
-            genreDAO.getGenres();
-            fail("Can't get genres with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).createNamedQuery(Genre.SELECT_GENRES, Genre.class);
-        verifyNoMoreInteractions(entityManager);
-        verifyZeroInteractions(genresQuery);
+        genreDAO.getGenres();
     }
 
     /**
      * Test method for {@link GenreDAO#getGenre(Integer)} with existing genre.
      */
     @Test
-    public void testGetGenreWithExistingGenre() {
-        final Genre genre = mock(Genre.class);
-        final int id = generate(Integer.class);
-        when(entityManager.find(eq(Genre.class), anyInt())).thenReturn(genre);
+    public void testGetGenre_ExistingGenre() {
+        when(entityManager.find(eq(Genre.class), anyInt())).thenReturn(GenreUtils.newGenre(GenreUtils.ID));
 
-        DeepAsserts.assertEquals(genre, genreDAO.getGenre(id));
+        final Genre genre = genreDAO.getGenre(GenreUtils.ID);
 
-        verify(entityManager).find(Genre.class, id);
+        GenreUtils.assertGenreDeepEquals(GenreUtils.newGenre(GenreUtils.ID), genre);
+
+        verify(entityManager).find(Genre.class, GenreUtils.ID);
         verifyNoMoreInteractions(entityManager);
     }
 
@@ -130,10 +118,12 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
      * Test method for {@link GenreDAO#getGenre(Integer)} with not existing genre.
      */
     @Test
-    public void testGetGenreWithNotExistingGenre() {
+    public void testGetGenre_NotExistingGenre() {
         when(entityManager.find(eq(Genre.class), anyInt())).thenReturn(null);
 
-        assertNull(genreDAO.getGenre(Integer.MAX_VALUE));
+        final Genre genre = genreDAO.getGenre(Integer.MAX_VALUE);
+
+        assertNull(genre);
 
         verify(entityManager).find(Genre.class, Integer.MAX_VALUE);
         verifyNoMoreInteractions(entityManager);
@@ -142,34 +132,19 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link GenreDAO#getGenre(Integer)} with null argument.
      */
-    @Test
-    public void testGetGenreWithNullArgument() {
-        try {
-            genreDAO.getGenre(null);
-            fail("Can't get genre with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetGenre_NullArgument() {
+        genreDAO.getGenre(null);
     }
 
     /**
      * Test method for {@link GenreDAO#getGenre(Integer)} with exception in persistence.
      */
-    @Test
-    public void testGetGenreWithPersistenceException() {
+    @Test(expected = DataStorageException.class)
+    public void testGetGenre_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).find(eq(Genre.class), anyInt());
 
-        try {
-            genreDAO.getGenre(Integer.MAX_VALUE);
-            fail("Can't get genre with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).find(Genre.class, Integer.MAX_VALUE);
-        verifyNoMoreInteractions(entityManager);
+        genreDAO.getGenre(Integer.MAX_VALUE);
     }
 
     /**
@@ -177,49 +152,35 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
      */
     @Test
     public void testAdd() {
-        final int id = generate(Integer.class);
-        final Genre genre = generate(Genre.class);
-        doAnswer(setId(id)).when(entityManager).persist(any(Genre.class));
+        final Genre genre = GenreUtils.newGenre(GenreUtils.ID);
+        doAnswer(setId(GenreUtils.ID)).when(entityManager).persist(any(Genre.class));
 
         genreDAO.add(genre);
-        DeepAsserts.assertEquals(id, genre.getId());
+
+        assertEquals(GenreUtils.ID, genre.getId());
+        assertEquals(GenreUtils.ID - 1, genre.getPosition());
 
         verify(entityManager).persist(genre);
+        verify(entityManager).merge(genre);
         verifyNoMoreInteractions(entityManager);
     }
 
     /**
      * Test method for {@link GenreDAO#add(Genre)} with null argument.
      */
-    @Test
-    public void testAddWithNullArgument() {
-        try {
-            genreDAO.add(null);
-            fail("Can't add genre with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testAdd_NullArgument() {
+        genreDAO.add(null);
     }
 
     /**
      * Test method for {@link GenreDAO#add(Genre)} with exception in persistence.
      */
-    @Test
-    public void testAddWithPersistenceException() {
-        final Genre genre = generate(Genre.class);
+    @Test(expected = DataStorageException.class)
+    public void testAdd_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).persist(any(Genre.class));
 
-        try {
-            genreDAO.add(genre);
-            fail("Can't add genre with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).persist(genre);
-        verifyNoMoreInteractions(entityManager);
+        genreDAO.add(GenreUtils.newGenre(GenreUtils.ID));
     }
 
     /**
@@ -227,7 +188,7 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
      */
     @Test
     public void testUpdate() {
-        final Genre genre = generate(Genre.class);
+        final Genre genre = GenreUtils.newGenre(GenreUtils.ID);
 
         genreDAO.update(genre);
 
@@ -238,43 +199,27 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link GenreDAO#update(Genre)} with null argument.
      */
-    @Test
-    public void testUpdateWithNullArgument() {
-        try {
-            genreDAO.update(null);
-            fail("Can't update genre with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdate_NullArgument() {
+        genreDAO.update(null);
     }
 
     /**
      * Test method for {@link GenreDAO#update(Genre)} with exception in persistence.
      */
-    @Test
-    public void testUpdateWithPersistenceException() {
-        final Genre genre = generate(Genre.class);
+    @Test(expected = DataStorageException.class)
+    public void testUpdate_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).merge(any(Genre.class));
 
-        try {
-            genreDAO.update(genre);
-            fail("Can't update genre with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).merge(genre);
-        verifyNoMoreInteractions(entityManager);
+        genreDAO.update(GenreUtils.newGenre(GenreUtils.ID));
     }
 
     /**
      * Test method for {@link GenreDAO#remove(Genre)} with managed genre.
      */
     @Test
-    public void testRemoveWithManagedGenre() {
-        final Genre genre = generate(Genre.class);
+    public void testRemove_ManagedGenre() {
+        final Genre genre = GenreUtils.newGenre(GenreUtils.ID);
         when(entityManager.contains(any(Genre.class))).thenReturn(true);
 
         genreDAO.remove(genre);
@@ -288,8 +233,8 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
      * Test method for {@link GenreDAO#remove(Genre)} with not managed genre.
      */
     @Test
-    public void testRemoveWithNotManagedGenre() {
-        final Genre genre = generate(Genre.class);
+    public void testRemove_NotManagedGenre() {
+        final Genre genre = GenreUtils.newGenre(GenreUtils.ID);
         when(entityManager.contains(any(Genre.class))).thenReturn(false);
         when(entityManager.getReference(eq(Genre.class), anyInt())).thenReturn(genre);
 
@@ -304,35 +249,19 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
     /**
      * Test method for {@link GenreDAO#remove(Genre)} with null argument.
      */
-    @Test
-    public void testRemoveWithNullArgument() {
-        try {
-            genreDAO.remove(null);
-            fail("Can't remove genre with null argument.");
-        } catch (final IllegalArgumentException ex) {
-            // OK
-        }
-
-        verifyZeroInteractions(entityManager);
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemove_NullArgument() {
+        genreDAO.remove(null);
     }
 
     /**
      * Test method for {@link GenreDAO#remove(Genre)} with exception in persistence.
      */
-    @Test
-    public void testRemoveWithPersistenceException() {
-        final Genre genre = generate(Genre.class);
+    @Test(expected = DataStorageException.class)
+    public void testRemove_PersistenceException() {
         doThrow(PersistenceException.class).when(entityManager).contains(any(Genre.class));
 
-        try {
-            genreDAO.remove(genre);
-            fail("Can't remove genre with not thrown DataStorageException for exception in persistence.");
-        } catch (final DataStorageException ex) {
-            // OK
-        }
-
-        verify(entityManager).contains(genre);
-        verifyNoMoreInteractions(entityManager);
+        genreDAO.remove(GenreUtils.newGenre(GenreUtils.ID));
     }
 
     /**
@@ -342,14 +271,9 @@ public class GenreDAOImplTest extends ObjectGeneratorTest {
      * @return mocked answer
      */
     private static Answer<Void> setId(final Integer id) {
-        return new Answer<Void>() {
-
-            @Override
-            public Void answer(final InvocationOnMock invocation) {
-                ((Genre) invocation.getArguments()[0]).setId(id);
-                return null;
-            }
-
+        return invocation -> {
+            ((Genre) invocation.getArguments()[0]).setId(id);
+            return null;
         };
     }
 

@@ -207,14 +207,14 @@ public class ShowServiceImpl extends AbstractShowService implements ShowService 
 
             for (final Season season : getCachedSeasons(show, false)) {
                 final Season newSeason = createSeason(season);
-                newSeason.setShow(newShow);
+//                newSeason.setShow(newShow);
                 seasonDAO.add(newSeason);
                 newSeason.setPosition(season.getPosition());
                 seasonDAO.update(newSeason);
 
                 for (final Episode episode : getCachedEpisodes(season, false)) {
                     final Episode newEpisode = createEpisode(episode);
-                    newEpisode.setSeason(newSeason);
+//                    newEpisode.setSeason(newSeason);
                     episodeDAO.add(newEpisode);
                     newEpisode.setPosition(episode.getPosition());
                     episodeDAO.update(newEpisode);

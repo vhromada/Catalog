@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.dao.impl;
 
-import cz.vhromada.catalog.dao.impl.spring.DAOImplSpringSuite;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -11,8 +9,6 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ MovieDAOImplTest.class, ShowDAOImplTest.class, SeasonDAOImplTest.class, EpisodeDAOImplTest.class, GameDAOImplTest.class,
-        MusicDAOImplTest.class, SongDAOImplTest.class, ProgramDAOImplTest.class, BookCategoryDAOImplTest.class, BookDAOImplTest.class, GenreDAOImplTest.class,
-        DAOImplSpringSuite.class })
+@Suite.SuiteClasses({ MovieDAOImplTest.class, GameDAOImplTest.class, ProgramDAOImplTest.class, GenreDAOImplTest.class })
 public class DAOImplSuite {
 }

@@ -121,7 +121,7 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
      * @param song song
      */
     protected void addSongToCache(final Song song) {
-        addInnerObjectToListCache(musicCache, SONGS_CACHE_KEY + song.getMusic().getId(), song);
+//        addInnerObjectToListCache(musicCache, SONGS_CACHE_KEY + song.getMusic().getId(), song);
         addInnerObjectToCache(musicCache, SONG_CACHE_KEY + song.getId(), song);
     }
 
@@ -131,7 +131,7 @@ public abstract class AbstractMusicService extends AbstractInnerService<Music, S
      * @param song song
      */
     protected void removeSongFromCache(final Song song) {
-        removeInnerObjectFromCache(musicCache, SONGS_CACHE_KEY + song.getMusic().getId(), song);
+//        removeInnerObjectFromCache(musicCache, SONGS_CACHE_KEY + song.getMusic().getId(), song);
         musicCache.evict(SONG_CACHE_KEY + song.getId());
     }
 

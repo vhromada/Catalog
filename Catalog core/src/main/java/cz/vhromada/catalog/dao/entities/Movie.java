@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.dao.entities;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -35,7 +34,7 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "movies")
 @NamedQuery(name = Movie.SELECT_MOVIES, query = "SELECT m FROM Movie m ORDER BY m.position, m.id")
-public class Movie implements Serializable {
+public class Movie implements Movable {
 
     /**
      * Name for query - select movies
@@ -145,20 +144,12 @@ public class Movie implements Serializable {
     @Fetch(FetchMode.SELECT)
     private List<Genre> genres;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -379,20 +370,12 @@ public class Movie implements Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }
@@ -420,11 +403,12 @@ public class Movie implements Serializable {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Movie) || id == null) {
             return false;
         }
-        final Movie movie = (Movie) obj;
-        return id.equals(movie.id);
+
+        return id.equals(((Movie) obj).id);
     }
 
     @Override

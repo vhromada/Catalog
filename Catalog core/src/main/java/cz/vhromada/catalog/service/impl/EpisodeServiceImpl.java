@@ -170,7 +170,7 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
-            final List<Episode> episodes = getCachedEpisodes(episode.getSeason(), false);
+            final List<Episode> episodes = null;//getCachedEpisodes(episode.getSeason(), false);
             final Episode otherEpisode = episodes.get(episodes.indexOf(episode) - 1);
             switchPosition(episode, otherEpisode);
             episodeDAO.update(episode);
@@ -190,7 +190,7 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
         Validators.validateArgumentNotNull(episode, EPISODE_ARGUMENT);
 
         try {
-            final List<Episode> episodes = getCachedEpisodes(episode.getSeason(), false);
+            final List<Episode> episodes = null;//getCachedEpisodes(episode.getSeason(), false);
             final Episode otherEpisode = episodes.get(episodes.indexOf(episode) + 1);
             switchPosition(episode, otherEpisode);
             episodeDAO.update(episode);

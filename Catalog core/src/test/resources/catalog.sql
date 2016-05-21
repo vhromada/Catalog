@@ -1,6 +1,3 @@
-DROP TABLE book_languages;
-DROP TABLE books;
-DROP TABLE book_categories;
 DROP TABLE programs;
 DROP TABLE songs;
 DROP TABLE music;
@@ -19,7 +16,8 @@ DROP TABLE genres;
 
 CREATE TABLE genres (
   id         INTEGER      NOT NULL CONSTRAINT genres_pk PRIMARY KEY,
-  genre_name VARCHAR(200) NOT NULL CONSTRAINT genres_genre_name_ck CHECK (LENGTH(genre_name) > 0)
+  genre_name VARCHAR(200) NOT NULL CONSTRAINT genres_genre_name_ck CHECK (LENGTH(genre_name) > 0),
+  position   INTEGER      NOT NULL CONSTRAINT genres_position_ck CHECK (position >= 0)
 );
 
 CREATE TABLE media (
@@ -153,27 +151,6 @@ CREATE TABLE programs (
   position     INTEGER      NOT NULL CONSTRAINT programs_position_ck CHECK (position >= 0)
 );
 
-CREATE TABLE book_categories (
-  id                 INTEGER      NOT NULL CONSTRAINT book_categories_pk PRIMARY KEY,
-  book_category_name VARCHAR(200) NOT NULL CONSTRAINT book_categories_book_category_name_ck CHECK (LENGTH(book_category_name) > 0),
-  note               VARCHAR(100) NOT NULL,
-  position           INTEGER      NOT NULL CONSTRAINT book_categories_position_ck CHECK (position >= 0)
-);
-
-CREATE TABLE books (
-  id            INTEGER      NOT NULL CONSTRAINT books_pk PRIMARY KEY,
-  book_category INTEGER      NOT NULL CONSTRAINT books_book_category_fk REFERENCES book_categories (id),
-  author        VARCHAR(200) NOT NULL CONSTRAINT books_author_ck CHECK (LENGTH(author) > 0),
-  title         VARCHAR(100) NOT NULL CONSTRAINT books_title_ck CHECK (LENGTH(title) > 0),
-  note          VARCHAR(100) NOT NULL,
-  position      INTEGER      NOT NULL CONSTRAINT books_position_ck CHECK (position >= 0)
-);
-
-CREATE TABLE book_languages (
-  book          INTEGER    NOT NULL CONSTRAINT book_languages_book_fk REFERENCES books (id),
-  book_language VARCHAR(2) NOT NULL CONSTRAINT book_languages_book_language_ck CHECK (book_language IN ('CZ', 'EN', 'FR', 'JP', 'SK'))
-);
-
 DROP SEQUENCE movies_sq;
 DROP SEQUENCE media_sq;
 DROP SEQUENCE tv_shows_sq;
@@ -183,8 +160,6 @@ DROP SEQUENCE games_sq;
 DROP SEQUENCE music_sq;
 DROP SEQUENCE songs_sq;
 DROP SEQUENCE programs_sq;
-DROP SEQUENCE book_categories_sq;
-DROP SEQUENCE books_sq;
 DROP SEQUENCE genres_sq;
 
 CREATE SEQUENCE movies_sq START WITH 1 INCREMENT BY 1;
@@ -196,6 +171,4 @@ CREATE SEQUENCE games_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE music_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE songs_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE programs_sq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE book_categories_sq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE books_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE genres_sq START WITH 1 INCREMENT BY 1;

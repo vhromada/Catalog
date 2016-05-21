@@ -1,3 +1,3 @@
 #Catalog
 
-Catalog of movies, games, music, programs and books
+Catalog of movies, games, music and programs

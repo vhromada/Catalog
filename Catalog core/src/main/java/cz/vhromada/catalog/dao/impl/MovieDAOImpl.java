@@ -1,15 +1,12 @@
 package cz.vhromada.catalog.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 
 import cz.vhromada.catalog.dao.MovieDAO;
 import cz.vhromada.catalog.dao.entities.Movie;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,32 +17,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("movieDAO")
-public class MovieDAOImpl implements MovieDAO {
-
-    /**
-     * Entity manager argument
-     */
-    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
-
-    /**
-     * Movie argument
-     */
-    private static final String MOVIE_ARGUMENT = "Movie";
-
-    /**
-     * ID argument
-     */
-    private static final String ID_ARGUMENT = "ID";
-
-    /**
-     * Message for {@link DataStorageException}
-     */
-    private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
-
-    /**
-     * Entity manager
-     */
-    private EntityManager entityManager;
+public class MovieDAOImpl extends AbstractDAO<Movie> implements MovieDAO {
 
     /**
      * Creates a new instance of MovieDAOImpl.
@@ -55,9 +27,7 @@ public class MovieDAOImpl implements MovieDAO {
      */
     @Autowired
     public MovieDAOImpl(final EntityManager entityManager) {
-        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
-
-        this.entityManager = entityManager;
+        super(entityManager, Movie.class, "Movie");
     }
 
     /**
@@ -65,11 +35,7 @@ public class MovieDAOImpl implements MovieDAO {
      */
     @Override
     public List<Movie> getMovies() {
-        try {
-            return new ArrayList<>(entityManager.createNamedQuery(Movie.SELECT_MOVIES, Movie.class).getResultList());
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        return getData(Movie.SELECT_MOVIES);
     }
 
     /**
@@ -78,13 +44,7 @@ public class MovieDAOImpl implements MovieDAO {
      */
     @Override
     public Movie getMovie(final Integer id) {
-        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
-
-        try {
-            return entityManager.find(Movie.class, id);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        return getItem(id);
     }
 
     /**
@@ -93,15 +53,7 @@ public class MovieDAOImpl implements MovieDAO {
      */
     @Override
     public void add(final Movie movie) {
-        Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
-
-        try {
-            entityManager.persist(movie);
-            movie.setPosition(movie.getId() - 1);
-            entityManager.merge(movie);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        addItem(movie);
     }
 
     /**
@@ -110,13 +62,7 @@ public class MovieDAOImpl implements MovieDAO {
      */
     @Override
     public void update(final Movie movie) {
-        Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
-
-        try {
-            entityManager.merge(movie);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        updateItem(movie);
     }
 
     /**
@@ -125,17 +71,7 @@ public class MovieDAOImpl implements MovieDAO {
      */
     @Override
     public void remove(final Movie movie) {
-        Validators.validateArgumentNotNull(movie, MOVIE_ARGUMENT);
-
-        try {
-            if (entityManager.contains(movie)) {
-                entityManager.remove(movie);
-            } else {
-                entityManager.remove(entityManager.getReference(Movie.class, movie.getId()));
-            }
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        removeItem(movie);
     }
 
 }

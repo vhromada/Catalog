@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.dao.entities;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "games")
 @NamedQuery(name = Game.SELECT_GAMES, query = "SELECT g FROM Game g ORDER BY g.position, g.id")
-public class Game implements Serializable {
+public class Game implements Movable {
 
     /**
      * Name for query - select games
@@ -117,20 +115,12 @@ public class Game implements Serializable {
      */
     private int position;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -370,20 +360,12 @@ public class Game implements Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }
@@ -393,11 +375,12 @@ public class Game implements Serializable {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Game) || id == null) {
             return false;
         }
-        final Game game = (Game) obj;
-        return id.equals(game.id);
+
+        return id.equals(((Game) obj).id);
     }
 
     @Override

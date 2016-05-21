@@ -174,7 +174,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
             Validators.validateExists(season, SEASON_TO_ARGUMENT);
 
             final Episode episodeEntity = converter.convert(episode, Episode.class);
-            episodeEntity.setSeason(season);
+//            episodeEntity.setSeason(season);
             episodeService.add(episodeEntity);
             if (episodeEntity.getId() == null) {
                 throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
@@ -201,7 +201,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
             final Season season = seasonService.getSeason(episode.getSeason().getId());
             Validators.validateExists(season, SEASON_TO_ARGUMENT);
 
-            episodeEntity.setSeason(season);
+//            episodeEntity.setSeason(season);
             episodeService.update(episodeEntity);
         } catch (final ServiceOperationException ex) {
             throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
@@ -258,7 +258,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
         try {
             final Episode episodeEntity = episodeService.getEpisode(episode.getId());
             Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
-            final List<Episode> episodes = episodeService.findEpisodesBySeason(episodeEntity.getSeason());
+            final List<Episode> episodes = null;//episodeService.findEpisodesBySeason(episodeEntity.getSeason());
             Validators.validateMoveUp(episodes, episodeEntity, EPISODE_ARGUMENT);
 
             episodeService.moveUp(episodeEntity);
@@ -279,7 +279,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
         try {
             final Episode episodeEntity = episodeService.getEpisode(episode.getId());
             Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
-            final List<Episode> episodes = episodeService.findEpisodesBySeason(episodeEntity.getSeason());
+            final List<Episode> episodes = null;//episodeService.findEpisodesBySeason(episodeEntity.getSeason());
             Validators.validateMoveDown(episodes, episodeEntity, EPISODE_ARGUMENT);
 
             episodeService.moveDown(episodeEntity);

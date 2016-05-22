@@ -1,15 +1,12 @@
 package cz.vhromada.catalog.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 
 import cz.vhromada.catalog.dao.MusicDAO;
 import cz.vhromada.catalog.dao.entities.Music;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,32 +17,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("musicDAO")
-public class MusicDAOImpl implements MusicDAO {
-
-    /**
-     * Entity manager argument
-     */
-    private static final String ENTITY_MANAGER_ARGUMENT = "Entity manager";
-
-    /**
-     * Music argument
-     */
-    private static final String MUSIC_ARGUMENT = "Music";
-
-    /**
-     * ID argument
-     */
-    private static final String ID_ARGUMENT = "ID";
-
-    /**
-     * Message for {@link DataStorageException}
-     */
-    private static final String DATA_STORAGE_EXCEPTION_MESSAGE = "Error in working with ORM.";
-
-    /**
-     * Entity manager
-     */
-    private EntityManager entityManager;
+public class MusicDAOImpl extends AbstractDAO<Music> implements MusicDAO {
 
     /**
      * Creates a new instance of MusicDAOImpl.
@@ -55,9 +27,7 @@ public class MusicDAOImpl implements MusicDAO {
      */
     @Autowired
     public MusicDAOImpl(final EntityManager entityManager) {
-        Validators.validateArgumentNotNull(entityManager, ENTITY_MANAGER_ARGUMENT);
-
-        this.entityManager = entityManager;
+        super(entityManager, Music.class, "Music");
     }
 
     /**
@@ -65,11 +35,7 @@ public class MusicDAOImpl implements MusicDAO {
      */
     @Override
     public List<Music> getMusic() {
-        try {
-            return new ArrayList<>(entityManager.createNamedQuery(Music.SELECT_MUSIC, Music.class).getResultList());
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        return getData(Music.SELECT_MUSIC);
     }
 
     /**
@@ -78,13 +44,7 @@ public class MusicDAOImpl implements MusicDAO {
      */
     @Override
     public Music getMusic(final Integer id) {
-        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
-
-        try {
-            return entityManager.find(Music.class, id);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        return getItem(id);
     }
 
     /**
@@ -93,15 +53,7 @@ public class MusicDAOImpl implements MusicDAO {
      */
     @Override
     public void add(final Music music) {
-        Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
-
-        try {
-            entityManager.persist(music);
-            music.setPosition(music.getId() - 1);
-            entityManager.merge(music);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        addItem(music);
     }
 
     /**
@@ -110,13 +62,7 @@ public class MusicDAOImpl implements MusicDAO {
      */
     @Override
     public void update(final Music music) {
-        Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
-
-        try {
-            entityManager.merge(music);
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        updateItem(music);
     }
 
     /**
@@ -125,17 +71,7 @@ public class MusicDAOImpl implements MusicDAO {
      */
     @Override
     public void remove(final Music music) {
-        Validators.validateArgumentNotNull(music, MUSIC_ARGUMENT);
-
-        try {
-            if (entityManager.contains(music)) {
-                entityManager.remove(music);
-            } else {
-                entityManager.remove(entityManager.getReference(Music.class, music.getId()));
-            }
-        } catch (final PersistenceException ex) {
-            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
-        }
+        removeItem(music);
     }
 
 }

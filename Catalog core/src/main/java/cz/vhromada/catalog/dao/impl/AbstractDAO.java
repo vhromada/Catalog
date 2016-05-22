@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 
 import cz.vhromada.catalog.dao.entities.Movable;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
@@ -66,6 +67,30 @@ public abstract class AbstractDAO<T extends Movable> {
     protected List<T> getData(final String queryName) {
         try {
             return new ArrayList<>(entityManager.createNamedQuery(queryName, clazz).getResultList());
+        } catch (final PersistenceException ex) {
+            throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
+        }
+    }
+
+    /**
+     * Returns list of data by specified object.
+     *
+     * @param object         object
+     * @param objectName     name of object
+     * @param queryName      name of query
+     * @param queryParamName name of query param
+     * @return list of data
+     * @throws IllegalArgumentException if object is null
+     * @throws DataStorageException     if there was error with working with data storage
+     */
+    protected List<T> getData(final Movable object, final String objectName, final String queryName, final String queryParamName) {
+        Validators.validateArgumentNotNull(object, objectName);
+
+        try {
+            final TypedQuery<T> query = entityManager.createNamedQuery(queryName, clazz);
+            query.setParameter(queryParamName, object.getId());
+
+            return query.getResultList();
         } catch (final PersistenceException ex) {
             throw new DataStorageException(DATA_STORAGE_EXCEPTION_MESSAGE, ex);
         }

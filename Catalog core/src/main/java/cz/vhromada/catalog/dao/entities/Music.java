@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.dao.entities;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "music")
 @NamedQuery(name = Music.SELECT_MUSIC, query = "SELECT m FROM Music m ORDER BY m.position, m.id")
-public class Music implements Serializable {
+public class Music implements Movable {
 
     /**
      * Name for query - select music
@@ -73,20 +71,12 @@ public class Music implements Serializable {
      */
     private int position;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -181,20 +171,12 @@ public class Music implements Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }

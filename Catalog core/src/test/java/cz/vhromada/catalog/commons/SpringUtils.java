@@ -59,26 +59,6 @@
 //    public static final int EPISODES_PER_SEASON_COUNT = 3;
 //
 //    /**
-//     * Count of music
-//     */
-//    public static final int MUSIC_COUNT = 3;
-//
-//    /**
-//     * Count of songs
-//     */
-//    public static final int SONGS_COUNT = 9;
-//
-//    /**
-//     * Count of songs in music
-//     */
-//    public static final int SONGS_PER_MUSIC_COUNT = 3;
-//
-//    /**
-//     * Multipliers for length
-//     */
-//    public static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
-//
-//    /**
 //     * Creates a new instance of SpringUtils.
 //     */
 //    private SpringUtils() {
@@ -145,47 +125,6 @@
 //     */
 //    public static Episode getEpisode(final EntityManager entityManager, final int id) {
 //        return entityManager.find(Episode.class, id);
-//    }
-//    /**
-//     * Returns count of music.
-//     *
-//     * @param entityManager entity manager
-//     * @return count of music
-//     */
-//    public static int getMusicCount(final EntityManager entityManager) {
-//        return entityManager.createQuery("SELECT COUNT(m.id) FROM Music m", Long.class).getSingleResult().intValue();
-//    }
-//
-//    /**
-//     * Returns music.
-//     *
-//     * @param entityManager entity manager
-//     * @param id            music ID
-//     * @return music
-//     */
-//    public static Music getMusic(final EntityManager entityManager, final int id) {
-//        return entityManager.find(Music.class, id);
-//    }
-//
-//    /**
-//     * Returns count of songs.
-//     *
-//     * @param entityManager entity manager
-//     * @return count of songs
-//     */
-//    public static int getSongsCount(final EntityManager entityManager) {
-//        return entityManager.createQuery("SELECT COUNT(s.id) FROM Song s", Long.class).getSingleResult().intValue();
-//    }
-//
-//    /**
-//     * Returns song.
-//     *
-//     * @param entityManager entity manager
-//     * @param id            song ID
-//     * @return song
-//     */
-//    public static Song getSong(final EntityManager entityManager, final int id) {
-//        return entityManager.find(Song.class, id);
 //    }
 //
 //    /**

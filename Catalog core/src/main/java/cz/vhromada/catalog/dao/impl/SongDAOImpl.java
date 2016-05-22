@@ -73,7 +73,7 @@ public class SongDAOImpl extends AbstractDAO<Song> implements SongDAO {
      */
     @Override
     public List<Song> findSongsByMusic(final Music music) {
-        return getData(music, "Music", Song.FIND_BY_MUSIC, "music");
+        return null;//getData(music, "Music", Song.FIND_BY_MUSIC, "music");
     }
 
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -161,7 +162,7 @@ public final class MovieUtils {
      * @param entityManager entity manager
      * @return movie with updated fields
      */
-    public static Movie updateMovie(final int id, final EntityManager entityManager) {
+    public static Movie updateMovie(final EntityManager entityManager, final int id) {
         final Movie movie = getMovie(entityManager, id);
         updateMovie(movie);
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
@@ -204,6 +205,8 @@ public final class MovieUtils {
      */
     public static void assertMovieDeepEquals(final Movie expected, final Movie actual) {
         assertNotNull(actual);
+        assertNotNull(actual.getSubtitles());
+        Collections.sort(actual.getSubtitles());
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getCzechName(), actual.getCzechName());
         assertEquals(expected.getOriginalName(), actual.getOriginalName());

@@ -76,7 +76,7 @@ CREATE TABLE tv_show_genres (
 
 CREATE TABLE seasons (
   id              INTEGER      NOT NULL CONSTRAINT seasons_pk PRIMARY KEY,
-  tv_show         INTEGER      NOT NULL CONSTRAINT seasons_tv_show_fk REFERENCES tv_shows (id),
+  tv_show         INTEGER      CONSTRAINT seasons_tv_show_fk REFERENCES tv_shows (id),
   season_number   INTEGER      NOT NULL CONSTRAINT seasons_season_number_ck CHECK (season_number > 0),
   start_year      INTEGER      NOT NULL CONSTRAINT seasons_start_year_ck CHECK (start_year BETWEEN 1930 AND 2100),
   end_year        INTEGER      NOT NULL CONSTRAINT seasons_end_year_ck CHECK (end_year BETWEEN 1930 AND 2100),
@@ -93,7 +93,7 @@ CREATE TABLE season_subtitles (
 
 CREATE TABLE episodes (
   id             INTEGER      NOT NULL CONSTRAINT episodes_pk PRIMARY KEY,
-  season         INTEGER      NOT NULL CONSTRAINT episodes_season_fk REFERENCES seasons (id),
+  season         INTEGER      CONSTRAINT episodes_season_fk REFERENCES seasons (id),
   episode_number INTEGER      NOT NULL CONSTRAINT episodes_episode_number_ck CHECK (episode_number > 0),
   episode_name   VARCHAR(100) NOT NULL CONSTRAINT episodes_episode_name_ck CHECK (LENGTH(episode_name) > 0),
   episode_length INTEGER      NOT NULL CONSTRAINT episodes_episode_length_ck CHECK (episode_length >= 0),
@@ -131,7 +131,7 @@ CREATE TABLE music (
 
 CREATE TABLE songs (
   id          INTEGER      NOT NULL CONSTRAINT songs_pk PRIMARY KEY,
-  music       INTEGER      NOT NULL CONSTRAINT songs_music_fk REFERENCES music (id),
+  music       INTEGER      CONSTRAINT songs_music_fk REFERENCES music (id),
   song_name   VARCHAR(100) NOT NULL CONSTRAINT songs_song_name_ck CHECK (LENGTH(song_name) > 0),
   song_length INTEGER      NOT NULL CONSTRAINT songs_song_length_ck CHECK (song_length >= 0),
   note        VARCHAR(100) NOT NULL,

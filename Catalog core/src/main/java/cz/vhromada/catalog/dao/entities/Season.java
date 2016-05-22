@@ -2,6 +2,7 @@ package cz.vhromada.catalog.dao.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -13,7 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -29,13 +31,7 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "seasons")
-@NamedQuery(name = Season.FIND_BY_SHOW, query = "SELECT s FROM Season s WHERE s.show = :show ORDER BY s.position, s.id")
 public class Season implements Movable {
-
-    /**
-     * Name for query - find by show
-     */
-    public static final String FIND_BY_SHOW = "Season.findByShow";
 
     /**
      * SerialVersionUID
@@ -95,10 +91,13 @@ public class Season implements Movable {
     private int position;
 
     /**
-     * Show
+     * Episodes
      */
-    @Column(name = "tv_show")
-    private Integer show;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "season", referencedColumnName = "id")
+    @OrderBy("position, id")
+    @Fetch(FetchMode.SELECT)
+    private List<Episode> episodes;
 
     @Override
     public Integer getId() {
@@ -230,21 +229,21 @@ public class Season implements Movable {
     }
 
     /**
-     * Returns show.
+     * Returns episodes.
      *
-     * @return show
+     * @return episodes
      */
-    public Integer getShow() {
-        return show;
+    public List<Episode> getEpisodes() {
+        return episodes;
     }
 
     /**
-     * Sets a new value to show.
+     * Sets a new value to episodes.
      *
-     * @param show new value
+     * @param episodes new value
      */
-    public void setShow(final Integer show) {
-        this.show = show;
+    public void setEpisodes(final List<Episode> episodes) {
+        this.episodes = episodes;
     }
 
     @Override
@@ -252,11 +251,12 @@ public class Season implements Movable {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Season) || id == null) {
             return false;
         }
-        final Season season = (Season) obj;
-        return id.equals(season.id);
+
+        return id.equals(((Season) obj).id);
     }
 
     @Override
@@ -266,8 +266,8 @@ public class Season implements Movable {
 
     @Override
     public String toString() {
-        return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, show=%d]", id, number,
-                startYear, endYear, language, subtitles, note, position, show);
+        return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, episodes=%s]", id, number,
+                startYear, endYear, language, subtitles, note, position, episodes);
     }
 
 }

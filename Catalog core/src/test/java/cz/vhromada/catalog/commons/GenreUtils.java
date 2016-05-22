@@ -107,11 +107,11 @@ public final class GenreUtils {
     /**
      * Returns genre with updated fields.
      *
-     * @param id            genre ID
      * @param entityManager entity manager
+     * @param id            genre ID
      * @return genre with updated fields
      */
-    public static Genre updateGenre(final int id, final EntityManager entityManager) {
+    public static Genre updateGenre(final EntityManager entityManager, final int id) {
         final Genre genre = getGenre(entityManager, id);
         updateGenre(genre);
         genre.setPosition(POSITION);

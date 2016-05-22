@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -16,13 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "episodes")
-@NamedQuery(name = Episode.FIND_BY_SEASON, query = "SELECT e FROM Episode e WHERE e.season = :season ORDER BY e.position, e.id")
 public class Episode implements Movable {
-
-    /**
-     * Name for query - find by season
-     */
-    public static final String FIND_BY_SEASON = "Episode.findBySeason";
 
     /**
      * SerialVersionUID
@@ -64,11 +57,6 @@ public class Episode implements Movable {
      * Position
      */
     private int position;
-
-    /**
-     * Season
-     */
-    private Integer season;
 
     @Override
     public Integer getId() {
@@ -162,34 +150,17 @@ public class Episode implements Movable {
         this.position = position;
     }
 
-    /**
-     * Returns season.
-     *
-     * @return season
-     */
-    public Integer getSeason() {
-        return season;
-    }
-
-    /**
-     * Sets a new value to season.
-     *
-     * @param season new value
-     */
-    public void setSeason(final Integer season) {
-        this.season = season;
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Episode) || id == null) {
             return false;
         }
-        final Episode episode = (Episode) obj;
-        return id.equals(episode.id);
+
+        return id.equals(((Episode) obj).id);
     }
 
     @Override
@@ -199,8 +170,7 @@ public class Episode implements Movable {
 
     @Override
     public String toString() {
-        return String.format("Episode [id=%d, number=%d, name=%s, length=%d, note=%s, position=%d, season=%d]", id, number, name, length, note, position,
-                season);
+        return String.format("Episode [id=%d, number=%d, name=%s, length=%d, note=%s, position=%d]", id, number, name, length, note, position);
     }
 
 }

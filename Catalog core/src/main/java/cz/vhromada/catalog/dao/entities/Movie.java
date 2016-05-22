@@ -91,7 +91,7 @@ public class Movie implements Movable {
     /**
      * Media
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinTable(name = "movie_media", joinColumns = @JoinColumn(name = "movie"), inverseJoinColumns = @JoinColumn(name = "medium"))
     @OrderBy("id")
     @Fetch(FetchMode.SELECT)

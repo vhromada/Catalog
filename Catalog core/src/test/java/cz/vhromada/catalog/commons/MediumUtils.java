@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import cz.vhromada.catalog.dao.entities.Medium;
 
 /**
@@ -75,6 +77,16 @@ public final class MediumUtils {
         medium.setLength(index * 100);
 
         return medium;
+    }
+
+    /**
+     * Returns count of media.
+     *
+     * @param entityManager entity manager
+     * @return count of media
+     */
+    public static int getMediaCount(final EntityManager entityManager) {
+        return entityManager.createQuery("SELECT COUNT(m.id) FROM Medium m", Long.class).getSingleResult().intValue();
     }
 
     /**

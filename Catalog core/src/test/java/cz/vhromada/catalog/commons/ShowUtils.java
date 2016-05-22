@@ -2,6 +2,7 @@ package cz.vhromada.catalog.commons;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +112,7 @@ public final class ShowUtils {
             genres.add(GenreUtils.getGenre(4));
         }
         show.setGenres(genres);
+        show.setSeasons(SeasonUtils.getSeasons(index));
 
         return show;
     }
@@ -133,7 +135,7 @@ public final class ShowUtils {
      * @param entityManager entity manager
      * @return show with updated fields
      */
-    public static Show updateShow(final int id, final EntityManager entityManager) {
+    public static Show updateShow(final EntityManager entityManager, final int id) {
         final Show show = getShow(entityManager, id);
         updateShow(show);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
@@ -187,6 +189,11 @@ public final class ShowUtils {
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
         GenreUtils.assertGenresDeepEquals(expected.getGenres(), actual.getGenres());
+        if (expected.getSeasons() == null) {
+            assertNull(actual.getSeasons());
+        } else {
+            SeasonUtils.assertSeasonsDeepEquals(expected.getSeasons(), actual.getSeasons());
+        }
     }
 
 }

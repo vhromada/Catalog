@@ -151,7 +151,7 @@ public class EpisodeServiceImpl extends AbstractShowService implements EpisodeSe
             newEpisode.setName(episode.getName());
             newEpisode.setLength(episode.getLength());
             newEpisode.setNote(episode.getNote());
-            newEpisode.setSeason(episode.getSeason());
+//            newEpisode.setSeason(episode.getSeason());
             episodeDAO.add(newEpisode);
             newEpisode.setPosition(episode.getPosition());
             episodeDAO.update(newEpisode);

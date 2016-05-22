@@ -149,7 +149,7 @@ public class SongServiceImpl extends AbstractMusicService implements SongService
             newSong.setName(song.getName());
             newSong.setLength(song.getLength());
             newSong.setNote(song.getNote());
-            newSong.setMusic(song.getMusic());
+//            newSong.setMusic(song.getMusic());
             songDAO.add(newSong);
             newSong.setPosition(song.getPosition());
             songDAO.update(newSong);

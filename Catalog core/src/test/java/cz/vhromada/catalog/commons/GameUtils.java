@@ -131,11 +131,11 @@ public final class GameUtils {
     /**
      * Returns game with updated fields.
      *
-     * @param id            game ID
      * @param entityManager entity manager
+     * @param id            game ID
      * @return game with updated fields
      */
-    public static Game updateGame(final int id, final EntityManager entityManager) {
+    public static Game updateGame(final EntityManager entityManager, final int id) {
         final Game game = getGame(entityManager, id);
         updateGame(game);
         game.setPosition(POSITION);

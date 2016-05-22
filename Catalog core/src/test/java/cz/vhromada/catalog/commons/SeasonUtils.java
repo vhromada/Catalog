@@ -2,8 +2,10 @@ package cz.vhromada.catalog.commons;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -35,7 +37,7 @@ public final class SeasonUtils {
     /**
      * Count of seasons in show
      */
-    public static final int SEASONS_PER_SHOW_COUNT = 3;
+    private static final int SEASONS_PER_SHOW_COUNT = 3;
 
     /**
      * Creates a new instance of SeasonUtils.
@@ -52,7 +54,6 @@ public final class SeasonUtils {
     public static Season newSeason(final Integer id) {
         final Season season = new Season();
         updateSeason(season);
-        season.setShow(5);
         if (id != null) {
             season.setId(id);
             season.setPosition(id - 1);
@@ -78,16 +79,43 @@ public final class SeasonUtils {
     /**
      * Returns seasons.
      *
-     * @param show index of show
      * @return seasons
      */
-    public static List<Season> getSeasons(final int show) {
+    public static List<Season> getSeasons() {
         final List<Season> seasons = new ArrayList<>();
-        for (int i = 0; i < SEASONS_PER_SHOW_COUNT; i++) {
-            seasons.add(getSeason(show, i + 1));
+        for (int i = 1; i <= SEASONS_PER_SHOW_COUNT; i++) {
+            seasons.add(getSeason(i));
         }
 
         return seasons;
+    }
+
+    /**
+     * Returns seasons for show.
+     *
+     * @param show show
+     * @return seasons for show
+     */
+    public static List<Season> getSeasons(final int show) {
+        final List<Season> seasons = new ArrayList<>();
+        for (int i = 1; i <= SEASONS_PER_SHOW_COUNT; i++) {
+            seasons.add(getSeason(show, i));
+        }
+
+        return seasons;
+    }
+
+    /**
+     * Returns season for index.
+     *
+     * @param index index
+     * @return season for index
+     */
+    public static Season getSeason(final int index) {
+        final int showNumber = (index - 1) / SEASONS_PER_SHOW_COUNT + 1;
+        final int seasonNumber = (index - 1) % SEASONS_PER_SHOW_COUNT + 1;
+
+        return getSeason(showNumber, seasonNumber);
     }
 
     /**
@@ -105,7 +133,6 @@ public final class SeasonUtils {
         season.setEndYear(seasonIndex == 3 ? 1984 : 1982);
         season.setNote(seasonIndex == 2 ? "Show " + showIndex + " Season 2 note" : "");
         season.setPosition(seasonIndex - 1);
-        season.setShow(showIndex);
         final List<Language> subtitles = new ArrayList<>();
         final Language language;
         switch (seasonIndex) {
@@ -126,6 +153,7 @@ public final class SeasonUtils {
         }
         season.setLanguage(language);
         season.setSubtitles(subtitles);
+        season.setEpisodes(EpisodeUtils.getEpisodes(showIndex, seasonIndex));
 
         return season;
     }
@@ -148,7 +176,7 @@ public final class SeasonUtils {
      * @param entityManager entity manager
      * @return season with updated fields
      */
-    public static Season updateSeason(final int id, final EntityManager entityManager) {
+    public static Season updateSeason(final EntityManager entityManager, final int id) {
         final Season season = getSeason(entityManager, id);
         updateSeason(season);
         season.setPosition(POSITION);
@@ -190,6 +218,8 @@ public final class SeasonUtils {
      */
     public static void assertSeasonDeepEquals(final Season expected, final Season actual) {
         assertNotNull(actual);
+        assertNotNull(actual.getSubtitles());
+        Collections.sort(actual.getSubtitles());
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getNumber(), actual.getNumber());
         assertEquals(expected.getStartYear(), actual.getStartYear());
@@ -198,7 +228,10 @@ public final class SeasonUtils {
         assertEquals(expected.getSubtitles(), actual.getSubtitles());
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
-        assertEquals(expected.getShow(), actual.getShow());
+        if (expected.getEpisodes() == null) {
+            assertNull(actual.getEpisodes());
+        } else {
+            EpisodeUtils.assertEpisodesDeepEquals(expected.getEpisodes(), actual.getEpisodes());
+        }
     }
-
 }

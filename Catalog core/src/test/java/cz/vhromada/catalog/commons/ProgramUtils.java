@@ -125,7 +125,7 @@ public final class ProgramUtils {
      * @param entityManager entity manager
      * @return program with updated fields
      */
-    public static Program updateProgram(final int id, final EntityManager entityManager) {
+    public static Program updateProgram(final EntityManager entityManager, final int id) {
         final Program program = getProgram(entityManager, id);
         updateProgram(program);
         program.setPosition(POSITION);

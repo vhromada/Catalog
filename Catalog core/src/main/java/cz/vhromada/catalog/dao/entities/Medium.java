@@ -103,11 +103,12 @@ public class Medium implements Serializable {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Medium) || id == null) {
             return false;
         }
-        final Medium medium = (Medium) obj;
-        return id.equals(medium.id);
+
+        return id.equals(((Medium) obj).id);
     }
 
     @Override

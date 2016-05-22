@@ -165,7 +165,7 @@ public class SeasonServiceImpl extends AbstractShowService implements SeasonServ
 
         try {
             final Season newSeason = createSeason(season);
-            newSeason.setShow(season.getShow());
+//            newSeason.setShow(season.getShow());
             seasonDAO.add(newSeason);
             newSeason.setPosition(season.getPosition());
             seasonDAO.update(newSeason);

@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -16,13 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "songs")
-@NamedQuery(name = Song.FIND_BY_MUSIC, query = "SELECT s FROM Song s WHERE s.music = :music ORDER BY s.position, s.id")
 public class Song implements Movable {
-
-    /**
-     * Name for query - find by music
-     */
-    public static final String FIND_BY_MUSIC = "Song.findByMusic";
 
     /**
      * SerialVersionUID
@@ -58,11 +51,6 @@ public class Song implements Movable {
      * Position
      */
     private int position;
-
-    /**
-     * Music
-     */
-    private Integer music;
 
     @Override
     public Integer getId() {
@@ -138,34 +126,17 @@ public class Song implements Movable {
         this.position = position;
     }
 
-    /**
-     * Returns music.
-     *
-     * @return music
-     */
-    public Integer getMusic() {
-        return music;
-    }
-
-    /**
-     * Sets a new value to music.
-     *
-     * @param music new value
-     */
-    public void setMusic(final Integer music) {
-        this.music = music;
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Song) || id == null) {
             return false;
         }
-        final Song song = (Song) obj;
-        return id.equals(song.id);
+
+        return id.equals(((Song) obj).id);
     }
 
     @Override
@@ -175,7 +146,7 @@ public class Song implements Movable {
 
     @Override
     public String toString() {
-        return String.format("Song [id=%d, name=%s, length=%d, note=%s, position=%d, music=%d]", id, name, length, note, position, music);
+        return String.format("Song [id=%d, name=%s, length=%d, note=%s, position=%d]", id, name, length, note, position);
     }
 
 }

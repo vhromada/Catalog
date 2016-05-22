@@ -2,6 +2,7 @@ package cz.vhromada.catalog.commons;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +98,7 @@ public final class MusicUtils {
         music.setMediaCount(index * 10);
         music.setNote(index == 2 ? "Music 2 note" : "");
         music.setPosition(index - 1);
+        music.setSongs(SongUtils.getSongs(index));
 
         return music;
     }
@@ -119,7 +121,7 @@ public final class MusicUtils {
      * @param entityManager entity manager
      * @return music with updated fields
      */
-    public static Music updateMusic(final int id, final EntityManager entityManager) {
+    public static Music updateMusic(final EntityManager entityManager, final int id) {
         final Music music = getMusic(entityManager, id);
         updateMusic(music);
         music.setPosition(POSITION);
@@ -167,6 +169,11 @@ public final class MusicUtils {
         assertEquals(expected.getWikiCz(), actual.getWikiCz());
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
+        if (expected.getSongs() == null) {
+            assertNull(actual.getSongs());
+        } else {
+            SongUtils.assertSongsDeepEquals(expected.getSongs(), actual.getSongs());
+        }
     }
 
 }

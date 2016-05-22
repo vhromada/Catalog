@@ -1,7 +1,6 @@
 package cz.vhromada.catalog;
 
-import cz.vhromada.catalog.dao.impl.DAOImplIntegrationSuite;
-import cz.vhromada.catalog.dao.impl.DAOImplSuite;
+import cz.vhromada.catalog.repository.RepositorySuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -15,6 +14,6 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ DAOImplSuite.class, DAOImplIntegrationSuite.class/*, ServiceImplSuite.class, FacadeSuite.class*/ })
+@Suite.SuiteClasses({ RepositorySuite.class/*, ServiceImplSuite.class, FacadeSuite.class*/ })
 public class CatalogCoreSuite {
 }

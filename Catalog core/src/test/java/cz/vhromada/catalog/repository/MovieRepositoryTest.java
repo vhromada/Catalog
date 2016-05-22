@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.dao.impl;
+package cz.vhromada.catalog.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,13 +13,13 @@ import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.GenreUtils;
 import cz.vhromada.catalog.commons.MediumUtils;
 import cz.vhromada.catalog.commons.MovieUtils;
-import cz.vhromada.catalog.dao.MovieDAO;
-import cz.vhromada.catalog.dao.entities.Medium;
 import cz.vhromada.catalog.dao.entities.Movie;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,59 +27,61 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents integration test for class {@link MovieDAOImpl}.
+ * A class represents test for class {@link MovieRepository}.
  *
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testDAOContext.xml")
+@ContextConfiguration("classpath:testRepositoryContext.xml")
 @Transactional
 @Rollback
-public class MovieDAOImplIntegrationTest {
+public class MovieRepositoryTest {
 
     /**
      * Instance of {@link EntityManager}
      */
     @Autowired
+    @Qualifier("containerManagedEntityManager")
     private EntityManager entityManager;
 
     /**
-     * Instance of {@link MovieDAO}
+     * Instance of {@link MovieRepository}
      */
     @Autowired
-    private MovieDAO movieDAO;
+    private MovieRepository movieRepository;
 
     /**
-     * Test method for {@link MovieDAO#getMovies()}.
+     * Test method for get movies.
      */
     @Test
     public void testGetMovies() {
-        final List<Movie> movies = movieDAO.getMovies();
+        final List<Movie> movies = movieRepository.findAll(new Sort("position", "id"));
 
         MovieUtils.assertMoviesDeepEquals(MovieUtils.getMovies(), movies);
 
         assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
-     * Test method for {@link MovieDAO#getMovie(Integer)}.
+     * Test method for get movie.
      */
     @Test
     public void testGetMovie() {
         for (int i = 1; i <= MovieUtils.MOVIES_COUNT; i++) {
-            final Movie movie = movieDAO.getMovie(i);
+            final Movie movie = movieRepository.findOne(i);
 
-            assertNotNull(movie);
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), movie);
         }
 
-        assertNull(movieDAO.getMovie(Integer.MAX_VALUE));
+        assertNull(movieRepository.findOne(Integer.MAX_VALUE));
 
         assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
-     * Test method for {@link MovieDAO#add(Movie)}.
+     * Test method for add movie.
      */
     @Test
     @DirtiesContext
@@ -88,29 +90,30 @@ public class MovieDAOImplIntegrationTest {
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(null)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
 
-        movieDAO.add(movie);
+        movieRepository.saveAndFlush(movie);
 
         assertNotNull(movie.getId());
         assertEquals(MovieUtils.MOVIES_COUNT + 1, movie.getId().intValue());
-        assertEquals(MovieUtils.MOVIES_COUNT, movie.getPosition());
 
         final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
-        final Movie expectedAddedMovie = MovieUtils.newMovie(MovieUtils.MOVIES_COUNT + 1);
+        final Movie expectedAddedMovie = MovieUtils.newMovie(null);
+        expectedAddedMovie.setId(MovieUtils.MOVIES_COUNT + 1);
         expectedAddedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(MediumUtils.MEDIA_COUNT + 1)));
         expectedAddedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         MovieUtils.assertMovieDeepEquals(expectedAddedMovie, addedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
-     * Test method for {@link MovieDAO#update(Movie)} with no media change.
+     * Test method for update movie with no media change.
      */
     @Test
     public void testUpdate_NoMediaChange() {
-        final Movie movie = MovieUtils.updateMovie(1, entityManager);
+        final Movie movie = MovieUtils.updateMovie(entityManager, 1);
 
-        movieDAO.update(movie);
+        movieRepository.saveAndFlush(movie);
 
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
@@ -119,20 +122,19 @@ public class MovieDAOImplIntegrationTest {
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
-     * Test method for {@link MovieDAO#update(Movie)} with added medium.
+     * Test method for update movie with added medium.
      */
     @Test
     @DirtiesContext
     public void testUpdate_AddedMedium() {
-        final Movie movie = MovieUtils.updateMovie(1, entityManager);
-        final List<Medium> media = movie.getMedia();
-        media.add(MediumUtils.newMedium(null));
-        movie.setMedia(media);
+        final Movie movie = MovieUtils.updateMovie(entityManager, 1);
+        movie.getMedia().add(MediumUtils.newMedium(null));
 
-        movieDAO.update(movie);
+        movieRepository.saveAndFlush(movie);
 
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
@@ -142,17 +144,19 @@ public class MovieDAOImplIntegrationTest {
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
-     * Test method for {@link MovieDAO#update(Movie)} with removed medium.
+     * Test method for update movie with removed medium.
      */
     @Test
     public void testUpdate_RemovedMedium() {
-        final Movie movie = MovieUtils.updateMovie(1, entityManager);
-        movie.setMedia(new ArrayList<>());
+        final int mediaCount = MovieUtils.getMovie(1).getMedia().size();
+        final Movie movie = MovieUtils.updateMovie(entityManager, 1);
+        movie.getMedia().clear();
 
-        movieDAO.update(movie);
+        movieRepository.saveAndFlush(movie);
 
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
@@ -162,18 +166,33 @@ public class MovieDAOImplIntegrationTest {
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT - mediaCount, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
-     * Test method for {@link MovieDAO#remove(Movie)}.
+     * Test method for remove movie.
      */
     @Test
     public void testRemove() {
-        movieDAO.remove(MovieUtils.getMovie(entityManager, 1));
+        final int mediaCount = MovieUtils.getMovie(1).getMedia().size();
+
+        movieRepository.delete(MovieUtils.getMovie(entityManager, 1));
 
         assertNull(MovieUtils.getMovie(entityManager, 1));
 
         assertEquals(MovieUtils.MOVIES_COUNT - 1, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT - mediaCount, MediumUtils.getMediaCount(entityManager));
+    }
+
+    /**
+     * Test method for remove all movies.
+     */
+    @Test
+    public void testRemoveAll() {
+        movieRepository.deleteAll();
+
+        assertEquals(0, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(0, MediumUtils.getMediaCount(entityManager));
     }
 
 }

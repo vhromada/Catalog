@@ -23,11 +23,6 @@ public final class SongUtils {
     public static final Integer ID = 1;
 
     /**
-     * Multipliers for length
-     */
-    private static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
-
-    /**
      * Position
      */
     public static final Integer POSITION = 10;
@@ -38,9 +33,14 @@ public final class SongUtils {
     public static final int SONGS_COUNT = 9;
 
     /**
+     * Multipliers for length
+     */
+    private static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
+
+    /**
      * Count of songs in music
      */
-    public static final int SONGS_PER_MUSIC_COUNT = 3;
+    private static final int SONGS_PER_MUSIC_COUNT = 3;
 
     /**
      * Creates a new instance of SongUtils.
@@ -57,7 +57,6 @@ public final class SongUtils {
     public static Song newSong(final Integer id) {
         final Song song = new Song();
         updateSong(song);
-        song.setMusic(5);
         if (id != null) {
             song.setId(id);
             song.setPosition(id - 1);
@@ -78,18 +77,31 @@ public final class SongUtils {
     }
 
     /**
-     * Returns songs.
+     * Returns songs for music.
      *
-     * @param music index of music
-     * @return songs
+     * @param music music
+     * @return songs for music
      */
     public static List<Song> getSongs(final int music) {
         final List<Song> songs = new ArrayList<>();
-        for (int i = 0; i < SONGS_PER_MUSIC_COUNT; i++) {
-            songs.add(getSong(music, i + 1));
+        for (int i = 1; i <= SONGS_PER_MUSIC_COUNT; i++) {
+            songs.add(getSong(music, i));
         }
 
         return songs;
+    }
+
+    /**
+     * Returns song for index.
+     *
+     * @param index song index
+     * @return song for index
+     */
+    public static Song getSong(final int index) {
+        final int musicNumber = (index - 1) / SONGS_PER_MUSIC_COUNT + 1;
+        final int songNumber = (index - 1) % SONGS_PER_MUSIC_COUNT + 1;
+
+        return getSong(musicNumber, songNumber);
     }
 
     /**
@@ -106,7 +118,6 @@ public final class SongUtils {
         song.setLength(songIndex * LENGTH_MULTIPLIERS[musicIndex - 1]);
         song.setNote(songIndex == 2 ? "Music " + musicIndex + " Song 2 note" : "");
         song.setPosition(songIndex - 1);
-        song.setMusic(musicIndex);
 
         return song;
     }
@@ -129,7 +140,7 @@ public final class SongUtils {
      * @param entityManager entity manager
      * @return song with updated fields
      */
-    public static Song updateSong(final int id, final EntityManager entityManager) {
+    public static Song updateSong(final EntityManager entityManager, final int id) {
         final Song song = getSong(entityManager, id);
         updateSong(song);
         song.setPosition(POSITION);
@@ -176,7 +187,6 @@ public final class SongUtils {
         assertEquals(expected.getLength(), actual.getLength());
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
-        assertEquals(expected.getMusic(), actual.getMusic());
     }
 
 }

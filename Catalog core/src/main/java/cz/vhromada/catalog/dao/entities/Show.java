@@ -2,6 +2,7 @@ package cz.vhromada.catalog.dao.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -103,6 +105,15 @@ public class Show implements Movable {
     @JoinTable(name = "tv_show_genres", joinColumns = @JoinColumn(name = "tv_show"), inverseJoinColumns = @JoinColumn(name = "genre"))
     @Fetch(FetchMode.SELECT)
     private List<Genre> genres;
+
+    /**
+     * Seasons
+     */
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "tv_show", referencedColumnName = "id")
+    @OrderBy("position, id")
+    @Fetch(FetchMode.SELECT)
+    private List<Season> seasons;
 
     @Override
     public Integer getId() {
@@ -286,16 +297,35 @@ public class Show implements Movable {
         this.genres = genres;
     }
 
+    /**
+     * Returns seasons.
+     *
+     * @return seasons
+     */
+    public List<Season> getSeasons() {
+        return seasons;
+    }
+
+    /**
+     * Sets a new value to seasons.
+     *
+     * @param seasons new value
+     */
+    public void setSeasons(final List<Season> seasons) {
+        this.seasons = seasons;
+    }
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
+
         if (obj == null || !(obj instanceof Show) || id == null) {
             return false;
         }
-        final Show show = (Show) obj;
-        return id.equals(show.id);
+
+        return id.equals(((Show) obj).id);
     }
 
     @Override
@@ -306,7 +336,7 @@ public class Show implements Movable {
     @Override
     public String toString() {
         return String.format("Show [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
-                + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
+                + "genres=%s, seasons=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres, seasons);
     }
 
 }

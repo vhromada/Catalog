@@ -73,7 +73,7 @@ public class SeasonDAOImpl extends AbstractDAO<Season> implements SeasonDAO {
      */
     @Override
     public List<Season> findSeasonsByShow(final Show show) {
-        return getData(show, "Show", Season.FIND_BY_SHOW, "show");
+        return null;//getData(show, "Show", Season.FIND_BY_SHOW, "show");
     }
 
 }

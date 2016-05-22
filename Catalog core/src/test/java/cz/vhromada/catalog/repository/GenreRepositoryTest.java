@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.dao.impl;
+package cz.vhromada.catalog.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,46 +9,48 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.dao.GenreDAO;
 import cz.vhromada.catalog.dao.entities.Genre;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents integration test for class {@link GenreDAOImpl}.
+ * A class represents test for class {@link GenreRepository}.
  *
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testDAOContext.xml")
+@ContextConfiguration("classpath:testRepositoryContext.xml")
 @Transactional
 @Rollback
-public class GenreDAOImplIntegrationTest {
+public class GenreRepositoryTest {
 
     /**
      * Instance of {@link EntityManager}
      */
     @Autowired
+    @Qualifier("containerManagedEntityManager")
     private EntityManager entityManager;
 
     /**
-     * Instance of {@link GenreDAO}
+     * Instance of {@link GenreRepository}
      */
     @Autowired
-    private GenreDAO genreDAO;
+    private GenreRepository genreRepository;
 
     /**
-     * Test method for {@link GenreDAO#getGenres()}.
+     * Test method for get genres.
      */
     @Test
     public void testGetGenres() {
-        final List<Genre> genres = genreDAO.getGenres();
+        final List<Genre> genres = genreRepository.findAll(new Sort("position", "id"));
 
         GenreUtils.assertGenresDeepEquals(GenreUtils.getGenres(), genres);
 
@@ -56,49 +58,49 @@ public class GenreDAOImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreDAO#getGenre(Integer)}.
+     * Test method for get genre.
      */
     @Test
     public void testGetGenre() {
         for (int i = 1; i <= GenreUtils.GENRES_COUNT; i++) {
-            final Genre genre = genreDAO.getGenre(i);
+            final Genre genre = genreRepository.findOne(i);
 
-            assertNotNull(genre);
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), genre);
         }
 
-        assertNull(genreDAO.getGenre(Integer.MAX_VALUE));
+        assertNull(genreRepository.findOne(Integer.MAX_VALUE));
 
         assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
     }
 
     /**
-     * Test method for {@link GenreDAO#add(Genre)}.
+     * Test method for add genre.
      */
     @Test
     public void testAdd() {
         final Genre genre = GenreUtils.newGenre(null);
 
-        genreDAO.add(genre);
+        genreRepository.saveAndFlush(genre);
 
         assertNotNull(genre.getId());
         assertEquals(GenreUtils.GENRES_COUNT + 1, genre.getId().intValue());
-        assertEquals(GenreUtils.GENRES_COUNT, genre.getPosition());
 
         final Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
-        GenreUtils.assertGenreDeepEquals(GenreUtils.newGenre(GenreUtils.GENRES_COUNT + 1), addedGenre);
+        final Genre expectedAddGenre = GenreUtils.newGenre(null);
+        expectedAddGenre.setId(GenreUtils.GENRES_COUNT + 1);
+        GenreUtils.assertGenreDeepEquals(expectedAddGenre, addedGenre);
 
         assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
     }
 
     /**
-     * Test method for {@link GenreDAO#update(Genre)}.
+     * Test method for update genre.
      */
     @Test
     public void testUpdate() {
-        final Genre genre = GenreUtils.updateGenre(1, entityManager);
+        final Genre genre = GenreUtils.updateGenre(entityManager, 1);
 
-        genreDAO.update(genre);
+        genreRepository.saveAndFlush(genre);
 
         final Genre updatedGenre = GenreUtils.getGenre(entityManager, 1);
         final Genre expectedUpdatedGenre = GenreUtils.getGenre(1);
@@ -110,7 +112,7 @@ public class GenreDAOImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreDAO#remove(Genre)}.
+     * Test method for remove genre.
      */
     @Test
     public void testRemove() {
@@ -118,10 +120,24 @@ public class GenreDAOImplIntegrationTest {
         entityManager.persist(genre);
         assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
 
-        genreDAO.remove(genre);
+        genreRepository.delete(genre);
 
         assertNull(GenreUtils.getGenre(entityManager, genre.getId()));
+
         assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+    }
+
+    /**
+     * Test method for remove all genres.
+     */
+    @Test
+    public void testRemoveAll() {
+        entityManager.createNativeQuery("DELETE FROM movie_genres").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM tv_show_genres").executeUpdate();
+
+        genreRepository.deleteAllInBatch();
+
+        assertEquals(0, GenreUtils.getGenresCount(entityManager));
     }
 
 }

@@ -28,24 +28,24 @@ public final class EpisodeUtils {
     public static final int EPISODES_PER_SEASON_COUNT = 3;
 
     /**
-     * Count of episodes in show
-     */
-    public static final int EPISODES_PER_SHOW_COUNT = 9;
-
-    /**
      * ID
      */
     public static final Integer ID = 1;
 
     /**
-     * Multipliers for length
-     */
-    private static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
-
-    /**
      * Position
      */
     public static final Integer POSITION = 10;
+
+    /**
+     * Count of episodes in show
+     */
+    private static final int EPISODES_PER_SHOW_COUNT = 9;
+
+    /**
+     * Multipliers for length
+     */
+    private static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
 
     /**
      * Creates a new instance of EpisodeUtils.
@@ -62,7 +62,6 @@ public final class EpisodeUtils {
     public static Episode newEpisode(final Integer id) {
         final Episode episode = new Episode();
         updateEpisode(episode);
-        episode.setSeason(5);
         if (id != null) {
             episode.setId(id);
             episode.setPosition(id - 1);
@@ -84,18 +83,33 @@ public final class EpisodeUtils {
     }
 
     /**
-     * Returns episodes.
+     * Returns episodes for show and season.
      *
-     * @param show   index of show
-     * @param season index of season
-     * @return episodes
+     * @param show   show
+     * @param season season
+     * @return episodes for show and season
      */
     public static List<Episode> getEpisodes(final int show, final int season) {
         final List<Episode> episodes = new ArrayList<>();
-        for (int i = 0; i < EPISODES_PER_SEASON_COUNT; i++) {
-            episodes.add(getEpisode(show, season, i + 1));
+        for (int i = 1; i <= EPISODES_PER_SEASON_COUNT; i++) {
+            episodes.add(getEpisode(show, season, i));
         }
+
         return episodes;
+    }
+
+    /**
+     * Returns episode for index.
+     *
+     * @param index index
+     * @return episode for index
+     */
+    public static Episode getEpisode(final int index) {
+        final int showNumber = (index - 1) / EPISODES_PER_SHOW_COUNT + 1;
+        final int seasonNumber = (index - 1) % EPISODES_PER_SHOW_COUNT / EPISODES_PER_SEASON_COUNT + 1;
+        final int episodeNumber = (index - 1) % EPISODES_PER_SEASON_COUNT + 1;
+
+        return getEpisode(showNumber, seasonNumber, episodeNumber);
     }
 
     /**
@@ -114,7 +128,6 @@ public final class EpisodeUtils {
         episode.setLength(episodeIndex * LENGTH_MULTIPLIERS[seasonIndex - 1]);
         episode.setNote(episodeIndex == 2 ? "Show " + showIndex + " Season " + seasonIndex + " Episode 2 note" : "");
         episode.setPosition(episodeIndex - 1);
-        episode.setSeason((showIndex - 1) * SeasonUtils.SEASONS_PER_SHOW_COUNT + seasonIndex);
 
         return episode;
     }
@@ -137,7 +150,7 @@ public final class EpisodeUtils {
      * @param entityManager entity manager
      * @return episode with updated fields
      */
-    public static Episode updateEpisode(final int id, final EntityManager entityManager) {
+    public static Episode updateEpisode(final EntityManager entityManager, final int id) {
         final Episode episode = getEpisode(entityManager, id);
         updateEpisode(episode);
         episode.setPosition(POSITION);
@@ -185,7 +198,5 @@ public final class EpisodeUtils {
         assertEquals(expected.getLength(), actual.getLength());
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
-        assertEquals(expected.getSeason(), actual.getSeason());
     }
-
 }

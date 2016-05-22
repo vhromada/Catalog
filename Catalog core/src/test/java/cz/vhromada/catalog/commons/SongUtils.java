@@ -23,6 +23,11 @@ public final class SongUtils {
     public static final Integer ID = 1;
 
     /**
+     * Multipliers for length
+     */
+    private static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
+
+    /**
      * Position
      */
     public static final Integer POSITION = 10;
@@ -36,11 +41,6 @@ public final class SongUtils {
      * Count of songs in music
      */
     public static final int SONGS_PER_MUSIC_COUNT = 3;
-
-    /**
-     * Multipliers for length
-     */
-    private static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
 
     /**
      * Creates a new instance of SongUtils.

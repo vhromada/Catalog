@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.dao.entities;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -27,7 +26,7 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "tv_shows")
 @NamedQuery(name = Show.SELECT_SHOWS, query = "SELECT s FROM Show s ORDER BY s.position, s.id")
-public class Show implements Serializable {
+public class Show implements Movable {
 
     /**
      * Name for query - select shows
@@ -105,20 +104,12 @@ public class Show implements Serializable {
     @Fetch(FetchMode.SELECT)
     private List<Genre> genres;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -267,20 +258,12 @@ public class Show implements Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }

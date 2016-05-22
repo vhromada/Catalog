@@ -86,6 +86,7 @@ public final class GameUtils {
         for (int i = 0; i < GAMES_COUNT; i++) {
             games.add(getGame(i + 1));
         }
+
         return games;
     }
 

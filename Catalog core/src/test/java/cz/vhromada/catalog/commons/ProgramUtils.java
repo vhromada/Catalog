@@ -81,6 +81,7 @@ public final class ProgramUtils {
         for (int i = 0; i < PROGRAMS_COUNT; i++) {
             programs.add(getProgram(i + 1));
         }
+
         return programs;
     }
 

@@ -88,6 +88,7 @@ public final class MovieUtils {
         for (int i = 0; i < MOVIES_COUNT; i++) {
             movies.add(getMovie(i + 1));
         }
+
         return movies;
     }
 

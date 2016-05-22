@@ -74,6 +74,7 @@ public final class GenreUtils {
         for (int i = 0; i < GENRES_COUNT; i++) {
             genres.add(getGenre(i + 1));
         }
+
         return genres;
     }
 

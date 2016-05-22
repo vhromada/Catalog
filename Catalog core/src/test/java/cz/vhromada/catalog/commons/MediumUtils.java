@@ -58,6 +58,7 @@ public final class MediumUtils {
         for (int i = 0; i < MEDIA_COUNT; i++) {
             media.add(getMedium(i + 1));
         }
+
         return media;
     }
 

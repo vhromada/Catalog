@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author Vladimir Hromada
  */
-public class GameTO implements Comparable<GameTO>, Serializable {
+public class GameTO implements Serializable {
 
     /**
      * SerialVersionUID
@@ -382,12 +382,6 @@ public class GameTO implements Comparable<GameTO>, Serializable {
         return String.format("GameTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, patch=%b, trainer=%b, trainerData=%b, "
                         + "editor=%b, saves=%b, otherData=%s, note=%s, position=%d]", id, name, wikiEn, wikiCz, mediaCount, crack, serialKey, patch, trainer,
                 trainerData, editor, saves, otherData, note, position);
-    }
-
-    @Override
-    public int compareTo(final GameTO o) {
-        final int result = position - o.position;
-        return result == 0 ? id - o.id : result;
     }
 
 }

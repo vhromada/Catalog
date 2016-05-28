@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -16,13 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "games")
-@NamedQuery(name = Game.SELECT_GAMES, query = "SELECT g FROM Game g ORDER BY g.position, g.id")
 public class Game implements Movable {
-
-    /**
-     * Name for query - select games
-     */
-    public static final String SELECT_GAMES = "Game.selectGames";
 
     /**
      * SerialVersionUID

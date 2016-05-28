@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -50,25 +49,9 @@ public class GameRepositoryTest {
      */
     @Test
     public void testGetGames() {
-        final List<Game> games = gameRepository.findAll(new Sort("position", "id"));
+        final List<Game> games = gameRepository.findAll();
 
         GameUtils.assertGamesDeepEquals(GameUtils.getGames(), games);
-
-        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
-    }
-
-    /**
-     * Test method for get game.
-     */
-    @Test
-    public void testGetGame() {
-        for (int i = 1; i <= GameUtils.GAMES_COUNT; i++) {
-            final Game game = gameRepository.findOne(i);
-
-            GameUtils.assertGameDeepEquals(GameUtils.getGame(i), game);
-        }
-
-        assertNull(gameRepository.findOne(Integer.MAX_VALUE));
 
         assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
     }
@@ -80,7 +63,7 @@ public class GameRepositoryTest {
     public void testAdd() {
         final Game game = GameUtils.newGame(null);
 
-        gameRepository.saveAndFlush(game);
+        gameRepository.save(game);
 
         assertNotNull(game.getId());
         assertEquals(GameUtils.GAMES_COUNT + 1, game.getId().intValue());
@@ -100,7 +83,7 @@ public class GameRepositoryTest {
     public void testUpdate() {
         final Game game = GameUtils.updateGame(entityManager, 1);
 
-        gameRepository.saveAndFlush(game);
+        gameRepository.save(game);
 
         final Game updatedGame = GameUtils.getGame(entityManager, 1);
         final Game expectedUpdatedGame = GameUtils.getGame(1);
@@ -128,7 +111,7 @@ public class GameRepositoryTest {
      */
     @Test
     public void testRemoveAll() {
-        gameRepository.deleteAllInBatch();
+        gameRepository.deleteAll();
 
         assertEquals(0, GameUtils.getGamesCount(entityManager));
     }

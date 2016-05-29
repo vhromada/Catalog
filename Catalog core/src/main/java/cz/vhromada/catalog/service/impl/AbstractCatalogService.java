@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Movable;
+import cz.vhromada.catalog.commons.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.validators.Validators;
 

@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.dao.entities;
+package cz.vhromada.catalog.commons;
 
 import java.io.Serializable;
 

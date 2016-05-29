@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.dao.entities.Movable;
+import cz.vhromada.catalog.commons.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 
 import org.junit.Before;

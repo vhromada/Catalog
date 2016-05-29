@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import cz.vhromada.catalog.commons.Movable;
+
 /**
  * A class represents song.
  *

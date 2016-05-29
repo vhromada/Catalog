@@ -2,7 +2,7 @@ package cz.vhromada.catalog.service;
 
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Movable;
+import cz.vhromada.catalog.commons.Movable;
 
 /**
  * An interface represents service for catalog.

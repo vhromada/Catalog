@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import cz.vhromada.catalog.dao.entities.Movable;
+import cz.vhromada.catalog.commons.Movable;
 import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 import cz.vhromada.validators.Validators;
 

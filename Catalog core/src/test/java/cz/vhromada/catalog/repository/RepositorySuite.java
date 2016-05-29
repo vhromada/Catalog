@@ -9,7 +9,8 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ MovieRepositoryTest.class, ShowRepositoryTest.class, SeasonRepositoryTest.class, EpisodeRepositoryTest.class, GameRepositoryTest.class,
-        MusicRepositoryTest.class, SongRepositoryTest.class, ProgramRepositoryTest.class, GenreRepositoryTest.class })
+@Suite.SuiteClasses({ MovieRepositoryIntegrationTest.class, ShowRepositoryIntegrationTest.class, SeasonRepositoryIntegrationTest.class,
+        EpisodeRepositoryIntegrationTest.class, GameRepositoryIntegrationTest.class, MusicRepositoryIntegrationTest.class, SongRepositoryIntegrationTest.class,
+        ProgramRepositoryIntegrationTest.class, GenreRepositoryIntegrationTest.class })
 public class RepositorySuite {
 }

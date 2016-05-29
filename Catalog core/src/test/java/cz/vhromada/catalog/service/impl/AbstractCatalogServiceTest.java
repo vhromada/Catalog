@@ -91,7 +91,7 @@ public class AbstractCatalogServiceTest {
      * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null cache for datas.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullGCache() {
+    public void testConstructor_NullCache() {
         new AbstractCatalogServiceStub(repository, null, KEY);
     }
 

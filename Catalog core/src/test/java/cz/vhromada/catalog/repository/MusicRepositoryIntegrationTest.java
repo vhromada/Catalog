@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link MusicRepository}.
+ * A class represents integration test for class {@link MusicRepository}.
  *
  * @author Vladimir Hromada
  */
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testRepositoryContext.xml")
 @Transactional
 @Rollback
-public class MusicRepositoryTest {
+public class MusicRepositoryIntegrationTest {
 
     /**
      * Instance of {@link EntityManager}

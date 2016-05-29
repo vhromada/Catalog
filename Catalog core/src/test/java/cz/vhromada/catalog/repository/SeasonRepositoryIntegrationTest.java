@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A class represents test for class {@link SeasonRepository}.
+ * A class represents integration test for class {@link SeasonRepository}.
  *
  * @author Vladimir Hromada
  */
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:testRepositoryContext.xml")
 @Transactional
 @Rollback
-public class SeasonRepositoryTest {
+public class SeasonRepositoryIntegrationTest {
 
     /**
      * Instance of {@link EntityManager}

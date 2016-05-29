@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.dao.entities.Game;
+import cz.vhromada.catalog.facade.to.GameTO;
 
 /**
  * A class represents utility class for games.
@@ -61,6 +62,44 @@ public final class GameUtils {
      * @param game game
      */
     public static void updateGame(final Game game) {
+        game.setName("Name");
+        game.setWikiEn("enWiki");
+        game.setWikiCz("czWiki");
+        game.setMediaCount(1);
+        game.setCrack(true);
+        game.setSerialKey(true);
+        game.setPatch(true);
+        game.setTrainer(true);
+        game.setTrainerData(true);
+        game.setEditor(true);
+        game.setSaves(true);
+        game.setOtherData("Other data");
+        game.setNote("Note");
+    }
+
+    /**
+     * Returns TO for game.
+     *
+     * @param id ID
+     * @return TO for game
+     */
+    public static GameTO newGameTO(final Integer id) {
+        final GameTO game = new GameTO();
+        updateGameTO(game);
+        if (id != null) {
+            game.setId(id);
+            game.setPosition(id - 1);
+        }
+
+        return game;
+    }
+
+    /**
+     * Updates TO for game fields.
+     *
+     * @param game TO for game
+     */
+    public static void updateGameTO(final GameTO game) {
         game.setName("Name");
         game.setWikiEn("enWiki");
         game.setWikiCz("czWiki");

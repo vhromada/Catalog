@@ -1,13 +1,13 @@
 package cz.vhromada.catalog.facade.to;
 
-import java.io.Serializable;
+import cz.vhromada.catalog.commons.Movable;
 
 /**
  * A class represents TO for game.
  *
  * @author Vladimir Hromada
  */
-public class GameTO implements Serializable {
+public class GameTO implements Movable {
 
     /**
      * SerialVersionUID
@@ -89,20 +89,12 @@ public class GameTO implements Serializable {
      */
     private int position;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -112,7 +104,6 @@ public class GameTO implements Serializable {
      *
      * @return name
      */
-
     public String getName() {
         return name;
     }
@@ -342,20 +333,12 @@ public class GameTO implements Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }

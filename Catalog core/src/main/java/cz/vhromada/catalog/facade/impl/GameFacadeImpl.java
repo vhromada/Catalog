@@ -98,10 +98,7 @@ public class GameFacadeImpl implements GameFacade {
     public void add(final GameTO game) {
         gameTOValidator.validateNewGameTO(game);
 
-        final Game gameEntity = converter.convert(game, Game.class);
-        gameService.add(gameEntity);
-        game.setId(gameEntity.getId());
-        game.setPosition(gameEntity.getPosition());
+        gameService.add(converter.convert(game, Game.class));
     }
 
     /**

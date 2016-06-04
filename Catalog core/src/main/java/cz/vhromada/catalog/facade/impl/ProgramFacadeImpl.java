@@ -25,12 +25,12 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * Program argument
      */
-    private static final String GAME_ARGUMENT = "program";
+    private static final String PROGRAM_ARGUMENT = "program";
 
     /**
      * TO for program argument
      */
-    private static final String GAME_TO_ARGUMENT = "TO for program";
+    private static final String PROGRAM_TO_ARGUMENT = "TO for program";
 
     /**
      * Service for programs
@@ -109,7 +109,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     @Override
     public void update(final ProgramTO program) {
         programTOValidator.validateExistingProgramTO(program);
-        Validators.validateExists(programService.get(program.getId()), GAME_TO_ARGUMENT);
+        Validators.validateExists(programService.get(program.getId()), PROGRAM_TO_ARGUMENT);
 
         programService.update(converter.convert(program, Program.class));
     }
@@ -123,7 +123,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     public void remove(final ProgramTO program) {
         programTOValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, GAME_TO_ARGUMENT);
+        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
 
         programService.remove(programEntity);
     }
@@ -137,7 +137,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     public void duplicate(final ProgramTO program) {
         programTOValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, GAME_TO_ARGUMENT);
+        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
 
         programService.duplicate(programEntity);
     }
@@ -151,9 +151,9 @@ public class ProgramFacadeImpl implements ProgramFacade {
     public void moveUp(final ProgramTO program) {
         programTOValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, GAME_TO_ARGUMENT);
+        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
         final List<Program> programs = programService.getAll();
-        Validators.validateMoveUp(programs, programEntity, GAME_ARGUMENT);
+        Validators.validateMoveUp(programs, programEntity, PROGRAM_ARGUMENT);
 
         programService.moveUp(programEntity);
     }
@@ -167,9 +167,9 @@ public class ProgramFacadeImpl implements ProgramFacade {
     public void moveDown(final ProgramTO program) {
         programTOValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, GAME_TO_ARGUMENT);
+        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
         final List<Program> programs = programService.getAll();
-        Validators.validateMoveDown(programs, programEntity, GAME_ARGUMENT);
+        Validators.validateMoveDown(programs, programEntity, PROGRAM_ARGUMENT);
 
         programService.moveDown(programEntity);
     }

@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -18,13 +17,7 @@ import cz.vhromada.catalog.commons.Movable;
  */
 @Entity
 @Table(name = "genres")
-@NamedQuery(name = Genre.SELECT_GENRES, query = "SELECT g FROM Genre g ORDER BY g.position, g.id")
 public class Genre implements Movable {
-
-    /**
-     * Name for query - select genres
-     */
-    public static final String SELECT_GENRES = "Genre.selectGenres";
 
     /**
      * SerialVersionUID

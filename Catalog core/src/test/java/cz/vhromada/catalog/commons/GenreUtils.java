@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.dao.entities.Genre;
+import cz.vhromada.catalog.facade.to.GenreTO;
 
 /**
  * A class represents utility class for genres.
@@ -61,6 +62,32 @@ public final class GenreUtils {
      * @param genre genre
      */
     public static void updateGenre(final Genre genre) {
+        genre.setName("Name");
+    }
+
+    /**
+     * Returns TO for genre.
+     *
+     * @param id ID
+     * @return TO for genre
+     */
+    public static GenreTO newGenreTO(final Integer id) {
+        final GenreTO genre = new GenreTO();
+        updateGenreTO(genre);
+        if (id != null) {
+            genre.setId(id);
+            genre.setPosition(id - 1);
+        }
+
+        return genre;
+    }
+
+    /**
+     * Updates TO for genre fields.
+     *
+     * @param genre TO for genre
+     */
+    public static void updateGenreTO(final GenreTO genre) {
         genre.setName("Name");
     }
 

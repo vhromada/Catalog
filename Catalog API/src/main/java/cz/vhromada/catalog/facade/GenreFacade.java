@@ -13,8 +13,6 @@ public interface GenreFacade {
 
     /**
      * Creates new data.
-     *
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void newData();
 
@@ -22,7 +20,6 @@ public interface GenreFacade {
      * Returns list of TO for genre.
      *
      * @return list of TO for genre
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     List<GenreTO> getGenres();
 
@@ -31,20 +28,23 @@ public interface GenreFacade {
      *
      * @param id ID
      * @return TO for genre with ID or null if there isn't such TO for genre
-     * @throws IllegalArgumentException                                       if ID is null
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
+     * @throws IllegalArgumentException if ID is null
      */
     GenreTO getGenre(Integer id);
 
     /**
-     * Adds TO for genre. Sets new ID.
+     * Adds TO for genre. Sets new ID and position.
      *
      * @param genre TO for genre
-     * @throws IllegalArgumentException                                       if TO for genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID isn't null
-     *                                                                        or name is null
-     *                                                                        or name is empty string
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
+     * @throws IllegalArgumentException                              if TO for genre is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
+     *                                                               or name is null
+     *                                                               or name is empty string
+     *                                                               or URL to english Wikipedia page about genre is null
+     *                                                               or URL to czech Wikipedia page about genre is null
+     *                                                               or count of media isn't positive number
+     *                                                               or other data is null
+     *                                                               or note is null
      */
     void add(GenreTO genre);
 
@@ -52,9 +52,8 @@ public interface GenreFacade {
      * Adds list of genre names.
      *
      * @param genres list of genre names
-     * @throws IllegalArgumentException                                       if list of genre names is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException          if list of genre names contains null value
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
+     * @throws IllegalArgumentException                              if list of genre names is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException if list of genre names contains null value
      */
     void add(List<String> genres);
 
@@ -94,14 +93,29 @@ public interface GenreFacade {
     void duplicate(GenreTO genre);
 
     /**
-     * Returns true if TO for genre exists.
+     * Moves TO for genre in list one position up.
      *
      * @param genre TO for genre
-     * @return true if TO for genre exists
-     * @throws IllegalArgumentException                                       if TO for genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
+     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or TO for genre can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
      */
-    boolean exists(GenreTO genre);
+    void moveUp(GenreTO genre);
 
+    /**
+     * Moves TO for genre in list one position down.
+     *
+     * @param genre TO for genre
+     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or TO for genre can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     */
+    void moveDown(GenreTO genre);
+
+    /**
+     * Updates positions.
+     */
+    void updatePositions();
 }

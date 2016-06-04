@@ -1,13 +1,13 @@
 package cz.vhromada.catalog.facade.to;
 
-import java.io.Serializable;
+import cz.vhromada.catalog.commons.Movable;
 
 /**
  * A class represents TO for genre.
  *
  * @author Vladimir Hromada
  */
-public class GenreTO implements Comparable<GenreTO>, Serializable {
+public class GenreTO implements Movable {
 
     /**
      * SerialVersionUID
@@ -25,19 +25,16 @@ public class GenreTO implements Comparable<GenreTO>, Serializable {
     private String name;
 
     /**
-     * Returns ID.
-     *
-     * @return ID
+     * Position
      */
+    private int position;
+
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -61,6 +58,16 @@ public class GenreTO implements Comparable<GenreTO>, Serializable {
     }
 
     @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(final int position) {
+        this.position = position;
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
@@ -79,13 +86,7 @@ public class GenreTO implements Comparable<GenreTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("GenreTO [id=%d, name=%s]", id, name);
-    }
-
-    @Override
-    public int compareTo(final GenreTO o) {
-        final int result = name.compareTo(o.name);
-        return result == 0 ? id - o.id : result;
+        return String.format("GenreTO [id=%d, name=%s, position=%d]", id, name, position);
     }
 
 }

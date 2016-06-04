@@ -1,1071 +1,516 @@
-//package cz.vhromada.catalog.facade.impl;
-//
-//import static org.junit.Assert.assertFalse;
-//import static org.junit.Assert.assertNull;
-//import static org.junit.Assert.assertTrue;
-//import static org.junit.Assert.fail;
-//import static org.mockito.Matchers.any;
-//import static org.mockito.Matchers.anyInt;
-//import static org.mockito.Matchers.eq;
-//import static org.mockito.Mockito.doAnswer;
-//import static org.mockito.Mockito.doThrow;
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.verifyNoMoreInteractions;
-//import static org.mockito.Mockito.verifyZeroInteractions;
-//import static org.mockito.Mockito.when;
-//
-//import java.util.List;
-//
-//import cz.vhromada.catalog.commons.CollectionUtils;
-//import cz.vhromada.catalog.commons.ObjectGeneratorTest;
-//import cz.vhromada.catalog.dao.entities.Program;
-//import cz.vhromada.catalog.facade.ProgramFacade;
-//import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
-//import cz.vhromada.catalog.facade.to.ProgramTO;
-//import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
-//import cz.vhromada.catalog.service.ProgramService;
-//import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
-//import cz.vhromada.converters.Converter;
-//import cz.vhromada.test.DeepAsserts;
-//import cz.vhromada.validators.exceptions.RecordNotFoundException;
-//import cz.vhromada.validators.exceptions.ValidationException;
-//
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.Mock;
-//import org.mockito.invocation.InvocationOnMock;
-//import org.mockito.runners.MockitoJUnitRunner;
-//import org.mockito.stubbing.Answer;
-//
-///**
-// * A class represents test for class {@link ProgramFacadeImpl}.
-// *
-// * @author Vladimir Hromada
-// */
-//@RunWith(MockitoJUnitRunner.class)
-//public class ProgramFacadeImplTest extends ObjectGeneratorTest {
-//
-//    /**
-//     * Instance of {@link ProgramService}
-//     */
-//    @Mock
-//    private ProgramService programService;
-//
-//    /**
-//     * Instance of {@link Converter}
-//     */
-//    @Mock
-//    private Converter converter;
-//
-//    /**
-//     * Instance of {@link ProgramTOValidator}
-//     */
-//    @Mock
-//    private ProgramTOValidator programTOValidator;
-//
-//    /**
-//     * Instance of {@link ProgramFacade}
-//     */
-//    private ProgramFacade programFacade;
-//
-//    /**
-//     * Initializes facade for programs.
-//     */
-//    @Before
-//    public void setUp() {
-//        programFacade = new ProgramFacadeImpl(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null service for programs.
-//     */
-//    @Test(expected = IllegalArgumentException.class)
-//    public void testConstructorWithNullProgramService() {
-//        new ProgramFacadeImpl(null, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null converter.
-//     */
-//    @Test(expected = IllegalArgumentException.class)
-//    public void testConstructorWithNullConverter() {
-//        new ProgramFacadeImpl(programService, null, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(ProgramService, Converter, ProgramTOValidator)} with null validator for TO for program.
-//     */
-//    @Test(expected = IllegalArgumentException.class)
-//    public void testConstructorWithNullProgramTOValidator() {
-//        new ProgramFacadeImpl(programService, converter, null);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#newData()}.
-//     */
-//    @Test
-//    public void testNewData() {
-//        programFacade.newData();
-//
-//        verify(programService).newData();
-//        verifyNoMoreInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#newData()} with exception in service tier.
-//     */
-//    @Test
-//    public void testNewDataWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(programService).newData();
-//
-//        try {
-//            programFacade.newData();
-//            fail("Can't create new data with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).newData();
-//        verifyNoMoreInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getPrograms()}.
-//     */
-//    @Test
-//    public void testGetPrograms() {
-//        final List<Program> programs = CollectionUtils.newList(generate(Program.class), generate(Program.class));
-//        final List<ProgramTO> programsList = CollectionUtils.newList(generate(ProgramTO.class), generate(ProgramTO.class));
-//        when(programService.getPrograms()).thenReturn(programs);
-//        when(converter.convertCollection(programs, ProgramTO.class)).thenReturn(programsList);
-//
-//        DeepAsserts.assertEquals(programsList, programFacade.getPrograms());
-//
-//        verify(programService).getPrograms();
-//        verify(converter).convertCollection(programs, ProgramTO.class);
-//        verifyNoMoreInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getPrograms()} with exception in service tier.
-//     */
-//    @Test
-//    public void testGetProgramsWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(programService).getPrograms();
-//
-//        try {
-//            programFacade.getPrograms();
-//            fail("Can't get programs with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getPrograms();
-//        verifyNoMoreInteractions(programService);
-//        verifyZeroInteractions(converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getProgram(Integer)} with existing program.
-//     */
-//    @Test
-//    public void testGetProgramWithExistingProgram() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(program);
-//        when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(programTO);
-//
-//        DeepAsserts.assertEquals(programTO, programFacade.getProgram(programTO.getId()));
-//
-//        verify(programService).getProgram(programTO.getId());
-//        verify(converter).convert(program, ProgramTO.class);
-//        verifyNoMoreInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getProgram(Integer)} with not existing program.
-//     */
-//    @Test
-//    public void testGetProgramWithNotExistingProgram() {
-//        when(programService.getProgram(anyInt())).thenReturn(null);
-//        when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(null);
-//
-//        assertNull(programFacade.getProgram(Integer.MAX_VALUE));
-//
-//        verify(programService).getProgram(Integer.MAX_VALUE);
-//        verify(converter).convert(null, ProgramTO.class);
-//        verifyNoMoreInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getProgram(Integer)} with null argument.
-//     */
-//    @Test
-//    public void testGetProgramWithNullArgument() {
-//        try {
-//            programFacade.getProgram(null);
-//            fail("Can't get program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verifyZeroInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getProgram(Integer)} with exception in service tier.
-//     */
-//    @Test
-//    public void testGetProgramWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(programService).getProgram(anyInt());
-//
-//        try {
-//            programFacade.getProgram(Integer.MAX_VALUE);
-//            fail("Can't get program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(Integer.MAX_VALUE);
-//        verifyNoMoreInteractions(programService);
-//        verifyZeroInteractions(converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#add(ProgramTO)}.
-//     */
-//    @Test
-//    public void testAdd() {
-//        final Program program = generate(Program.class);
-//        program.setId(null);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        programTO.setId(null);
-//        final int id = generate(Integer.class);
-//        final int position = generate(Integer.class);
-//        doAnswer(setProgramIdAndPosition(id, position)).when(programService).add(any(Program.class));
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        programFacade.add(programTO);
-//        DeepAsserts.assertEquals(id, program.getId());
-//        DeepAsserts.assertEquals(position, program.getPosition());
-//
-//        verify(programService).add(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateNewProgramTO(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#add(ProgramTO)} with null argument.
-//     */
-//    @Test
-//    public void testAddWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(programTOValidator).validateNewProgramTO(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.add(null);
-//            fail("Can't add program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateNewProgramTO(null);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#add(ProgramTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testAddWithBadArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        program.setId(null);
-//        doThrow(ValidationException.class).when(programTOValidator).validateNewProgramTO(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.add(program);
-//            fail("Can't add program with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateNewProgramTO(program);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#add(ProgramTO)} with service tier not setting ID.
-//     */
-//    @Test
-//    public void testAddWithNotServiceTierSettingID() {
-//        final Program program = generate(Program.class);
-//        program.setId(null);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        programTO.setId(null);
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        try {
-//            programFacade.add(programTO);
-//            fail("Can't add program with service tier not setting ID.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).add(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateNewProgramTO(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#add(ProgramTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testAddWithServiceTierException() {
-//        final Program program = generate(Program.class);
-//        program.setId(null);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        programTO.setId(null);
-//        doThrow(ServiceOperationException.class).when(programService).add(any(Program.class));
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        try {
-//            programFacade.add(programTO);
-//            fail("Can't add program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).add(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateNewProgramTO(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#update(ProgramTO)}.
-//     */
-//    @Test
-//    public void testUpdate() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.exists(any(Program.class))).thenReturn(true);
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        programFacade.update(programTO);
-//
-//        verify(programService).exists(program);
-//        verify(programService).update(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateExistingProgramTO(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#update(ProgramTO)} with null argument.
-//     */
-//    @Test
-//    public void testUpdateWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(programTOValidator).validateExistingProgramTO(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.update(null);
-//            fail("Can't update program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateExistingProgramTO(null);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#update(ProgramTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testUpdateWithBadArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ValidationException.class).when(programTOValidator).validateExistingProgramTO(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.update(program);
-//            fail("Can't update program with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateExistingProgramTO(program);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#update(ProgramTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testUpdateWithNotExistingArgument() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.exists(any(Program.class))).thenReturn(false);
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        try {
-//            programFacade.update(programTO);
-//            fail("Can't update program with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).exists(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateExistingProgramTO(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#update(ProgramTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testUpdateWithServiceTierException() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        doThrow(ServiceOperationException.class).when(programService).exists(any(Program.class));
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        try {
-//            programFacade.update(programTO);
-//            fail("Can't update program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).exists(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateExistingProgramTO(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#remove(ProgramTO)}.
-//     */
-//    @Test
-//    public void testRemove() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(program);
-//
-//        programFacade.remove(programTO);
-//
-//        verify(programService).getProgram(programTO.getId());
-//        verify(programService).remove(program);
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#remove(ProgramTO)} with null argument.
-//     */
-//    @Test
-//    public void testRemoveWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.remove(null);
-//            fail("Can't remove program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(null);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#remove(ProgramTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testRemoveWithBadArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.remove(program);
-//            fail("Can't remove program with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#remove(ProgramTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testRemoveWithNotExistingArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(null);
-//
-//        try {
-//            programFacade.remove(program);
-//            fail("Can't remove program with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#remove(ProgramTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testRemoveWithServiceTierException() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ServiceOperationException.class).when(programService).getProgram(anyInt());
-//
-//        try {
-//            programFacade.remove(program);
-//            fail("Can't remove program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#duplicate(ProgramTO)}.
-//     */
-//    @Test
-//    public void testDuplicate() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(program);
-//
-//        programFacade.duplicate(programTO);
-//
-//        verify(programService).getProgram(programTO.getId());
-//        verify(programService).duplicate(program);
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with null argument.
-//     */
-//    @Test
-//    public void testDuplicateWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.duplicate(null);
-//            fail("Can't duplicate program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(null);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testDuplicateWithBadArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.duplicate(program);
-//            fail("Can't duplicate program with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testDuplicateWithNotExistingArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(null);
-//
-//        try {
-//            programFacade.duplicate(program);
-//            fail("Can't duplicate program with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testDuplicateWithServiceTierException() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ServiceOperationException.class).when(programService).getProgram(anyInt());
-//
-//        try {
-//            programFacade.duplicate(program);
-//            fail("Can't duplicate program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveUp(ProgramTO)}.
-//     */
-//    @Test
-//    public void testMoveUp() {
-//        final Program program = generate(Program.class);
-//        final List<Program> programs = CollectionUtils.newList(mock(Program.class), program);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(program);
-//        when(programService.getPrograms()).thenReturn(programs);
-//
-//        programFacade.moveUp(programTO);
-//
-//        verify(programService).getProgram(programTO.getId());
-//        verify(programService).getPrograms();
-//        verify(programService).moveUp(program);
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with null argument.
-//     */
-//    @Test
-//    public void testMoveUpWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.moveUp(null);
-//            fail("Can't move up program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(null);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testMoveUpWithBadArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.moveUp(program);
-//            fail("Can't move up program with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testMoveUpWithNotExistingArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(null);
-//
-//        try {
-//            programFacade.moveUp(program);
-//            fail("Can't move up program with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not movable argument.
-//     */
-//    @Test
-//    public void testMoveUpWithNotMovableArgument() {
-//        final Program program = generate(Program.class);
-//        final List<Program> programs = CollectionUtils.newList(program, mock(Program.class));
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(program);
-//        when(programService.getPrograms()).thenReturn(programs);
-//
-//        try {
-//            programFacade.moveUp(programTO);
-//            fail("Can't move up program with not thrown ValidationException for not movable argument.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(programTO.getId());
-//        verify(programService).getPrograms();
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testMoveUpWithServiceTierException() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ServiceOperationException.class).when(programService).getProgram(anyInt());
-//
-//        try {
-//            programFacade.moveUp(program);
-//            fail("Can't move up program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveDown(ProgramTO)}.
-//     */
-//    @Test
-//    public void testMoveDown() {
-//        final Program program = generate(Program.class);
-//        final List<Program> programs = CollectionUtils.newList(program, mock(Program.class));
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(program);
-//        when(programService.getPrograms()).thenReturn(programs);
-//
-//        programFacade.moveDown(programTO);
-//
-//        verify(programService).getProgram(programTO.getId());
-//        verify(programService).getPrograms();
-//        verify(programService).moveDown(program);
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with null argument.
-//     */
-//    @Test
-//    public void testMoveDownWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.moveDown(null);
-//            fail("Can't move down program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(null);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testMoveDownWithBadArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.moveDown(program);
-//            fail("Can't move down program with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testMoveDownWithNotExistingArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(null);
-//
-//        try {
-//            programFacade.moveDown(program);
-//            fail("Can't move down program with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not movable argument.
-//     */
-//    @Test
-//    public void testMoveDownWithNotMovableArgument() {
-//        final Program program = generate(Program.class);
-//        final List<Program> programs = CollectionUtils.newList(mock(Program.class), program);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.getProgram(anyInt())).thenReturn(program);
-//        when(programService.getPrograms()).thenReturn(programs);
-//
-//        try {
-//            programFacade.moveDown(programTO);
-//            fail("Can't move down program with not thrown ValidationException for not movable argument.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(programTO.getId());
-//        verify(programService).getPrograms();
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testMoveDownWithServiceTierException() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ServiceOperationException.class).when(programService).getProgram(anyInt());
-//
-//        try {
-//            programFacade.moveDown(program);
-//            fail("Can't move down program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getProgram(program.getId());
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programService, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#exists(ProgramTO)} with existing program.
-//     */
-//    @Test
-//    public void testExistsWithExistingProgram() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.exists(any(Program.class))).thenReturn(true);
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        assertTrue(programFacade.exists(programTO));
-//
-//        verify(programService).exists(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#exists(ProgramTO)} with not existing program.
-//     */
-//    @Test
-//    public void testExistsWithNotExistingProgram() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        when(programService.exists(any(Program.class))).thenReturn(false);
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        assertFalse(programFacade.exists(programTO));
-//
-//        verify(programService).exists(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#exists(ProgramTO)} with null argument.
-//     */
-//    @Test
-//    public void testExistsWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.exists(null);
-//            fail("Can't exists program with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(null);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#exists(ProgramTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testExistsWithBadArgument() {
-//        final ProgramTO program = generate(ProgramTO.class);
-//        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
-//
-//        try {
-//            programFacade.exists(program);
-//            fail("Can't exists program with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(programTOValidator).validateProgramTOWithId(program);
-//        verifyNoMoreInteractions(programTOValidator);
-//        verifyZeroInteractions(programService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#exists(ProgramTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testExistsWithServiceTierException() {
-//        final Program program = generate(Program.class);
-//        final ProgramTO programTO = generate(ProgramTO.class);
-//        doThrow(ServiceOperationException.class).when(programService).exists(any(Program.class));
-//        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(program);
-//
-//        try {
-//            programFacade.exists(programTO);
-//            fail("Can't exists program with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).exists(program);
-//        verify(converter).convert(programTO, Program.class);
-//        verify(programTOValidator).validateProgramTOWithId(programTO);
-//        verifyNoMoreInteractions(programService, converter, programTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#updatePositions()}.
-//     */
-//    @Test
-//    public void testUpdatePositions() {
-//        programFacade.updatePositions();
-//
-//        verify(programService).updatePositions();
-//        verifyNoMoreInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#updatePositions()} with exception in service tier.
-//     */
-//    @Test
-//    public void testUpdatePositionsWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(programService).updatePositions();
-//
-//        try {
-//            programFacade.updatePositions();
-//            fail("Can't update positions with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).updatePositions();
-//        verifyNoMoreInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getTotalMediaCount()}.
-//     */
-//    @Test
-//    public void testGetTotalMediaCount() {
-//        final int count = generate(Integer.class);
-//        when(programService.getTotalMediaCount()).thenReturn(count);
-//
-//        DeepAsserts.assertEquals(count, programFacade.getTotalMediaCount());
-//
-//        verify(programService).getTotalMediaCount();
-//        verifyNoMoreInteractions(programService);
-//    }
-//
-//    /**
-//     * Test method for {@link ProgramFacade#getTotalMediaCount()} with exception in service tier.
-//     */
-//    @Test
-//    public void testGetTotalMediaCountWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(programService).getTotalMediaCount();
-//
-//        try {
-//            programFacade.getTotalMediaCount();
-//            fail("Can't get total media count with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(programService).getTotalMediaCount();
-//        verifyNoMoreInteractions(programService);
-//    }
-//
-//    /**
-//     * Sets program's ID and position.
-//     *
-//     * @param id       ID
-//     * @param position position
-//     * @return mocked answer
-//     */
-//    private static Answer<Void> setProgramIdAndPosition(final Integer id, final int position) {
-//        return new Answer<Void>() {
-//
-//            @Override
-//            public Void answer(final InvocationOnMock invocation) {
-//                final Program program = (Program) invocation.getArguments()[0];
-//                program.setId(id);
-//                program.setPosition(position);
-//                return null;
-//            }
-//
-//        };
-//    }
-//
-//}
+package cz.vhromada.catalog.facade.impl;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
+import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.ProgramUtils;
+import cz.vhromada.catalog.dao.entities.Program;
+import cz.vhromada.catalog.facade.ProgramFacade;
+import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
+import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.converters.Converter;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+/**
+ * A class represents test for class {@link ProgramFacadeImpl}.
+ *
+ * @author Vladimir Hromada
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class ProgramFacadeImplTest {
+
+    /**
+     * Instance of {@link CatalogService}
+     */
+    @Mock
+    private CatalogService<Program> programService;
+
+    /**
+     * Instance of {@link Converter}
+     */
+    @Mock
+    private Converter converter;
+
+    /**
+     * Instance of {@link ProgramTOValidator}
+     */
+    @Mock
+    private ProgramTOValidator programTOValidator;
+
+    /**
+     * Instance of {@link ProgramFacade}
+     */
+    private ProgramFacade programFacade;
+
+    /**
+     * Initializes facade for programs.
+     */
+    @Before
+    public void setUp() {
+        programFacade = new ProgramFacadeImpl(programService, converter, programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramTOValidator)} with null service for programs.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructor_NullProgramService() {
+        new ProgramFacadeImpl(null, converter, programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramTOValidator)} with null converter.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructor_NullConverter() {
+        new ProgramFacadeImpl(programService, null, programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramTOValidator)} with null validator for TO for program.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructor_NullProgramTOValidator() {
+        new ProgramFacadeImpl(programService, converter, null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#newData()}.
+     */
+    @Test
+    public void testNewData() {
+        programFacade.newData();
+
+        verify(programService).newData();
+        verifyNoMoreInteractions(programService);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#getPrograms()}.
+     */
+    @Test
+    public void testGetPrograms() {
+        final List<Program> programList = CollectionUtils.newList(ProgramUtils.newProgram(1), ProgramUtils.newProgram(2));
+        final List<ProgramTO> expectedPrograms = CollectionUtils.newList(ProgramUtils.newProgramTO(1), ProgramUtils.newProgramTO(2));
+        when(programService.getAll()).thenReturn(programList);
+        when(converter.convertCollection(anyListOf(Program.class), eq(ProgramTO.class))).thenReturn(expectedPrograms);
+
+        final List<ProgramTO> programs = programFacade.getPrograms();
+
+        assertNotNull(programs);
+        assertEquals(expectedPrograms, programs);
+
+        verify(programService).getAll();
+        verify(converter).convertCollection(programList, ProgramTO.class);
+        verifyNoMoreInteractions(programService, converter);
+        verifyZeroInteractions(programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#getProgram(Integer)} with existing program.
+     */
+    @Test
+    public void testGetProgram_ExistingProgram() {
+        final Program entityProgram = ProgramUtils.newProgram(1);
+        final ProgramTO expectedProgram = ProgramUtils.newProgramTO(1);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(expectedProgram);
+
+        final ProgramTO program = programFacade.getProgram(1);
+
+        assertNotNull(program);
+        assertEquals(expectedProgram, program);
+
+        verify(programService).get(1);
+        verify(converter).convert(entityProgram, ProgramTO.class);
+        verifyNoMoreInteractions(programService, converter);
+        verifyZeroInteractions(programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#getProgram(Integer)} with not existing program.
+     */
+    @Test
+    public void testGetProgram_NotExistingProgram() {
+        when(programService.get(anyInt())).thenReturn(null);
+        when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(null);
+
+        assertNull(programFacade.getProgram(Integer.MAX_VALUE));
+
+        verify(programService).get(Integer.MAX_VALUE);
+        verify(converter).convert(null, ProgramTO.class);
+        verifyNoMoreInteractions(programService, converter);
+        verifyZeroInteractions(programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#getProgram(Integer)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetProgram_NullArgument() {
+        programFacade.getProgram(null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)}.
+     */
+    @Test
+    public void testAdd() {
+        final Program entityProgram = ProgramUtils.newProgram(null);
+        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(entityProgram);
+
+        programFacade.add(program);
+
+        verify(programService).add(entityProgram);
+        verify(converter).convert(program, Program.class);
+        verify(programTOValidator).validateNewProgramTO(program);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAdd_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(programTOValidator).validateNewProgramTO(any(ProgramTO.class));
+
+        programFacade.add(null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#add(ProgramTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testAdd_BadArgument() {
+        doThrow(ValidationException.class).when(programTOValidator).validateNewProgramTO(any(ProgramTO.class));
+
+        programFacade.add(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)}.
+     */
+    @Test
+    public void testUpdate() {
+        final Program entityProgram = ProgramUtils.newProgram(1);
+        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(entityProgram);
+
+        programFacade.update(program);
+
+        verify(programService).get(1);
+        verify(programService).update(entityProgram);
+        verify(converter).convert(program, Program.class);
+        verify(programTOValidator).validateExistingProgramTO(program);
+        verifyNoMoreInteractions(programService, converter, programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdate_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(programTOValidator).validateExistingProgramTO(any(ProgramTO.class));
+
+        programFacade.update(null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testUpdate_BadArgument() {
+        doThrow(ValidationException.class).when(programTOValidator).validateExistingProgramTO(any(ProgramTO.class));
+
+        programFacade.update(ProgramUtils.newProgramTO(null));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#update(ProgramTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testUpdate_NotExistingArgument() {
+        when(programService.get(anyInt())).thenReturn(null);
+
+        programFacade.update(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)}.
+     */
+    @Test
+    public void testRemove() {
+        final Program entityProgram = ProgramUtils.newProgram(1);
+        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+
+        programFacade.remove(program);
+
+        verify(programService).get(1);
+        verify(programService).remove(entityProgram);
+        verify(programTOValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programTOValidator);
+        verifyZeroInteractions(converter);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemove_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.remove(null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testRemove_BadArgument() {
+        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.remove(ProgramUtils.newProgramTO(null));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#remove(ProgramTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testRemove_NotExistingArgument() {
+        when(programService.get(anyInt())).thenReturn(null);
+
+        programFacade.remove(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)}.
+     */
+    @Test
+    public void testDuplicate() {
+        final Program entityProgram = ProgramUtils.newProgram(1);
+        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+
+        programFacade.duplicate(program);
+
+        verify(programService).get(1);
+        verify(programService).duplicate(entityProgram);
+        verify(programTOValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programTOValidator);
+        verifyZeroInteractions(converter);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testDuplicate_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.duplicate(null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testDuplicate_BadArgument() {
+        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.duplicate(ProgramUtils.newProgramTO(null));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#duplicate(ProgramTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testDuplicate_NotExistingArgument() {
+        when(programService.get(anyInt())).thenReturn(null);
+
+        programFacade.duplicate(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)}.
+     */
+    @Test
+    public void testMoveUp() {
+        final Program entityProgram = ProgramUtils.newProgram(2);
+        final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), entityProgram);
+        final ProgramTO program = ProgramUtils.newProgramTO(2);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.getAll()).thenReturn(programs);
+
+        programFacade.moveUp(program);
+
+        verify(programService).get(2);
+        verify(programService).getAll();
+        verify(programService).moveUp(entityProgram);
+        verify(programTOValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programTOValidator);
+        verifyZeroInteractions(converter);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testMoveUp_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.moveUp(null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveUp_BadArgument() {
+        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.moveUp(ProgramUtils.newProgramTO(null));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testMoveUp_NotExistingArgument() {
+        when(programService.get(anyInt())).thenReturn(null);
+
+        programFacade.moveUp(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveUp(ProgramTO)} with not movable argument.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveUp_NotMovableArgument() {
+        final Program entityProgram = ProgramUtils.newProgram(Integer.MAX_VALUE);
+        final List<Program> programs = CollectionUtils.newList(entityProgram, ProgramUtils.newProgram(1));
+        final ProgramTO program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.getAll()).thenReturn(programs);
+
+        programFacade.moveUp(program);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)}.
+     */
+    @Test
+    public void testMoveDown() {
+        final Program entityProgram = ProgramUtils.newProgram(1);
+        final List<Program> programs = CollectionUtils.newList(entityProgram, ProgramUtils.newProgram(2));
+        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.getAll()).thenReturn(programs);
+
+        programFacade.moveDown(program);
+
+        verify(programService).get(1);
+        verify(programService).getAll();
+        verify(programService).moveDown(entityProgram);
+        verify(programTOValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programTOValidator);
+        verifyZeroInteractions(converter);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testMoveDown_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.moveDown(null);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveDown_BadArgument() {
+        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+
+        programFacade.moveDown(ProgramUtils.newProgramTO(null));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testMoveDown_NotExistingArgument() {
+        when(programService.get(anyInt())).thenReturn(null);
+
+        programFacade.moveDown(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#moveDown(ProgramTO)} with not movable argument.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveDown_NotMovableArgument() {
+        final Program entityProgram = ProgramUtils.newProgram(Integer.MAX_VALUE);
+        final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), entityProgram);
+        final ProgramTO program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
+        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.getAll()).thenReturn(programs);
+
+        programFacade.moveDown(program);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#updatePositions()}.
+     */
+    @Test
+    public void testUpdatePositions() {
+        programFacade.updatePositions();
+
+        verify(programService).updatePositions();
+        verifyNoMoreInteractions(programService);
+        verifyZeroInteractions(converter, programTOValidator);
+    }
+
+    /**
+     * Test method for {@link ProgramFacade#getTotalMediaCount()}.
+     */
+    @Test
+    public void testGetTotalMediaCount() {
+        final Program program1 = ProgramUtils.newProgram(1);
+        final Program program2 = ProgramUtils.newProgram(2);
+        final int expectedCount = program1.getMediaCount() + program2.getMediaCount();
+        when(programService.getAll()).thenReturn(CollectionUtils.newList(program1, program2));
+
+        assertEquals(expectedCount, programFacade.getTotalMediaCount());
+
+        verify(programService).getAll();
+        verifyNoMoreInteractions(programService);
+        verifyZeroInteractions(converter, programTOValidator);
+    }
+
+}

@@ -86,4 +86,5 @@ public class GameServiceImplTest extends AbstractServiceTest<Game> {
     protected void assertDataDeepEquals(final Game expected, final Game actual) {
         GameUtils.assertGameDeepEquals(expected, actual);
     }
+
 }

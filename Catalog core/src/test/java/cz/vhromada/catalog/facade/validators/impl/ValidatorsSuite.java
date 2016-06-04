@@ -9,6 +9,6 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ GameTOValidatorImplTest.class })
+@Suite.SuiteClasses({ GameTOValidatorImplTest.class, ProgramTOValidatorImplTest.class })
 public class ValidatorsSuite {
 }

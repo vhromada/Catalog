@@ -1,13 +1,13 @@
 package cz.vhromada.catalog.facade.to;
 
-import java.io.Serializable;
+import cz.vhromada.catalog.commons.Movable;
 
 /**
  * A class represents TO for program.
  *
  * @author Vladimir Hromada
  */
-public class ProgramTO implements Comparable<ProgramTO>, Serializable {
+public class ProgramTO implements Movable {
 
     /**
      * SerialVersionUID
@@ -64,20 +64,12 @@ public class ProgramTO implements Comparable<ProgramTO>, Serializable {
      */
     private int position;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -227,20 +219,12 @@ public class ProgramTO implements Comparable<ProgramTO>, Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }
@@ -266,12 +250,6 @@ public class ProgramTO implements Comparable<ProgramTO>, Serializable {
     public String toString() {
         return String.format("ProgramTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, otherData=%s, note=%s, position=%d]", id,
                 name, wikiEn, wikiCz, mediaCount, crack, serialKey, otherData, note, position);
-    }
-
-    @Override
-    public int compareTo(final ProgramTO o) {
-        final int result = position - o.position;
-        return result == 0 ? id - o.id : result;
     }
 
 }

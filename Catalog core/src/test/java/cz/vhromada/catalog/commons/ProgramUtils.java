@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.dao.entities.Program;
+import cz.vhromada.catalog.facade.to.ProgramTO;
 
 /**
  * A class represents utility class for programs.
@@ -71,6 +72,39 @@ public final class ProgramUtils {
         program.setNote("Note");
     }
 
+    /**
+     * Returns TO for program.
+     *
+     * @param id ID
+     * @return TO for program
+     */
+    public static ProgramTO newProgramTO(final Integer id) {
+        final ProgramTO program = new ProgramTO();
+        updateProgramTO(program);
+        if (id != null) {
+            program.setId(id);
+            program.setPosition(id - 1);
+        }
+
+        return program;
+    }
+
+    /**
+     * Updates TO for program fields.
+     *
+     * @param program TO for program
+     */
+    public static void updateProgramTO(final ProgramTO program) {
+        program.setName("Name");
+        program.setWikiEn("enWiki");
+        program.setWikiCz("czWiki");
+        program.setMediaCount(1);
+        program.setCrack(true);
+        program.setSerialKey(true);
+        program.setOtherData("Other data");
+        program.setNote("Note");
+    }
+    
     /**
      * Returns programs.
      *

@@ -23,8 +23,8 @@
 //import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 //import cz.vhromada.catalog.commons.Time;
 //import cz.vhromada.catalog.dao.SongDAO;
-//import cz.vhromada.catalog.dao.entities.Music;
-//import cz.vhromada.catalog.dao.entities.Song;
+//import cz.vhromada.catalog.entities.Music;
+//import cz.vhromada.catalog.entities.Song;
 //import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 //import cz.vhromada.catalog.service.SongService;
 //import cz.vhromada.catalog.service.exceptions.ServiceOperationException;

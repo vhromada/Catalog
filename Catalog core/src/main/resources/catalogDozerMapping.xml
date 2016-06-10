@@ -6,19 +6,19 @@
     <configuration>
         <custom-converters>
             <converter type="cz.vhromada.catalog.facade.converters.MediumToIntegerConverter">
-                <class-a>cz.vhromada.catalog.dao.entities.Medium</class-a>
+                <class-a>cz.vhromada.catalog.entities.Medium</class-a>
                 <class-b>java.lang.Integer</class-b>
             </converter>
         </custom-converters>
     </configuration>
 
     <mapping>
-        <class-a>cz.vhromada.catalog.dao.entities.Movie</class-a>
+        <class-a>cz.vhromada.catalog.entities.Movie</class-a>
         <class-b>cz.vhromada.catalog.facade.to.MovieTO</class-b>
         <field custom-converter="cz.vhromada.catalog.facade.converters.MediaConverter">
             <a>media</a>
             <b>media</b>
-            <a-hint>cz.vhromada.catalog.dao.entities.Medium</a-hint>
+            <a-hint>cz.vhromada.catalog.entities.Medium</a-hint>
             <b-hint>java.lang.Integer</b-hint>
         </field>
     </mapping>

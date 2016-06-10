@@ -20,7 +20,7 @@ public class GenreServiceImpl extends AbstractCatalogService<Genre> {
      * Creates a new instance of GenreServiceImpl.
      *
      * @param genreRepository repository for genres
-     * @param cache      cache
+     * @param cache           cache
      * @throws IllegalArgumentException if repository genres is null
      *                                  or cache is null
      */

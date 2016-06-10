@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.dao.entities;
+package cz.vhromada.catalog.entities;
 
 import java.util.List;
 
@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
@@ -29,13 +28,7 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "tv_shows")
-@NamedQuery(name = Show.SELECT_SHOWS, query = "SELECT s FROM Show s ORDER BY s.position, s.id")
 public class Show implements Movable {
-
-    /**
-     * Name for query - select shows
-     */
-    public static final String SELECT_SHOWS = "Show.selectShows";
 
     /**
      * SerialVersionUID

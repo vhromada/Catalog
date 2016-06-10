@@ -32,9 +32,9 @@ public final class CollectionUtils {
 
     /**
      * Returns sorted data.
-
+     *
      * @param data data for sorting
-     * @param <T> type of data
+     * @param <T>  type of data
      * @return sorted data
      */
     public static <T extends Movable> List<T> getSortedData(final List<T> data) {

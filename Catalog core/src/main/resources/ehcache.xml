@@ -5,52 +5,7 @@
 
     <diskStore path="java.io.tmpdir"/>
 
-    <cache name="movieCache"
-           eternal="false"
-           maxElementsInMemory="1000"
-           overflowToDisk="false"
-           diskPersistent="false"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="300"
-           memoryStoreEvictionPolicy="LRU"/>
-
-    <cache name="showCache"
-           eternal="false"
-           maxElementsInMemory="1000"
-           overflowToDisk="false"
-           diskPersistent="false"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="300"
-           memoryStoreEvictionPolicy="LRU"/>
-
-    <cache name="gameCache"
-           eternal="false"
-           maxElementsInMemory="1000"
-           overflowToDisk="false"
-           diskPersistent="false"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="300"
-           memoryStoreEvictionPolicy="LRU"/>
-
-    <cache name="musicCache"
-           eternal="false"
-           maxElementsInMemory="1000"
-           overflowToDisk="false"
-           diskPersistent="false"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="300"
-           memoryStoreEvictionPolicy="LRU"/>
-
-    <cache name="programCache"
-           eternal="false"
-           maxElementsInMemory="1000"
-           overflowToDisk="false"
-           diskPersistent="false"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="300"
-           memoryStoreEvictionPolicy="LRU"/>
-
-    <cache name="genreCache"
+    <cache name="catalogCache"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"

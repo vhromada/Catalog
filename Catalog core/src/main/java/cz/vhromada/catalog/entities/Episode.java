@@ -1,13 +1,23 @@
-package cz.vhromada.catalog.facade.to;
+package cz.vhromada.catalog.entities;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import cz.vhromada.catalog.commons.Movable;
 
 /**
- * A class represents TO for episode.
+ * A class represents episode.
  *
  * @author Vladimir Hromada
  */
-public class EpisodeTO implements Movable {
+@Entity
+@Table(name = "episodes")
+public class Episode implements Movable {
 
     /**
      * SerialVersionUID
@@ -17,21 +27,27 @@ public class EpisodeTO implements Movable {
     /**
      * ID
      */
+    @Id
+    @SequenceGenerator(name = "episode_generator", sequenceName = "episodes_sq", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "episode_generator")
     private Integer id;
 
     /**
      * Number of episode
      */
+    @Column(name = "episode_number")
     private int number;
 
     /**
      * Name
      */
+    @Column(name = "episode_name")
     private String name;
 
     /**
      * Length
      */
+    @Column(name = "episode_length")
     private int length;
 
     /**
@@ -141,11 +157,12 @@ public class EpisodeTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof EpisodeTO) || id == null) {
+
+        if (obj == null || !(obj instanceof Episode) || id == null) {
             return false;
         }
 
-        return id.equals(((EpisodeTO) obj).id);
+        return id.equals(((Episode) obj).id);
     }
 
     @Override
@@ -155,7 +172,7 @@ public class EpisodeTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("EpisodeTO [id=%d, number=%d, name=%s, length=%d, note=%s, position=%d]", id, number, name, length, note, position);
+        return String.format("Episode [id=%d, number=%d, name=%s, length=%d, note=%s, position=%d]", id, number, name, length, note, position);
     }
 
 }

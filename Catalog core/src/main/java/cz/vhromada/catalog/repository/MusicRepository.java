@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.repository;
 
-import cz.vhromada.catalog.dao.entities.Music;
+import cz.vhromada.catalog.entities.Music;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

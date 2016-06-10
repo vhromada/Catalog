@@ -20,7 +20,7 @@
 //import cz.vhromada.catalog.commons.CollectionUtils;
 //import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 //import cz.vhromada.catalog.commons.Time;
-//import cz.vhromada.catalog.dao.entities.Music;
+//import cz.vhromada.catalog.entities.Music;
 //import cz.vhromada.catalog.facade.MusicFacade;
 //import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 //import cz.vhromada.catalog.facade.to.MusicTO;

@@ -13,8 +13,8 @@
 //import cz.vhromada.catalog.commons.SpringUtils;
 //import cz.vhromada.catalog.commons.TestConstants;
 //import cz.vhromada.catalog.commons.Time;
-//import cz.vhromada.catalog.dao.entities.Medium;
-//import cz.vhromada.catalog.dao.entities.Movie;
+//import cz.vhromada.catalog.entities.Medium;
+//import cz.vhromada.catalog.entities.Movie;
 //import cz.vhromada.catalog.facade.MovieFacade;
 //import cz.vhromada.catalog.facade.to.GenreTO;
 //import cz.vhromada.catalog.facade.to.MovieTO;

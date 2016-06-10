@@ -20,7 +20,7 @@ public class GameServiceImpl extends AbstractCatalogService<Game> {
      * Creates a new instance of GameServiceImpl.
      *
      * @param gameRepository repository for games
-     * @param cache      cache
+     * @param cache          cache
      * @throws IllegalArgumentException if repository games is null
      *                                  or cache is null
      */

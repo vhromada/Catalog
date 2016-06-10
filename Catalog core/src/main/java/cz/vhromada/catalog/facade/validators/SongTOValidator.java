@@ -19,8 +19,6 @@ public interface SongTOValidator {
      *                                                               or name is empty string
      *                                                               or length of song is negative value
      *                                                               or note is null
-     *                                                               or TO for music is null
-     *                                                               or TO for music ID is null
      */
     void validateNewSongTO(SongTO song);
 
@@ -34,8 +32,6 @@ public interface SongTOValidator {
      *                                                               or name is empty string
      *                                                               or length of song is negative value
      *                                                               or note is null
-     *                                                               or TO for music is null
-     *                                                               or TO for music ID is null
      */
     void validateExistingSongTO(SongTO song);
 

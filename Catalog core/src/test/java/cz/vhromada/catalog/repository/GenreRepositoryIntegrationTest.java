@@ -9,7 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.dao.entities.Genre;
+import cz.vhromada.catalog.entities.Genre;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

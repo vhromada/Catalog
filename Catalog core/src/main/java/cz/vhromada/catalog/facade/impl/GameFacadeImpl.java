@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Game;
+import cz.vhromada.catalog.entities.Game;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.validators.GameTOValidator;
@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component;
  */
 @Component("gameFacade")
 public class GameFacadeImpl implements GameFacade {
-
-    /**
-     * Game argument
-     */
-    private static final String GAME_ARGUMENT = "game";
 
     /**
      * TO for game argument
@@ -153,7 +148,7 @@ public class GameFacadeImpl implements GameFacade {
         final Game gameEntity = gameService.get(game.getId());
         Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
         final List<Game> games = gameService.getAll();
-        Validators.validateMoveUp(games, gameEntity, GAME_ARGUMENT);
+        Validators.validateMoveUp(games, gameEntity, GAME_TO_ARGUMENT);
 
         gameService.moveUp(gameEntity);
     }
@@ -169,7 +164,7 @@ public class GameFacadeImpl implements GameFacade {
         final Game gameEntity = gameService.get(game.getId());
         Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
         final List<Game> games = gameService.getAll();
-        Validators.validateMoveDown(games, gameEntity, GAME_ARGUMENT);
+        Validators.validateMoveDown(games, gameEntity, GAME_TO_ARGUMENT);
 
         gameService.moveDown(gameEntity);
     }
@@ -181,12 +176,12 @@ public class GameFacadeImpl implements GameFacade {
 
     @Override
     public int getTotalMediaCount() {
-        int sum = 0;
+        int totalMedia = 0;
         for (final Game game : gameService.getAll()) {
-            sum += game.getMediaCount();
+            totalMedia += game.getMediaCount();
         }
 
-        return sum;
+        return totalMedia;
     }
 
 }

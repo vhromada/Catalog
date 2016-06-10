@@ -104,7 +104,7 @@ public final class ProgramUtils {
         program.setOtherData("Other data");
         program.setNote("Note");
     }
-    
+
     /**
      * Returns programs.
      *

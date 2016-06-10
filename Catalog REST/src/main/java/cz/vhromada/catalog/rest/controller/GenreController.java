@@ -140,7 +140,7 @@ public class GenreController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(final String genre) {
-        return serialize(genreFacade.exists(deserialize(genre, GenreTO.class)));
+        return null;//serialize(genreFacade.exists(deserialize(genre, GenreTO.class)));
     }
 
 }

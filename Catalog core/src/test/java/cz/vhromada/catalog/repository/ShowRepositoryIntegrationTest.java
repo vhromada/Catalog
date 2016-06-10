@@ -13,8 +13,8 @@ import cz.vhromada.catalog.commons.EpisodeUtils;
 import cz.vhromada.catalog.commons.GenreUtils;
 import cz.vhromada.catalog.commons.SeasonUtils;
 import cz.vhromada.catalog.commons.ShowUtils;
-import cz.vhromada.catalog.dao.entities.Season;
-import cz.vhromada.catalog.dao.entities.Show;
+import cz.vhromada.catalog.entities.Season;
+import cz.vhromada.catalog.entities.Show;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

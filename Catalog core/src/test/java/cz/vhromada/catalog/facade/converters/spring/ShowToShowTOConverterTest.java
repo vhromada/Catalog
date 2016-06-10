@@ -2,7 +2,7 @@
 //
 //import static org.junit.Assert.assertNull;
 //
-//import cz.vhromada.catalog.dao.entities.Show;
+//import cz.vhromada.catalog.entities.Show;
 //import cz.vhromada.catalog.facade.to.ShowTO;
 //import cz.vhromada.converters.Converter;
 //import cz.vhromada.generator.ObjectGenerator;
@@ -21,7 +21,7 @@
 // * @author Vladimir Hromada
 // */
 //@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:testFacadeConvertersContext.xml")
+//@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
 //public class ShowToShowTOConverterTest {
 //
 //    /**

@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.service.impl;
 
 import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.dao.entities.Genre;
+import cz.vhromada.catalog.entities.Genre;
 import cz.vhromada.catalog.repository.GenreRepository;
 import cz.vhromada.catalog.service.CatalogService;
 

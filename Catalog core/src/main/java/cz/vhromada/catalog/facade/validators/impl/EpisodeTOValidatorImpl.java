@@ -64,8 +64,6 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
      *                                                               or name is empty string
      *                                                               or length of episode is negative value
      *                                                               or note is null
-     *                                                               or TO for season is null
-     *                                                               or TO for season ID is null
      */
     private static void validateEpisodeTO(final EpisodeTO episode) {
         Validators.validateArgumentNotNull(episode, EPISODE_TO_ARGUMENT);
@@ -74,8 +72,6 @@ public class EpisodeTOValidatorImpl implements EpisodeTOValidator {
         Validators.validateNotEmptyString(episode.getName(), "Name");
         Validators.validateNotNegativeNumber(episode.getLength(), "Length");
         Validators.validateNotNull(episode.getNote(), "Note");
-        Validators.validateNotNull(episode.getSeason(), "TO for season");
-        Validators.validateNotNull(episode.getSeason().getId(), "TO for season ID");
     }
 
 }

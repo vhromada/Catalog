@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.dao.entities.Genre;
-import cz.vhromada.catalog.dao.entities.Show;
+import cz.vhromada.catalog.entities.Genre;
+import cz.vhromada.catalog.entities.Show;
 
 /**
  * A class represents utility class for shows.

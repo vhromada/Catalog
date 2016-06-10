@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.dao.entities;
+package cz.vhromada.catalog.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

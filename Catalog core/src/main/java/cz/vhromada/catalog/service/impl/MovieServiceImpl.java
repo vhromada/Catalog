@@ -6,6 +6,7 @@ import java.util.List;
 import cz.vhromada.catalog.entities.Medium;
 import cz.vhromada.catalog.entities.Movie;
 import cz.vhromada.catalog.repository.MovieRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -22,8 +23,8 @@ public class MovieServiceImpl extends AbstractCatalogService<Movie> {
     /**
      * Creates a new instance of MovieServiceImpl.
      *
-     * @param movieRepository   repository for movies
-     * @param cache cache
+     * @param movieRepository repository for movies
+     * @param cache           cache
      * @throws IllegalArgumentException if repository for movies is null
      *                                  or cache is null
      */

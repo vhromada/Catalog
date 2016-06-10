@@ -63,8 +63,6 @@ public class SongTOValidatorImpl implements SongTOValidator {
      *                                                               or name is empty string
      *                                                               or length of song is negative value
      *                                                               or note is null
-     *                                                               or TO for music is null
-     *                                                               or TO for music ID is null
      */
     private static void validateSongTO(final SongTO song) {
         Validators.validateArgumentNotNull(song, SONG_TO_ARGUMENT);
@@ -72,8 +70,6 @@ public class SongTOValidatorImpl implements SongTOValidator {
         Validators.validateNotEmptyString(song.getName(), "Name");
         Validators.validateNotNegativeNumber(song.getLength(), "Length");
         Validators.validateNotNull(song.getNote(), "Note");
-        Validators.validateNotNull(song.getMusic(), "TO for music");
-        Validators.validateNotNull(song.getMusic().getId(), "TO for music ID");
     }
 
 }

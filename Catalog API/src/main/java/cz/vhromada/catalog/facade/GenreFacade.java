@@ -61,11 +61,11 @@ public interface GenreFacade {
      * Updates TO for genre.
      *
      * @param genre new value of TO for genre
-     * @throws IllegalArgumentException                                       if TO for genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
-     *                                                                        or name is null
-     *                                                                        or name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for genre doesn't exist in data storage
+     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or name is null
+     *                                                                   or name is empty string
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
      */
     void update(GenreTO genre);
 
@@ -73,9 +73,9 @@ public interface GenreFacade {
      * Removes TO for genre.
      *
      * @param genre TO for genre
-     * @throws IllegalArgumentException                                       if TO for genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for genre doesn't exist in data storage
+     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
      */
     void remove(GenreTO genre);
 
@@ -83,9 +83,9 @@ public interface GenreFacade {
      * Duplicates TO for genre.
      *
      * @param genre TO for genre
-     * @throws IllegalArgumentException                                       if TO for genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for genre doesn't exist in data storage
+     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
      */
     void duplicate(GenreTO genre);
 

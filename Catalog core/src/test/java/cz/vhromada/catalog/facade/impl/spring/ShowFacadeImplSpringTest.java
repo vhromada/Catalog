@@ -12,9 +12,9 @@
 //import cz.vhromada.catalog.commons.SpringUtils;
 //import cz.vhromada.catalog.commons.TestConstants;
 //import cz.vhromada.catalog.commons.Time;
-//import cz.vhromada.catalog.dao.entities.Episode;
-//import cz.vhromada.catalog.dao.entities.Season;
-//import cz.vhromada.catalog.dao.entities.Show;
+//import cz.vhromada.catalog.entities.Episode;
+//import cz.vhromada.catalog.entities.Season;
+//import cz.vhromada.catalog.entities.Show;
 //import cz.vhromada.catalog.facade.ShowFacade;
 //import cz.vhromada.catalog.facade.to.GenreTO;
 //import cz.vhromada.catalog.facade.to.ShowTO;

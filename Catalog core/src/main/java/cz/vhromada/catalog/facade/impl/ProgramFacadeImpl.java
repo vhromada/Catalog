@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Program;
+import cz.vhromada.catalog.entities.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component;
  */
 @Component("programFacade")
 public class ProgramFacadeImpl implements ProgramFacade {
-
-    /**
-     * Program argument
-     */
-    private static final String PROGRAM_ARGUMENT = "program";
 
     /**
      * TO for program argument
@@ -51,7 +46,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * Creates a new instance of ProgramFacadeImpl.
      *
      * @param programService     service for programs
-     * @param converter       converter
+     * @param converter          converter
      * @param programTOValidator validator for TO for program
      * @throws IllegalArgumentException if service for programs is null
      *                                  or converter is null
@@ -153,7 +148,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
         final Program programEntity = programService.get(program.getId());
         Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
         final List<Program> programs = programService.getAll();
-        Validators.validateMoveUp(programs, programEntity, PROGRAM_ARGUMENT);
+        Validators.validateMoveUp(programs, programEntity, PROGRAM_TO_ARGUMENT);
 
         programService.moveUp(programEntity);
     }
@@ -169,7 +164,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
         final Program programEntity = programService.get(program.getId());
         Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
         final List<Program> programs = programService.getAll();
-        Validators.validateMoveDown(programs, programEntity, PROGRAM_ARGUMENT);
+        Validators.validateMoveDown(programs, programEntity, PROGRAM_TO_ARGUMENT);
 
         programService.moveDown(programEntity);
     }
@@ -181,12 +176,12 @@ public class ProgramFacadeImpl implements ProgramFacade {
 
     @Override
     public int getTotalMediaCount() {
-        int sum = 0;
+        int totalMedia = 0;
         for (final Program program : programService.getAll()) {
-            sum += program.getMediaCount();
+            totalMedia += program.getMediaCount();
         }
 
-        return sum;
+        return totalMedia;
     }
 
 }

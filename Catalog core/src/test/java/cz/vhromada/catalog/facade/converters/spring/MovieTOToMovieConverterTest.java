@@ -4,8 +4,8 @@
 //
 //import java.util.List;
 //
-//import cz.vhromada.catalog.dao.entities.Medium;
-//import cz.vhromada.catalog.dao.entities.Movie;
+//import cz.vhromada.catalog.entities.Medium;
+//import cz.vhromada.catalog.entities.Movie;
 //import cz.vhromada.catalog.facade.to.MovieTO;
 //import cz.vhromada.converters.Converter;
 //import cz.vhromada.generator.ObjectGenerator;
@@ -24,7 +24,7 @@
 // * @author Vladimir Hromada
 // */
 //@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:testFacadeConvertersContext.xml")
+//@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
 //public class MovieTOToMovieConverterTest {
 //
 //    /**

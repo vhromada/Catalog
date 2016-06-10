@@ -1,26 +1,23 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Music;
-import cz.vhromada.catalog.dao.entities.Song;
+import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.entities.Music;
+import cz.vhromada.catalog.entities.Song;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.MusicTO;
 import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.catalog.facade.validators.SongTOValidator;
-import cz.vhromada.catalog.service.MusicService;
-import cz.vhromada.catalog.service.SongService;
-import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A class represents implementation of service for songs.
@@ -28,38 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @Component("songFacade")
-@Transactional
 public class SongFacadeImpl implements SongFacade {
-
-    /**
-     * Service for music argument
-     */
-    private static final String MUSIC_SERVICE_ARGUMENT = "Service for music";
-
-    /**
-     * Service for songs argument
-     */
-    private static final String SONG_SERVICE_ARGUMENT = "Service for songs";
-
-    /**
-     * Converter argument
-     */
-    private static final String CONVERTER_ARGUMENT = "Converter";
-
-    /**
-     * Validator for TO for music argument
-     */
-    private static final String MUSIC_TO_VALIDATOR_ARGUMENT = "Validator for TO for music";
-
-    /**
-     * Validator for TO for song argument
-     */
-    private static final String SONG_TO_VALIDATOR_ARGUMENT = "Validator for TO for song";
-
-    /**
-     * Song argument
-     */
-    private static final String SONG_ARGUMENT = "song";
 
     /**
      * TO for music argument
@@ -72,29 +38,9 @@ public class SongFacadeImpl implements SongFacade {
     private static final String SONG_TO_ARGUMENT = "TO for song";
 
     /**
-     * ID argument
-     */
-    private static final String ID_ARGUMENT = "ID";
-
-    /**
-     * Message for {@link FacadeOperationException}
-     */
-    private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
-
-    /**
-     * Message for not setting ID
-     */
-    private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
-
-    /**
      * Service for music
      */
-    private MusicService musicService;
-
-    /**
-     * Service for songs
-     */
-    private SongService songService;
+    private CatalogService<Music> musicService;
 
     /**
      * Converter
@@ -115,30 +61,25 @@ public class SongFacadeImpl implements SongFacade {
      * Creates a new instance of SongFacadeImpl.
      *
      * @param musicService     service for music
-     * @param songService      service for songs
      * @param converter        converter
      * @param musicTOValidator validator for TO for music
      * @param songTOValidator  validator for TO for song
      * @throws IllegalArgumentException if service for music is null
-     *                                  or service for songs is null
      *                                  or converter is null
      *                                  or validator for TO for music is null
      *                                  or validator for TO for song is null
      */
     @Autowired
-    public SongFacadeImpl(final MusicService musicService,
-            final SongService songService,
+    public SongFacadeImpl(@Qualifier("musicService") final CatalogService<Music> musicService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final MusicTOValidator musicTOValidator,
             final SongTOValidator songTOValidator) {
-        Validators.validateArgumentNotNull(musicService, MUSIC_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(songService, SONG_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
-        Validators.validateArgumentNotNull(musicTOValidator, MUSIC_TO_VALIDATOR_ARGUMENT);
-        Validators.validateArgumentNotNull(songTOValidator, SONG_TO_VALIDATOR_ARGUMENT);
+        Validators.validateArgumentNotNull(musicService, "Service for music");
+        Validators.validateArgumentNotNull(converter, "Converter");
+        Validators.validateArgumentNotNull(musicTOValidator, "Validator for TO for music");
+        Validators.validateArgumentNotNull(songTOValidator, "Validator for TO for song");
 
         this.musicService = musicService;
-        this.songService = songService;
         this.converter = converter;
         this.musicTOValidator = musicTOValidator;
         this.songTOValidator = songTOValidator;
@@ -146,185 +87,202 @@ public class SongFacadeImpl implements SongFacade {
 
     /**
      * @throws IllegalArgumentException {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public SongTO getSong(final Integer id) {
-        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
+        Validators.validateArgumentNotNull(id, "ID");
 
-        try {
-            return converter.convert(songService.getSong(id), SongTO.class);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        final List<Music> musicList = musicService.getAll();
+        for (final Music music : musicList) {
+            for (final Song song : music.getSongs()) {
+                if (id.equals(song.getId())) {
+                    return converter.convert(song, SongTO.class);
+                }
+            }
         }
+
+        return null;
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    public void add(final SongTO song) {
+    public void add(final MusicTO music, final SongTO song) {
+        musicTOValidator.validateMusicTOWithId(music);
         songTOValidator.validateNewSongTO(song);
-        try {
-            final Music music = musicService.getMusic(song.getMusic().getId());
-            Validators.validateExists(music, MUSIC_TO_ARGUMENT);
+        final Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
-            final Song songEntity = converter.convert(song, Song.class);
-//            songEntity.setMusic(music);
-            songService.add(songEntity);
-            if (songEntity.getId() == null) {
-                throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
-            }
-            song.setId(songEntity.getId());
-            song.setPosition(songEntity.getPosition());
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        final Song songEntity = converter.convert(song, Song.class);
+        musicEntity.getSongs().add(songEntity);
+
+        musicService.update(musicEntity);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void update(final SongTO song) {
         songTOValidator.validateExistingSongTO(song);
-        try {
-            final Song songEntity = converter.convert(song, Song.class);
-            Validators.validateExists(songService.exists(songEntity), SONG_TO_ARGUMENT);
-            final Music music = musicService.getMusic(song.getMusic().getId());
-            Validators.validateExists(music, MUSIC_TO_ARGUMENT);
+        final SongTO songTO = getSong(song.getId());
+        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
 
-//            songEntity.setMusic(music);
-            songService.update(songEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        final Music music = getMusic(song);
+        updateSong(music, converter.convert(song, Song.class));
+
+        musicService.update(music);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void remove(final SongTO song) {
         songTOValidator.validateSongTOWithId(song);
-        try {
-            final Song songEntity = songService.getSong(song.getId());
-            Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
+        final SongTO songTO = getSong(song.getId());
+        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
 
-            songService.remove(songEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        final Music music = getMusic(song);
+        final List<Song> songs = new ArrayList<>();
+        for (final Song songEntity : music.getSongs()) {
+            if (!songEntity.getId().equals(song.getId())) {
+                songs.add(songEntity);
+            }
         }
+        music.setSongs(songs);
+
+        musicService.update(music);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void duplicate(final SongTO song) {
         songTOValidator.validateSongTOWithId(song);
-        try {
-            final Song oldSong = songService.getSong(song.getId());
-            Validators.validateExists(oldSong, SONG_TO_ARGUMENT);
+        final SongTO songTO = getSong(song.getId());
+        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
 
-            songService.duplicate(oldSong);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        final Music music = getMusic(song);
+        final Song newSong = new Song();
+        newSong.setName(song.getName());
+        newSong.setLength(song.getLength());
+        newSong.setNote(song.getNote());
+        newSong.setPosition(song.getPosition());
+        music.getSongs().add(newSong);
+
+        musicService.update(music);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final SongTO song) {
-        songTOValidator.validateSongTOWithId(song);
-        try {
-            final Song songEntity = songService.getSong(song.getId());
-            Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
-            final List<Song> songs = null;//songService.findSongsByMusic(songEntity.getMusic());
-            Validators.validateMoveUp(songs, songEntity, SONG_ARGUMENT);
-
-            songService.moveUp(songEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        move(song, true);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveDown(final SongTO song) {
-        songTOValidator.validateSongTOWithId(song);
-        try {
-            final Song songEntity = songService.getSong(song.getId());
-            Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
-            final List<Song> songs = null;//songService.findSongsByMusic(songEntity.getMusic());
-            Validators.validateMoveDown(songs, songEntity, SONG_ARGUMENT);
-
-            songService.moveDown(songEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
-    }
-
-    /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
-     * @throws FacadeOperationException                              {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public boolean exists(final SongTO song) {
-        songTOValidator.validateSongTOWithId(song);
-        try {
-
-            return songService.exists(converter.convert(song, Song.class));
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        move(song, false);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public List<SongTO> findSongsByMusic(final MusicTO music) {
         musicTOValidator.validateMusicTOWithId(music);
-        try {
-            final Music musicEntity = musicService.getMusic(music.getId());
-            Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
+        final Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
-            final List<SongTO> songs = converter.convertCollection(songService.findSongsByMusic(musicEntity), SongTO.class);
-            Collections.sort(songs);
-            return songs;
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        return CollectionUtils.getSortedData(converter.convertCollection(musicEntity.getSongs(), SongTO.class));
+    }
+
+    /**
+     * Returns music for song.
+     *
+     * @param song TO for song
+     * @return music for song
+     */
+    private Music getMusic(final SongTO song) {
+        for (final Music music : musicService.getAll()) {
+            for (final Song songEntity : music.getSongs()) {
+                if (song.getId().equals(songEntity.getId())) {
+                    return music;
+                }
+            }
         }
+
+        throw new IllegalStateException("Unknown music");
+    }
+
+    /**
+     * Updates song in music.
+     *
+     * @param music TO for music
+     * @param song  TO for song
+     */
+    private void updateSong(final Music music, final Song song) {
+        final List<Song> songs = new ArrayList<>();
+        for (final Song songEntity : music.getSongs()) {
+            if (songEntity.equals(song)) {
+                songs.add(song);
+            } else {
+                songs.add(songEntity);
+            }
+        }
+        music.setSongs(songs);
+    }
+
+    /**
+     * Moves song in list one position up or down.
+     *
+     * @param song TO for song
+     * @param up   if moving song up
+     */
+    private void move(final SongTO song, final boolean up) {
+        songTOValidator.validateSongTOWithId(song);
+        final SongTO songTO = getSong(song.getId());
+        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
+        final Music music = getMusic(song);
+        final List<Song> songs = CollectionUtils.getSortedData(music.getSongs());
+        final Song songEntity = converter.convert(song, Song.class);
+        if (up) {
+            Validators.validateMoveUp(songs, songEntity, SONG_TO_ARGUMENT);
+        } else {
+            Validators.validateMoveDown(songs, songEntity, SONG_TO_ARGUMENT);
+        }
+
+        final int index = songs.indexOf(songEntity);
+        final Song other = songs.get(up ? index - 1 : index + 1);
+        final int position = songEntity.getPosition();
+        songEntity.setPosition(other.getPosition());
+        other.setPosition(position);
+
+        updateSong(music, songEntity);
+        updateSong(music, other);
+
+        musicService.update(music);
     }
 
 }

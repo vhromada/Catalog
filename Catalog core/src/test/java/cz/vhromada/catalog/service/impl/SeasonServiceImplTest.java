@@ -22,9 +22,9 @@
 //import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 //import cz.vhromada.catalog.dao.EpisodeDAO;
 //import cz.vhromada.catalog.dao.SeasonDAO;
-//import cz.vhromada.catalog.dao.entities.Episode;
-//import cz.vhromada.catalog.dao.entities.Season;
-//import cz.vhromada.catalog.dao.entities.Show;
+//import cz.vhromada.catalog.entities.Episode;
+//import cz.vhromada.catalog.entities.Season;
+//import cz.vhromada.catalog.entities.Show;
 //import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 //import cz.vhromada.catalog.service.SeasonService;
 //import cz.vhromada.catalog.service.exceptions.ServiceOperationException;

@@ -3,7 +3,7 @@ package cz.vhromada.catalog.facade.converters;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Medium;
+import cz.vhromada.catalog.entities.Medium;
 
 import org.dozer.CustomConverter;
 import org.dozer.Mapper;

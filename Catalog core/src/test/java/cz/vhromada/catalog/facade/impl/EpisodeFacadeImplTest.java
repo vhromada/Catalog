@@ -19,8 +19,8 @@
 //
 //import cz.vhromada.catalog.commons.CollectionUtils;
 //import cz.vhromada.catalog.commons.ObjectGeneratorTest;
-//import cz.vhromada.catalog.dao.entities.Episode;
-//import cz.vhromada.catalog.dao.entities.Season;
+//import cz.vhromada.catalog.entities.Episode;
+//import cz.vhromada.catalog.entities.Season;
 //import cz.vhromada.catalog.facade.EpisodeFacade;
 //import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 //import cz.vhromada.catalog.facade.to.EpisodeTO;

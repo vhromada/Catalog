@@ -2,7 +2,7 @@
 //
 //import static org.junit.Assert.assertNull;
 //
-//import cz.vhromada.catalog.dao.entities.Game;
+//import cz.vhromada.catalog.entities.Game;
 //import cz.vhromada.catalog.facade.to.GameTO;
 //import cz.vhromada.converters.Converter;
 //import cz.vhromada.generator.ObjectGenerator;
@@ -21,7 +21,7 @@
 // * @author Vladimir Hromada
 // */
 //@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:testFacadeConvertersContext.xml")
+//@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
 //public class GameToGameTOConverterTest {
 //
 //    /**

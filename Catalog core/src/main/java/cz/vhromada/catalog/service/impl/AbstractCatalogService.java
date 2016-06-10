@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.validators.Validators;
@@ -71,7 +70,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
     @Override
     @Transactional(readOnly = true)
     public List<T> getAll() {
-        return getSortedData(getCachedData(true));
+        return CollectionUtils.getSortedData(getCachedData(true));
     }
 
     /**
@@ -169,10 +168,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
     @Override
     public void updatePositions() {
         final List<T> data = getCachedData(false);
-        for (int i = 0; i < data.size(); i++) {
-            final T item = data.get(i);
-            item.setPosition(i);
-        }
+        updatePositions(data);
 
         final List<T> savedData = repository.save(data);
 
@@ -186,6 +182,16 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      * @return copy of data
      */
     protected abstract T getCopy(final T data);
+
+    /**
+     * Updates positions.
+     */
+    protected void updatePositions(final List<T> data) {
+        for (int i = 0; i < data.size(); i++) {
+            final T item = data.get(i);
+            item.setPosition(i);
+        }
+    }
 
     /**
      * Returns list of data.
@@ -210,32 +216,6 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
     }
 
     /**
-     * Returns sorted data.
-     *
-     * @param data data for sorting
-     * @return sorted data
-     */
-    private List<T> getSortedData(final List<T> data) {
-        final List<T> sortedData = new ArrayList<>(data);
-        Collections.sort(sortedData, (o1, o2) -> {
-            if (o1 == null) {
-                return -1;
-            }
-            if (o2 == null) {
-                return 1;
-            }
-
-            final int result = Integer.compare(o1.getPosition(), o2.getPosition());
-            if (result == 0) {
-                return Integer.compare(o1.getId(), o2.getId());
-            }
-            return result;
-        });
-
-        return sortedData;
-    }
-
-    /**
      * Moves data in list one position up or down.
      *
      * @param data data
@@ -245,7 +225,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
     private void move(final T data, final boolean up) {
         Validators.validateArgumentNotNull(data, DATA_ARGUMENT);
 
-        final List<T> dataList = getSortedData(getCachedData(false));
+        final List<T> dataList = CollectionUtils.getSortedData(getCachedData(false));
         final int index = dataList.indexOf(data);
         final T other = dataList.get(up ? index - 1 : index + 1);
         final int position = data.getPosition();

@@ -58,7 +58,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * Creates a new instance of EpisodeFacadeImpl.
      *
-     * @param showService      service for shows
+     * @param showService        service for shows
      * @param converter          converter
      * @param seasonTOValidator  validator for TO for season
      * @param episodeTOValidator validator for TO for episode
@@ -250,7 +250,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * Returns season for episode.
      *
-     * @param show show
+     * @param show    show
      * @param episode TO for season
      * @return season for episode
      */
@@ -268,7 +268,8 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
 
     /**
      * Updates episode in show.
-     * @param show show
+     *
+     * @param show    show
      * @param episode episode
      */
     private void updateEpisode(final Show show, final Episode episode) {
@@ -288,7 +289,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * Moves episode in list one position up or down.
      *
      * @param episode TO for episode
-     * @param up   if moving season up
+     * @param up      if moving season up
      */
     private void move(final EpisodeTO episode, final boolean up) {
         episodeTOValidator.validateEpisodeTOWithId(episode);

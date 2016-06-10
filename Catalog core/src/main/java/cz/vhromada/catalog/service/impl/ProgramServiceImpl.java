@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.dao.entities.Program;
+import cz.vhromada.catalog.entities.Program;
 import cz.vhromada.catalog.repository.ProgramRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,14 @@ public class ProgramServiceImpl extends AbstractCatalogService<Program> {
      * Creates a new instance of ProgramServiceImpl.
      *
      * @param programRepository repository for programs
-     * @param programCache      cache for programs
+     * @param cache             cache
      * @throws IllegalArgumentException if repository programs is null
-     *                                  or cache for programs is null
+     *                                  or cache is null
      */
     @Autowired
     public ProgramServiceImpl(final ProgramRepository programRepository,
-            @Value("#{cacheManager.getCache('programCache')}") final Cache programCache) {
-        super(programRepository, programCache, "programs");
+            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+        super(programRepository, cache, "programs");
     }
 
     @Override

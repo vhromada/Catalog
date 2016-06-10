@@ -171,7 +171,7 @@ public class MusicController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(final String music) {
-        return serialize(musicFacade.exists(deserialize(music, MusicTO.class)));
+        return null;//serialize(musicFacade.exists(deserialize(music, MusicTO.class)));
     }
 
     /**

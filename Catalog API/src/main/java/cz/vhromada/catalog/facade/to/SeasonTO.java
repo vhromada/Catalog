@@ -1,16 +1,16 @@
 package cz.vhromada.catalog.facade.to;
 
-import java.io.Serializable;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Language;
+import cz.vhromada.catalog.commons.Movable;
 
 /**
  * A class represents TO for season.
  *
  * @author Vladimir Hromada
  */
-public class SeasonTO implements Comparable<SeasonTO>, Serializable {
+public class SeasonTO implements Movable {
 
     /**
      * SerialVersionUID
@@ -57,25 +57,12 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
      */
     private int position;
 
-    /**
-     * TO for show
-     */
-    private ShowTO show;
-
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -189,40 +176,14 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
-    }
-
-    /**
-     * Returns TO for show.
-     *
-     * @return TO for show
-     */
-    public ShowTO getShow() {
-        return show;
-    }
-
-    /**
-     * Sets a new value to TO for show.
-     *
-     * @param show new value
-     */
-    public void setShow(final ShowTO show) {
-        this.show = show;
     }
 
     @Override
@@ -233,8 +194,8 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
         if (obj == null || !(obj instanceof SeasonTO) || id == null) {
             return false;
         }
-        final SeasonTO season = (SeasonTO) obj;
-        return id.equals(season.id);
+
+        return id.equals(((SeasonTO) obj).id);
     }
 
     @Override
@@ -244,14 +205,8 @@ public class SeasonTO implements Comparable<SeasonTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("SeasonTO [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d, show=%s]", id, number,
-                startYear, endYear, language, subtitles, note, position, show);
-    }
-
-    @Override
-    public int compareTo(final SeasonTO o) {
-        final int result = position - o.position;
-        return result == 0 ? id - o.id : result;
+        return String.format("SeasonTO [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d]", id, number, startYear,
+                endYear, language, subtitles, note, position);
     }
 
 }

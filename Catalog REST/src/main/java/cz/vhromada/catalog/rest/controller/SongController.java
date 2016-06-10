@@ -57,7 +57,7 @@ public class SongController extends JsonController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public void add(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, final String song) {
-        songFacade.add(deserialize(song, SongTO.class));
+        //songFacade.add(deserialize(song, SongTO.class));
     }
 
     /**
@@ -156,7 +156,7 @@ public class SongController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(@PathVariable("musicId") @SuppressWarnings("unused") final Integer musicId, final String song) {
-        return serialize(songFacade.exists(deserialize(song, SongTO.class)));
+        return null;//serialize(songFacade.exists(deserialize(song, SongTO.class)));
     }
 
     /**

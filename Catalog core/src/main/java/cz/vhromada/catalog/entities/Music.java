@@ -1,13 +1,33 @@
-package cz.vhromada.catalog.facade.to;
+package cz.vhromada.catalog.entities;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import cz.vhromada.catalog.commons.Movable;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 /**
- * A class represents TO for music.
+ * A class represents music.
  *
  * @author Vladimir Hromada
  */
-public class MusicTO implements Movable {
+@Entity
+@Table(name = "music")
+public class Music implements Movable {
 
     /**
      * SerialVersionUID
@@ -17,26 +37,33 @@ public class MusicTO implements Movable {
     /**
      * ID
      */
+    @Id
+    @SequenceGenerator(name = "music_generator", sequenceName = "music_sq", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "music_generator")
     private Integer id;
 
     /**
      * Name
      */
+    @Column(name = "music_name")
     private String name;
 
     /**
      * URL to english Wikipedia page about music
      */
+    @Column(name = "wiki_en")
     private String wikiEn;
 
     /**
      * URL to czech Wikipedia page about music
      */
+    @Column(name = "wiki_cz")
     private String wikiCz;
 
     /**
      * Count of media
      */
+    @Column(name = "media_count")
     private int mediaCount;
 
     /**
@@ -48,6 +75,15 @@ public class MusicTO implements Movable {
      * Position
      */
     private int position;
+
+    /**
+     * Songs
+     */
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "music", referencedColumnName = "id")
+    @OrderBy("position, id")
+    @Fetch(FetchMode.SELECT)
+    private List<Song> songs;
 
     @Override
     public Integer getId() {
@@ -159,16 +195,35 @@ public class MusicTO implements Movable {
         this.position = position;
     }
 
+    /**
+     * Returns songs.
+     *
+     * @return songs
+     */
+    public List<Song> getSongs() {
+        return songs;
+    }
+
+    /**
+     * Sets a new value to songs.
+     *
+     * @param songs new value
+     */
+    public void setSongs(final List<Song> songs) {
+        this.songs = songs;
+    }
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof MusicTO) || id == null) {
+
+        if (obj == null || !(obj instanceof Music) || id == null) {
             return false;
         }
 
-        return id.equals(((MusicTO) obj).id);
+        return id.equals(((Music) obj).id);
     }
 
     @Override
@@ -178,8 +233,8 @@ public class MusicTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("MusicTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, note=%s, position=%d]", id, name, wikiEn, wikiCz, mediaCount, note,
-                position);
+        return String.format("Music [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, note=%s, position=%d, songs=%s]", id, name, wikiEn, wikiCz,
+                mediaCount, note, position, songs);
     }
 
 }

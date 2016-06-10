@@ -1,26 +1,26 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Episode;
-import cz.vhromada.catalog.dao.entities.Season;
+import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.Movable;
+import cz.vhromada.catalog.entities.Episode;
+import cz.vhromada.catalog.entities.Season;
+import cz.vhromada.catalog.entities.Show;
 import cz.vhromada.catalog.facade.EpisodeFacade;
-import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.catalog.facade.validators.EpisodeTOValidator;
 import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
-import cz.vhromada.catalog.service.EpisodeService;
-import cz.vhromada.catalog.service.SeasonService;
-import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A class represents implementation of facade for episodes.
@@ -28,43 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @Component("episodeFacade")
-@Transactional
 public class EpisodeFacadeImpl implements EpisodeFacade {
-
-    /**
-     * Service for seasons argument
-     */
-    private static final String SEASON_SERVICE_ARGUMENT = "Service for seasons";
-
-    /**
-     * Service for episodes argument
-     */
-    private static final String EPISODE_SERVICE_ARGUMENT = "Service for episodes";
-
-    /**
-     * Converter argument
-     */
-    private static final String CONVERTER_ARGUMENT = "Converter";
-
-    /**
-     * Validator for TO for season field
-     */
-    private static final String SEASON_TO_VALIDATOR_ARGUMENT = "Validator for TO for season";
-
-    /**
-     * Validator for TO for episode field
-     */
-    private static final String EPISODE_TO_VALIDATOR_ARGUMENT = "Validator for TO for episode";
-
-    /**
-     * Episode argument
-     */
-    private static final String EPISODE_ARGUMENT = "episode";
-
-    /**
-     * TO for season argument
-     */
-    private static final String SEASON_TO_ARGUMENT = "TO for season";
 
     /**
      * TO for episode argument
@@ -72,29 +36,9 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     private static final String EPISODE_TO_ARGUMENT = "TO for episode";
 
     /**
-     * ID argument
+     * Service for shows
      */
-    private static final String ID_ARGUMENT = "ID";
-
-    /**
-     * Message for {@link FacadeOperationException}
-     */
-    private static final String FACADE_OPERATION_EXCEPTION_MESSAGE = "Error in working with service tier.";
-
-    /**
-     * Message for not setting ID
-     */
-    private static final String NOT_SET_ID_EXCEPTION_MESSAGE = "Service tier doesn't set ID.";
-
-    /**
-     * Service for seasons
-     */
-    private SeasonService seasonService;
-
-    /**
-     * Service for episodes
-     */
-    private EpisodeService episodeService;
+    private CatalogService<Show> showService;
 
     /**
      * Converter
@@ -114,31 +58,26 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * Creates a new instance of EpisodeFacadeImpl.
      *
-     * @param seasonService      service for seasons
-     * @param episodeService     service for episodes
+     * @param showService      service for shows
      * @param converter          converter
      * @param seasonTOValidator  validator for TO for season
      * @param episodeTOValidator validator for TO for episode
-     * @throws IllegalArgumentException if service for seasons is null
-     *                                  or service for episodes is null
+     * @throws IllegalArgumentException if service for shows is null
      *                                  or converter is null
      *                                  or validator for TO for season is null
      *                                  or validator for TO for episode is null
      */
     @Autowired
-    public EpisodeFacadeImpl(final SeasonService seasonService,
-            final EpisodeService episodeService,
+    public EpisodeFacadeImpl(final CatalogService<Show> showService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final SeasonTOValidator seasonTOValidator,
             final EpisodeTOValidator episodeTOValidator) {
-        Validators.validateArgumentNotNull(seasonService, SEASON_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(episodeService, EPISODE_SERVICE_ARGUMENT);
-        Validators.validateArgumentNotNull(converter, CONVERTER_ARGUMENT);
-        Validators.validateArgumentNotNull(seasonTOValidator, SEASON_TO_VALIDATOR_ARGUMENT);
-        Validators.validateArgumentNotNull(episodeTOValidator, EPISODE_TO_VALIDATOR_ARGUMENT);
+        Validators.validateArgumentNotNull(showService, "Service for shows");
+        Validators.validateArgumentNotNull(converter, "Converter");
+        Validators.validateArgumentNotNull(seasonTOValidator, "Validator for TO for season");
+        Validators.validateArgumentNotNull(episodeTOValidator, "Validator for TO for episode");
 
-        this.seasonService = seasonService;
-        this.episodeService = episodeService;
+        this.showService = showService;
         this.converter = converter;
         this.seasonTOValidator = seasonTOValidator;
         this.episodeTOValidator = episodeTOValidator;
@@ -146,185 +85,235 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
 
     /**
      * @throws IllegalArgumentException {@inheritDoc}
-     * @throws FacadeOperationException {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public EpisodeTO getEpisode(final Integer id) {
-        Validators.validateArgumentNotNull(id, ID_ARGUMENT);
+        Validators.validateArgumentNotNull(id, "ID");
 
-        try {
-            return converter.convert(episodeService.getEpisode(id), EpisodeTO.class);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        final List<Show> shows = showService.getAll();
+        for (final Show show : shows) {
+            for (final Season season : show.getSeasons()) {
+                for (final Episode episode : season.getEpisodes()) {
+                    if (id.equals(episode.getId())) {
+                        return converter.convert(season, EpisodeTO.class);
+                    }
+                }
+
+            }
         }
+
+        return null;
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    public void add(final EpisodeTO episode) {
+    public void add(final SeasonTO season, final EpisodeTO episode) {
+        seasonTOValidator.validateSeasonTOWithId(season);
         episodeTOValidator.validateNewEpisodeTO(episode);
-        try {
-            final Season season = seasonService.getSeason(episode.getSeason().getId());
-            Validators.validateExists(season, SEASON_TO_ARGUMENT);
+        final Show show = getShow(episode);
+        final Season seasonEntity = getSeason(show, episode);
+        Validators.validateExists(season, "TO for season");
 
-            final Episode episodeEntity = converter.convert(episode, Episode.class);
-//            episodeEntity.setSeason(season);
-            episodeService.add(episodeEntity);
-            if (episodeEntity.getId() == null) {
-                throw new FacadeOperationException(NOT_SET_ID_EXCEPTION_MESSAGE);
-            }
-            episode.setId(episodeEntity.getId());
-            episode.setPosition(episodeEntity.getPosition());
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        final Episode episodeEntity = converter.convert(episode, Episode.class);
+        seasonEntity.getEpisodes().add(episodeEntity);
+
+        showService.update(show);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void update(final EpisodeTO episode) {
         episodeTOValidator.validateExistingEpisodeTO(episode);
-        try {
-            final Episode episodeEntity = converter.convert(episode, Episode.class);
-            Validators.validateExists(episodeService.exists(episodeEntity), EPISODE_TO_ARGUMENT);
-            final Season season = seasonService.getSeason(episode.getSeason().getId());
-            Validators.validateExists(season, SEASON_TO_ARGUMENT);
+        final EpisodeTO episodeTO = getEpisode(episode.getId());
+        Validators.validateExists(episodeTO, EPISODE_TO_ARGUMENT);
 
-//            episodeEntity.setSeason(season);
-            episodeService.update(episodeEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        final Show show = getShow(episode);
+        updateEpisode(show, converter.convert(episode, Episode.class));
+
+        showService.update(show);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void remove(final EpisodeTO episode) {
         episodeTOValidator.validateEpisodeTOWithId(episode);
-        try {
-            final Episode episodeEntity = episodeService.getEpisode(episode.getId());
-            Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
+        final EpisodeTO episodeTO = getEpisode(episode.getId());
+        Validators.validateExists(episodeTO, EPISODE_TO_ARGUMENT);
 
-            episodeService.remove(episodeEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        final Show show = getShow(episode);
+        final Season season = getSeason(show, episode);
+        final List<Episode> episodes = new ArrayList<>();
+        for (final Episode episodeEntity : season.getEpisodes()) {
+            if (!episodeEntity.getId().equals(episode.getId())) {
+                episodes.add(episodeEntity);
+            }
         }
+        season.setEpisodes(episodes);
+
+        showService.update(show);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void duplicate(final EpisodeTO episode) {
         episodeTOValidator.validateEpisodeTOWithId(episode);
-        try {
-            final Episode oldEpisode = episodeService.getEpisode(episode.getId());
-            Validators.validateExists(oldEpisode, EPISODE_TO_ARGUMENT);
+        final EpisodeTO episodeTO = getEpisode(episode.getId());
+        Validators.validateExists(episodeTO, EPISODE_TO_ARGUMENT);
 
-            episodeService.duplicate(oldEpisode);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        final Show show = getShow(episode);
+        final Episode newEpisode = new Episode();
+        newEpisode.setNumber(episode.getNumber());
+        newEpisode.setName(episode.getName());
+        newEpisode.setLength(episode.getLength());
+        newEpisode.setNote(episode.getNote());
+        updateEpisode(show, newEpisode);
+
+        showService.update(show);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final EpisodeTO episode) {
-        episodeTOValidator.validateEpisodeTOWithId(episode);
-        try {
-            final Episode episodeEntity = episodeService.getEpisode(episode.getId());
-            Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
-            final List<Episode> episodes = null;//episodeService.findEpisodesBySeason(episodeEntity.getSeason());
-            Validators.validateMoveUp(episodes, episodeEntity, EPISODE_ARGUMENT);
-
-            episodeService.moveUp(episodeEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        move(episode, true);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
     public void moveDown(final EpisodeTO episode) {
-        episodeTOValidator.validateEpisodeTOWithId(episode);
-        try {
-            final Episode episodeEntity = episodeService.getEpisode(episode.getId());
-            Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
-            final List<Episode> episodes = null;//episodeService.findEpisodesBySeason(episodeEntity.getSeason());
-            Validators.validateMoveDown(episodes, episodeEntity, EPISODE_ARGUMENT);
-
-            episodeService.moveDown(episodeEntity);
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
-    }
-
-    /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
-     * @throws FacadeOperationException                              {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public boolean exists(final EpisodeTO episode) {
-        episodeTOValidator.validateEpisodeTOWithId(episode);
-        try {
-
-            return episodeService.exists(converter.convert(episode, Episode.class));
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
-        }
+        move(episode, false);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
-     * @throws FacadeOperationException                                  {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public List<EpisodeTO> findEpisodesBySeason(final SeasonTO season) {
         seasonTOValidator.validateSeasonTOWithId(season);
-        try {
-            final Season seasonEntity = seasonService.getSeason(season.getId());
-            Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
-
-            final List<EpisodeTO> episodes = converter.convertCollection(episodeService.findEpisodesBySeason(seasonEntity), EpisodeTO.class);
-            Collections.sort(episodes);
-            return episodes;
-        } catch (final ServiceOperationException ex) {
-            throw new FacadeOperationException(FACADE_OPERATION_EXCEPTION_MESSAGE, ex);
+        final List<Show> shows = showService.getAll();
+        for (final Show show : shows) {
+            for (final Season seasonEntity : show.getSeasons()) {
+                if (season.getId().equals(seasonEntity.getId())) {
+                    return CollectionUtils.getSortedData(converter.convertCollection(seasonEntity.getEpisodes(), EpisodeTO.class));
+                }
+            }
         }
+
+        throw new RecordNotFoundException("TO for season doesn't exist.");
+    }
+
+    /**
+     * Returns show for episode.
+     *
+     * @param episode TO for season
+     * @return show for episode
+     */
+    private Show getShow(final EpisodeTO episode) {
+        for (final Show show : showService.getAll()) {
+            for (final Season season : show.getSeasons()) {
+                for (final Episode episodeEntity : season.getEpisodes()) {
+                    if (episode.getId().equals(episodeEntity.getId())) {
+                        return show;
+                    }
+                }
+            }
+        }
+
+        throw new IllegalStateException("Unknown show");
+    }
+
+    /**
+     * Returns season for episode.
+     *
+     * @param show show
+     * @param episode TO for season
+     * @return season for episode
+     */
+    private Season getSeason(final Show show, final Movable episode) {
+        for (final Season season : show.getSeasons()) {
+            for (final Episode episodeEntity : season.getEpisodes()) {
+                if (episode.getId().equals(episodeEntity.getId())) {
+                    return season;
+                }
+            }
+        }
+
+        throw new IllegalStateException("Unknown show");
+    }
+
+    /**
+     * Updates episode in show.
+     * @param show show
+     * @param episode episode
+     */
+    private void updateEpisode(final Show show, final Episode episode) {
+        final List<Episode> episodes = new ArrayList<>();
+        final Season season = getSeason(show, episode);
+        for (final Episode episodeEntity : season.getEpisodes()) {
+            if (episodeEntity.equals(episode)) {
+                episodes.add(episode);
+            } else {
+                episodes.add(episodeEntity);
+            }
+        }
+        season.setEpisodes(episodes);
+    }
+
+    /**
+     * Moves episode in list one position up or down.
+     *
+     * @param episode TO for episode
+     * @param up   if moving season up
+     */
+    private void move(final EpisodeTO episode, final boolean up) {
+        episodeTOValidator.validateEpisodeTOWithId(episode);
+        final EpisodeTO episodeTO = getEpisode(episode.getId());
+        Validators.validateExists(episodeTO, EPISODE_TO_ARGUMENT);
+        final Show show = getShow(episode);
+        final Season season = getSeason(show, episode);
+        final List<Episode> episodes = CollectionUtils.getSortedData(season.getEpisodes());
+        final Episode episodeEntity = converter.convert(episode, Episode.class);
+        if (up) {
+            Validators.validateMoveUp(episodes, episodeEntity, EPISODE_TO_ARGUMENT);
+        } else {
+            Validators.validateMoveDown(episodes, episodeEntity, EPISODE_TO_ARGUMENT);
+        }
+
+        final int index = episodes.indexOf(episodeEntity);
+        final Episode other = episodes.get(up ? index - 1 : index + 1);
+        final int position = episodeEntity.getPosition();
+        episodeEntity.setPosition(other.getPosition());
+        other.setPosition(position);
+
+        updateEpisode(show, episodeEntity);
+        updateEpisode(show, other);
+
+        showService.update(show);
     }
 
 }

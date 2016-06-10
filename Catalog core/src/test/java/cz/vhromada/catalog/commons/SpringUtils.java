@@ -7,11 +7,11 @@
 //
 //import javax.persistence.EntityManager;
 //
-//import cz.vhromada.catalog.dao.entities.Episode;
-//import cz.vhromada.catalog.dao.entities.Music;
-//import cz.vhromada.catalog.dao.entities.Season;
-//import cz.vhromada.catalog.dao.entities.Show;
-//import cz.vhromada.catalog.dao.entities.Song;
+//import cz.vhromada.catalog.entities.Episode;
+//import cz.vhromada.catalog.entities.Music;
+//import cz.vhromada.catalog.entities.Season;
+//import cz.vhromada.catalog.entities.Show;
+//import cz.vhromada.catalog.entities.Song;
 //import cz.vhromada.test.DeepAsserts;
 //
 //import net.sf.ehcache.Ehcache;

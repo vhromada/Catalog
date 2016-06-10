@@ -20,8 +20,8 @@
 //import cz.vhromada.catalog.commons.CollectionUtils;
 //import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 //import cz.vhromada.catalog.commons.Time;
-//import cz.vhromada.catalog.dao.entities.Genre;
-//import cz.vhromada.catalog.dao.entities.Movie;
+//import cz.vhromada.catalog.entities.Genre;
+//import cz.vhromada.catalog.entities.Movie;
 //import cz.vhromada.catalog.facade.MovieFacade;
 //import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
 //import cz.vhromada.catalog.facade.to.GenreTO;

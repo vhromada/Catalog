@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.dao.entities.Genre;
+import cz.vhromada.catalog.entities.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component;
  */
 @Component("genreFacade")
 public class GenreFacadeImpl implements GenreFacade {
-
-    /**
-     * Genre argument
-     */
-    private static final String GENRE_ARGUMENT = "genre";
 
     /**
      * TO for genre argument
@@ -169,7 +164,7 @@ public class GenreFacadeImpl implements GenreFacade {
         final Genre genreEntity = genreService.get(genre.getId());
         Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
         final List<Genre> genres = genreService.getAll();
-        Validators.validateMoveUp(genres, genreEntity, GENRE_ARGUMENT);
+        Validators.validateMoveUp(genres, genreEntity, GENRE_TO_ARGUMENT);
 
         genreService.moveUp(genreEntity);
     }
@@ -185,7 +180,7 @@ public class GenreFacadeImpl implements GenreFacade {
         final Genre genreEntity = genreService.get(genre.getId());
         Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
         final List<Genre> genres = genreService.getAll();
-        Validators.validateMoveDown(genres, genreEntity, GENRE_ARGUMENT);
+        Validators.validateMoveDown(genres, genreEntity, GENRE_TO_ARGUMENT);
 
         genreService.moveDown(genreEntity);
     }

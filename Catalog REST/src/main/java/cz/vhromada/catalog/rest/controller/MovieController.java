@@ -199,7 +199,7 @@ public class MovieController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(final String movie) {
-        return serialize(movieFacade.exists(deserialize(movie, MovieTO.class)));
+        return null;//serialize(movieFacade.exists(deserialize(movie, MovieTO.class)));
     }
 
     /**

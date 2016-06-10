@@ -17,7 +17,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.ProgramUtils;
-import cz.vhromada.catalog.dao.entities.Program;
+import cz.vhromada.catalog.entities.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.catalog.facade.validators.ProgramTOValidator;

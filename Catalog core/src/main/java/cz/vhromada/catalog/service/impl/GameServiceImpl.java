@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.dao.entities.Game;
+import cz.vhromada.catalog.entities.Game;
 import cz.vhromada.catalog.repository.GameRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,14 @@ public class GameServiceImpl extends AbstractCatalogService<Game> {
      * Creates a new instance of GameServiceImpl.
      *
      * @param gameRepository repository for games
-     * @param gameCache      cache for games
+     * @param cache      cache
      * @throws IllegalArgumentException if repository games is null
-     *                                  or cache for games is null
+     *                                  or cache is null
      */
     @Autowired
     public GameServiceImpl(final GameRepository gameRepository,
-            @Value("#{cacheManager.getCache('gameCache')}") final Cache gameCache) {
-        super(gameRepository, gameCache, "games");
+            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+        super(gameRepository, cache, "games");
     }
 
     @Override

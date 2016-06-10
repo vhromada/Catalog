@@ -9,7 +9,7 @@
 //import cz.vhromada.catalog.commons.EntitiesUtils;
 //import cz.vhromada.catalog.commons.SpringToUtils;
 //import cz.vhromada.catalog.commons.SpringUtils;
-//import cz.vhromada.catalog.dao.entities.Game;
+//import cz.vhromada.catalog.entities.Game;
 //import cz.vhromada.catalog.facade.GameFacade;
 //import cz.vhromada.catalog.facade.to.GameTO;
 //import cz.vhromada.generator.ObjectGenerator;

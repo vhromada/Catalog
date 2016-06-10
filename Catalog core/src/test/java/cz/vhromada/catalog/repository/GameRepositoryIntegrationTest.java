@@ -9,7 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.commons.GameUtils;
-import cz.vhromada.catalog.dao.entities.Game;
+import cz.vhromada.catalog.entities.Game;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.dao.entities.Song;
+import cz.vhromada.catalog.entities.Song;
 
 /**
  * A class represents utility class for songs.

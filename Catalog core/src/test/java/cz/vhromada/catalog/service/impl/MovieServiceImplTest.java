@@ -23,8 +23,8 @@
 //import cz.vhromada.catalog.commons.ObjectGeneratorTest;
 //import cz.vhromada.catalog.commons.Time;
 //import cz.vhromada.catalog.dao.MovieDAO;
-//import cz.vhromada.catalog.dao.entities.Medium;
-//import cz.vhromada.catalog.dao.entities.Movie;
+//import cz.vhromada.catalog.entities.Medium;
+//import cz.vhromada.catalog.entities.Movie;
 //import cz.vhromada.catalog.dao.exceptions.DataStorageException;
 //import cz.vhromada.catalog.service.MovieService;
 //import cz.vhromada.catalog.service.exceptions.ServiceOperationException;

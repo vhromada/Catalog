@@ -3,13 +3,14 @@ package cz.vhromada.catalog.service;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.dao.entities.Movie;
+import cz.vhromada.catalog.entities.Movie;
 
 /**
  * An interface represents service for movies.
  *
  * @author Vladimir Hromada
  */
+@Deprecated
 public interface MovieService {
 
     /**

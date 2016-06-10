@@ -2,7 +2,7 @@
 //
 //import static org.junit.Assert.assertNull;
 //
-//import cz.vhromada.catalog.dao.entities.Season;
+//import cz.vhromada.catalog.entities.Season;
 //import cz.vhromada.catalog.facade.to.SeasonTO;
 //import cz.vhromada.converters.Converter;
 //import cz.vhromada.generator.ObjectGenerator;
@@ -21,7 +21,7 @@
 // * @author Vladimir Hromada
 // */
 //@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:testFacadeConvertersContext.xml")
+//@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
 //public class SeasonToSeasonTOConverterTest {
 //
 //    /**

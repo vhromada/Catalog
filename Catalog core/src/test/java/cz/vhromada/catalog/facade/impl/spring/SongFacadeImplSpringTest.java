@@ -9,8 +9,8 @@
 //import cz.vhromada.catalog.commons.EntitiesUtils;
 //import cz.vhromada.catalog.commons.SpringToUtils;
 //import cz.vhromada.catalog.commons.SpringUtils;
-//import cz.vhromada.catalog.dao.entities.Music;
-//import cz.vhromada.catalog.dao.entities.Song;
+//import cz.vhromada.catalog.entities.Music;
+//import cz.vhromada.catalog.entities.Song;
 //import cz.vhromada.catalog.facade.SongFacade;
 //import cz.vhromada.catalog.facade.to.SongTO;
 //import cz.vhromada.generator.ObjectGenerator;

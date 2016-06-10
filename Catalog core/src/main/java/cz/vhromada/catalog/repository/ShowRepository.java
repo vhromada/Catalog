@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.repository;
 
-import cz.vhromada.catalog.dao.entities.Show;
+import cz.vhromada.catalog.entities.Show;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

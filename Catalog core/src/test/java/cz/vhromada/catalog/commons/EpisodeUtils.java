@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.dao.entities.Episode;
+import cz.vhromada.catalog.entities.Episode;
 
 /**
  * A class represents utility class for episodes.

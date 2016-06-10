@@ -167,7 +167,7 @@ public class ProgramController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(final String program) {
-        return serialize(programFacade.exists(deserialize(program, ProgramTO.class)));
+        return null;//serialize(programFacade.exists(deserialize(program, ProgramTO.class)));
     }
 
     /**

@@ -66,7 +66,6 @@ public interface GenreFacade {
      *                                                                        or name is null
      *                                                                        or name is empty string
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for genre doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void update(GenreTO genre);
 
@@ -77,7 +76,6 @@ public interface GenreFacade {
      * @throws IllegalArgumentException                                       if TO for genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for genre doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void remove(GenreTO genre);
 
@@ -88,7 +86,6 @@ public interface GenreFacade {
      * @throws IllegalArgumentException                                       if TO for genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException          if ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException      if TO for genre doesn't exist in data storage
-     * @throws cz.vhromada.catalog.facade.exceptions.FacadeOperationException if there was error in working with service tier
      */
     void duplicate(GenreTO genre);
 

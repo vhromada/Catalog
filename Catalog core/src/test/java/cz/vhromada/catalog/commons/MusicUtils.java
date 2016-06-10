@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.dao.entities.Music;
+import cz.vhromada.catalog.entities.Music;
 
 /**
  * A class represents utility class for music.

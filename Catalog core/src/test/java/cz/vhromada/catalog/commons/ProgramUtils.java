@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.dao.entities.Program;
+import cz.vhromada.catalog.entities.Program;
 import cz.vhromada.catalog.facade.to.ProgramTO;
 
 /**

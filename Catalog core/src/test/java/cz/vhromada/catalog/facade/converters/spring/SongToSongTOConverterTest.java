@@ -20,7 +20,7 @@
 // * @author Vladimir Hromada
 // */
 //@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:testFacadeConvertersContext.xml")
+//@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
 //public class SongToSongTOConverterTest {
 //
 //    /**

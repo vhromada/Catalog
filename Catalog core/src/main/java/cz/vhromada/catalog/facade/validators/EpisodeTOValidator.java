@@ -20,8 +20,6 @@ public interface EpisodeTOValidator {
      *                                                               or name is empty string
      *                                                               or length of episode is negative value
      *                                                               or note is null
-     *                                                               or TO for season is null
-     *                                                               or TO for season ID is null
      */
     void validateNewEpisodeTO(EpisodeTO episode);
 
@@ -36,8 +34,6 @@ public interface EpisodeTOValidator {
      *                                                               or name is empty string
      *                                                               or length of episode is negative value
      *                                                               or note is null
-     *                                                               or TO for season is null
-     *                                                               or TO for season ID is null
      */
     void validateExistingEpisodeTO(EpisodeTO episode);
 

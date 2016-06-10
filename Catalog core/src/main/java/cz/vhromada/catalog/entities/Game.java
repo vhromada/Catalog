@@ -1,13 +1,23 @@
-package cz.vhromada.catalog.facade.to;
+package cz.vhromada.catalog.entities;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import cz.vhromada.catalog.commons.Movable;
 
 /**
- * A class represents TO for game.
+ * A class represents game.
  *
  * @author Vladimir Hromada
  */
-public class GameTO implements Movable {
+@Entity
+@Table(name = "games")
+public class Game implements Movable {
 
     /**
      * SerialVersionUID
@@ -17,26 +27,33 @@ public class GameTO implements Movable {
     /**
      * ID
      */
+    @Id
+    @SequenceGenerator(name = "game_generator", sequenceName = "games_sq", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "game_generator")
     private Integer id;
 
     /**
      * Name
      */
+    @Column(name = "game_name")
     private String name;
 
     /**
      * URL to english Wikipedia page about game
      */
+    @Column(name = "wiki_en")
     private String wikiEn;
 
     /**
      * URL to czech Wikipedia page about game
      */
+    @Column(name = "wiki_cz")
     private String wikiCz;
 
     /**
      * Count of media
      */
+    @Column(name = "media_count")
     private int mediaCount;
 
     /**
@@ -47,6 +64,7 @@ public class GameTO implements Movable {
     /**
      * True if there is serial key
      */
+    @Column(name = "serial_key")
     private boolean serialKey;
 
     /**
@@ -62,11 +80,13 @@ public class GameTO implements Movable {
     /**
      * True if there is data for trainer
      */
+    @Column(name = "trainer_data")
     private boolean trainerData;
 
     /**
      * True if there is editor
      */
+    @Column(name = "editor")
     private boolean editor;
 
     /**
@@ -77,6 +97,7 @@ public class GameTO implements Movable {
     /**
      * Other data
      */
+    @Column(name = "other_data")
     private String otherData;
 
     /**
@@ -104,6 +125,7 @@ public class GameTO implements Movable {
      *
      * @return name
      */
+
     public String getName() {
         return name;
     }
@@ -348,11 +370,12 @@ public class GameTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof GameTO) || id == null) {
+
+        if (obj == null || !(obj instanceof Game) || id == null) {
             return false;
         }
 
-        return id.equals(((GameTO) obj).id);
+        return id.equals(((Game) obj).id);
     }
 
     @Override
@@ -362,7 +385,7 @@ public class GameTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("GameTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, patch=%b, trainer=%b, trainerData=%b, "
+        return String.format("Game [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, patch=%b, trainer=%b, trainerData=%b, "
                         + "editor=%b, saves=%b, otherData=%s, note=%s, position=%d]", id, name, wikiEn, wikiCz, mediaCount, crack, serialKey, patch, trainer,
                 trainerData, editor, saves, otherData, note, position);
     }

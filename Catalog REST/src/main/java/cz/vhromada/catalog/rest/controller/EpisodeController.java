@@ -61,7 +61,7 @@ public class EpisodeController extends JsonController {
     @ResponseBody
     public void add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
-        episodeFacade.add(deserialize(episode, EpisodeTO.class));
+//        episodeFacade.add(deserialize(episode, EpisodeTO.class));
     }
 
     /**
@@ -172,7 +172,7 @@ public class EpisodeController extends JsonController {
     @ResponseBody
     public String exists(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId,
             @PathVariable("seasonId") @SuppressWarnings("unused") final Integer seasonId, final String episode) {
-        return serialize(episodeFacade.exists(deserialize(episode, EpisodeTO.class)));
+        return null;//serialize(episodeFacade.exists(deserialize(episode, EpisodeTO.class)));
     }
 
     /**

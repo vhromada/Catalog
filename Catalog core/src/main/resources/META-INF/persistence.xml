@@ -6,15 +6,15 @@
 
     <persistence-unit name="CatalogPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>cz.vhromada.catalog.dao.entities.Movie</class>
-        <class>cz.vhromada.catalog.dao.entities.Show</class>
-        <class>cz.vhromada.catalog.dao.entities.Season</class>
-        <class>cz.vhromada.catalog.dao.entities.Episode</class>
-        <class>cz.vhromada.catalog.dao.entities.Game</class>
-        <class>cz.vhromada.catalog.dao.entities.Music</class>
-        <class>cz.vhromada.catalog.dao.entities.Song</class>
-        <class>cz.vhromada.catalog.dao.entities.Program</class>
-        <class>cz.vhromada.catalog.dao.entities.Genre</class>
+        <class>cz.vhromada.catalog.entities.Movie</class>
+        <class>cz.vhromada.catalog.entities.Show</class>
+        <class>cz.vhromada.catalog.entities.Season</class>
+        <class>cz.vhromada.catalog.entities.Episode</class>
+        <class>cz.vhromada.catalog.entities.Game</class>
+        <class>cz.vhromada.catalog.entities.Music</class>
+        <class>cz.vhromada.catalog.entities.Song</class>
+        <class>cz.vhromada.catalog.entities.Program</class>
+        <class>cz.vhromada.catalog.entities.Genre</class>
     </persistence-unit>
 
 </persistence>

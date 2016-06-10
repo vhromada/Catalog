@@ -1,14 +1,15 @@
 package cz.vhromada.catalog.facade.to;
 
-import java.io.Serializable;
 import java.util.List;
+
+import cz.vhromada.catalog.commons.Movable;
 
 /**
  * A class represents TO for show.
  *
  * @author Vladimir Hromada
  */
-public class ShowTO implements Comparable<ShowTO>, Serializable {
+public class ShowTO implements Movable {
 
     /**
      * SerialVersionUID
@@ -70,20 +71,12 @@ public class ShowTO implements Comparable<ShowTO>, Serializable {
      */
     private List<GenreTO> genres;
 
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -232,20 +225,12 @@ public class ShowTO implements Comparable<ShowTO>, Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
     }
@@ -276,8 +261,8 @@ public class ShowTO implements Comparable<ShowTO>, Serializable {
         if (obj == null || !(obj instanceof ShowTO) || id == null) {
             return false;
         }
-        final ShowTO show = (ShowTO) obj;
-        return id.equals(show.id);
+
+        return id.equals(((ShowTO) obj).id);
     }
 
     @Override
@@ -289,12 +274,6 @@ public class ShowTO implements Comparable<ShowTO>, Serializable {
     public String toString() {
         return String.format("ShowTO [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
                 + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
-    }
-
-    @Override
-    public int compareTo(final ShowTO o) {
-        final int result = position - o.position;
-        return result == 0 ? id - o.id : result;
     }
 
 }

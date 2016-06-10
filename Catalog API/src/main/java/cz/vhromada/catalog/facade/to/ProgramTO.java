@@ -237,8 +237,8 @@ public class ProgramTO implements Movable {
         if (obj == null || !(obj instanceof ProgramTO) || id == null) {
             return false;
         }
-        final ProgramTO program = (ProgramTO) obj;
-        return id.equals(program.id);
+
+        return id.equals(((ProgramTO) obj).id);
     }
 
     @Override

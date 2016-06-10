@@ -17,7 +17,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.GameUtils;
-import cz.vhromada.catalog.dao.entities.Game;
+import cz.vhromada.catalog.entities.Game;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.facade.to.GameTO;
 import cz.vhromada.catalog.facade.validators.GameTOValidator;
@@ -25,7 +25,6 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

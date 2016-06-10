@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.dao.entities.Medium;
+import cz.vhromada.catalog.entities.Medium;
 
 /**
  * A class represents utility class for mediums.

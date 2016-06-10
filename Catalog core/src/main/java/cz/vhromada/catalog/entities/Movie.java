@@ -1,16 +1,39 @@
-package cz.vhromada.catalog.facade.to;
+package cz.vhromada.catalog.entities;
 
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import cz.vhromada.catalog.commons.Language;
 import cz.vhromada.catalog.commons.Movable;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 /**
- * A class represents TO for movie.
+ * A class represents movie.
  *
  * @author Vladimir Hromada
  */
-public class MovieTO implements Movable {
+@Entity
+@Table(name = "movies")
+public class Movie implements Movable {
 
     /**
      * SerialVersionUID
@@ -20,37 +43,53 @@ public class MovieTO implements Movable {
     /**
      * ID
      */
+    @Id
+    @SequenceGenerator(name = "movie_generator", sequenceName = "movies_sq", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_generator")
     private Integer id;
 
     /**
      * Czech name
      */
+    @Column(name = "czech_name")
     private String czechName;
 
     /**
      * Original name
      */
+    @Column(name = "original_name")
     private String originalName;
 
     /**
      * Year
      */
+    @Column(name = "movie_year")
     private int year;
 
     /**
      * Language
      */
+    @Column(name = "movie_language")
+    @Enumerated(EnumType.STRING)
     private Language language;
 
     /**
      * Subtitles
      */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "movie_subtitles", joinColumns = @JoinColumn(name = "movie"))
+    @Enumerated(EnumType.STRING)
+    @Fetch(FetchMode.SELECT)
     private List<Language> subtitles;
 
     /**
      * Media
      */
-    private List<Integer> media;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinTable(name = "movie_media", joinColumns = @JoinColumn(name = "movie"), inverseJoinColumns = @JoinColumn(name = "medium"))
+    @OrderBy("id")
+    @Fetch(FetchMode.SELECT)
+    private List<Medium> media;
 
     /**
      * URL to ČSFD page about movie
@@ -60,16 +99,19 @@ public class MovieTO implements Movable {
     /**
      * IMDB code
      */
+    @Column(name = "imdb_code")
     private int imdbCode;
 
     /**
      * URL to english Wikipedia page about movie
      */
+    @Column(name = "wiki_en")
     private String wikiEn;
 
     /**
      * URL to czech Wikipedia page about movie
      */
+    @Column(name = "wiki_cz")
     private String wikiCz;
 
     /**
@@ -88,9 +130,13 @@ public class MovieTO implements Movable {
     private int position;
 
     /**
-     * List of TO for genre
+     * Genres
      */
-    private List<GenreTO> genres;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie"), inverseJoinColumns = @JoinColumn(name = "genre"))
+    @OrderBy("id")
+    @Fetch(FetchMode.SELECT)
+    private List<Genre> genres;
 
     @Override
     public Integer getId() {
@@ -197,7 +243,7 @@ public class MovieTO implements Movable {
      *
      * @return media
      */
-    public List<Integer> getMedia() {
+    public List<Medium> getMedia() {
         return media;
     }
 
@@ -206,7 +252,7 @@ public class MovieTO implements Movable {
      *
      * @param media new value
      */
-    public void setMedia(final List<Integer> media) {
+    public void setMedia(final List<Medium> media) {
         this.media = media;
     }
 
@@ -329,20 +375,20 @@ public class MovieTO implements Movable {
     }
 
     /**
-     * Returns list of TO for genre.
+     * Returns genres.
      *
-     * @return list of TO for genre
+     * @return genres
      */
-    public List<GenreTO> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
     /**
-     * Sets a new value to list of TO for genre.
+     * Sets a new value to genres.
      *
      * @param genres new value
      */
-    public void setGenres(final List<GenreTO> genres) {
+    public void setGenres(final List<Genre> genres) {
         this.genres = genres;
     }
 
@@ -351,11 +397,12 @@ public class MovieTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof MovieTO) || id == null) {
+
+        if (obj == null || !(obj instanceof Movie) || id == null) {
             return false;
         }
 
-        return id.equals(((MovieTO) obj).id);
+        return id.equals(((Movie) obj).id);
     }
 
     @Override
@@ -365,7 +412,7 @@ public class MovieTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("MovieTO [id=%d, czechName=%s, originalName=%s, year=%d, language=%s, subtitles=%s, media=%s, csfd=%s, imdbCode=%d, wikiEn=%s, "
+        return String.format("Movie [id=%d, czechName=%s, originalName=%s, year=%d, language=%s, subtitles=%s, media=%s, csfd=%s, imdbCode=%d, wikiEn=%s, "
                         + "wikiCz=%s, picture=%s, note=%s, position=%d, genres=%s]", id, czechName, originalName, year, language, subtitles, media, csfd,
                 imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }

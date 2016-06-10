@@ -64,7 +64,7 @@ public class SeasonController extends JsonController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public void add(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, final String season) {
-        seasonFacade.add(deserialize(season, SeasonTO.class));
+        //seasonFacade.add(deserialize(season, SeasonTO.class));
     }
 
     /**
@@ -170,7 +170,7 @@ public class SeasonController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(@PathVariable("showId") @SuppressWarnings("unused") final Integer showId, final String season) {
-        return serialize(seasonFacade.exists(deserialize(season, SeasonTO.class)));
+        return null;//serialize(seasonFacade.exists(deserialize(season, SeasonTO.class)));
     }
 
     /**

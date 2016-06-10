@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.dao.entities;
+package cz.vhromada.catalog.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +11,13 @@ import javax.persistence.Table;
 import cz.vhromada.catalog.commons.Movable;
 
 /**
- * A class represents game.
+ * A class represents program.
  *
  * @author Vladimir Hromada
  */
 @Entity
-@Table(name = "games")
-public class Game implements Movable {
+@Table(name = "programs")
+public class Program implements Movable {
 
     /**
      * SerialVersionUID
@@ -28,24 +28,24 @@ public class Game implements Movable {
      * ID
      */
     @Id
-    @SequenceGenerator(name = "game_generator", sequenceName = "games_sq", allocationSize = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "game_generator")
+    @SequenceGenerator(name = "program_generator", sequenceName = "programs_sq", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_generator")
     private Integer id;
 
     /**
      * Name
      */
-    @Column(name = "game_name")
+    @Column(name = "program_name")
     private String name;
 
     /**
-     * URL to english Wikipedia page about game
+     * URL to english Wikipedia page about program
      */
     @Column(name = "wiki_en")
     private String wikiEn;
 
     /**
-     * URL to czech Wikipedia page about game
+     * URL to czech Wikipedia page about program
      */
     @Column(name = "wiki_cz")
     private String wikiCz;
@@ -66,33 +66,6 @@ public class Game implements Movable {
      */
     @Column(name = "serial_key")
     private boolean serialKey;
-
-    /**
-     * True if there is patch
-     */
-    private boolean patch;
-
-    /**
-     * True if there is trainer
-     */
-    private boolean trainer;
-
-    /**
-     * True if there is data for trainer
-     */
-    @Column(name = "trainer_data")
-    private boolean trainerData;
-
-    /**
-     * True if there is editor
-     */
-    @Column(name = "editor")
-    private boolean editor;
-
-    /**
-     * True if there are saves
-     */
-    private boolean saves;
 
     /**
      * Other data
@@ -125,7 +98,6 @@ public class Game implements Movable {
      *
      * @return name
      */
-
     public String getName() {
         return name;
     }
@@ -140,16 +112,16 @@ public class Game implements Movable {
     }
 
     /**
-     * Returns URL to english Wikipedia page about game.
+     * Returns URL to english Wikipedia page about program.
      *
-     * @return URL to english Wikipedia page about game
+     * @return URL to english Wikipedia page about program
      */
     public String getWikiEn() {
         return wikiEn;
     }
 
     /**
-     * Sets a new value to URL to english Wikipedia page about game.
+     * Sets a new value to URL to english Wikipedia page about program.
      *
      * @param wikiEn new value
      */
@@ -158,16 +130,16 @@ public class Game implements Movable {
     }
 
     /**
-     * Returns URL to czech Wikipedia page about game.
+     * Returns URL to czech Wikipedia page about program.
      *
-     * @return URL to czech Wikipedia page about game
+     * @return URL to czech Wikipedia page about program
      */
     public String getWikiCz() {
         return wikiCz;
     }
 
     /**
-     * Sets a new value to URL to czech Wikipedia page about game.
+     * Sets a new value to URL to czech Wikipedia page about program.
      *
      * @param wikiCz new value
      */
@@ -230,96 +202,6 @@ public class Game implements Movable {
     }
 
     /**
-     * Returns true if there is patch.
-     *
-     * @return true if there is patch
-     */
-    public boolean getPatch() {
-        return patch;
-    }
-
-    /**
-     * Sets a new value to if there is patch.
-     *
-     * @param patch new value
-     */
-    public void setPatch(final boolean patch) {
-        this.patch = patch;
-    }
-
-    /**
-     * Returns true if there is trainer.
-     *
-     * @return true if there is trainer
-     */
-    public boolean getTrainer() {
-        return trainer;
-    }
-
-    /**
-     * Sets a new value to if there is trainer.
-     *
-     * @param trainer new value
-     */
-    public void setTrainer(final boolean trainer) {
-        this.trainer = trainer;
-    }
-
-    /**
-     * Returns true if there is data for trainer.
-     *
-     * @return true if there is data for trainer
-     */
-    public boolean getTrainerData() {
-        return trainerData;
-    }
-
-    /**
-     * Sets a new value to if there is data for trainer.
-     *
-     * @param trainerData new value
-     */
-    public void setTrainerData(final boolean trainerData) {
-        this.trainerData = trainerData;
-    }
-
-    /**
-     * Returns true if there is editor.
-     *
-     * @return true if there is editor
-     */
-    public boolean getEditor() {
-        return editor;
-    }
-
-    /**
-     * Sets a new value to if there is editor.
-     *
-     * @param editor new value
-     */
-    public void setEditor(final boolean editor) {
-        this.editor = editor;
-    }
-
-    /**
-     * Returns true if there are saves.
-     *
-     * @return true if there are saves
-     */
-    public boolean getSaves() {
-        return saves;
-    }
-
-    /**
-     * Sets a new value to if there are saves.
-     *
-     * @param saves new value
-     */
-    public void setSaves(final boolean saves) {
-        this.saves = saves;
-    }
-
-    /**
      * Returns other data.
      *
      * @return other data
@@ -371,11 +253,11 @@ public class Game implements Movable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Game) || id == null) {
+        if (obj == null || !(obj instanceof Program) || id == null) {
             return false;
         }
 
-        return id.equals(((Game) obj).id);
+        return id.equals(((Program) obj).id);
     }
 
     @Override
@@ -385,9 +267,8 @@ public class Game implements Movable {
 
     @Override
     public String toString() {
-        return String.format("Game [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, patch=%b, trainer=%b, trainerData=%b, "
-                        + "editor=%b, saves=%b, otherData=%s, note=%s, position=%d]", id, name, wikiEn, wikiCz, mediaCount, crack, serialKey, patch, trainer,
-                trainerData, editor, saves, otherData, note, position);
+        return String.format("Program [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, otherData=%s, note=%s, position=%d]", id,
+                name, wikiEn, wikiCz, mediaCount, crack, serialKey, otherData, note, position);
     }
 
 }

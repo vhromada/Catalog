@@ -75,8 +75,8 @@ public class GenreTO implements Movable {
         if (obj == null || !(obj instanceof GenreTO) || id == null) {
             return false;
         }
-        final GenreTO genre = (GenreTO) obj;
-        return id.equals(genre.id);
+
+        return id.equals(((GenreTO) obj).id);
     }
 
     @Override

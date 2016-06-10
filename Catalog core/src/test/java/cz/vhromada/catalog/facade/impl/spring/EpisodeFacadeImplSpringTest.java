@@ -9,9 +9,9 @@
 //import cz.vhromada.catalog.commons.EntitiesUtils;
 //import cz.vhromada.catalog.commons.SpringToUtils;
 //import cz.vhromada.catalog.commons.SpringUtils;
-//import cz.vhromada.catalog.dao.entities.Episode;
-//import cz.vhromada.catalog.dao.entities.Season;
-//import cz.vhromada.catalog.dao.entities.Show;
+//import cz.vhromada.catalog.entities.Episode;
+//import cz.vhromada.catalog.entities.Season;
+//import cz.vhromada.catalog.entities.Show;
 //import cz.vhromada.catalog.facade.EpisodeFacade;
 //import cz.vhromada.catalog.facade.to.EpisodeTO;
 //import cz.vhromada.generator.ObjectGenerator;

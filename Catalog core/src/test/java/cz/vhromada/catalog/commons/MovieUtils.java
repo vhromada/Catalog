@@ -9,9 +9,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.dao.entities.Genre;
-import cz.vhromada.catalog.dao.entities.Medium;
-import cz.vhromada.catalog.dao.entities.Movie;
+import cz.vhromada.catalog.entities.Genre;
+import cz.vhromada.catalog.entities.Medium;
+import cz.vhromada.catalog.entities.Movie;
 
 /**
  * A class represents utility class for movies.

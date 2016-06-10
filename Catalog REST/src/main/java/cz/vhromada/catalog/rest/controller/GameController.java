@@ -167,7 +167,7 @@ public class GameController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(final String game) {
-        return serialize(gameFacade.exists(deserialize(game, GameTO.class)));
+        return null;//serialize(gameFacade.exists(deserialize(game, GameTO.class)));
     }
 
     /**

@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.service.impl;
 
 import cz.vhromada.catalog.commons.ProgramUtils;
-import cz.vhromada.catalog.dao.entities.Program;
+import cz.vhromada.catalog.entities.Program;
 import cz.vhromada.catalog.repository.ProgramRepository;
 import cz.vhromada.catalog.service.CatalogService;
 

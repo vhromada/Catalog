@@ -194,7 +194,7 @@ public class ShowController extends JsonController {
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
     public String exists(final String show) {
-        return serialize(showFacade.exists(deserialize(show, ShowTO.class)));
+        return null;//serialize(showFacade.exists(deserialize(show, ShowTO.class)));
     }
 
     /**

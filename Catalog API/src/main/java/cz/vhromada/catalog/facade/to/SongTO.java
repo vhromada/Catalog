@@ -1,13 +1,13 @@
 package cz.vhromada.catalog.facade.to;
 
-import java.io.Serializable;
+import cz.vhromada.catalog.commons.Movable;
 
 /**
  * A class represents TO for song.
  *
  * @author Vladimir Hromada
  */
-public class SongTO implements Comparable<SongTO>, Serializable {
+public class SongTO implements Movable {
 
     /**
      * SerialVersionUID
@@ -39,25 +39,12 @@ public class SongTO implements Comparable<SongTO>, Serializable {
      */
     private int position;
 
-    /**
-     * TO for music
-     */
-    private MusicTO music;
-
-    /**
-     * Returns ID.
-     *
-     * @return ID
-     */
+    @Override
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Sets a new value to ID.
-     *
-     * @param id new value
-     */
+    @Override
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -116,40 +103,14 @@ public class SongTO implements Comparable<SongTO>, Serializable {
         this.note = note;
     }
 
-    /**
-     * Returns position.
-     *
-     * @return position
-     */
+    @Override
     public int getPosition() {
         return position;
     }
 
-    /**
-     * Sets a new value to position.
-     *
-     * @param position new value
-     */
+    @Override
     public void setPosition(final int position) {
         this.position = position;
-    }
-
-    /**
-     * Returns TO for music.
-     *
-     * @return TO for music
-     */
-    public MusicTO getMusic() {
-        return music;
-    }
-
-    /**
-     * Sets a new value to TO for music
-     *
-     * @param music new value
-     */
-    public void setMusic(final MusicTO music) {
-        this.music = music;
     }
 
     @Override
@@ -160,8 +121,8 @@ public class SongTO implements Comparable<SongTO>, Serializable {
         if (obj == null || !(obj instanceof SongTO) || id == null) {
             return false;
         }
-        final SongTO song = (SongTO) obj;
-        return id.equals(song.id);
+
+        return id.equals(((SongTO) obj).id);
     }
 
     @Override
@@ -171,13 +132,7 @@ public class SongTO implements Comparable<SongTO>, Serializable {
 
     @Override
     public String toString() {
-        return String.format("SongTO [id=%d, name=%s, length=%d, note=%s, position=%d, music=%s]", id, name, length, note, position, music);
-    }
-
-    @Override
-    public int compareTo(final SongTO o) {
-        final int result = position - o.position;
-        return result == 0 ? id - o.id : result;
+        return String.format("SongTO [id=%d, name=%s, length=%d, note=%s, position=%d]", id, name, length, note, position);
     }
 
 }

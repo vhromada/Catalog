@@ -2,7 +2,9 @@ package cz.vhromada.catalog.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import cz.vhromada.catalog.CatalogUtils;
 import cz.vhromada.catalog.entities.Episode;
 import cz.vhromada.catalog.entities.Season;
 import cz.vhromada.catalog.entities.Show;
@@ -47,28 +49,7 @@ public class ShowServiceImpl extends AbstractCatalogService<Show> {
         newShow.setPicture(data.getPicture());
         newShow.setNote(data.getNote());
         newShow.setGenres(new ArrayList<>(data.getGenres()));
-        final List<Season> newSeasons = new ArrayList<>();
-        for (final Season season : data.getSeasons()) {
-            final Season newSeason = new Season();
-            newSeason.setNumber(season.getNumber());
-            newSeason.setStartYear(season.getStartYear());
-            newSeason.setEndYear(season.getEndYear());
-            newSeason.setLanguage(season.getLanguage());
-            newSeason.setSubtitles(new ArrayList<>(season.getSubtitles()));
-            newSeason.setNote(season.getNote());
-            final List<Episode> newEpisodes = new ArrayList<>();
-            for (final Episode episode : season.getEpisodes()) {
-                final Episode newEpisode = new Episode();
-                newEpisode.setNumber(episode.getNumber());
-                newEpisode.setName(episode.getName());
-                newEpisode.setLength(episode.getLength());
-                newEpisode.setNote(episode.getNote());
-                newEpisodes.add(newEpisode);
-            }
-            newSeason.setEpisodes(newEpisodes);
-            newSeasons.add(newSeason);
-        }
-        newShow.setSeasons(newSeasons);
+        newShow.setSeasons(data.getSeasons().stream().map(CatalogUtils::duplicateSeason).collect(Collectors.toList()));
 
         return newShow;
     }

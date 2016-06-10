@@ -2,9 +2,10 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import cz.vhromada.catalog.CatalogUtils;
 import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.entities.Episode;
 import cz.vhromada.catalog.entities.Season;
 import cz.vhromada.catalog.entities.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
@@ -93,16 +94,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     public SeasonTO getSeason(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        final List<Show> shows = showService.getAll();
-        for (final Show show : shows) {
-            for (final Season season : show.getSeasons()) {
-                if (id.equals(season.getId())) {
-                    return converter.convert(season, SeasonTO.class);
-                }
-            }
-        }
-
-        return null;
+        return converter.convert(getSeasonEntity(id), SeasonTO.class);
     }
 
     /**
@@ -152,12 +144,8 @@ public class SeasonFacadeImpl implements SeasonFacade {
         Validators.validateExists(seasonTO, SEASON_TO_ARGUMENT);
 
         final Show show = getShow(season);
-        final List<Season> seasons = new ArrayList<>();
-        for (final Season seasonEntity : show.getSeasons()) {
-            if (!seasonEntity.getId().equals(season.getId())) {
-                seasons.add(seasonEntity);
-            }
-        }
+        final List<Season> seasons = show.getSeasons().stream().filter(seasonEntity -> !seasonEntity.getId().equals(season.getId()))
+                .collect(Collectors.toList());
         show.setSeasons(seasons);
 
         showService.update(show);
@@ -171,28 +159,11 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Override
     public void duplicate(final SeasonTO season) {
         seasonTOValidator.validateSeasonTOWithId(season);
-        final SeasonTO seasonTO = getSeason(season.getId());
-        Validators.validateExists(seasonTO, SEASON_TO_ARGUMENT);
+        final Season seasonEntity = getSeasonEntity(season.getId());
+        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
 
         final Show show = getShow(season);
-        final Season newSeason = new Season();
-        newSeason.setNumber(season.getNumber());
-        newSeason.setStartYear(season.getStartYear());
-        newSeason.setEndYear(season.getEndYear());
-        newSeason.setLanguage(season.getLanguage());
-        newSeason.setSubtitles(new ArrayList<>(season.getSubtitles()));
-        newSeason.setNote(season.getNote());
-        final List<Episode> newEpisodes = new ArrayList<>();
-        //TODO vladimir.hromada 10.06.2016: get episodes
-        for (final Episode episode : newEpisodes) {
-            final Episode newEpisode = new Episode();
-            newEpisode.setNumber(episode.getNumber());
-            newEpisode.setName(episode.getName());
-            newEpisode.setLength(episode.getLength());
-            newEpisode.setNote(episode.getNote());
-            newEpisodes.add(newEpisode);
-        }
-        newSeason.setEpisodes(newEpisodes);
+        final Season newSeason = CatalogUtils.duplicateSeason(seasonEntity);
         show.getSeasons().add(newSeason);
 
         showService.update(show);
@@ -233,6 +204,43 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
+     * Updates season in show.
+     *
+     * @param show   show
+     * @param season season
+     */
+    private static void updateSeason(final Show show, final Season season) {
+        final List<Season> seasons = new ArrayList<>();
+        for (final Season seasonEntity : show.getSeasons()) {
+            if (seasonEntity.equals(season)) {
+                seasons.add(season);
+            } else {
+                seasons.add(seasonEntity);
+            }
+        }
+        show.setSeasons(seasons);
+    }
+
+    /**
+     * Returns season with ID.
+     *
+     * @param id ID
+     * @return season with ID
+     */
+    private Season getSeasonEntity(final Integer id) {
+        final List<Show> shows = showService.getAll();
+        for (final Show show : shows) {
+            for (final Season season : show.getSeasons()) {
+                if (id.equals(season.getId())) {
+                    return season;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns show for season.
      *
      * @param season TO for season
@@ -251,28 +259,10 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * Updates season in show.
-     *
-     * @param show   TO for show
-     * @param season TO for season
-     */
-    private void updateSeason(final Show show, final Season season) {
-        final List<Season> seasons = new ArrayList<>();
-        for (final Season seasonEntity : show.getSeasons()) {
-            if (seasonEntity.equals(season)) {
-                seasons.add(season);
-            } else {
-                seasons.add(seasonEntity);
-            }
-        }
-        show.setSeasons(seasons);
-    }
-
-    /**
-     * Moves season in list one position up or down.
+     * Moves TO for season in list one position up or down.
      *
      * @param season TO for season
-     * @param up     if moving season up
+     * @param up     true if moving TO for season up
      */
     private void move(final SeasonTO season, final boolean up) {
         seasonTOValidator.validateSeasonTOWithId(season);

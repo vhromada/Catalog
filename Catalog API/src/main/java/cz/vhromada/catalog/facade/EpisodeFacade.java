@@ -24,6 +24,7 @@ public interface EpisodeFacade {
     /**
      * Adds TO for episode. Sets new ID and position.
      *
+     * @param season  TO for season
      * @param episode TO for episode
      * @throws IllegalArgumentException                                  if TO for season is null
      *                                                                   or TO for episode is null
@@ -34,8 +35,6 @@ public interface EpisodeFacade {
      *                                                                   or name is empty string
      *                                                                   or length of episode is negative value
      *                                                                   or note is null
-     *                                                                   or TO for season is null
-     *                                                                   or TO for season ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException TO for season doesn't exist in data storage
      */
     void add(SeasonTO season, EpisodeTO episode);

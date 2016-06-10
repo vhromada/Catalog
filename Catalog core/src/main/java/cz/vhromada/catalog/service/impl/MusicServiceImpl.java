@@ -1,8 +1,9 @@
 package cz.vhromada.catalog.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import cz.vhromada.catalog.CatalogUtils;
 import cz.vhromada.catalog.entities.Music;
 import cz.vhromada.catalog.entities.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
@@ -43,16 +44,7 @@ public class MusicServiceImpl extends AbstractCatalogService<Music> {
         newMusic.setMediaCount(data.getMediaCount());
         newMusic.setNote(data.getNote());
         newMusic.setPosition(data.getPosition());
-        final List<Song> newSongs = new ArrayList<>();
-        for (final Song song : data.getSongs()) {
-            final Song newSong = new Song();
-            newSong.setName(song.getName());
-            newSong.setLength(song.getLength());
-            newSong.setNote(song.getNote());
-            newSong.setPosition(song.getPosition());
-            newSongs.add(newSong);
-        }
-        newMusic.setSongs(newSongs);
+        newMusic.setSongs(data.getSongs().stream().map(CatalogUtils::duplicateSong).collect(Collectors.toList()));
 
         return newMusic;
     }

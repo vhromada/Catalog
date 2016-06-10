@@ -28,8 +28,8 @@ public interface SongFacade {
      * @param song  TO for song
      * @throws IllegalArgumentException                                  if TO for music is null
      *                                                                   or TO for song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID of music is null
-     *                                                                   or ID of song isn't null
+     * @throws cz.vhromada.validators.exceptions.ValidationException     if music ID is null
+     *                                                                   or song ID isn't null
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or length of song is negative value

@@ -28,8 +28,8 @@ public interface SeasonFacade {
      * @param season TO for season
      * @throws IllegalArgumentException                                  if TO for show is null
      *                                                                   or TO for season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID of show is null
-     *                                                                   or ID of season isn't null
+     * @throws cz.vhromada.validators.exceptions.ValidationException     if show ID is null
+     *                                                                   or season ID isn't null
      *                                                                   or number of season isn't positive number
      *                                                                   or starting year isn't between 1940 and current year
      *                                                                   or ending year isn't between 1940 and current year

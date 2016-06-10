@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.service.impl;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import cz.vhromada.catalog.entities.Medium;
 import cz.vhromada.catalog.entities.Movie;
@@ -50,16 +50,23 @@ public class MovieServiceImpl extends AbstractCatalogService<Movie> {
         newMovie.setNote(data.getNote());
         newMovie.setGenres(new ArrayList<>(data.getGenres()));
         newMovie.setPosition(data.getPosition());
-        final List<Medium> newMedia = new ArrayList<>();
-        for (final Medium medium : data.getMedia()) {
-            final Medium newMedium = new Medium();
-            newMedium.setNumber(medium.getNumber());
-            newMedium.setLength(medium.getLength());
-            newMedia.add(newMedium);
-        }
-        newMovie.setMedia(newMedia);
+        newMovie.setMedia(data.getMedia().stream().map(MovieServiceImpl::duplicateMedium).collect(Collectors.toList()));
 
         return newMovie;
+    }
+
+    /**
+     * Duplicates medium.
+     *
+     * @param medium medium for duplication
+     * @return duplicated medium
+     */
+    private static Medium duplicateMedium(final Medium medium) {
+        final Medium newMedium = new Medium();
+        newMedium.setNumber(medium.getNumber());
+        newMedium.setLength(medium.getLength());
+
+        return newMedium;
     }
 
 }

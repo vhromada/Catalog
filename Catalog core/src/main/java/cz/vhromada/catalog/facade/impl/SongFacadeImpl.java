@@ -2,7 +2,9 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import cz.vhromada.catalog.CatalogUtils;
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.entities.Music;
 import cz.vhromada.catalog.entities.Song;
@@ -92,16 +94,7 @@ public class SongFacadeImpl implements SongFacade {
     public SongTO getSong(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        final List<Music> musicList = musicService.getAll();
-        for (final Music music : musicList) {
-            for (final Song song : music.getSongs()) {
-                if (id.equals(song.getId())) {
-                    return converter.convert(song, SongTO.class);
-                }
-            }
-        }
-
-        return null;
+        return converter.convert(getSongEntity(id), SongTO.class);
     }
 
     /**
@@ -151,12 +144,7 @@ public class SongFacadeImpl implements SongFacade {
         Validators.validateExists(songTO, SONG_TO_ARGUMENT);
 
         final Music music = getMusic(song);
-        final List<Song> songs = new ArrayList<>();
-        for (final Song songEntity : music.getSongs()) {
-            if (!songEntity.getId().equals(song.getId())) {
-                songs.add(songEntity);
-            }
-        }
+        final List<Song> songs = music.getSongs().stream().filter(songEntity -> !songEntity.getId().equals(song.getId())).collect(Collectors.toList());
         music.setSongs(songs);
 
         musicService.update(music);
@@ -170,15 +158,11 @@ public class SongFacadeImpl implements SongFacade {
     @Override
     public void duplicate(final SongTO song) {
         songTOValidator.validateSongTOWithId(song);
-        final SongTO songTO = getSong(song.getId());
-        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
+        final Song songEntity = getSongEntity(song.getId());
+        Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
 
         final Music music = getMusic(song);
-        final Song newSong = new Song();
-        newSong.setName(song.getName());
-        newSong.setLength(song.getLength());
-        newSong.setNote(song.getNote());
-        newSong.setPosition(song.getPosition());
+        final Song newSong = CatalogUtils.duplicateSong(songEntity);
         music.getSongs().add(newSong);
 
         musicService.update(music);
@@ -219,10 +203,47 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * Returns music for song.
+     * Updates song in music.
+     *
+     * @param music music
+     * @param song  song
+     */
+    private static void updateSong(final Music music, final Song song) {
+        final List<Song> songs = new ArrayList<>();
+        for (final Song songEntity : music.getSongs()) {
+            if (songEntity.equals(song)) {
+                songs.add(song);
+            } else {
+                songs.add(songEntity);
+            }
+        }
+        music.setSongs(songs);
+    }
+
+    /**
+     * Returns song with ID.
+     *
+     * @param id ID
+     * @return song with ID
+     */
+    private Song getSongEntity(final Integer id) {
+        final List<Music> musicList = musicService.getAll();
+        for (final Music music : musicList) {
+            for (final Song song : music.getSongs()) {
+                if (id.equals(song.getId())) {
+                    return song;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns music for TO for song.
      *
      * @param song TO for song
-     * @return music for song
+     * @return music for TO for song
      */
     private Music getMusic(final SongTO song) {
         for (final Music music : musicService.getAll()) {
@@ -237,28 +258,10 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * Updates song in music.
-     *
-     * @param music TO for music
-     * @param song  TO for song
-     */
-    private void updateSong(final Music music, final Song song) {
-        final List<Song> songs = new ArrayList<>();
-        for (final Song songEntity : music.getSongs()) {
-            if (songEntity.equals(song)) {
-                songs.add(song);
-            } else {
-                songs.add(songEntity);
-            }
-        }
-        music.setSongs(songs);
-    }
-
-    /**
-     * Moves song in list one position up or down.
+     * Moves TO for song in list one position up or down.
      *
      * @param song TO for song
-     * @param up   if moving song up
+     * @param up   true if moving TO for song up
      */
     private void move(final SongTO song, final boolean up) {
         songTOValidator.validateSongTOWithId(song);

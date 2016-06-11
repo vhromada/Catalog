@@ -56,7 +56,7 @@ public interface MovieFacade {
      *                                                                   or URL to czech Wikipedia page about movie is null
      *                                                                   or path to file with movie's picture is null
      *                                                                   or note is null
-     *                                                                   or genres are value
+     *                                                                   or genres are null
      *                                                                   or genres contain null value
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
@@ -88,7 +88,7 @@ public interface MovieFacade {
      *                                                                   or URL to czech Wikipedia page about movie is null
      *                                                                   or path to file with movie's picture is null
      *                                                                   or note is null
-     *                                                                   or genres are value
+     *                                                                   or genres are null
      *                                                                   or genres contain null value
      *                                                                   or genre ID is null
      *                                                                   or genre name is null

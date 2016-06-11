@@ -9,6 +9,8 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ GameTOValidatorImplTest.class, ProgramTOValidatorImplTest.class, GenreTOValidatorImplTest.class })
+@Suite.SuiteClasses({ MovieTOValidatorImplTest.class, ShowTOValidatorImplTest.class, SeasonTOValidatorImplTest.class, EpisodeTOValidatorImplTest.class,
+        GameTOValidatorImplTest.class, MusicTOValidatorImplTest.class, SongTOValidatorImplTest.class, ProgramTOValidatorImplTest.class,
+        GenreTOValidatorImplTest.class })
 public class ValidatorsSuite {
 }

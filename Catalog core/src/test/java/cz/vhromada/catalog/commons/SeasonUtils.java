@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entities.Season;
+import cz.vhromada.catalog.facade.to.SeasonTO;
 
 /**
  * A class represents utility class for seasons.
@@ -68,6 +69,37 @@ public final class SeasonUtils {
      * @param season season
      */
     public static void updateSeason(final Season season) {
+        season.setNumber(2);
+        season.setStartYear(2000);
+        season.setEndYear(2001);
+        season.setLanguage(Language.EN);
+        season.setSubtitles(CollectionUtils.newList(Language.CZ));
+        season.setNote("Note");
+    }
+
+    /**
+     * Returns TO for season.
+     *
+     * @param id ID
+     * @return TO for season
+     */
+    public static SeasonTO newSeasonTO(final Integer id) {
+        final SeasonTO season = new SeasonTO();
+        updateSeasonTO(season);
+        if (id != null) {
+            season.setId(id);
+            season.setPosition(id - 1);
+        }
+
+        return season;
+    }
+
+    /**
+     * Updates TO for season fields.
+     *
+     * @param season TO for season
+     */
+    public static void updateSeasonTO(final SeasonTO season) {
         season.setNumber(2);
         season.setStartYear(2000);
         season.setEndYear(2001);

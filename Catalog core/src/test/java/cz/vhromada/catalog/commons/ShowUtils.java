@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entities.Genre;
 import cz.vhromada.catalog.entities.Show;
+import cz.vhromada.catalog.facade.to.ShowTO;
 
 /**
  * A class represents utility class for shows.
@@ -64,6 +65,40 @@ public final class ShowUtils {
      * @param show show
      */
     public static void updateShow(final Show show) {
+        show.setCzechName("czName");
+        show.setOriginalName("origName");
+        show.setCsfd("Csfd");
+        show.setImdbCode(1000);
+        show.setWikiEn("enWiki");
+        show.setWikiCz("czWiki");
+        show.setPicture("Picture");
+        show.setNote("Note");
+    }
+
+    /**
+     * Returns TO for show.
+     *
+     * @param id ID
+     * @return TO for show
+     */
+    public static ShowTO newShowTO(final Integer id) {
+        final ShowTO show = new ShowTO();
+        updateShowTO(show);
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(id)));
+        if (id != null) {
+            show.setId(id);
+            show.setPosition(id - 1);
+        }
+
+        return show;
+    }
+
+    /**
+     * Updates TO for show fields.
+     *
+     * @param show TO for show
+     */
+    public static void updateShowTO(final ShowTO show) {
         show.setCzechName("czName");
         show.setOriginalName("origName");
         show.setCsfd("Csfd");

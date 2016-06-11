@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import cz.vhromada.catalog.entities.Genre;
 import cz.vhromada.catalog.entities.Medium;
 import cz.vhromada.catalog.entities.Movie;
+import cz.vhromada.catalog.facade.to.MovieTO;
 
 /**
  * A class represents utility class for movies.
@@ -66,6 +67,44 @@ public final class MovieUtils {
      * @param movie movie
      */
     public static void updateMovie(final Movie movie) {
+        movie.setCzechName("czName");
+        movie.setOriginalName("origName");
+        movie.setYear(2000);
+        movie.setLanguage(Language.EN);
+        movie.setSubtitles(CollectionUtils.newList(Language.CZ));
+        movie.setCsfd("Csfd");
+        movie.setImdbCode(1000);
+        movie.setWikiEn("enWiki");
+        movie.setWikiCz("czWiki");
+        movie.setPicture("Picture");
+        movie.setNote("Note");
+    }
+
+    /**
+     * Returns TO for movie.
+     *
+     * @param id ID
+     * @return TO for movie
+     */
+    public static MovieTO newMovieTO(final Integer id) {
+        final MovieTO movie = new MovieTO();
+        updateMovieTO(movie);
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(id).getLength()));
+        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(id)));
+        if (id != null) {
+            movie.setId(id);
+            movie.setPosition(id - 1);
+        }
+
+        return movie;
+    }
+
+    /**
+     * Updates TO for movie fields.
+     *
+     * @param movie TO for movie
+     */
+    public static void updateMovieTO(final MovieTO movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
         movie.setYear(2000);

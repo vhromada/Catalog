@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entities.Music;
+import cz.vhromada.catalog.facade.to.MusicTO;
 
 /**
  * A class represents utility class for music.
@@ -62,6 +63,36 @@ public final class MusicUtils {
      * @param music music
      */
     public static void updateMusic(final Music music) {
+        music.setName("Name");
+        music.setWikiEn("enWiki");
+        music.setWikiCz("czWiki");
+        music.setMediaCount(1);
+        music.setNote("Note");
+    }
+
+    /**
+     * Returns TO for music.
+     *
+     * @param id ID
+     * @return TO for music
+     */
+    public static MusicTO newMusicTO(final Integer id) {
+        final MusicTO music = new MusicTO();
+        updateMusicTO(music);
+        if (id != null) {
+            music.setId(id);
+            music.setPosition(id - 1);
+        }
+
+        return music;
+    }
+
+    /**
+     * Updates TO for music fields.
+     *
+     * @param music TO for music
+     */
+    public static void updateMusicTO(final MusicTO music) {
         music.setName("Name");
         music.setWikiEn("enWiki");
         music.setWikiCz("czWiki");

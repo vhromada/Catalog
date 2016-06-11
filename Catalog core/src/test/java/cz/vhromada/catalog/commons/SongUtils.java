@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entities.Song;
+import cz.vhromada.catalog.facade.to.SongTO;
 
 /**
  * A class represents utility class for songs.
@@ -71,6 +72,34 @@ public final class SongUtils {
      * @param song song
      */
     public static void updateSong(final Song song) {
+        song.setName("Name");
+        song.setLength(5);
+        song.setNote("Note");
+    }
+
+    /**
+     * Returns TO for song.
+     *
+     * @param id ID
+     * @return TO for song
+     */
+    public static SongTO newSongTO(final Integer id) {
+        final SongTO song = new SongTO();
+        updateSongTO(song);
+        if (id != null) {
+            song.setId(id);
+            song.setPosition(id - 1);
+        }
+
+        return song;
+    }
+
+    /**
+     * Updates TO for song fields.
+     *
+     * @param song TO for song
+     */
+    public static void updateSongTO(final SongTO song) {
         song.setName("Name");
         song.setLength(5);
         song.setNote("Note");

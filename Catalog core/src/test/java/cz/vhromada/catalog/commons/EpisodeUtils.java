@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entities.Episode;
+import cz.vhromada.catalog.facade.to.EpisodeTO;
 
 /**
  * A class represents utility class for episodes.
@@ -76,6 +77,35 @@ public final class EpisodeUtils {
      * @param episode episode
      */
     public static void updateEpisode(final Episode episode) {
+        episode.setNumber(2);
+        episode.setName("Name");
+        episode.setLength(5);
+        episode.setNote("Note");
+    }
+
+    /**
+     * Returns TO for episode.
+     *
+     * @param id ID
+     * @return TO for episode
+     */
+    public static EpisodeTO newEpisodeTO(final Integer id) {
+        final EpisodeTO episode = new EpisodeTO();
+        updateEpisodeTO(episode);
+        if (id != null) {
+            episode.setId(id);
+            episode.setPosition(id - 1);
+        }
+
+        return episode;
+    }
+
+    /**
+     * Updates TO for episode fields.
+     *
+     * @param episode TO for episode
+     */
+    public static void updateEpisodeTO(final EpisodeTO episode) {
         episode.setNumber(2);
         episode.setName("Name");
         episode.setLength(5);

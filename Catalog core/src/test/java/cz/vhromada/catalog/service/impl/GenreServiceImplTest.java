@@ -27,15 +27,15 @@ public class GenreServiceImplTest extends AbstractServiceTest<Genre> {
      * Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreRepository, Cache)} with null repository for genres.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullGenreDAO() {
+    public void testConstructor_NullGenreRepository() {
         new GenreServiceImpl(null, getCache());
     }
 
     /**
-     * Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreRepository, Cache)} with null cache for genres.
+     * Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreRepository, Cache)} with null cache.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullGenreCache() {
+    public void testConstructor_NullCache() {
         new GenreServiceImpl(genreRepository, null);
     }
 

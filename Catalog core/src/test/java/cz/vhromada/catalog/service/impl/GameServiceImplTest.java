@@ -27,15 +27,15 @@ public class GameServiceImplTest extends AbstractServiceTest<Game> {
      * Test method for {@link GameServiceImpl#GameServiceImpl(GameRepository, Cache)} with null repository for games.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullGameDAO() {
+    public void testConstructor_NullGameRepository() {
         new GameServiceImpl(null, getCache());
     }
 
     /**
-     * Test method for {@link GameServiceImpl#GameServiceImpl(GameRepository, Cache)} with null cache for games.
+     * Test method for {@link GameServiceImpl#GameServiceImpl(GameRepository, Cache)} with null cache.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullGameCache() {
+    public void testConstructor_NullCache() {
         new GameServiceImpl(gameRepository, null);
     }
 

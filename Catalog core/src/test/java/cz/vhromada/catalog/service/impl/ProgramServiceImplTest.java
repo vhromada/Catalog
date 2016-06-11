@@ -27,15 +27,15 @@ public class ProgramServiceImplTest extends AbstractServiceTest<Program> {
      * Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramRepository, Cache)} with null repository for programs.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullProgramDAO() {
+    public void testConstructor_NullProgramRepository() {
         new ProgramServiceImpl(null, getCache());
     }
 
     /**
-     * Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramRepository, Cache)} with null cache for programs.
+     * Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramRepository, Cache)} with null cache.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithNullProgramCache() {
+    public void testConstructor_NullCache() {
         new ProgramServiceImpl(programRepository, null);
     }
 

@@ -127,9 +127,8 @@ public class ProgramRepositoryIntegrationTest {
      * Test method for remove all programs.
      */
     @Test
-//    @Ignore
     public void testRemoveAll() {
-        programRepository.deleteAllInBatch();
+        programRepository.deleteAll();
 
         assertEquals(0, ProgramUtils.getProgramsCount(entityManager));
     }

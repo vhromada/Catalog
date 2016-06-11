@@ -135,7 +135,7 @@ public class GenreRepositoryIntegrationTest {
         entityManager.createNativeQuery("DELETE FROM movie_genres").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM tv_show_genres").executeUpdate();
 
-        genreRepository.deleteAllInBatch();
+        genreRepository.deleteAll();
 
         assertEquals(0, GenreUtils.getGenresCount(entityManager));
     }

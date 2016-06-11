@@ -30,6 +30,7 @@ public class MediaConverter implements MapperAware, CustomConverter {
 
         final List sourceList = (List) sourceFieldValue;
 
+        //TODO vhromada 11.06.2016: convert
         return null;//convert(sourceList, sourceList.get(0) instanceof Integer ? Medium.class : Integer.class);
     }
 

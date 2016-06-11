@@ -207,4 +207,20 @@ public final class MusicUtils {
         }
     }
 
+    /**
+     * Asserts music deep equals.
+     *
+     * @param expected expected TO for music
+     * @param actual   actual music
+     */
+    public static void assertMusicDeepEquals(final MusicTO expected, final Music actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getWikiEn(), actual.getWikiEn());
+        assertEquals(expected.getWikiCz(), actual.getWikiCz());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
 }

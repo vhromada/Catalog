@@ -218,4 +218,19 @@ public final class SongUtils {
         assertEquals(expected.getPosition(), actual.getPosition());
     }
 
+    /**
+     * Asserts song deep equals.
+     *
+     * @param expected expected TO for song
+     * @param actual   actual song
+     */
+    public static void assertSongDeepEquals(final SongTO expected, final Song actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getLength(), actual.getLength());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
 }

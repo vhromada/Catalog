@@ -229,4 +229,21 @@ public final class EpisodeUtils {
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
     }
+
+    /**
+     * Asserts episode deep equals.
+     *
+     * @param expected expected TO for episode
+     * @param actual   actual episode
+     */
+    public static void assertEpisodeDeepEquals(final EpisodeTO expected, final Episode actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getNumber(), actual.getNumber());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getLength(), actual.getLength());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
 }

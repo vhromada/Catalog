@@ -2,6 +2,7 @@ package cz.vhromada.catalog.facade.validators.impl;
 
 import cz.vhromada.catalog.commons.CatalogValidators;
 import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.facade.to.MediumTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.catalog.facade.validators.MovieTOValidator;
@@ -117,8 +118,8 @@ public class MovieTOValidatorImpl implements MovieTOValidator {
         final String mediaField = "Media";
         Validators.validateNotNull(movie.getMedia(), mediaField);
         Validators.validateCollectionNotContainNull(movie.getMedia(), mediaField);
-        for (final Integer medium : movie.getMedia()) {
-            Validators.validateNotNegativeNumber(medium, mediaField);
+        for (final MediumTO medium : movie.getMedia()) {
+            Validators.validateNotNegativeNumber(medium.getLength(), mediaField);
         }
         Validators.validateNotNull(movie.getCsfd(), "URL to ČSFD page about movie");
         CatalogValidators.validateImdbCode(movie.getImdbCode(), "IMDB code");

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entities.Medium;
+import cz.vhromada.catalog.facade.to.MediumTO;
 
 /**
  * A class represents utility class for mediums.
@@ -41,6 +42,23 @@ public final class MediumUtils {
      */
     public static Medium newMedium(final Integer id) {
         final Medium medium = new Medium();
+        medium.setLength(10);
+        medium.setNumber(1);
+        if (id != null) {
+            medium.setId(id);
+        }
+
+        return medium;
+    }
+
+    /**
+     * Returns TO for medium.
+     *
+     * @param id ID
+     * @return TO for medium
+     */
+    public static MediumTO newMediumTO(final Integer id) {
+        final MediumTO medium = new MediumTO();
         medium.setLength(10);
         medium.setNumber(1);
         if (id != null) {
@@ -112,6 +130,36 @@ public final class MediumUtils {
      * @param actual   actual medium
      */
     private static void assertMediumDeepEquals(final Medium expected, final Medium actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getNumber(), actual.getNumber());
+        assertEquals(expected.getLength(), actual.getLength());
+    }
+
+
+    /**
+     * Asserts media deep equals.
+     *
+     * @param expected expected list of TO for medium
+     * @param actual   actual media
+     */
+    public static void assertMediumListDeepEquals(final List<MediumTO> expected, final List<Medium> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertMediumDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
+     * Asserts medium deep equals.
+     *
+     * @param expected expected TO for medium
+     * @param actual   actual medium
+     */
+    private static void assertMediumDeepEquals(final MediumTO expected, final Medium actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getNumber(), actual.getNumber());

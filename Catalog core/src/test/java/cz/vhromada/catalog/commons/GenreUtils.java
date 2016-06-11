@@ -185,4 +185,33 @@ public final class GenreUtils {
         assertEquals(expected.getPosition(), actual.getPosition());
     }
 
+    /**
+     * Asserts genres deep equals.
+     *
+     * @param expected expected list of TO for genre
+     * @param actual   actual genres
+     */
+    public static void assertGenreListDeepEquals(final List<GenreTO> expected, final List<Genre> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertGenreDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
+     * Asserts genre deep equals.
+     *
+     * @param expected expected TO for genre
+     * @param actual   actual genre
+     */
+    public static void assertGenreDeepEquals(final GenreTO expected, final Genre actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
 }

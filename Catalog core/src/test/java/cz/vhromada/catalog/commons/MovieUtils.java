@@ -89,7 +89,7 @@ public final class MovieUtils {
     public static MovieTO newMovieTO(final Integer id) {
         final MovieTO movie = new MovieTO();
         updateMovieTO(movie);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(id).getLength()));
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(id)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(id)));
         if (id != null) {
             movie.setId(id);
@@ -261,6 +261,33 @@ public final class MovieUtils {
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
         GenreUtils.assertGenresDeepEquals(expected.getGenres(), actual.getGenres());
+    }
+
+    /**
+     * Asserts movie deep equals.
+     *
+     * @param expected expected TO for movie
+     * @param actual   actual movie
+     */
+    public static void assertMovieDeepEquals(final MovieTO expected, final Movie actual) {
+        assertNotNull(actual);
+        assertNotNull(actual.getSubtitles());
+        Collections.sort(actual.getSubtitles());
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getCzechName(), actual.getCzechName());
+        assertEquals(expected.getOriginalName(), actual.getOriginalName());
+        assertEquals(expected.getYear(), actual.getYear());
+        assertEquals(expected.getLanguage(), actual.getLanguage());
+        assertEquals(expected.getSubtitles(), actual.getSubtitles());
+        MediumUtils.assertMediumListDeepEquals(expected.getMedia(), actual.getMedia());
+        assertEquals(expected.getCsfd(), actual.getCsfd());
+        assertEquals(expected.getImdbCode(), actual.getImdbCode());
+        assertEquals(expected.getWikiEn(), actual.getWikiEn());
+        assertEquals(expected.getWikiCz(), actual.getWikiCz());
+        assertEquals(expected.getPicture(), actual.getPicture());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+        GenreUtils.assertGenreListDeepEquals(expected.getGenres(), actual.getGenres());
     }
 
 }

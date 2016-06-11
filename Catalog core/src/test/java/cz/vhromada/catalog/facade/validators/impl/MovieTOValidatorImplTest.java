@@ -3,9 +3,11 @@ package cz.vhromada.catalog.facade.validators.impl;
 import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.commons.GenreUtils;
 import cz.vhromada.catalog.commons.Language;
+import cz.vhromada.catalog.commons.MediumUtils;
 import cz.vhromada.catalog.commons.MovieUtils;
 import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.facade.to.MediumTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.validators.MovieTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -174,7 +176,7 @@ public class MovieTOValidatorImplTest {
     @Test(expected = ValidationException.class)
     public void testValidateNewMovieTO_BadMedia() {
         final MovieTO movie = MovieUtils.newMovieTO(null);
-        movie.setMedia(CollectionUtils.newList(10, null));
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), null));
 
         movieTOValidator.validateNewMovieTO(movie);
     }
@@ -184,8 +186,10 @@ public class MovieTOValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMovieTO_MediaWithBadMedium() {
+        final MediumTO badMedium = MediumUtils.newMediumTO(2);
+        badMedium.setLength(-1);
         final MovieTO movie = MovieUtils.newMovieTO(null);
-        movie.setMedia(CollectionUtils.newList(10, -1));
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), badMedium));
 
         movieTOValidator.validateNewMovieTO(movie);
     }
@@ -455,7 +459,7 @@ public class MovieTOValidatorImplTest {
     @Test(expected = ValidationException.class)
     public void testValidateExistingMovieTO_BadMedia() {
         final MovieTO movie = MovieUtils.newMovieTO(1);
-        movie.setMedia(CollectionUtils.newList(10, null));
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), null));
 
         movieTOValidator.validateExistingMovieTO(movie);
     }
@@ -465,8 +469,10 @@ public class MovieTOValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMovieTO_MediaWithBadMedium() {
+        final MediumTO badMedium = MediumUtils.newMediumTO(2);
+        badMedium.setLength(-1);
         final MovieTO movie = MovieUtils.newMovieTO(1);
-        movie.setMedia(CollectionUtils.newList(10, -1));
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), badMedium));
 
         movieTOValidator.validateExistingMovieTO(movie);
     }

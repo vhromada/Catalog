@@ -3,13 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="catalogMapper" class="org.dozer.DozerBeanMapper">
-        <property name="mappingFiles">
-            <list>
-                <value>catalogDozerMapping.xml</value>
-            </list>
-        </property>
-    </bean>
+    <bean id="catalogMapper" class="org.dozer.DozerBeanMapper"/>
 
     <bean name="catalogDozerConverter" class="cz.vhromada.converters.dozer.DozerConverter">
         <constructor-arg ref="catalogMapper"/>

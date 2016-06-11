@@ -232,4 +232,28 @@ public final class GameUtils {
         assertEquals(expected.getPosition(), actual.getPosition());
     }
 
+    /**
+     * Asserts game deep equals.
+     *
+     * @param expected expected TO for game
+     * @param actual   actual game
+     */
+    public static void assertGameDeepEquals(final GameTO expected, final Game actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getWikiEn(), actual.getWikiEn());
+        assertEquals(expected.getWikiCz(), actual.getWikiCz());
+        assertEquals(expected.getCrack(), actual.getCrack());
+        assertEquals(expected.getSerialKey(), actual.getSerialKey());
+        assertEquals(expected.getPatch(), actual.getPatch());
+        assertEquals(expected.getTrainer(), actual.getTrainer());
+        assertEquals(expected.getTrainerData(), actual.getTrainerData());
+        assertEquals(expected.getEditor(), actual.getEditor());
+        assertEquals(expected.getSaves(), actual.getSaves());
+        assertEquals(expected.getOtherData(), actual.getOtherData());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
 }

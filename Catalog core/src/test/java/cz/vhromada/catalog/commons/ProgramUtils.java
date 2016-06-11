@@ -212,4 +212,23 @@ public final class ProgramUtils {
         assertEquals(expected.getPosition(), actual.getPosition());
     }
 
+    /**
+     * Asserts program deep equals.
+     *
+     * @param expected expected TO for program
+     * @param actual   actual program
+     */
+    public static void assertProgramDeepEquals(final ProgramTO expected, final Program actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getWikiEn(), actual.getWikiEn());
+        assertEquals(expected.getWikiCz(), actual.getWikiCz());
+        assertEquals(expected.getCrack(), actual.getCrack());
+        assertEquals(expected.getSerialKey(), actual.getSerialKey());
+        assertEquals(expected.getOtherData(), actual.getOtherData());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
 }

@@ -50,7 +50,7 @@ public class MovieTO implements Movable {
     /**
      * Media
      */
-    private List<Integer> media;
+    private List<MediumTO> media;
 
     /**
      * URL to ČSFD page about movie
@@ -197,7 +197,7 @@ public class MovieTO implements Movable {
      *
      * @return media
      */
-    public List<Integer> getMedia() {
+    public List<MediumTO> getMedia() {
         return media;
     }
 
@@ -206,7 +206,7 @@ public class MovieTO implements Movable {
      *
      * @param media new value
      */
-    public void setMedia(final List<Integer> media) {
+    public void setMedia(final List<MediumTO> media) {
         this.media = media;
     }
 

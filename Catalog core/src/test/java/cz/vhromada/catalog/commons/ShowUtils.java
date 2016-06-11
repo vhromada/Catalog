@@ -231,4 +231,25 @@ public final class ShowUtils {
         }
     }
 
+    /**
+     * Asserts show deep equals.
+     *
+     * @param expected expected TO for show
+     * @param actual   actual show
+     */
+    public static void assertShowDeepEquals(final ShowTO expected, final Show actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getCzechName(), actual.getCzechName());
+        assertEquals(expected.getOriginalName(), actual.getOriginalName());
+        assertEquals(expected.getCsfd(), actual.getCsfd());
+        assertEquals(expected.getImdbCode(), actual.getImdbCode());
+        assertEquals(expected.getWikiEn(), actual.getWikiEn());
+        assertEquals(expected.getWikiCz(), actual.getWikiCz());
+        assertEquals(expected.getPicture(), actual.getPicture());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+        GenreUtils.assertGenreListDeepEquals(expected.getGenres(), actual.getGenres());
+    }
+
 }

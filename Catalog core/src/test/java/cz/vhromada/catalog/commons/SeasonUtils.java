@@ -266,4 +266,25 @@ public final class SeasonUtils {
             EpisodeUtils.assertEpisodesDeepEquals(expected.getEpisodes(), actual.getEpisodes());
         }
     }
+
+    /**
+     * Asserts season deep equals.
+     *
+     * @param expected expected TO for season
+     * @param actual   actual season
+     */
+    public static void assertSeasonDeepEquals(final SeasonTO expected, final Season actual) {
+        assertNotNull(actual);
+        assertNotNull(actual.getSubtitles());
+        Collections.sort(actual.getSubtitles());
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getNumber(), actual.getNumber());
+        assertEquals(expected.getStartYear(), actual.getStartYear());
+        assertEquals(expected.getEndYear(), actual.getEndYear());
+        assertEquals(expected.getLanguage(), actual.getLanguage());
+        assertEquals(expected.getSubtitles(), actual.getSubtitles());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
 }

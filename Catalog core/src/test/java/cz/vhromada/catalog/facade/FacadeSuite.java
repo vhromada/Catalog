@@ -1,7 +1,6 @@
 package cz.vhromada.catalog.facade;
 
-//import cz.vhromada.catalog.facade.converters.ConvertersSuite;
-
+import cz.vhromada.catalog.facade.converters.ConvertersSuite;
 import cz.vhromada.catalog.facade.impl.FacadeImplSuite;
 import cz.vhromada.catalog.facade.validators.impl.ValidatorsSuite;
 
@@ -14,6 +13,6 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ /*ConvertersSuite.class,*/ FacadeImplSuite.class, ValidatorsSuite.class })
+@Suite.SuiteClasses({ ConvertersSuite.class, FacadeImplSuite.class, ValidatorsSuite.class })
 public class FacadeSuite {
 }

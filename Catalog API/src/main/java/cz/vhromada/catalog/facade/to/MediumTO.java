@@ -1,23 +1,13 @@
-package cz.vhromada.catalog.entities;
+package cz.vhromada.catalog.facade.to;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 /**
- * A class represents medium.
+ * A class represents TO for medium.
  *
  * @author Vladimir Hromada
  */
-@Entity
-@Table(name = "media")
-public class Medium implements Serializable {
+public class MediumTO implements Serializable {
 
     /**
      * SerialVersionUID
@@ -27,21 +17,16 @@ public class Medium implements Serializable {
     /**
      * ID
      */
-    @Id
-    @SequenceGenerator(name = "medium_generator", sequenceName = "media_sq", allocationSize = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medium_generator")
     private Integer id;
 
     /**
      * Number
      */
-    @Column(name = "medium_number")
     private int number;
 
     /**
      * Length
      */
-    @Column(name = "medium_length")
     private int length;
 
     /**
@@ -104,11 +89,11 @@ public class Medium implements Serializable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Medium) || id == null) {
+        if (obj == null || !(obj instanceof MediumTO) || id == null) {
             return false;
         }
 
-        return id.equals(((Medium) obj).id);
+        return id.equals(((MediumTO) obj).id);
     }
 
     @Override
@@ -118,7 +103,7 @@ public class Medium implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Medium [id=%d, number=%d, length=%d]", id, number, length);
+        return String.format("MediumTO [id=%d, number=%d, length=%d]", id, number, length);
     }
 
 }

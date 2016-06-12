@@ -590,9 +590,6 @@ public class EpisodeFacadeImplTest {
      */
     private static Show newShowWithSeasons(final Integer id, final Episode... episodes) {
         final Season season = SeasonUtils.newSeason(id);
-        if (id == null) {
-            season.setPosition(0);
-        }
         season.setEpisodes(CollectionUtils.newList(episodes));
 
         final Show show = ShowUtils.newShow(id);

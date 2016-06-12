@@ -229,7 +229,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
                     return episode;
                 }
             }
-
         }
 
         return null;
@@ -309,7 +308,6 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
                         return episode;
                     }
                 }
-
             }
         }
 

@@ -123,10 +123,10 @@ public class SongFacadeImpl implements SongFacade {
     @Override
     public void update(final SongTO song) {
         songTOValidator.validateExistingSongTO(song);
-        final SongTO songTO = getSong(song.getId());
-        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
-
         final Music music = getMusic(song);
+        final Song songEntity = getSong(song.getId(), music);
+        Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
+
         updateSong(music, converter.convert(song, Song.class));
 
         musicService.update(music);
@@ -140,11 +140,12 @@ public class SongFacadeImpl implements SongFacade {
     @Override
     public void remove(final SongTO song) {
         songTOValidator.validateSongTOWithId(song);
-        final SongTO songTO = getSong(song.getId());
-        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
-
         final Music music = getMusic(song);
-        final List<Song> songs = music.getSongs().stream().filter(songEntity -> !songEntity.getId().equals(song.getId())).collect(Collectors.toList());
+        final Song songEntity = getSong(song.getId(), music);
+        Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
+        assert music != null;
+
+        final List<Song> songs = music.getSongs().stream().filter(songValue -> !songValue.getId().equals(song.getId())).collect(Collectors.toList());
         music.setSongs(songs);
 
         musicService.update(music);
@@ -158,10 +159,11 @@ public class SongFacadeImpl implements SongFacade {
     @Override
     public void duplicate(final SongTO song) {
         songTOValidator.validateSongTOWithId(song);
-        final Song songEntity = getSongEntity(song.getId());
-        Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
-
         final Music music = getMusic(song);
+        final Song songEntity = getSong(song.getId(), music);
+        Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
+        assert music != null;
+
         final Song newSong = CatalogUtils.duplicateSong(songEntity);
         music.getSongs().add(newSong);
 
@@ -200,6 +202,27 @@ public class SongFacadeImpl implements SongFacade {
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
         return CollectionUtils.getSortedData(converter.convertCollection(musicEntity.getSongs(), SongTO.class));
+    }
+
+    /**
+     * Returns song with ID.
+     *
+     * @param id    ID
+     * @param music music
+     * @return song with ID
+     */
+    private static Song getSong(final Integer id, final Music music) {
+        if (music == null) {
+            return null;
+        }
+
+        for (final Song song : music.getSongs()) {
+            if (id.equals(song.getId())) {
+                return song;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -254,7 +277,7 @@ public class SongFacadeImpl implements SongFacade {
             }
         }
 
-        throw new IllegalStateException("Unknown music");
+        return null;
     }
 
     /**
@@ -265,11 +288,11 @@ public class SongFacadeImpl implements SongFacade {
      */
     private void move(final SongTO song, final boolean up) {
         songTOValidator.validateSongTOWithId(song);
-        final SongTO songTO = getSong(song.getId());
-        Validators.validateExists(songTO, SONG_TO_ARGUMENT);
         final Music music = getMusic(song);
+        final Song songEntity = getSong(song.getId(), music);
+        Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
+        assert music != null;
         final List<Song> songs = CollectionUtils.getSortedData(music.getSongs());
-        final Song songEntity = converter.convert(song, Song.class);
         if (up) {
             Validators.validateMoveUp(songs, songEntity, SONG_TO_ARGUMENT);
         } else {

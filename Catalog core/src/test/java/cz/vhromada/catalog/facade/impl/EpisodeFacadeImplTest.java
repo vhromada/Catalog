@@ -224,7 +224,7 @@ public class EpisodeFacadeImplTest {
     public void testAdd_BadEpisodeTO() {
         doThrow(ValidationException.class).when(episodeTOValidator).validateNewEpisodeTO(any(EpisodeTO.class));
 
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(1));
+        episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
 
     /**

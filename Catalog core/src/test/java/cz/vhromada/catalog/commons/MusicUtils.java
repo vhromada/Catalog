@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entities.Music;
+import cz.vhromada.catalog.entities.Song;
 import cz.vhromada.catalog.facade.to.MusicTO;
 
 /**
@@ -53,6 +54,25 @@ public final class MusicUtils {
             music.setId(id);
             music.setPosition(id - 1);
         }
+        music.setSongs(new ArrayList<>());
+
+        return music;
+    }
+
+    /**
+     * Returns music with songs.
+     *
+     * @param id ID
+     * @return music with songs
+     */
+    public static Music newMusicWithSongs(final Integer id) {
+        final Song song = SongUtils.newSong(id);
+        if (id == null) {
+            song.setPosition(0);
+        }
+
+        final Music music = newMusic(id);
+        music.setSongs(CollectionUtils.newList(song));
 
         return music;
     }

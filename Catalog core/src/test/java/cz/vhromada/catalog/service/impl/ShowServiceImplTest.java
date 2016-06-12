@@ -1,11 +1,7 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EpisodeUtils;
-import cz.vhromada.catalog.commons.SeasonUtils;
 import cz.vhromada.catalog.commons.ShowUtils;
-import cz.vhromada.catalog.entities.Episode;
-import cz.vhromada.catalog.entities.Season;
+import cz.vhromada.catalog.entities.Genre;
 import cz.vhromada.catalog.entities.Show;
 import cz.vhromada.catalog.repository.ShowRepository;
 import cz.vhromada.catalog.service.CatalogService;
@@ -64,12 +60,12 @@ public class ShowServiceImplTest extends AbstractServiceTest<Show> {
 
     @Override
     protected Show getItem1() {
-        return setSeasons(ShowUtils.newShow(1));
+        return ShowUtils.newShowWithSeasons(1);
     }
 
     @Override
     protected Show getItem2() {
-        return setSeasons(ShowUtils.newShow(2));
+        return ShowUtils.newShowWithSeasons(2);
     }
 
     @Override
@@ -79,9 +75,12 @@ public class ShowServiceImplTest extends AbstractServiceTest<Show> {
 
     @Override
     protected Show getCopyItem() {
-        final Show show = ShowUtils.newShow(1);
-        show.setId(null);
-        setSeasons(show);
+        final Show show = ShowUtils.newShowWithSeasons(null);
+        for (final Genre genre : show.getGenres()) {
+            genre.setId(1);
+            genre.setPosition(0);
+        }
+        show.setPosition(0);
 
         return show;
     }
@@ -94,38 +93,6 @@ public class ShowServiceImplTest extends AbstractServiceTest<Show> {
     @Override
     protected void assertDataDeepEquals(final Show expected, final Show actual) {
         ShowUtils.assertShowDeepEquals(expected, actual);
-    }
-
-    /**
-     * Sets seasons to show.
-     *
-     * @param show show
-     * @return show with seasons
-     */
-    private static Show setSeasons(final Show show) {
-        final Integer id = show.getId();
-        final Season season = SeasonUtils.newSeason(id);
-        if (id == null) {
-            season.setPosition(0);
-        }
-        setEpisodes(season);
-        show.setSeasons(CollectionUtils.newList(season));
-
-        return show;
-    }
-
-    /**
-     * Sets episodes to season.
-     *
-     * @param season season
-     */
-    private static void setEpisodes(final Season season) {
-        final Integer id = season.getId();
-        final Episode episode = EpisodeUtils.newEpisode(id);
-        if (id == null) {
-            episode.setPosition(0);
-        }
-        season.setEpisodes(CollectionUtils.newList(episode));
     }
 
 }

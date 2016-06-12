@@ -104,9 +104,10 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     public void add(final SeasonTO season, final EpisodeTO episode) {
         seasonTOValidator.validateSeasonTOWithId(season);
         episodeTOValidator.validateNewEpisodeTO(episode);
-        final Show show = getShow(episode);
-        final Season seasonEntity = getSeason(show, episode);
-        Validators.validateExists(season, "TO for season");
+        final Show show = getShow(season);
+        final Season seasonEntity = getSeason(show, season);
+        Validators.validateExists(seasonEntity, "TO for season");
+        assert seasonEntity != null;
 
         final Episode episodeEntity = converter.convert(episode, Episode.class);
         seasonEntity.getEpisodes().add(episodeEntity);
@@ -122,10 +123,10 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Override
     public void update(final EpisodeTO episode) {
         episodeTOValidator.validateExistingEpisodeTO(episode);
-        final EpisodeTO episodeTO = getEpisode(episode.getId());
-        Validators.validateExists(episodeTO, EPISODE_TO_ARGUMENT);
-
         final Show show = getShow(episode);
+        final Episode episodeEntity = getEpisode(episode.getId(), show);
+        Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
+
         updateEpisode(show, converter.convert(episode, Episode.class));
 
         showService.update(show);
@@ -139,12 +140,12 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Override
     public void remove(final EpisodeTO episode) {
         episodeTOValidator.validateEpisodeTOWithId(episode);
-        final EpisodeTO episodeTO = getEpisode(episode.getId());
-        Validators.validateExists(episodeTO, EPISODE_TO_ARGUMENT);
-
         final Show show = getShow(episode);
+        final Episode episodeEntity = getEpisode(episode.getId(), show);
+        Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
+
         final Season season = getSeason(show, episode);
-        final List<Episode> episodes = season.getEpisodes().stream().filter(episodeEntity -> !episodeEntity.getId().equals(episode.getId()))
+        final List<Episode> episodes = season.getEpisodes().stream().filter(episodeValue -> !episodeValue.getId().equals(episode.getId()))
                 .collect(Collectors.toList());
         season.setEpisodes(episodes);
 
@@ -159,12 +160,13 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Override
     public void duplicate(final EpisodeTO episode) {
         episodeTOValidator.validateEpisodeTOWithId(episode);
-        final Episode episodeEntity = getEpisodeEntity(episode.getId());
+        final Show show = getShow(episode);
+        final Episode episodeEntity = getEpisode(episode.getId(), show);
         Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
 
-        final Show show = getShow(episode);
         final Episode newEpisode = CatalogUtils.duplicateEpisode(episodeEntity);
-        updateEpisode(show, newEpisode);
+        final Season seasonEntity = getSeason(show, episode);
+        seasonEntity.getEpisodes().add(newEpisode);
 
         showService.update(show);
     }
@@ -210,6 +212,30 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     }
 
     /**
+     * Returns episode with ID.
+     *
+     * @param id   ID
+     * @param show show
+     * @return episode with ID
+     */
+    private static Episode getEpisode(final Integer id, final Show show) {
+        if (show == null) {
+            return null;
+        }
+
+        for (final Season season : show.getSeasons()) {
+            for (final Episode episode : season.getEpisodes()) {
+                if (id.equals(episode.getId())) {
+                    return episode;
+                }
+            }
+
+        }
+
+        return null;
+    }
+
+    /**
      * Updates episode in show.
      *
      * @param show    show
@@ -245,6 +271,27 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
         }
 
         throw new IllegalStateException("Unknown season");
+    }
+
+    /**
+     * Returns season for show.
+     *
+     * @param show   show
+     * @param season season
+     * @return season for show
+     */
+    private static Season getSeason(final Show show, final SeasonTO season) {
+        if (show == null) {
+            return null;
+        }
+
+        for (final Season seasonEntity : show.getSeasons()) {
+            if (season.getId().equals(seasonEntity.getId())) {
+                return seasonEntity;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -286,7 +333,25 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
             }
         }
 
-        throw new IllegalStateException("Unknown show");
+        return null;
+    }
+
+    /**
+     * Returns show for TO for season.
+     *
+     * @param season TO for season
+     * @return show for TO for season
+     */
+    private Show getShow(final SeasonTO season) {
+        for (final Show show : showService.getAll()) {
+            for (final Season seasonEntity : show.getSeasons()) {
+                if (season.getId().equals(seasonEntity.getId())) {
+                    return show;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -297,17 +362,17 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     private void move(final EpisodeTO episode, final boolean up) {
         episodeTOValidator.validateEpisodeTOWithId(episode);
-        final EpisodeTO episodeTO = getEpisode(episode.getId());
-        Validators.validateExists(episodeTO, EPISODE_TO_ARGUMENT);
         final Show show = getShow(episode);
+        final Episode episodeEntity = getEpisode(episode.getId(), show);
+        Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
         final Season season = getSeason(show, episode);
         final List<Episode> episodes = CollectionUtils.getSortedData(season.getEpisodes());
-        final Episode episodeEntity = converter.convert(episode, Episode.class);
         if (up) {
             Validators.validateMoveUp(episodes, episodeEntity, EPISODE_TO_ARGUMENT);
         } else {
             Validators.validateMoveDown(episodes, episodeEntity, EPISODE_TO_ARGUMENT);
         }
+        assert episodeEntity != null;
 
         final int index = episodes.indexOf(episodeEntity);
         final Episode other = episodes.get(up ? index - 1 : index + 1);

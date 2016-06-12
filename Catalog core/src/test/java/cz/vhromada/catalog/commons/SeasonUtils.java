@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.entities.Episode;
 import cz.vhromada.catalog.entities.Season;
 import cz.vhromada.catalog.facade.to.SeasonTO;
 
@@ -59,6 +60,25 @@ public final class SeasonUtils {
             season.setId(id);
             season.setPosition(id - 1);
         }
+        season.setEpisodes(new ArrayList<>());
+
+        return season;
+    }
+
+    /**
+     * Returns season with episodes.
+     *
+     * @param id ID
+     * @return season with episodes
+     */
+    public static Season newSeasonWithEpisodes(final Integer id) {
+        final Episode episode = EpisodeUtils.newEpisode(id);
+        if (id == null) {
+            episode.setPosition(0);
+        }
+
+        final Season season = newSeason(id);
+        season.setEpisodes(CollectionUtils.newList(episode));
 
         return season;
     }

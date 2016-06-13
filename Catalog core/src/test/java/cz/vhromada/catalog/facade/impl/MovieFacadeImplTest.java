@@ -1,1132 +1,599 @@
-//package cz.vhromada.catalog.facade.impl;
-//
-//import static org.junit.Assert.assertFalse;
-//import static org.junit.Assert.assertNull;
-//import static org.junit.Assert.assertTrue;
-//import static org.junit.Assert.fail;
-//import static org.mockito.Matchers.any;
-//import static org.mockito.Matchers.anyInt;
-//import static org.mockito.Matchers.eq;
-//import static org.mockito.Mockito.doAnswer;
-//import static org.mockito.Mockito.doThrow;
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.verifyNoMoreInteractions;
-//import static org.mockito.Mockito.verifyZeroInteractions;
-//import static org.mockito.Mockito.when;
-//
-//import java.util.List;
-//
-//import cz.vhromada.catalog.commons.CollectionUtils;
-//import cz.vhromada.catalog.commons.ObjectGeneratorTest;
-//import cz.vhromada.catalog.commons.Time;
-//import cz.vhromada.catalog.entities.Genre;
-//import cz.vhromada.catalog.entities.Movie;
-//import cz.vhromada.catalog.facade.MovieFacade;
-//import cz.vhromada.catalog.facade.exceptions.FacadeOperationException;
-//import cz.vhromada.catalog.facade.to.GenreTO;
-//import cz.vhromada.catalog.facade.to.MovieTO;
-//import cz.vhromada.catalog.facade.validators.MovieTOValidator;
-//import cz.vhromada.catalog.service.GenreService;
-//import cz.vhromada.catalog.service.MovieService;
-//import cz.vhromada.catalog.service.exceptions.ServiceOperationException;
-//import cz.vhromada.converters.Converter;
-//import cz.vhromada.test.DeepAsserts;
-//import cz.vhromada.validators.exceptions.RecordNotFoundException;
-//import cz.vhromada.validators.exceptions.ValidationException;
-//
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.Mock;
-//import org.mockito.invocation.InvocationOnMock;
-//import org.mockito.runners.MockitoJUnitRunner;
-//import org.mockito.stubbing.Answer;
-//
-///**
-// * A class represents test for class {@link MovieFacadeImpl}.
-// *
-// * @author Vladimir Hromada
-// */
-//@RunWith(MockitoJUnitRunner.class)
-//public class MovieFacadeImplTest extends ObjectGeneratorTest {
-//
-//    /**
-//     * Instance of {@link MovieService}
-//     */
-//    @Mock
-//    private MovieService movieService;
-//
-//    /**
-//     * Instance of {@link GenreService}
-//     */
-//    @Mock
-//    private GenreService genreService;
-//
-//    /**
-//     * Instance of {@link Converter}
-//     */
-//    @Mock
-//    private Converter converter;
-//
-//    /**
-//     * Instance of {@link MovieTOValidator}
-//     */
-//    @Mock
-//    private MovieTOValidator movieTOValidator;
-//
-//    /**
-//     * Instance of {@link MovieFacade}
-//     */
-//    private MovieFacade movieFacade;
-//
-//    /**
-//     * Initializes facade for movies.
-//     */
-//    @Before
-//    public void setUp() {
-//        movieFacade = new MovieFacadeImpl(movieService, genreService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, Converter, MovieTOValidator)} with null service for movies.
-//     */
-//    @Test(expected = IllegalArgumentException.class)
-//    public void testConstructorWithNullMovieService() {
-//        new MovieFacadeImpl(null, genreService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, Converter, MovieTOValidator)} with null service for genres.
-//     */
-//    @Test(expected = IllegalArgumentException.class)
-//    public void testConstructorWithNullGenreService() {
-//        new MovieFacadeImpl(movieService, null, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, Converter, MovieTOValidator)} with null converter.
-//     */
-//    @Test(expected = IllegalArgumentException.class)
-//    public void testConstructorWithNullConverter() {
-//        new MovieFacadeImpl(movieService, genreService, null, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovieService, GenreService, Converter, MovieTOValidator)} with null validator for TO for movie.
-//     */
-//    @Test(expected = IllegalArgumentException.class)
-//    public void testConstructorWithNullMovieTOValidator() {
-//        new MovieFacadeImpl(movieService, genreService, converter, null);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#newData()}.
-//     */
-//    @Test
-//    public void testNewData() {
-//        movieFacade.newData();
-//
-//        verify(movieService).newData();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#newData()} with exception in service tier.
-//     */
-//    @Test
-//    public void testNewDataWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(movieService).newData();
-//
-//        try {
-//            movieFacade.newData();
-//            fail("Can't create new data with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).newData();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getMovies()}.
-//     */
-//    @Test
-//    public void testGetMovies() {
-//        final List<Movie> movies = CollectionUtils.newList(generate(Movie.class), generate(Movie.class));
-//        final List<MovieTO> moviesList = CollectionUtils.newList(generate(MovieTO.class), generate(MovieTO.class));
-//        when(movieService.getMovies()).thenReturn(movies);
-//        when(converter.convertCollection(movies, MovieTO.class)).thenReturn(moviesList);
-//
-//        DeepAsserts.assertEquals(moviesList, movieFacade.getMovies());
-//
-//        verify(movieService).getMovies();
-//        verify(converter).convertCollection(movies, MovieTO.class);
-//        verifyNoMoreInteractions(movieService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getMovies()} with exception in service tier.
-//     */
-//    @Test
-//    public void testGetMoviesWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(movieService).getMovies();
-//
-//        try {
-//            movieFacade.getMovies();
-//            fail("Can't get movies with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovies();
-//        verifyNoMoreInteractions(movieService);
-//        verifyZeroInteractions(converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getMovie(Integer)} with existing movie.
-//     */
-//    @Test
-//    public void testGetMovieWithExistingMovie() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(movie);
-//        when(converter.convert(any(Movie.class), eq(MovieTO.class))).thenReturn(movieTO);
-//
-//        DeepAsserts.assertEquals(movieTO, movieFacade.getMovie(movieTO.getId()));
-//
-//        verify(movieService).getMovie(movieTO.getId());
-//        verify(converter).convert(movie, MovieTO.class);
-//        verify(converter).convert(movie, MovieTO.class);
-//        verifyNoMoreInteractions(movieService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getMovie(Integer)} with not existing movie.
-//     */
-//    @Test
-//    public void testGetMovieWithNotExistingMovie() {
-//        when(movieService.getMovie(anyInt())).thenReturn(null);
-//        when(converter.convert(any(Movie.class), eq(MovieTO.class))).thenReturn(null);
-//
-//        assertNull(movieFacade.getMovie(Integer.MAX_VALUE));
-//
-//        verify(movieService).getMovie(Integer.MAX_VALUE);
-//        verify(converter).convert(null, MovieTO.class);
-//        verifyNoMoreInteractions(movieService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getMovie(Integer)} with null argument.
-//     */
-//    @Test
-//    public void testGetMovieWithNullArgument() {
-//        try {
-//            movieFacade.getMovie(null);
-//            fail("Can't get movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verifyZeroInteractions(movieService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getMovie(Integer)} with exception in service tier.
-//     */
-//    @Test
-//    public void testGetMovieWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
-//
-//        try {
-//            movieFacade.getMovie(Integer.MAX_VALUE);
-//            fail("Can't get movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(Integer.MAX_VALUE);
-//        verifyNoMoreInteractions(movieService);
-//        verifyZeroInteractions(converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#add(MovieTO)}.
-//     */
-//    @Test
-//    public void testAdd() {
-//        final Movie movie = generate(Movie.class);
-//        movie.setId(null);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        movieTO.setId(null);
-//        final int id = generate(Integer.class);
-//        final int position = generate(Integer.class);
-//        doAnswer(setMovieIdAndPosition(id, position)).when(movieService).add(any(Movie.class));
-//        when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        movieFacade.add(movieTO);
-//        DeepAsserts.assertEquals(id, movie.getId());
-//        DeepAsserts.assertEquals(position, movie.getPosition());
-//
-//        verify(movieService).add(movie);
-//        for (final GenreTO genre : movieTO.getGenres()) {
-//            verify(genreService).getGenre(genre.getId());
-//        }
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateNewMovieTO(movieTO);
-//        verifyNoMoreInteractions(movieService, genreService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#add(MovieTO)} with null argument.
-//     */
-//    @Test
-//    public void testAddWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateNewMovieTO(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.add(null);
-//            fail("Can't add movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateNewMovieTO(null);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService, genreService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#add(MovieTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testAddWithBadArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        movie.setId(null);
-//        doThrow(ValidationException.class).when(movieTOValidator).validateNewMovieTO(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.add(movie);
-//            fail("Can't add movie with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateNewMovieTO(movie);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService, genreService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#add(MovieTO)} with service tier not setting ID.
-//     */
-//    @Test
-//    public void testAddWithNotServiceTierSettingID() {
-//        final Movie movie = generate(Movie.class);
-//        movie.setId(null);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        movieTO.setId(null);
-//        when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        try {
-//            movieFacade.add(movieTO);
-//            fail("Can't add movie with service tier not setting ID.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).add(movie);
-//        for (final GenreTO genre : movieTO.getGenres()) {
-//            verify(genreService).getGenre(genre.getId());
-//        }
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateNewMovieTO(movieTO);
-//        verifyNoMoreInteractions(movieService, genreService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#add(MovieTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testAddWithServiceTierException() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        movie.setId(null);
-//        doThrow(ServiceOperationException.class).when(genreService).getGenre(anyInt());
-//
-//        try {
-//            movieFacade.add(movie);
-//            fail("Can't add movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(genreService).getGenre(movie.getGenres().get(0).getId());
-//        verify(movieTOValidator).validateNewMovieTO(movie);
-//        verifyNoMoreInteractions(genreService, movieTOValidator);
-//        verifyZeroInteractions(movieService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#update(MovieTO)}.
-//     */
-//    @Test
-//    public void testUpdate() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.exists(any(Movie.class))).thenReturn(true);
-//        when(genreService.getGenre(anyInt())).thenReturn(mock(Genre.class));
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        movieFacade.update(movieTO);
-//
-//        verify(movieService).exists(movie);
-//        verify(movieService).update(movie);
-//        for (final GenreTO genre : movieTO.getGenres()) {
-//            verify(genreService).getGenre(genre.getId());
-//        }
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateExistingMovieTO(movieTO);
-//        verifyNoMoreInteractions(movieService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#update(MovieTO)} with null argument.
-//     */
-//    @Test
-//    public void testUpdateWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateExistingMovieTO(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.update(null);
-//            fail("Can't update movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateExistingMovieTO(null);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService, genreService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#update(MovieTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testUpdateWithBadArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ValidationException.class).when(movieTOValidator).validateExistingMovieTO(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.update(movie);
-//            fail("Can't update movie with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateExistingMovieTO(movie);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService, genreService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#update(MovieTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testUpdateWithNotExistingArgument() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.exists(any(Movie.class))).thenReturn(false);
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        try {
-//            movieFacade.update(movieTO);
-//            fail("Can't update movie with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).exists(movie);
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateExistingMovieTO(movieTO);
-//        verifyNoMoreInteractions(movieService, genreService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#update(MovieTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testUpdateWithServiceTierException() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        doThrow(ServiceOperationException.class).when(movieService).exists(any(Movie.class));
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        try {
-//            movieFacade.update(movieTO);
-//            fail("Can't update movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).exists(movie);
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateExistingMovieTO(movieTO);
-//        verifyNoMoreInteractions(movieService, converter, movieTOValidator);
-//        verifyZeroInteractions(genreService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#remove(MovieTO)}.
-//     */
-//    @Test
-//    public void testRemove() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(movie);
-//
-//        movieFacade.remove(movieTO);
-//
-//        verify(movieService).getMovie(movieTO.getId());
-//        verify(movieService).remove(movie);
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#remove(MovieTO)} with null argument.
-//     */
-//    @Test
-//    public void testRemoveWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.remove(null);
-//            fail("Can't remove movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(null);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#remove(MovieTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testRemoveWithBadArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.remove(movie);
-//            fail("Can't remove movie with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#remove(MovieTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testRemoveWithNotExistingArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(null);
-//
-//        try {
-//            movieFacade.remove(movie);
-//            fail("Can't remove movie with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#remove(MovieTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testRemoveWithServiceTierException() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
-//
-//        try {
-//            movieFacade.remove(movie);
-//            fail("Can't remove movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#duplicate(MovieTO)}.
-//     */
-//    @Test
-//    public void testDuplicate() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(movie);
-//
-//        movieFacade.duplicate(movieTO);
-//
-//        verify(movieService).getMovie(movieTO.getId());
-//        verify(movieService).duplicate(movie);
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#duplicate(MovieTO)} with null argument.
-//     */
-//    @Test
-//    public void testDuplicateWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.duplicate(null);
-//            fail("Can't duplicate movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(null);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#duplicate(MovieTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testDuplicateWithBadArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.duplicate(movie);
-//            fail("Can't duplicate movie with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#duplicate(MovieTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testDuplicateWithNotExistingArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(null);
-//
-//        try {
-//            movieFacade.duplicate(movie);
-//            fail("Can't duplicate movie with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#duplicate(MovieTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testDuplicateWithServiceTierException() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
-//
-//        try {
-//            movieFacade.duplicate(movie);
-//            fail("Can't duplicate movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveUp(MovieTO)}.
-//     */
-//    @Test
-//    public void testMoveUp() {
-//        final Movie movie = generate(Movie.class);
-//        final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), movie);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(movie);
-//        when(movieService.getMovies()).thenReturn(movies);
-//
-//        movieFacade.moveUp(movieTO);
-//
-//        verify(movieService).getMovie(movieTO.getId());
-//        verify(movieService).getMovies();
-//        verify(movieService).moveUp(movie);
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveUp(MovieTO)} with null argument.
-//     */
-//    @Test
-//    public void testMoveUpWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.moveUp(null);
-//            fail("Can't move up movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(null);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveUp(MovieTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testMoveUpWithBadArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.moveUp(movie);
-//            fail("Can't move up movie with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testMoveUpWithNotExistingArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(null);
-//
-//        try {
-//            movieFacade.moveUp(movie);
-//            fail("Can't move up movie with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not movable argument.
-//     */
-//    @Test
-//    public void testMoveUpWithNotMovableArgument() {
-//        final Movie movie = generate(Movie.class);
-//        final List<Movie> movies = CollectionUtils.newList(movie, mock(Movie.class));
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(movie);
-//        when(movieService.getMovies()).thenReturn(movies);
-//
-//        try {
-//            movieFacade.moveUp(movieTO);
-//            fail("Can't move up movie with not thrown ValidationException for not movable argument.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movieTO.getId());
-//        verify(movieService).getMovies();
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveUp(MovieTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testMoveUpWithServiceTierException() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
-//
-//        try {
-//            movieFacade.moveUp(movie);
-//            fail("Can't move up movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveDown(MovieTO)}.
-//     */
-//    @Test
-//    public void testMoveDown() {
-//        final Movie movie = generate(Movie.class);
-//        final List<Movie> movies = CollectionUtils.newList(movie, mock(Movie.class));
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(movie);
-//        when(movieService.getMovies()).thenReturn(movies);
-//
-//        movieFacade.moveDown(movieTO);
-//
-//        verify(movieService).getMovie(movieTO.getId());
-//        verify(movieService).getMovies();
-//        verify(movieService).moveDown(movie);
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveDown(MovieTO)} with null argument.
-//     */
-//    @Test
-//    public void testMoveDownWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.moveDown(null);
-//            fail("Can't move down movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(null);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveDown(MovieTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testMoveDownWithBadArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.moveDown(movie);
-//            fail("Can't move down movie with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not existing argument.
-//     */
-//    @Test
-//    public void testMoveDownWithNotExistingArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(null);
-//
-//        try {
-//            movieFacade.moveDown(movie);
-//            fail("Can't move down movie with not thrown RecordNotFoundException for not existing argument.");
-//        } catch (final RecordNotFoundException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not movable argument.
-//     */
-//    @Test
-//    public void testMoveDownWithNotMovableArgument() {
-//        final Movie movie = generate(Movie.class);
-//        final List<Movie> movies = CollectionUtils.newList(mock(Movie.class), movie);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.getMovie(anyInt())).thenReturn(movie);
-//        when(movieService.getMovies()).thenReturn(movies);
-//
-//        try {
-//            movieFacade.moveDown(movieTO);
-//            fail("Can't move down movie with not thrown ValidationException for not movable argument.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movieTO.getId());
-//        verify(movieService).getMovies();
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#moveDown(MovieTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testMoveDownWithServiceTierException() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ServiceOperationException.class).when(movieService).getMovie(anyInt());
-//
-//        try {
-//            movieFacade.moveDown(movie);
-//            fail("Can't move down movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getMovie(movie.getId());
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieService, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#exists(MovieTO)} with existing movie.
-//     */
-//    @Test
-//    public void testExistsWithExistingMovie() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.exists(any(Movie.class))).thenReturn(true);
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        assertTrue(movieFacade.exists(movieTO));
-//
-//        verify(movieService).exists(movie);
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#exists(MovieTO)} with not existing movie.
-//     */
-//    @Test
-//    public void testExistsWithNotExistingMovie() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        when(movieService.exists(any(Movie.class))).thenReturn(false);
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        assertFalse(movieFacade.exists(movieTO));
-//
-//        verify(movieService).exists(movie);
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#exists(MovieTO)} with null argument.
-//     */
-//    @Test
-//    public void testExistsWithNullArgument() {
-//        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.exists(null);
-//            fail("Can't exists movie with not thrown IllegalArgumentException for null argument.");
-//        } catch (final IllegalArgumentException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(null);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#exists(MovieTO)} with argument with bad data.
-//     */
-//    @Test
-//    public void testExistsWithBadArgument() {
-//        final MovieTO movie = generate(MovieTO.class);
-//        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
-//
-//        try {
-//            movieFacade.exists(movie);
-//            fail("Can't exists movie with not thrown ValidationException for argument with bad data.");
-//        } catch (final ValidationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieTOValidator).validateMovieTOWithId(movie);
-//        verifyNoMoreInteractions(movieTOValidator);
-//        verifyZeroInteractions(movieService, converter);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#exists(MovieTO)} with exception in service tier.
-//     */
-//    @Test
-//    public void testExistsWithServiceTierException() {
-//        final Movie movie = generate(Movie.class);
-//        final MovieTO movieTO = generate(MovieTO.class);
-//        doThrow(ServiceOperationException.class).when(movieService).exists(any(Movie.class));
-//        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movie);
-//
-//        try {
-//            movieFacade.exists(movieTO);
-//            fail("Can't exists movie with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).exists(movie);
-//        verify(converter).convert(movieTO, Movie.class);
-//        verify(movieTOValidator).validateMovieTOWithId(movieTO);
-//        verifyNoMoreInteractions(movieService, converter, movieTOValidator);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#updatePositions()}.
-//     */
-//    @Test
-//    public void testUpdatePositions() {
-//        movieFacade.updatePositions();
-//
-//        verify(movieService).updatePositions();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#updatePositions()} with exception in service tier.
-//     */
-//    @Test
-//    public void testUpdatePositionsWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(movieService).updatePositions();
-//
-//        try {
-//            movieFacade.updatePositions();
-//            fail("Can't update positions with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).updatePositions();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getTotalMediaCount()}.
-//     */
-//    @Test
-//    public void testGetTotalMediaCount() {
-//        final int count = generate(Integer.class);
-//        when(movieService.getTotalMediaCount()).thenReturn(count);
-//
-//        DeepAsserts.assertEquals(count, movieFacade.getTotalMediaCount());
-//
-//        verify(movieService).getTotalMediaCount();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getTotalMediaCount()} with exception in service tier.
-//     */
-//    @Test
-//    public void testGetTotalMediaCountWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(movieService).getTotalMediaCount();
-//
-//        try {
-//            movieFacade.getTotalMediaCount();
-//            fail("Can't get total media count with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getTotalMediaCount();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getTotalLength()}.
-//     */
-//    @Test
-//    public void testGetTotalLength() {
-//        final Time length = generate(Time.class);
-//        when(movieService.getTotalLength()).thenReturn(length);
-//
-//        DeepAsserts.assertEquals(length, movieFacade.getTotalLength());
-//
-//        verify(movieService).getTotalLength();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Test method for {@link MovieFacade#getTotalLength()} with exception in service tier.
-//     */
-//    @Test
-//    public void testGetTotalLengthWithServiceTierException() {
-//        doThrow(ServiceOperationException.class).when(movieService).getTotalLength();
-//
-//        try {
-//            movieFacade.getTotalLength();
-//            fail("Can't get total length count with not thrown FacadeOperationException for service tier exception.");
-//        } catch (final FacadeOperationException ex) {
-//            // OK
-//        }
-//
-//        verify(movieService).getTotalLength();
-//        verifyNoMoreInteractions(movieService);
-//    }
-//
-//    /**
-//     * Sets movie's ID and position.
-//     *
-//     * @param id       ID
-//     * @param position position
-//     * @return mocked answer
-//     */
-//    private static Answer<Void> setMovieIdAndPosition(final Integer id, final int position) {
-//        return new Answer<Void>() {
-//
-//            @Override
-//            public Void answer(final InvocationOnMock invocation) {
-//                final Movie movie = (Movie) invocation.getArguments()[0];
-//                movie.setId(id);
-//                movie.setPosition(position);
-//                return null;
-//            }
-//
-//        };
-//    }
-//
-//}
+package cz.vhromada.catalog.facade.impl;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
+import cz.vhromada.catalog.commons.CollectionUtils;
+import cz.vhromada.catalog.commons.GenreUtils;
+import cz.vhromada.catalog.commons.MovieUtils;
+import cz.vhromada.catalog.commons.Time;
+import cz.vhromada.catalog.entities.Genre;
+import cz.vhromada.catalog.entities.Medium;
+import cz.vhromada.catalog.entities.Movie;
+import cz.vhromada.catalog.facade.MovieFacade;
+import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.catalog.facade.validators.MovieTOValidator;
+import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.converters.Converter;
+import cz.vhromada.validators.exceptions.RecordNotFoundException;
+import cz.vhromada.validators.exceptions.ValidationException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+/**
+ * A class represents test for class {@link MovieFacadeImpl}.
+ *
+ * @author Vladimir Hromada
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class MovieFacadeImplTest {
+
+    /**
+     * Instance of {@link CatalogService}
+     */
+    @Mock
+    private CatalogService<Movie> movieService;
+
+    /**
+     * Instance of {@link CatalogService}
+     */
+    @Mock
+    private CatalogService<Genre> genreService;
+
+    /**
+     * Instance of {@link Converter}
+     */
+    @Mock
+    private Converter converter;
+
+    /**
+     * Instance of {@link MovieTOValidator}
+     */
+    @Mock
+    private MovieTOValidator movieTOValidator;
+
+    /**
+     * Instance of {@link MovieFacade}
+     */
+    private MovieFacade movieFacade;
+
+    /**
+     * Initializes facade for movies.
+     */
+    @Before
+    public void setUp() {
+        movieFacade = new MovieFacadeImpl(movieService, genreService, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null service for movies.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructor_NullMovieService() {
+        new MovieFacadeImpl(null, genreService, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null service for genres.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructor_NullGenreService() {
+        new MovieFacadeImpl(movieService, null, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null converter.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructor_NullConverter() {
+        new MovieFacadeImpl(movieService, genreService, null, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null validator for TO for
+     * movie.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructor_NullMovieTOValidator() {
+        new MovieFacadeImpl(movieService, genreService, converter, null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#newData()}.
+     */
+    @Test
+    public void testNewData() {
+        movieFacade.newData();
+
+        verify(movieService).newData();
+        verifyNoMoreInteractions(movieService);
+        verifyZeroInteractions(genreService, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#getMovies()}.
+     */
+    @Test
+    public void testGetMovies() {
+        final List<Movie> movieList = CollectionUtils.newList(MovieUtils.newMovie(1), MovieUtils.newMovie(2));
+        final List<MovieTO> expectedMovies = CollectionUtils.newList(MovieUtils.newMovieTO(1), MovieUtils.newMovieTO(2));
+
+        when(movieService.getAll()).thenReturn(movieList);
+        when(converter.convertCollection(anyListOf(Movie.class), eq(MovieTO.class))).thenReturn(expectedMovies);
+
+        final List<MovieTO> movies = movieFacade.getMovies();
+
+        assertNotNull(movies);
+        assertEquals(expectedMovies, movies);
+
+        verify(movieService).getAll();
+        verify(converter).convertCollection(movieList, MovieTO.class);
+        verifyNoMoreInteractions(movieService, converter);
+        verifyZeroInteractions(genreService, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#getMovie(Integer)} with existing movie.
+     */
+    @Test
+    public void testGetMovie_ExistingMovie() {
+        final Movie movieEntity = MovieUtils.newMovie(1);
+        final MovieTO expectedMovie = MovieUtils.newMovieTO(1);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(converter.convert(any(Movie.class), eq(MovieTO.class))).thenReturn(expectedMovie);
+
+        final MovieTO movie = movieFacade.getMovie(1);
+
+        assertNotNull(movie);
+        assertEquals(expectedMovie, movie);
+
+        verify(movieService).get(1);
+        verify(converter).convert(movieEntity, MovieTO.class);
+        verifyNoMoreInteractions(movieService, converter);
+        verifyZeroInteractions(genreService, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#getMovie(Integer)} with not existing movie.
+     */
+    @Test
+    public void testGetMovie_NotExistingMovie() {
+        when(movieService.get(anyInt())).thenReturn(null);
+        when(converter.convert(any(Movie.class), eq(MovieTO.class))).thenReturn(null);
+
+        assertNull(movieFacade.getMovie(Integer.MAX_VALUE));
+
+        verify(movieService).get(Integer.MAX_VALUE);
+        verify(converter).convert(null, MovieTO.class);
+        verifyNoMoreInteractions(movieService, converter);
+        verifyZeroInteractions(genreService, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#getMovie(Integer)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetMovie_NullArgument() {
+        movieFacade.getMovie(null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#add(MovieTO)}.
+     */
+    @Test
+    public void testAdd() {
+        final Movie movieEntity = MovieUtils.newMovie(null);
+        final MovieTO movie = MovieUtils.newMovieTO(null);
+
+        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
+        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movieEntity);
+
+        movieFacade.add(movie);
+
+        verify(movieService).add(movieEntity);
+        for (final GenreTO genre : movie.getGenres()) {
+            verify(genreService).get(genre.getId());
+        }
+        verify(converter).convert(movie, Movie.class);
+        verify(movieTOValidator).validateNewMovieTO(movie);
+        verifyNoMoreInteractions(movieService, genreService, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#add(MovieTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAdd_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateNewMovieTO(any(MovieTO.class));
+
+        movieFacade.add(null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#add(MovieTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testAdd_BadArgument() {
+        doThrow(ValidationException.class).when(movieTOValidator).validateNewMovieTO(any(MovieTO.class));
+
+        movieFacade.add(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#add(MovieTO)} with argument with not existing genre.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testAdd_NotExistingGenre() {
+        when(genreService.get(anyInt())).thenReturn(null);
+
+        movieFacade.add(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#update(MovieTO)}.
+     */
+    @Test
+    public void testUpdate() {
+        final Movie movieEntity = MovieUtils.newMovie(null);
+        final MovieTO movie = MovieUtils.newMovieTO(null);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
+        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movieEntity);
+
+        movieFacade.update(movie);
+
+        verify(movieService).get(movie.getId());
+        verify(movieService).update(movieEntity);
+        for (final GenreTO genre : movie.getGenres()) {
+            verify(genreService).get(genre.getId());
+        }
+        verify(converter).convert(movie, Movie.class);
+        verify(movieTOValidator).validateExistingMovieTO(movie);
+        verifyNoMoreInteractions(movieService, genreService, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#update(MovieTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdate_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateExistingMovieTO(any(MovieTO.class));
+
+        movieFacade.update(null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#update(MovieTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testUpdate_BadArgument() {
+        doThrow(ValidationException.class).when(movieTOValidator).validateExistingMovieTO(any(MovieTO.class));
+
+        movieFacade.update(MovieUtils.newMovieTO(null));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#update(MovieTO)} with not existing movie.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testUpdate_NotExistingMovie() {
+        when(movieService.get(anyInt())).thenReturn(null);
+
+        movieFacade.update(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#update(MovieTO)} with not existing genre.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testUpdate_NotExistingGenre() {
+        when(movieService.get(anyInt())).thenReturn(MovieUtils.newMovie(1));
+        when(genreService.get(anyInt())).thenReturn(null);
+
+        movieFacade.update(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#remove(MovieTO)}.
+     */
+    @Test
+    public void testRemove() {
+        final Movie movieEntity = MovieUtils.newMovie(1);
+        final MovieTO movie = MovieUtils.newMovieTO(1);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+
+        movieFacade.remove(movie);
+
+        verify(movieService).get(1);
+        verify(movieService).remove(movieEntity);
+        verify(movieTOValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verifyZeroInteractions(genreService, converter);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#remove(MovieTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemove_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.remove(null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#remove(MovieTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testRemove_BadArgument() {
+        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.remove(MovieUtils.newMovieTO(null));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#remove(MovieTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testRemove_NotExistingArgument() {
+        when(movieService.get(anyInt())).thenReturn(null);
+
+        movieFacade.remove(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#duplicate(MovieTO)}.
+     */
+    @Test
+    public void testDuplicate() {
+        final Movie movieEntity = MovieUtils.newMovie(1);
+        final MovieTO movie = MovieUtils.newMovieTO(1);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+
+        movieFacade.duplicate(movie);
+
+        verify(movieService).get(1);
+        verify(movieService).duplicate(movieEntity);
+        verify(movieTOValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verifyZeroInteractions(genreService, converter);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#duplicate(MovieTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testDuplicate_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.duplicate(null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#duplicate(MovieTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testDuplicate_BadArgument() {
+        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.duplicate(MovieUtils.newMovieTO(null));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#duplicate(MovieTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testDuplicate_NotExistingArgument() {
+        when(movieService.get(anyInt())).thenReturn(null);
+
+        movieFacade.duplicate(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveUp(MovieTO)}.
+     */
+    @Test
+    public void testMoveUp() {
+        final Movie movieEntity = MovieUtils.newMovie(2);
+        final List<Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), movieEntity);
+        final MovieTO movie = MovieUtils.newMovieTO(2);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.getAll()).thenReturn(movies);
+
+        movieFacade.moveUp(movie);
+
+        verify(movieService).get(2);
+        verify(movieService).getAll();
+        verify(movieService).moveUp(movieEntity);
+        verify(movieTOValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verifyZeroInteractions(genreService, converter);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveUp(MovieTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testMoveUp_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.moveUp(null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveUp(MovieTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveUp_BadArgument() {
+        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.moveUp(MovieUtils.newMovieTO(null));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testMoveUp_NotExistingArgument() {
+        when(movieService.get(anyInt())).thenReturn(null);
+
+        movieFacade.moveUp(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not movable argument.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveUp_NotMovableArgument() {
+        final Movie movieEntity = MovieUtils.newMovie(Integer.MAX_VALUE);
+        final List<Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovie(1));
+        final MovieTO movie = MovieUtils.newMovieTO(Integer.MAX_VALUE);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.getAll()).thenReturn(movies);
+
+        movieFacade.moveUp(movie);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveDown(MovieTO)}.
+     */
+    @Test
+    public void testMoveDown() {
+        final Movie movieEntity = MovieUtils.newMovie(1);
+        final List<Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovie(2));
+        final MovieTO movie = MovieUtils.newMovieTO(1);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.getAll()).thenReturn(movies);
+
+        movieFacade.moveDown(movie);
+
+        verify(movieService).get(1);
+        verify(movieService).getAll();
+        verify(movieService).moveDown(movieEntity);
+        verify(movieTOValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verifyZeroInteractions(genreService, converter);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveDown(MovieTO)} with null argument.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testMoveDown_NullArgument() {
+        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.moveDown(null);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveDown(MovieTO)} with argument with bad data.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveDown_BadArgument() {
+        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+
+        movieFacade.moveDown(MovieUtils.newMovieTO(null));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not existing argument.
+     */
+    @Test(expected = RecordNotFoundException.class)
+    public void testMoveDown_NotExistingArgument() {
+        when(movieService.get(anyInt())).thenReturn(null);
+
+        movieFacade.moveDown(MovieUtils.newMovieTO(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not movable argument.
+     */
+    @Test(expected = ValidationException.class)
+    public void testMoveDown_NotMovableArgument() {
+        final Movie movieEntity = MovieUtils.newMovie(Integer.MAX_VALUE);
+        final List<Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), movieEntity);
+        final MovieTO movie = MovieUtils.newMovieTO(Integer.MAX_VALUE);
+
+        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.getAll()).thenReturn(movies);
+
+        movieFacade.moveDown(movie);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#updatePositions()}.
+     */
+    @Test
+    public void testUpdatePositions() {
+        movieFacade.updatePositions();
+
+        verify(movieService).updatePositions();
+        verifyNoMoreInteractions(movieService);
+        verifyZeroInteractions(genreService, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#getTotalMediaCount()}.
+     */
+    @Test
+    public void testGetTotalMediaCount() {
+        final Movie movie1 = MovieUtils.newMovie(1);
+        final Movie movie2 = MovieUtils.newMovie(2);
+        final int expectedCount = movie1.getMedia().size() + movie2.getMedia().size();
+
+        when(movieService.getAll()).thenReturn(CollectionUtils.newList(movie1, movie2));
+
+        assertEquals(expectedCount, movieFacade.getTotalMediaCount());
+
+        verify(movieService).getAll();
+        verifyNoMoreInteractions(movieService);
+        verifyZeroInteractions(genreService, converter, movieTOValidator);
+    }
+
+    /**
+     * Test method for {@link MovieFacade#getTotalLength()}.
+     */
+    @Test
+    public void testGetTotalLength() {
+        final List<Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), MovieUtils.newMovie(2));
+        int expectedTotalLength = 0;
+        for (final Movie movie : movies) {
+            for (final Medium medium : movie.getMedia()) {
+                expectedTotalLength += medium.getLength();
+            }
+        }
+
+        when(movieService.getAll()).thenReturn(movies);
+
+        assertEquals(new Time(expectedTotalLength), movieFacade.getTotalLength());
+
+        verify(movieService).getAll();
+        verifyNoMoreInteractions(movieService);
+        verifyZeroInteractions(genreService, converter, movieTOValidator);
+    }
+
+}

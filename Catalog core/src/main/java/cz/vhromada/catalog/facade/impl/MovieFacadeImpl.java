@@ -128,13 +128,12 @@ public class MovieFacadeImpl implements MovieFacade {
     @Override
     public void update(final MovieTO movie) {
         movieTOValidator.validateExistingMovieTO(movie);
-        final Movie movieEntity = converter.convert(movie, Movie.class);
-        Validators.validateExists(movieService.get(movieEntity.getId()), MOVIE_TO_ARGUMENT);
+        Validators.validateExists(movieService.get(movie.getId()), MOVIE_TO_ARGUMENT);
         for (final GenreTO genre : movie.getGenres()) {
             Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
         }
 
-        movieService.update(movieEntity);
+        movieService.update(converter.convert(movie, Movie.class));
     }
 
     /**

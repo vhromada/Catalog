@@ -135,10 +135,10 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testGetGenre_ExistingGenre() {
-        final Genre entityGenre = GenreUtils.newGenre(1);
+        final Genre genreEntity = GenreUtils.newGenre(1);
         final GenreTO expectedGenre = GenreUtils.newGenreTO(1);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(converter.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(expectedGenre);
 
         final GenreTO genre = genreFacade.getGenre(1);
@@ -147,7 +147,7 @@ public class GenreFacadeImplTest {
         assertEquals(expectedGenre, genre);
 
         verify(genreService).get(1);
-        verify(converter).convert(entityGenre, GenreTO.class);
+        verify(converter).convert(genreEntity, GenreTO.class);
         verifyNoMoreInteractions(genreService, converter);
         verifyZeroInteractions(genreTOValidator);
     }
@@ -181,14 +181,14 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testAdd() {
-        final Genre entityGenre = GenreUtils.newGenre(null);
+        final Genre genreEntity = GenreUtils.newGenre(null);
         final GenreTO genre = GenreUtils.newGenreTO(null);
 
-        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(entityGenre);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genreEntity);
 
         genreFacade.add(genre);
 
-        verify(genreService).add(entityGenre);
+        verify(genreService).add(genreEntity);
         verify(converter).convert(genre, Genre.class);
         verify(genreTOValidator).validateNewGenreTO(genre);
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
@@ -252,16 +252,16 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Genre entityGenre = GenreUtils.newGenre(1);
+        final Genre genreEntity = GenreUtils.newGenre(1);
         final GenreTO genre = GenreUtils.newGenreTO(1);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
-        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
+        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genreEntity);
 
         genreFacade.update(genre);
 
         verify(genreService).get(1);
-        verify(genreService).update(entityGenre);
+        verify(genreService).update(genreEntity);
         verify(converter).convert(genre, Genre.class);
         verify(genreTOValidator).validateExistingGenreTO(genre);
         verifyNoMoreInteractions(genreService, converter, genreTOValidator);
@@ -302,15 +302,15 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testRemove() {
-        final Genre entityGenre = GenreUtils.newGenre(1);
+        final Genre genreEntity = GenreUtils.newGenre(1);
         final GenreTO genre = GenreUtils.newGenreTO(1);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
 
         genreFacade.remove(genre);
 
         verify(genreService).get(1);
-        verify(genreService).remove(entityGenre);
+        verify(genreService).remove(genreEntity);
         verify(genreTOValidator).validateGenreTOWithId(genre);
         verifyNoMoreInteractions(genreService, genreTOValidator);
         verifyZeroInteractions(converter);
@@ -351,15 +351,15 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testDuplicate() {
-        final Genre entityGenre = GenreUtils.newGenre(1);
+        final Genre genreEntity = GenreUtils.newGenre(1);
         final GenreTO genre = GenreUtils.newGenreTO(1);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
 
         genreFacade.duplicate(genre);
 
         verify(genreService).get(1);
-        verify(genreService).duplicate(entityGenre);
+        verify(genreService).duplicate(genreEntity);
         verify(genreTOValidator).validateGenreTOWithId(genre);
         verifyNoMoreInteractions(genreService, genreTOValidator);
         verifyZeroInteractions(converter);
@@ -400,18 +400,18 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testMoveUp() {
-        final Genre entityGenre = GenreUtils.newGenre(2);
-        final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), entityGenre);
+        final Genre genreEntity = GenreUtils.newGenre(2);
+        final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), genreEntity);
         final GenreTO genre = GenreUtils.newGenreTO(2);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);
 
         genreFacade.moveUp(genre);
 
         verify(genreService).get(2);
         verify(genreService).getAll();
-        verify(genreService).moveUp(entityGenre);
+        verify(genreService).moveUp(genreEntity);
         verify(genreTOValidator).validateGenreTOWithId(genre);
         verifyNoMoreInteractions(genreService, genreTOValidator);
         verifyZeroInteractions(converter);
@@ -452,11 +452,11 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Genre entityGenre = GenreUtils.newGenre(Integer.MAX_VALUE);
-        final List<Genre> genres = CollectionUtils.newList(entityGenre, GenreUtils.newGenre(1));
+        final Genre genreEntity = GenreUtils.newGenre(Integer.MAX_VALUE);
+        final List<Genre> genres = CollectionUtils.newList(genreEntity, GenreUtils.newGenre(1));
         final GenreTO genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);
 
         genreFacade.moveUp(genre);
@@ -467,18 +467,18 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testMoveDown() {
-        final Genre entityGenre = GenreUtils.newGenre(1);
-        final List<Genre> genres = CollectionUtils.newList(entityGenre, GenreUtils.newGenre(2));
+        final Genre genreEntity = GenreUtils.newGenre(1);
+        final List<Genre> genres = CollectionUtils.newList(genreEntity, GenreUtils.newGenre(2));
         final GenreTO genre = GenreUtils.newGenreTO(1);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);
 
         genreFacade.moveDown(genre);
 
         verify(genreService).get(1);
         verify(genreService).getAll();
-        verify(genreService).moveDown(entityGenre);
+        verify(genreService).moveDown(genreEntity);
         verify(genreTOValidator).validateGenreTOWithId(genre);
         verifyNoMoreInteractions(genreService, genreTOValidator);
         verifyZeroInteractions(converter);
@@ -519,11 +519,11 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Genre entityGenre = GenreUtils.newGenre(Integer.MAX_VALUE);
-        final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), entityGenre);
+        final Genre genreEntity = GenreUtils.newGenre(Integer.MAX_VALUE);
+        final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), genreEntity);
         final GenreTO genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
 
-        when(genreService.get(anyInt())).thenReturn(entityGenre);
+        when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);
 
         genreFacade.moveDown(genre);

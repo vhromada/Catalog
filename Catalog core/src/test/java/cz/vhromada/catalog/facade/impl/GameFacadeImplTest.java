@@ -134,10 +134,10 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testGetGame_ExistingGame() {
-        final Game entityGame = GameUtils.newGame(1);
+        final Game gameEntity = GameUtils.newGame(1);
         final GameTO expectedGame = GameUtils.newGameTO(1);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(converter.convert(any(Game.class), eq(GameTO.class))).thenReturn(expectedGame);
 
         final GameTO game = gameFacade.getGame(1);
@@ -146,7 +146,7 @@ public class GameFacadeImplTest {
         assertEquals(expectedGame, game);
 
         verify(gameService).get(1);
-        verify(converter).convert(entityGame, GameTO.class);
+        verify(converter).convert(gameEntity, GameTO.class);
         verifyNoMoreInteractions(gameService, converter);
         verifyZeroInteractions(gameTOValidator);
     }
@@ -180,14 +180,14 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testAdd() {
-        final Game entityGame = GameUtils.newGame(null);
+        final Game gameEntity = GameUtils.newGame(null);
         final GameTO game = GameUtils.newGameTO(null);
 
-        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(entityGame);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(gameEntity);
 
         gameFacade.add(game);
 
-        verify(gameService).add(entityGame);
+        verify(gameService).add(gameEntity);
         verify(converter).convert(game, Game.class);
         verify(gameTOValidator).validateNewGameTO(game);
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
@@ -218,16 +218,16 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Game entityGame = GameUtils.newGame(1);
+        final Game gameEntity = GameUtils.newGame(1);
         final GameTO game = GameUtils.newGameTO(1);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
-        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(gameEntity);
 
         gameFacade.update(game);
 
         verify(gameService).get(1);
-        verify(gameService).update(entityGame);
+        verify(gameService).update(gameEntity);
         verify(converter).convert(game, Game.class);
         verify(gameTOValidator).validateExistingGameTO(game);
         verifyNoMoreInteractions(gameService, converter, gameTOValidator);
@@ -268,15 +268,15 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testRemove() {
-        final Game entityGame = GameUtils.newGame(1);
+        final Game gameEntity = GameUtils.newGame(1);
         final GameTO game = GameUtils.newGameTO(1);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
 
         gameFacade.remove(game);
 
         verify(gameService).get(1);
-        verify(gameService).remove(entityGame);
+        verify(gameService).remove(gameEntity);
         verify(gameTOValidator).validateGameTOWithId(game);
         verifyNoMoreInteractions(gameService, gameTOValidator);
         verifyZeroInteractions(converter);
@@ -317,15 +317,15 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testDuplicate() {
-        final Game entityGame = GameUtils.newGame(1);
+        final Game gameEntity = GameUtils.newGame(1);
         final GameTO game = GameUtils.newGameTO(1);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
 
         gameFacade.duplicate(game);
 
         verify(gameService).get(1);
-        verify(gameService).duplicate(entityGame);
+        verify(gameService).duplicate(gameEntity);
         verify(gameTOValidator).validateGameTOWithId(game);
         verifyNoMoreInteractions(gameService, gameTOValidator);
         verifyZeroInteractions(converter);
@@ -366,18 +366,18 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testMoveUp() {
-        final Game entityGame = GameUtils.newGame(2);
-        final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), entityGame);
+        final Game gameEntity = GameUtils.newGame(2);
+        final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), gameEntity);
         final GameTO game = GameUtils.newGameTO(2);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveUp(game);
 
         verify(gameService).get(2);
         verify(gameService).getAll();
-        verify(gameService).moveUp(entityGame);
+        verify(gameService).moveUp(gameEntity);
         verify(gameTOValidator).validateGameTOWithId(game);
         verifyNoMoreInteractions(gameService, gameTOValidator);
         verifyZeroInteractions(converter);
@@ -418,11 +418,11 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Game entityGame = GameUtils.newGame(Integer.MAX_VALUE);
-        final List<Game> games = CollectionUtils.newList(entityGame, GameUtils.newGame(1));
+        final Game gameEntity = GameUtils.newGame(Integer.MAX_VALUE);
+        final List<Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGame(1));
         final GameTO game = GameUtils.newGameTO(Integer.MAX_VALUE);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveUp(game);
@@ -433,18 +433,18 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testMoveDown() {
-        final Game entityGame = GameUtils.newGame(1);
-        final List<Game> games = CollectionUtils.newList(entityGame, GameUtils.newGame(2));
+        final Game gameEntity = GameUtils.newGame(1);
+        final List<Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGame(2));
         final GameTO game = GameUtils.newGameTO(1);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveDown(game);
 
         verify(gameService).get(1);
         verify(gameService).getAll();
-        verify(gameService).moveDown(entityGame);
+        verify(gameService).moveDown(gameEntity);
         verify(gameTOValidator).validateGameTOWithId(game);
         verifyNoMoreInteractions(gameService, gameTOValidator);
         verifyZeroInteractions(converter);
@@ -485,11 +485,11 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Game entityGame = GameUtils.newGame(Integer.MAX_VALUE);
-        final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), entityGame);
+        final Game gameEntity = GameUtils.newGame(Integer.MAX_VALUE);
+        final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), gameEntity);
         final GameTO game = GameUtils.newGameTO(Integer.MAX_VALUE);
 
-        when(gameService.get(anyInt())).thenReturn(entityGame);
+        when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveDown(game);

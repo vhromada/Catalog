@@ -134,10 +134,10 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testGetProgram_ExistingProgram() {
-        final Program entityProgram = ProgramUtils.newProgram(1);
+        final Program programEntity = ProgramUtils.newProgram(1);
         final ProgramTO expectedProgram = ProgramUtils.newProgramTO(1);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
         when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(expectedProgram);
 
         final ProgramTO program = programFacade.getProgram(1);
@@ -146,7 +146,7 @@ public class ProgramFacadeImplTest {
         assertEquals(expectedProgram, program);
 
         verify(programService).get(1);
-        verify(converter).convert(entityProgram, ProgramTO.class);
+        verify(converter).convert(programEntity, ProgramTO.class);
         verifyNoMoreInteractions(programService, converter);
         verifyZeroInteractions(programTOValidator);
     }
@@ -180,14 +180,14 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testAdd() {
-        final Program entityProgram = ProgramUtils.newProgram(null);
+        final Program programEntity = ProgramUtils.newProgram(null);
         final ProgramTO program = ProgramUtils.newProgramTO(null);
 
-        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(entityProgram);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(programEntity);
 
         programFacade.add(program);
 
-        verify(programService).add(entityProgram);
+        verify(programService).add(programEntity);
         verify(converter).convert(program, Program.class);
         verify(programTOValidator).validateNewProgramTO(program);
         verifyNoMoreInteractions(programService, converter, programTOValidator);
@@ -218,16 +218,16 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Program entityProgram = ProgramUtils.newProgram(1);
+        final Program programEntity = ProgramUtils.newProgram(1);
         final ProgramTO program = ProgramUtils.newProgramTO(1);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
-        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(programEntity);
 
         programFacade.update(program);
 
         verify(programService).get(1);
-        verify(programService).update(entityProgram);
+        verify(programService).update(programEntity);
         verify(converter).convert(program, Program.class);
         verify(programTOValidator).validateExistingProgramTO(program);
         verifyNoMoreInteractions(programService, converter, programTOValidator);
@@ -268,15 +268,15 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testRemove() {
-        final Program entityProgram = ProgramUtils.newProgram(1);
+        final Program programEntity = ProgramUtils.newProgram(1);
         final ProgramTO program = ProgramUtils.newProgramTO(1);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
 
         programFacade.remove(program);
 
         verify(programService).get(1);
-        verify(programService).remove(entityProgram);
+        verify(programService).remove(programEntity);
         verify(programTOValidator).validateProgramTOWithId(program);
         verifyNoMoreInteractions(programService, programTOValidator);
         verifyZeroInteractions(converter);
@@ -317,15 +317,15 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testDuplicate() {
-        final Program entityProgram = ProgramUtils.newProgram(1);
+        final Program programEntity = ProgramUtils.newProgram(1);
         final ProgramTO program = ProgramUtils.newProgramTO(1);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
 
         programFacade.duplicate(program);
 
         verify(programService).get(1);
-        verify(programService).duplicate(entityProgram);
+        verify(programService).duplicate(programEntity);
         verify(programTOValidator).validateProgramTOWithId(program);
         verifyNoMoreInteractions(programService, programTOValidator);
         verifyZeroInteractions(converter);
@@ -366,18 +366,18 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testMoveUp() {
-        final Program entityProgram = ProgramUtils.newProgram(2);
-        final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), entityProgram);
+        final Program programEntity = ProgramUtils.newProgram(2);
+        final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), programEntity);
         final ProgramTO program = ProgramUtils.newProgramTO(2);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveUp(program);
 
         verify(programService).get(2);
         verify(programService).getAll();
-        verify(programService).moveUp(entityProgram);
+        verify(programService).moveUp(programEntity);
         verify(programTOValidator).validateProgramTOWithId(program);
         verifyNoMoreInteractions(programService, programTOValidator);
         verifyZeroInteractions(converter);
@@ -418,11 +418,11 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Program entityProgram = ProgramUtils.newProgram(Integer.MAX_VALUE);
-        final List<Program> programs = CollectionUtils.newList(entityProgram, ProgramUtils.newProgram(1));
+        final Program programEntity = ProgramUtils.newProgram(Integer.MAX_VALUE);
+        final List<Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgram(1));
         final ProgramTO program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveUp(program);
@@ -433,18 +433,18 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testMoveDown() {
-        final Program entityProgram = ProgramUtils.newProgram(1);
-        final List<Program> programs = CollectionUtils.newList(entityProgram, ProgramUtils.newProgram(2));
+        final Program programEntity = ProgramUtils.newProgram(1);
+        final List<Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgram(2));
         final ProgramTO program = ProgramUtils.newProgramTO(1);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveDown(program);
 
         verify(programService).get(1);
         verify(programService).getAll();
-        verify(programService).moveDown(entityProgram);
+        verify(programService).moveDown(programEntity);
         verify(programTOValidator).validateProgramTOWithId(program);
         verifyNoMoreInteractions(programService, programTOValidator);
         verifyZeroInteractions(converter);
@@ -485,11 +485,11 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Program entityProgram = ProgramUtils.newProgram(Integer.MAX_VALUE);
-        final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), entityProgram);
+        final Program programEntity = ProgramUtils.newProgram(Integer.MAX_VALUE);
+        final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), programEntity);
         final ProgramTO program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
 
-        when(programService.get(anyInt())).thenReturn(entityProgram);
+        when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveDown(program);

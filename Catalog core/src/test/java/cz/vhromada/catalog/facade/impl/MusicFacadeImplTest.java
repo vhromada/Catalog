@@ -135,10 +135,10 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testGetMusicById_ExistingMusic() {
-        final Music entityMusic = MusicUtils.newMusic(1);
+        final Music musicEntity = MusicUtils.newMusic(1);
         final MusicTO expectedMusic = MusicUtils.newMusicTO(1);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(converter.convert(any(Music.class), eq(MusicTO.class))).thenReturn(expectedMusic);
 
         final MusicTO music = musicFacade.getMusic(expectedMusic.getId());
@@ -147,7 +147,7 @@ public class MusicFacadeImplTest {
         assertEquals(expectedMusic, music);
 
         verify(musicService).get(expectedMusic.getId());
-        verify(converter).convert(entityMusic, MusicTO.class);
+        verify(converter).convert(musicEntity, MusicTO.class);
         verifyNoMoreInteractions(musicService, converter);
         verifyZeroInteractions(musicTOValidator);
     }
@@ -181,14 +181,14 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testAdd() {
-        final Music entityMusic = MusicUtils.newMusic(null);
+        final Music musicEntity = MusicUtils.newMusic(null);
         final MusicTO music = MusicUtils.newMusicTO(null);
 
-        when(converter.convert(any(MusicTO.class), eq(Music.class))).thenReturn(entityMusic);
+        when(converter.convert(any(MusicTO.class), eq(Music.class))).thenReturn(musicEntity);
 
         musicFacade.add(music);
 
-        verify(musicService).add(entityMusic);
+        verify(musicService).add(musicEntity);
         verify(converter).convert(music, Music.class);
         verify(musicTOValidator).validateNewMusicTO(music);
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
@@ -219,16 +219,16 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Music entityMusic = MusicUtils.newMusic(1);
+        final Music musicEntity = MusicUtils.newMusic(1);
         final MusicTO music = MusicUtils.newMusicTO(1);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
-        when(converter.convert(any(MusicTO.class), eq(Music.class))).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(converter.convert(any(MusicTO.class), eq(Music.class))).thenReturn(musicEntity);
 
         musicFacade.update(music);
 
         verify(musicService).get(1);
-        verify(musicService).update(entityMusic);
+        verify(musicService).update(musicEntity);
         verify(converter).convert(music, Music.class);
         verify(musicTOValidator).validateExistingMusicTO(music);
         verifyNoMoreInteractions(musicService, converter, musicTOValidator);
@@ -269,15 +269,15 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testRemove() {
-        final Music entityMusic = MusicUtils.newMusic(1);
+        final Music musicEntity = MusicUtils.newMusic(1);
         final MusicTO music = MusicUtils.newMusicTO(1);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
 
         musicFacade.remove(music);
 
         verify(musicService).get(1);
-        verify(musicService).remove(entityMusic);
+        verify(musicService).remove(musicEntity);
         verify(musicTOValidator).validateMusicTOWithId(music);
         verifyNoMoreInteractions(musicService, musicTOValidator);
         verifyZeroInteractions(converter);
@@ -318,15 +318,15 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testDuplicate() {
-        final Music entityMusic = MusicUtils.newMusic(1);
+        final Music musicEntity = MusicUtils.newMusic(1);
         final MusicTO music = MusicUtils.newMusicTO(1);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
 
         musicFacade.duplicate(music);
 
         verify(musicService).get(1);
-        verify(musicService).duplicate(entityMusic);
+        verify(musicService).duplicate(musicEntity);
         verify(musicTOValidator).validateMusicTOWithId(music);
         verifyNoMoreInteractions(musicService, musicTOValidator);
         verifyZeroInteractions(converter);
@@ -367,18 +367,18 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testMoveUp() {
-        final Music entityMusic = MusicUtils.newMusic(2);
-        final List<Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), entityMusic);
+        final Music musicEntity = MusicUtils.newMusic(2);
+        final List<Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), musicEntity);
         final MusicTO music = MusicUtils.newMusicTO(2);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
 
         musicFacade.moveUp(music);
 
         verify(musicService).get(2);
         verify(musicService).getAll();
-        verify(musicService).moveUp(entityMusic);
+        verify(musicService).moveUp(musicEntity);
         verify(musicTOValidator).validateMusicTOWithId(music);
         verifyNoMoreInteractions(musicService, musicTOValidator);
         verifyZeroInteractions(converter);
@@ -419,11 +419,11 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Music entityMusic = MusicUtils.newMusic(Integer.MAX_VALUE);
-        final List<Music> musics = CollectionUtils.newList(entityMusic, MusicUtils.newMusic(1));
+        final Music musicEntity = MusicUtils.newMusic(Integer.MAX_VALUE);
+        final List<Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusic(1));
         final MusicTO music = MusicUtils.newMusicTO(Integer.MAX_VALUE);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
 
         musicFacade.moveUp(music);
@@ -434,18 +434,18 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testMoveDown() {
-        final Music entityMusic = MusicUtils.newMusic(1);
-        final List<Music> musics = CollectionUtils.newList(entityMusic, MusicUtils.newMusic(2));
+        final Music musicEntity = MusicUtils.newMusic(1);
+        final List<Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusic(2));
         final MusicTO music = MusicUtils.newMusicTO(1);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
 
         musicFacade.moveDown(music);
 
         verify(musicService).get(1);
         verify(musicService).getAll();
-        verify(musicService).moveDown(entityMusic);
+        verify(musicService).moveDown(musicEntity);
         verify(musicTOValidator).validateMusicTOWithId(music);
         verifyNoMoreInteractions(musicService, musicTOValidator);
         verifyZeroInteractions(converter);
@@ -486,11 +486,11 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Music entityMusic = MusicUtils.newMusic(Integer.MAX_VALUE);
-        final List<Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), entityMusic);
+        final Music musicEntity = MusicUtils.newMusic(Integer.MAX_VALUE);
+        final List<Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), musicEntity);
         final MusicTO music = MusicUtils.newMusicTO(Integer.MAX_VALUE);
 
-        when(musicService.get(anyInt())).thenReturn(entityMusic);
+        when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
 
         musicFacade.moveDown(music);

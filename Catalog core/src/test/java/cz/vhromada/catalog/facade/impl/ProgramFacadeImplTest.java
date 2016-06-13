@@ -104,6 +104,7 @@ public class ProgramFacadeImplTest {
 
         verify(programService).newData();
         verifyNoMoreInteractions(programService);
+        verifyZeroInteractions(converter, programTOValidator);
     }
 
     /**
@@ -113,6 +114,7 @@ public class ProgramFacadeImplTest {
     public void testGetPrograms() {
         final List<Program> programList = CollectionUtils.newList(ProgramUtils.newProgram(1), ProgramUtils.newProgram(2));
         final List<ProgramTO> expectedPrograms = CollectionUtils.newList(ProgramUtils.newProgramTO(1), ProgramUtils.newProgramTO(2));
+
         when(programService.getAll()).thenReturn(programList);
         when(converter.convertCollection(anyListOf(Program.class), eq(ProgramTO.class))).thenReturn(expectedPrograms);
 
@@ -134,6 +136,7 @@ public class ProgramFacadeImplTest {
     public void testGetProgram_ExistingProgram() {
         final Program entityProgram = ProgramUtils.newProgram(1);
         final ProgramTO expectedProgram = ProgramUtils.newProgramTO(1);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
         when(converter.convert(any(Program.class), eq(ProgramTO.class))).thenReturn(expectedProgram);
 
@@ -179,6 +182,7 @@ public class ProgramFacadeImplTest {
     public void testAdd() {
         final Program entityProgram = ProgramUtils.newProgram(null);
         final ProgramTO program = ProgramUtils.newProgramTO(null);
+
         when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(entityProgram);
 
         programFacade.add(program);
@@ -216,6 +220,7 @@ public class ProgramFacadeImplTest {
     public void testUpdate() {
         final Program entityProgram = ProgramUtils.newProgram(1);
         final ProgramTO program = ProgramUtils.newProgramTO(1);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
         when(converter.convert(any(ProgramTO.class), eq(Program.class))).thenReturn(entityProgram);
 
@@ -265,6 +270,7 @@ public class ProgramFacadeImplTest {
     public void testRemove() {
         final Program entityProgram = ProgramUtils.newProgram(1);
         final ProgramTO program = ProgramUtils.newProgramTO(1);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
 
         programFacade.remove(program);
@@ -313,6 +319,7 @@ public class ProgramFacadeImplTest {
     public void testDuplicate() {
         final Program entityProgram = ProgramUtils.newProgram(1);
         final ProgramTO program = ProgramUtils.newProgramTO(1);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
 
         programFacade.duplicate(program);
@@ -362,6 +369,7 @@ public class ProgramFacadeImplTest {
         final Program entityProgram = ProgramUtils.newProgram(2);
         final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), entityProgram);
         final ProgramTO program = ProgramUtils.newProgramTO(2);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
         when(programService.getAll()).thenReturn(programs);
 
@@ -413,6 +421,7 @@ public class ProgramFacadeImplTest {
         final Program entityProgram = ProgramUtils.newProgram(Integer.MAX_VALUE);
         final List<Program> programs = CollectionUtils.newList(entityProgram, ProgramUtils.newProgram(1));
         final ProgramTO program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
         when(programService.getAll()).thenReturn(programs);
 
@@ -427,6 +436,7 @@ public class ProgramFacadeImplTest {
         final Program entityProgram = ProgramUtils.newProgram(1);
         final List<Program> programs = CollectionUtils.newList(entityProgram, ProgramUtils.newProgram(2));
         final ProgramTO program = ProgramUtils.newProgramTO(1);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
         when(programService.getAll()).thenReturn(programs);
 
@@ -478,6 +488,7 @@ public class ProgramFacadeImplTest {
         final Program entityProgram = ProgramUtils.newProgram(Integer.MAX_VALUE);
         final List<Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), entityProgram);
         final ProgramTO program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
+
         when(programService.get(anyInt())).thenReturn(entityProgram);
         when(programService.getAll()).thenReturn(programs);
 
@@ -504,6 +515,7 @@ public class ProgramFacadeImplTest {
         final Program program1 = ProgramUtils.newProgram(1);
         final Program program2 = ProgramUtils.newProgram(2);
         final int expectedCount = program1.getMediaCount() + program2.getMediaCount();
+
         when(programService.getAll()).thenReturn(CollectionUtils.newList(program1, program2));
 
         assertEquals(expectedCount, programFacade.getTotalMediaCount());

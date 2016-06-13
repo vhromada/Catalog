@@ -9,6 +9,7 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ EpisodeFacadeImplTest.class, GameFacadeImplTest.class, SongFacadeImplTest.class, ProgramFacadeImplTest.class, GenreFacadeImplTest.class })
+@Suite.SuiteClasses({ ShowFacadeImplTest.class, SeasonFacadeImplTest.class, EpisodeFacadeImplTest.class, GameFacadeImplTest.class, MusicFacadeImplTest.class,
+        SongFacadeImplTest.class, ProgramFacadeImplTest.class, GenreFacadeImplTest.class })
 public class FacadeImplSuite {
 }

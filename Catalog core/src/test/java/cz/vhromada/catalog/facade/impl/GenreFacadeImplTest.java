@@ -105,6 +105,7 @@ public class GenreFacadeImplTest {
 
         verify(genreService).newData();
         verifyNoMoreInteractions(genreService);
+        verifyZeroInteractions(converter, genreTOValidator);
     }
 
     /**
@@ -114,6 +115,7 @@ public class GenreFacadeImplTest {
     public void testGetGenres() {
         final List<Genre> genreList = CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(2));
         final List<GenreTO> expectedGenres = CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(2));
+
         when(genreService.getAll()).thenReturn(genreList);
         when(converter.convertCollection(anyListOf(Genre.class), eq(GenreTO.class))).thenReturn(expectedGenres);
 
@@ -135,6 +137,7 @@ public class GenreFacadeImplTest {
     public void testGetGenre_ExistingGenre() {
         final Genre entityGenre = GenreUtils.newGenre(1);
         final GenreTO expectedGenre = GenreUtils.newGenreTO(1);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
         when(converter.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(expectedGenre);
 
@@ -180,6 +183,7 @@ public class GenreFacadeImplTest {
     public void testAdd() {
         final Genre entityGenre = GenreUtils.newGenre(null);
         final GenreTO genre = GenreUtils.newGenreTO(null);
+
         when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(entityGenre);
 
         genreFacade.add(genre);
@@ -250,6 +254,7 @@ public class GenreFacadeImplTest {
     public void testUpdate() {
         final Genre entityGenre = GenreUtils.newGenre(1);
         final GenreTO genre = GenreUtils.newGenreTO(1);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
         when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(entityGenre);
 
@@ -299,6 +304,7 @@ public class GenreFacadeImplTest {
     public void testRemove() {
         final Genre entityGenre = GenreUtils.newGenre(1);
         final GenreTO genre = GenreUtils.newGenreTO(1);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
 
         genreFacade.remove(genre);
@@ -347,6 +353,7 @@ public class GenreFacadeImplTest {
     public void testDuplicate() {
         final Genre entityGenre = GenreUtils.newGenre(1);
         final GenreTO genre = GenreUtils.newGenreTO(1);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
 
         genreFacade.duplicate(genre);
@@ -396,6 +403,7 @@ public class GenreFacadeImplTest {
         final Genre entityGenre = GenreUtils.newGenre(2);
         final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), entityGenre);
         final GenreTO genre = GenreUtils.newGenreTO(2);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
         when(genreService.getAll()).thenReturn(genres);
 
@@ -447,6 +455,7 @@ public class GenreFacadeImplTest {
         final Genre entityGenre = GenreUtils.newGenre(Integer.MAX_VALUE);
         final List<Genre> genres = CollectionUtils.newList(entityGenre, GenreUtils.newGenre(1));
         final GenreTO genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
         when(genreService.getAll()).thenReturn(genres);
 
@@ -461,6 +470,7 @@ public class GenreFacadeImplTest {
         final Genre entityGenre = GenreUtils.newGenre(1);
         final List<Genre> genres = CollectionUtils.newList(entityGenre, GenreUtils.newGenre(2));
         final GenreTO genre = GenreUtils.newGenreTO(1);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
         when(genreService.getAll()).thenReturn(genres);
 
@@ -512,6 +522,7 @@ public class GenreFacadeImplTest {
         final Genre entityGenre = GenreUtils.newGenre(Integer.MAX_VALUE);
         final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), entityGenre);
         final GenreTO genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
+
         when(genreService.get(anyInt())).thenReturn(entityGenre);
         when(genreService.getAll()).thenReturn(genres);
 

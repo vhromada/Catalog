@@ -204,6 +204,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     @Test
     public void testAdd_CachedData() {
         final T data = getAddItem();
+
         when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
         when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -226,6 +227,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     @Test
     public void testAdd_NotCachedData() {
         final T data = getAddItem();
+
         when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
         when(cache.get(anyString())).thenReturn(null);
 
@@ -258,6 +260,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     public void testUpdate_CachedData() {
         final T data = dataList.get(0);
         data.setPosition(10);
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -279,6 +282,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     public void testUpdate_NotCachedData() {
         final T data = dataList.get(0);
         data.setPosition(10);
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(null);
 
@@ -308,6 +312,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     @Test
     public void testRemove_CachedData() {
         final T data = dataList.get(0);
+
         when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.remove(data);
@@ -327,6 +332,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     @Test
     public void testRemove_NotCachedData() {
         final T data = dataList.get(0);
+
         when(cache.get(anyString())).thenReturn(null);
 
         catalogService.remove(data);
@@ -356,6 +362,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     public void testDuplicate_CachedData() {
         final T copy = getCopyItem();
         final ArgumentCaptor<T> copyArgumentCaptor = ArgumentCaptor.forClass(getItemClass());
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -380,6 +387,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     public void testDuplicate_NotCachedData() {
         final T copy = getCopyItem();
         final ArgumentCaptor<T> copyArgumentCaptor = ArgumentCaptor.forClass(getItemClass());
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(null);
 
@@ -415,6 +423,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -439,6 +448,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(null);
 
@@ -472,6 +482,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -496,6 +507,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
+
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(anyString())).thenReturn(null);
 

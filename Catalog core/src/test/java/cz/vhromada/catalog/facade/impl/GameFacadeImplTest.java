@@ -104,6 +104,7 @@ public class GameFacadeImplTest {
 
         verify(gameService).newData();
         verifyNoMoreInteractions(gameService);
+        verifyZeroInteractions(converter, gameTOValidator);
     }
 
     /**
@@ -113,6 +114,7 @@ public class GameFacadeImplTest {
     public void testGetGames() {
         final List<Game> gameList = CollectionUtils.newList(GameUtils.newGame(1), GameUtils.newGame(2));
         final List<GameTO> expectedGames = CollectionUtils.newList(GameUtils.newGameTO(1), GameUtils.newGameTO(2));
+
         when(gameService.getAll()).thenReturn(gameList);
         when(converter.convertCollection(anyListOf(Game.class), eq(GameTO.class))).thenReturn(expectedGames);
 
@@ -134,6 +136,7 @@ public class GameFacadeImplTest {
     public void testGetGame_ExistingGame() {
         final Game entityGame = GameUtils.newGame(1);
         final GameTO expectedGame = GameUtils.newGameTO(1);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
         when(converter.convert(any(Game.class), eq(GameTO.class))).thenReturn(expectedGame);
 
@@ -179,6 +182,7 @@ public class GameFacadeImplTest {
     public void testAdd() {
         final Game entityGame = GameUtils.newGame(null);
         final GameTO game = GameUtils.newGameTO(null);
+
         when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(entityGame);
 
         gameFacade.add(game);
@@ -216,6 +220,7 @@ public class GameFacadeImplTest {
     public void testUpdate() {
         final Game entityGame = GameUtils.newGame(1);
         final GameTO game = GameUtils.newGameTO(1);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
         when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(entityGame);
 
@@ -265,6 +270,7 @@ public class GameFacadeImplTest {
     public void testRemove() {
         final Game entityGame = GameUtils.newGame(1);
         final GameTO game = GameUtils.newGameTO(1);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
 
         gameFacade.remove(game);
@@ -313,6 +319,7 @@ public class GameFacadeImplTest {
     public void testDuplicate() {
         final Game entityGame = GameUtils.newGame(1);
         final GameTO game = GameUtils.newGameTO(1);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
 
         gameFacade.duplicate(game);
@@ -362,6 +369,7 @@ public class GameFacadeImplTest {
         final Game entityGame = GameUtils.newGame(2);
         final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), entityGame);
         final GameTO game = GameUtils.newGameTO(2);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
         when(gameService.getAll()).thenReturn(games);
 
@@ -413,6 +421,7 @@ public class GameFacadeImplTest {
         final Game entityGame = GameUtils.newGame(Integer.MAX_VALUE);
         final List<Game> games = CollectionUtils.newList(entityGame, GameUtils.newGame(1));
         final GameTO game = GameUtils.newGameTO(Integer.MAX_VALUE);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
         when(gameService.getAll()).thenReturn(games);
 
@@ -427,6 +436,7 @@ public class GameFacadeImplTest {
         final Game entityGame = GameUtils.newGame(1);
         final List<Game> games = CollectionUtils.newList(entityGame, GameUtils.newGame(2));
         final GameTO game = GameUtils.newGameTO(1);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
         when(gameService.getAll()).thenReturn(games);
 
@@ -478,6 +488,7 @@ public class GameFacadeImplTest {
         final Game entityGame = GameUtils.newGame(Integer.MAX_VALUE);
         final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), entityGame);
         final GameTO game = GameUtils.newGameTO(Integer.MAX_VALUE);
+
         when(gameService.get(anyInt())).thenReturn(entityGame);
         when(gameService.getAll()).thenReturn(games);
 
@@ -504,6 +515,7 @@ public class GameFacadeImplTest {
         final Game game1 = GameUtils.newGame(1);
         final Game game2 = GameUtils.newGame(2);
         final int expectedCount = game1.getMediaCount() + game2.getMediaCount();
+
         when(gameService.getAll()).thenReturn(CollectionUtils.newList(game1, game2));
 
         assertEquals(expectedCount, gameFacade.getTotalMediaCount());

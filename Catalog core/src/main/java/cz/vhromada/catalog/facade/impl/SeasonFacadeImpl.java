@@ -123,10 +123,10 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Override
     public void update(final SeasonTO season) {
         seasonTOValidator.validateExistingSeasonTO(season);
-        final SeasonTO seasonTO = getSeason(season.getId());
-        Validators.validateExists(seasonTO, SEASON_TO_ARGUMENT);
-
         final Show show = getShow(season);
+        final Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+
         updateSeason(show, converter.convert(season, Season.class));
 
         showService.update(show);
@@ -140,11 +140,12 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Override
     public void remove(final SeasonTO season) {
         seasonTOValidator.validateSeasonTOWithId(season);
-        final SeasonTO seasonTO = getSeason(season.getId());
-        Validators.validateExists(seasonTO, SEASON_TO_ARGUMENT);
-
         final Show show = getShow(season);
-        final List<Season> seasons = show.getSeasons().stream().filter(seasonEntity -> !seasonEntity.getId().equals(season.getId()))
+        final Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+        assert seasonEntity != null;
+
+        final List<Season> seasons = show.getSeasons().stream().filter(seasonValue -> !seasonValue.getId().equals(season.getId()))
                 .collect(Collectors.toList());
         show.setSeasons(seasons);
 
@@ -159,10 +160,11 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Override
     public void duplicate(final SeasonTO season) {
         seasonTOValidator.validateSeasonTOWithId(season);
-        final Season seasonEntity = getSeasonEntity(season.getId());
-        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
-
         final Show show = getShow(season);
+        final Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+        assert seasonEntity != null;
+
         final Season newSeason = CatalogUtils.duplicateSeason(seasonEntity);
         show.getSeasons().add(newSeason);
 
@@ -201,6 +203,27 @@ public class SeasonFacadeImpl implements SeasonFacade {
         Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
 
         return CollectionUtils.getSortedData(converter.convertCollection(showEntity.getSeasons(), SeasonTO.class));
+    }
+
+    /**
+     * Returns season with ID.
+     *
+     * @param id    ID
+     * @param show show
+     * @return season with ID
+     */
+    private static Season getSeason(final Integer id, final Show show) {
+        if (show == null) {
+            return null;
+        }
+
+        for (final Season season : show.getSeasons()) {
+            if (id.equals(season.getId())) {
+                return season;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -255,7 +278,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
             }
         }
 
-        throw new IllegalStateException("Unknown show");
+        return null;
     }
 
     /**
@@ -266,11 +289,11 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     private void move(final SeasonTO season, final boolean up) {
         seasonTOValidator.validateSeasonTOWithId(season);
-        final SeasonTO seasonTO = getSeason(season.getId());
-        Validators.validateExists(seasonTO, SEASON_TO_ARGUMENT);
         final Show show = getShow(season);
+        final Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+        assert seasonEntity != null;
         final List<Season> seasons = CollectionUtils.getSortedData(show.getSeasons());
-        final Season seasonEntity = converter.convert(season, Season.class);
         if (up) {
             Validators.validateMoveUp(seasons, seasonEntity, SEASON_TO_ARGUMENT);
         } else {

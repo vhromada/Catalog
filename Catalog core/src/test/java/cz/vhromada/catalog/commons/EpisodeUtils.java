@@ -215,6 +215,22 @@ public final class EpisodeUtils {
     }
 
     /**
+     * Asserts episodes deep equals.
+     *
+     * @param expected expected list of TO for episode
+     * @param actual   actual episodes
+     */
+    public static void assertEpisodeListDeepEquals(final List<EpisodeTO> expected, final List<Episode> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertEpisodeDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
      * Asserts episode deep equals.
      *
      * @param expected expected episode

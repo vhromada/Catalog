@@ -110,6 +110,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
         assert seasonEntity != null;
 
         final Episode episodeEntity = converter.convert(episode, Episode.class);
+        episodeEntity.setPosition(Integer.MAX_VALUE);
         seasonEntity.getEpisodes().add(episodeEntity);
 
         showService.update(show);

@@ -38,7 +38,7 @@ public final class SeasonUtils {
     /**
      * Count of seasons in show
      */
-    private static final int SEASONS_PER_SHOW_COUNT = 3;
+    public static final int SEASONS_PER_SHOW_COUNT = 3;
 
     /**
      * Creates a new instance of SeasonUtils.

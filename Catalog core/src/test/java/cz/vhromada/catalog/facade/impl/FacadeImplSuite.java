@@ -11,6 +11,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ MovieFacadeImplTest.class, ShowFacadeImplTest.class, SeasonFacadeImplTest.class, EpisodeFacadeImplTest.class, GameFacadeImplTest.class,
         MusicFacadeImplTest.class, SongFacadeImplTest.class, ProgramFacadeImplTest.class, GenreFacadeImplTest.class,
-        GameFacadeImplIntegrationTest.class, ProgramFacadeImplIntegrationTest.class })
+        EpisodeFacadeImplIntegrationTest.class, GameFacadeImplIntegrationTest.class, ProgramFacadeImplIntegrationTest.class })
 public class FacadeImplSuite {
 }

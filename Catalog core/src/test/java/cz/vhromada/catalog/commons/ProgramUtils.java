@@ -194,6 +194,22 @@ public final class ProgramUtils {
     }
 
     /**
+     * Asserts programs deep equals.
+     *
+     * @param expected expected list of TO for program
+     * @param actual   actual programs
+     */
+    public static void assertProgramListDeepEquals(final List<ProgramTO> expected, final List<Program> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertProgramDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
      * Asserts program deep equals.
      *
      * @param expected expected program

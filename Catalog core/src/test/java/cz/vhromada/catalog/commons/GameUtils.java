@@ -209,6 +209,22 @@ public final class GameUtils {
     }
 
     /**
+     * Asserts games deep equals.
+     *
+     * @param expected expected list of TO for game
+     * @param actual   actual games
+     */
+    public static void assertGameListDeepEquals(final List<GameTO> expected, final List<Game> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertGameDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
      * Asserts game deep equals.
      *
      * @param expected expected game

@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testRepositoryContext.xml")
 @Transactional
-@Rollback
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class MovieRepositoryIntegrationTest {
 
     /**
@@ -84,7 +83,6 @@ public class MovieRepositoryIntegrationTest {
      * Test method for add movie.
      */
     @Test
-    @DirtiesContext
     public void testAdd() {
         final Movie movie = MovieUtils.newMovie(null);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(null)));
@@ -129,7 +127,6 @@ public class MovieRepositoryIntegrationTest {
      * Test method for update movie with added medium.
      */
     @Test
-    @DirtiesContext
     public void testUpdate_AddedMedium() {
         final Movie movie = MovieUtils.updateMovie(entityManager, 1);
         movie.getMedia().add(MediumUtils.newMedium(null));

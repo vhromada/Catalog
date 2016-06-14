@@ -1,19 +1,3 @@
-DROP TABLE programs;
-DROP TABLE songs;
-DROP TABLE music;
-DROP TABLE games;
-DROP TABLE episodes;
-DROP TABLE season_subtitles;
-DROP TABLE seasons;
-DROP TABLE tv_show_genres;
-DROP TABLE tv_shows;
-DROP TABLE movie_subtitles;
-DROP TABLE movie_media;
-DROP TABLE movie_genres;
-DROP TABLE movies;
-DROP TABLE media;
-DROP TABLE genres;
-
 CREATE TABLE genres (
   id         INTEGER      NOT NULL CONSTRAINT genres_pk PRIMARY KEY,
   genre_name VARCHAR(200) NOT NULL CONSTRAINT genres_genre_name_ck CHECK (LENGTH(genre_name) > 0),
@@ -150,17 +134,6 @@ CREATE TABLE programs (
   note         VARCHAR(100) NOT NULL,
   position     INTEGER      NOT NULL CONSTRAINT programs_position_ck CHECK (position >= 0)
 );
-
-DROP SEQUENCE movies_sq;
-DROP SEQUENCE media_sq;
-DROP SEQUENCE tv_shows_sq;
-DROP SEQUENCE seasons_sq;
-DROP SEQUENCE episodes_sq;
-DROP SEQUENCE games_sq;
-DROP SEQUENCE music_sq;
-DROP SEQUENCE songs_sq;
-DROP SEQUENCE programs_sq;
-DROP SEQUENCE genres_sq;
 
 CREATE SEQUENCE movies_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE media_sq START WITH 1 INCREMENT BY 1;

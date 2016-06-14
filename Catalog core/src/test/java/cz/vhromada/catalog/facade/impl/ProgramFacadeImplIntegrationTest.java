@@ -23,7 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for class {@link ProgramFacadeImpl}.
+ * A class represents integration test for class {@link ProgramFacadeImpl}.
  *
  * @author Vladimir Hromada
  */

@@ -204,6 +204,22 @@ public final class SongUtils {
     }
 
     /**
+     * Asserts songs deep equals.
+     *
+     * @param expected expected list of TO for song
+     * @param actual   actual songs
+     */
+    public static void assertSongListDeepEquals(final List<SongTO> expected, final List<Song> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertSongDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
      * Asserts song deep equals.
      *
      * @param expected expected song

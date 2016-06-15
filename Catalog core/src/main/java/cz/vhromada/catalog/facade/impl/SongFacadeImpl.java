@@ -110,6 +110,7 @@ public class SongFacadeImpl implements SongFacade {
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
         final Song songEntity = converter.convert(song, Song.class);
+        songEntity.setPosition(Integer.MAX_VALUE);
         musicEntity.getSongs().add(songEntity);
 
         musicService.update(musicEntity);

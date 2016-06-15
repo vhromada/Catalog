@@ -110,6 +110,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
         Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
 
         final Season seasonEntity = converter.convert(season, Season.class);
+        seasonEntity.setPosition(Integer.MAX_VALUE);
         showEntity.getSeasons().add(seasonEntity);
 
         showService.update(showEntity);
@@ -126,8 +127,17 @@ public class SeasonFacadeImpl implements SeasonFacade {
         final Show show = getShow(season);
         final Season seasonEntity = getSeason(season.getId(), show);
         Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+        assert seasonEntity != null;
 
-        updateSeason(show, converter.convert(season, Season.class));
+        seasonEntity.setNumber(season.getNumber());
+        seasonEntity.setStartYear(season.getStartYear());
+        seasonEntity.setEndYear(season.getEndYear());
+        seasonEntity.setLanguage(season.getLanguage());
+        seasonEntity.setSubtitles(new ArrayList<>(season.getSubtitles()));
+        seasonEntity.setNote(season.getNote());
+        seasonEntity.setPosition(season.getPosition());
+
+        updateSeason(show, seasonEntity);
 
         showService.update(show);
     }

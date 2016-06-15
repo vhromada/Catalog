@@ -121,6 +121,21 @@ public final class GenreUtils {
     }
 
     /**
+     * Returns TO for genre for index.
+     *
+     * @param index index
+     * @return TO for genre for index
+     */
+    public static GenreTO getGenreTO(final int index) {
+        final GenreTO genre = new GenreTO();
+        genre.setId(index);
+        genre.setName("Genre " + index + " name");
+        genre.setPosition(index - 1);
+
+        return genre;
+    }
+
+    /**
      * Returns genre.
      *
      * @param entityManager entity manager

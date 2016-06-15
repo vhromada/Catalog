@@ -128,12 +128,27 @@ public class ShowFacadeImpl implements ShowFacade {
     @Override
     public void update(final ShowTO show) {
         showTOValidator.validateExistingShowTO(show);
-        Validators.validateExists(showService.get(show.getId()), SHOW_TO_ARGUMENT);
+        final Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+        assert showEntity != null;
+        showEntity.getGenres().clear();
         for (final GenreTO genre : show.getGenres()) {
-            Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
+            final Genre genreEntity = genreService.get(genre.getId());
+            Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
+            showEntity.getGenres().add(genreEntity);
         }
 
-        showService.update(converter.convert(show, Show.class));
+        showEntity.setCzechName(show.getCzechName());
+        showEntity.setOriginalName(show.getOriginalName());
+        showEntity.setCsfd(show.getCsfd());
+        showEntity.setImdbCode(show.getImdbCode());
+        showEntity.setWikiEn(show.getWikiEn());
+        showEntity.setWikiCz(show.getWikiCz());
+        showEntity.setPicture(show.getPicture());
+        showEntity.setNote(show.getNote());
+        showEntity.setPosition(show.getPosition());
+
+        showService.update(showEntity);
     }
 
     /**

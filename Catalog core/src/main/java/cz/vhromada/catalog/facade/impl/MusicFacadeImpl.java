@@ -106,9 +106,18 @@ public class MusicFacadeImpl implements MusicFacade {
     @Override
     public void update(final MusicTO music) {
         musicTOValidator.validateExistingMusicTO(music);
-        Validators.validateExists(musicService.get(music.getId()), MUSIC_TO_ARGUMENT);
+        final Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
+        assert musicEntity != null;
 
-        musicService.update(converter.convert(music, Music.class));
+        musicEntity.setName(music.getName());
+        musicEntity.setWikiEn(music.getWikiEn());
+        musicEntity.setWikiCz(music.getWikiCz());
+        musicEntity.setMediaCount(music.getMediaCount());
+        musicEntity.setNote(music.getNote());
+        musicEntity.setPosition(music.getPosition());
+
+        musicService.update(musicEntity);
     }
 
     /**

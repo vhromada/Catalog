@@ -30,6 +30,7 @@ import cz.vhromada.validators.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -219,19 +220,20 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Music musicEntity = MusicUtils.newMusic(1);
         final MusicTO music = MusicUtils.newMusicTO(1);
+        final ArgumentCaptor<Music> musicArgumentCaptor = ArgumentCaptor.forClass(Music.class);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
-        when(converter.convert(any(MusicTO.class), eq(Music.class))).thenReturn(musicEntity);
+        when(musicService.get(anyInt())).thenReturn(MusicUtils.newMusic(1));
 
         musicFacade.update(music);
 
         verify(musicService).get(1);
-        verify(musicService).update(musicEntity);
-        verify(converter).convert(music, Music.class);
+        verify(musicService).update(musicArgumentCaptor.capture());
         verify(musicTOValidator).validateExistingMusicTO(music);
-        verifyNoMoreInteractions(musicService, converter, musicTOValidator);
+        verifyNoMoreInteractions(musicService, musicTOValidator);
+        verifyZeroInteractions(converter);
+
+        MusicUtils.assertMusicDeepEquals(MusicUtils.newMusic(1), musicArgumentCaptor.getValue());
     }
 
     /**

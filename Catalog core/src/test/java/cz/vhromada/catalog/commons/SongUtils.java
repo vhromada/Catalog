@@ -34,14 +34,14 @@ public final class SongUtils {
     public static final int SONGS_COUNT = 9;
 
     /**
+     * Count of songs in music
+     */
+    public static final int SONGS_PER_MUSIC_COUNT = 3;
+
+    /**
      * Multipliers for length
      */
     private static final int[] LENGTH_MULTIPLIERS = { 1, 10, 100 };
-
-    /**
-     * Count of songs in music
-     */
-    private static final int SONGS_PER_MUSIC_COUNT = 3;
 
     /**
      * Creates a new instance of SongUtils.
@@ -204,6 +204,21 @@ public final class SongUtils {
     }
 
     /**
+     * Asserts song deep equals.
+     *
+     * @param expected expected song
+     * @param actual   actual song
+     */
+    public static void assertSongDeepEquals(final Song expected, final Song actual) {
+        assertNotNull(actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getLength(), actual.getLength());
+        assertEquals(expected.getNote(), actual.getNote());
+        assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
+    /**
      * Asserts songs deep equals.
      *
      * @param expected expected list of TO for song
@@ -217,21 +232,6 @@ public final class SongUtils {
                 assertSongDeepEquals(expected.get(i), actual.get(i));
             }
         }
-    }
-
-    /**
-     * Asserts song deep equals.
-     *
-     * @param expected expected song
-     * @param actual   actual song
-     */
-    public static void assertSongDeepEquals(final Song expected, final Song actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getLength(), actual.getLength());
-        assertEquals(expected.getNote(), actual.getNote());
-        assertEquals(expected.getPosition(), actual.getPosition());
     }
 
     /**

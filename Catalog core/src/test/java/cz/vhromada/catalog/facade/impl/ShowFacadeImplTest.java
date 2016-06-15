@@ -35,6 +35,7 @@ import cz.vhromada.validators.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -252,23 +253,24 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Show showEntity = ShowUtils.newShow(null);
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final ShowTO show = ShowUtils.newShowTO(1);
+        final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(anyInt())).thenReturn(ShowUtils.newShow(1));
         when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
-        when(converter.convert(any(ShowTO.class), eq(Show.class))).thenReturn(showEntity);
 
         showFacade.update(show);
 
         verify(showService).get(show.getId());
-        verify(showService).update(showEntity);
+        verify(showService).update(showArgumentCaptor.capture());
         for (final GenreTO genre : show.getGenres()) {
             verify(genreService).get(genre.getId());
         }
-        verify(converter).convert(show, Show.class);
         verify(showTOValidator).validateExistingShowTO(show);
-        verifyNoMoreInteractions(showService, genreService, converter, showTOValidator);
+        verifyNoMoreInteractions(showService, genreService, showTOValidator);
+        verifyZeroInteractions(converter);
+
+        ShowUtils.assertShowDeepEquals(ShowUtils.newShow(1), showArgumentCaptor.getValue());
     }
 
     /**

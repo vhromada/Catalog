@@ -246,16 +246,14 @@ public class SeasonFacadeImplTest {
         final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
-        when(converter.convert(any(SeasonTO.class), eq(Season.class))).thenReturn(seasonEntity);
 
         seasonFacade.update(season);
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(converter).convert(season, Season.class);
         verify(seasonTOValidator).validateExistingSeasonTO(season);
-        verifyNoMoreInteractions(showService, converter, seasonTOValidator);
-        verifyZeroInteractions(showTOValidator);
+        verifyNoMoreInteractions(showService, seasonTOValidator);
+        verifyZeroInteractions(converter, showTOValidator);
 
         ShowUtils.assertShowDeepEquals(ShowUtils.newShowWithSeasons(1), showArgumentCaptor.getValue());
     }

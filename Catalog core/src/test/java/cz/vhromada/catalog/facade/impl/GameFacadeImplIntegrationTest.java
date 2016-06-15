@@ -98,7 +98,7 @@ public class GameFacadeImplIntegrationTest {
         gameFacade.add(GameUtils.newGameTO(null));
 
         final Game addedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1);
-        GameUtils.assertGameDeepEquals(GameUtils.newGameTO(GameUtils.GAMES_COUNT + 1), addedGame);
+        GameUtils.assertGameDeepEquals(GameUtils.newGame(GameUtils.GAMES_COUNT + 1), addedGame);
 
         assertEquals(GameUtils.GAMES_COUNT + 1, GameUtils.getGamesCount(entityManager));
     }

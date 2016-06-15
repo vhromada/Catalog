@@ -98,7 +98,7 @@ public class ProgramFacadeImplIntegrationTest {
         programFacade.add(ProgramUtils.newProgramTO(null));
 
         final Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
-        ProgramUtils.assertProgramDeepEquals(ProgramUtils.newProgramTO(ProgramUtils.PROGRAMS_COUNT + 1), addedProgram);
+        ProgramUtils.assertProgramDeepEquals(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT + 1), addedProgram);
 
         assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, ProgramUtils.getProgramsCount(entityManager));
     }

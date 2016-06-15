@@ -48,6 +48,7 @@ public class ShowServiceImpl extends AbstractCatalogService<Show> {
         newShow.setWikiCz(data.getWikiCz());
         newShow.setPicture(data.getPicture());
         newShow.setNote(data.getNote());
+        newShow.setPosition(data.getPosition());
         newShow.setGenres(new ArrayList<>(data.getGenres()));
         newShow.setSeasons(data.getSeasons().stream().map(CatalogUtils::duplicateSeason).collect(Collectors.toList()));
 

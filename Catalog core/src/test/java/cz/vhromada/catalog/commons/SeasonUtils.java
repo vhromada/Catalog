@@ -282,6 +282,22 @@ public final class SeasonUtils {
     }
 
     /**
+     * Asserts seasons deep equals.
+     *
+     * @param expected expected list of TO for season
+     * @param actual   actual seasons
+     */
+    public static void assertSeasonListDeepEquals(final List<SeasonTO> expected, final List<Season> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertSeasonDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
      * Asserts season deep equals.
      *
      * @param expected expected TO for season

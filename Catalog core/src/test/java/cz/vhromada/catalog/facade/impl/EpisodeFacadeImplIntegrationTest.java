@@ -71,7 +71,7 @@ public class EpisodeFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testAdd() {
-        final EpisodeTO expectedEpisode = EpisodeUtils.newEpisodeTO(EpisodeUtils.EPISODES_COUNT + 1);
+        final Episode expectedEpisode = EpisodeUtils.newEpisode(EpisodeUtils.EPISODES_COUNT + 1);
         expectedEpisode.setPosition(Integer.MAX_VALUE);
 
         episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(null));
@@ -362,6 +362,7 @@ public class EpisodeFacadeImplIntegrationTest {
         episode2.setPosition(0);
 
         episodeFacade.moveUp(EpisodeUtils.newEpisodeTO(2));
+
         EpisodeUtils.assertEpisodeDeepEquals(episode1, EpisodeUtils.getEpisode(entityManager, 1));
         EpisodeUtils.assertEpisodeDeepEquals(episode2, EpisodeUtils.getEpisode(entityManager, 2));
         for (int i = 3; i <= EpisodeUtils.EPISODES_COUNT; i++) {
@@ -415,6 +416,7 @@ public class EpisodeFacadeImplIntegrationTest {
         episode2.setPosition(0);
 
         episodeFacade.moveDown(EpisodeUtils.newEpisodeTO(1));
+
         EpisodeUtils.assertEpisodeDeepEquals(episode1, EpisodeUtils.getEpisode(entityManager, 1));
         EpisodeUtils.assertEpisodeDeepEquals(episode2, EpisodeUtils.getEpisode(entityManager, 2));
         for (int i = 3; i <= EpisodeUtils.EPISODES_COUNT; i++) {

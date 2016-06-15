@@ -246,6 +246,22 @@ public final class ShowUtils {
     }
 
     /**
+     * Asserts shows deep equals.
+     *
+     * @param expected expectedlList of TO for show
+     * @param actual   actual shows
+     */
+    public static void assertShowListDeepEquals(final List<ShowTO> expected, final List<Show> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertShowDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
      * Asserts show deep equals.
      *
      * @param expected expected TO for show

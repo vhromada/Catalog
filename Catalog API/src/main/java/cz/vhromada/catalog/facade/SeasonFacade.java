@@ -56,10 +56,7 @@ public interface SeasonFacade {
      *                                                                   or subtitles are null
      *                                                                   or subtitles contain null value
      *                                                                   or note is null
-     *                                                                   or TO for show is null
-     *                                                                   or TO for show ID is null
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for season doesn't exist in data storage
-     *                                                                   or TO for show doesn't exist in data storage
      */
     void update(SeasonTO season);
 

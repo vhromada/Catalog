@@ -230,6 +230,22 @@ public final class MusicUtils {
     /**
      * Asserts music deep equals.
      *
+     * @param expected expected list of TO for music
+     * @param actual   actual music
+     */
+    public static void assertMusicListDeepEquals(final List<MusicTO> expected, final List<Music> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertMusicDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
+     * Asserts music deep equals.
+     *
      * @param expected expected TO for music
      * @param actual   actual music
      */

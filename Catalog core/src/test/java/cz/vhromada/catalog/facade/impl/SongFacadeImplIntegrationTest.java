@@ -71,7 +71,7 @@ public class SongFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testAdd() {
-        final SongTO expectedSong = SongUtils.newSongTO(SongUtils.SONGS_COUNT + 1);
+        final Song expectedSong = SongUtils.newSong(SongUtils.SONGS_COUNT + 1);
         expectedSong.setPosition(Integer.MAX_VALUE);
 
         songFacade.add(MusicUtils.newMusicTO(1), SongUtils.newSongTO(null));
@@ -340,6 +340,7 @@ public class SongFacadeImplIntegrationTest {
         song2.setPosition(0);
 
         songFacade.moveUp(SongUtils.newSongTO(2));
+
         SongUtils.assertSongDeepEquals(song1, SongUtils.getSong(entityManager, 1));
         SongUtils.assertSongDeepEquals(song2, SongUtils.getSong(entityManager, 2));
         for (int i = 3; i <= SongUtils.SONGS_COUNT; i++) {
@@ -393,6 +394,7 @@ public class SongFacadeImplIntegrationTest {
         song2.setPosition(0);
 
         songFacade.moveDown(SongUtils.newSongTO(1));
+
         SongUtils.assertSongDeepEquals(song1, SongUtils.getSong(entityManager, 1));
         SongUtils.assertSongDeepEquals(song2, SongUtils.getSong(entityManager, 2));
         for (int i = 3; i <= SongUtils.SONGS_COUNT; i++) {

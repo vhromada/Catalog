@@ -29,6 +29,11 @@ public final class EpisodeUtils {
     public static final int EPISODES_PER_SEASON_COUNT = 3;
 
     /**
+     * Count of episodes in show
+     */
+    public static final int EPISODES_PER_SHOW_COUNT = 9;
+
+    /**
      * ID
      */
     public static final Integer ID = 1;
@@ -37,11 +42,6 @@ public final class EpisodeUtils {
      * Position
      */
     public static final Integer POSITION = 10;
-
-    /**
-     * Count of episodes in show
-     */
-    private static final int EPISODES_PER_SHOW_COUNT = 9;
 
     /**
      * Multipliers for length
@@ -215,22 +215,6 @@ public final class EpisodeUtils {
     }
 
     /**
-     * Asserts episodes deep equals.
-     *
-     * @param expected expected list of TO for episode
-     * @param actual   actual episodes
-     */
-    public static void assertEpisodeListDeepEquals(final List<EpisodeTO> expected, final List<Episode> actual) {
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
-        if (!expected.isEmpty()) {
-            for (int i = 0; i < expected.size(); i++) {
-                assertEpisodeDeepEquals(expected.get(i), actual.get(i));
-            }
-        }
-    }
-
-    /**
      * Asserts episode deep equals.
      *
      * @param expected expected episode
@@ -244,6 +228,22 @@ public final class EpisodeUtils {
         assertEquals(expected.getLength(), actual.getLength());
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
+    /**
+     * Asserts episodes deep equals.
+     *
+     * @param expected expected list of TO for episode
+     * @param actual   actual episodes
+     */
+    public static void assertEpisodeListDeepEquals(final List<EpisodeTO> expected, final List<Episode> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertEpisodeDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
     }
 
     /**

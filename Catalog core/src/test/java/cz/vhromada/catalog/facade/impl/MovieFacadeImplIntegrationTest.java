@@ -12,6 +12,7 @@ import cz.vhromada.catalog.commons.MediumUtils;
 import cz.vhromada.catalog.commons.MovieUtils;
 import cz.vhromada.catalog.commons.TestConstants;
 import cz.vhromada.catalog.commons.Time;
+import cz.vhromada.catalog.entities.Medium;
 import cz.vhromada.catalog.entities.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
@@ -100,19 +101,19 @@ public class MovieFacadeImplIntegrationTest {
     @DirtiesContext
     public void testAdd() {
         final MovieTO movie = MovieUtils.newMovieTO(null);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1)));
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreTO(1)));
+        final Movie expectedMovie = MovieUtils.newMovie(MovieUtils.MOVIES_COUNT + 1);
+        expectedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(MediumUtils.MEDIA_COUNT + 1)));
+        expectedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
 
         movieFacade.add(movie);
 
-        //TODO vhromada 15.06.2016: add
-//        final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
-//        MovieUtils.assertMovieDeepEquals(movie, addedMovie);
-//        MovieUtils.assertMovieDeepEquals(movie.getMedia().size(), addedMovie.getMedia().size());
-//        for (int i = 0; i < movie.getMedia().size(); i++) {
-//            MovieUtils.assertMovieDeepEquals(movie.getMedia().get(i), addedMovie.getMedia().get(i).getLength());
-//        }
+        final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
+        MovieUtils.assertMovieDeepEquals(expectedMovie, addedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
+        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
     }
 
     /**
@@ -406,18 +407,16 @@ public class MovieFacadeImplIntegrationTest {
     @DirtiesContext
     public void testUpdate() {
         final MovieTO movie = MovieUtils.newMovieTO(1);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreTO(1)));
 
         movieFacade.update(movie);
 
-        //TODO vhromada 15.06.2016: update
-//        final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
-//        MovieUtils.assertMovieDeepEquals(movie, updatedMovie);
-//        MovieUtils.assertMovieDeepEquals(movie.getMedia().size(), updatedMovie.getMedia().size());
-//        for (int i = 0; i < movie.getMedia().size(); i++) {
-//            MovieUtils.assertMovieDeepEquals(movie.getMedia().get(i), updatedMovie.getMedia().get(i).getLength());
-//        }
+        final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
+        MovieUtils.assertMovieDeepEquals(movie, updatedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
+        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
     }
 
     /**
@@ -755,19 +754,23 @@ public class MovieFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testDuplicate() {
-        //TODO vhromada 15.06.2016: duplicate
-//        final Movie movie = MovieUtils.getMovie(MovieUtils.MOVIES_COUNT);
-//        movie.setId(MovieUtils.MOVIES_COUNT + 1);
-//        for (final Medium medium : movie.getMedia()) {
-//            medium.setId(MovieUtils.MEDIA_COUNT + movie.getMedia().indexOf(medium) + 1);
-//        }
-//
-//        movieFacade.duplicate(MovieUtils.newMovieTO( MovieUtils.MOVIES_COUNT));
-//
-//        final Movie duplicatedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
-//        MovieUtils.assertMovieDeepEquals(movie, duplicatedMovie);
-//        
-//        assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
+        final Medium medium1 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT - 1);
+        medium1.setId(MediumUtils.MEDIA_COUNT + 1);
+        final Medium medium2 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT);
+        medium2.setId(MediumUtils.MEDIA_COUNT + 2);
+        final Movie movie = MovieUtils.getMovie(MovieUtils.MOVIES_COUNT);
+        movie.setId(MovieUtils.MOVIES_COUNT + 1);
+        movie.setMedia(CollectionUtils.newList(medium1, medium2));
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(GenreUtils.GENRES_COUNT - 1), GenreUtils.getGenre(GenreUtils.GENRES_COUNT)));
+
+        movieFacade.duplicate(MovieUtils.newMovieTO(MovieUtils.MOVIES_COUNT));
+
+        final Movie duplicatedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
+        MovieUtils.assertMovieDeepEquals(movie, duplicatedMovie);
+
+        assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT + 2, MediumUtils.getMediaCount(entityManager));
+        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
     }
 
     /**

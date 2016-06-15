@@ -237,6 +237,22 @@ public final class MovieUtils {
     }
 
     /**
+     * Asserts movies deep equals.
+     *
+     * @param expected expected list of To for movie
+     * @param actual   actual movies
+     */
+    public static void assertMovieListDeepEquals(final List<MovieTO> expected, final List<Movie> actual) {
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        if (!expected.isEmpty()) {
+            for (int i = 0; i < expected.size(); i++) {
+                assertMovieDeepEquals(expected.get(i), actual.get(i));
+            }
+        }
+    }
+
+    /**
      * Asserts movie deep equals.
      *
      * @param expected expected movie

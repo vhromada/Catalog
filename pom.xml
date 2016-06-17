@@ -45,7 +45,6 @@
         <module>Catalog common</module>
         <module>Catalog API</module>
         <module>Catalog core</module>
-        <module>Catalog REST</module>
    </modules>
 
     <dependencyManagement>

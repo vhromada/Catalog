@@ -33,6 +33,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class GenreFacadeImplIntegrationTest {
 
     /**

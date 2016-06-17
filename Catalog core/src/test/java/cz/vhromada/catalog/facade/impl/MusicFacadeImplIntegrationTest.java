@@ -30,6 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testFacadeContext.xml")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class MusicFacadeImplIntegrationTest {
 
     /**

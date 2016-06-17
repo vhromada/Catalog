@@ -520,7 +520,9 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     public void testGetTotalMediaCount() {
-        assertEquals(600, programFacade.getTotalMediaCount());
+        final int count = 600;
+
+        assertEquals(count, programFacade.getTotalMediaCount());
 
         assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
     }

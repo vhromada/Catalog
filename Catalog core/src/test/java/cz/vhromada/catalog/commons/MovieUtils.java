@@ -37,6 +37,16 @@ public final class MovieUtils {
     public static final int POSITION = 10;
 
     /**
+     * Movie name
+     */
+    private static final String MOVIE = "Movie ";
+
+    /**
+     * Start year
+     */
+    private static final int START_YEAR = 2000;
+
+    /**
      * Creates a new instance of MovieUtils.
      */
     private MovieUtils() {
@@ -69,7 +79,7 @@ public final class MovieUtils {
     public static void updateMovie(final Movie movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
-        movie.setYear(2000);
+        movie.setYear(START_YEAR);
         movie.setLanguage(Language.EN);
         movie.setSubtitles(CollectionUtils.newList(Language.CZ));
         movie.setCsfd("Csfd");
@@ -107,7 +117,7 @@ public final class MovieUtils {
     public static void updateMovieTO(final MovieTO movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
-        movie.setYear(2000);
+        movie.setYear(START_YEAR);
         movie.setLanguage(Language.EN);
         movie.setSubtitles(CollectionUtils.newList(Language.CZ));
         movie.setCsfd("Csfd");
@@ -141,32 +151,65 @@ public final class MovieUtils {
     public static Movie getMovie(final int index) {
         final Movie movie = new Movie();
         movie.setId(index);
-        movie.setCzechName("Movie " + index + " czech name");
-        movie.setOriginalName("Movie " + index + " original name");
-        movie.setYear(index + 2000);
-        movie.setCsfd("Movie " + index + " CSFD");
+        movie.setCzechName(MOVIE + index + " czech name");
+        movie.setOriginalName(MOVIE + index + " original name");
+        movie.setYear(START_YEAR + index);
+        movie.setLanguage(getLanguage(index));
+        movie.setCsfd(MOVIE + index + " CSFD");
         movie.setImdbCode(index);
-        movie.setWikiEn("Movie " + index + " English Wikipedia");
-        movie.setWikiCz("Movie " + index + " Czech Wikipedia");
-        movie.setPicture("Movie " + index + " pc");
-        movie.setNote(index == 3 ? "Movie 3 note" : "");
+        movie.setWikiEn(MOVIE + index + " English Wikipedia");
+        movie.setWikiCz(MOVIE + index + " Czech Wikipedia");
+        movie.setPicture(MOVIE + index + " pc");
+        movie.setNote(index == 3 ? MOVIE + "3 note" : "");
         movie.setPosition(index - 1);
         final List<Language> subtitles = new ArrayList<>();
         final List<Medium> media = new ArrayList<>();
         final List<Genre> genres = new ArrayList<>();
-        final Language language;
         media.add(MediumUtils.getMedium(index));
         genres.add(GenreUtils.getGenre(index));
+        fillData(index, subtitles, media, genres);
+        movie.setSubtitles(subtitles);
+        movie.setMedia(media);
+        movie.setGenres(genres);
+
+        return movie;
+    }
+
+    /**
+     * Returns language for index.
+     *
+     * @param index index
+     * @return language for index
+     */
+    private static Language getLanguage(final int index) {
         switch (index) {
             case 1:
-                language = Language.CZ;
+                return Language.CZ;
+            case 2:
+                return Language.JP;
+            case 3:
+                return Language.FR;
+            default:
+                throw new IllegalArgumentException("Bad index");
+        }
+    }
+
+    /**
+     * Fills data for index.
+     *
+     * @param index     index
+     * @param subtitles subtitles
+     * @param media     media
+     * @param genres    genres
+     */
+    private static void fillData(final int index, final List<Language> subtitles, final List<Medium> media, final List<Genre> genres) {
+        switch (index) {
+            case 1:
                 break;
             case 2:
-                language = Language.JP;
                 subtitles.add(Language.EN);
                 break;
             case 3:
-                language = Language.FR;
                 subtitles.add(Language.CZ);
                 subtitles.add(Language.EN);
                 media.add(MediumUtils.getMedium(4));
@@ -175,12 +218,6 @@ public final class MovieUtils {
             default:
                 throw new IllegalArgumentException("Bad index");
         }
-        movie.setLanguage(language);
-        movie.setSubtitles(subtitles);
-        movie.setMedia(media);
-        movie.setGenres(genres);
-
-        return movie;
     }
 
     /**

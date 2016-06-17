@@ -17,6 +17,11 @@ public class CatalogValidatorsTest {
     private static final String NAME = "Name";
 
     /**
+     * Negative IMDB
+     */
+    private static final int NEGATIVE_IMDB = -2;
+
+    /**
      * Year
      */
     private static final int YEAR = 2000;
@@ -92,7 +97,7 @@ public class CatalogValidatorsTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateImdbCode_BadNegativeValue() {
-        CatalogValidators.validateImdbCode(-2, NAME);
+        CatalogValidators.validateImdbCode(NEGATIVE_IMDB, NAME);
     }
 
     /**

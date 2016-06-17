@@ -34,6 +34,11 @@ public final class ProgramUtils {
     public static final int PROGRAMS_COUNT = 3;
 
     /**
+     * Program name
+     */
+    private static final String PROGRAM = "Program ";
+
+    /**
      * Creates a new instance of ProgramUtils.
      */
     private ProgramUtils() {
@@ -126,16 +131,18 @@ public final class ProgramUtils {
      * @return program for index
      */
     public static Program getProgram(final int index) {
+        final int mediaCountMultiplier = 100;
+
         final Program program = new Program();
         program.setId(index);
-        program.setName("Program " + index + " name");
-        program.setWikiEn("Program " + index + " English Wikipedia");
-        program.setWikiCz("Program " + index + " Czech Wikipedia");
-        program.setMediaCount(index * 100);
+        program.setName(PROGRAM + index + " name");
+        program.setWikiEn(PROGRAM + index + " English Wikipedia");
+        program.setWikiCz(PROGRAM + index + " Czech Wikipedia");
+        program.setMediaCount(index * mediaCountMultiplier);
         program.setCrack(index == 3);
         program.setSerialKey(index != 1);
-        program.setOtherData(index == 3 ? "Program 3 other data" : "");
-        program.setNote(index == 3 ? "Program 3 note" : "");
+        program.setOtherData(index == 3 ? PROGRAM + "3 other data" : "");
+        program.setNote(index == 3 ? PROGRAM + "3 note" : "");
         program.setPosition(index - 1);
 
         return program;

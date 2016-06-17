@@ -89,10 +89,12 @@ public final class MediumUtils {
      * @return medium for index
      */
     public static Medium getMedium(final int index) {
+        final int lengthMultiplier = 100;
+
         final Medium medium = new Medium();
         medium.setId(index);
         medium.setNumber(index < 4 ? 1 : 2);
-        medium.setLength(index * 100);
+        medium.setLength(index * lengthMultiplier);
 
         return medium;
     }

@@ -53,7 +53,7 @@ public final class TestConstants {
             final Field length = Time.class.getDeclaredField("length");
             length.setAccessible(true);
             length.setInt(NEGATIVE_TIME, -1);
-        } catch (IllegalAccessException | NoSuchFieldException ex) {
+        } catch (final IllegalAccessException | NoSuchFieldException ex) {
             logger.error("Time with negative length can't be created.", ex);
         }
     }

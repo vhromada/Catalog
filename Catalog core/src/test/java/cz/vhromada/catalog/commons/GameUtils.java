@@ -34,6 +34,11 @@ public final class GameUtils {
     public static final Integer POSITION = 10;
 
     /**
+     * Game name
+     */
+    private static final String GAME = "Game ";
+
+    /**
      * Creates a new instance of GameUtils.
      */
     private GameUtils() {
@@ -138,9 +143,9 @@ public final class GameUtils {
     public static Game getGame(final int index) {
         final Game game = new Game();
         game.setId(index);
-        game.setName("Game " + index + " name");
-        game.setWikiEn("Game " + index + " English Wikipedia");
-        game.setWikiCz("Game " + index + " Czech Wikipedia");
+        game.setName(GAME + index + " name");
+        game.setWikiEn(GAME + index + " English Wikipedia");
+        game.setWikiCz(GAME + index + " Czech Wikipedia");
         game.setMediaCount(index);
         game.setCrack(index != 1);
         game.setSerialKey(index != 1);
@@ -149,8 +154,8 @@ public final class GameUtils {
         game.setTrainerData(index == 3);
         game.setEditor(index == 3);
         game.setSaves(index == 3);
-        game.setOtherData(index == 3 ? "Game 3 other data" : "");
-        game.setNote(index == 3 ? "Game 3 note" : "");
+        game.setOtherData(index == 3 ? GAME + "3 other data" : "");
+        game.setNote(index == 3 ? GAME + "3 note" : "");
         game.setPosition(index - 1);
 
         return game;

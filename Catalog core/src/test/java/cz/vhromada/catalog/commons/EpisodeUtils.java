@@ -174,21 +174,6 @@ public final class EpisodeUtils {
     }
 
     /**
-     * Returns episode with updated fields.
-     *
-     * @param id            episode ID
-     * @param entityManager entity manager
-     * @return episode with updated fields
-     */
-    public static Episode updateEpisode(final EntityManager entityManager, final int id) {
-        final Episode episode = getEpisode(entityManager, id);
-        updateEpisode(episode);
-        episode.setPosition(POSITION);
-
-        return episode;
-    }
-
-    /**
      * Returns count of episodes.
      *
      * @param entityManager entity manager

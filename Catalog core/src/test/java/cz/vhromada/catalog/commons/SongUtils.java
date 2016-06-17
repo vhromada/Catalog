@@ -163,21 +163,6 @@ public final class SongUtils {
     }
 
     /**
-     * Returns song with updated fields.
-     *
-     * @param id            song ID
-     * @param entityManager entity manager
-     * @return song with updated fields
-     */
-    public static Song updateSong(final EntityManager entityManager, final int id) {
-        final Song song = getSong(entityManager, id);
-        updateSong(song);
-        song.setPosition(POSITION);
-
-        return song;
-    }
-
-    /**
      * Returns count of songs.
      *
      * @param entityManager entity manager

@@ -36,6 +36,11 @@ public final class ShowUtils {
     public static final int POSITION = 10;
 
     /**
+     * Show name
+     */
+    private static final String SHOW = "Show ";
+
+    /**
      * Creates a new instance of ShowUtils.
      */
     private ShowUtils() {
@@ -144,16 +149,18 @@ public final class ShowUtils {
      * @return show for index
      */
     public static Show getShow(final int index) {
+        final int imdbMultiplier = 100;
+
         final Show show = new Show();
         show.setId(index);
-        show.setCzechName("Show " + index + " czech name");
-        show.setOriginalName("Show " + index + " original name");
-        show.setCsfd("Show " + index + " CSFD");
-        show.setImdbCode(index * 100);
-        show.setWikiEn("Show " + index + " English Wikipedia");
-        show.setWikiCz("Show " + index + " Czech Wikipedia");
-        show.setPicture("Show " + index + " pc");
-        show.setNote(index == 2 ? "Show 2 note" : "");
+        show.setCzechName(SHOW + index + " czech name");
+        show.setOriginalName(SHOW + index + " original name");
+        show.setCsfd(SHOW + index + " CSFD");
+        show.setImdbCode(index * imdbMultiplier);
+        show.setWikiEn(SHOW + index + " English Wikipedia");
+        show.setWikiCz(SHOW + index + " Czech Wikipedia");
+        show.setPicture(SHOW + index + " pc");
+        show.setNote(index == 2 ? SHOW + "2 note" : "");
         show.setPosition(index - 1);
         final List<Genre> genres = new ArrayList<>();
         genres.add(GenreUtils.getGenre(index));

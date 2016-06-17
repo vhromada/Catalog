@@ -41,6 +41,11 @@ public final class SeasonUtils {
     public static final int SEASONS_PER_SHOW_COUNT = 3;
 
     /**
+     * Start year
+     */
+    private static final int START_YEAR = 2000;
+
+    /**
      * Creates a new instance of SeasonUtils.
      */
     private SeasonUtils() {
@@ -84,8 +89,8 @@ public final class SeasonUtils {
      */
     public static void updateSeason(final Season season) {
         season.setNumber(2);
-        season.setStartYear(2000);
-        season.setEndYear(2001);
+        season.setStartYear(START_YEAR);
+        season.setEndYear(START_YEAR + 1);
         season.setLanguage(Language.EN);
         season.setSubtitles(CollectionUtils.newList(Language.CZ));
         season.setNote("Note");
@@ -115,25 +120,11 @@ public final class SeasonUtils {
      */
     public static void updateSeasonTO(final SeasonTO season) {
         season.setNumber(2);
-        season.setStartYear(2000);
-        season.setEndYear(2001);
+        season.setStartYear(START_YEAR);
+        season.setEndYear(START_YEAR + 1);
         season.setLanguage(Language.EN);
         season.setSubtitles(CollectionUtils.newList(Language.CZ));
         season.setNote("Note");
-    }
-
-    /**
-     * Returns seasons.
-     *
-     * @return seasons
-     */
-    public static List<Season> getSeasons() {
-        final List<Season> seasons = new ArrayList<>();
-        for (int i = 1; i <= SEASONS_PER_SHOW_COUNT; i++) {
-            seasons.add(getSeason(i));
-        }
-
-        return seasons;
     }
 
     /**
@@ -172,11 +163,13 @@ public final class SeasonUtils {
      * @return season for indexes
      */
     public static Season getSeason(final int showIndex, final int seasonIndex) {
+        final int year = 1980;
+
         final Season season = new Season();
         season.setId((showIndex - 1) * SEASONS_PER_SHOW_COUNT + seasonIndex);
         season.setNumber(seasonIndex);
-        season.setStartYear(1980 + seasonIndex);
-        season.setEndYear(seasonIndex == 3 ? 1984 : 1982);
+        season.setStartYear(year + seasonIndex);
+        season.setEndYear(year + (seasonIndex == 3 ? 4 : 2));
         season.setNote(seasonIndex == 2 ? "Show " + showIndex + " Season 2 note" : "");
         season.setPosition(seasonIndex - 1);
         final List<Language> subtitles = new ArrayList<>();
@@ -213,21 +206,6 @@ public final class SeasonUtils {
      */
     public static Season getSeason(final EntityManager entityManager, final int id) {
         return entityManager.find(Season.class, id);
-    }
-
-    /**
-     * Returns season with updated fields.
-     *
-     * @param id            season ID
-     * @param entityManager entity manager
-     * @return season with updated fields
-     */
-    public static Season updateSeason(final EntityManager entityManager, final int id) {
-        final Season season = getSeason(entityManager, id);
-        updateSeason(season);
-        season.setPosition(POSITION);
-
-        return season;
     }
 
     /**

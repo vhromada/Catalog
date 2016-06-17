@@ -36,6 +36,11 @@ public final class MusicUtils {
     public static final Integer POSITION = 10;
 
     /**
+     * Music name
+     */
+    private static final String MUSIC = "Music ";
+
+    /**
      * Creates a new instance of MusicUtils.
      */
     private MusicUtils() {
@@ -143,11 +148,11 @@ public final class MusicUtils {
     public static Music getMusic(final int index) {
         final Music music = new Music();
         music.setId(index);
-        music.setName("Music " + index + " name");
-        music.setWikiEn("Music " + index + " English Wikipedia");
-        music.setWikiCz("Music " + index + " Czech Wikipedia");
+        music.setName(MUSIC + index + " name");
+        music.setWikiEn(MUSIC + index + " English Wikipedia");
+        music.setWikiCz(MUSIC + index + " Czech Wikipedia");
         music.setMediaCount(index * 10);
-        music.setNote(index == 2 ? "Music 2 note" : "");
+        music.setNote(index == 2 ? MUSIC + "2 note" : "");
         music.setPosition(index - 1);
         music.setSongs(SongUtils.getSongs(index));
 

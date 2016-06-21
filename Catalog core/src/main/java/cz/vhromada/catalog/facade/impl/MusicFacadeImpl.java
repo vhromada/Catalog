@@ -1,5 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
@@ -95,7 +96,10 @@ public class MusicFacadeImpl implements MusicFacade {
     public void add(final MusicTO music) {
         musicTOValidator.validateNewMusicTO(music);
 
-        musicService.add(converter.convert(music, Music.class));
+        final Music musicEntity = converter.convert(music, Music.class);
+        musicEntity.setSongs(new ArrayList<>());
+
+        musicService.add(musicEntity);
     }
 
     /**

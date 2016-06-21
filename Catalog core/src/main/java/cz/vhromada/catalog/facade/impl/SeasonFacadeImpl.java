@@ -111,6 +111,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
 
         final Season seasonEntity = converter.convert(season, Season.class);
         seasonEntity.setPosition(Integer.MAX_VALUE);
+        seasonEntity.setEpisodes(new ArrayList<>());
         showEntity.getSeasons().add(seasonEntity);
 
         showService.update(showEntity);

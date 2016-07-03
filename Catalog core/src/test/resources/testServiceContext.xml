@@ -7,8 +7,8 @@
 
     <import resource="cacheContext.xml"/>
 
-    <import resource="serviceContext.xml"/>
-
     <import resource="aopContext.xml"/>
+
+    <import resource="serviceContext.xml"/>
 
 </beans>

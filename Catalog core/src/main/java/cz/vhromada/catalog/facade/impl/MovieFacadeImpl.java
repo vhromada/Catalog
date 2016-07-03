@@ -1,5 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.commons.Time;
@@ -8,6 +9,7 @@ import cz.vhromada.catalog.entities.Medium;
 import cz.vhromada.catalog.entities.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.facade.to.MediumTO;
 import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.catalog.facade.validators.MovieTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
@@ -128,12 +130,16 @@ public class MovieFacadeImpl implements MovieFacade {
     @Override
     public void update(final MovieTO movie) {
         movieTOValidator.validateExistingMovieTO(movie);
-        Validators.validateExists(movieService.get(movie.getId()), MOVIE_TO_ARGUMENT);
+        final Movie movieEntity = movieService.get(movie.getId());
+        Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
         for (final GenreTO genre : movie.getGenres()) {
             Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
         }
 
-        movieService.update(converter.convert(movie, Movie.class));
+        final Movie updatedMovie = converter.convert(movie, Movie.class);
+        updatedMovie.setMedia(getUpdatedMedia(movieEntity.getMedia(), movie.getMedia()));
+
+        movieService.update(updatedMovie);
     }
 
     /**
@@ -221,6 +227,37 @@ public class MovieFacadeImpl implements MovieFacade {
         }
 
         return new Time(totalLength);
+    }
+
+    /**
+     * Updates media.
+     *
+     * @param originalMedia original list of media
+     * @param updatedMedia  updated list of TO for medium
+     * @return updated media
+     */
+    private static List<Medium> getUpdatedMedia(final List<Medium> originalMedia, final List<MediumTO> updatedMedia) {
+        final List<Medium> result = new ArrayList<>();
+
+        int index = 0;
+        final int max = Math.min(originalMedia.size(), updatedMedia.size());
+        while (index < max) {
+            final Medium medium = new Medium();
+            medium.setId(originalMedia.get(index).getId());
+            medium.setNumber(index + 1);
+            medium.setLength(updatedMedia.get(index).getLength());
+            result.add(medium);
+            index++;
+        }
+        while (index < updatedMedia.size()) {
+            final Medium medium = new Medium();
+            medium.setNumber(index + 1);
+            medium.setLength(updatedMedia.get(index).getLength());
+            result.add(medium);
+            index++;
+        }
+
+        return result;
     }
 
 }

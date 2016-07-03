@@ -265,6 +265,7 @@ public final class GameUtils {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getWikiEn(), actual.getWikiEn());
         assertEquals(expected.getWikiCz(), actual.getWikiCz());
+        assertEquals(expected.getMediaCount(), actual.getMediaCount());
         assertEquals(expected.getCrack(), actual.getCrack());
         assertEquals(expected.getSerialKey(), actual.getSerialKey());
         assertEquals(expected.getPatch(), actual.getPatch());

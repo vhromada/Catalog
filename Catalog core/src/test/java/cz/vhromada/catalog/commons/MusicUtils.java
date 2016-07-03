@@ -260,6 +260,7 @@ public final class MusicUtils {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getWikiEn(), actual.getWikiEn());
         assertEquals(expected.getWikiCz(), actual.getWikiCz());
+        assertEquals(expected.getMediaCount(), actual.getMediaCount());
         assertEquals(expected.getNote(), actual.getNote());
         assertEquals(expected.getPosition(), actual.getPosition());
     }

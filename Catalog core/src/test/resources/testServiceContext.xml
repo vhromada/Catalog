@@ -9,4 +9,6 @@
 
     <import resource="serviceContext.xml"/>
 
+    <import resource="aopContext.xml"/>
+
 </beans>

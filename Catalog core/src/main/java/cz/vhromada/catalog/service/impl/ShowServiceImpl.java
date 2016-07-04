@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cz.vhromada.catalog.CatalogUtils;
+import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.entities.Episode;
 import cz.vhromada.catalog.entities.Season;
 import cz.vhromada.catalog.entities.Show;
@@ -60,11 +61,11 @@ public class ShowServiceImpl extends AbstractCatalogService<Show> {
         for (int i = 0; i < data.size(); i++) {
             final Show show = data.get(i);
             show.setPosition(i);
-            final List<Season> seasons = show.getSeasons();
+            final List<Season> seasons = CollectionUtils.getSortedData(show.getSeasons());
             for (int j = 0; j < seasons.size(); j++) {
                 final Season season = seasons.get(j);
                 season.setPosition(j);
-                final List<Episode> episodes = season.getEpisodes();
+                final List<Episode> episodes = CollectionUtils.getSortedData(season.getEpisodes());
                 for (int k = 0; k < episodes.size(); k++) {
                     final Episode episode = episodes.get(k);
                     episode.setPosition(k);

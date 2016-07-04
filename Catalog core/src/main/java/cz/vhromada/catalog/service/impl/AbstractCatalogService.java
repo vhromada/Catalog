@@ -167,7 +167,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
 
     @Override
     public void updatePositions() {
-        final List<T> data = getCachedData(false);
+        final List<T> data = CollectionUtils.getSortedData(getCachedData(false));
         updatePositions(data);
 
         final List<T> savedData = repository.save(data);

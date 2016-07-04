@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cz.vhromada.catalog.CatalogUtils;
+import cz.vhromada.catalog.commons.CollectionUtils;
 import cz.vhromada.catalog.entities.Music;
 import cz.vhromada.catalog.entities.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
@@ -54,7 +55,7 @@ public class MusicServiceImpl extends AbstractCatalogService<Music> {
         for (int i = 0; i < data.size(); i++) {
             final Music music = data.get(i);
             music.setPosition(i);
-            final List<Song> songs = music.getSongs();
+            final List<Song> songs = CollectionUtils.getSortedData(music.getSongs());
             for (int j = 0; j < songs.size(); j++) {
                 final Song song = songs.get(j);
                 song.setPosition(j);

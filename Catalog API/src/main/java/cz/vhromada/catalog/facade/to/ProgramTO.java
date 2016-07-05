@@ -1,5 +1,7 @@
 package cz.vhromada.catalog.facade.to;
 
+import java.util.Objects;
+
 import cz.vhromada.catalog.commons.Movable;
 
 /**
@@ -243,7 +245,7 @@ public class ProgramTO implements Movable {
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id.hashCode();
+        return Objects.hashCode(id);
     }
 
     @Override

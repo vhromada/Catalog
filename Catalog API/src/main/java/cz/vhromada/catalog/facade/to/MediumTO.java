@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade.to;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A class represents TO for medium.
@@ -98,7 +99,7 @@ public class MediumTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id.hashCode();
+        return Objects.hashCode(id);
     }
 
     @Override

@@ -3,9 +3,9 @@ package cz.vhromada.catalog.facade.converters;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.MusicUtils;
-import cz.vhromada.catalog.entities.Music;
-import cz.vhromada.catalog.facade.to.MusicTO;
+import cz.vhromada.catalog.common.MusicUtils;
+import cz.vhromada.catalog.domain.Music;
+import cz.vhromada.catalog.entity.MusicTO;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;

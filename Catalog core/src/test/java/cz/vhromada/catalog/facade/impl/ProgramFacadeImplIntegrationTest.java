@@ -7,10 +7,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.ProgramUtils;
-import cz.vhromada.catalog.entities.Program;
+import cz.vhromada.catalog.common.ProgramUtils;
+import cz.vhromada.catalog.domain.Program;
+import cz.vhromada.catalog.entity.ProgramTO;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.catalog.facade.to.ProgramTO;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 

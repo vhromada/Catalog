@@ -3,9 +3,9 @@ package cz.vhromada.catalog;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.entities.Episode;
-import cz.vhromada.catalog.entities.Season;
-import cz.vhromada.catalog.entities.Song;
+import cz.vhromada.catalog.domain.Episode;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.domain.Song;
 
 /**
  * A class represents utility class for working with data.

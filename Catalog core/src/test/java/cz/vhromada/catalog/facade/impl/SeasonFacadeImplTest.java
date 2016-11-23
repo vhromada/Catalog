@@ -15,17 +15,17 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.SeasonUtils;
-import cz.vhromada.catalog.commons.ShowUtils;
-import cz.vhromada.catalog.entities.Season;
-import cz.vhromada.catalog.entities.Show;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.SeasonUtils;
+import cz.vhromada.catalog.common.ShowUtils;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.domain.Show;
+import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.SeasonFacade;
-import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.ShowTO;
-import cz.vhromada.catalog.facade.validators.SeasonTOValidator;
-import cz.vhromada.catalog.facade.validators.ShowTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.validators.SeasonTOValidator;
+import cz.vhromada.catalog.validators.ShowTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;

@@ -5,19 +5,19 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EpisodeUtils;
-import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.commons.SeasonUtils;
-import cz.vhromada.catalog.commons.ShowUtils;
-import cz.vhromada.catalog.commons.TestConstants;
-import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.entities.Episode;
-import cz.vhromada.catalog.entities.Season;
-import cz.vhromada.catalog.entities.Show;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.EpisodeUtils;
+import cz.vhromada.catalog.common.GenreUtils;
+import cz.vhromada.catalog.common.SeasonUtils;
+import cz.vhromada.catalog.common.ShowUtils;
+import cz.vhromada.catalog.common.TestConstants;
+import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.domain.Episode;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.domain.Show;
+import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.ShowFacade;
-import cz.vhromada.catalog.facade.to.GenreTO;
-import cz.vhromada.catalog.facade.to.ShowTO;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 

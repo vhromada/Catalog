@@ -3,7 +3,7 @@ package cz.vhromada.catalog.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import cz.vhromada.catalog.commons.Movable;
+import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 
 import org.junit.Test;

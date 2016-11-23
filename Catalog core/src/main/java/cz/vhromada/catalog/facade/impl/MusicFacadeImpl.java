@@ -3,13 +3,13 @@ package cz.vhromada.catalog.facade.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.entities.Music;
-import cz.vhromada.catalog.entities.Song;
+import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.domain.Music;
+import cz.vhromada.catalog.domain.Song;
+import cz.vhromada.catalog.entity.MusicTO;
 import cz.vhromada.catalog.facade.MusicFacade;
-import cz.vhromada.catalog.facade.to.MusicTO;
-import cz.vhromada.catalog.facade.validators.MusicTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.validators.MusicTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 

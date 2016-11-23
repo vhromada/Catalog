@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cz.vhromada.catalog.CatalogUtils;
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.entities.Episode;
-import cz.vhromada.catalog.entities.Season;
-import cz.vhromada.catalog.entities.Show;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.domain.Episode;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.repository.ShowRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

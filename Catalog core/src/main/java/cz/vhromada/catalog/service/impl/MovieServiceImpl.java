@@ -3,8 +3,8 @@ package cz.vhromada.catalog.service.impl;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import cz.vhromada.catalog.entities.Medium;
-import cz.vhromada.catalog.entities.Movie;
+import cz.vhromada.catalog.domain.Medium;
+import cz.vhromada.catalog.domain.Movie;
 import cz.vhromada.catalog.repository.MovieRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,9 +3,9 @@ package cz.vhromada.catalog.facade.converters;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.ProgramUtils;
-import cz.vhromada.catalog.entities.Program;
-import cz.vhromada.catalog.facade.to.ProgramTO;
+import cz.vhromada.catalog.common.ProgramUtils;
+import cz.vhromada.catalog.domain.Program;
+import cz.vhromada.catalog.entity.ProgramTO;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;

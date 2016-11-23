@@ -5,11 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.EpisodeUtils;
-import cz.vhromada.catalog.commons.SeasonUtils;
-import cz.vhromada.catalog.entities.Episode;
+import cz.vhromada.catalog.common.EpisodeUtils;
+import cz.vhromada.catalog.common.SeasonUtils;
+import cz.vhromada.catalog.domain.Episode;
+import cz.vhromada.catalog.entity.EpisodeTO;
+import cz.vhromada.catalog.entity.SeasonTO;
 import cz.vhromada.catalog.facade.EpisodeFacade;
-import cz.vhromada.catalog.facade.to.EpisodeTO;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -67,7 +68,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)}.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)}.
      */
     @Test
     @DirtiesContext
@@ -84,7 +85,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with null TO for season.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with null TO for season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonTO() {
@@ -92,7 +93,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with null TO for episode.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with null TO for episode.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullEpisodeTO() {
@@ -100,7 +101,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with season with null ID.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with season with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullId() {
@@ -108,7 +109,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with episode with not null ID.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with episode with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotNullId() {
@@ -116,7 +117,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with episode with not positive number of episode.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with episode with not positive number of episode.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotPositiveNumber() {
@@ -127,7 +128,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with episode with null name.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with episode with null name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullName() {
@@ -138,7 +139,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with episode with empty string as name.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with episode with empty string as name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_EmptyName() {
@@ -149,7 +150,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with episode with negative length.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with episode with negative length.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NegativeLength() {
@@ -160,7 +161,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with episode with null note.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with episode with null note.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullNote() {
@@ -171,7 +172,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(cz.vhromada.catalog.facade.to.SeasonTO, EpisodeTO)} with episode with not existing season.
+     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with episode with not existing season.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testAdd_NotExistingSeason() {
@@ -460,7 +461,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)}.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)}.
      */
     @Test
     public void testFindEpisodesBySeason() {
@@ -475,7 +476,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)} with null argument.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindEpisodesBySeason_NullArgument() {
@@ -483,7 +484,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)} with season with null ID.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with season with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testFindEpisodesBySeason_NullId() {
@@ -491,7 +492,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(cz.vhromada.catalog.facade.to.SeasonTO)} with bad ID.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testFindEpisodesBySeason_BadId() {

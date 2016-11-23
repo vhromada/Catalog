@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.commons.MovieUtils;
-import cz.vhromada.catalog.entities.Medium;
-import cz.vhromada.catalog.entities.Movie;
+import cz.vhromada.catalog.common.MovieUtils;
+import cz.vhromada.catalog.domain.Medium;
+import cz.vhromada.catalog.domain.Movie;
 import cz.vhromada.catalog.repository.MovieRepository;
 import cz.vhromada.catalog.service.CatalogService;
 

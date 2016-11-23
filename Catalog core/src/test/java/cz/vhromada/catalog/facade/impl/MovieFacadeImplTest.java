@@ -15,18 +15,18 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.commons.MovieUtils;
-import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.entities.Genre;
-import cz.vhromada.catalog.entities.Medium;
-import cz.vhromada.catalog.entities.Movie;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.GenreUtils;
+import cz.vhromada.catalog.common.MovieUtils;
+import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.domain.Medium;
+import cz.vhromada.catalog.domain.Movie;
+import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.MovieTO;
 import cz.vhromada.catalog.facade.MovieFacade;
-import cz.vhromada.catalog.facade.to.GenreTO;
-import cz.vhromada.catalog.facade.to.MovieTO;
-import cz.vhromada.catalog.facade.validators.MovieTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.validators.MovieTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;

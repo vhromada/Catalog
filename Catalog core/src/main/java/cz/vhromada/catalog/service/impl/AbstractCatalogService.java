@@ -2,8 +2,8 @@ package cz.vhromada.catalog.service.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.Movable;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.validators.Validators;
 

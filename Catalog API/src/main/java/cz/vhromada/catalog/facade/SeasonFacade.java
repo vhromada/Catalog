@@ -2,8 +2,8 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.facade.to.SeasonTO;
-import cz.vhromada.catalog.facade.to.ShowTO;
+import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.ShowTO;
 
 /**
  * An interface represents facade for shows.

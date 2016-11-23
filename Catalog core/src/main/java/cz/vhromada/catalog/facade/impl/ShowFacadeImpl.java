@@ -3,16 +3,16 @@ package cz.vhromada.catalog.facade.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.entities.Episode;
-import cz.vhromada.catalog.entities.Genre;
-import cz.vhromada.catalog.entities.Season;
-import cz.vhromada.catalog.entities.Show;
+import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.domain.Episode;
+import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.domain.Show;
+import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.ShowFacade;
-import cz.vhromada.catalog.facade.to.GenreTO;
-import cz.vhromada.catalog.facade.to.ShowTO;
-import cz.vhromada.catalog.facade.validators.ShowTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.validators.ShowTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 

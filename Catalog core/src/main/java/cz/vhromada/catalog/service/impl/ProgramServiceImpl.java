@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.entities.Program;
+import cz.vhromada.catalog.domain.Program;
 import cz.vhromada.catalog.repository.ProgramRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

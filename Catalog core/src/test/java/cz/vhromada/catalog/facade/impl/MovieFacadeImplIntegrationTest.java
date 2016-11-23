@@ -5,19 +5,19 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.commons.Language;
-import cz.vhromada.catalog.commons.MediumUtils;
-import cz.vhromada.catalog.commons.MovieUtils;
-import cz.vhromada.catalog.commons.TestConstants;
-import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.entities.Medium;
-import cz.vhromada.catalog.entities.Movie;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.GenreUtils;
+import cz.vhromada.catalog.common.Language;
+import cz.vhromada.catalog.common.MediumUtils;
+import cz.vhromada.catalog.common.MovieUtils;
+import cz.vhromada.catalog.common.TestConstants;
+import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.domain.Medium;
+import cz.vhromada.catalog.domain.Movie;
+import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.MediumTO;
+import cz.vhromada.catalog.entity.MovieTO;
 import cz.vhromada.catalog.facade.MovieFacade;
-import cz.vhromada.catalog.facade.to.GenreTO;
-import cz.vhromada.catalog.facade.to.MediumTO;
-import cz.vhromada.catalog.facade.to.MovieTO;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 

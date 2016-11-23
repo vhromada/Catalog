@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.entity.GenreTO;
 
 /**
  * An interface represents facade for genres.

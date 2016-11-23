@@ -3,9 +3,9 @@ package cz.vhromada.catalog.facade.converters;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.MovieUtils;
-import cz.vhromada.catalog.entities.Movie;
-import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.catalog.common.MovieUtils;
+import cz.vhromada.catalog.domain.Movie;
+import cz.vhromada.catalog.entity.MovieTO;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;

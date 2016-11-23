@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.repository;
 
-import cz.vhromada.catalog.entities.Game;
+import cz.vhromada.catalog.domain.Game;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

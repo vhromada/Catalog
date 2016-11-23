@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.repository;
 
-import cz.vhromada.catalog.entities.Genre;
+import cz.vhromada.catalog.domain.Genre;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

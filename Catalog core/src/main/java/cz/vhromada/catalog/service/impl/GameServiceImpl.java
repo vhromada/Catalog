@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.entities.Game;
+import cz.vhromada.catalog.domain.Game;
 import cz.vhromada.catalog.repository.GameRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

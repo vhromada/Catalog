@@ -8,13 +8,13 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EpisodeUtils;
-import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.commons.SeasonUtils;
-import cz.vhromada.catalog.commons.ShowUtils;
-import cz.vhromada.catalog.entities.Season;
-import cz.vhromada.catalog.entities.Show;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.EpisodeUtils;
+import cz.vhromada.catalog.common.GenreUtils;
+import cz.vhromada.catalog.common.SeasonUtils;
+import cz.vhromada.catalog.common.ShowUtils;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.domain.Show;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

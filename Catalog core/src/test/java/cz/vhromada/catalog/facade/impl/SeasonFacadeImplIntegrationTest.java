@@ -7,16 +7,17 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.EpisodeUtils;
-import cz.vhromada.catalog.commons.Language;
-import cz.vhromada.catalog.commons.SeasonUtils;
-import cz.vhromada.catalog.commons.ShowUtils;
-import cz.vhromada.catalog.commons.TestConstants;
-import cz.vhromada.catalog.entities.Episode;
-import cz.vhromada.catalog.entities.Season;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.EpisodeUtils;
+import cz.vhromada.catalog.common.Language;
+import cz.vhromada.catalog.common.SeasonUtils;
+import cz.vhromada.catalog.common.ShowUtils;
+import cz.vhromada.catalog.common.TestConstants;
+import cz.vhromada.catalog.domain.Episode;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.SeasonFacade;
-import cz.vhromada.catalog.facade.to.SeasonTO;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -75,7 +76,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)}.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)}.
      */
     @Test
     @DirtiesContext
@@ -93,7 +94,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with null TO for show.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with null TO for show.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullShowTO() {
@@ -101,7 +102,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with null TO for season.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with null TO for season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonTO() {
@@ -109,7 +110,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with show with null ID.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullId() {
@@ -117,7 +118,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with not null ID.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotNullId() {
@@ -125,7 +126,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with not positive number of season.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with not positive number of season.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotPositiveNumber() {
@@ -136,7 +137,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with bad minimum starting year.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad minimum starting year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMinimumStartYear() {
@@ -147,7 +148,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with bad maximum starting year.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad maximum starting year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMaximumStartYear() {
@@ -158,7 +159,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with bad minimum ending year.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad minimum ending year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMinimumEndYear() {
@@ -169,7 +170,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with bad maximum ending year.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad maximum ending year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMaximumEndYear() {
@@ -180,7 +181,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with starting year greater than ending year.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with starting year greater than ending year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadYear() {
@@ -191,7 +192,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with null language.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with null language.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullLanguage() {
@@ -202,7 +203,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with null subtitles.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with null subtitles.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullSubtitles() {
@@ -213,7 +214,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with subtitles with null value.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with subtitles with null value.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadSubtitles() {
@@ -224,7 +225,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with null note.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with null note.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullNote() {
@@ -235,7 +236,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(cz.vhromada.catalog.facade.to.ShowTO, SeasonTO)} with season with not existing show.
+     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with not existing show.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testAdd_NotExistingShow() {
@@ -587,7 +588,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)}.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)}.
      */
     @Test
     public void testFindSeasonsByShow() {
@@ -602,7 +603,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)} with null argument.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSeasonsByShow_NullArgument() {
@@ -610,7 +611,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)} with show with null ID.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testFindSeasonsByShow_NullId() {
@@ -618,7 +619,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(cz.vhromada.catalog.facade.to.ShowTO)} with bad ID.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testFindSeasonsByShow_BadId() {

@@ -9,11 +9,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.commons.MediumUtils;
-import cz.vhromada.catalog.commons.MovieUtils;
-import cz.vhromada.catalog.entities.Movie;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.GenreUtils;
+import cz.vhromada.catalog.common.MediumUtils;
+import cz.vhromada.catalog.common.MovieUtils;
+import cz.vhromada.catalog.domain.Movie;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -7,11 +7,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.entities.Genre;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.GenreUtils;
+import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.catalog.facade.to.GenreTO;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 

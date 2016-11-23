@@ -2,11 +2,11 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.entities.Genre;
+import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.catalog.facade.to.GenreTO;
-import cz.vhromada.catalog.facade.validators.GenreTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.validators.GenreTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 

@@ -3,9 +3,9 @@ package cz.vhromada.catalog.facade.converters;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.GameUtils;
-import cz.vhromada.catalog.entities.Game;
-import cz.vhromada.catalog.facade.to.GameTO;
+import cz.vhromada.catalog.common.GameUtils;
+import cz.vhromada.catalog.domain.Game;
+import cz.vhromada.catalog.entity.GameTO;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;

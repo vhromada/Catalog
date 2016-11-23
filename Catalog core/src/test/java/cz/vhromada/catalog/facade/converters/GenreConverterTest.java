@@ -3,9 +3,9 @@ package cz.vhromada.catalog.facade.converters;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.GenreUtils;
-import cz.vhromada.catalog.entities.Genre;
-import cz.vhromada.catalog.facade.to.GenreTO;
+import cz.vhromada.catalog.common.GenreUtils;
+import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;

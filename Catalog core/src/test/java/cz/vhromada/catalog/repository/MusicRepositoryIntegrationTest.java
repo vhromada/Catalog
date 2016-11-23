@@ -8,10 +8,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.MusicUtils;
-import cz.vhromada.catalog.commons.SongUtils;
-import cz.vhromada.catalog.entities.Music;
-import cz.vhromada.catalog.entities.Song;
+import cz.vhromada.catalog.common.MusicUtils;
+import cz.vhromada.catalog.common.SongUtils;
+import cz.vhromada.catalog.domain.Music;
+import cz.vhromada.catalog.domain.Song;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

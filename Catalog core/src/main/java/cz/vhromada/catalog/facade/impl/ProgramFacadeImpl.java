@@ -2,11 +2,11 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.entities.Program;
+import cz.vhromada.catalog.domain.Program;
+import cz.vhromada.catalog.entity.ProgramTO;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.catalog.facade.to.ProgramTO;
-import cz.vhromada.catalog.facade.validators.ProgramTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.validators.ProgramTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 

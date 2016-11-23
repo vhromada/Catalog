@@ -2,8 +2,8 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.commons.Time;
-import cz.vhromada.catalog.facade.to.MovieTO;
+import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.entity.MovieTO;
 
 /**
  * An interface represents facade for movies.

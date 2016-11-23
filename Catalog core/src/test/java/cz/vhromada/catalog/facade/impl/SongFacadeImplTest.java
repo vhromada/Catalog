@@ -15,17 +15,17 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.MusicUtils;
-import cz.vhromada.catalog.commons.SongUtils;
-import cz.vhromada.catalog.entities.Music;
-import cz.vhromada.catalog.entities.Song;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.MusicUtils;
+import cz.vhromada.catalog.common.SongUtils;
+import cz.vhromada.catalog.domain.Music;
+import cz.vhromada.catalog.domain.Song;
+import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.SongTO;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.catalog.facade.to.MusicTO;
-import cz.vhromada.catalog.facade.to.SongTO;
-import cz.vhromada.catalog.facade.validators.MusicTOValidator;
-import cz.vhromada.catalog.facade.validators.SongTOValidator;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.validators.MusicTOValidator;
+import cz.vhromada.catalog.validators.SongTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;

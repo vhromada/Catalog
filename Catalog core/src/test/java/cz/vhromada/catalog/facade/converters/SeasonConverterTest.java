@@ -3,9 +3,9 @@ package cz.vhromada.catalog.facade.converters;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.commons.SeasonUtils;
-import cz.vhromada.catalog.entities.Season;
-import cz.vhromada.catalog.facade.to.SeasonTO;
+import cz.vhromada.catalog.common.SeasonUtils;
+import cz.vhromada.catalog.domain.Season;
+import cz.vhromada.catalog.entity.SeasonTO;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;

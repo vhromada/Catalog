@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.entities.Genre;
+import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.repository.GenreRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

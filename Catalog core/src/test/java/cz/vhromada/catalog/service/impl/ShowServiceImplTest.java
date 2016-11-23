@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.commons.ShowUtils;
-import cz.vhromada.catalog.entities.Genre;
-import cz.vhromada.catalog.entities.Show;
+import cz.vhromada.catalog.common.ShowUtils;
+import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.repository.ShowRepository;
 import cz.vhromada.catalog.service.CatalogService;
 

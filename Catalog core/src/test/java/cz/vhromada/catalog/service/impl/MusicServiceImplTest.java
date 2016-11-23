@@ -1,10 +1,10 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.commons.CollectionUtils;
-import cz.vhromada.catalog.commons.MusicUtils;
-import cz.vhromada.catalog.commons.SongUtils;
-import cz.vhromada.catalog.entities.Music;
-import cz.vhromada.catalog.entities.Song;
+import cz.vhromada.catalog.common.CollectionUtils;
+import cz.vhromada.catalog.common.MusicUtils;
+import cz.vhromada.catalog.common.SongUtils;
+import cz.vhromada.catalog.domain.Music;
+import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
 import cz.vhromada.catalog.service.CatalogService;
 

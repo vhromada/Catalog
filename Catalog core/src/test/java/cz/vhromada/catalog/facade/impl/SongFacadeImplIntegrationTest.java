@@ -5,11 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.commons.MusicUtils;
-import cz.vhromada.catalog.commons.SongUtils;
-import cz.vhromada.catalog.entities.Song;
+import cz.vhromada.catalog.common.MusicUtils;
+import cz.vhromada.catalog.common.SongUtils;
+import cz.vhromada.catalog.domain.Song;
+import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.SongTO;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.catalog.facade.to.SongTO;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -67,7 +68,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)}.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)}.
      */
     @Test
     @DirtiesContext
@@ -84,7 +85,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with null TO for music.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with null TO for music.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullMusicTO() {
@@ -92,7 +93,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with null TO for song.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with null TO for song.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSongTO() {
@@ -100,7 +101,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with music with null ID.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with music with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullId() {
@@ -108,7 +109,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with song with not null ID.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with song with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotNullId() {
@@ -116,7 +117,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with song with null name.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with song with null name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullName() {
@@ -127,7 +128,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with song with empty string as name.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with song with empty string as name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_EmptyName() {
@@ -138,7 +139,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with song with negative length.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with song with negative length.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NegativeLength() {
@@ -149,7 +150,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with song with null note.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with song with null note.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullNote() {
@@ -160,7 +161,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(cz.vhromada.catalog.facade.to.MusicTO, SongTO)} with song with not existing music.
+     * Test method for {@link SongFacade#add(MusicTO, SongTO)} with song with not existing music.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testAdd_NotExistingMusic() {
@@ -438,7 +439,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)}.
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)}.
      */
     @Test
     public void testFindSongsByMusic() {
@@ -450,7 +451,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with null argument.
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSongsByMusic_NullArgument() {
@@ -458,7 +459,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with music with null ID.
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with music with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testFindSongsByMusic_NullId() {
@@ -466,7 +467,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#findSongsByMusic(cz.vhromada.catalog.facade.to.MusicTO)} with bad ID.
+     * Test method for {@link SongFacade#findSongsByMusic(MusicTO)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testFindSongsByMusic_BadId() {

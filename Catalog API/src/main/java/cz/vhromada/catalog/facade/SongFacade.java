@@ -2,8 +2,8 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.facade.to.MusicTO;
-import cz.vhromada.catalog.facade.to.SongTO;
+import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.SongTO;
 
 /**
  * An interface represents facade for songs.

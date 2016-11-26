@@ -13,6 +13,7 @@ import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.domain.Movie;
 import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.util.CollectionUtils;
 
 /**
  * A class represents utility class for movies.

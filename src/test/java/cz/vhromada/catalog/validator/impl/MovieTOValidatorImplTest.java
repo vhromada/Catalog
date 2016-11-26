@@ -1,6 +1,5 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.MediumUtils;
@@ -9,6 +8,7 @@ import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.entity.MediumTO;
 import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.MovieTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 

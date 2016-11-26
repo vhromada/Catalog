@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.CatalogValidators;
 import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.util.CatalogValidators;
 import cz.vhromada.catalog.validator.SeasonTOValidator;
 import cz.vhromada.validators.Validators;
 

@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.util.CollectionUtils;
 
 /**
  * A class represents utility class for music.

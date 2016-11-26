@@ -15,12 +15,12 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.ProgramUtils;
 import cz.vhromada.catalog.domain.Program;
 import cz.vhromada.catalog.entity.ProgramTO;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.ProgramTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;

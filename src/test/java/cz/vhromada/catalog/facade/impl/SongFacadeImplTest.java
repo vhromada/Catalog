@@ -15,7 +15,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.MusicUtils;
 import cz.vhromada.catalog.common.SongUtils;
 import cz.vhromada.catalog.domain.Music;
@@ -24,6 +23,7 @@ import cz.vhromada.catalog.entity.MusicTO;
 import cz.vhromada.catalog.entity.SongTO;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.MusicTOValidator;
 import cz.vhromada.catalog.validator.SongTOValidator;
 import cz.vhromada.converters.Converter;

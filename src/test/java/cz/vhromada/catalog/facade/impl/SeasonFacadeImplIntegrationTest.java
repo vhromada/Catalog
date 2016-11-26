@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.EpisodeUtils;
 import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.SeasonUtils;
@@ -18,6 +17,7 @@ import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.entity.SeasonTO;
 import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.SeasonFacade;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 

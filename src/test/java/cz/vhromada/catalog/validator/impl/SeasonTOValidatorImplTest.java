@@ -1,10 +1,10 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.SeasonTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 

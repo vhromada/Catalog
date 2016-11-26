@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.EpisodeUtils;
 import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.common.ShowUtils;
@@ -25,6 +24,7 @@ import cz.vhromada.catalog.entity.EpisodeTO;
 import cz.vhromada.catalog.entity.SeasonTO;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.EpisodeTOValidator;
 import cz.vhromada.catalog.validator.SeasonTOValidator;
 import cz.vhromada.converters.Converter;

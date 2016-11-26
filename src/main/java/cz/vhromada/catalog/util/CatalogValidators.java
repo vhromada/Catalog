@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.util;
 
 import cz.vhromada.validators.Validators;
 import cz.vhromada.validators.exceptions.ValidationException;

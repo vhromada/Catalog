@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.CatalogValidators;
 import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.util.CatalogValidators;
 import cz.vhromada.catalog.validator.GenreTOValidator;
 import cz.vhromada.catalog.validator.ShowTOValidator;
 import cz.vhromada.validators.Validators;

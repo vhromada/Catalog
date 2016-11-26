@@ -15,7 +15,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.common.Time;
@@ -27,6 +26,7 @@ import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.ShowTOValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;

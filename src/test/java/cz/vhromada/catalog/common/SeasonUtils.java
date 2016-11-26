@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.util.CollectionUtils;
 
 /**
  * A class represents utility class for seasons.

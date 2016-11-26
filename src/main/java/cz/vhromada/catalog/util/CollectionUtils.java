@@ -1,9 +1,11 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import cz.vhromada.catalog.common.Movable;
 
 /**
  * A class represents utility class for working with collections.

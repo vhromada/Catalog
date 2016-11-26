@@ -1,5 +1,7 @@
 package cz.vhromada.catalog.common;
 
+import cz.vhromada.catalog.util.CatalogValidators;
+import cz.vhromada.catalog.util.Constants;
 import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Test;

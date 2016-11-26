@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.MediumUtils;
@@ -18,6 +17,7 @@ import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.entity.MediumTO;
 import cz.vhromada.catalog.entity.MovieTO;
 import cz.vhromada.catalog.facade.MovieFacade;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 

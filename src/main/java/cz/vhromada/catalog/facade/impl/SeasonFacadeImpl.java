@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cz.vhromada.catalog.CatalogUtils;
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.entity.SeasonTO;
 import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.util.CatalogUtils;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.SeasonTOValidator;
 import cz.vhromada.catalog.validator.ShowTOValidator;
 import cz.vhromada.converters.Converter;

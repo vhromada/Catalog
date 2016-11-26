@@ -1,11 +1,11 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.ShowTOValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 

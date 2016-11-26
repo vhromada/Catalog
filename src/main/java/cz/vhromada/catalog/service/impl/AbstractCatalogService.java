@@ -2,9 +2,9 @@ package cz.vhromada.catalog.service.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.Validators;
 
 import org.springframework.cache.Cache;

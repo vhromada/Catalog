@@ -3,11 +3,11 @@ package cz.vhromada.catalog.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cz.vhromada.catalog.CatalogUtils;
-import cz.vhromada.catalog.common.CollectionUtils;
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
+import cz.vhromada.catalog.util.CatalogUtils;
+import cz.vhromada.catalog.util.CollectionUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 
-import cz.vhromada.validators.Validators;
+import org.springframework.util.Assert;
 
 /**
  * A class represents time.
@@ -60,7 +60,7 @@ public final class Time implements Serializable {
      * @throws IllegalArgumentException if time in seconds is negative number
      */
     public Time(final int length) {
-        Validators.validateArgumentNotNegativeNumber(length, "Length");
+        Assert.isTrue(length >= 0L, "Length mustn't be negative number.");
 
         this.length = length;
         this.data = new EnumMap<>(TimeData.class);
@@ -81,9 +81,9 @@ public final class Time implements Serializable {
      *                                  or seconds isn't between 0 and 59
      */
     public Time(final int hours, final int minutes, final int seconds) {
-        Validators.validateArgumentNotNegativeNumber(hours, "Hours");
-        Validators.validateArgumentRange(minutes, MIN_TIME, MAX_TIME, "Minutes");
-        Validators.validateArgumentRange(seconds, MIN_TIME, MAX_TIME, "Seconds");
+        Assert.isTrue(hours >= 0L, "Hours mustn't be negative number.");
+        Assert.isTrue(minutes >= MIN_TIME && minutes <= MAX_TIME, "Minutes must be between " + MIN_TIME + " and " + MAX_TIME + '.');
+        Assert.isTrue(seconds >= MIN_TIME && seconds <= MAX_TIME, "Seconds must be between " + MIN_TIME + " and " + MAX_TIME + '.');
 
         this.length = hours * HOUR_SECONDS + minutes * MINUTE_SECONDS + seconds;
         this.data = new EnumMap<>(TimeData.class);
@@ -109,7 +109,7 @@ public final class Time implements Serializable {
      * @throws IllegalArgumentException if data type is null
      */
     public int getData(final TimeData dataType) {
-        Validators.validateArgumentNotNull(dataType, "Data type");
+        Assert.notNull(dataType, "Data type mustn't be null.");
 
         return data.get(dataType);
     }

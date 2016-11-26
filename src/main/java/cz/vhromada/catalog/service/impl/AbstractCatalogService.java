@@ -5,11 +5,11 @@ import java.util.List;
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.cache.Cache;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 /**
  * An abstract class represents service for data.
@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractCatalogService<T extends Movable> implements CatalogService<T> {
 
     /**
-     * Data argument
+     * Message for invalid data
      */
-    private static final String DATA_ARGUMENT = "Data";
+    private static final String NULL_DATA_MESSAGE = "Data mustn't be null.";
 
     /**
      * Repository for data
@@ -51,9 +51,9 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      *                                  or cache key is null
      */
     public AbstractCatalogService(final JpaRepository<T, Integer> repository, final Cache cache, final String key) {
-        Validators.validateArgumentNotNull(repository, "Repository");
-        Validators.validateArgumentNotNull(cache, "Cache");
-        Validators.validateArgumentNotNull(key, "Cache key");
+        Assert.notNull(repository, "Repository mustn't be null.");
+        Assert.notNull(cache, "Cache mustn't be null.");
+        Assert.notNull(key, "Cache key mustn't be null.");
 
         this.repository = repository;
         this.cache = cache;
@@ -79,7 +79,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
     @Override
     @Transactional(readOnly = true)
     public T get(final Integer id) {
-        Validators.validateArgumentNotNull(id, "ID");
+        Assert.notNull(id, "ID mustn't be null.");
 
         final List<T> data = getCachedData(true);
         for (final T item : data) {
@@ -96,7 +96,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      */
     @Override
     public void add(final T data) {
-        Validators.validateArgumentNotNull(data, DATA_ARGUMENT);
+        Assert.notNull(data, NULL_DATA_MESSAGE);
 
         final T savedData = repository.save(data);
         savedData.setPosition(savedData.getId() - 1);
@@ -112,7 +112,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      */
     @Override
     public void update(final T data) {
-        Validators.validateArgumentNotNull(data, DATA_ARGUMENT);
+        Assert.notNull(data, NULL_DATA_MESSAGE);
 
         final T savedData = repository.save(data);
 
@@ -126,7 +126,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      */
     @Override
     public void remove(final T data) {
-        Validators.validateArgumentNotNull(data, DATA_ARGUMENT);
+        Assert.notNull(data, NULL_DATA_MESSAGE);
 
         repository.delete(data);
 
@@ -140,7 +140,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      */
     @Override
     public void duplicate(final T data) {
-        Validators.validateArgumentNotNull(data, DATA_ARGUMENT);
+        Assert.notNull(data, NULL_DATA_MESSAGE);
 
         final T savedDataCopy = repository.save(getCopy(data));
 
@@ -181,7 +181,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      * @param data data
      * @return copy of data
      */
-    protected abstract T getCopy(final T data);
+    protected abstract T getCopy(T data);
 
     /**
      * Updates positions.
@@ -223,7 +223,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
      * @throws IllegalArgumentException if data is null
      */
     private void move(final T data, final boolean up) {
-        Validators.validateArgumentNotNull(data, DATA_ARGUMENT);
+        Assert.notNull(data, NULL_DATA_MESSAGE);
 
         final List<T> dataList = CollectionUtils.getSortedData(getCachedData(false));
         final int index = dataList.indexOf(data);

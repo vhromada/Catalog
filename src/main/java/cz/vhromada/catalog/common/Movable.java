@@ -21,7 +21,7 @@ public interface Movable extends Serializable {
      *
      * @param id new value
      */
-    void setId(final Integer id);
+    void setId(Integer id);
 
     /**
      * Returns position.
@@ -35,6 +35,6 @@ public interface Movable extends Serializable {
      *
      * @param position new value
      */
-    void setPosition(final int position);
+    void setPosition(int position);
 
 }

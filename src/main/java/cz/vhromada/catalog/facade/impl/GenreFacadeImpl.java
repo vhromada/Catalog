@@ -141,7 +141,7 @@ public class GenreFacadeImpl implements GenreFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc
+     * @throws IllegalArgumentException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final Genre genre) {

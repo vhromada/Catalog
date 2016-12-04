@@ -141,7 +141,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc
+     * @throws IllegalArgumentException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final Game game) {

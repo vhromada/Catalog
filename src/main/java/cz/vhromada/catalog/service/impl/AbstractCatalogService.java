@@ -185,6 +185,8 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
 
     /**
      * Updates positions.
+     *
+     * @param data data
      */
     protected void updatePositions(final List<T> data) {
         for (int i = 0; i < data.size(); i++) {

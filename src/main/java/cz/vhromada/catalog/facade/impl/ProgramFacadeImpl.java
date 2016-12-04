@@ -141,7 +141,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc
+     * @throws IllegalArgumentException                                  {@inheritDoc}
      */
     @Override
     public void moveUp(final Program program) {

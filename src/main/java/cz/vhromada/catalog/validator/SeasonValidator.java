@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.Season;
 
 /**
  * An interface represents validator for season.
@@ -24,7 +24,7 @@ public interface SeasonValidator {
      *                                  or subtitles contain null value
      *                                  or note is null
      */
-    void validateNewSeasonTO(SeasonTO season);
+    void validateNewSeason(Season season);
 
     /**
      * Validates existing season.
@@ -41,7 +41,7 @@ public interface SeasonValidator {
      *                                  or subtitles contain null value
      *                                  or note is null
      */
-    void validateExistingSeasonTO(SeasonTO season);
+    void validateExistingSeason(Season season);
 
     /**
      * Validates season with ID.
@@ -50,6 +50,6 @@ public interface SeasonValidator {
      * @throws IllegalArgumentException if season is null
      *                                  or ID is null
      */
-    void validateSeasonTOWithId(SeasonTO season);
+    void validateSeasonWithId(Season season);
 
 }

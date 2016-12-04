@@ -5,11 +5,11 @@ import java.util.Objects;
 import cz.vhromada.catalog.common.Movable;
 
 /**
- * A class represents TO for game.
+ * A class represents program.
  *
  * @author Vladimir Hromada
  */
-public class GameTO implements Movable {
+public class Program implements Movable {
 
     /**
      * SerialVersionUID
@@ -27,12 +27,12 @@ public class GameTO implements Movable {
     private String name;
 
     /**
-     * URL to english Wikipedia page about game
+     * URL to english Wikipedia page about program
      */
     private String wikiEn;
 
     /**
-     * URL to czech Wikipedia page about game
+     * URL to czech Wikipedia page about program
      */
     private String wikiCz;
 
@@ -50,31 +50,6 @@ public class GameTO implements Movable {
      * True if there is serial key
      */
     private boolean serialKey;
-
-    /**
-     * True if there is patch
-     */
-    private boolean patch;
-
-    /**
-     * True if there is trainer
-     */
-    private boolean trainer;
-
-    /**
-     * True if there is data for trainer
-     */
-    private boolean trainerData;
-
-    /**
-     * True if there is editor
-     */
-    private boolean editor;
-
-    /**
-     * True if there are saves
-     */
-    private boolean saves;
 
     /**
      * Other data
@@ -106,6 +81,7 @@ public class GameTO implements Movable {
      *
      * @return name
      */
+
     public String getName() {
         return name;
     }
@@ -120,16 +96,16 @@ public class GameTO implements Movable {
     }
 
     /**
-     * Returns URL to english Wikipedia page about game.
+     * Returns URL to english Wikipedia page about program.
      *
-     * @return URL to english Wikipedia page about game
+     * @return URL to english Wikipedia page about program
      */
     public String getWikiEn() {
         return wikiEn;
     }
 
     /**
-     * Sets a new value to URL to english Wikipedia page about game.
+     * Sets a new value to URL to english Wikipedia page about program.
      *
      * @param wikiEn new value
      */
@@ -138,16 +114,16 @@ public class GameTO implements Movable {
     }
 
     /**
-     * Returns URL to czech Wikipedia page about game.
+     * Returns URL to czech Wikipedia page about program.
      *
-     * @return URL to czech Wikipedia page about game
+     * @return URL to czech Wikipedia page about program
      */
     public String getWikiCz() {
         return wikiCz;
     }
 
     /**
-     * Sets a new value to URL to czech Wikipedia page about game.
+     * Sets a new value to URL to czech Wikipedia page about program.
      *
      * @param wikiCz new value
      */
@@ -210,96 +186,6 @@ public class GameTO implements Movable {
     }
 
     /**
-     * Returns true if there is patch.
-     *
-     * @return true if there is patch
-     */
-    public boolean getPatch() {
-        return patch;
-    }
-
-    /**
-     * Sets a new value to if there is patch.
-     *
-     * @param patch new value
-     */
-    public void setPatch(final boolean patch) {
-        this.patch = patch;
-    }
-
-    /**
-     * Returns true if there is trainer.
-     *
-     * @return true if there is trainer
-     */
-    public boolean getTrainer() {
-        return trainer;
-    }
-
-    /**
-     * Sets a new value to if there is trainer.
-     *
-     * @param trainer new value
-     */
-    public void setTrainer(final boolean trainer) {
-        this.trainer = trainer;
-    }
-
-    /**
-     * Returns true if there is data for trainer.
-     *
-     * @return true if there is data for trainer
-     */
-    public boolean getTrainerData() {
-        return trainerData;
-    }
-
-    /**
-     * Sets a new value to if there is data for trainer.
-     *
-     * @param trainerData new value
-     */
-    public void setTrainerData(final boolean trainerData) {
-        this.trainerData = trainerData;
-    }
-
-    /**
-     * Returns true if there is editor.
-     *
-     * @return true if there is editor
-     */
-    public boolean getEditor() {
-        return editor;
-    }
-
-    /**
-     * Sets a new value to if there is editor.
-     *
-     * @param editor new value
-     */
-    public void setEditor(final boolean editor) {
-        this.editor = editor;
-    }
-
-    /**
-     * Returns true if there are saves.
-     *
-     * @return true if there are saves
-     */
-    public boolean getSaves() {
-        return saves;
-    }
-
-    /**
-     * Sets a new value to if there are saves.
-     *
-     * @param saves new value
-     */
-    public void setSaves(final boolean saves) {
-        this.saves = saves;
-    }
-
-    /**
      * Returns other data.
      *
      * @return other data
@@ -350,11 +236,11 @@ public class GameTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof GameTO) || id == null) {
+        if (obj == null || !(obj instanceof Program) || id == null) {
             return false;
         }
 
-        return id.equals(((GameTO) obj).id);
+        return id.equals(((Program) obj).id);
     }
 
     @Override
@@ -364,9 +250,8 @@ public class GameTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("GameTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, patch=%b, trainer=%b, trainerData=%b, "
-                        + "editor=%b, saves=%b, otherData=%s, note=%s, position=%d]", id, name, wikiEn, wikiCz, mediaCount, crack, serialKey, patch, trainer,
-                trainerData, editor, saves, otherData, note, position);
+        return String.format("Program [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, otherData=%s, note=%s, position=%d]", id,
+                name, wikiEn, wikiCz, mediaCount, crack, serialKey, otherData, note, position);
     }
 
 }

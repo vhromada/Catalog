@@ -6,11 +6,11 @@ import java.util.Objects;
 import cz.vhromada.catalog.common.Movable;
 
 /**
- * A class represents TO for show.
+ * A class represents show.
  *
  * @author Vladimir Hromada
  */
-public class ShowTO implements Movable {
+public class Show implements Movable {
 
     /**
      * SerialVersionUID
@@ -68,9 +68,9 @@ public class ShowTO implements Movable {
     private int position;
 
     /**
-     * List of TO for genre
+     * Genres
      */
-    private List<GenreTO> genres;
+    private List<Genre> genres;
 
     @Override
     public Integer getId() {
@@ -237,20 +237,20 @@ public class ShowTO implements Movable {
     }
 
     /**
-     * Returns list of TO for genre.
+     * Returns genres.
      *
-     * @return list of TO for genre
+     * @return genres
      */
-    public List<GenreTO> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
     /**
-     * Sets a new value to list of TO for genre.
+     * Sets a new value to genres.
      *
      * @param genres new value
      */
-    public void setGenres(final List<GenreTO> genres) {
+    public void setGenres(final List<Genre> genres) {
         this.genres = genres;
     }
 
@@ -259,11 +259,11 @@ public class ShowTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof ShowTO) || id == null) {
+        if (obj == null || !(obj instanceof Show) || id == null) {
             return false;
         }
 
-        return id.equals(((ShowTO) obj).id);
+        return id.equals(((Show) obj).id);
     }
 
     @Override
@@ -273,7 +273,7 @@ public class ShowTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("ShowTO [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
+        return String.format("Show [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
                 + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }
 

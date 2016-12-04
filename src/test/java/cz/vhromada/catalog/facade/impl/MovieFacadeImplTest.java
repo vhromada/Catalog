@@ -18,11 +18,9 @@ import java.util.List;
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.MovieUtils;
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Medium;
-import cz.vhromada.catalog.domain.Movie;
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
@@ -49,13 +47,13 @@ public class MovieFacadeImplTest {
      * Instance of {@link CatalogService}
      */
     @Mock
-    private CatalogService<Movie> movieService;
+    private CatalogService<cz.vhromada.catalog.domain.Movie> movieService;
 
     /**
      * Instance of {@link CatalogService}
      */
     @Mock
-    private CatalogService<Genre> genreService;
+    private CatalogService<cz.vhromada.catalog.domain.Genre> genreService;
 
     /**
      * Instance of {@link Converter}
@@ -132,19 +130,19 @@ public class MovieFacadeImplTest {
      */
     @Test
     public void testGetMovies() {
-        final List<Movie> movieList = CollectionUtils.newList(MovieUtils.newMovie(1), MovieUtils.newMovie(2));
-        final List<MovieTO> expectedMovies = CollectionUtils.newList(MovieUtils.newMovieTO(1), MovieUtils.newMovieTO(2));
+        final List<cz.vhromada.catalog.domain.Movie> movieList = CollectionUtils.newList(MovieUtils.newMovie(1), MovieUtils.newMovie(2));
+        final List<Movie> expectedMovies = CollectionUtils.newList(MovieUtils.newMovieTO(1), MovieUtils.newMovieTO(2));
 
         when(movieService.getAll()).thenReturn(movieList);
-        when(converter.convertCollection(anyListOf(Movie.class), eq(MovieTO.class))).thenReturn(expectedMovies);
+        when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Movie.class), eq(Movie.class))).thenReturn(expectedMovies);
 
-        final List<MovieTO> movies = movieFacade.getMovies();
+        final List<Movie> movies = movieFacade.getMovies();
 
         assertNotNull(movies);
         assertEquals(expectedMovies, movies);
 
         verify(movieService).getAll();
-        verify(converter).convertCollection(movieList, MovieTO.class);
+        verify(converter).convertCollection(movieList, Movie.class);
         verifyNoMoreInteractions(movieService, converter);
         verifyZeroInteractions(genreService, movieValidator);
     }
@@ -154,19 +152,19 @@ public class MovieFacadeImplTest {
      */
     @Test
     public void testGetMovie_ExistingMovie() {
-        final Movie movieEntity = MovieUtils.newMovie(1);
-        final MovieTO expectedMovie = MovieUtils.newMovieTO(1);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(1);
+        final Movie expectedMovie = MovieUtils.newMovieTO(1);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
-        when(converter.convert(any(Movie.class), eq(MovieTO.class))).thenReturn(expectedMovie);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Movie.class), eq(Movie.class))).thenReturn(expectedMovie);
 
-        final MovieTO movie = movieFacade.getMovie(1);
+        final Movie movie = movieFacade.getMovie(1);
 
         assertNotNull(movie);
         assertEquals(expectedMovie, movie);
 
         verify(movieService).get(1);
-        verify(converter).convert(movieEntity, MovieTO.class);
+        verify(converter).convert(movieEntity, Movie.class);
         verifyNoMoreInteractions(movieService, converter);
         verifyZeroInteractions(genreService, movieValidator);
     }
@@ -177,12 +175,12 @@ public class MovieFacadeImplTest {
     @Test
     public void testGetMovie_NotExistingMovie() {
         when(movieService.get(anyInt())).thenReturn(null);
-        when(converter.convert(any(Movie.class), eq(MovieTO.class))).thenReturn(null);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Movie.class), eq(Movie.class))).thenReturn(null);
 
         assertNull(movieFacade.getMovie(Integer.MAX_VALUE));
 
         verify(movieService).get(Integer.MAX_VALUE);
-        verify(converter).convert(null, MovieTO.class);
+        verify(converter).convert(null, Movie.class);
         verifyNoMoreInteractions(movieService, converter);
         verifyZeroInteractions(genreService, movieValidator);
     }
@@ -196,49 +194,49 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)}.
+     * Test method for {@link MovieFacade#add(Movie)}.
      */
     @Test
     public void testAdd() {
-        final Movie movieEntity = MovieUtils.newMovie(null);
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
 
         when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
-        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movieEntity);
+        when(converter.convert(any(Movie.class), eq(cz.vhromada.catalog.domain.Movie.class))).thenReturn(movieEntity);
 
         movieFacade.add(movie);
 
         verify(movieService).add(movieEntity);
-        for (final GenreTO genre : movie.getGenres()) {
+        for (final Genre genre : movie.getGenres()) {
             verify(genreService).get(genre.getId());
         }
-        verify(converter).convert(movie, Movie.class);
-        verify(movieValidator).validateNewMovieTO(movie);
+        verify(converter).convert(movie, cz.vhromada.catalog.domain.Movie.class);
+        verify(movieValidator).validateNewMovie(movie);
         verifyNoMoreInteractions(movieService, genreService, converter, movieValidator);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#add(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieValidator).validateNewMovieTO(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateNewMovie(any(Movie.class));
 
         movieFacade.add(null);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with argument with bad data.
+     * Test method for {@link MovieFacade#add(Movie)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(movieValidator).validateNewMovieTO(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateNewMovie(any(Movie.class));
 
         movieFacade.add(MovieUtils.newMovieTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with argument with not existing genre.
+     * Test method for {@link MovieFacade#add(Movie)} with argument with not existing genre.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testAdd_NotExistingGenre() {
@@ -248,51 +246,51 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)}.
+     * Test method for {@link MovieFacade#update(Movie)}.
      */
     @Test
     public void testUpdate() {
-        final Movie movieEntity = MovieUtils.newMovie(null);
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
         when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
-        when(converter.convert(any(MovieTO.class), eq(Movie.class))).thenReturn(movieEntity);
+        when(converter.convert(any(Movie.class), eq(cz.vhromada.catalog.domain.Movie.class))).thenReturn(movieEntity);
 
         movieFacade.update(movie);
 
         verify(movieService).get(movie.getId());
         verify(movieService).update(movieEntity);
-        for (final GenreTO genre : movie.getGenres()) {
+        for (final Genre genre : movie.getGenres()) {
             verify(genreService).get(genre.getId());
         }
-        verify(converter).convert(movie, Movie.class);
-        verify(movieValidator).validateExistingMovieTO(movie);
+        verify(converter).convert(movie, cz.vhromada.catalog.domain.Movie.class);
+        verify(movieValidator).validateExistingMovie(movie);
         verifyNoMoreInteractions(movieService, genreService, converter, movieValidator);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#update(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieValidator).validateExistingMovieTO(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateExistingMovie(any(Movie.class));
 
         movieFacade.update(null);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with argument with bad data.
+     * Test method for {@link MovieFacade#update(Movie)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(movieValidator).validateExistingMovieTO(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateExistingMovie(any(Movie.class));
 
         movieFacade.update(MovieUtils.newMovieTO(null));
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with not existing movie.
+     * Test method for {@link MovieFacade#update(Movie)} with not existing movie.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingMovie() {
@@ -302,7 +300,7 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with not existing genre.
+     * Test method for {@link MovieFacade#update(Movie)} with not existing genre.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingGenre() {
@@ -313,12 +311,12 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)}.
+     * Test method for {@link MovieFacade#remove(Movie)}.
      */
     @Test
     public void testRemove() {
-        final Movie movieEntity = MovieUtils.newMovie(1);
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
 
@@ -326,33 +324,33 @@ public class MovieFacadeImplTest {
 
         verify(movieService).get(1);
         verify(movieService).remove(movieEntity);
-        verify(movieValidator).validateMovieTOWithId(movie);
+        verify(movieValidator).validateMovieWithId(movie);
         verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#remove(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.remove(null);
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)} with argument with bad data.
+     * Test method for {@link MovieFacade#remove(Movie)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.remove(MovieUtils.newMovieTO(null));
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)} with not existing argument.
+     * Test method for {@link MovieFacade#remove(Movie)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_NotExistingArgument() {
@@ -362,12 +360,12 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)}.
+     * Test method for {@link MovieFacade#duplicate(Movie)}.
      */
     @Test
     public void testDuplicate() {
-        final Movie movieEntity = MovieUtils.newMovie(1);
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
 
@@ -375,33 +373,33 @@ public class MovieFacadeImplTest {
 
         verify(movieService).get(1);
         verify(movieService).duplicate(movieEntity);
-        verify(movieValidator).validateMovieTOWithId(movie);
+        verify(movieValidator).validateMovieWithId(movie);
         verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#duplicate(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.duplicate(null);
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)} with argument with bad data.
+     * Test method for {@link MovieFacade#duplicate(Movie)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.duplicate(MovieUtils.newMovieTO(null));
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)} with not existing argument.
+     * Test method for {@link MovieFacade#duplicate(Movie)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_NotExistingArgument() {
@@ -411,13 +409,13 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)}.
+     * Test method for {@link MovieFacade#moveUp(Movie)}.
      */
     @Test
     public void testMoveUp() {
-        final Movie movieEntity = MovieUtils.newMovie(2);
-        final List<Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), movieEntity);
-        final MovieTO movie = MovieUtils.newMovieTO(2);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(2);
+        final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), movieEntity);
+        final Movie movie = MovieUtils.newMovieTO(2);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
@@ -427,33 +425,33 @@ public class MovieFacadeImplTest {
         verify(movieService).get(2);
         verify(movieService).getAll();
         verify(movieService).moveUp(movieEntity);
-        verify(movieValidator).validateMovieTOWithId(movie);
+        verify(movieValidator).validateMovieWithId(movie);
         verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.moveUp(null);
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with argument with bad data.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.moveUp(MovieUtils.newMovieTO(null));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not existing argument.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_NotExistingArgument() {
@@ -463,13 +461,13 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not movable argument.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Movie movieEntity = MovieUtils.newMovie(Integer.MAX_VALUE);
-        final List<Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovie(1));
-        final MovieTO movie = MovieUtils.newMovieTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovie(1));
+        final Movie movie = MovieUtils.newMovieTO(Integer.MAX_VALUE);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
@@ -478,13 +476,13 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)}.
+     * Test method for {@link MovieFacade#moveDown(Movie)}.
      */
     @Test
     public void testMoveDown() {
-        final Movie movieEntity = MovieUtils.newMovie(1);
-        final List<Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovie(2));
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(1);
+        final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovie(2));
+        final Movie movie = MovieUtils.newMovieTO(1);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
@@ -494,33 +492,33 @@ public class MovieFacadeImplTest {
         verify(movieService).get(1);
         verify(movieService).getAll();
         verify(movieService).moveDown(movieEntity);
-        verify(movieValidator).validateMovieTOWithId(movie);
+        verify(movieValidator).validateMovieWithId(movie);
         verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.moveDown(null);
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with argument with bad data.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieWithId(any(Movie.class));
 
         movieFacade.moveDown(MovieUtils.newMovieTO(null));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not existing argument.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_NotExistingArgument() {
@@ -530,13 +528,13 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not movable argument.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Movie movieEntity = MovieUtils.newMovie(Integer.MAX_VALUE);
-        final List<Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), movieEntity);
-        final MovieTO movie = MovieUtils.newMovieTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovie(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), movieEntity);
+        final Movie movie = MovieUtils.newMovieTO(Integer.MAX_VALUE);
 
         when(movieService.get(anyInt())).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
@@ -561,8 +559,8 @@ public class MovieFacadeImplTest {
      */
     @Test
     public void testGetTotalMediaCount() {
-        final Movie movie1 = MovieUtils.newMovie(1);
-        final Movie movie2 = MovieUtils.newMovie(2);
+        final cz.vhromada.catalog.domain.Movie movie1 = MovieUtils.newMovie(1);
+        final cz.vhromada.catalog.domain.Movie movie2 = MovieUtils.newMovie(2);
         final int expectedCount = movie1.getMedia().size() + movie2.getMedia().size();
 
         when(movieService.getAll()).thenReturn(CollectionUtils.newList(movie1, movie2));
@@ -579,9 +577,9 @@ public class MovieFacadeImplTest {
      */
     @Test
     public void testGetTotalLength() {
-        final List<Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), MovieUtils.newMovie(2));
+        final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(MovieUtils.newMovie(1), MovieUtils.newMovie(2));
         int expectedTotalLength = 0;
-        for (final Movie movie : movies) {
+        for (final cz.vhromada.catalog.domain.Movie movie : movies) {
             for (final Medium medium : movie.getMedia()) {
                 expectedTotalLength += medium.getLength();
             }

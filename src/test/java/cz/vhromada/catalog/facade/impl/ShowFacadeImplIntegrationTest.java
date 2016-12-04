@@ -13,9 +13,8 @@ import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Season;
-import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -100,19 +99,19 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)}.
+     * Test method for {@link ShowFacade#add(Show)}.
      */
     @Test
     @DirtiesContext
     public void testAdd() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenreTO(1)));
-        final Show expectedShow = ShowUtils.newShow(ShowUtils.SHOWS_COUNT + 1);
+        final cz.vhromada.catalog.domain.Show expectedShow = ShowUtils.newShow(ShowUtils.SHOWS_COUNT + 1);
         expectedShow.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
 
         showFacade.add(show);
 
-        final Show addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
+        final cz.vhromada.catalog.domain.Show addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
         ShowUtils.assertShowDeepEquals(expectedShow, addedShow);
 
         assertEquals(ShowUtils.SHOWS_COUNT + 1, ShowUtils.getShowsCount(entityManager));
@@ -121,7 +120,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#add(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
@@ -129,7 +128,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with not null ID.
+     * Test method for {@link ShowFacade#add(Show)} with show with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotNullId() {
@@ -137,177 +136,177 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null czech name.
+     * Test method for {@link ShowFacade#add(Show)} with show with null czech name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setCzechName(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with empty string as czech name.
+     * Test method for {@link ShowFacade#add(Show)} with show with empty string as czech name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_EmptyCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setCzechName("");
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null original name.
+     * Test method for {@link ShowFacade#add(Show)} with show with null original name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setOriginalName(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with empty string as original name.
+     * Test method for {@link ShowFacade#add(Show)} with show with empty string as original name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_EmptyOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setOriginalName("");
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null URL to ČSFD page about show.
+     * Test method for {@link ShowFacade#add(Show)} with show with null URL to ČSFD page about show.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullCsfd() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setCsfd(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with bad minimal IMDB code.
+     * Test method for {@link ShowFacade#add(Show)} with show with bad minimal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMinimalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with bad divider IMDB code.
+     * Test method for {@link ShowFacade#add(Show)} with show with bad divider IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadDividerImdb() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setImdbCode(0);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with bad maximal IMDB code.
+     * Test method for {@link ShowFacade#add(Show)} with show with bad maximal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMaximalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null URL to english Wikipedia page about show.
+     * Test method for {@link ShowFacade#add(Show)} with show with null URL to english Wikipedia page about show.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullWikiEn() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setWikiEn(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null URL to czech Wikipedia page about show.
+     * Test method for {@link ShowFacade#add(Show)} with show with null URL to czech Wikipedia page about show.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullWikiCz() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setWikiCz(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null path to file with show picture.
+     * Test method for {@link ShowFacade#add(Show)} with show with null path to file with show picture.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullPicture() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setPicture(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null note.
+     * Test method for {@link ShowFacade#add(Show)} with show with null note.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullNote() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setNote(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with null genres.
+     * Test method for {@link ShowFacade#add(Show)} with show with null genres.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullGenres() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setGenres(null);
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with genres with null value.
+     * Test method for {@link ShowFacade#add(Show)} with show with genres with null value.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadGenres() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), null));
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with genres with genre with null ID.
+     * Test method for {@link ShowFacade#add(Show)} with show with genres with genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_Genres_Genre_NullId() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(null)));
 
         showFacade.add(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with show with genres with genre with null name.
+     * Test method for {@link ShowFacade#add(Show)} with show with genres with genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_Genres_Genre_NullName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
-        final GenreTO badGenre = GenreUtils.newGenreTO(1);
+        final Show show = ShowUtils.newShowTO(null);
+        final Genre badGenre = GenreUtils.newGenreTO(1);
         badGenre.setName(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), badGenre));
 
@@ -315,17 +314,17 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)}.
+     * Test method for {@link ShowFacade#update(Show)}.
      */
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenreTO(4)));
 
         showFacade.update(show);
 
-        final Show updatedShow = ShowUtils.getShow(entityManager, 1);
+        final cz.vhromada.catalog.domain.Show updatedShow = ShowUtils.getShow(entityManager, 1);
         ShowUtils.assertShowDeepEquals(show, updatedShow);
 
         assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
@@ -334,7 +333,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#update(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
@@ -342,7 +341,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null ID.
+     * Test method for {@link ShowFacade#update(Show)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullId() {
@@ -350,177 +349,177 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null czech name.
+     * Test method for {@link ShowFacade#update(Show)} with show with null czech name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setCzechName(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with empty string as czech name.
+     * Test method for {@link ShowFacade#update(Show)} with show with empty string as czech name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_EmptyCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setCzechName("");
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null original name.
+     * Test method for {@link ShowFacade#update(Show)} with show with null original name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setOriginalName(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with empty string as original name.
+     * Test method for {@link ShowFacade#update(Show)} with show with empty string as original name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_EmptyOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setOriginalName("");
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null URL to ČSFD page about show.
+     * Test method for {@link ShowFacade#update(Show)} with show with null URL to ČSFD page about show.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullCsfd() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setCsfd(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with bad minimal IMDB code.
+     * Test method for {@link ShowFacade#update(Show)} with show with bad minimal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMinimalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with bad divider IMDB code.
+     * Test method for {@link ShowFacade#update(Show)} with show with bad divider IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadDividerImdb() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setImdbCode(0);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with bad maximal IMDB code.
+     * Test method for {@link ShowFacade#update(Show)} with show with bad maximal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMaximalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null URL to english Wikipedia page about show.
+     * Test method for {@link ShowFacade#update(Show)} with show with null URL to english Wikipedia page about show.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullWikiEn() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setWikiEn(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null URL to czech Wikipedia page about show.
+     * Test method for {@link ShowFacade#update(Show)} with show with null URL to czech Wikipedia page about show.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullWikiCz() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setWikiCz(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null path to file with show picture.
+     * Test method for {@link ShowFacade#update(Show)} with show with null path to file with show picture.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullPicture() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setPicture(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null note.
+     * Test method for {@link ShowFacade#update(Show)} with show with null note.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullNote() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setNote(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with null genres.
+     * Test method for {@link ShowFacade#update(Show)} with show with null genres.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullGenres() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setGenres(null);
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with genres with null value.
+     * Test method for {@link ShowFacade#update(Show)} with show with genres with null value.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadGenres() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), null));
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with genres with genre with null ID.
+     * Test method for {@link ShowFacade#update(Show)} with show with genres with genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_Genres_Genre_NullId() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(null)));
 
         showFacade.update(show);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with genres with genre with null name.
+     * Test method for {@link ShowFacade#update(Show)} with show with genres with genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_Genres_Genre_NullName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
-        final GenreTO badGenre = GenreUtils.newGenreTO(1);
+        final Show show = ShowUtils.newShowTO(1);
+        final Genre badGenre = GenreUtils.newGenreTO(1);
         badGenre.setName(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), badGenre));
 
@@ -528,7 +527,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with show with bad ID.
+     * Test method for {@link ShowFacade#update(Show)} with show with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_BadId() {
@@ -536,7 +535,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)}.
+     * Test method for {@link ShowFacade#remove(Show)}.
      */
     @Test
     @DirtiesContext
@@ -551,7 +550,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#remove(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
@@ -559,7 +558,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)} with show with null ID.
+     * Test method for {@link ShowFacade#remove(Show)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_NullId() {
@@ -567,7 +566,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)} with show with bad ID.
+     * Test method for {@link ShowFacade#remove(Show)} with show with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_BadId() {
@@ -575,12 +574,12 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)}.
+     * Test method for {@link ShowFacade#duplicate(Show)}.
      */
     @Test
     @DirtiesContext
     public void testDuplicate() {
-        final Show show = ShowUtils.getShow(ShowUtils.SHOWS_COUNT);
+        final cz.vhromada.catalog.domain.Show show = ShowUtils.getShow(ShowUtils.SHOWS_COUNT);
         show.setId(ShowUtils.SHOWS_COUNT + 1);
         for (final Season season : show.getSeasons()) {
             final int index = show.getSeasons().indexOf(season);
@@ -592,7 +591,7 @@ public class ShowFacadeImplIntegrationTest {
 
         showFacade.duplicate(ShowUtils.newShowTO(ShowUtils.SHOWS_COUNT));
 
-        final Show duplicatedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
+        final cz.vhromada.catalog.domain.Show duplicatedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
         ShowUtils.assertShowDeepEquals(show, duplicatedShow);
 
         assertEquals(ShowUtils.SHOWS_COUNT + 1, ShowUtils.getShowsCount(entityManager));
@@ -601,7 +600,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#duplicate(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
@@ -609,7 +608,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)} with show with null ID.
+     * Test method for {@link ShowFacade#duplicate(Show)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_NullId() {
@@ -617,7 +616,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)} with show with bad ID.
+     * Test method for {@link ShowFacade#duplicate(Show)} with show with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_BadId() {
@@ -625,14 +624,14 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)}.
+     * Test method for {@link ShowFacade#moveUp(Show)}.
      */
     @Test
     @DirtiesContext
     public void testMoveUp() {
-        final Show show1 = ShowUtils.getShow(1);
+        final cz.vhromada.catalog.domain.Show show1 = ShowUtils.getShow(1);
         show1.setPosition(1);
-        final Show show2 = ShowUtils.getShow(2);
+        final cz.vhromada.catalog.domain.Show show2 = ShowUtils.getShow(2);
         show2.setPosition(0);
 
         showFacade.moveUp(ShowUtils.newShowTO(2));
@@ -649,7 +648,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#moveUp(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
@@ -657,7 +656,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with show with null ID.
+     * Test method for {@link ShowFacade#moveUp(Show)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NullId() {
@@ -665,7 +664,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with not movable argument.
+     * Test method for {@link ShowFacade#moveUp(Show)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
@@ -673,7 +672,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with bad ID.
+     * Test method for {@link ShowFacade#moveUp(Show)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_BadId() {
@@ -681,14 +680,14 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)}.
+     * Test method for {@link ShowFacade#moveDown(Show)}.
      */
     @Test
     @DirtiesContext
     public void testMoveDown() {
-        final Show show1 = ShowUtils.getShow(1);
+        final cz.vhromada.catalog.domain.Show show1 = ShowUtils.getShow(1);
         show1.setPosition(1);
-        final Show show2 = ShowUtils.getShow(2);
+        final cz.vhromada.catalog.domain.Show show2 = ShowUtils.getShow(2);
         show2.setPosition(0);
 
         showFacade.moveDown(ShowUtils.newShowTO(1));
@@ -705,7 +704,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#moveDown(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
@@ -713,7 +712,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with show with null ID.
+     * Test method for {@link ShowFacade#moveDown(Show)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NullId() {
@@ -721,7 +720,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with not movable argument.
+     * Test method for {@link ShowFacade#moveDown(Show)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
@@ -729,7 +728,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with bad ID.
+     * Test method for {@link ShowFacade#moveDown(Show)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_BadId() {

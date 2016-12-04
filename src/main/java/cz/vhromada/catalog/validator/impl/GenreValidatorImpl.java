@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.validator.GenreValidator;
 
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ public class GenreValidatorImpl implements GenreValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewGenreTO(final GenreTO genre) {
-        validateGenreTO(genre);
+    public void validateNewGenre(final Genre genre) {
+        validateGenre(genre);
         Assert.isNull(genre.getId(), "ID must be null.");
     }
 
@@ -28,8 +28,8 @@ public class GenreValidatorImpl implements GenreValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingGenreTO(final GenreTO genre) {
-        validateGenreTO(genre);
+    public void validateExistingGenre(final Genre genre) {
+        validateGenre(genre);
         Assert.notNull(genre.getId(), "ID mustn't be null.");
     }
 
@@ -37,7 +37,7 @@ public class GenreValidatorImpl implements GenreValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateGenreTOWithId(final GenreTO genre) {
+    public void validateGenreWithId(final Genre genre) {
         Assert.notNull(genre, "Genre mustn't be null.");
         Assert.notNull(genre.getId(), "ID mustn't be null.");
     }
@@ -50,7 +50,7 @@ public class GenreValidatorImpl implements GenreValidator {
      *                                  or name is null
      *                                  or name is empty string
      */
-    private static void validateGenreTO(final GenreTO genre) {
+    private static void validateGenre(final Genre genre) {
         Assert.notNull(genre, "Genre mustn't be null.");
         Assert.notNull(genre.getName(), "Name mustn't be null");
         Assert.isTrue(!StringUtils.isEmpty(genre.getName()) && !StringUtils.isEmpty(genre.getName().trim()), "Name mustn't be empty string.");

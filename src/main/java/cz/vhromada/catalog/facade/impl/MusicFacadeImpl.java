@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
-import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.MusicValidator;
@@ -26,14 +25,14 @@ import org.springframework.stereotype.Component;
 public class MusicFacadeImpl implements MusicFacade {
 
     /**
-     * TO for music argument
+     * Music argument
      */
-    private static final String MUSIC_TO_ARGUMENT = "TO for music";
+    private static final String MUSIC_ARGUMENT = "music";
 
     /**
      * Service for music
      */
-    private final CatalogService<Music> musicService;
+    private final CatalogService<cz.vhromada.catalog.domain.Music> musicService;
 
     /**
      * Converter
@@ -41,7 +40,7 @@ public class MusicFacadeImpl implements MusicFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for music
+     * Validator for music
      */
     private MusicValidator musicValidator;
 
@@ -50,18 +49,18 @@ public class MusicFacadeImpl implements MusicFacade {
      *
      * @param musicService   service for music
      * @param converter      converter
-     * @param musicValidator validator for TO for music
+     * @param musicValidator validator for music
      * @throws IllegalArgumentException if service for music is null
      *                                  or converter is null
-     *                                  or validator for TO for music is null
+     *                                  or validator for music is null
      */
     @Autowired
-    public MusicFacadeImpl(@Qualifier("musicService") final CatalogService<Music> musicService,
+    public MusicFacadeImpl(@Qualifier("musicService") final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final MusicValidator musicValidator) {
         Validators.validateArgumentNotNull(musicService, "Service for music");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(musicValidator, "Validator for TO for music");
+        Validators.validateArgumentNotNull(musicValidator, "Validator for music");
 
         this.musicService = musicService;
         this.converter = converter;
@@ -74,18 +73,18 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     @Override
-    public List<MusicTO> getMusic() {
-        return converter.convertCollection(musicService.getAll(), MusicTO.class);
+    public List<Music> getMusic() {
+        return converter.convertCollection(musicService.getAll(), Music.class);
     }
 
     /**
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public MusicTO getMusic(final Integer id) {
+    public Music getMusic(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        return converter.convert(musicService.get(id), MusicTO.class);
+        return converter.convert(musicService.get(id), Music.class);
     }
 
     /**
@@ -93,10 +92,10 @@ public class MusicFacadeImpl implements MusicFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void add(final MusicTO music) {
-        musicValidator.validateNewMusicTO(music);
+    public void add(final Music music) {
+        musicValidator.validateNewMusic(music);
 
-        final Music musicEntity = converter.convert(music, Music.class);
+        final cz.vhromada.catalog.domain.Music musicEntity = converter.convert(music, cz.vhromada.catalog.domain.Music.class);
         musicEntity.setSongs(new ArrayList<>());
 
         musicService.add(musicEntity);
@@ -108,10 +107,10 @@ public class MusicFacadeImpl implements MusicFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void update(final MusicTO music) {
-        musicValidator.validateExistingMusicTO(music);
-        final Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
+    public void update(final Music music) {
+        musicValidator.validateExistingMusic(music);
+        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
         assert musicEntity != null;
 
         musicEntity.setName(music.getName());
@@ -129,10 +128,10 @@ public class MusicFacadeImpl implements MusicFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void remove(final MusicTO music) {
-        musicValidator.validateMusicTOWithId(music);
-        final Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
+    public void remove(final Music music) {
+        musicValidator.validateMusicWithId(music);
+        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
 
         musicService.remove(musicEntity);
     }
@@ -142,10 +141,10 @@ public class MusicFacadeImpl implements MusicFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void duplicate(final MusicTO music) {
-        musicValidator.validateMusicTOWithId(music);
-        final Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
+    public void duplicate(final Music music) {
+        musicValidator.validateMusicWithId(music);
+        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
 
         musicService.duplicate(musicEntity);
     }
@@ -155,12 +154,12 @@ public class MusicFacadeImpl implements MusicFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void moveUp(final MusicTO music) {
-        musicValidator.validateMusicTOWithId(music);
-        final Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
-        final List<Music> musicList = musicService.getAll();
-        Validators.validateMoveUp(musicList, musicEntity, MUSIC_TO_ARGUMENT);
+    public void moveUp(final Music music) {
+        musicValidator.validateMusicWithId(music);
+        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Music> musicList = musicService.getAll();
+        Validators.validateMoveUp(musicList, musicEntity, MUSIC_ARGUMENT);
 
         musicService.moveUp(musicEntity);
     }
@@ -170,12 +169,12 @@ public class MusicFacadeImpl implements MusicFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void moveDown(final MusicTO music) {
-        musicValidator.validateMusicTOWithId(music);
-        final Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
-        final List<Music> musicList = musicService.getAll();
-        Validators.validateMoveDown(musicList, musicEntity, MUSIC_TO_ARGUMENT);
+    public void moveDown(final Music music) {
+        musicValidator.validateMusicWithId(music);
+        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
+        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Music> musicList = musicService.getAll();
+        Validators.validateMoveDown(musicList, musicEntity, MUSIC_ARGUMENT);
 
         musicService.moveDown(musicEntity);
     }
@@ -188,7 +187,7 @@ public class MusicFacadeImpl implements MusicFacade {
     @Override
     public int getTotalMediaCount() {
         int totalMedia = 0;
-        for (final Music music : musicService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : musicService.getAll()) {
             totalMedia += music.getMediaCount();
         }
 
@@ -198,7 +197,7 @@ public class MusicFacadeImpl implements MusicFacade {
     @Override
     public Time getTotalLength() {
         int totalLength = 0;
-        for (final Music music : musicService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : musicService.getAll()) {
             for (final Song song : music.getSongs()) {
                 totalLength += song.getLength();
             }
@@ -210,7 +209,7 @@ public class MusicFacadeImpl implements MusicFacade {
     @Override
     public int getSongsCount() {
         int songs = 0;
-        for (final Music music : musicService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : musicService.getAll()) {
             songs += music.getSongs().size();
         }
 

@@ -3,7 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.entity.Movie;
 
 /**
  * An interface represents facade for movies.
@@ -18,26 +18,26 @@ public interface MovieFacade {
     void newData();
 
     /**
-     * Returns list of TO for movie.
+     * Returns movies.
      *
-     * @return list of TO for movie
+     * @return movies
      */
-    List<MovieTO> getMovies();
+    List<Movie> getMovies();
 
     /**
-     * Returns TO for movie with ID or null if there isn't such TO for movie.
+     * Returns movie with ID or null if there isn't such movie.
      *
      * @param id ID
-     * @return TO for movie with ID or null if there isn't such TO for movie
+     * @return movie with ID or null if there isn't such movie
      * @throws IllegalArgumentException if ID is null
      */
-    MovieTO getMovie(Integer id);
+    Movie getMovie(Integer id);
 
     /**
-     * Adds TO for movie. Sets new ID and position.
+     * Adds movie. Sets new ID and position.
      *
-     * @param movie TO for movie
-     * @throws IllegalArgumentException                                  if TO for movie is null
+     * @param movie movie
+     * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID isn't null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
@@ -61,15 +61,15 @@ public interface MovieFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
-    void add(MovieTO movie);
+    void add(Movie movie);
 
     /**
-     * Updates TO for movie.
+     * Updates movie.
      *
-     * @param movie new value of TO for movie
-     * @throws IllegalArgumentException                                  if TO for movie is null
+     * @param movie new value of movie
+     * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
@@ -93,52 +93,52 @@ public interface MovieFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for movie doesn't exist in data storage
-     *                                                                   or TO for genre doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
+     *                                                                   or genre doesn't exist in data storage
      */
-    void update(MovieTO movie);
+    void update(Movie movie);
 
     /**
-     * Removes TO for movie.
+     * Removes movie.
      *
-     * @param movie TO for movie
-     * @throws IllegalArgumentException                                  if TO for movie is null
+     * @param movie movie
+     * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for movie doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
      */
-    void remove(MovieTO movie);
+    void remove(Movie movie);
 
     /**
-     * Duplicates TO for movie.
+     * Duplicates movie.
      *
-     * @param movie TO for movie
-     * @throws IllegalArgumentException                                  if TO for movie is null
+     * @param movie movie
+     * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for movie doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
      */
-    void duplicate(MovieTO movie);
+    void duplicate(Movie movie);
 
     /**
-     * Moves TO for movie in list one position up.
+     * Moves movie in list one position up.
      *
-     * @param movie TO for movie
-     * @throws IllegalArgumentException                                  if TO for movie is null
+     * @param movie movie
+     * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for movie can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for movie doesn't exist in data storage
+     *                                                                   or movie can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
      */
-    void moveUp(MovieTO movie);
+    void moveUp(Movie movie);
 
     /**
-     * Moves TO for movie in list one position down.
+     * Moves movie in list one position down.
      *
-     * @param movie TO for movie
-     * @throws IllegalArgumentException                                  if TO for movie is null
+     * @param movie movie
+     * @throws IllegalArgumentException                                  if movie is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for movie can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for movie doesn't exist in data storage
+     *                                                                   or movie can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
      */
-    void moveDown(MovieTO movie);
+    void moveDown(Movie movie);
 
     /**
      * Updates positions.

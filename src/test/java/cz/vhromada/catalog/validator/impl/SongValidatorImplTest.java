@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.common.SongUtils;
-import cz.vhromada.catalog.entity.SongTO;
+import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.validator.SongValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -29,11 +29,11 @@ public class SongValidatorImplTest {
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSongTO(SongTO)} with null argument.
+     * Test method for {@link SongValidator#validateNewSong(Song)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewSongTO_NullArgument() {
-        songValidator.validateNewSongTO(null);
+        songValidator.validateNewSong(null);
     }
 
     /**
@@ -41,7 +41,7 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewSongTO_NotNullId() {
-        songValidator.validateNewSongTO(SongUtils.newSongTO(1));
+        songValidator.validateNewSong(SongUtils.newSongTO(1));
     }
 
     /**
@@ -49,10 +49,10 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewSongTO_NullName() {
-        final SongTO song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSongTO(null);
         song.setName(null);
 
-        songValidator.validateNewSongTO(song);
+        songValidator.validateNewSong(song);
     }
 
     /**
@@ -60,10 +60,10 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewSongTO_EmptyName() {
-        final SongTO song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSongTO(null);
         song.setName("");
 
-        songValidator.validateNewSongTO(song);
+        songValidator.validateNewSong(song);
     }
 
     /**
@@ -71,10 +71,10 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewSongTO_NegativeLength() {
-        final SongTO song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSongTO(null);
         song.setLength(-1);
 
-        songValidator.validateNewSongTO(song);
+        songValidator.validateNewSong(song);
     }
 
     /**
@@ -82,18 +82,18 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewSongTO_NullNote() {
-        final SongTO song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSongTO(null);
         song.setNote(null);
 
-        songValidator.validateNewSongTO(song);
+        songValidator.validateNewSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateExistingSongTO(SongTO)} with null argument.
+     * Test method for {@link SongValidator#validateExistingSong(Song)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingSongTO_NullArgument() {
-        songValidator.validateExistingSongTO(null);
+        songValidator.validateExistingSong(null);
     }
 
     /**
@@ -101,7 +101,7 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSongTO_NullId() {
-        songValidator.validateExistingSongTO(SongUtils.newSongTO(null));
+        songValidator.validateExistingSong(SongUtils.newSongTO(null));
     }
 
     /**
@@ -109,10 +109,10 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSongTO_NullName() {
-        final SongTO song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSongTO(1);
         song.setName(null);
 
-        songValidator.validateExistingSongTO(song);
+        songValidator.validateExistingSong(song);
     }
 
     /**
@@ -120,10 +120,10 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSongTO_EmptyName() {
-        final SongTO song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSongTO(1);
         song.setName("");
 
-        songValidator.validateExistingSongTO(song);
+        songValidator.validateExistingSong(song);
     }
 
     /**
@@ -131,10 +131,10 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSongTO_NegativeLength() {
-        final SongTO song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSongTO(1);
         song.setLength(-1);
 
-        songValidator.validateExistingSongTO(song);
+        songValidator.validateExistingSong(song);
     }
 
     /**
@@ -142,18 +142,18 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingSongTO_NullNote() {
-        final SongTO song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSongTO(1);
         song.setNote(null);
 
-        songValidator.validateExistingSongTO(song);
+        songValidator.validateExistingSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateSongTOWithId(SongTO)} with null argument.
+     * Test method for {@link SongValidator#validateSongWithId(Song)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateSongTOWithId_NullArgument() {
-        songValidator.validateSongTOWithId(null);
+        songValidator.validateSongWithId(null);
     }
 
     /**
@@ -161,7 +161,7 @@ public class SongValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateSongTOWithId_NullId() {
-        songValidator.validateSongTOWithId(SongUtils.newSongTO(null));
+        songValidator.validateSongWithId(SongUtils.newSongTO(null));
     }
 
 }

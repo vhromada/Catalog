@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.entity.Movie;
 
 /**
  * An interface represents validator for movie.
@@ -38,7 +38,7 @@ public interface MovieValidator {
      *                                  or genre name is null
      *                                  or genre name is empty string
      */
-    void validateNewMovieTO(MovieTO movie);
+    void validateNewMovie(Movie movie);
 
     /**
      * Validates existing movie.
@@ -69,7 +69,7 @@ public interface MovieValidator {
      *                                  or genre name is null
      *                                  or genre name is empty string
      */
-    void validateExistingMovieTO(MovieTO movie);
+    void validateExistingMovie(Movie movie);
 
     /**
      * Validates movie with ID.
@@ -78,6 +78,6 @@ public interface MovieValidator {
      * @throws IllegalArgumentException if movie is null
      *                                  or ID is null
      */
-    void validateMovieTOWithId(MovieTO movie);
+    void validateMovieWithId(Movie movie);
 
 }

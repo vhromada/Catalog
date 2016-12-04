@@ -2,8 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.domain.Program;
-import cz.vhromada.catalog.entity.ProgramTO;
+import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.ProgramValidator;
@@ -23,14 +22,14 @@ import org.springframework.stereotype.Component;
 public class ProgramFacadeImpl implements ProgramFacade {
 
     /**
-     * TO for program argument
+     * Program argument
      */
-    private static final String PROGRAM_TO_ARGUMENT = "TO for program";
+    private static final String PROGRAM_ARGUMENT = "program";
 
     /**
      * Service for programs
      */
-    private CatalogService<Program> programService;
+    private CatalogService<cz.vhromada.catalog.domain.Program> programService;
 
     /**
      * Converter
@@ -38,7 +37,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for program
+     * Validator for program
      */
     private ProgramValidator programValidator;
 
@@ -47,18 +46,18 @@ public class ProgramFacadeImpl implements ProgramFacade {
      *
      * @param programService   service for programs
      * @param converter        converter
-     * @param programValidator validator for TO for program
+     * @param programValidator validator for program
      * @throws IllegalArgumentException if service for programs is null
      *                                  or converter is null
-     *                                  or validator for TO for program is null
+     *                                  or validator for program is null
      */
     @Autowired
-    public ProgramFacadeImpl(@Qualifier("programService") final CatalogService<Program> programService,
+    public ProgramFacadeImpl(@Qualifier("programService") final CatalogService<cz.vhromada.catalog.domain.Program> programService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final ProgramValidator programValidator) {
         Validators.validateArgumentNotNull(programService, "Service for programs");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(programValidator, "Validator for TO for program");
+        Validators.validateArgumentNotNull(programValidator, "Validator for program");
 
         this.programService = programService;
         this.converter = converter;
@@ -71,18 +70,18 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     @Override
-    public List<ProgramTO> getPrograms() {
-        return converter.convertCollection(programService.getAll(), ProgramTO.class);
+    public List<Program> getPrograms() {
+        return converter.convertCollection(programService.getAll(), Program.class);
     }
 
     /**
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public ProgramTO getProgram(final Integer id) {
+    public Program getProgram(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        return converter.convert(programService.get(id), ProgramTO.class);
+        return converter.convert(programService.get(id), Program.class);
     }
 
     /**
@@ -90,10 +89,10 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void add(final ProgramTO program) {
-        programValidator.validateNewProgramTO(program);
+    public void add(final Program program) {
+        programValidator.validateNewProgram(program);
 
-        programService.add(converter.convert(program, Program.class));
+        programService.add(converter.convert(program, cz.vhromada.catalog.domain.Program.class));
     }
 
     /**
@@ -102,11 +101,11 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void update(final ProgramTO program) {
-        programValidator.validateExistingProgramTO(program);
-        Validators.validateExists(programService.get(program.getId()), PROGRAM_TO_ARGUMENT);
+    public void update(final Program program) {
+        programValidator.validateExistingProgram(program);
+        Validators.validateExists(programService.get(program.getId()), PROGRAM_ARGUMENT);
 
-        programService.update(converter.convert(program, Program.class));
+        programService.update(converter.convert(program, cz.vhromada.catalog.domain.Program.class));
     }
 
     /**
@@ -115,10 +114,10 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void remove(final ProgramTO program) {
-        programValidator.validateProgramTOWithId(program);
-        final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
+    public void remove(final Program program) {
+        programValidator.validateProgramWithId(program);
+        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
+        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
 
         programService.remove(programEntity);
     }
@@ -129,10 +128,10 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void duplicate(final ProgramTO program) {
-        programValidator.validateProgramTOWithId(program);
-        final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
+    public void duplicate(final Program program) {
+        programValidator.validateProgramWithId(program);
+        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
+        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
 
         programService.duplicate(programEntity);
     }
@@ -143,12 +142,12 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveUp(final ProgramTO program) {
-        programValidator.validateProgramTOWithId(program);
-        final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
-        final List<Program> programs = programService.getAll();
-        Validators.validateMoveUp(programs, programEntity, PROGRAM_TO_ARGUMENT);
+    public void moveUp(final Program program) {
+        programValidator.validateProgramWithId(program);
+        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
+        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Program> programs = programService.getAll();
+        Validators.validateMoveUp(programs, programEntity, PROGRAM_ARGUMENT);
 
         programService.moveUp(programEntity);
     }
@@ -159,12 +158,12 @@ public class ProgramFacadeImpl implements ProgramFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveDown(final ProgramTO program) {
-        programValidator.validateProgramTOWithId(program);
-        final Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
-        final List<Program> programs = programService.getAll();
-        Validators.validateMoveDown(programs, programEntity, PROGRAM_TO_ARGUMENT);
+    public void moveDown(final Program program) {
+        programValidator.validateProgramWithId(program);
+        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
+        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Program> programs = programService.getAll();
+        Validators.validateMoveDown(programs, programEntity, PROGRAM_ARGUMENT);
 
         programService.moveDown(programEntity);
     }
@@ -177,7 +176,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     @Override
     public int getTotalMediaCount() {
         int totalMedia = 0;
-        for (final Program program : programService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Program program : programService.getAll()) {
             totalMedia += program.getMediaCount();
         }
 

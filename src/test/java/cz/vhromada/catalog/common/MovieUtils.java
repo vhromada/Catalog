@@ -11,8 +11,7 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Medium;
-import cz.vhromada.catalog.domain.Movie;
-import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.util.CollectionUtils;
 
 /**
@@ -59,8 +58,8 @@ public final class MovieUtils {
      * @param id ID
      * @return movie
      */
-    public static Movie newMovie(final Integer id) {
-        final Movie movie = new Movie();
+    public static cz.vhromada.catalog.domain.Movie newMovie(final Integer id) {
+        final cz.vhromada.catalog.domain.Movie movie = new cz.vhromada.catalog.domain.Movie();
         updateMovie(movie);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(id)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
@@ -77,7 +76,7 @@ public final class MovieUtils {
      *
      * @param movie movie
      */
-    public static void updateMovie(final Movie movie) {
+    public static void updateMovie(final cz.vhromada.catalog.domain.Movie movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
         movie.setYear(START_YEAR);
@@ -92,13 +91,13 @@ public final class MovieUtils {
     }
 
     /**
-     * Returns TO for movie.
+     * Returns movie.
      *
      * @param id ID
-     * @return TO for movie
+     * @return movie
      */
-    public static MovieTO newMovieTO(final Integer id) {
-        final MovieTO movie = new MovieTO();
+    public static Movie newMovieTO(final Integer id) {
+        final Movie movie = new Movie();
         updateMovieTO(movie);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(id)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(id)));
@@ -111,11 +110,11 @@ public final class MovieUtils {
     }
 
     /**
-     * Updates TO for movie fields.
+     * Updates movie fields.
      *
-     * @param movie TO for movie
+     * @param movie movie
      */
-    public static void updateMovieTO(final MovieTO movie) {
+    public static void updateMovieTO(final Movie movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
         movie.setYear(START_YEAR);
@@ -134,8 +133,8 @@ public final class MovieUtils {
      *
      * @return movies
      */
-    public static List<Movie> getMovies() {
-        final List<Movie> movies = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Movie> getMovies() {
+        final List<cz.vhromada.catalog.domain.Movie> movies = new ArrayList<>();
         for (int i = 0; i < MOVIES_COUNT; i++) {
             movies.add(getMovie(i + 1));
         }
@@ -149,8 +148,8 @@ public final class MovieUtils {
      * @param index index
      * @return movie for index
      */
-    public static Movie getMovie(final int index) {
-        final Movie movie = new Movie();
+    public static cz.vhromada.catalog.domain.Movie getMovie(final int index) {
+        final cz.vhromada.catalog.domain.Movie movie = new cz.vhromada.catalog.domain.Movie();
         movie.setId(index);
         movie.setCzechName(MOVIE + index + " czech name");
         movie.setOriginalName(MOVIE + index + " original name");
@@ -228,8 +227,8 @@ public final class MovieUtils {
      * @param id            movie ID
      * @return movie
      */
-    public static Movie getMovie(final EntityManager entityManager, final int id) {
-        return entityManager.find(Movie.class, id);
+    public static cz.vhromada.catalog.domain.Movie getMovie(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Movie.class, id);
     }
 
     /**
@@ -239,8 +238,8 @@ public final class MovieUtils {
      * @param entityManager entity manager
      * @return movie with updated fields
      */
-    public static Movie updateMovie(final EntityManager entityManager, final int id) {
-        final Movie movie = getMovie(entityManager, id);
+    public static cz.vhromada.catalog.domain.Movie updateMovie(final EntityManager entityManager, final int id) {
+        final cz.vhromada.catalog.domain.Movie movie = getMovie(entityManager, id);
         updateMovie(movie);
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setPosition(POSITION);
@@ -264,7 +263,7 @@ public final class MovieUtils {
      * @param expected expected movies
      * @param actual   actual movies
      */
-    public static void assertMoviesDeepEquals(final List<Movie> expected, final List<Movie> actual) {
+    public static void assertMoviesDeepEquals(final List<cz.vhromada.catalog.domain.Movie> expected, final List<cz.vhromada.catalog.domain.Movie> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -280,7 +279,7 @@ public final class MovieUtils {
      * @param expected expected movie
      * @param actual   actual movie
      */
-    public static void assertMovieDeepEquals(final Movie expected, final Movie actual) {
+    public static void assertMovieDeepEquals(final cz.vhromada.catalog.domain.Movie expected, final cz.vhromada.catalog.domain.Movie actual) {
         assertNotNull(actual);
         assertNotNull(actual.getSubtitles());
         Collections.sort(actual.getSubtitles());
@@ -307,7 +306,7 @@ public final class MovieUtils {
      * @param expected expected list of To for movie
      * @param actual   actual movies
      */
-    public static void assertMovieListDeepEquals(final List<MovieTO> expected, final List<Movie> actual) {
+    public static void assertMovieListDeepEquals(final List<Movie> expected, final List<cz.vhromada.catalog.domain.Movie> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -320,10 +319,10 @@ public final class MovieUtils {
     /**
      * Asserts movie deep equals.
      *
-     * @param expected expected TO for movie
+     * @param expected expected movie
      * @param actual   actual movie
      */
-    public static void assertMovieDeepEquals(final MovieTO expected, final Movie actual) {
+    public static void assertMovieDeepEquals(final Movie expected, final cz.vhromada.catalog.domain.Movie actual) {
         assertNotNull(actual);
         assertNotNull(actual.getSubtitles());
         Collections.sort(actual.getSubtitles());

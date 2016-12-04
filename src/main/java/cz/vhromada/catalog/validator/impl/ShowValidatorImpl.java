@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.util.Constants;
 import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.catalog.validator.ShowValidator;
@@ -41,8 +41,8 @@ public class ShowValidatorImpl implements ShowValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewShowTO(final ShowTO show) {
-        validateShowTO(show);
+    public void validateNewShow(final Show show) {
+        validateShow(show);
         Assert.isNull(show.getId(), "ID must be null.");
     }
 
@@ -50,8 +50,8 @@ public class ShowValidatorImpl implements ShowValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingShowTO(final ShowTO show) {
-        validateShowTO(show);
+    public void validateExistingShow(final Show show) {
+        validateShow(show);
         Assert.notNull(show.getId(), "ID mustn't be null.");
     }
 
@@ -59,7 +59,7 @@ public class ShowValidatorImpl implements ShowValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateShowTOWithId(final ShowTO show) {
+    public void validateShowWithId(final Show show) {
         Assert.notNull(show, "Show mustn't be null.");
         Assert.notNull(show.getId(), "ID mustn't be null.");
     }
@@ -85,7 +85,7 @@ public class ShowValidatorImpl implements ShowValidator {
      *                                                               or genre name is null
      *                                                               or genre name is empty string
      */
-    private void validateShowTO(final ShowTO show) {
+    private void validateShow(final Show show) {
         Assert.notNull(show, "Movie mustn't be null.");
         Assert.notNull(show.getCzechName(), "Czech name mustn't be null");
         Assert.isTrue(!StringUtils.isEmpty(show.getCzechName()) && !StringUtils.isEmpty(show.getCzechName().trim()), "Czech name mustn't be empty string.");
@@ -101,8 +101,8 @@ public class ShowValidatorImpl implements ShowValidator {
         Assert.notNull(show.getNote(), "Note mustn't be null.");
         Assert.notNull(show.getGenres(), "Genres mustn't be null.");
         Assert.isTrue(!show.getGenres().contains(null), "Genres mustn't contain null value.");
-        for (final GenreTO genre : show.getGenres()) {
-            genreValidator.validateExistingGenreTO(genre);
+        for (final Genre genre : show.getGenres()) {
+            genreValidator.validateExistingGenre(genre);
         }
     }
 

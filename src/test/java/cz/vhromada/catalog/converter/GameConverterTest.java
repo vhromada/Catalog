@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.common.GameUtils;
-import cz.vhromada.catalog.domain.Game;
-import cz.vhromada.catalog.entity.GameTO;
+import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for converter between {@link Game} and {@link GameTO}.
+ * A class represents test for converter between {@link cz.vhromada.catalog.domain.Game} and {@link Game}.
  *
  * @author Vladimir Hromada
  */
@@ -36,8 +35,8 @@ public class GameConverterTest {
      */
     @Test
     public void testConvertGame() {
-        final Game game = GameUtils.newGame(1);
-        final GameTO gameTO = converter.convert(game, GameTO.class);
+        final cz.vhromada.catalog.domain.Game game = GameUtils.newGame(1);
+        final Game gameTO = converter.convert(game, Game.class);
 
         GameUtils.assertGameDeepEquals(gameTO, game);
     }
@@ -47,7 +46,7 @@ public class GameConverterTest {
      */
     @Test
     public void testConvertGame_NullArgument() {
-        assertNull(converter.convert(null, GameTO.class));
+        assertNull(converter.convert(null, Game.class));
     }
 
     /**
@@ -55,8 +54,8 @@ public class GameConverterTest {
      */
     @Test
     public void testConvertGameTO() {
-        final GameTO gameTO = GameUtils.newGameTO(1);
-        final Game game = converter.convert(gameTO, Game.class);
+        final Game gameTO = GameUtils.newGameTO(1);
+        final cz.vhromada.catalog.domain.Game game = converter.convert(gameTO, cz.vhromada.catalog.domain.Game.class);
 
         assertNotNull(game);
         GameUtils.assertGameDeepEquals(gameTO, game);
@@ -67,7 +66,7 @@ public class GameConverterTest {
      */
     @Test
     public void testConvertGameTO_NullArgument() {
-        assertNull(converter.convert(null, Game.class));
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Game.class));
     }
 
 }

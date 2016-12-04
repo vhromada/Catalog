@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.MediumTO;
-import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Medium;
+import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.util.Constants;
 import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.catalog.validator.MovieValidator;
@@ -42,8 +42,8 @@ public class MovieValidatorImpl implements MovieValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewMovieTO(final MovieTO movie) {
-        validateMovieTO(movie);
+    public void validateNewMovie(final Movie movie) {
+        validateMovie(movie);
         Assert.isNull(movie.getId(), "ID must be null.");
     }
 
@@ -51,8 +51,8 @@ public class MovieValidatorImpl implements MovieValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingMovieTO(final MovieTO movie) {
-        validateMovieTO(movie);
+    public void validateExistingMovie(final Movie movie) {
+        validateMovie(movie);
         Assert.notNull(movie.getId(), "ID mustn't be null.");
     }
 
@@ -60,7 +60,7 @@ public class MovieValidatorImpl implements MovieValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateMovieTOWithId(final MovieTO movie) {
+    public void validateMovieWithId(final Movie movie) {
         Assert.notNull(movie, "Movie mustn't be null.");
         Assert.notNull(movie.getId(), "ID mustn't be null.");
     }
@@ -93,7 +93,7 @@ public class MovieValidatorImpl implements MovieValidator {
      *                                  or genre name is null
      *                                  or genre name is empty string
      */
-    private void validateMovieTO(final MovieTO movie) {
+    private void validateMovie(final Movie movie) {
         Assert.notNull(movie, "Movie mustn't be null.");
         Assert.notNull(movie.getCzechName(), "Czech name mustn't be null");
         Assert.isTrue(!StringUtils.isEmpty(movie.getCzechName()) && !StringUtils.isEmpty(movie.getCzechName().trim()), "Czech name mustn't be empty string.");
@@ -107,7 +107,7 @@ public class MovieValidatorImpl implements MovieValidator {
         Assert.isTrue(!movie.getSubtitles().contains(null), "Subtitles mustn't contain null value.");
         Assert.notNull(movie.getMedia(), "Media mustn't be null.");
         Assert.isTrue(!movie.getMedia().contains(null), "Media mustn't contain null value.");
-        for (final MediumTO medium : movie.getMedia()) {
+        for (final Medium medium : movie.getMedia()) {
             Assert.isTrue(medium.getLength() > 0, "Length of medium must be positive number.");
         }
         Assert.notNull(movie.getCsfd(), "URL to ČSFD page about movie mustn't be null.");
@@ -119,8 +119,8 @@ public class MovieValidatorImpl implements MovieValidator {
         Assert.notNull(movie.getNote(), "Note mustn't be null.");
         Assert.notNull(movie.getGenres(), "Genres mustn't be null.");
         Assert.isTrue(!movie.getGenres().contains(null), "Genres mustn't contain null value.");
-        for (final GenreTO genre : movie.getGenres()) {
-            genreValidator.validateExistingGenreTO(genre);
+        for (final Genre genre : movie.getGenres()) {
+            genreValidator.validateExistingGenre(genre);
         }
     }
 

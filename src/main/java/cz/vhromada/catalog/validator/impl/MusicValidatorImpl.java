@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.validator.MusicValidator;
 
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ public class MusicValidatorImpl implements MusicValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewMusicTO(final MusicTO music) {
-        validateMusicTO(music);
+    public void validateNewMusic(final Music music) {
+        validateMusic(music);
         Assert.isNull(music.getId(), "ID must be null.");
     }
 
@@ -28,8 +28,8 @@ public class MusicValidatorImpl implements MusicValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingMusicTO(final MusicTO music) {
-        validateMusicTO(music);
+    public void validateExistingMusic(final Music music) {
+        validateMusic(music);
         Assert.notNull(music.getId(), "ID mustn't be null.");
     }
 
@@ -37,7 +37,7 @@ public class MusicValidatorImpl implements MusicValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateMusicTOWithId(final MusicTO music) {
+    public void validateMusicWithId(final Music music) {
         Assert.notNull(music, "Music mustn't be null.");
         Assert.notNull(music.getId(), "ID mustn't be null.");
     }
@@ -54,7 +54,7 @@ public class MusicValidatorImpl implements MusicValidator {
      *                                  or count of media isn't positive number
      *                                  or note is null
      */
-    private static void validateMusicTO(final MusicTO music) {
+    private static void validateMusic(final Music music) {
         Assert.notNull(music, "Music mustn't be null.");
         Assert.notNull(music.getName(), "Name mustn't be null");
         Assert.isTrue(!StringUtils.isEmpty(music.getName()) && !StringUtils.isEmpty(music.getName().trim()), "Name mustn't be empty string.");

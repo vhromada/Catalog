@@ -16,8 +16,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import cz.vhromada.catalog.common.GameUtils;
-import cz.vhromada.catalog.domain.Game;
-import cz.vhromada.catalog.entity.GameTO;
+import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
@@ -44,7 +43,7 @@ public class GameFacadeImplTest {
      * Instance of {@link CatalogService}
      */
     @Mock
-    private CatalogService<Game> gameService;
+    private CatalogService<cz.vhromada.catalog.domain.Game> gameService;
 
     /**
      * Instance of {@link Converter}
@@ -112,19 +111,19 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testGetGames() {
-        final List<Game> gameList = CollectionUtils.newList(GameUtils.newGame(1), GameUtils.newGame(2));
-        final List<GameTO> expectedGames = CollectionUtils.newList(GameUtils.newGameTO(1), GameUtils.newGameTO(2));
+        final List<cz.vhromada.catalog.domain.Game> gameList = CollectionUtils.newList(GameUtils.newGame(1), GameUtils.newGame(2));
+        final List<Game> expectedGames = CollectionUtils.newList(GameUtils.newGameTO(1), GameUtils.newGameTO(2));
 
         when(gameService.getAll()).thenReturn(gameList);
-        when(converter.convertCollection(anyListOf(Game.class), eq(GameTO.class))).thenReturn(expectedGames);
+        when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(expectedGames);
 
-        final List<GameTO> games = gameFacade.getGames();
+        final List<Game> games = gameFacade.getGames();
 
         assertNotNull(games);
         assertEquals(expectedGames, games);
 
         verify(gameService).getAll();
-        verify(converter).convertCollection(gameList, GameTO.class);
+        verify(converter).convertCollection(gameList, Game.class);
         verifyNoMoreInteractions(gameService, converter);
         verifyZeroInteractions(gameValidator);
     }
@@ -134,19 +133,19 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testGetGame_ExistingGame() {
-        final Game gameEntity = GameUtils.newGame(1);
-        final GameTO expectedGame = GameUtils.newGameTO(1);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(1);
+        final Game expectedGame = GameUtils.newGameTO(1);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
-        when(converter.convert(any(Game.class), eq(GameTO.class))).thenReturn(expectedGame);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(expectedGame);
 
-        final GameTO game = gameFacade.getGame(1);
+        final Game game = gameFacade.getGame(1);
 
         assertNotNull(game);
         assertEquals(expectedGame, game);
 
         verify(gameService).get(1);
-        verify(converter).convert(gameEntity, GameTO.class);
+        verify(converter).convert(gameEntity, Game.class);
         verifyNoMoreInteractions(gameService, converter);
         verifyZeroInteractions(gameValidator);
     }
@@ -157,12 +156,12 @@ public class GameFacadeImplTest {
     @Test
     public void testGetGame_NotExistingGame() {
         when(gameService.get(anyInt())).thenReturn(null);
-        when(converter.convert(any(Game.class), eq(GameTO.class))).thenReturn(null);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(null);
 
         assertNull(gameFacade.getGame(Integer.MAX_VALUE));
 
         verify(gameService).get(Integer.MAX_VALUE);
-        verify(converter).convert(null, GameTO.class);
+        verify(converter).convert(null, Game.class);
         verifyNoMoreInteractions(gameService, converter);
         verifyZeroInteractions(gameValidator);
     }
@@ -176,85 +175,85 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#add(GameTO)}.
+     * Test method for {@link GameFacade#add(Game)}.
      */
     @Test
     public void testAdd() {
-        final Game gameEntity = GameUtils.newGame(null);
-        final GameTO game = GameUtils.newGameTO(null);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(null);
+        final Game game = GameUtils.newGameTO(null);
 
-        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(gameEntity);
+        when(converter.convert(any(Game.class), eq(cz.vhromada.catalog.domain.Game.class))).thenReturn(gameEntity);
 
         gameFacade.add(game);
 
         verify(gameService).add(gameEntity);
-        verify(converter).convert(game, Game.class);
-        verify(gameValidator).validateNewGameTO(game);
+        verify(converter).convert(game, cz.vhromada.catalog.domain.Game.class);
+        verify(gameValidator).validateNewGame(game);
         verifyNoMoreInteractions(gameService, converter, gameValidator);
     }
 
     /**
-     * Test method for {@link GameFacade#add(GameTO)} with null argument.
+     * Test method for {@link GameFacade#add(Game)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validateNewGameTO(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateNewGame(any(Game.class));
 
         gameFacade.add(null);
     }
 
     /**
-     * Test method for {@link GameFacade#add(GameTO)} with argument with bad data.
+     * Test method for {@link GameFacade#add(Game)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(gameValidator).validateNewGameTO(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateNewGame(any(Game.class));
 
         gameFacade.add(GameUtils.newGameTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link GameFacade#update(GameTO)}.
+     * Test method for {@link GameFacade#update(Game)}.
      */
     @Test
     public void testUpdate() {
-        final Game gameEntity = GameUtils.newGame(1);
-        final GameTO game = GameUtils.newGameTO(1);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(1);
+        final Game game = GameUtils.newGameTO(1);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
-        when(converter.convert(any(GameTO.class), eq(Game.class))).thenReturn(gameEntity);
+        when(converter.convert(any(Game.class), eq(cz.vhromada.catalog.domain.Game.class))).thenReturn(gameEntity);
 
         gameFacade.update(game);
 
         verify(gameService).get(1);
         verify(gameService).update(gameEntity);
-        verify(converter).convert(game, Game.class);
-        verify(gameValidator).validateExistingGameTO(game);
+        verify(converter).convert(game, cz.vhromada.catalog.domain.Game.class);
+        verify(gameValidator).validateExistingGame(game);
         verifyNoMoreInteractions(gameService, converter, gameValidator);
     }
 
     /**
-     * Test method for {@link GameFacade#update(GameTO)} with null argument.
+     * Test method for {@link GameFacade#update(Game)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validateExistingGameTO(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateExistingGame(any(Game.class));
 
         gameFacade.update(null);
     }
 
     /**
-     * Test method for {@link GameFacade#update(GameTO)} with argument with bad data.
+     * Test method for {@link GameFacade#update(Game)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(gameValidator).validateExistingGameTO(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateExistingGame(any(Game.class));
 
         gameFacade.update(GameUtils.newGameTO(null));
     }
 
     /**
-     * Test method for {@link GameFacade#update(GameTO)} with not existing argument.
+     * Test method for {@link GameFacade#update(Game)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingArgument() {
@@ -264,12 +263,12 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#remove(GameTO)}.
+     * Test method for {@link GameFacade#remove(Game)}.
      */
     @Test
     public void testRemove() {
-        final Game gameEntity = GameUtils.newGame(1);
-        final GameTO game = GameUtils.newGameTO(1);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(1);
+        final Game game = GameUtils.newGameTO(1);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
 
@@ -277,33 +276,33 @@ public class GameFacadeImplTest {
 
         verify(gameService).get(1);
         verify(gameService).remove(gameEntity);
-        verify(gameValidator).validateGameTOWithId(game);
+        verify(gameValidator).validateGameWith(game);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#remove(GameTO)} with null argument.
+     * Test method for {@link GameFacade#remove(Game)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.remove(null);
     }
 
     /**
-     * Test method for {@link GameFacade#remove(GameTO)} with argument with bad data.
+     * Test method for {@link GameFacade#remove(Game)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.remove(GameUtils.newGameTO(null));
     }
 
     /**
-     * Test method for {@link GameFacade#remove(GameTO)} with not existing argument.
+     * Test method for {@link GameFacade#remove(Game)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_NotExistingArgument() {
@@ -313,12 +312,12 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(GameTO)}.
+     * Test method for {@link GameFacade#duplicate(Game)}.
      */
     @Test
     public void testDuplicate() {
-        final Game gameEntity = GameUtils.newGame(1);
-        final GameTO game = GameUtils.newGameTO(1);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(1);
+        final Game game = GameUtils.newGameTO(1);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
 
@@ -326,33 +325,33 @@ public class GameFacadeImplTest {
 
         verify(gameService).get(1);
         verify(gameService).duplicate(gameEntity);
-        verify(gameValidator).validateGameTOWithId(game);
+        verify(gameValidator).validateGameWith(game);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(GameTO)} with null argument.
+     * Test method for {@link GameFacade#duplicate(Game)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.duplicate(null);
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(GameTO)} with argument with bad data.
+     * Test method for {@link GameFacade#duplicate(Game)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.duplicate(GameUtils.newGameTO(null));
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(GameTO)} with not existing argument.
+     * Test method for {@link GameFacade#duplicate(Game)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_NotExistingArgument() {
@@ -362,13 +361,13 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(GameTO)}.
+     * Test method for {@link GameFacade#moveUp(Game)}.
      */
     @Test
     public void testMoveUp() {
-        final Game gameEntity = GameUtils.newGame(2);
-        final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), gameEntity);
-        final GameTO game = GameUtils.newGameTO(2);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(2);
+        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(GameUtils.newGame(1), gameEntity);
+        final Game game = GameUtils.newGameTO(2);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
@@ -378,33 +377,33 @@ public class GameFacadeImplTest {
         verify(gameService).get(2);
         verify(gameService).getAll();
         verify(gameService).moveUp(gameEntity);
-        verify(gameValidator).validateGameTOWithId(game);
+        verify(gameValidator).validateGameWith(game);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(GameTO)} with null argument.
+     * Test method for {@link GameFacade#moveUp(Game)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.moveUp(null);
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(GameTO)} with argument with bad data.
+     * Test method for {@link GameFacade#moveUp(Game)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.moveUp(GameUtils.newGameTO(null));
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(GameTO)} with not existing argument.
+     * Test method for {@link GameFacade#moveUp(Game)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_NotExistingArgument() {
@@ -414,13 +413,13 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(GameTO)} with not movable argument.
+     * Test method for {@link GameFacade#moveUp(Game)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Game gameEntity = GameUtils.newGame(Integer.MAX_VALUE);
-        final List<Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGame(1));
-        final GameTO game = GameUtils.newGameTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGame(1));
+        final Game game = GameUtils.newGameTO(Integer.MAX_VALUE);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
@@ -429,13 +428,13 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(GameTO)}.
+     * Test method for {@link GameFacade#moveDown(Game)}.
      */
     @Test
     public void testMoveDown() {
-        final Game gameEntity = GameUtils.newGame(1);
-        final List<Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGame(2));
-        final GameTO game = GameUtils.newGameTO(1);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(1);
+        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGame(2));
+        final Game game = GameUtils.newGameTO(1);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
@@ -445,33 +444,33 @@ public class GameFacadeImplTest {
         verify(gameService).get(1);
         verify(gameService).getAll();
         verify(gameService).moveDown(gameEntity);
-        verify(gameValidator).validateGameTOWithId(game);
+        verify(gameValidator).validateGameWith(game);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(GameTO)} with null argument.
+     * Test method for {@link GameFacade#moveDown(Game)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.moveDown(null);
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(GameTO)} with argument with bad data.
+     * Test method for {@link GameFacade#moveDown(Game)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameWith(any(Game.class));
 
         gameFacade.moveDown(GameUtils.newGameTO(null));
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(GameTO)} with not existing argument.
+     * Test method for {@link GameFacade#moveDown(Game)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_NotExistingArgument() {
@@ -481,13 +480,13 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(GameTO)} with not movable argument.
+     * Test method for {@link GameFacade#moveDown(Game)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Game gameEntity = GameUtils.newGame(Integer.MAX_VALUE);
-        final List<Game> games = CollectionUtils.newList(GameUtils.newGame(1), gameEntity);
-        final GameTO game = GameUtils.newGameTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGame(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(GameUtils.newGame(1), gameEntity);
+        final Game game = GameUtils.newGameTO(Integer.MAX_VALUE);
 
         when(gameService.get(anyInt())).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
@@ -512,8 +511,8 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testGetTotalMediaCount() {
-        final Game game1 = GameUtils.newGame(1);
-        final Game game2 = GameUtils.newGame(2);
+        final cz.vhromada.catalog.domain.Game game1 = GameUtils.newGame(1);
+        final cz.vhromada.catalog.domain.Game game2 = GameUtils.newGame(2);
         final int expectedCount = game1.getMediaCount() + game2.getMediaCount();
 
         when(gameService.getAll()).thenReturn(CollectionUtils.newList(game1, game2));

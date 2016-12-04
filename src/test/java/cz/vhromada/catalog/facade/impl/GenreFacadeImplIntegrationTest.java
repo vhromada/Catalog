@@ -8,8 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.common.GenreUtils;
-import cz.vhromada.catalog.domain.Genre;
-import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -101,29 +100,29 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)}.
+     * Test method for {@link GenreFacade#add(Genre)}.
      */
     @Test
     @DirtiesContext
     public void testAdd() {
         genreFacade.add(GenreUtils.newGenreTO(null));
 
-        final Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
+        final cz.vhromada.catalog.domain.Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(GenreUtils.newGenre(GenreUtils.GENRES_COUNT + 1), addedGenre);
 
         assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#add(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        genreFacade.add((GenreTO) null);
+        genreFacade.add((Genre) null);
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)} with genre with not null ID.
+     * Test method for {@link GenreFacade#add(Genre)} with genre with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotNullId() {
@@ -131,22 +130,22 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)} with genre with null name.
+     * Test method for {@link GenreFacade#add(Genre)} with genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullName() {
-        final GenreTO genre = GenreUtils.newGenreTO(null);
+        final Genre genre = GenreUtils.newGenreTO(null);
         genre.setName(null);
 
         genreFacade.add(genre);
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)} with genre with empty string as name.
+     * Test method for {@link GenreFacade#add(Genre)} with genre with empty string as name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_EmptyName() {
-        final GenreTO genre = GenreUtils.newGenreTO(null);
+        final Genre genre = GenreUtils.newGenreTO(null);
         genre.setName("");
 
         genreFacade.add(genre);
@@ -162,8 +161,8 @@ public class GenreFacadeImplIntegrationTest {
 
         genreFacade.add(names);
 
-        final Genre addedGenre1 = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
-        final Genre addedGenre2 = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 2);
+        final cz.vhromada.catalog.domain.Genre addedGenre1 = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
+        final cz.vhromada.catalog.domain.Genre addedGenre2 = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 2);
         GenreUtils.assertGenreDeepEquals(createGenre(GenreUtils.GENRES_COUNT + 1, names.get(0)), addedGenre1);
         GenreUtils.assertGenreDeepEquals(createGenre(GenreUtils.GENRES_COUNT + 2, names.get(1)), addedGenre2);
 
@@ -171,7 +170,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#add(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddList_NullArgument() {
@@ -187,23 +186,23 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)}.
+     * Test method for {@link GenreFacade#update(Genre)}.
      */
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final Genre genre = GenreUtils.newGenreTO(1);
 
         genreFacade.update(genre);
 
-        final Genre updatedGenre = GenreUtils.getGenre(entityManager, 1);
+        final cz.vhromada.catalog.domain.Genre updatedGenre = GenreUtils.getGenre(entityManager, 1);
         GenreUtils.assertGenreDeepEquals(genre, updatedGenre);
 
         assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#update(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
@@ -211,7 +210,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with genre with null ID.
+     * Test method for {@link GenreFacade#update(Genre)} with genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullId() {
@@ -219,29 +218,29 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with genre with null name.
+     * Test method for {@link GenreFacade#update(Genre)} with genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullName() {
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final Genre genre = GenreUtils.newGenreTO(1);
         genre.setName(null);
 
         genreFacade.update(genre);
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with genre with empty string as name.
+     * Test method for {@link GenreFacade#update(Genre)} with genre with empty string as name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_EmptyName() {
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final Genre genre = GenreUtils.newGenreTO(1);
         genre.setName("");
 
         genreFacade.update(genre);
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with genre with bad ID.
+     * Test method for {@link GenreFacade#update(Genre)} with genre with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_BadId() {
@@ -249,7 +248,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)}.
+     * Test method for {@link GenreFacade#remove(Genre)}.
      */
     @Test
     @DirtiesContext
@@ -264,7 +263,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#remove(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
@@ -272,7 +271,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)} with genre with null ID.
+     * Test method for {@link GenreFacade#remove(Genre)} with genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_NullId() {
@@ -280,7 +279,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)} with genre with bad ID.
+     * Test method for {@link GenreFacade#remove(Genre)} with genre with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_BadId() {
@@ -288,24 +287,24 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)}.
+     * Test method for {@link GenreFacade#duplicate(Genre)}.
      */
     @Test
     @DirtiesContext
     public void testDuplicate() {
-        final Genre genre = GenreUtils.getGenre(GenreUtils.GENRES_COUNT);
+        final cz.vhromada.catalog.domain.Genre genre = GenreUtils.getGenre(GenreUtils.GENRES_COUNT);
         genre.setId(GenreUtils.GENRES_COUNT + 1);
 
         genreFacade.duplicate(GenreUtils.newGenreTO(GenreUtils.GENRES_COUNT));
 
-        final Genre duplicatedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
+        final cz.vhromada.catalog.domain.Genre duplicatedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(genre, duplicatedGenre);
 
         assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#duplicate(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
@@ -313,7 +312,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)} with genre with null ID.
+     * Test method for {@link GenreFacade#duplicate(Genre)} with genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_NullId() {
@@ -321,7 +320,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)} with genre with bad ID.
+     * Test method for {@link GenreFacade#duplicate(Genre)} with genre with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_BadId() {
@@ -335,8 +334,8 @@ public class GenreFacadeImplIntegrationTest {
      * @param name name
      * @return new TO for genre
      */
-    private static GenreTO createGenre(final int id, final String name) {
-        final GenreTO genre = new GenreTO();
+    private static Genre createGenre(final int id, final String name) {
+        final Genre genre = new Genre();
         genre.setId(id);
         genre.setName(name);
         genre.setPosition(id - 1);

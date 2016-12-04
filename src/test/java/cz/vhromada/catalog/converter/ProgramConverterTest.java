@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.common.ProgramUtils;
-import cz.vhromada.catalog.domain.Program;
-import cz.vhromada.catalog.entity.ProgramTO;
+import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for converter between {@link Program} and {@link ProgramTO}.
+ * A class represents test for converter between {@link cz.vhromada.catalog.domain.Program} and {@link Program}.
  *
  * @author Vladimir Hromada
  */
@@ -36,8 +35,8 @@ public class ProgramConverterTest {
      */
     @Test
     public void testConvertProgram() {
-        final Program program = ProgramUtils.newProgram(1);
-        final ProgramTO programTO = converter.convert(program, ProgramTO.class);
+        final cz.vhromada.catalog.domain.Program program = ProgramUtils.newProgram(1);
+        final Program programTO = converter.convert(program, Program.class);
 
         ProgramUtils.assertProgramDeepEquals(programTO, program);
     }
@@ -47,7 +46,7 @@ public class ProgramConverterTest {
      */
     @Test
     public void testConvertProgram_NullArgument() {
-        assertNull(converter.convert(null, ProgramTO.class));
+        assertNull(converter.convert(null, Program.class));
     }
 
     /**
@@ -55,8 +54,8 @@ public class ProgramConverterTest {
      */
     @Test
     public void testConvertProgramTO() {
-        final ProgramTO programTO = ProgramUtils.newProgramTO(1);
-        final Program program = converter.convert(programTO, Program.class);
+        final Program programTO = ProgramUtils.newProgramTO(1);
+        final cz.vhromada.catalog.domain.Program program = converter.convert(programTO, cz.vhromada.catalog.domain.Program.class);
 
         assertNotNull(program);
         ProgramUtils.assertProgramDeepEquals(programTO, program);
@@ -67,7 +66,7 @@ public class ProgramConverterTest {
      */
     @Test
     public void testConvertProgramTO_NullArgument() {
-        assertNull(converter.convert(null, Program.class));
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Program.class));
     }
 
 }

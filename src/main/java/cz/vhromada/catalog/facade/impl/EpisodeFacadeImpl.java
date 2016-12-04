@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cz.vhromada.catalog.common.Movable;
-import cz.vhromada.catalog.domain.Episode;
-import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.entity.EpisodeTO;
-import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.Episode;
+import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CatalogUtils;
@@ -33,9 +31,9 @@ import org.springframework.stereotype.Component;
 public class EpisodeFacadeImpl implements EpisodeFacade {
 
     /**
-     * TO for episode argument
+     * Episode argument
      */
-    private static final String EPISODE_TO_ARGUMENT = "TO for episode";
+    private static final String EPISODE_ARGUMENT = "episode";
 
     /**
      * Service for shows
@@ -48,12 +46,12 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for season
+     * Validator for season
      */
     private SeasonValidator seasonValidator;
 
     /**
-     * Validator for TO for episode
+     * Validator for episode
      */
     private EpisodeValidator episodeValidator;
 
@@ -62,12 +60,12 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      *
      * @param showService      service for shows
      * @param converter        converter
-     * @param seasonValidator  validator for TO for season
-     * @param episodeValidator validator for TO for episode
+     * @param seasonValidator  validator for season
+     * @param episodeValidator validator for episode
      * @throws IllegalArgumentException if service for shows is null
      *                                  or converter is null
-     *                                  or validator for TO for season is null
-     *                                  or validator for TO for episode is null
+     *                                  or validator for season is null
+     *                                  or validator for episode is null
      */
     @Autowired
     public EpisodeFacadeImpl(final CatalogService<Show> showService,
@@ -76,8 +74,8 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
             final EpisodeValidator episodeValidator) {
         Validators.validateArgumentNotNull(showService, "Service for shows");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(seasonValidator, "Validator for TO for season");
-        Validators.validateArgumentNotNull(episodeValidator, "Validator for TO for episode");
+        Validators.validateArgumentNotNull(seasonValidator, "Validator for season");
+        Validators.validateArgumentNotNull(episodeValidator, "Validator for episode");
 
         this.showService = showService;
         this.converter = converter;
@@ -89,10 +87,10 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public EpisodeTO getEpisode(final Integer id) {
+    public Episode getEpisode(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        return converter.convert(getEpisodeEntity(id), EpisodeTO.class);
+        return converter.convert(getEpisodeEntity(id), Episode.class);
     }
 
     /**
@@ -101,15 +99,15 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws RecordNotFoundException                               {@inheritDoc}
      */
     @Override
-    public void add(final SeasonTO season, final EpisodeTO episode) {
-        seasonValidator.validateSeasonTOWithId(season);
-        episodeValidator.validateNewEpisodeTO(episode);
+    public void add(final Season season, final Episode episode) {
+        seasonValidator.validateSeasonWithId(season);
+        episodeValidator.validateNewEpisode(episode);
         final Show show = getShow(season);
-        final Season seasonEntity = getSeason(show, season);
-        Validators.validateExists(seasonEntity, "TO for season");
+        final cz.vhromada.catalog.domain.Season seasonEntity = getSeason(show, season);
+        Validators.validateExists(seasonEntity, "season");
         assert seasonEntity != null;
 
-        final Episode episodeEntity = converter.convert(episode, Episode.class);
+        final cz.vhromada.catalog.domain.Episode episodeEntity = converter.convert(episode, cz.vhromada.catalog.domain.Episode.class);
         episodeEntity.setPosition(Integer.MAX_VALUE);
         seasonEntity.getEpisodes().add(episodeEntity);
 
@@ -122,13 +120,13 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws RecordNotFoundException                               {@inheritDoc}
      */
     @Override
-    public void update(final EpisodeTO episode) {
-        episodeValidator.validateExistingEpisodeTO(episode);
+    public void update(final Episode episode) {
+        episodeValidator.validateExistingEpisode(episode);
         final Show show = getShow(episode);
-        final Episode episodeEntity = getEpisode(episode.getId(), show);
-        Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
+        final cz.vhromada.catalog.domain.Episode episodeEntity = getEpisode(episode.getId(), show);
+        Validators.validateExists(episodeEntity, EPISODE_ARGUMENT);
 
-        updateEpisode(show, converter.convert(episode, Episode.class));
+        updateEpisode(show, converter.convert(episode, cz.vhromada.catalog.domain.Episode.class));
 
         showService.update(show);
     }
@@ -139,14 +137,15 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws RecordNotFoundException                               {@inheritDoc}
      */
     @Override
-    public void remove(final EpisodeTO episode) {
-        episodeValidator.validateEpisodeTOWithId(episode);
+    public void remove(final Episode episode) {
+        episodeValidator.validateEpisodeWithId(episode);
         final Show show = getShow(episode);
-        final Episode episodeEntity = getEpisode(episode.getId(), show);
-        Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
+        final cz.vhromada.catalog.domain.Episode episodeEntity = getEpisode(episode.getId(), show);
+        Validators.validateExists(episodeEntity, EPISODE_ARGUMENT);
 
-        final Season season = getSeason(show, episode);
-        final List<Episode> episodes = season.getEpisodes().stream().filter(episodeValue -> !episodeValue.getId().equals(episode.getId()))
+        final cz.vhromada.catalog.domain.Season season = getSeason(show, episode);
+        final List<cz.vhromada.catalog.domain.Episode> episodes = season.getEpisodes().stream()
+                .filter(episodeValue -> !episodeValue.getId().equals(episode.getId()))
                 .collect(Collectors.toList());
         season.setEpisodes(episodes);
 
@@ -159,14 +158,14 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws RecordNotFoundException                               {@inheritDoc}
      */
     @Override
-    public void duplicate(final EpisodeTO episode) {
-        episodeValidator.validateEpisodeTOWithId(episode);
+    public void duplicate(final Episode episode) {
+        episodeValidator.validateEpisodeWithId(episode);
         final Show show = getShow(episode);
-        final Episode episodeEntity = getEpisode(episode.getId(), show);
-        Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
+        final cz.vhromada.catalog.domain.Episode episodeEntity = getEpisode(episode.getId(), show);
+        Validators.validateExists(episodeEntity, EPISODE_ARGUMENT);
 
-        final Episode newEpisode = CatalogUtils.duplicateEpisode(episodeEntity);
-        final Season seasonEntity = getSeason(show, episode);
+        final cz.vhromada.catalog.domain.Episode newEpisode = CatalogUtils.duplicateEpisode(episodeEntity);
+        final cz.vhromada.catalog.domain.Season seasonEntity = getSeason(show, episode);
         seasonEntity.getEpisodes().add(newEpisode);
 
         showService.update(show);
@@ -178,7 +177,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws RecordNotFoundException                               {@inheritDoc}
      */
     @Override
-    public void moveUp(final EpisodeTO episode) {
+    public void moveUp(final Episode episode) {
         move(episode, true);
     }
 
@@ -188,7 +187,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws RecordNotFoundException                               {@inheritDoc}
      */
     @Override
-    public void moveDown(final EpisodeTO episode) {
+    public void moveDown(final Episode episode) {
         move(episode, false);
     }
 
@@ -198,18 +197,18 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @throws RecordNotFoundException                               {@inheritDoc}
      */
     @Override
-    public List<EpisodeTO> findEpisodesBySeason(final SeasonTO season) {
-        seasonValidator.validateSeasonTOWithId(season);
+    public List<Episode> findEpisodesBySeason(final Season season) {
+        seasonValidator.validateSeasonWithId(season);
         final List<Show> shows = showService.getAll();
         for (final Show show : shows) {
-            for (final Season seasonEntity : show.getSeasons()) {
+            for (final cz.vhromada.catalog.domain.Season seasonEntity : show.getSeasons()) {
                 if (season.getId().equals(seasonEntity.getId())) {
-                    return CollectionUtils.getSortedData(converter.convertCollection(seasonEntity.getEpisodes(), EpisodeTO.class));
+                    return CollectionUtils.getSortedData(converter.convertCollection(seasonEntity.getEpisodes(), Episode.class));
                 }
             }
         }
 
-        throw new RecordNotFoundException("TO for season doesn't exist.");
+        throw new RecordNotFoundException("season doesn't exist.");
     }
 
     /**
@@ -219,13 +218,13 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @param show show
      * @return episode with ID
      */
-    private static Episode getEpisode(final Integer id, final Show show) {
+    private static cz.vhromada.catalog.domain.Episode getEpisode(final Integer id, final Show show) {
         if (show == null) {
             return null;
         }
 
-        for (final Season season : show.getSeasons()) {
-            for (final Episode episode : season.getEpisodes()) {
+        for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
+            for (final cz.vhromada.catalog.domain.Episode episode : season.getEpisodes()) {
                 if (id.equals(episode.getId())) {
                     return episode;
                 }
@@ -241,10 +240,10 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @param show    show
      * @param episode episode
      */
-    private static void updateEpisode(final Show show, final Episode episode) {
-        final List<Episode> episodes = new ArrayList<>();
-        final Season season = getSeason(show, episode);
-        for (final Episode episodeEntity : season.getEpisodes()) {
+    private static void updateEpisode(final Show show, final cz.vhromada.catalog.domain.Episode episode) {
+        final List<cz.vhromada.catalog.domain.Episode> episodes = new ArrayList<>();
+        final cz.vhromada.catalog.domain.Season season = getSeason(show, episode);
+        for (final cz.vhromada.catalog.domain.Episode episodeEntity : season.getEpisodes()) {
             if (episodeEntity.equals(episode)) {
                 episodes.add(episode);
             } else {
@@ -261,9 +260,9 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @param episode episode
      * @return season for episode
      */
-    private static Season getSeason(final Show show, final Movable episode) {
-        for (final Season season : show.getSeasons()) {
-            for (final Episode episodeEntity : season.getEpisodes()) {
+    private static cz.vhromada.catalog.domain.Season getSeason(final Show show, final Movable episode) {
+        for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
+            for (final cz.vhromada.catalog.domain.Episode episodeEntity : season.getEpisodes()) {
                 if (episode.getId().equals(episodeEntity.getId())) {
                     return season;
                 }
@@ -280,12 +279,12 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @param season season
      * @return season for show
      */
-    private static Season getSeason(final Show show, final SeasonTO season) {
+    private static cz.vhromada.catalog.domain.Season getSeason(final Show show, final Season season) {
         if (show == null) {
             return null;
         }
 
-        for (final Season seasonEntity : show.getSeasons()) {
+        for (final cz.vhromada.catalog.domain.Season seasonEntity : show.getSeasons()) {
             if (season.getId().equals(seasonEntity.getId())) {
                 return seasonEntity;
             }
@@ -300,11 +299,11 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @param id ID
      * @return episode with ID
      */
-    private Episode getEpisodeEntity(final Integer id) {
+    private cz.vhromada.catalog.domain.Episode getEpisodeEntity(final Integer id) {
         final List<Show> shows = showService.getAll();
         for (final Show show : shows) {
-            for (final Season season : show.getSeasons()) {
-                for (final Episode episode : season.getEpisodes()) {
+            for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
+                for (final cz.vhromada.catalog.domain.Episode episode : season.getEpisodes()) {
                     if (id.equals(episode.getId())) {
                         return episode;
                     }
@@ -316,15 +315,15 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     }
 
     /**
-     * Returns show for TO for episode.
+     * Returns show for episode.
      *
-     * @param episode TO for episode
-     * @return show for TO for episode
+     * @param episode episode
+     * @return show for episode
      */
-    private Show getShow(final EpisodeTO episode) {
+    private Show getShow(final Episode episode) {
         for (final Show show : showService.getAll()) {
-            for (final Season season : show.getSeasons()) {
-                for (final Episode episodeEntity : season.getEpisodes()) {
+            for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
+                for (final cz.vhromada.catalog.domain.Episode episodeEntity : season.getEpisodes()) {
                     if (episode.getId().equals(episodeEntity.getId())) {
                         return show;
                     }
@@ -336,14 +335,14 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     }
 
     /**
-     * Returns show for TO for season.
+     * Returns show for season.
      *
-     * @param season TO for season
-     * @return show for TO for season
+     * @param season season
+     * @return show for season
      */
-    private Show getShow(final SeasonTO season) {
+    private Show getShow(final Season season) {
         for (final Show show : showService.getAll()) {
-            for (final Season seasonEntity : show.getSeasons()) {
+            for (final cz.vhromada.catalog.domain.Season seasonEntity : show.getSeasons()) {
                 if (season.getId().equals(seasonEntity.getId())) {
                     return show;
                 }
@@ -354,27 +353,27 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     }
 
     /**
-     * Moves TO for episode in list one position up or down.
+     * Moves episode in list one position up or down.
      *
-     * @param episode TO for episode
-     * @param up      true if moving TO for episode up
+     * @param episode episode
+     * @param up      true if moving episode up
      */
-    private void move(final EpisodeTO episode, final boolean up) {
-        episodeValidator.validateEpisodeTOWithId(episode);
+    private void move(final Episode episode, final boolean up) {
+        episodeValidator.validateEpisodeWithId(episode);
         final Show show = getShow(episode);
-        final Episode episodeEntity = getEpisode(episode.getId(), show);
-        Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
-        final Season season = getSeason(show, episode);
-        final List<Episode> episodes = CollectionUtils.getSortedData(season.getEpisodes());
+        final cz.vhromada.catalog.domain.Episode episodeEntity = getEpisode(episode.getId(), show);
+        Validators.validateExists(episodeEntity, EPISODE_ARGUMENT);
+        final cz.vhromada.catalog.domain.Season season = getSeason(show, episode);
+        final List<cz.vhromada.catalog.domain.Episode> episodes = CollectionUtils.getSortedData(season.getEpisodes());
         if (up) {
-            Validators.validateMoveUp(episodes, episodeEntity, EPISODE_TO_ARGUMENT);
+            Validators.validateMoveUp(episodes, episodeEntity, EPISODE_ARGUMENT);
         } else {
-            Validators.validateMoveDown(episodes, episodeEntity, EPISODE_TO_ARGUMENT);
+            Validators.validateMoveDown(episodes, episodeEntity, EPISODE_ARGUMENT);
         }
         assert episodeEntity != null;
 
         final int index = episodes.indexOf(episodeEntity);
-        final Episode other = episodes.get(up ? index - 1 : index + 1);
+        final cz.vhromada.catalog.domain.Episode other = episodes.get(up ? index - 1 : index + 1);
         final int position = episodeEntity.getPosition();
         episodeEntity.setPosition(other.getPosition());
         other.setPosition(position);

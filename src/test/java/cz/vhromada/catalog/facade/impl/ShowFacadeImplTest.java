@@ -19,11 +19,9 @@ import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Episode;
-import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Season;
-import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
@@ -51,13 +49,13 @@ public class ShowFacadeImplTest {
      * Instance of {@link CatalogService}
      */
     @Mock
-    private CatalogService<Show> showService;
+    private CatalogService<cz.vhromada.catalog.domain.Show> showService;
 
     /**
      * Instance of {@link CatalogService}
      */
     @Mock
-    private CatalogService<Genre> genreService;
+    private CatalogService<cz.vhromada.catalog.domain.Genre> genreService;
 
     /**
      * Instance of {@link Converter}
@@ -133,19 +131,19 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetShows() {
-        final List<Show> showList = CollectionUtils.newList(ShowUtils.newShow(1), ShowUtils.newShow(2));
-        final List<ShowTO> expectedShows = CollectionUtils.newList(ShowUtils.newShowTO(1), ShowUtils.newShowTO(2));
+        final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShow(1), ShowUtils.newShow(2));
+        final List<Show> expectedShows = CollectionUtils.newList(ShowUtils.newShowTO(1), ShowUtils.newShowTO(2));
 
         when(showService.getAll()).thenReturn(showList);
-        when(converter.convertCollection(anyListOf(Show.class), eq(ShowTO.class))).thenReturn(expectedShows);
+        when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Show.class), eq(Show.class))).thenReturn(expectedShows);
 
-        final List<ShowTO> shows = showFacade.getShows();
+        final List<Show> shows = showFacade.getShows();
 
         assertNotNull(shows);
         assertEquals(expectedShows, shows);
 
         verify(showService).getAll();
-        verify(converter).convertCollection(showList, ShowTO.class);
+        verify(converter).convertCollection(showList, Show.class);
         verifyNoMoreInteractions(showService, converter);
         verifyZeroInteractions(genreService, showValidator);
     }
@@ -155,19 +153,19 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetShow_ExistingShow() {
-        final Show showEntity = ShowUtils.newShow(1);
-        final ShowTO expectedShow = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
+        final Show expectedShow = ShowUtils.newShowTO(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
-        when(converter.convert(any(Show.class), eq(ShowTO.class))).thenReturn(expectedShow);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Show.class), eq(Show.class))).thenReturn(expectedShow);
 
-        final ShowTO show = showFacade.getShow(1);
+        final Show show = showFacade.getShow(1);
 
         assertNotNull(show);
         assertEquals(expectedShow, show);
 
         verify(showService).get(1);
-        verify(converter).convert(showEntity, ShowTO.class);
+        verify(converter).convert(showEntity, Show.class);
         verifyNoMoreInteractions(showService, converter);
         verifyZeroInteractions(genreService, showValidator);
     }
@@ -178,12 +176,12 @@ public class ShowFacadeImplTest {
     @Test
     public void testGetShow_NotExistingShow() {
         when(showService.get(anyInt())).thenReturn(null);
-        when(converter.convert(any(Show.class), eq(ShowTO.class))).thenReturn(null);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Show.class), eq(Show.class))).thenReturn(null);
 
         assertNull(showFacade.getShow(Integer.MAX_VALUE));
 
         verify(showService).get(Integer.MAX_VALUE);
-        verify(converter).convert(null, ShowTO.class);
+        verify(converter).convert(null, Show.class);
         verifyNoMoreInteractions(showService, converter);
         verifyZeroInteractions(genreService, showValidator);
     }
@@ -197,49 +195,49 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)}.
+     * Test method for {@link ShowFacade#add(Show)}.
      */
     @Test
     public void testAdd() {
-        final Show showEntity = ShowUtils.newShow(null);
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(null);
+        final Show show = ShowUtils.newShowTO(null);
 
         when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
-        when(converter.convert(any(ShowTO.class), eq(Show.class))).thenReturn(showEntity);
+        when(converter.convert(any(Show.class), eq(cz.vhromada.catalog.domain.Show.class))).thenReturn(showEntity);
 
         showFacade.add(show);
 
         verify(showService).add(showEntity);
-        for (final GenreTO genre : show.getGenres()) {
+        for (final Genre genre : show.getGenres()) {
             verify(genreService).get(genre.getId());
         }
-        verify(converter).convert(show, Show.class);
-        verify(showValidator).validateNewShowTO(show);
+        verify(converter).convert(show, cz.vhromada.catalog.domain.Show.class);
+        verify(showValidator).validateNewShow(show);
         verifyNoMoreInteractions(showService, genreService, converter, showValidator);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#add(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showValidator).validateNewShowTO(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateNewShow(any(Show.class));
 
         showFacade.add(null);
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with argument with bad data.
+     * Test method for {@link ShowFacade#add(Show)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateNewShowTO(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateNewShow(any(Show.class));
 
         showFacade.add(ShowUtils.newShowTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link ShowFacade#add(ShowTO)} with argument with not existing genre.
+     * Test method for {@link ShowFacade#add(Show)} with argument with not existing genre.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testAdd_NotExistingGenre() {
@@ -249,12 +247,12 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)}.
+     * Test method for {@link ShowFacade#update(Show)}.
      */
     @Test
     public void testUpdate() {
-        final ShowTO show = ShowUtils.newShowTO(1);
-        final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
+        final Show show = ShowUtils.newShowTO(1);
+        final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
         when(showService.get(anyInt())).thenReturn(ShowUtils.newShow(1));
         when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
@@ -263,10 +261,10 @@ public class ShowFacadeImplTest {
 
         verify(showService).get(show.getId());
         verify(showService).update(showArgumentCaptor.capture());
-        for (final GenreTO genre : show.getGenres()) {
+        for (final Genre genre : show.getGenres()) {
             verify(genreService).get(genre.getId());
         }
-        verify(showValidator).validateExistingShowTO(show);
+        verify(showValidator).validateExistingShow(show);
         verifyNoMoreInteractions(showService, genreService, showValidator);
         verifyZeroInteractions(converter);
 
@@ -274,27 +272,27 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#update(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showValidator).validateExistingShowTO(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateExistingShow(any(Show.class));
 
         showFacade.update(null);
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with argument with bad data.
+     * Test method for {@link ShowFacade#update(Show)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateExistingShowTO(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateExistingShow(any(Show.class));
 
         showFacade.update(ShowUtils.newShowTO(null));
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with not existing show.
+     * Test method for {@link ShowFacade#update(Show)} with not existing show.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingShow() {
@@ -304,7 +302,7 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#update(ShowTO)} with not existing genre.
+     * Test method for {@link ShowFacade#update(Show)} with not existing genre.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingGenre() {
@@ -315,12 +313,12 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)}.
+     * Test method for {@link ShowFacade#remove(Show)}.
      */
     @Test
     public void testRemove() {
-        final Show showEntity = ShowUtils.newShow(1);
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
+        final Show show = ShowUtils.newShowTO(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
 
@@ -328,33 +326,33 @@ public class ShowFacadeImplTest {
 
         verify(showService).get(1);
         verify(showService).remove(showEntity);
-        verify(showValidator).validateShowTOWithId(show);
+        verify(showValidator).validateShowWithId(show);
         verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#remove(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.remove(null);
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)} with argument with bad data.
+     * Test method for {@link ShowFacade#remove(Show)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.remove(ShowUtils.newShowTO(null));
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(ShowTO)} with not existing argument.
+     * Test method for {@link ShowFacade#remove(Show)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_NotExistingArgument() {
@@ -364,12 +362,12 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)}.
+     * Test method for {@link ShowFacade#duplicate(Show)}.
      */
     @Test
     public void testDuplicate() {
-        final Show showEntity = ShowUtils.newShow(1);
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
+        final Show show = ShowUtils.newShowTO(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
 
@@ -377,33 +375,33 @@ public class ShowFacadeImplTest {
 
         verify(showService).get(1);
         verify(showService).duplicate(showEntity);
-        verify(showValidator).validateShowTOWithId(show);
+        verify(showValidator).validateShowWithId(show);
         verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#duplicate(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.duplicate(null);
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)} with argument with bad data.
+     * Test method for {@link ShowFacade#duplicate(Show)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.duplicate(ShowUtils.newShowTO(null));
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(ShowTO)} with not existing argument.
+     * Test method for {@link ShowFacade#duplicate(Show)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_NotExistingArgument() {
@@ -413,13 +411,13 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)}.
+     * Test method for {@link ShowFacade#moveUp(Show)}.
      */
     @Test
     public void testMoveUp() {
-        final Show showEntity = ShowUtils.newShow(2);
-        final List<Show> shows = CollectionUtils.newList(ShowUtils.newShow(1), showEntity);
-        final ShowTO show = ShowUtils.newShowTO(2);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(2);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShow(1), showEntity);
+        final Show show = ShowUtils.newShowTO(2);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
@@ -429,33 +427,33 @@ public class ShowFacadeImplTest {
         verify(showService).get(2);
         verify(showService).getAll();
         verify(showService).moveUp(showEntity);
-        verify(showValidator).validateShowTOWithId(show);
+        verify(showValidator).validateShowWithId(show);
         verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#moveUp(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.moveUp(null);
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with argument with bad data.
+     * Test method for {@link ShowFacade#moveUp(Show)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.moveUp(ShowUtils.newShowTO(null));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with not existing argument.
+     * Test method for {@link ShowFacade#moveUp(Show)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_NotExistingArgument() {
@@ -465,13 +463,13 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(ShowTO)} with not movable argument.
+     * Test method for {@link ShowFacade#moveUp(Show)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Show showEntity = ShowUtils.newShow(Integer.MAX_VALUE);
-        final List<Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShow(1));
-        final ShowTO show = ShowUtils.newShowTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShow(1));
+        final Show show = ShowUtils.newShowTO(Integer.MAX_VALUE);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
@@ -480,13 +478,13 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)}.
+     * Test method for {@link ShowFacade#moveDown(Show)}.
      */
     @Test
     public void testMoveDown() {
-        final Show showEntity = ShowUtils.newShow(1);
-        final List<Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShow(2));
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShow(2));
+        final Show show = ShowUtils.newShowTO(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
@@ -496,33 +494,33 @@ public class ShowFacadeImplTest {
         verify(showService).get(1);
         verify(showService).getAll();
         verify(showService).moveDown(showEntity);
-        verify(showValidator).validateShowTOWithId(show);
+        verify(showValidator).validateShowWithId(show);
         verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with null argument.
+     * Test method for {@link ShowFacade#moveDown(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.moveDown(null);
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with argument with bad data.
+     * Test method for {@link ShowFacade#moveDown(Show)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         showFacade.moveDown(ShowUtils.newShowTO(null));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with not existing argument.
+     * Test method for {@link ShowFacade#moveDown(Show)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_NotExistingArgument() {
@@ -532,13 +530,13 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(ShowTO)} with not movable argument.
+     * Test method for {@link ShowFacade#moveDown(Show)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Show showEntity = ShowUtils.newShow(Integer.MAX_VALUE);
-        final List<Show> shows = CollectionUtils.newList(ShowUtils.newShow(1), showEntity);
-        final ShowTO show = ShowUtils.newShowTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShow(1), showEntity);
+        final Show show = ShowUtils.newShowTO(Integer.MAX_VALUE);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
@@ -563,9 +561,9 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetTotalLength() {
-        final List<Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
+        final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
         int expectedTotalLength = 0;
-        for (final Show show : showList) {
+        for (final cz.vhromada.catalog.domain.Show show : showList) {
             for (final Season season : show.getSeasons()) {
                 for (final Episode episode : season.getEpisodes()) {
                     expectedTotalLength += episode.getLength();
@@ -587,8 +585,8 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetSeasonsCount() {
-        final Show show1 = ShowUtils.newShowWithSeasons(1);
-        final Show show2 = ShowUtils.newShowWithSeasons(2);
+        final cz.vhromada.catalog.domain.Show show1 = ShowUtils.newShowWithSeasons(1);
+        final cz.vhromada.catalog.domain.Show show2 = ShowUtils.newShowWithSeasons(2);
         final int expectedSeasons = show1.getSeasons().size() + show2.getSeasons().size();
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(show1, show2));
@@ -605,9 +603,9 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetEpisodesCount() {
-        final List<Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
+        final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
         int expectedEpisodes = 0;
-        for (final Show show : showList) {
+        for (final cz.vhromada.catalog.domain.Show show : showList) {
             for (final Season season : show.getSeasons()) {
                 expectedEpisodes += season.getEpisodes().size();
             }

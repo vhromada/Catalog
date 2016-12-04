@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.common.ProgramUtils;
-import cz.vhromada.catalog.entity.ProgramTO;
+import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.validator.ProgramValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -29,11 +29,11 @@ public class ProgramValidatorImplTest {
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgramTO(ProgramTO)} with null argument.
+     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewProgramTO_NullArgument() {
-        programValidator.validateNewProgramTO(null);
+        programValidator.validateNewProgram(null);
     }
 
     /**
@@ -41,7 +41,7 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_NotNullId() {
-        programValidator.validateNewProgramTO(ProgramUtils.newProgramTO(1));
+        programValidator.validateNewProgram(ProgramUtils.newProgramTO(1));
     }
 
     /**
@@ -49,10 +49,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_NullName() {
-        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgramTO(null);
         program.setName(null);
 
-        programValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgram(program);
     }
 
     /**
@@ -60,10 +60,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_EmptyName() {
-        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgramTO(null);
         program.setName("");
 
-        programValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgram(program);
     }
 
     /**
@@ -72,10 +72,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_NullWikiEn() {
-        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgramTO(null);
         program.setWikiEn(null);
 
-        programValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgram(program);
     }
 
     /**
@@ -84,10 +84,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_NullWikiCz() {
-        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgramTO(null);
         program.setWikiCz(null);
 
-        programValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgram(program);
     }
 
     /**
@@ -95,10 +95,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_NotPositiveMediaCount() {
-        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgramTO(null);
         program.setMediaCount(0);
 
-        programValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgram(program);
     }
 
     /**
@@ -106,10 +106,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_NullOtherData() {
-        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgramTO(null);
         program.setOtherData(null);
 
-        programValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgram(program);
     }
 
     /**
@@ -117,18 +117,18 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewProgramTO_NullNote() {
-        final ProgramTO program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgramTO(null);
         program.setNote(null);
 
-        programValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgram(program);
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateExistingProgramTO(ProgramTO)} with null argument.
+     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingProgramTO_NullArgument() {
-        programValidator.validateExistingProgramTO(null);
+        programValidator.validateExistingProgram(null);
     }
 
     /**
@@ -136,7 +136,7 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingProgramTO_NullId() {
-        programValidator.validateExistingProgramTO(ProgramUtils.newProgramTO(null));
+        programValidator.validateExistingProgram(ProgramUtils.newProgramTO(null));
     }
 
     /**
@@ -144,10 +144,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingProgramTO_NullName() {
-        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgramTO(1);
         program.setName(null);
 
-        programValidator.validateExistingProgramTO(program);
+        programValidator.validateExistingProgram(program);
     }
 
     /**
@@ -155,10 +155,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingProgramTO_EmptyName() {
-        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgramTO(1);
         program.setName("");
 
-        programValidator.validateExistingProgramTO(program);
+        programValidator.validateExistingProgram(program);
     }
 
     /**
@@ -167,10 +167,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingProgramTO_NullWiki() {
-        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgramTO(1);
         program.setWikiCz(null);
 
-        programValidator.validateExistingProgramTO(program);
+        programValidator.validateExistingProgram(program);
     }
 
     /**
@@ -178,10 +178,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingProgramTO_NotPositiveMediaCount() {
-        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgramTO(1);
         program.setMediaCount(0);
 
-        programValidator.validateExistingProgramTO(program);
+        programValidator.validateExistingProgram(program);
     }
 
     /**
@@ -189,10 +189,10 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingProgramTO_NullOtherData() {
-        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgramTO(1);
         program.setOtherData(null);
 
-        programValidator.validateExistingProgramTO(program);
+        programValidator.validateExistingProgram(program);
     }
 
     /**
@@ -200,18 +200,18 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingProgramTO_NullNote() {
-        final ProgramTO program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgramTO(1);
         program.setNote(null);
 
-        programValidator.validateExistingProgramTO(program);
+        programValidator.validateExistingProgram(program);
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateProgramTOWithId(ProgramTO)} with null argument.
+     * Test method for {@link ProgramValidator#validateProgramWithId(Program)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateProgramTOWithId_NullArgument() {
-        programValidator.validateProgramTOWithId(null);
+        programValidator.validateProgramWithId(null);
     }
 
     /**
@@ -219,7 +219,7 @@ public class ProgramValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateProgramTOWithId_NullId() {
-        programValidator.validateProgramTOWithId(new ProgramTO());
+        programValidator.validateProgramWithId(new Program());
     }
 
 }

@@ -11,11 +11,9 @@ import cz.vhromada.catalog.common.MediumUtils;
 import cz.vhromada.catalog.common.MovieUtils;
 import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.domain.Medium;
-import cz.vhromada.catalog.domain.Movie;
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.MediumTO;
-import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Medium;
+import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -96,20 +94,20 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)}.
+     * Test method for {@link MovieFacade#add(Movie)}.
      */
     @Test
     @DirtiesContext
     public void testAdd() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreTO(1)));
-        final Movie expectedMovie = MovieUtils.newMovie(MovieUtils.MOVIES_COUNT + 1);
+        final cz.vhromada.catalog.domain.Movie expectedMovie = MovieUtils.newMovie(MovieUtils.MOVIES_COUNT + 1);
         expectedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(MediumUtils.MEDIA_COUNT + 1)));
         expectedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
 
         movieFacade.add(movie);
 
-        final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
+        final cz.vhromada.catalog.domain.Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
         MovieUtils.assertMovieDeepEquals(expectedMovie, addedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
@@ -118,7 +116,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#add(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
@@ -126,7 +124,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with not null ID.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotNullId() {
@@ -134,267 +132,267 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null czech name.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null czech name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullCzechName() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setCzechName(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with empty string as czech name.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with empty string as czech name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_EmptyCzechName() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setCzechName("");
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null original name.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null original name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullOriginalName() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setOriginalName(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with empty string as original name.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with empty string as original name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_EmptyOriginalName() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setOriginalName("");
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with bad minimum year.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with bad minimum year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMinimumYear() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setYear(TestConstants.BAD_MIN_YEAR);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with bad maximum year.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with bad maximum year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMaximumYear() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setYear(TestConstants.BAD_MAX_YEAR);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null language.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null language.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullLanguage() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setLanguage(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null subtitles.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null subtitles.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullSubtitles() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setSubtitles(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with subtitles with null value.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with subtitles with null value.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadSubtitles() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null media.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null media.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullMedia() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setMedia(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with media with null value.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with media with null value.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMedia() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), null));
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with media with negative value as medium.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with media with negative value as medium.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMedium() {
-        final MediumTO badMedium = MediumUtils.newMediumTO(Integer.MAX_VALUE);
+        final Medium badMedium = MediumUtils.newMediumTO(Integer.MAX_VALUE);
         badMedium.setLength(-1);
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), badMedium));
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null URL to ČSFD page about movie.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null URL to ČSFD page about movie.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullCsfd() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setCsfd(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with bad minimal IMDB code.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with bad minimal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMinimalImdb() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with bad divider IMDB code.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with bad divider IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadDividerImdb() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setImdbCode(0);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with bad maximal IMDB code.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with bad maximal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMaximalImdb() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null URL to english Wikipedia page about movie.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null URL to english Wikipedia page about movie.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullWikiEn() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setWikiEn(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null URL to czech Wikipedia page about movie.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null URL to czech Wikipedia page about movie.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullWikiCz() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setWikiCz(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null path to file with movie's picture.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null path to file with movie's picture.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullPicture() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setPicture(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null note.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null note.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullNote() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setNote(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with null genres.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with null genres.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullGenres() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setGenres(null);
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with genres with null value.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with genres with null value.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadGenres() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), null));
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with genres with genre with null ID.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with genres with genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullGenreId() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
+        final Movie movie = MovieUtils.newMovieTO(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(null)));
 
         movieFacade.add(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#add(MovieTO)} with movie with genres with genre with null name.
+     * Test method for {@link MovieFacade#add(Movie)} with movie with genres with genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullGenreName() {
-        final MovieTO movie = MovieUtils.newMovieTO(null);
-        final GenreTO badGenre = GenreUtils.newGenreTO(1);
+        final Movie movie = MovieUtils.newMovieTO(null);
+        final Genre badGenre = GenreUtils.newGenreTO(1);
         badGenre.setName(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), badGenre));
 
@@ -402,17 +400,17 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)}.
+     * Test method for {@link MovieFacade#update(Movie)}.
      */
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreTO(1)));
 
         movieFacade.update(movie);
 
-        final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
+        final cz.vhromada.catalog.domain.Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         MovieUtils.assertMovieDeepEquals(movie, updatedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
@@ -421,7 +419,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#update(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
@@ -429,7 +427,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null ID.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullId() {
@@ -437,267 +435,267 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null czech name.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null czech name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullCzechName() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setCzechName(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with empty string as czech name.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with empty string as czech name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_EmptyCzechName() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setCzechName("");
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null original name.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null original name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullOriginalName() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setOriginalName(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with empty string as original name.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with empty string as original name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_EmptyOriginalName() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setOriginalName("");
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with bad minimum year.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with bad minimum year.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMinimumYear() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setYear(TestConstants.BAD_MIN_YEAR);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with bad maximum year.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with bad maximum year.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMaximumYear() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setYear(TestConstants.BAD_MAX_YEAR);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null language.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null language.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullLanguage() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setLanguage(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null subtitles.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null subtitles.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullSubtitles() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setSubtitles(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with subtitles with null value.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with subtitles with null value.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadSubtitles() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null media.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null media.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullMedia() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setMedia(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with media with null value.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with media with null value.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMedia() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), null));
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with media with negative value as medium.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with media with negative value as medium.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMedium() {
-        final MediumTO badMedium = MediumUtils.newMediumTO(Integer.MAX_VALUE);
+        final Medium badMedium = MediumUtils.newMediumTO(Integer.MAX_VALUE);
         badMedium.setLength(-1);
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(1), badMedium));
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null URL to ČSFD page about movie.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null URL to ČSFD page about movie.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullCsfd() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setCsfd(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with bad minimal IMDB code.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with bad minimal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMinimalImdb() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with bad divider IMDB code.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with bad divider IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadDividerImdb() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setImdbCode(0);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with bad maximal IMDB code.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with bad maximal IMDB code.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMaximalImdb() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null URL to english Wikipedia page about movie.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null URL to english Wikipedia page about movie.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullWikiEn() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setWikiEn(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null URL to czech Wikipedia page about movie.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null URL to czech Wikipedia page about movie.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullWikiCz() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setWikiCz(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null path to file with movie's picture.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null path to file with movie's picture.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullPicture() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setPicture(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null note.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null note.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullNote() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setNote(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with null genres.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with null genres.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullGenres() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setGenres(null);
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with genres with null value.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with genres with null value.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadGenres() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), null));
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with genres with genre with null ID.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with genres with genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullGenreId() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(null)));
 
         movieFacade.update(movie);
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with genres with genre with null name.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with genres with genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullGenreName() {
-        final MovieTO movie = MovieUtils.newMovieTO(1);
-        final GenreTO badGenre = GenreUtils.newGenreTO(1);
+        final Movie movie = MovieUtils.newMovieTO(1);
+        final Genre badGenre = GenreUtils.newGenreTO(1);
         badGenre.setName(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), badGenre));
 
@@ -705,7 +703,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#update(MovieTO)} with movie with bad ID.
+     * Test method for {@link MovieFacade#update(Movie)} with movie with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_BadId() {
@@ -713,7 +711,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)}.
+     * Test method for {@link MovieFacade#remove(Movie)}.
      */
     @Test
     @DirtiesContext
@@ -726,7 +724,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#remove(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
@@ -734,7 +732,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)} with movie with null ID.
+     * Test method for {@link MovieFacade#remove(Movie)} with movie with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_NullId() {
@@ -742,7 +740,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(MovieTO)} with movie with bad ID.
+     * Test method for {@link MovieFacade#remove(Movie)} with movie with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_BadId() {
@@ -750,23 +748,23 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)}.
+     * Test method for {@link MovieFacade#duplicate(Movie)}.
      */
     @Test
     @DirtiesContext
     public void testDuplicate() {
-        final Medium medium1 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT - 1);
+        final cz.vhromada.catalog.domain.Medium medium1 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT - 1);
         medium1.setId(MediumUtils.MEDIA_COUNT + 1);
-        final Medium medium2 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT);
+        final cz.vhromada.catalog.domain.Medium medium2 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT);
         medium2.setId(MediumUtils.MEDIA_COUNT + 2);
-        final Movie movie = MovieUtils.getMovie(MovieUtils.MOVIES_COUNT);
+        final cz.vhromada.catalog.domain.Movie movie = MovieUtils.getMovie(MovieUtils.MOVIES_COUNT);
         movie.setId(MovieUtils.MOVIES_COUNT + 1);
         movie.setMedia(CollectionUtils.newList(medium1, medium2));
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(GenreUtils.GENRES_COUNT - 1), GenreUtils.getGenre(GenreUtils.GENRES_COUNT)));
 
         movieFacade.duplicate(MovieUtils.newMovieTO(MovieUtils.MOVIES_COUNT));
 
-        final Movie duplicatedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
+        final cz.vhromada.catalog.domain.Movie duplicatedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
         MovieUtils.assertMovieDeepEquals(movie, duplicatedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
@@ -775,7 +773,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#duplicate(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
@@ -783,7 +781,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)} with movie with null ID.
+     * Test method for {@link MovieFacade#duplicate(Movie)} with movie with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_NullId() {
@@ -791,7 +789,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(MovieTO)} with movie with bad ID.
+     * Test method for {@link MovieFacade#duplicate(Movie)} with movie with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_BadId() {
@@ -799,14 +797,14 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)}.
+     * Test method for {@link MovieFacade#moveUp(Movie)}.
      */
     @Test
     @DirtiesContext
     public void testMoveUp() {
-        final Movie movie1 = MovieUtils.getMovie(1);
+        final cz.vhromada.catalog.domain.Movie movie1 = MovieUtils.getMovie(1);
         movie1.setPosition(1);
-        final Movie movie2 = MovieUtils.getMovie(2);
+        final cz.vhromada.catalog.domain.Movie movie2 = MovieUtils.getMovie(2);
         movie2.setPosition(0);
 
         movieFacade.moveUp(MovieUtils.newMovieTO(2));
@@ -820,7 +818,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
@@ -828,7 +826,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with movie with null ID.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with movie with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NullId() {
@@ -836,7 +834,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with not movable argument.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
@@ -844,7 +842,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(MovieTO)} with bad ID.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_BadId() {
@@ -852,14 +850,14 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)}.
+     * Test method for {@link MovieFacade#moveDown(Movie)}.
      */
     @Test
     @DirtiesContext
     public void testMoveDown() {
-        final Movie movie1 = MovieUtils.getMovie(1);
+        final cz.vhromada.catalog.domain.Movie movie1 = MovieUtils.getMovie(1);
         movie1.setPosition(1);
-        final Movie movie2 = MovieUtils.getMovie(2);
+        final cz.vhromada.catalog.domain.Movie movie2 = MovieUtils.getMovie(2);
         movie2.setPosition(0);
 
         movieFacade.moveDown(MovieUtils.newMovieTO(1));
@@ -873,7 +871,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with null argument.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
@@ -881,7 +879,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with movie with null ID.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with movie with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NullId() {
@@ -889,7 +887,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with not movable argument.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
@@ -897,7 +895,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(MovieTO)} with bad ID.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_BadId() {

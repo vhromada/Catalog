@@ -5,11 +5,11 @@ import java.util.Objects;
 import cz.vhromada.catalog.common.Movable;
 
 /**
- * A class represents TO for program.
+ * A class represents music.
  *
  * @author Vladimir Hromada
  */
-public class ProgramTO implements Movable {
+public class Music implements Movable {
 
     /**
      * SerialVersionUID
@@ -27,12 +27,12 @@ public class ProgramTO implements Movable {
     private String name;
 
     /**
-     * URL to english Wikipedia page about program
+     * URL to english Wikipedia page about music
      */
     private String wikiEn;
 
     /**
-     * URL to czech Wikipedia page about program
+     * URL to czech Wikipedia page about music
      */
     private String wikiCz;
 
@@ -40,21 +40,6 @@ public class ProgramTO implements Movable {
      * Count of media
      */
     private int mediaCount;
-
-    /**
-     * True if there is crack
-     */
-    private boolean crack;
-
-    /**
-     * True if there is serial key
-     */
-    private boolean serialKey;
-
-    /**
-     * Other data
-     */
-    private String otherData;
 
     /**
      * Note
@@ -81,7 +66,6 @@ public class ProgramTO implements Movable {
      *
      * @return name
      */
-
     public String getName() {
         return name;
     }
@@ -96,16 +80,16 @@ public class ProgramTO implements Movable {
     }
 
     /**
-     * Returns URL to english Wikipedia page about program.
+     * Returns URL to english Wikipedia page about music.
      *
-     * @return URL to english Wikipedia page about program
+     * @return URL to english Wikipedia page about music
      */
     public String getWikiEn() {
         return wikiEn;
     }
 
     /**
-     * Sets a new value to URL to english Wikipedia page about program.
+     * Sets a new value to URL to english Wikipedia page about music.
      *
      * @param wikiEn new value
      */
@@ -114,16 +98,16 @@ public class ProgramTO implements Movable {
     }
 
     /**
-     * Returns URL to czech Wikipedia page about program.
+     * Returns URL to czech Wikipedia page about music.
      *
-     * @return URL to czech Wikipedia page about program
+     * @return URL to czech Wikipedia page about music
      */
     public String getWikiCz() {
         return wikiCz;
     }
 
     /**
-     * Sets a new value to URL to czech Wikipedia page about program.
+     * Sets a new value to URL to czech Wikipedia page about music.
      *
      * @param wikiCz new value
      */
@@ -147,60 +131,6 @@ public class ProgramTO implements Movable {
      */
     public void setMediaCount(final int mediaCount) {
         this.mediaCount = mediaCount;
-    }
-
-    /**
-     * Returns true if there is crack.
-     *
-     * @return true if there is crack
-     */
-    public boolean getCrack() {
-        return crack;
-    }
-
-    /**
-     * Sets a new value to if there is crack.
-     *
-     * @param crack new value
-     */
-    public void setCrack(final boolean crack) {
-        this.crack = crack;
-    }
-
-    /**
-     * Returns true if there is serial key.
-     *
-     * @return true if there is serial key
-     */
-    public boolean getSerialKey() {
-        return serialKey;
-    }
-
-    /**
-     * Sets a new value to if there is serial key.
-     *
-     * @param serialKey new value
-     */
-    public void setSerialKey(final boolean serialKey) {
-        this.serialKey = serialKey;
-    }
-
-    /**
-     * Returns other data.
-     *
-     * @return other data
-     */
-    public String getOtherData() {
-        return otherData;
-    }
-
-    /**
-     * Sets a new value to other data.
-     *
-     * @param otherData new value
-     */
-    public void setOtherData(final String otherData) {
-        this.otherData = otherData;
     }
 
     /**
@@ -236,11 +166,11 @@ public class ProgramTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof ProgramTO) || id == null) {
+        if (obj == null || !(obj instanceof Music) || id == null) {
             return false;
         }
 
-        return id.equals(((ProgramTO) obj).id);
+        return id.equals(((Music) obj).id);
     }
 
     @Override
@@ -250,8 +180,8 @@ public class ProgramTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("ProgramTO [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, crack=%b, serialKey=%b, otherData=%s, note=%s, position=%d]", id,
-                name, wikiEn, wikiCz, mediaCount, crack, serialKey, otherData, note, position);
+        return String.format("Music [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, note=%s, position=%d]", id, name, wikiEn, wikiCz, mediaCount, note,
+                position);
     }
 
 }

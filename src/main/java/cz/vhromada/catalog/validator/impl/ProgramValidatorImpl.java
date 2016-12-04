@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.ProgramTO;
+import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.validator.ProgramValidator;
 
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ public class ProgramValidatorImpl implements ProgramValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewProgramTO(final ProgramTO program) {
-        validateProgramTO(program);
+    public void validateNewProgram(final Program program) {
+        validateProgram(program);
         Assert.isNull(program.getId(), "ID must be null.");
     }
 
@@ -28,8 +28,8 @@ public class ProgramValidatorImpl implements ProgramValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingProgramTO(final ProgramTO program) {
-        validateProgramTO(program);
+    public void validateExistingProgram(final Program program) {
+        validateProgram(program);
         Assert.notNull(program.getId(), "ID mustn't be null.");
     }
 
@@ -37,7 +37,7 @@ public class ProgramValidatorImpl implements ProgramValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateProgramTOWithId(final ProgramTO program) {
+    public void validateProgramWithId(final Program program) {
         Assert.notNull(program, "Program mustn't be null.");
         Assert.notNull(program.getId(), "ID mustn't be null.");
     }
@@ -55,7 +55,7 @@ public class ProgramValidatorImpl implements ProgramValidator {
      *                                  or other data is null
      *                                  or note is null
      */
-    private static void validateProgramTO(final ProgramTO program) {
+    private static void validateProgram(final Program program) {
         Assert.notNull(program, "Program mustn't be null.");
         Assert.notNull(program.getName(), "Name mustn't be null");
         Assert.isTrue(!StringUtils.isEmpty(program.getName()) && !StringUtils.isEmpty(program.getName().trim()), "Name mustn't be empty string.");

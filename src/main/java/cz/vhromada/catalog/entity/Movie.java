@@ -7,11 +7,11 @@ import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.Movable;
 
 /**
- * A class represents TO for movie.
+ * A class represents movie.
  *
  * @author Vladimir Hromada
  */
-public class MovieTO implements Movable {
+public class Movie implements Movable {
 
     /**
      * SerialVersionUID
@@ -51,7 +51,7 @@ public class MovieTO implements Movable {
     /**
      * Media
      */
-    private List<MediumTO> media;
+    private List<Medium> media;
 
     /**
      * URL to ČSFD page about movie
@@ -89,9 +89,9 @@ public class MovieTO implements Movable {
     private int position;
 
     /**
-     * List of TO for genre
+     * Genres
      */
-    private List<GenreTO> genres;
+    private List<Genre> genres;
 
     @Override
     public Integer getId() {
@@ -198,7 +198,7 @@ public class MovieTO implements Movable {
      *
      * @return media
      */
-    public List<MediumTO> getMedia() {
+    public List<Medium> getMedia() {
         return media;
     }
 
@@ -207,7 +207,7 @@ public class MovieTO implements Movable {
      *
      * @param media new value
      */
-    public void setMedia(final List<MediumTO> media) {
+    public void setMedia(final List<Medium> media) {
         this.media = media;
     }
 
@@ -330,20 +330,20 @@ public class MovieTO implements Movable {
     }
 
     /**
-     * Returns list of TO for genre.
+     * Returns genres.
      *
-     * @return list of TO for genre
+     * @return genres
      */
-    public List<GenreTO> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
     /**
-     * Sets a new value to list of TO for genre.
+     * Sets a new value to genres.
      *
      * @param genres new value
      */
-    public void setGenres(final List<GenreTO> genres) {
+    public void setGenres(final List<Genre> genres) {
         this.genres = genres;
     }
 
@@ -352,11 +352,11 @@ public class MovieTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof MovieTO) || id == null) {
+        if (obj == null || !(obj instanceof Movie) || id == null) {
             return false;
         }
 
-        return id.equals(((MovieTO) obj).id);
+        return id.equals(((Movie) obj).id);
     }
 
     @Override
@@ -366,7 +366,7 @@ public class MovieTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("MovieTO [id=%d, czechName=%s, originalName=%s, year=%d, language=%s, subtitles=%s, media=%s, csfd=%s, imdbCode=%d, wikiEn=%s, "
+        return String.format("Movie [id=%d, czechName=%s, originalName=%s, year=%d, language=%s, subtitles=%s, media=%s, csfd=%s, imdbCode=%d, wikiEn=%s, "
                         + "wikiCz=%s, picture=%s, note=%s, position=%d, genres=%s]", id, czechName, originalName, year, language, subtitles, media, csfd,
                 imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }

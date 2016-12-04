@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.common.SongUtils;
-import cz.vhromada.catalog.domain.Song;
-import cz.vhromada.catalog.entity.SongTO;
+import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for converter between {@link Song} and {@link SongTO}.
+ * A class represents test for converter between {@link cz.vhromada.catalog.domain.Song} and {@link Song}.
  *
  * @author Vladimir Hromada
  */
@@ -36,8 +35,8 @@ public class SongConverterTest {
      */
     @Test
     public void testConvertSong() {
-        final Song song = SongUtils.newSong(1);
-        final SongTO songTO = converter.convert(song, SongTO.class);
+        final cz.vhromada.catalog.domain.Song song = SongUtils.newSong(1);
+        final Song songTO = converter.convert(song, Song.class);
 
         SongUtils.assertSongDeepEquals(songTO, song);
     }
@@ -47,7 +46,7 @@ public class SongConverterTest {
      */
     @Test
     public void testConvertSong_NullArgument() {
-        assertNull(converter.convert(null, SongTO.class));
+        assertNull(converter.convert(null, Song.class));
     }
 
     /**
@@ -55,8 +54,8 @@ public class SongConverterTest {
      */
     @Test
     public void testConvertSongTO() {
-        final SongTO songTO = SongUtils.newSongTO(1);
-        final Song song = converter.convert(songTO, Song.class);
+        final Song songTO = SongUtils.newSongTO(1);
+        final cz.vhromada.catalog.domain.Song song = converter.convert(songTO, cz.vhromada.catalog.domain.Song.class);
 
         assertNotNull(song);
         SongUtils.assertSongDeepEquals(songTO, song);
@@ -67,7 +66,7 @@ public class SongConverterTest {
      */
     @Test
     public void testConvertSongTO_NullArgument() {
-        assertNull(converter.convert(null, Song.class));
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Song.class));
     }
 
 }

@@ -17,11 +17,9 @@ import java.util.List;
 import cz.vhromada.catalog.common.EpisodeUtils;
 import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.common.ShowUtils;
-import cz.vhromada.catalog.domain.Episode;
-import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.entity.EpisodeTO;
-import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.Episode;
+import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
@@ -123,18 +121,18 @@ public class EpisodeFacadeImplTest {
      */
     @Test
     public void testGetEpisode_ExistingEpisode() {
-        final EpisodeTO expectedEpisode = EpisodeUtils.newEpisodeTO(1);
+        final Episode expectedEpisode = EpisodeUtils.newEpisodeTO(1);
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
-        when(converter.convert(any(Episode.class), eq(EpisodeTO.class))).thenReturn(expectedEpisode);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Episode.class), eq(Episode.class))).thenReturn(expectedEpisode);
 
-        final EpisodeTO episode = episodeFacade.getEpisode(1);
+        final Episode episode = episodeFacade.getEpisode(1);
 
         assertNotNull(episode);
         assertEquals(expectedEpisode, episode);
 
         verify(showService).getAll();
-        verify(converter).convert(EpisodeUtils.newEpisode(1), EpisodeTO.class);
+        verify(converter).convert(EpisodeUtils.newEpisode(1), Episode.class);
         verifyNoMoreInteractions(showService, converter);
         verifyZeroInteractions(seasonValidator, episodeValidator);
     }
@@ -145,12 +143,12 @@ public class EpisodeFacadeImplTest {
     @Test
     public void testGetEpisode_NotExistingEpisode() {
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
-        when(converter.convert(any(Episode.class), eq(EpisodeTO.class))).thenReturn(null);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Episode.class), eq(Episode.class))).thenReturn(null);
 
         assertNull(episodeFacade.getEpisode(Integer.MAX_VALUE));
 
         verify(showService).getAll();
-        verify(converter).convert(null, EpisodeTO.class);
+        verify(converter).convert(null, Episode.class);
         verifyNoMoreInteractions(showService, converter);
     }
 
@@ -163,72 +161,72 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)}.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)}.
      */
     @Test
     public void testAdd() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(null);
-        final Episode episodeEntity = EpisodeUtils.newEpisode(null);
+        final Season season = SeasonUtils.newSeasonTO(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+        final cz.vhromada.catalog.domain.Episode episodeEntity = EpisodeUtils.newEpisode(null);
         final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
-        when(converter.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episodeEntity);
+        when(converter.convert(any(Episode.class), eq(cz.vhromada.catalog.domain.Episode.class))).thenReturn(episodeEntity);
 
         episodeFacade.add(season, episode);
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonValidator).validateSeasonTOWithId(season);
-        verify(episodeValidator).validateNewEpisodeTO(episode);
-        verify(converter).convert(episode, Episode.class);
+        verify(seasonValidator).validateSeasonWithId(season);
+        verify(episodeValidator).validateNewEpisode(episode);
+        verify(converter).convert(episode, cz.vhromada.catalog.domain.Episode.class);
         verifyNoMoreInteractions(showService, converter, seasonValidator, episodeValidator);
 
         ShowUtils.assertShowDeepEquals(newShowWithSeasons(1, EpisodeUtils.newEpisode(1), episodeEntity), showArgumentCaptor.getValue());
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with null TO for season.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)} with null TO for season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonTO() {
-        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
         episodeFacade.add(null, EpisodeUtils.newEpisodeTO(null));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with null TO for episode.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)} with null TO for episode.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullEpisodeTO() {
-        doThrow(IllegalArgumentException.class).when(episodeValidator).validateNewEpisodeTO(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateNewEpisode(any(Episode.class));
 
         episodeFacade.add(SeasonUtils.newSeasonTO(1), null);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with TO for season with bad data.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)} with TO for season with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadSeasonTO() {
-        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
         episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(null));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with TO for episode with bad data.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)} with TO for episode with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadEpisodeTO() {
-        doThrow(ValidationException.class).when(episodeValidator).validateNewEpisodeTO(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateNewEpisode(any(Episode.class));
 
         episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(SeasonTO, EpisodeTO)} with not existing argument.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testAdd_NotExistingArgument() {
@@ -238,23 +236,23 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#update(EpisodeTO)}.
+     * Test method for {@link EpisodeFacade#update(Episode)}.
      */
     @Test
     public void testUpdate() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
-        final Episode episodeEntity = EpisodeUtils.newEpisode(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final cz.vhromada.catalog.domain.Episode episodeEntity = EpisodeUtils.newEpisode(1);
         final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
-        when(converter.convert(any(EpisodeTO.class), eq(Episode.class))).thenReturn(episodeEntity);
+        when(converter.convert(any(Episode.class), eq(cz.vhromada.catalog.domain.Episode.class))).thenReturn(episodeEntity);
 
         episodeFacade.update(episode);
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(converter).convert(episode, Episode.class);
-        verify(episodeValidator).validateExistingEpisodeTO(episode);
+        verify(converter).convert(episode, cz.vhromada.catalog.domain.Episode.class);
+        verify(episodeValidator).validateExistingEpisode(episode);
         verifyNoMoreInteractions(showService, converter, episodeValidator);
         verifyZeroInteractions(seasonValidator);
 
@@ -262,27 +260,27 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#update(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeFacade#update(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateExistingEpisode(any(Episode.class));
 
         episodeFacade.update(null);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#update(EpisodeTO)} with argument with bad data.
+     * Test method for {@link EpisodeFacade#update(Episode)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(episodeValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateExistingEpisode(any(Episode.class));
 
         episodeFacade.update(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#update(EpisodeTO)} with not existing argument.
+     * Test method for {@link EpisodeFacade#update(Episode)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingArgument() {
@@ -292,11 +290,11 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(EpisodeTO)}.
+     * Test method for {@link EpisodeFacade#remove(Episode)}.
      */
     @Test
     public void testRemove() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
         final Show expectedShow = ShowUtils.newShow(1);
         expectedShow.setSeasons(CollectionUtils.newList(SeasonUtils.newSeason(1)));
         final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
@@ -307,7 +305,7 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verify(episodeValidator).validateEpisodeWithId(episode);
         verifyNoMoreInteractions(showService, episodeValidator);
         verifyZeroInteractions(converter, seasonValidator);
 
@@ -315,27 +313,27 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeFacade#remove(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.remove(null);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(EpisodeTO)} with argument with bad data.
+     * Test method for {@link EpisodeFacade#remove(Episode)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.remove(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(EpisodeTO)} with not existing argument.
+     * Test method for {@link EpisodeFacade#remove(Episode)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_NotExistingArgument() {
@@ -345,12 +343,12 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)}.
+     * Test method for {@link EpisodeFacade#duplicate(Episode)}.
      */
     @Test
     public void testDuplicate() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
-        final Episode episodeEntity = EpisodeUtils.newEpisode(null);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final cz.vhromada.catalog.domain.Episode episodeEntity = EpisodeUtils.newEpisode(null);
         episode.setPosition(0);
         final Show expectedShow = newShowWithSeasons(1, EpisodeUtils.newEpisode(1), episodeEntity);
         final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
@@ -361,7 +359,7 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verify(episodeValidator).validateEpisodeWithId(episode);
         verifyNoMoreInteractions(showService, episodeValidator);
         verifyZeroInteractions(converter, seasonValidator);
 
@@ -369,27 +367,27 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeFacade#duplicate(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.duplicate(null);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with argument with bad data.
+     * Test method for {@link EpisodeFacade#duplicate(Episode)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.duplicate(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(EpisodeTO)} with not existing argument.
+     * Test method for {@link EpisodeFacade#duplicate(Episode)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_NotExistingArgument() {
@@ -399,14 +397,14 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)}.
+     * Test method for {@link EpisodeFacade#moveUp(Episode)}.
      */
     @Test
     public void testMoveUp() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(2);
-        final Episode expectedEpisode1 = EpisodeUtils.newEpisode(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(2);
+        final cz.vhromada.catalog.domain.Episode expectedEpisode1 = EpisodeUtils.newEpisode(1);
         expectedEpisode1.setPosition(1);
-        final Episode expectedEpisode2 = EpisodeUtils.newEpisode(2);
+        final cz.vhromada.catalog.domain.Episode expectedEpisode2 = EpisodeUtils.newEpisode(2);
         expectedEpisode2.setPosition(0);
         final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
 
@@ -416,7 +414,7 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verify(episodeValidator).validateEpisodeWithId(episode);
         verifyNoMoreInteractions(showService, episodeValidator);
         verifyZeroInteractions(converter, seasonValidator);
 
@@ -424,27 +422,27 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeFacade#moveUp(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.moveUp(null);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with argument with bad data.
+     * Test method for {@link EpisodeFacade#moveUp(Episode)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.moveUp(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not existing argument.
+     * Test method for {@link EpisodeFacade#moveUp(Episode)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_NotExistingArgument() {
@@ -454,7 +452,7 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(EpisodeTO)} with not movable argument.
+     * Test method for {@link EpisodeFacade#moveUp(Episode)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
@@ -464,14 +462,14 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)}.
+     * Test method for {@link EpisodeFacade#moveDown(Episode)}.
      */
     @Test
     public void testMoveDown() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
-        final Episode expectedEpisode1 = EpisodeUtils.newEpisode(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final cz.vhromada.catalog.domain.Episode expectedEpisode1 = EpisodeUtils.newEpisode(1);
         expectedEpisode1.setPosition(1);
-        final Episode expectedEpisode2 = EpisodeUtils.newEpisode(2);
+        final cz.vhromada.catalog.domain.Episode expectedEpisode2 = EpisodeUtils.newEpisode(2);
         expectedEpisode2.setPosition(0);
         final ArgumentCaptor<Show> showArgumentCaptor = ArgumentCaptor.forClass(Show.class);
 
@@ -481,7 +479,7 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verify(episodeValidator).validateEpisodeWithId(episode);
         verifyNoMoreInteractions(showService, episodeValidator);
         verifyZeroInteractions(converter, seasonValidator);
 
@@ -489,27 +487,27 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeFacade#moveDown(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.moveDown(null);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with argument with bad data.
+     * Test method for {@link EpisodeFacade#moveDown(Episode)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeWithId(any(Episode.class));
 
         episodeFacade.moveDown(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not existing argument.
+     * Test method for {@link EpisodeFacade#moveDown(Episode)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_NotExistingArgument() {
@@ -519,7 +517,7 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(EpisodeTO)} with not movable argument.
+     * Test method for {@link EpisodeFacade#moveDown(Episode)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
@@ -529,50 +527,50 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)}.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(Season)}.
      */
     @Test
     public void testFindEpisodesBySeason() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
-        final List<EpisodeTO> expectedEpisodes = CollectionUtils.newList(EpisodeUtils.newEpisodeTO(1));
+        final Season season = SeasonUtils.newSeasonTO(1);
+        final List<Episode> expectedEpisodes = CollectionUtils.newList(EpisodeUtils.newEpisodeTO(1));
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
-        when(converter.convertCollection(anyListOf(Episode.class), eq(EpisodeTO.class))).thenReturn(expectedEpisodes);
+        when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Episode.class), eq(Episode.class))).thenReturn(expectedEpisodes);
 
-        final List<EpisodeTO> episodes = episodeFacade.findEpisodesBySeason(season);
+        final List<Episode> episodes = episodeFacade.findEpisodesBySeason(season);
 
         assertNotNull(episodes);
         assertEquals(expectedEpisodes, episodes);
 
         verify(showService).getAll();
-        verify(converter).convertCollection(CollectionUtils.newList(EpisodeUtils.newEpisode(1)), EpisodeTO.class);
-        verify(seasonValidator).validateSeasonTOWithId(season);
+        verify(converter).convertCollection(CollectionUtils.newList(EpisodeUtils.newEpisode(1)), Episode.class);
+        verify(seasonValidator).validateSeasonWithId(season);
         verifyNoMoreInteractions(showService, converter, seasonValidator);
         verifyZeroInteractions(episodeValidator);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with null argument.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(Season)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindEpisodesBySeason_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
         episodeFacade.findEpisodesBySeason(null);
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with argument with bad data.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(Season)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testFindEpisodesBySeason_BadArgument() {
-        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
         episodeFacade.findEpisodesBySeason(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#findEpisodesBySeason(SeasonTO)} with not existing argument.
+     * Test method for {@link EpisodeFacade#findEpisodesBySeason(Season)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testFindEpisodesBySeason_NotExistingArgument() {
@@ -588,8 +586,8 @@ public class EpisodeFacadeImplTest {
      * @param episodes episodes
      * @return show with seasons
      */
-    private static Show newShowWithSeasons(final Integer id, final Episode... episodes) {
-        final Season season = SeasonUtils.newSeason(id);
+    private static Show newShowWithSeasons(final Integer id, final cz.vhromada.catalog.domain.Episode... episodes) {
+        final cz.vhromada.catalog.domain.Season season = SeasonUtils.newSeason(id);
         season.setEpisodes(CollectionUtils.newList(episodes));
 
         final Show show = ShowUtils.newShow(id);

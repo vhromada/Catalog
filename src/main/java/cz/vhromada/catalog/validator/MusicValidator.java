@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.Music;
 
 /**
  * An interface represents validator for music.
@@ -22,7 +22,7 @@ public interface MusicValidator {
      *                                  or count of media isn't positive number
      *                                  or note is null
      */
-    void validateNewMusicTO(MusicTO music);
+    void validateNewMusic(Music music);
 
     /**
      * Validates existing music.
@@ -37,7 +37,7 @@ public interface MusicValidator {
      *                                  or count of media isn't positive number
      *                                  or note is null
      */
-    void validateExistingMusicTO(MusicTO music);
+    void validateExistingMusic(Music music);
 
     /**
      * Validates music with ID.
@@ -46,6 +46,6 @@ public interface MusicValidator {
      * @throws IllegalArgumentException if music is null
      *                                  or ID is null
      */
-    void validateMusicTOWithId(MusicTO music);
+    void validateMusicWithId(Music music);
 
 }

@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.Genre;
 
 /**
  * An interface represents facade for genres.
@@ -17,26 +17,26 @@ public interface GenreFacade {
     void newData();
 
     /**
-     * Returns list of TO for genre.
+     * Returns genres.
      *
-     * @return list of TO for genre
+     * @return genres
      */
-    List<GenreTO> getGenres();
+    List<Genre> getGenres();
 
     /**
-     * Returns TO for genre with ID or null if there isn't such TO for genre.
+     * Returns genre with ID or null if there isn't such genre.
      *
      * @param id ID
-     * @return TO for genre with ID or null if there isn't such TO for genre
+     * @return genre with ID or null if there isn't such genre
      * @throws IllegalArgumentException if ID is null
      */
-    GenreTO getGenre(Integer id);
+    Genre getGenre(Integer id);
 
     /**
-     * Adds TO for genre. Sets new ID and position.
+     * Adds genre. Sets new ID and position.
      *
-     * @param genre TO for genre
-     * @throws IllegalArgumentException                              if TO for genre is null
+     * @param genre genre
+     * @throws IllegalArgumentException                              if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
      *                                                               or name is null
      *                                                               or name is empty string
@@ -46,7 +46,7 @@ public interface GenreFacade {
      *                                                               or other data is null
      *                                                               or note is null
      */
-    void add(GenreTO genre);
+    void add(Genre genre);
 
     /**
      * Adds list of genre names.
@@ -58,58 +58,58 @@ public interface GenreFacade {
     void add(List<String> genres);
 
     /**
-     * Updates TO for genre.
+     * Updates genre.
      *
-     * @param genre new value of TO for genre
-     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @param genre new value of genre
+     * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
-    void update(GenreTO genre);
+    void update(Genre genre);
 
     /**
-     * Removes TO for genre.
+     * Removes genre.
      *
-     * @param genre TO for genre
-     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @param genre genre
+     * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
-    void remove(GenreTO genre);
+    void remove(Genre genre);
 
     /**
-     * Duplicates TO for genre.
+     * Duplicates genre.
      *
-     * @param genre TO for genre
-     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @param genre genre
+     * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
-    void duplicate(GenreTO genre);
+    void duplicate(Genre genre);
 
     /**
-     * Moves TO for genre in list one position up.
+     * Moves genre in list one position up.
      *
-     * @param genre TO for genre
-     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @param genre genre
+     * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for genre can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     *                                                                   or genre can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
-    void moveUp(GenreTO genre);
+    void moveUp(Genre genre);
 
     /**
-     * Moves TO for genre in list one position down.
+     * Moves genre in list one position down.
      *
-     * @param genre TO for genre
-     * @throws IllegalArgumentException                                  if TO for genre is null
+     * @param genre genre
+     * @throws IllegalArgumentException                                  if genre is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for genre can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     *                                                                   or genre can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
-    void moveDown(GenreTO genre);
+    void moveDown(Genre genre);
 
     /**
      * Updates positions.

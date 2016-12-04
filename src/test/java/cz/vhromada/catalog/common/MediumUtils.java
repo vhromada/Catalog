@@ -8,8 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.domain.Medium;
-import cz.vhromada.catalog.entity.MediumTO;
+import cz.vhromada.catalog.entity.Medium;
 
 /**
  * A class represents utility class for mediums.
@@ -40,8 +39,8 @@ public final class MediumUtils {
      * @param id ID
      * @return medium
      */
-    public static Medium newMedium(final Integer id) {
-        final Medium medium = new Medium();
+    public static cz.vhromada.catalog.domain.Medium newMedium(final Integer id) {
+        final cz.vhromada.catalog.domain.Medium medium = new cz.vhromada.catalog.domain.Medium();
         medium.setLength(10);
         medium.setNumber(1);
         if (id != null) {
@@ -52,13 +51,13 @@ public final class MediumUtils {
     }
 
     /**
-     * Returns TO for medium.
+     * Returns medium.
      *
      * @param id ID
-     * @return TO for medium
+     * @return medium
      */
-    public static MediumTO newMediumTO(final Integer id) {
-        final MediumTO medium = new MediumTO();
+    public static Medium newMediumTO(final Integer id) {
+        final Medium medium = new Medium();
         medium.setLength(10);
         medium.setNumber(1);
         if (id != null) {
@@ -73,8 +72,8 @@ public final class MediumUtils {
      *
      * @return media
      */
-    public static List<Medium> getMedia() {
-        final List<Medium> media = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Medium> getMedia() {
+        final List<cz.vhromada.catalog.domain.Medium> media = new ArrayList<>();
         for (int i = 0; i < MEDIA_COUNT; i++) {
             media.add(getMedium(i + 1));
         }
@@ -88,10 +87,10 @@ public final class MediumUtils {
      * @param index index
      * @return medium for index
      */
-    public static Medium getMedium(final int index) {
+    public static cz.vhromada.catalog.domain.Medium getMedium(final int index) {
         final int lengthMultiplier = 100;
 
-        final Medium medium = new Medium();
+        final cz.vhromada.catalog.domain.Medium medium = new cz.vhromada.catalog.domain.Medium();
         medium.setId(index);
         medium.setNumber(index < 4 ? 1 : 2);
         medium.setLength(index * lengthMultiplier);
@@ -115,7 +114,7 @@ public final class MediumUtils {
      * @param expected expected media
      * @param actual   actual media
      */
-    public static void assertMediaDeepEquals(final List<Medium> expected, final List<Medium> actual) {
+    public static void assertMediaDeepEquals(final List<cz.vhromada.catalog.domain.Medium> expected, final List<cz.vhromada.catalog.domain.Medium> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -131,7 +130,7 @@ public final class MediumUtils {
      * @param expected expected medium
      * @param actual   actual medium
      */
-    private static void assertMediumDeepEquals(final Medium expected, final Medium actual) {
+    private static void assertMediumDeepEquals(final cz.vhromada.catalog.domain.Medium expected, final cz.vhromada.catalog.domain.Medium actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getNumber(), actual.getNumber());
@@ -142,10 +141,10 @@ public final class MediumUtils {
     /**
      * Asserts media deep equals.
      *
-     * @param expected expected list of TO for medium
+     * @param expected expected list of medium
      * @param actual   actual media
      */
-    public static void assertMediumListDeepEquals(final List<MediumTO> expected, final List<Medium> actual) {
+    public static void assertMediumListDeepEquals(final List<Medium> expected, final List<cz.vhromada.catalog.domain.Medium> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -158,10 +157,10 @@ public final class MediumUtils {
     /**
      * Asserts medium deep equals.
      *
-     * @param expected expected TO for medium
+     * @param expected expected medium
      * @param actual   actual medium
      */
-    private static void assertMediumDeepEquals(final MediumTO expected, final Medium actual) {
+    private static void assertMediumDeepEquals(final Medium expected, final cz.vhromada.catalog.domain.Medium actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getNumber(), actual.getNumber());

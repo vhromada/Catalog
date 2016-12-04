@@ -8,8 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.domain.Song;
-import cz.vhromada.catalog.entity.SongTO;
+import cz.vhromada.catalog.entity.Song;
 
 /**
  * A class represents utility class for songs.
@@ -55,8 +54,8 @@ public final class SongUtils {
      * @param id ID
      * @return song
      */
-    public static Song newSong(final Integer id) {
-        final Song song = new Song();
+    public static cz.vhromada.catalog.domain.Song newSong(final Integer id) {
+        final cz.vhromada.catalog.domain.Song song = new cz.vhromada.catalog.domain.Song();
         updateSong(song);
         if (id != null) {
             song.setId(id);
@@ -71,20 +70,20 @@ public final class SongUtils {
      *
      * @param song song
      */
-    public static void updateSong(final Song song) {
+    public static void updateSong(final cz.vhromada.catalog.domain.Song song) {
         song.setName("Name");
         song.setLength(5);
         song.setNote("Note");
     }
 
     /**
-     * Returns TO for song.
+     * Returns song.
      *
      * @param id ID
-     * @return TO for song
+     * @return song
      */
-    public static SongTO newSongTO(final Integer id) {
-        final SongTO song = new SongTO();
+    public static Song newSongTO(final Integer id) {
+        final Song song = new Song();
         updateSongTO(song);
         if (id != null) {
             song.setId(id);
@@ -95,11 +94,11 @@ public final class SongUtils {
     }
 
     /**
-     * Updates TO for song fields.
+     * Updates song fields.
      *
-     * @param song TO for song
+     * @param song song
      */
-    public static void updateSongTO(final SongTO song) {
+    public static void updateSongTO(final Song song) {
         song.setName("Name");
         song.setLength(5);
         song.setNote("Note");
@@ -111,8 +110,8 @@ public final class SongUtils {
      * @param music music
      * @return songs for music
      */
-    public static List<Song> getSongs(final int music) {
-        final List<Song> songs = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Song> getSongs(final int music) {
+        final List<cz.vhromada.catalog.domain.Song> songs = new ArrayList<>();
         for (int i = 1; i <= SONGS_PER_MUSIC_COUNT; i++) {
             songs.add(getSong(music, i));
         }
@@ -126,7 +125,7 @@ public final class SongUtils {
      * @param index song index
      * @return song for index
      */
-    public static Song getSong(final int index) {
+    public static cz.vhromada.catalog.domain.Song getSong(final int index) {
         final int musicNumber = (index - 1) / SONGS_PER_MUSIC_COUNT + 1;
         final int songNumber = (index - 1) % SONGS_PER_MUSIC_COUNT + 1;
 
@@ -140,8 +139,8 @@ public final class SongUtils {
      * @param songIndex  song index
      * @return song for indexes
      */
-    public static Song getSong(final int musicIndex, final int songIndex) {
-        final Song song = new Song();
+    public static cz.vhromada.catalog.domain.Song getSong(final int musicIndex, final int songIndex) {
+        final cz.vhromada.catalog.domain.Song song = new cz.vhromada.catalog.domain.Song();
         song.setId((musicIndex - 1) * SONGS_PER_MUSIC_COUNT + songIndex);
         song.setName("Music " + musicIndex + " Song " + songIndex);
         song.setLength(songIndex * LENGTH_MULTIPLIERS[musicIndex - 1]);
@@ -158,8 +157,8 @@ public final class SongUtils {
      * @param id            song ID
      * @return song
      */
-    public static Song getSong(final EntityManager entityManager, final int id) {
-        return entityManager.find(Song.class, id);
+    public static cz.vhromada.catalog.domain.Song getSong(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Song.class, id);
     }
 
     /**
@@ -178,7 +177,7 @@ public final class SongUtils {
      * @param expected expected songs
      * @param actual   actual songs
      */
-    public static void assertSongsDeepEquals(final List<Song> expected, final List<Song> actual) {
+    public static void assertSongsDeepEquals(final List<cz.vhromada.catalog.domain.Song> expected, final List<cz.vhromada.catalog.domain.Song> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -194,7 +193,7 @@ public final class SongUtils {
      * @param expected expected song
      * @param actual   actual song
      */
-    public static void assertSongDeepEquals(final Song expected, final Song actual) {
+    public static void assertSongDeepEquals(final cz.vhromada.catalog.domain.Song expected, final cz.vhromada.catalog.domain.Song actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
@@ -206,10 +205,10 @@ public final class SongUtils {
     /**
      * Asserts songs deep equals.
      *
-     * @param expected expected list of TO for song
+     * @param expected expected list of song
      * @param actual   actual songs
      */
-    public static void assertSongListDeepEquals(final List<SongTO> expected, final List<Song> actual) {
+    public static void assertSongListDeepEquals(final List<Song> expected, final List<cz.vhromada.catalog.domain.Song> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -222,10 +221,10 @@ public final class SongUtils {
     /**
      * Asserts song deep equals.
      *
-     * @param expected expected TO for song
+     * @param expected expected song
      * @param actual   actual song
      */
-    public static void assertSongDeepEquals(final SongTO expected, final Song actual) {
+    public static void assertSongDeepEquals(final Song expected, final cz.vhromada.catalog.domain.Song actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());

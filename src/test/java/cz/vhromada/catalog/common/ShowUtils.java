@@ -10,8 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Genre;
-import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.util.CollectionUtils;
 
 /**
@@ -53,8 +52,8 @@ public final class ShowUtils {
      * @param id ID
      * @return show
      */
-    public static Show newShow(final Integer id) {
-        final Show show = new Show();
+    public static cz.vhromada.catalog.domain.Show newShow(final Integer id) {
+        final cz.vhromada.catalog.domain.Show show = new cz.vhromada.catalog.domain.Show();
         updateShow(show);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
         if (id != null) {
@@ -72,8 +71,8 @@ public final class ShowUtils {
      * @param id ID
      * @return show with seasons
      */
-    public static Show newShowWithSeasons(final Integer id) {
-        final Show show = newShow(id);
+    public static cz.vhromada.catalog.domain.Show newShowWithSeasons(final Integer id) {
+        final cz.vhromada.catalog.domain.Show show = newShow(id);
         show.setSeasons(CollectionUtils.newList(SeasonUtils.newSeasonWithEpisodes(id)));
 
         return show;
@@ -84,7 +83,7 @@ public final class ShowUtils {
      *
      * @param show show
      */
-    public static void updateShow(final Show show) {
+    public static void updateShow(final cz.vhromada.catalog.domain.Show show) {
         show.setCzechName("czName");
         show.setOriginalName("origName");
         show.setCsfd("Csfd");
@@ -96,13 +95,13 @@ public final class ShowUtils {
     }
 
     /**
-     * Returns TO for show.
+     * Returns show.
      *
      * @param id ID
-     * @return TO for show
+     * @return show
      */
-    public static ShowTO newShowTO(final Integer id) {
-        final ShowTO show = new ShowTO();
+    public static Show newShowTO(final Integer id) {
+        final Show show = new Show();
         updateShowTO(show);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(id)));
         if (id != null) {
@@ -114,11 +113,11 @@ public final class ShowUtils {
     }
 
     /**
-     * Updates TO for show fields.
+     * Updates show fields.
      *
-     * @param show TO for show
+     * @param show show
      */
-    public static void updateShowTO(final ShowTO show) {
+    public static void updateShowTO(final Show show) {
         show.setCzechName("czName");
         show.setOriginalName("origName");
         show.setCsfd("Csfd");
@@ -134,8 +133,8 @@ public final class ShowUtils {
      *
      * @return shows
      */
-    public static List<Show> getShows() {
-        final List<Show> shows = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Show> getShows() {
+        final List<cz.vhromada.catalog.domain.Show> shows = new ArrayList<>();
         for (int i = 0; i < SHOWS_COUNT; i++) {
             shows.add(getShow(i + 1));
         }
@@ -149,10 +148,10 @@ public final class ShowUtils {
      * @param index index
      * @return show for index
      */
-    public static Show getShow(final int index) {
+    public static cz.vhromada.catalog.domain.Show getShow(final int index) {
         final int imdbMultiplier = 100;
 
-        final Show show = new Show();
+        final cz.vhromada.catalog.domain.Show show = new cz.vhromada.catalog.domain.Show();
         show.setId(index);
         show.setCzechName(SHOW + index + " czech name");
         show.setOriginalName(SHOW + index + " original name");
@@ -181,8 +180,8 @@ public final class ShowUtils {
      * @param id            show ID
      * @return show
      */
-    public static Show getShow(final EntityManager entityManager, final int id) {
-        return entityManager.find(Show.class, id);
+    public static cz.vhromada.catalog.domain.Show getShow(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Show.class, id);
     }
 
     /**
@@ -192,8 +191,8 @@ public final class ShowUtils {
      * @param entityManager entity manager
      * @return show with updated fields
      */
-    public static Show updateShow(final EntityManager entityManager, final int id) {
-        final Show show = getShow(entityManager, id);
+    public static cz.vhromada.catalog.domain.Show updateShow(final EntityManager entityManager, final int id) {
+        final cz.vhromada.catalog.domain.Show show = getShow(entityManager, id);
         updateShow(show);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setPosition(POSITION);
@@ -217,7 +216,7 @@ public final class ShowUtils {
      * @param expected expected shows
      * @param actual   actual shows
      */
-    public static void assertShowsDeepEquals(final List<Show> expected, final List<Show> actual) {
+    public static void assertShowsDeepEquals(final List<cz.vhromada.catalog.domain.Show> expected, final List<cz.vhromada.catalog.domain.Show> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -233,7 +232,7 @@ public final class ShowUtils {
      * @param expected expected show
      * @param actual   actual show
      */
-    public static void assertShowDeepEquals(final Show expected, final Show actual) {
+    public static void assertShowDeepEquals(final cz.vhromada.catalog.domain.Show expected, final cz.vhromada.catalog.domain.Show actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getCzechName(), actual.getCzechName());
@@ -256,10 +255,10 @@ public final class ShowUtils {
     /**
      * Asserts shows deep equals.
      *
-     * @param expected expectedlList of TO for show
+     * @param expected expectedlList of show
      * @param actual   actual shows
      */
-    public static void assertShowListDeepEquals(final List<ShowTO> expected, final List<Show> actual) {
+    public static void assertShowListDeepEquals(final List<Show> expected, final List<cz.vhromada.catalog.domain.Show> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -272,10 +271,10 @@ public final class ShowUtils {
     /**
      * Asserts show deep equals.
      *
-     * @param expected expected TO for show
+     * @param expected expected show
      * @param actual   actual show
      */
-    public static void assertShowDeepEquals(final ShowTO expected, final Show actual) {
+    public static void assertShowDeepEquals(final Show expected, final cz.vhromada.catalog.domain.Show actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getCzechName(), actual.getCzechName());

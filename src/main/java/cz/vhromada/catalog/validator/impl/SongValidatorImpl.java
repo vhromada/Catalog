@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.SongTO;
+import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.validator.SongValidator;
 
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ public class SongValidatorImpl implements SongValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewSongTO(final SongTO song) {
-        validateSongTO(song);
+    public void validateNewSong(final Song song) {
+        validateSong(song);
         Assert.isNull(song.getId(), "ID must be null.");
     }
 
@@ -28,8 +28,8 @@ public class SongValidatorImpl implements SongValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingSongTO(final SongTO song) {
-        validateSongTO(song);
+    public void validateExistingSong(final Song song) {
+        validateSong(song);
         Assert.notNull(song.getId(), "ID mustn't be null.");
     }
 
@@ -37,7 +37,7 @@ public class SongValidatorImpl implements SongValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateSongTOWithId(final SongTO song) {
+    public void validateSongWithId(final Song song) {
         Assert.notNull(song, "Song mustn't be null.");
         Assert.notNull(song.getId(), "ID mustn't be null.");
     }
@@ -53,7 +53,7 @@ public class SongValidatorImpl implements SongValidator {
      *                                  or length of song is negative value
      *                                  or note is null
      */
-    private static void validateSongTO(final SongTO song) {
+    private static void validateSong(final Song song) {
         Assert.notNull(song, "Song mustn't be null.");
         Assert.notNull(song.getName(), "Name mustn't be null");
         Assert.isTrue(!StringUtils.isEmpty(song.getName()) && !StringUtils.isEmpty(song.getName().trim()), "Name mustn't be empty string.");

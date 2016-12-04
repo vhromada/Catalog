@@ -5,11 +5,9 @@ import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Episode;
-import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Season;
-import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.ShowValidator;
@@ -29,24 +27,24 @@ import org.springframework.stereotype.Component;
 public class ShowFacadeImpl implements ShowFacade {
 
     /**
-     * TO for show argument
+     * Show argument
      */
-    private static final String SHOW_TO_ARGUMENT = "TO for show";
+    private static final String SHOW_ARGUMENT = "show";
 
     /**
-     * TO for genre argument
+     * Genre argument
      */
-    private static final String GENRE_TO_ARGUMENT = "TO for genre";
+    private static final String GENRE_ARGUMENT = "genre";
 
     /**
      * Service for shows
      */
-    private CatalogService<Show> showService;
+    private CatalogService<cz.vhromada.catalog.domain.Show> showService;
 
     /**
      * Service for genres
      */
-    private CatalogService<Genre> genreService;
+    private CatalogService<cz.vhromada.catalog.domain.Genre> genreService;
 
     /**
      * Converter
@@ -54,7 +52,7 @@ public class ShowFacadeImpl implements ShowFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for show
+     * Validator for show
      */
     private ShowValidator showValidator;
 
@@ -64,21 +62,21 @@ public class ShowFacadeImpl implements ShowFacade {
      * @param showService   service for shows
      * @param genreService  service for genres
      * @param converter     converter
-     * @param showValidator validator for TO for show
+     * @param showValidator validator for show
      * @throws IllegalArgumentException if service for shows is null
      *                                  or service for genres is null
      *                                  or converter is null
-     *                                  or validator for TO for show is null
+     *                                  or validator for show is null
      */
     @Autowired
-    public ShowFacadeImpl(final CatalogService<Show> showService,
-            final CatalogService<Genre> genreService,
+    public ShowFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
+            final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final ShowValidator showValidator) {
         Validators.validateArgumentNotNull(showService, "Service for shows");
         Validators.validateArgumentNotNull(genreService, "Service for genres");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(showValidator, "Validator for TO for show");
+        Validators.validateArgumentNotNull(showValidator, "Validator for show");
 
         this.showService = showService;
         this.genreService = genreService;
@@ -92,18 +90,18 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     @Override
-    public List<ShowTO> getShows() {
-        return converter.convertCollection(showService.getAll(), ShowTO.class);
+    public List<Show> getShows() {
+        return converter.convertCollection(showService.getAll(), Show.class);
     }
 
     /**
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public ShowTO getShow(final Integer id) {
+    public Show getShow(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        return converter.convert(showService.get(id), ShowTO.class);
+        return converter.convert(showService.get(id), Show.class);
     }
 
     /**
@@ -112,13 +110,13 @@ public class ShowFacadeImpl implements ShowFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void add(final ShowTO show) {
-        showValidator.validateNewShowTO(show);
-        for (final GenreTO genre : show.getGenres()) {
-            Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
+    public void add(final Show show) {
+        showValidator.validateNewShow(show);
+        for (final Genre genre : show.getGenres()) {
+            Validators.validateExists(genreService.get(genre.getId()), GENRE_ARGUMENT);
         }
 
-        final Show showEntity = converter.convert(show, Show.class);
+        final cz.vhromada.catalog.domain.Show showEntity = converter.convert(show, cz.vhromada.catalog.domain.Show.class);
         showEntity.setSeasons(new ArrayList<>());
 
         showService.add(showEntity);
@@ -130,15 +128,15 @@ public class ShowFacadeImpl implements ShowFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void update(final ShowTO show) {
-        showValidator.validateExistingShowTO(show);
-        final Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+    public void update(final Show show) {
+        showValidator.validateExistingShow(show);
+        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_ARGUMENT);
         assert showEntity != null;
         showEntity.getGenres().clear();
-        for (final GenreTO genre : show.getGenres()) {
-            final Genre genreEntity = genreService.get(genre.getId());
-            Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
+        for (final Genre genre : show.getGenres()) {
+            final cz.vhromada.catalog.domain.Genre genreEntity = genreService.get(genre.getId());
+            Validators.validateExists(genreEntity, GENRE_ARGUMENT);
             showEntity.getGenres().add(genreEntity);
         }
 
@@ -161,10 +159,10 @@ public class ShowFacadeImpl implements ShowFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void remove(final ShowTO show) {
-        showValidator.validateShowTOWithId(show);
-        final Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+    public void remove(final Show show) {
+        showValidator.validateShowWithId(show);
+        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_ARGUMENT);
 
         showService.remove(showEntity);
     }
@@ -174,10 +172,10 @@ public class ShowFacadeImpl implements ShowFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void duplicate(final ShowTO show) {
-        showValidator.validateShowTOWithId(show);
-        final Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+    public void duplicate(final Show show) {
+        showValidator.validateShowWithId(show);
+        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_ARGUMENT);
 
         showService.duplicate(showEntity);
     }
@@ -188,12 +186,12 @@ public class ShowFacadeImpl implements ShowFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveUp(final ShowTO show) {
-        showValidator.validateShowTOWithId(show);
-        final Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
-        final List<Show> shows = showService.getAll();
-        Validators.validateMoveUp(shows, showEntity, SHOW_TO_ARGUMENT);
+    public void moveUp(final Show show) {
+        showValidator.validateShowWithId(show);
+        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Show> shows = showService.getAll();
+        Validators.validateMoveUp(shows, showEntity, SHOW_ARGUMENT);
 
         showService.moveUp(showEntity);
     }
@@ -204,12 +202,12 @@ public class ShowFacadeImpl implements ShowFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveDown(final ShowTO show) {
-        showValidator.validateShowTOWithId(show);
-        final Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
-        final List<Show> shows = showService.getAll();
-        Validators.validateMoveDown(shows, showEntity, SHOW_TO_ARGUMENT);
+    public void moveDown(final Show show) {
+        showValidator.validateShowWithId(show);
+        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Show> shows = showService.getAll();
+        Validators.validateMoveDown(shows, showEntity, SHOW_ARGUMENT);
 
         showService.moveDown(showEntity);
     }
@@ -222,7 +220,7 @@ public class ShowFacadeImpl implements ShowFacade {
     @Override
     public Time getTotalLength() {
         int totalLength = 0;
-        for (final Show show : showService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Show show : showService.getAll()) {
             for (final Season season : show.getSeasons()) {
                 for (final Episode episode : season.getEpisodes()) {
                     totalLength += episode.getLength();
@@ -236,7 +234,7 @@ public class ShowFacadeImpl implements ShowFacade {
     @Override
     public int getSeasonsCount() {
         int seasonsCount = 0;
-        for (final Show show : showService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Show show : showService.getAll()) {
             seasonsCount += show.getSeasons().size();
         }
 
@@ -246,7 +244,7 @@ public class ShowFacadeImpl implements ShowFacade {
     @Override
     public int getEpisodesCount() {
         int episodesCount = 0;
-        for (final Show show : showService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Show show : showService.getAll()) {
             for (final Season season : show.getSeasons()) {
                 episodesCount += season.getEpisodes().size();
             }

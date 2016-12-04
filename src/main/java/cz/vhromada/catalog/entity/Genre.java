@@ -5,11 +5,11 @@ import java.util.Objects;
 import cz.vhromada.catalog.common.Movable;
 
 /**
- * A class represents TO for genre.
+ * A class represents genre.
  *
  * @author Vladimir Hromada
  */
-public class GenreTO implements Movable {
+public class Genre implements Movable {
 
     /**
      * SerialVersionUID
@@ -74,11 +74,11 @@ public class GenreTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof GenreTO) || id == null) {
+        if (obj == null || !(obj instanceof Genre) || id == null) {
             return false;
         }
 
-        return id.equals(((GenreTO) obj).id);
+        return id.equals(((Genre) obj).id);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class GenreTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("GenreTO [id=%d, name=%s, position=%d]", id, name, position);
+        return String.format("Genre [id=%d, name=%s, position=%d]", id, name, position);
     }
 
 }

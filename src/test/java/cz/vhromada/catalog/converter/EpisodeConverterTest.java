@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.common.EpisodeUtils;
-import cz.vhromada.catalog.domain.Episode;
-import cz.vhromada.catalog.entity.EpisodeTO;
+import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for converter between {@link Episode} and {@link EpisodeTO}.
+ * A class represents test for converter between {@link cz.vhromada.catalog.domain.Episode} and {@link Episode}.
  *
  * @author Vladimir Hromada
  */
@@ -36,8 +35,8 @@ public class EpisodeConverterTest {
      */
     @Test
     public void testConvertEpisode() {
-        final Episode episode = EpisodeUtils.newEpisode(1);
-        final EpisodeTO episodeTO = converter.convert(episode, EpisodeTO.class);
+        final cz.vhromada.catalog.domain.Episode episode = EpisodeUtils.newEpisode(1);
+        final Episode episodeTO = converter.convert(episode, Episode.class);
 
         EpisodeUtils.assertEpisodeDeepEquals(episodeTO, episode);
     }
@@ -47,7 +46,7 @@ public class EpisodeConverterTest {
      */
     @Test
     public void testConvertEpisode_NullArgument() {
-        assertNull(converter.convert(null, EpisodeTO.class));
+        assertNull(converter.convert(null, Episode.class));
     }
 
     /**
@@ -55,8 +54,8 @@ public class EpisodeConverterTest {
      */
     @Test
     public void testConvertEpisodeTO() {
-        final EpisodeTO episodeTO = EpisodeUtils.newEpisodeTO(1);
-        final Episode episode = converter.convert(episodeTO, Episode.class);
+        final Episode episodeTO = EpisodeUtils.newEpisodeTO(1);
+        final cz.vhromada.catalog.domain.Episode episode = converter.convert(episodeTO, cz.vhromada.catalog.domain.Episode.class);
 
         assertNotNull(episode);
         EpisodeUtils.assertEpisodeDeepEquals(episodeTO, episode);
@@ -67,7 +66,7 @@ public class EpisodeConverterTest {
      */
     @Test
     public void testConvertEpisodeTO_NullArgument() {
-        assertNull(converter.convert(null, Episode.class));
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Episode.class));
     }
 
 }

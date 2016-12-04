@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.GameTO;
+import cz.vhromada.catalog.entity.Game;
 
 /**
  * An interface represents validator for game.
@@ -23,7 +23,7 @@ public interface GameValidator {
      *                                  or other data is null
      *                                  or note is null
      */
-    void validateNewGameTO(GameTO game);
+    void validateNewGame(Game game);
 
     /**
      * Validates existing game.
@@ -39,7 +39,7 @@ public interface GameValidator {
      *                                  or other data is null
      *                                  or note is null
      */
-    void validateExistingGameTO(GameTO game);
+    void validateExistingGame(Game game);
 
     /**
      * Validates game with ID.
@@ -48,6 +48,6 @@ public interface GameValidator {
      * @throws IllegalArgumentException if game is null
      *                                  or ID is null
      */
-    void validateGameTOWithId(GameTO game);
+    void validateGameWith(Game game);
 
 }

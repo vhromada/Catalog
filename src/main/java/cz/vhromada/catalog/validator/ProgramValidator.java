@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.ProgramTO;
+import cz.vhromada.catalog.entity.Program;
 
 /**
  * An interface represents validator for program.
@@ -23,7 +23,7 @@ public interface ProgramValidator {
      *                                  or other data is null
      *                                  or note is null
      */
-    void validateNewProgramTO(ProgramTO program);
+    void validateNewProgram(Program program);
 
     /**
      * Validates existing program.
@@ -39,7 +39,7 @@ public interface ProgramValidator {
      *                                  or other data is null
      *                                  or note is null
      */
-    void validateExistingProgramTO(ProgramTO program);
+    void validateExistingProgram(Program program);
 
     /**
      * Validates program with ID.
@@ -48,6 +48,6 @@ public interface ProgramValidator {
      * @throws IllegalArgumentException if program is null
      *                                  or ID is null
      */
-    void validateProgramTOWithId(ProgramTO program);
+    void validateProgramWithId(Program program);
 
 }

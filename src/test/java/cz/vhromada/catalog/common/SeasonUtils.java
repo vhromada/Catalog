@@ -10,8 +10,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.domain.Season;
-import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.util.CollectionUtils;
 
 /**
@@ -58,8 +57,8 @@ public final class SeasonUtils {
      * @param id ID
      * @return season
      */
-    public static Season newSeason(final Integer id) {
-        final Season season = new Season();
+    public static cz.vhromada.catalog.domain.Season newSeason(final Integer id) {
+        final cz.vhromada.catalog.domain.Season season = new cz.vhromada.catalog.domain.Season();
         updateSeason(season);
         if (id != null) {
             season.setId(id);
@@ -76,8 +75,8 @@ public final class SeasonUtils {
      * @param id ID
      * @return season with episodes
      */
-    public static Season newSeasonWithEpisodes(final Integer id) {
-        final Season season = newSeason(id);
+    public static cz.vhromada.catalog.domain.Season newSeasonWithEpisodes(final Integer id) {
+        final cz.vhromada.catalog.domain.Season season = newSeason(id);
         season.setEpisodes(CollectionUtils.newList(EpisodeUtils.newEpisode(id)));
 
         return season;
@@ -88,7 +87,7 @@ public final class SeasonUtils {
      *
      * @param season season
      */
-    public static void updateSeason(final Season season) {
+    public static void updateSeason(final cz.vhromada.catalog.domain.Season season) {
         season.setNumber(2);
         season.setStartYear(START_YEAR);
         season.setEndYear(START_YEAR + 1);
@@ -98,13 +97,13 @@ public final class SeasonUtils {
     }
 
     /**
-     * Returns TO for season.
+     * Returns season.
      *
      * @param id ID
-     * @return TO for season
+     * @return season
      */
-    public static SeasonTO newSeasonTO(final Integer id) {
-        final SeasonTO season = new SeasonTO();
+    public static Season newSeasonTO(final Integer id) {
+        final Season season = new Season();
         updateSeasonTO(season);
         if (id != null) {
             season.setId(id);
@@ -115,11 +114,11 @@ public final class SeasonUtils {
     }
 
     /**
-     * Updates TO for season fields.
+     * Updates season fields.
      *
-     * @param season TO for season
+     * @param season season
      */
-    public static void updateSeasonTO(final SeasonTO season) {
+    public static void updateSeasonTO(final Season season) {
         season.setNumber(2);
         season.setStartYear(START_YEAR);
         season.setEndYear(START_YEAR + 1);
@@ -134,8 +133,8 @@ public final class SeasonUtils {
      * @param show show
      * @return seasons for show
      */
-    public static List<Season> getSeasons(final int show) {
-        final List<Season> seasons = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Season> getSeasons(final int show) {
+        final List<cz.vhromada.catalog.domain.Season> seasons = new ArrayList<>();
         for (int i = 1; i <= SEASONS_PER_SHOW_COUNT; i++) {
             seasons.add(getSeason(show, i));
         }
@@ -149,7 +148,7 @@ public final class SeasonUtils {
      * @param index index
      * @return season for index
      */
-    public static Season getSeason(final int index) {
+    public static cz.vhromada.catalog.domain.Season getSeason(final int index) {
         final int showNumber = (index - 1) / SEASONS_PER_SHOW_COUNT + 1;
         final int seasonNumber = (index - 1) % SEASONS_PER_SHOW_COUNT + 1;
 
@@ -163,10 +162,10 @@ public final class SeasonUtils {
      * @param seasonIndex season index
      * @return season for indexes
      */
-    public static Season getSeason(final int showIndex, final int seasonIndex) {
+    public static cz.vhromada.catalog.domain.Season getSeason(final int showIndex, final int seasonIndex) {
         final int year = 1980;
 
-        final Season season = new Season();
+        final cz.vhromada.catalog.domain.Season season = new cz.vhromada.catalog.domain.Season();
         season.setId((showIndex - 1) * SEASONS_PER_SHOW_COUNT + seasonIndex);
         season.setNumber(seasonIndex);
         season.setStartYear(year + seasonIndex);
@@ -205,8 +204,8 @@ public final class SeasonUtils {
      * @param id            season ID
      * @return season
      */
-    public static Season getSeason(final EntityManager entityManager, final int id) {
-        return entityManager.find(Season.class, id);
+    public static cz.vhromada.catalog.domain.Season getSeason(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Season.class, id);
     }
 
     /**
@@ -225,7 +224,7 @@ public final class SeasonUtils {
      * @param expected expected seasons
      * @param actual   actual seasons
      */
-    public static void assertSeasonsDeepEquals(final List<Season> expected, final List<Season> actual) {
+    public static void assertSeasonsDeepEquals(final List<cz.vhromada.catalog.domain.Season> expected, final List<cz.vhromada.catalog.domain.Season> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -241,7 +240,7 @@ public final class SeasonUtils {
      * @param expected expected season
      * @param actual   actual season
      */
-    public static void assertSeasonDeepEquals(final Season expected, final Season actual) {
+    public static void assertSeasonDeepEquals(final cz.vhromada.catalog.domain.Season expected, final cz.vhromada.catalog.domain.Season actual) {
         assertNotNull(actual);
         assertNotNull(actual.getSubtitles());
         Collections.sort(actual.getSubtitles());
@@ -263,10 +262,10 @@ public final class SeasonUtils {
     /**
      * Asserts seasons deep equals.
      *
-     * @param expected expected list of TO for season
+     * @param expected expected list of season
      * @param actual   actual seasons
      */
-    public static void assertSeasonListDeepEquals(final List<SeasonTO> expected, final List<Season> actual) {
+    public static void assertSeasonListDeepEquals(final List<Season> expected, final List<cz.vhromada.catalog.domain.Season> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -279,10 +278,10 @@ public final class SeasonUtils {
     /**
      * Asserts season deep equals.
      *
-     * @param expected expected TO for season
+     * @param expected expected season
      * @param actual   actual season
      */
-    public static void assertSeasonDeepEquals(final SeasonTO expected, final Season actual) {
+    public static void assertSeasonDeepEquals(final Season expected, final cz.vhromada.catalog.domain.Season actual) {
         assertNotNull(actual);
         assertNotNull(actual.getSubtitles());
         Collections.sort(actual.getSubtitles());

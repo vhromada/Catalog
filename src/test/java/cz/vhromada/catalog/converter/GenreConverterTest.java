@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.common.GenreUtils;
-import cz.vhromada.catalog.domain.Genre;
-import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for converter between {@link Genre} and {@link GenreTO}.
+ * A class represents test for converter between {@link cz.vhromada.catalog.domain.Genre} and {@link Genre}.
  *
  * @author Vladimir Hromada
  */
@@ -36,8 +35,8 @@ public class GenreConverterTest {
      */
     @Test
     public void testConvertGenre() {
-        final Genre genre = GenreUtils.newGenre(1);
-        final GenreTO genreTO = converter.convert(genre, GenreTO.class);
+        final cz.vhromada.catalog.domain.Genre genre = GenreUtils.newGenre(1);
+        final Genre genreTO = converter.convert(genre, Genre.class);
 
         GenreUtils.assertGenreDeepEquals(genreTO, genre);
     }
@@ -47,7 +46,7 @@ public class GenreConverterTest {
      */
     @Test
     public void testConvertGenre_NullArgument() {
-        assertNull(converter.convert(null, GenreTO.class));
+        assertNull(converter.convert(null, Genre.class));
     }
 
     /**
@@ -55,8 +54,8 @@ public class GenreConverterTest {
      */
     @Test
     public void testConvertGenreTO() {
-        final GenreTO genreTO = GenreUtils.newGenreTO(1);
-        final Genre genre = converter.convert(genreTO, Genre.class);
+        final Genre genreTO = GenreUtils.newGenreTO(1);
+        final cz.vhromada.catalog.domain.Genre genre = converter.convert(genreTO, cz.vhromada.catalog.domain.Genre.class);
 
         assertNotNull(genre);
         GenreUtils.assertGenreDeepEquals(genreTO, genre);
@@ -67,7 +66,7 @@ public class GenreConverterTest {
      */
     @Test
     public void testConvertGenreTO_NullArgument() {
-        assertNull(converter.convert(null, Genre.class));
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Genre.class));
     }
 
 }

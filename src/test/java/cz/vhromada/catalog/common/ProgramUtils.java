@@ -8,8 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.domain.Program;
-import cz.vhromada.catalog.entity.ProgramTO;
+import cz.vhromada.catalog.entity.Program;
 
 /**
  * A class represents utility class for programs.
@@ -50,8 +49,8 @@ public final class ProgramUtils {
      * @param id ID
      * @return program
      */
-    public static Program newProgram(final Integer id) {
-        final Program program = new Program();
+    public static cz.vhromada.catalog.domain.Program newProgram(final Integer id) {
+        final cz.vhromada.catalog.domain.Program program = new cz.vhromada.catalog.domain.Program();
         updateProgram(program);
         if (id != null) {
             program.setId(id);
@@ -66,7 +65,7 @@ public final class ProgramUtils {
      *
      * @param program program
      */
-    public static void updateProgram(final Program program) {
+    public static void updateProgram(final cz.vhromada.catalog.domain.Program program) {
         program.setName("Name");
         program.setWikiEn("enWiki");
         program.setWikiCz("czWiki");
@@ -78,13 +77,13 @@ public final class ProgramUtils {
     }
 
     /**
-     * Returns TO for program.
+     * Returns program.
      *
      * @param id ID
-     * @return TO for program
+     * @return program
      */
-    public static ProgramTO newProgramTO(final Integer id) {
-        final ProgramTO program = new ProgramTO();
+    public static Program newProgramTO(final Integer id) {
+        final Program program = new Program();
         updateProgramTO(program);
         if (id != null) {
             program.setId(id);
@@ -95,11 +94,11 @@ public final class ProgramUtils {
     }
 
     /**
-     * Updates TO for program fields.
+     * Updates program fields.
      *
-     * @param program TO for program
+     * @param program program
      */
-    public static void updateProgramTO(final ProgramTO program) {
+    public static void updateProgramTO(final Program program) {
         program.setName("Name");
         program.setWikiEn("enWiki");
         program.setWikiCz("czWiki");
@@ -115,8 +114,8 @@ public final class ProgramUtils {
      *
      * @return programs
      */
-    public static List<Program> getPrograms() {
-        final List<Program> programs = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Program> getPrograms() {
+        final List<cz.vhromada.catalog.domain.Program> programs = new ArrayList<>();
         for (int i = 0; i < PROGRAMS_COUNT; i++) {
             programs.add(getProgram(i + 1));
         }
@@ -130,10 +129,10 @@ public final class ProgramUtils {
      * @param index index
      * @return program for index
      */
-    public static Program getProgram(final int index) {
+    public static cz.vhromada.catalog.domain.Program getProgram(final int index) {
         final int mediaCountMultiplier = 100;
 
-        final Program program = new Program();
+        final cz.vhromada.catalog.domain.Program program = new cz.vhromada.catalog.domain.Program();
         program.setId(index);
         program.setName(PROGRAM + index + " name");
         program.setWikiEn(PROGRAM + index + " English Wikipedia");
@@ -155,8 +154,8 @@ public final class ProgramUtils {
      * @param id            program ID
      * @return program
      */
-    public static Program getProgram(final EntityManager entityManager, final int id) {
-        return entityManager.find(Program.class, id);
+    public static cz.vhromada.catalog.domain.Program getProgram(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Program.class, id);
     }
 
     /**
@@ -166,8 +165,8 @@ public final class ProgramUtils {
      * @param entityManager entity manager
      * @return program with updated fields
      */
-    public static Program updateProgram(final EntityManager entityManager, final int id) {
-        final Program program = getProgram(entityManager, id);
+    public static cz.vhromada.catalog.domain.Program updateProgram(final EntityManager entityManager, final int id) {
+        final cz.vhromada.catalog.domain.Program program = getProgram(entityManager, id);
         updateProgram(program);
         program.setPosition(POSITION);
 
@@ -190,7 +189,8 @@ public final class ProgramUtils {
      * @param expected expected programs
      * @param actual   actual programs
      */
-    public static void assertProgramsDeepEquals(final List<Program> expected, final List<Program> actual) {
+    public static void assertProgramsDeepEquals(final List<cz.vhromada.catalog.domain.Program> expected,
+            final List<cz.vhromada.catalog.domain.Program> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -206,7 +206,7 @@ public final class ProgramUtils {
      * @param expected expected program
      * @param actual   actual program
      */
-    public static void assertProgramDeepEquals(final Program expected, final Program actual) {
+    public static void assertProgramDeepEquals(final cz.vhromada.catalog.domain.Program expected, final cz.vhromada.catalog.domain.Program actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
@@ -222,10 +222,10 @@ public final class ProgramUtils {
     /**
      * Asserts programs deep equals.
      *
-     * @param expected expected list of TO for program
+     * @param expected expected list of program
      * @param actual   actual programs
      */
-    public static void assertProgramListDeepEquals(final List<ProgramTO> expected, final List<Program> actual) {
+    public static void assertProgramListDeepEquals(final List<Program> expected, final List<cz.vhromada.catalog.domain.Program> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -238,10 +238,10 @@ public final class ProgramUtils {
     /**
      * Asserts program deep equals.
      *
-     * @param expected expected TO for program
+     * @param expected expected program
      * @param actual   actual program
      */
-    public static void assertProgramDeepEquals(final ProgramTO expected, final Program actual) {
+    public static void assertProgramDeepEquals(final Program expected, final cz.vhromada.catalog.domain.Program actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());

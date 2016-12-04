@@ -2,8 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.List;
 
-import cz.vhromada.catalog.domain.Game;
-import cz.vhromada.catalog.entity.GameTO;
+import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.GameValidator;
@@ -23,14 +22,14 @@ import org.springframework.stereotype.Component;
 public class GameFacadeImpl implements GameFacade {
 
     /**
-     * TO for game argument
+     * Game argument
      */
-    private static final String GAME_TO_ARGUMENT = "TO for game";
+    private static final String GAME_ARGUMENT = "game";
 
     /**
      * Service for games
      */
-    private CatalogService<Game> gameService;
+    private CatalogService<cz.vhromada.catalog.domain.Game> gameService;
 
     /**
      * Converter
@@ -38,7 +37,7 @@ public class GameFacadeImpl implements GameFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for game
+     * Validator for game
      */
     private GameValidator gameValidator;
 
@@ -47,18 +46,18 @@ public class GameFacadeImpl implements GameFacade {
      *
      * @param gameService   service for games
      * @param converter     converter
-     * @param gameValidator validator for TO for game
+     * @param gameValidator validator for game
      * @throws IllegalArgumentException if service for games is null
      *                                  or converter is null
-     *                                  or validator for TO for game is null
+     *                                  or validator for game is null
      */
     @Autowired
-    public GameFacadeImpl(@Qualifier("gameService") final CatalogService<Game> gameService,
+    public GameFacadeImpl(@Qualifier("gameService") final CatalogService<cz.vhromada.catalog.domain.Game> gameService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final GameValidator gameValidator) {
         Validators.validateArgumentNotNull(gameService, "Service for games");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(gameValidator, "Validator for TO for game");
+        Validators.validateArgumentNotNull(gameValidator, "Validator for game");
 
         this.gameService = gameService;
         this.converter = converter;
@@ -71,18 +70,18 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public List<GameTO> getGames() {
-        return converter.convertCollection(gameService.getAll(), GameTO.class);
+    public List<Game> getGames() {
+        return converter.convertCollection(gameService.getAll(), Game.class);
     }
 
     /**
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public GameTO getGame(final Integer id) {
+    public Game getGame(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        return converter.convert(gameService.get(id), GameTO.class);
+        return converter.convert(gameService.get(id), Game.class);
     }
 
     /**
@@ -90,10 +89,10 @@ public class GameFacadeImpl implements GameFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void add(final GameTO game) {
-        gameValidator.validateNewGameTO(game);
+    public void add(final Game game) {
+        gameValidator.validateNewGame(game);
 
-        gameService.add(converter.convert(game, Game.class));
+        gameService.add(converter.convert(game, cz.vhromada.catalog.domain.Game.class));
     }
 
     /**
@@ -102,11 +101,11 @@ public class GameFacadeImpl implements GameFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void update(final GameTO game) {
-        gameValidator.validateExistingGameTO(game);
-        Validators.validateExists(gameService.get(game.getId()), GAME_TO_ARGUMENT);
+    public void update(final Game game) {
+        gameValidator.validateExistingGame(game);
+        Validators.validateExists(gameService.get(game.getId()), GAME_ARGUMENT);
 
-        gameService.update(converter.convert(game, Game.class));
+        gameService.update(converter.convert(game, cz.vhromada.catalog.domain.Game.class));
     }
 
     /**
@@ -115,10 +114,10 @@ public class GameFacadeImpl implements GameFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void remove(final GameTO game) {
-        gameValidator.validateGameTOWithId(game);
-        final Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
+    public void remove(final Game game) {
+        gameValidator.validateGameWith(game);
+        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
+        Validators.validateExists(gameEntity, GAME_ARGUMENT);
 
         gameService.remove(gameEntity);
     }
@@ -129,10 +128,10 @@ public class GameFacadeImpl implements GameFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void duplicate(final GameTO game) {
-        gameValidator.validateGameTOWithId(game);
-        final Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
+    public void duplicate(final Game game) {
+        gameValidator.validateGameWith(game);
+        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
+        Validators.validateExists(gameEntity, GAME_ARGUMENT);
 
         gameService.duplicate(gameEntity);
     }
@@ -143,12 +142,12 @@ public class GameFacadeImpl implements GameFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveUp(final GameTO game) {
-        gameValidator.validateGameTOWithId(game);
-        final Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
-        final List<Game> games = gameService.getAll();
-        Validators.validateMoveUp(games, gameEntity, GAME_TO_ARGUMENT);
+    public void moveUp(final Game game) {
+        gameValidator.validateGameWith(game);
+        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
+        Validators.validateExists(gameEntity, GAME_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Game> games = gameService.getAll();
+        Validators.validateMoveUp(games, gameEntity, GAME_ARGUMENT);
 
         gameService.moveUp(gameEntity);
     }
@@ -159,12 +158,12 @@ public class GameFacadeImpl implements GameFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveDown(final GameTO game) {
-        gameValidator.validateGameTOWithId(game);
-        final Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
-        final List<Game> games = gameService.getAll();
-        Validators.validateMoveDown(games, gameEntity, GAME_TO_ARGUMENT);
+    public void moveDown(final Game game) {
+        gameValidator.validateGameWith(game);
+        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
+        Validators.validateExists(gameEntity, GAME_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Game> games = gameService.getAll();
+        Validators.validateMoveDown(games, gameEntity, GAME_ARGUMENT);
 
         gameService.moveDown(gameEntity);
     }
@@ -177,7 +176,7 @@ public class GameFacadeImpl implements GameFacade {
     @Override
     public int getTotalMediaCount() {
         int totalMedia = 0;
-        for (final Game game : gameService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Game game : gameService.getAll()) {
             totalMedia += game.getMediaCount();
         }
 

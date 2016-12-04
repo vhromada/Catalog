@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.EpisodeTO;
+import cz.vhromada.catalog.entity.Episode;
 
 /**
  * An interface represents validator for episode.
@@ -21,7 +21,7 @@ public interface EpisodeValidator {
      *                                  or length of episode is negative value
      *                                  or note is null
      */
-    void validateNewEpisodeTO(EpisodeTO episode);
+    void validateNewEpisode(Episode episode);
 
     /**
      * Validates existing episode.
@@ -35,7 +35,7 @@ public interface EpisodeValidator {
      *                                  or length of episode is negative value
      *                                  or note is null
      */
-    void validateExistingEpisodeTO(EpisodeTO episode);
+    void validateExistingEpisode(Episode episode);
 
     /**
      * Validates episode with ID.
@@ -44,6 +44,6 @@ public interface EpisodeValidator {
      * @throws IllegalArgumentException if episode is null
      *                                  or ID is null
      */
-    void validateEpisodeTOWithId(EpisodeTO episode);
+    void validateEpisodeWithId(Episode episode);
 
 }

@@ -7,11 +7,11 @@ import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.Movable;
 
 /**
- * A class represents TO for season.
+ * A class represents season.
  *
  * @author Vladimir Hromada
  */
-public class SeasonTO implements Movable {
+public class Season implements Movable {
 
     /**
      * SerialVersionUID
@@ -192,11 +192,11 @@ public class SeasonTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof SeasonTO) || id == null) {
+        if (obj == null || !(obj instanceof Season) || id == null) {
             return false;
         }
 
-        return id.equals(((SeasonTO) obj).id);
+        return id.equals(((Season) obj).id);
     }
 
     @Override
@@ -206,7 +206,7 @@ public class SeasonTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("SeasonTO [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d]", id, number, startYear,
+        return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d]", id, number, startYear,
                 endYear, language, subtitles, note, position);
     }
 

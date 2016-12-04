@@ -16,9 +16,8 @@ import java.util.List;
 
 import cz.vhromada.catalog.common.MusicUtils;
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
-import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
@@ -46,7 +45,7 @@ public class MusicFacadeImplTest {
      * Instance of {@link CatalogService}
      */
     @Mock
-    private CatalogService<Music> musicService;
+    private CatalogService<cz.vhromada.catalog.domain.Music> musicService;
 
     /**
      * Instance of {@link Converter}
@@ -114,19 +113,19 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testGetMusic() {
-        final List<Music> musicList = CollectionUtils.newList(MusicUtils.newMusic(1), MusicUtils.newMusic(2));
-        final List<MusicTO> expectedMusic = CollectionUtils.newList(MusicUtils.newMusicTO(1), MusicUtils.newMusicTO(2));
+        final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusic(1), MusicUtils.newMusic(2));
+        final List<Music> expectedMusic = CollectionUtils.newList(MusicUtils.newMusicTO(1), MusicUtils.newMusicTO(2));
 
         when(musicService.getAll()).thenReturn(musicList);
-        when(converter.convertCollection(musicList, MusicTO.class)).thenReturn(expectedMusic);
+        when(converter.convertCollection(musicList, Music.class)).thenReturn(expectedMusic);
 
-        final List<MusicTO> music = musicFacade.getMusic();
+        final List<Music> music = musicFacade.getMusic();
 
         assertNotNull(music);
         assertEquals(expectedMusic, music);
 
         verify(musicService).getAll();
-        verify(converter).convertCollection(musicList, MusicTO.class);
+        verify(converter).convertCollection(musicList, Music.class);
         verifyNoMoreInteractions(musicService, converter);
         verifyZeroInteractions(musicValidator);
     }
@@ -136,19 +135,19 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testGetMusicById_ExistingMusic() {
-        final Music musicEntity = MusicUtils.newMusic(1);
-        final MusicTO expectedMusic = MusicUtils.newMusicTO(1);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(1);
+        final Music expectedMusic = MusicUtils.newMusicTO(1);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
-        when(converter.convert(any(Music.class), eq(MusicTO.class))).thenReturn(expectedMusic);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Music.class), eq(Music.class))).thenReturn(expectedMusic);
 
-        final MusicTO music = musicFacade.getMusic(expectedMusic.getId());
+        final Music music = musicFacade.getMusic(expectedMusic.getId());
 
         assertNotNull(music);
         assertEquals(expectedMusic, music);
 
         verify(musicService).get(expectedMusic.getId());
-        verify(converter).convert(musicEntity, MusicTO.class);
+        verify(converter).convert(musicEntity, Music.class);
         verifyNoMoreInteractions(musicService, converter);
         verifyZeroInteractions(musicValidator);
     }
@@ -159,12 +158,12 @@ public class MusicFacadeImplTest {
     @Test
     public void testGetMusicById_NotExistingMusic() {
         when(musicService.get(anyInt())).thenReturn(null);
-        when(converter.convert(any(Music.class), eq(MusicTO.class))).thenReturn(null);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Music.class), eq(Music.class))).thenReturn(null);
 
         assertNull(musicFacade.getMusic(Integer.MAX_VALUE));
 
         verify(musicService).get(Integer.MAX_VALUE);
-        verify(converter).convert(null, MusicTO.class);
+        verify(converter).convert(null, Music.class);
         verifyNoMoreInteractions(musicService, converter);
         verifyZeroInteractions(musicValidator);
     }
@@ -178,50 +177,50 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#add(MusicTO)}.
+     * Test method for {@link MusicFacade#add(Music)}.
      */
     @Test
     public void testAdd() {
-        final Music musicEntity = MusicUtils.newMusic(null);
-        final MusicTO music = MusicUtils.newMusicTO(null);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(null);
+        final Music music = MusicUtils.newMusicTO(null);
 
-        when(converter.convert(any(MusicTO.class), eq(Music.class))).thenReturn(musicEntity);
+        when(converter.convert(any(Music.class), eq(cz.vhromada.catalog.domain.Music.class))).thenReturn(musicEntity);
 
         musicFacade.add(music);
 
         verify(musicService).add(musicEntity);
-        verify(converter).convert(music, Music.class);
-        verify(musicValidator).validateNewMusicTO(music);
+        verify(converter).convert(music, cz.vhromada.catalog.domain.Music.class);
+        verify(musicValidator).validateNewMusic(music);
         verifyNoMoreInteractions(musicService, converter, musicValidator);
     }
 
     /**
-     * Test method for {@link MusicFacade#add(MusicTO)} with null argument.
+     * Test method for {@link MusicFacade#add(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicValidator).validateNewMusicTO(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateNewMusic(any(Music.class));
 
         musicFacade.add(null);
     }
 
     /**
-     * Test method for {@link MusicFacade#add(MusicTO)} with argument with bad data.
+     * Test method for {@link MusicFacade#add(Music)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(musicValidator).validateNewMusicTO(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateNewMusic(any(Music.class));
 
         musicFacade.add(MusicUtils.newMusicTO(Integer.MAX_VALUE));
     }
 
     /**
-     * Test method for {@link MusicFacade#update(MusicTO)}.
+     * Test method for {@link MusicFacade#update(Music)}.
      */
     @Test
     public void testUpdate() {
-        final MusicTO music = MusicUtils.newMusicTO(1);
-        final ArgumentCaptor<Music> musicArgumentCaptor = ArgumentCaptor.forClass(Music.class);
+        final Music music = MusicUtils.newMusicTO(1);
+        final ArgumentCaptor<cz.vhromada.catalog.domain.Music> musicArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Music.class);
 
         when(musicService.get(anyInt())).thenReturn(MusicUtils.newMusic(1));
 
@@ -229,7 +228,7 @@ public class MusicFacadeImplTest {
 
         verify(musicService).get(1);
         verify(musicService).update(musicArgumentCaptor.capture());
-        verify(musicValidator).validateExistingMusicTO(music);
+        verify(musicValidator).validateExistingMusic(music);
         verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
 
@@ -237,27 +236,27 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#update(MusicTO)} with null argument.
+     * Test method for {@link MusicFacade#update(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicValidator).validateExistingMusicTO(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateExistingMusic(any(Music.class));
 
         musicFacade.update(null);
     }
 
     /**
-     * Test method for {@link MusicFacade#update(MusicTO)} with argument with bad data.
+     * Test method for {@link MusicFacade#update(Music)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(musicValidator).validateExistingMusicTO(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateExistingMusic(any(Music.class));
 
         musicFacade.update(MusicUtils.newMusicTO(null));
     }
 
     /**
-     * Test method for {@link MusicFacade#update(MusicTO)} with not existing argument.
+     * Test method for {@link MusicFacade#update(Music)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingArgument() {
@@ -267,12 +266,12 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#remove(MusicTO)}.
+     * Test method for {@link MusicFacade#remove(Music)}.
      */
     @Test
     public void testRemove() {
-        final Music musicEntity = MusicUtils.newMusic(1);
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(1);
+        final Music music = MusicUtils.newMusicTO(1);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
 
@@ -280,33 +279,33 @@ public class MusicFacadeImplTest {
 
         verify(musicService).get(1);
         verify(musicService).remove(musicEntity);
-        verify(musicValidator).validateMusicTOWithId(music);
+        verify(musicValidator).validateMusicWithId(music);
         verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link MusicFacade#remove(MusicTO)} with null argument.
+     * Test method for {@link MusicFacade#remove(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.remove(null);
     }
 
     /**
-     * Test method for {@link MusicFacade#remove(MusicTO)} with argument with bad data.
+     * Test method for {@link MusicFacade#remove(Music)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.remove(MusicUtils.newMusicTO(null));
     }
 
     /**
-     * Test method for {@link MusicFacade#remove(MusicTO)} with not existing argument.
+     * Test method for {@link MusicFacade#remove(Music)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_NotExistingArgument() {
@@ -316,12 +315,12 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#duplicate(MusicTO)}.
+     * Test method for {@link MusicFacade#duplicate(Music)}.
      */
     @Test
     public void testDuplicate() {
-        final Music musicEntity = MusicUtils.newMusic(1);
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(1);
+        final Music music = MusicUtils.newMusicTO(1);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
 
@@ -329,33 +328,33 @@ public class MusicFacadeImplTest {
 
         verify(musicService).get(1);
         verify(musicService).duplicate(musicEntity);
-        verify(musicValidator).validateMusicTOWithId(music);
+        verify(musicValidator).validateMusicWithId(music);
         verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link MusicFacade#duplicate(MusicTO)} with null argument.
+     * Test method for {@link MusicFacade#duplicate(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.duplicate(null);
     }
 
     /**
-     * Test method for {@link MusicFacade#duplicate(MusicTO)} with argument with bad data.
+     * Test method for {@link MusicFacade#duplicate(Music)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.duplicate(MusicUtils.newMusicTO(null));
     }
 
     /**
-     * Test method for {@link MusicFacade#duplicate(MusicTO)} with not existing argument.
+     * Test method for {@link MusicFacade#duplicate(Music)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_NotExistingArgument() {
@@ -365,13 +364,13 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveUp(MusicTO)}.
+     * Test method for {@link MusicFacade#moveUp(Music)}.
      */
     @Test
     public void testMoveUp() {
-        final Music musicEntity = MusicUtils.newMusic(2);
-        final List<Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), musicEntity);
-        final MusicTO music = MusicUtils.newMusicTO(2);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(2);
+        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), musicEntity);
+        final Music music = MusicUtils.newMusicTO(2);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
@@ -381,33 +380,33 @@ public class MusicFacadeImplTest {
         verify(musicService).get(2);
         verify(musicService).getAll();
         verify(musicService).moveUp(musicEntity);
-        verify(musicValidator).validateMusicTOWithId(music);
+        verify(musicValidator).validateMusicWithId(music);
         verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link MusicFacade#moveUp(MusicTO)} with null argument.
+     * Test method for {@link MusicFacade#moveUp(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.moveUp(null);
     }
 
     /**
-     * Test method for {@link MusicFacade#moveUp(MusicTO)} with argument with bad data.
+     * Test method for {@link MusicFacade#moveUp(Music)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.moveUp(MusicUtils.newMusicTO(null));
     }
 
     /**
-     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not existing argument.
+     * Test method for {@link MusicFacade#moveUp(Music)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_NotExistingArgument() {
@@ -417,13 +416,13 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveUp(MusicTO)} with not movable argument.
+     * Test method for {@link MusicFacade#moveUp(Music)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Music musicEntity = MusicUtils.newMusic(Integer.MAX_VALUE);
-        final List<Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusic(1));
-        final MusicTO music = MusicUtils.newMusicTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusic(1));
+        final Music music = MusicUtils.newMusicTO(Integer.MAX_VALUE);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
@@ -432,13 +431,13 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveDown(MusicTO)}.
+     * Test method for {@link MusicFacade#moveDown(Music)}.
      */
     @Test
     public void testMoveDown() {
-        final Music musicEntity = MusicUtils.newMusic(1);
-        final List<Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusic(2));
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(1);
+        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusic(2));
+        final Music music = MusicUtils.newMusicTO(1);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
@@ -448,33 +447,33 @@ public class MusicFacadeImplTest {
         verify(musicService).get(1);
         verify(musicService).getAll();
         verify(musicService).moveDown(musicEntity);
-        verify(musicValidator).validateMusicTOWithId(music);
+        verify(musicValidator).validateMusicWithId(music);
         verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link MusicFacade#moveDown(MusicTO)} with null argument.
+     * Test method for {@link MusicFacade#moveDown(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.moveDown(null);
     }
 
     /**
-     * Test method for {@link MusicFacade#moveDown(MusicTO)} with argument with bad data.
+     * Test method for {@link MusicFacade#moveDown(Music)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         musicFacade.moveDown(MusicUtils.newMusicTO(null));
     }
 
     /**
-     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not existing argument.
+     * Test method for {@link MusicFacade#moveDown(Music)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_NotExistingArgument() {
@@ -484,13 +483,13 @@ public class MusicFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MusicFacade#moveDown(MusicTO)} with not movable argument.
+     * Test method for {@link MusicFacade#moveDown(Music)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Music musicEntity = MusicUtils.newMusic(Integer.MAX_VALUE);
-        final List<Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), musicEntity);
-        final MusicTO music = MusicUtils.newMusicTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusic(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(MusicUtils.newMusic(1), musicEntity);
+        final Music music = MusicUtils.newMusicTO(Integer.MAX_VALUE);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musics);
@@ -515,8 +514,8 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testGetTotalMediaCount() {
-        final Music music1 = MusicUtils.newMusic(1);
-        final Music music2 = MusicUtils.newMusic(2);
+        final cz.vhromada.catalog.domain.Music music1 = MusicUtils.newMusic(1);
+        final cz.vhromada.catalog.domain.Music music2 = MusicUtils.newMusic(2);
         final int expectedCount = music1.getMediaCount() + music2.getMediaCount();
 
         when(musicService.getAll()).thenReturn(CollectionUtils.newList(music1, music2));
@@ -533,9 +532,9 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testGetTotalLength() {
-        final List<Music> musicList = CollectionUtils.newList(MusicUtils.newMusicWithSongs(1), MusicUtils.newMusicWithSongs(2));
+        final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusicWithSongs(1), MusicUtils.newMusicWithSongs(2));
         int expectedTotalLength = 0;
-        for (final Music music : musicList) {
+        for (final cz.vhromada.catalog.domain.Music music : musicList) {
             for (final Song song : music.getSongs()) {
                 expectedTotalLength += song.getLength();
             }
@@ -555,8 +554,8 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testGetSongsCount() {
-        final Music music1 = MusicUtils.newMusicWithSongs(1);
-        final Music music2 = MusicUtils.newMusicWithSongs(2);
+        final cz.vhromada.catalog.domain.Music music1 = MusicUtils.newMusicWithSongs(1);
+        final cz.vhromada.catalog.domain.Music music2 = MusicUtils.newMusicWithSongs(2);
         final int expectedSongs = music1.getSongs().size() + music2.getSongs().size();
 
         when(musicService.getAll()).thenReturn(CollectionUtils.newList(music1, music2));

@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cz.vhromada.catalog.domain.Season;
-import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.entity.SeasonTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CatalogUtils;
@@ -30,19 +28,19 @@ import org.springframework.stereotype.Component;
 public class SeasonFacadeImpl implements SeasonFacade {
 
     /**
-     * TO for show argument
+     * Show argument
      */
-    private static final String SHOW_TO_ARGUMENT = "TO for show";
+    private static final String SHOW_ARGUMENT = "show";
 
     /**
-     * TO for season argument
+     * Season argument
      */
-    private static final String SEASON_TO_ARGUMENT = "TO for season";
+    private static final String SEASON_ARGUMENT = "season";
 
     /**
      * Service for shows
      */
-    private CatalogService<Show> showService;
+    private CatalogService<cz.vhromada.catalog.domain.Show> showService;
 
     /**
      * Converter
@@ -50,12 +48,12 @@ public class SeasonFacadeImpl implements SeasonFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for show
+     * Validator for show
      */
     private ShowValidator showValidator;
 
     /**
-     * Validator for TO for season
+     * Validator for season
      */
     private SeasonValidator seasonValidator;
 
@@ -64,22 +62,22 @@ public class SeasonFacadeImpl implements SeasonFacade {
      *
      * @param showService     service for shows
      * @param converter       converter
-     * @param showValidator   validator for TO for show
-     * @param seasonValidator validator for TO for season
+     * @param showValidator   validator for show
+     * @param seasonValidator validator for season
      * @throws IllegalArgumentException if service for shows is null
      *                                  or converter is null
-     *                                  or validator for TO for show is null
-     *                                  or validator for TO for season is null
+     *                                  or validator for show is null
+     *                                  or validator for season is null
      */
     @Autowired
-    public SeasonFacadeImpl(final CatalogService<Show> showService,
+    public SeasonFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final ShowValidator showValidator,
             final SeasonValidator seasonValidator) {
         Validators.validateArgumentNotNull(showService, "Service for shows");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(showValidator, "Validator for TO for show");
-        Validators.validateArgumentNotNull(seasonValidator, "Validator for TO for season");
+        Validators.validateArgumentNotNull(showValidator, "Validator for show");
+        Validators.validateArgumentNotNull(seasonValidator, "Validator for season");
 
         this.showService = showService;
         this.converter = converter;
@@ -91,10 +89,10 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public SeasonTO getSeason(final Integer id) {
+    public Season getSeason(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        return converter.convert(getSeasonEntity(id), SeasonTO.class);
+        return converter.convert(getSeasonEntity(id), Season.class);
     }
 
     /**
@@ -103,13 +101,13 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void add(final ShowTO show, final SeasonTO season) {
-        showValidator.validateShowTOWithId(show);
-        seasonValidator.validateNewSeasonTO(season);
-        final Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+    public void add(final Show show, final Season season) {
+        showValidator.validateShowWithId(show);
+        seasonValidator.validateNewSeason(season);
+        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_ARGUMENT);
 
-        final Season seasonEntity = converter.convert(season, Season.class);
+        final cz.vhromada.catalog.domain.Season seasonEntity = converter.convert(season, cz.vhromada.catalog.domain.Season.class);
         seasonEntity.setPosition(Integer.MAX_VALUE);
         seasonEntity.setEpisodes(new ArrayList<>());
         showEntity.getSeasons().add(seasonEntity);
@@ -123,11 +121,11 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void update(final SeasonTO season) {
-        seasonValidator.validateExistingSeasonTO(season);
-        final Show show = getShow(season);
-        final Season seasonEntity = getSeason(season.getId(), show);
-        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+    public void update(final Season season) {
+        seasonValidator.validateExistingSeason(season);
+        final cz.vhromada.catalog.domain.Show show = getShow(season);
+        final cz.vhromada.catalog.domain.Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_ARGUMENT);
         assert seasonEntity != null;
 
         seasonEntity.setNumber(season.getNumber());
@@ -149,14 +147,14 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void remove(final SeasonTO season) {
-        seasonValidator.validateSeasonTOWithId(season);
-        final Show show = getShow(season);
-        final Season seasonEntity = getSeason(season.getId(), show);
-        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+    public void remove(final Season season) {
+        seasonValidator.validateSeasonWithId(season);
+        final cz.vhromada.catalog.domain.Show show = getShow(season);
+        final cz.vhromada.catalog.domain.Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_ARGUMENT);
         assert seasonEntity != null;
 
-        final List<Season> seasons = show.getSeasons().stream().filter(seasonValue -> !seasonValue.getId().equals(season.getId()))
+        final List<cz.vhromada.catalog.domain.Season> seasons = show.getSeasons().stream().filter(seasonValue -> !seasonValue.getId().equals(season.getId()))
                 .collect(Collectors.toList());
         show.setSeasons(seasons);
 
@@ -169,14 +167,14 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void duplicate(final SeasonTO season) {
-        seasonValidator.validateSeasonTOWithId(season);
-        final Show show = getShow(season);
-        final Season seasonEntity = getSeason(season.getId(), show);
-        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+    public void duplicate(final Season season) {
+        seasonValidator.validateSeasonWithId(season);
+        final cz.vhromada.catalog.domain.Show show = getShow(season);
+        final cz.vhromada.catalog.domain.Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_ARGUMENT);
         assert seasonEntity != null;
 
-        final Season newSeason = CatalogUtils.duplicateSeason(seasonEntity);
+        final cz.vhromada.catalog.domain.Season newSeason = CatalogUtils.duplicateSeason(seasonEntity);
         show.getSeasons().add(newSeason);
 
         showService.update(show);
@@ -188,7 +186,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveUp(final SeasonTO season) {
+    public void moveUp(final Season season) {
         move(season, true);
     }
 
@@ -198,7 +196,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveDown(final SeasonTO season) {
+    public void moveDown(final Season season) {
         move(season, false);
     }
 
@@ -208,12 +206,12 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public List<SeasonTO> findSeasonsByShow(final ShowTO show) {
-        showValidator.validateShowTOWithId(show);
-        final Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
+    public List<Season> findSeasonsByShow(final Show show) {
+        showValidator.validateShowWithId(show);
+        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
+        Validators.validateExists(showEntity, SHOW_ARGUMENT);
 
-        return CollectionUtils.getSortedData(converter.convertCollection(showEntity.getSeasons(), SeasonTO.class));
+        return CollectionUtils.getSortedData(converter.convertCollection(showEntity.getSeasons(), Season.class));
     }
 
     /**
@@ -223,12 +221,12 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @param show show
      * @return season with ID
      */
-    private static Season getSeason(final Integer id, final Show show) {
+    private static cz.vhromada.catalog.domain.Season getSeason(final Integer id, final cz.vhromada.catalog.domain.Show show) {
         if (show == null) {
             return null;
         }
 
-        for (final Season season : show.getSeasons()) {
+        for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
             if (id.equals(season.getId())) {
                 return season;
             }
@@ -243,9 +241,9 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @param show   show
      * @param season season
      */
-    private static void updateSeason(final Show show, final Season season) {
-        final List<Season> seasons = new ArrayList<>();
-        for (final Season seasonEntity : show.getSeasons()) {
+    private static void updateSeason(final cz.vhromada.catalog.domain.Show show, final cz.vhromada.catalog.domain.Season season) {
+        final List<cz.vhromada.catalog.domain.Season> seasons = new ArrayList<>();
+        for (final cz.vhromada.catalog.domain.Season seasonEntity : show.getSeasons()) {
             if (seasonEntity.equals(season)) {
                 seasons.add(season);
             } else {
@@ -261,10 +259,10 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @param id ID
      * @return season with ID
      */
-    private Season getSeasonEntity(final Integer id) {
-        final List<Show> shows = showService.getAll();
-        for (final Show show : shows) {
-            for (final Season season : show.getSeasons()) {
+    private cz.vhromada.catalog.domain.Season getSeasonEntity(final Integer id) {
+        final List<cz.vhromada.catalog.domain.Show> shows = showService.getAll();
+        for (final cz.vhromada.catalog.domain.Show show : shows) {
+            for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 if (id.equals(season.getId())) {
                     return season;
                 }
@@ -277,12 +275,12 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * Returns show for season.
      *
-     * @param season TO for season
+     * @param season season
      * @return show for season
      */
-    private Show getShow(final SeasonTO season) {
-        for (final Show show : showService.getAll()) {
-            for (final Season seasonEntity : show.getSeasons()) {
+    private cz.vhromada.catalog.domain.Show getShow(final Season season) {
+        for (final cz.vhromada.catalog.domain.Show show : showService.getAll()) {
+            for (final cz.vhromada.catalog.domain.Season seasonEntity : show.getSeasons()) {
                 if (season.getId().equals(seasonEntity.getId())) {
                     return show;
                 }
@@ -293,26 +291,26 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * Moves TO for season in list one position up or down.
+     * Moves season in list one position up or down.
      *
-     * @param season TO for season
-     * @param up     true if moving TO for season up
+     * @param season season
+     * @param up     true if moving season up
      */
-    private void move(final SeasonTO season, final boolean up) {
-        seasonValidator.validateSeasonTOWithId(season);
-        final Show show = getShow(season);
-        final Season seasonEntity = getSeason(season.getId(), show);
-        Validators.validateExists(seasonEntity, SEASON_TO_ARGUMENT);
+    private void move(final Season season, final boolean up) {
+        seasonValidator.validateSeasonWithId(season);
+        final cz.vhromada.catalog.domain.Show show = getShow(season);
+        final cz.vhromada.catalog.domain.Season seasonEntity = getSeason(season.getId(), show);
+        Validators.validateExists(seasonEntity, SEASON_ARGUMENT);
         assert seasonEntity != null;
-        final List<Season> seasons = CollectionUtils.getSortedData(show.getSeasons());
+        final List<cz.vhromada.catalog.domain.Season> seasons = CollectionUtils.getSortedData(show.getSeasons());
         if (up) {
-            Validators.validateMoveUp(seasons, seasonEntity, SEASON_TO_ARGUMENT);
+            Validators.validateMoveUp(seasons, seasonEntity, SEASON_ARGUMENT);
         } else {
-            Validators.validateMoveDown(seasons, seasonEntity, SEASON_TO_ARGUMENT);
+            Validators.validateMoveDown(seasons, seasonEntity, SEASON_ARGUMENT);
         }
 
         final int index = seasons.indexOf(seasonEntity);
-        final Season other = seasons.get(up ? index - 1 : index + 1);
+        final cz.vhromada.catalog.domain.Season other = seasons.get(up ? index - 1 : index + 1);
         final int position = seasonEntity.getPosition();
         seasonEntity.setPosition(other.getPosition());
         other.setPosition(position);

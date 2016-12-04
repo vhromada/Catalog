@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.Genre;
 
 /**
  * An interface represents validator for genre.
@@ -18,7 +18,7 @@ public interface GenreValidator {
      *                                  or name is null
      *                                  or name is empty string
      */
-    void validateNewGenreTO(GenreTO genre);
+    void validateNewGenre(Genre genre);
 
     /**
      * Validates existing genre.
@@ -29,7 +29,7 @@ public interface GenreValidator {
      *                                  or name is null
      *                                  or name is empty string
      */
-    void validateExistingGenreTO(GenreTO genre);
+    void validateExistingGenre(Genre genre);
 
     /**
      * Validates genre with ID.
@@ -38,6 +38,6 @@ public interface GenreValidator {
      * @throws IllegalArgumentException if genre is null
      *                                  or ID is null
      */
-    void validateGenreTOWithId(GenreTO genre);
+    void validateGenreWithId(Genre genre);
 
 }

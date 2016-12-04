@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.GameTO;
+import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.validator.GameValidator;
 
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ public class GameValidatorImpl implements GameValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewGameTO(final GameTO game) {
-        validateGameTO(game);
+    public void validateNewGame(final Game game) {
+        validateGame(game);
         Assert.isNull(game.getId(), "ID must be null.");
     }
 
@@ -28,8 +28,8 @@ public class GameValidatorImpl implements GameValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingGameTO(final GameTO game) {
-        validateGameTO(game);
+    public void validateExistingGame(final Game game) {
+        validateGame(game);
         Assert.notNull(game.getId(), "ID mustn't be null.");
     }
 
@@ -37,7 +37,7 @@ public class GameValidatorImpl implements GameValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateGameTOWithId(final GameTO game) {
+    public void validateGameWith(final Game game) {
         Assert.notNull(game, "Game mustn't be null.");
         Assert.notNull(game.getId(), "ID mustn't be null.");
     }
@@ -55,7 +55,7 @@ public class GameValidatorImpl implements GameValidator {
      *                                  or other data is null
      *                                  or note is null
      */
-    private static void validateGameTO(final GameTO game) {
+    private static void validateGame(final Game game) {
         Assert.notNull(game, "Game mustn't be null.");
         Assert.notNull(game.getName(), "Name mustn't be null");
         Assert.isTrue(!StringUtils.isEmpty(game.getName()) && !StringUtils.isEmpty(game.getName().trim()), "Name mustn't be empty string.");

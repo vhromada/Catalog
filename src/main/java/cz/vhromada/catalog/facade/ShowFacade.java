@@ -3,7 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Show;
 
 /**
  * An interface represents facade for shows.
@@ -18,26 +18,26 @@ public interface ShowFacade {
     void newData();
 
     /**
-     * Returns list of TO for show.
+     * Returns shows.
      *
-     * @return list of TO for show
+     * @return shows
      */
-    List<ShowTO> getShows();
+    List<Show> getShows();
 
     /**
-     * Returns TO for show with ID or null if there isn't such TO for show.
+     * Returns show with ID or null if there isn't such show.
      *
      * @param id ID
-     * @return TO for show with ID or null if there isn't such TO for show
+     * @return show with ID or null if there isn't such show
      * @throws IllegalArgumentException if ID is null
      */
-    ShowTO getShow(Integer id);
+    Show getShow(Integer id);
 
     /**
-     * Adds TO for show. Sets new ID and position.
+     * Adds show. Sets new ID and position.
      *
-     * @param show TO for show
-     * @throws IllegalArgumentException                                  if TO for show is null
+     * @param show show
+     * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID isn't null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
@@ -54,15 +54,15 @@ public interface ShowFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for genre doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
      */
-    void add(ShowTO show);
+    void add(Show show);
 
     /**
-     * Updates TO for show.
+     * Updates show.
      *
-     * @param show new value of TO for show
-     * @throws IllegalArgumentException                                  if TO for show is null
+     * @param show new value of show
+     * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
@@ -79,52 +79,52 @@ public interface ShowFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for show doesn't exist in data storage
-     *                                                                   or TO for genre doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
+     *                                                                   or genre doesn't exist in data storage
      */
-    void update(ShowTO show);
+    void update(Show show);
 
     /**
-     * Removes TO for show.
+     * Removes show.
      *
-     * @param show TO for show
-     * @throws IllegalArgumentException                                  if TO for show is null
+     * @param show show
+     * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for show doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
-    void remove(ShowTO show);
+    void remove(Show show);
 
     /**
-     * Duplicates TO for show.
+     * Duplicates show.
      *
-     * @param show TO for show
-     * @throws IllegalArgumentException                                  if TO for show is null
+     * @param show show
+     * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for show doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
-    void duplicate(ShowTO show);
+    void duplicate(Show show);
 
     /**
-     * Moves TO for show in list one position up.
+     * Moves show in list one position up.
      *
-     * @param show TO for show
-     * @throws IllegalArgumentException                                  if TO for show is null
+     * @param show show
+     * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for show can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for show doesn't exist in data storage
+     *                                                                   or show can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
-    void moveUp(ShowTO show);
+    void moveUp(Show show);
 
     /**
-     * Moves TO for show in list one position down.
+     * Moves show in list one position down.
      *
-     * @param show TO for show
-     * @throws IllegalArgumentException                                  if TO for show is null
+     * @param show show
+     * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for show can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for show doesn't exist in data storage
+     *                                                                   or show can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
-    void moveDown(ShowTO show);
+    void moveDown(Show show);
 
     /**
      * Updates positions.

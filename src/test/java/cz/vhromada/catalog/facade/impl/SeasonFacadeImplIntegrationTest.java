@@ -13,9 +13,8 @@ import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.domain.Episode;
-import cz.vhromada.catalog.domain.Season;
-import cz.vhromada.catalog.entity.SeasonTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -76,17 +75,17 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)}.
+     * Test method for {@link SeasonFacade#add(Show, Season)}.
      */
     @Test
     @DirtiesContext
     public void testAdd() {
-        final Season expectedSeason = SeasonUtils.newSeason(SeasonUtils.SEASONS_COUNT + 1);
+        final cz.vhromada.catalog.domain.Season expectedSeason = SeasonUtils.newSeason(SeasonUtils.SEASONS_COUNT + 1);
         expectedSeason.setPosition(Integer.MAX_VALUE);
 
         seasonFacade.add(ShowUtils.newShowTO(1), SeasonUtils.newSeasonTO(null));
 
-        final Season addedSeason = SeasonUtils.getSeason(entityManager, SeasonUtils.SEASONS_COUNT + 1);
+        final cz.vhromada.catalog.domain.Season addedSeason = SeasonUtils.getSeason(entityManager, SeasonUtils.SEASONS_COUNT + 1);
         SeasonUtils.assertSeasonDeepEquals(expectedSeason, addedSeason);
 
         assertEquals(SeasonUtils.SEASONS_COUNT + 1, SeasonUtils.getSeasonsCount(entityManager));
@@ -94,7 +93,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with null TO for show.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with null TO for show.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullShowTO() {
@@ -102,7 +101,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with null TO for season.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with null TO for season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonTO() {
@@ -110,7 +109,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with show with null ID.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullId() {
@@ -118,7 +117,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with not null ID.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotNullId() {
@@ -126,117 +125,117 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with not positive number of season.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with not positive number of season.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NotPositiveNumber() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setNumber(0);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad minimum starting year.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with bad minimum starting year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMinimumStartYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad maximum starting year.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with bad maximum starting year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMaximumStartYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad minimum ending year.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with bad minimum ending year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMinimumEndYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with bad maximum ending year.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with bad maximum ending year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadMaximumEndYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with starting year greater than ending year.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with starting year greater than ending year.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setStartYear(season.getEndYear() + 1);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with null language.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with null language.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullLanguage() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setLanguage(null);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with null subtitles.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with null subtitles.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullSubtitles() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setSubtitles(null);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with subtitles with null value.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with subtitles with null value.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadSubtitles() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with null note.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with null note.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_NullNote() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(null);
+        final Season season = SeasonUtils.newSeasonTO(null);
         season.setNote(null);
 
         seasonFacade.add(ShowUtils.newShowTO(1), season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(ShowTO, SeasonTO)} with season with not existing show.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with not existing show.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testAdd_NotExistingShow() {
@@ -244,16 +243,16 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)}.
+     * Test method for {@link SeasonFacade#update(Season)}.
      */
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
 
         seasonFacade.update(season);
 
-        final Season updatedSeason = SeasonUtils.getSeason(entityManager, 1);
+        final cz.vhromada.catalog.domain.Season updatedSeason = SeasonUtils.getSeason(entityManager, 1);
         SeasonUtils.assertSeasonDeepEquals(season, updatedSeason);
 
         assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
@@ -261,7 +260,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with null argument.
+     * Test method for {@link SeasonFacade#update(Season)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
@@ -269,7 +268,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null ID.
+     * Test method for {@link SeasonFacade#update(Season)} with season with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullId() {
@@ -277,117 +276,117 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with not positive number of season.
+     * Test method for {@link SeasonFacade#update(Season)} with season with not positive number of season.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NotPositiveNumber() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setNumber(0);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad minimum starting year.
+     * Test method for {@link SeasonFacade#update(Season)} with season with bad minimum starting year.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMinimumStartYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad maximum starting year.
+     * Test method for {@link SeasonFacade#update(Season)} with season with bad maximum starting year.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMaximumStartYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad minimum ending year.
+     * Test method for {@link SeasonFacade#update(Season)} with season with bad minimum ending year.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMinimumEndYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with bad maximum ending year.
+     * Test method for {@link SeasonFacade#update(Season)} with season with bad maximum ending year.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadMaximumEndYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with starting year greater than ending year.
+     * Test method for {@link SeasonFacade#update(Season)} with season with starting year greater than ending year.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadYear() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setStartYear(season.getEndYear() + 1);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null language.
+     * Test method for {@link SeasonFacade#update(Season)} with season with null language.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullLanguage() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setLanguage(null);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null subtitles.
+     * Test method for {@link SeasonFacade#update(Season)} with season with null subtitles.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullSubtitles() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setSubtitles(null);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with subtitles with null value.
+     * Test method for {@link SeasonFacade#update(Season)} with season with subtitles with null value.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadSubtitles() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with season with null note.
+     * Test method for {@link SeasonFacade#update(Season)} with season with null note.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_NullNote() {
-        final SeasonTO season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeasonTO(1);
         season.setNote(null);
 
         seasonFacade.update(season);
     }
 
     /**
-     * Test method for {@link SeasonFacade#update(SeasonTO)} with bad ID.
+     * Test method for {@link SeasonFacade#update(Season)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_BadId() {
@@ -395,7 +394,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(SeasonTO)}.
+     * Test method for {@link SeasonFacade#remove(Season)}.
      */
     @Test
     @DirtiesContext
@@ -409,7 +408,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(SeasonTO)} with null argument.
+     * Test method for {@link SeasonFacade#remove(Season)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
@@ -417,7 +416,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(SeasonTO)} with season with null ID.
+     * Test method for {@link SeasonFacade#remove(Season)} with season with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_NullId() {
@@ -425,7 +424,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(SeasonTO)} with bad ID.
+     * Test method for {@link SeasonFacade#remove(Season)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_BadId() {
@@ -433,12 +432,12 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(SeasonTO)}.
+     * Test method for {@link SeasonFacade#duplicate(Season)}.
      */
     @Test
     @DirtiesContext
     public void testDuplicate() {
-        final Season season = SeasonUtils.getSeason(1);
+        final cz.vhromada.catalog.domain.Season season = SeasonUtils.getSeason(1);
         season.setId(SeasonUtils.SEASONS_COUNT + 1);
         for (final Episode episode : season.getEpisodes()) {
             episode.setId(EpisodeUtils.EPISODES_COUNT + season.getEpisodes().indexOf(episode) + 1);
@@ -446,7 +445,7 @@ public class SeasonFacadeImplIntegrationTest {
 
         seasonFacade.duplicate(SeasonUtils.newSeasonTO(1));
 
-        final Season duplicatedSeason = SeasonUtils.getSeason(entityManager, SeasonUtils.SEASONS_COUNT + 1);
+        final cz.vhromada.catalog.domain.Season duplicatedSeason = SeasonUtils.getSeason(entityManager, SeasonUtils.SEASONS_COUNT + 1);
         SeasonUtils.assertSeasonDeepEquals(season, duplicatedSeason);
 
         assertEquals(SeasonUtils.SEASONS_COUNT + 1, SeasonUtils.getSeasonsCount(entityManager));
@@ -454,7 +453,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(SeasonTO)} with null argument.
+     * Test method for {@link SeasonFacade#duplicate(Season)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
@@ -462,7 +461,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(SeasonTO)} with season with null ID.
+     * Test method for {@link SeasonFacade#duplicate(Season)} with season with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_NullId() {
@@ -470,7 +469,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(SeasonTO)} with bad ID.
+     * Test method for {@link SeasonFacade#duplicate(Season)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_BadId() {
@@ -478,14 +477,14 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(SeasonTO)}.
+     * Test method for {@link SeasonFacade#moveUp(Season)}.
      */
     @Test
     @DirtiesContext
     public void testMoveUp() {
-        final Season season1 = SeasonUtils.getSeason(1, 1);
+        final cz.vhromada.catalog.domain.Season season1 = SeasonUtils.getSeason(1, 1);
         season1.setPosition(1);
-        final Season season2 = SeasonUtils.getSeason(1, 2);
+        final cz.vhromada.catalog.domain.Season season2 = SeasonUtils.getSeason(1, 2);
         season2.setPosition(0);
 
         seasonFacade.moveUp(SeasonUtils.newSeasonTO(2));
@@ -501,7 +500,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with null argument.
+     * Test method for {@link SeasonFacade#moveUp(Season)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
@@ -509,7 +508,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with season with null ID.
+     * Test method for {@link SeasonFacade#moveUp(Season)} with season with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NullId() {
@@ -517,7 +516,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with not movable argument.
+     * Test method for {@link SeasonFacade#moveUp(Season)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
@@ -525,7 +524,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(SeasonTO)} with bad ID.
+     * Test method for {@link SeasonFacade#moveUp(Season)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_BadId() {
@@ -533,14 +532,14 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(SeasonTO)}.
+     * Test method for {@link SeasonFacade#moveDown(Season)}.
      */
     @Test
     @DirtiesContext
     public void testMoveDown() {
-        final Season season1 = SeasonUtils.getSeason(1, 1);
+        final cz.vhromada.catalog.domain.Season season1 = SeasonUtils.getSeason(1, 1);
         season1.setPosition(1);
-        final Season season2 = SeasonUtils.getSeason(1, 2);
+        final cz.vhromada.catalog.domain.Season season2 = SeasonUtils.getSeason(1, 2);
         season2.setPosition(0);
 
         seasonFacade.moveDown(SeasonUtils.newSeasonTO(1));
@@ -556,7 +555,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with null argument.
+     * Test method for {@link SeasonFacade#moveDown(Season)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
@@ -564,7 +563,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with season with null ID.
+     * Test method for {@link SeasonFacade#moveDown(Season)} with season with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NullId() {
@@ -572,7 +571,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with not movable argument.
+     * Test method for {@link SeasonFacade#moveDown(Season)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
@@ -580,7 +579,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(SeasonTO)} with bad ID.
+     * Test method for {@link SeasonFacade#moveDown(Season)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_BadId() {
@@ -588,13 +587,13 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)}.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(Show)}.
      */
     @Test
     public void testFindSeasonsByShow() {
         for (int i = 1; i <= ShowUtils.SHOWS_COUNT; i++) {
-            final List<Season> expectedSeasons = SeasonUtils.getSeasons(i);
-            final List<SeasonTO> actualSeasons = seasonFacade.findSeasonsByShow(ShowUtils.newShowTO(i));
+            final List<cz.vhromada.catalog.domain.Season> expectedSeasons = SeasonUtils.getSeasons(i);
+            final List<Season> actualSeasons = seasonFacade.findSeasonsByShow(ShowUtils.newShowTO(i));
             SeasonUtils.assertSeasonListDeepEquals(actualSeasons, expectedSeasons);
         }
 
@@ -603,7 +602,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with null argument.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSeasonsByShow_NullArgument() {
@@ -611,7 +610,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with show with null ID.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(Show)} with show with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testFindSeasonsByShow_NullId() {
@@ -619,7 +618,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#findSeasonsByShow(ShowTO)} with bad ID.
+     * Test method for {@link SeasonFacade#findSeasonsByShow(Show)} with bad ID.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testFindSeasonsByShow_BadId() {

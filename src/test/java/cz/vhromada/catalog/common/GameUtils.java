@@ -8,8 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.domain.Game;
-import cz.vhromada.catalog.entity.GameTO;
+import cz.vhromada.catalog.entity.Game;
 
 /**
  * A class represents utility class for games.
@@ -50,8 +49,8 @@ public final class GameUtils {
      * @param id ID
      * @return game
      */
-    public static Game newGame(final Integer id) {
-        final Game game = new Game();
+    public static cz.vhromada.catalog.domain.Game newGame(final Integer id) {
+        final cz.vhromada.catalog.domain.Game game = new cz.vhromada.catalog.domain.Game();
         updateGame(game);
         if (id != null) {
             game.setId(id);
@@ -66,7 +65,7 @@ public final class GameUtils {
      *
      * @param game game
      */
-    public static void updateGame(final Game game) {
+    public static void updateGame(final cz.vhromada.catalog.domain.Game game) {
         game.setName("Name");
         game.setWikiEn("enWiki");
         game.setWikiCz("czWiki");
@@ -83,13 +82,13 @@ public final class GameUtils {
     }
 
     /**
-     * Returns TO for game.
+     * Returns game.
      *
      * @param id ID
-     * @return TO for game
+     * @return game
      */
-    public static GameTO newGameTO(final Integer id) {
-        final GameTO game = new GameTO();
+    public static Game newGameTO(final Integer id) {
+        final Game game = new Game();
         updateGameTO(game);
         if (id != null) {
             game.setId(id);
@@ -100,11 +99,11 @@ public final class GameUtils {
     }
 
     /**
-     * Updates TO for game fields.
+     * Updates game fields.
      *
-     * @param game TO for game
+     * @param game game
      */
-    public static void updateGameTO(final GameTO game) {
+    public static void updateGameTO(final Game game) {
         game.setName("Name");
         game.setWikiEn("enWiki");
         game.setWikiCz("czWiki");
@@ -125,8 +124,8 @@ public final class GameUtils {
      *
      * @return games
      */
-    public static List<Game> getGames() {
-        final List<Game> games = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Game> getGames() {
+        final List<cz.vhromada.catalog.domain.Game> games = new ArrayList<>();
         for (int i = 0; i < GAMES_COUNT; i++) {
             games.add(getGame(i + 1));
         }
@@ -140,8 +139,8 @@ public final class GameUtils {
      * @param index index
      * @return game for index
      */
-    public static Game getGame(final int index) {
-        final Game game = new Game();
+    public static cz.vhromada.catalog.domain.Game getGame(final int index) {
+        final cz.vhromada.catalog.domain.Game game = new cz.vhromada.catalog.domain.Game();
         game.setId(index);
         game.setName(GAME + index + " name");
         game.setWikiEn(GAME + index + " English Wikipedia");
@@ -168,8 +167,8 @@ public final class GameUtils {
      * @param id            game ID
      * @return game
      */
-    public static Game getGame(final EntityManager entityManager, final int id) {
-        return entityManager.find(Game.class, id);
+    public static cz.vhromada.catalog.domain.Game getGame(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Game.class, id);
     }
 
     /**
@@ -179,8 +178,8 @@ public final class GameUtils {
      * @param id            game ID
      * @return game with updated fields
      */
-    public static Game updateGame(final EntityManager entityManager, final int id) {
-        final Game game = getGame(entityManager, id);
+    public static cz.vhromada.catalog.domain.Game updateGame(final EntityManager entityManager, final int id) {
+        final cz.vhromada.catalog.domain.Game game = getGame(entityManager, id);
         updateGame(game);
         game.setPosition(POSITION);
 
@@ -203,7 +202,7 @@ public final class GameUtils {
      * @param expected expected games
      * @param actual   actual games
      */
-    public static void assertGamesDeepEquals(final List<Game> expected, final List<Game> actual) {
+    public static void assertGamesDeepEquals(final List<cz.vhromada.catalog.domain.Game> expected, final List<cz.vhromada.catalog.domain.Game> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -219,7 +218,7 @@ public final class GameUtils {
      * @param expected expected game
      * @param actual   actual game
      */
-    public static void assertGameDeepEquals(final Game expected, final Game actual) {
+    public static void assertGameDeepEquals(final cz.vhromada.catalog.domain.Game expected, final cz.vhromada.catalog.domain.Game actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
@@ -240,10 +239,10 @@ public final class GameUtils {
     /**
      * Asserts games deep equals.
      *
-     * @param expected expected list of TO for game
+     * @param expected expected list of game
      * @param actual   actual games
      */
-    public static void assertGameListDeepEquals(final List<GameTO> expected, final List<Game> actual) {
+    public static void assertGameListDeepEquals(final List<Game> expected, final List<cz.vhromada.catalog.domain.Game> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -256,10 +255,10 @@ public final class GameUtils {
     /**
      * Asserts game deep equals.
      *
-     * @param expected expected TO for game
+     * @param expected expected game
      * @param actual   actual game
      */
-    public static void assertGameDeepEquals(final GameTO expected, final Game actual) {
+    public static void assertGameDeepEquals(final Game expected, final cz.vhromada.catalog.domain.Game actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());

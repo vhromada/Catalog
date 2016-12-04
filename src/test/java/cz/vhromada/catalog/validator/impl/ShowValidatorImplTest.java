@@ -3,8 +3,8 @@ package cz.vhromada.catalog.validator.impl;
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.common.TestConstants;
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.catalog.validator.ShowValidator;
@@ -43,11 +43,11 @@ public class ShowValidatorImplTest {
     }
 
     /**
-     * Test method for {@link ShowValidator#validateNewShowTO(ShowTO)} with null argument.
+     * Test method for {@link ShowValidator#validateNewShow(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewShowTO_NullArgument() {
-        showValidator.validateNewShowTO(null);
+        showValidator.validateNewShow(null);
     }
 
     /**
@@ -55,7 +55,7 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NotNullId() {
-        showValidator.validateNewShowTO(ShowUtils.newShowTO(1));
+        showValidator.validateNewShow(ShowUtils.newShowTO(1));
     }
 
     /**
@@ -63,10 +63,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setCzechName(null);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -74,10 +74,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_EmptyCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setCzechName("");
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -85,10 +85,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setOriginalName(null);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -96,10 +96,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_EmptyOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setOriginalName("");
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -107,10 +107,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullCsfd() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setCsfd(null);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -118,10 +118,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_BadMinimalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -129,10 +129,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_BadDividerImdb() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setImdbCode(0);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -140,10 +140,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_BadMaximalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -151,10 +151,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullWikiEn() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setWikiEn(null);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -162,10 +162,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullWikiCz() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setWikiCz(null);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -173,9 +173,9 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullPicture() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setPicture(null);
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -183,10 +183,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullNote() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setNote(null);
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -194,10 +194,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_BadGenres() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), null));
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -205,10 +205,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_GenresWithGenreWithNullId() {
-        final ShowTO show = ShowUtils.newShowTO(null);
+        final Show show = ShowUtils.newShowTO(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(null)));
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
@@ -216,20 +216,20 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_GenresWithGenreWithNullName() {
-        final ShowTO show = ShowUtils.newShowTO(null);
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final Show show = ShowUtils.newShowTO(null);
+        final Genre genre = GenreUtils.newGenreTO(1);
         genre.setName(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), genre));
 
-        showValidator.validateNewShowTO(show);
+        showValidator.validateNewShow(show);
     }
 
     /**
-     * Test method for {@link ShowValidator#validateExistingShowTO(ShowTO)} with null argument.
+     * Test method for {@link ShowValidator#validateExistingShow(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingShowTO_NullArgument() {
-        showValidator.validateExistingShowTO(null);
+        showValidator.validateExistingShow(null);
     }
 
     /**
@@ -237,7 +237,7 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewShowTO_NullId() {
-        showValidator.validateExistingShowTO(ShowUtils.newShowTO(null));
+        showValidator.validateExistingShow(ShowUtils.newShowTO(null));
     }
 
     /**
@@ -245,10 +245,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setCzechName(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -256,10 +256,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_EmptyCzechName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setCzechName("");
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -267,10 +267,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setOriginalName(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -278,10 +278,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_EmptyOriginalName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setOriginalName("");
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -289,10 +289,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullCsfd() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setCsfd(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -300,10 +300,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_BadMinimalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -311,10 +311,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_BadDividerImdb() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setImdbCode(0);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -322,10 +322,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_BadMaximalImdb() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -333,10 +333,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullWikiEn() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setWikiEn(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -344,10 +344,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullWikiCz() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setWikiCz(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -355,10 +355,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullPicture() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setPicture(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -366,10 +366,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullNote() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setNote(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -377,10 +377,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_NullGenres() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setGenres(null);
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -388,10 +388,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_BadGenres() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), null));
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -399,10 +399,10 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_GenresWithGenreWithNullId() {
-        final ShowTO show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShowTO(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(null)));
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
@@ -410,20 +410,20 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingShowTO_GenresWithGenreWithNullName() {
-        final ShowTO show = ShowUtils.newShowTO(1);
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final Show show = ShowUtils.newShowTO(1);
+        final Genre genre = GenreUtils.newGenreTO(1);
         genre.setName(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(1), genre));
 
-        showValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShow(show);
     }
 
     /**
-     * Test method for {@link ShowValidator#validateShowTOWithId(ShowTO)} with null argument.
+     * Test method for {@link ShowValidator#validateShowWithId(Show)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateShowTOWithId_NullArgument() {
-        showValidator.validateShowTOWithId(null);
+        showValidator.validateShowWithId(null);
     }
 
     /**
@@ -431,7 +431,7 @@ public class ShowValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateShowTOWithId_NullId() {
-        showValidator.validateShowTOWithId(ShowUtils.newShowTO(null));
+        showValidator.validateShowWithId(ShowUtils.newShowTO(null));
     }
 
 }

@@ -16,8 +16,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import cz.vhromada.catalog.common.GenreUtils;
-import cz.vhromada.catalog.domain.Genre;
-import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
@@ -45,7 +44,7 @@ public class GenreFacadeImplTest {
      * Instance of {@link CatalogService}
      */
     @Mock
-    private CatalogService<Genre> genreService;
+    private CatalogService<cz.vhromada.catalog.domain.Genre> genreService;
 
     /**
      * Instance of {@link Converter}
@@ -113,19 +112,19 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testGetGenres() {
-        final List<Genre> genreList = CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(2));
-        final List<GenreTO> expectedGenres = CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(2));
+        final List<cz.vhromada.catalog.domain.Genre> genreList = CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(2));
+        final List<Genre> expectedGenres = CollectionUtils.newList(GenreUtils.newGenreTO(1), GenreUtils.newGenreTO(2));
 
         when(genreService.getAll()).thenReturn(genreList);
-        when(converter.convertCollection(anyListOf(Genre.class), eq(GenreTO.class))).thenReturn(expectedGenres);
+        when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Genre.class), eq(Genre.class))).thenReturn(expectedGenres);
 
-        final List<GenreTO> genres = genreFacade.getGenres();
+        final List<Genre> genres = genreFacade.getGenres();
 
         assertNotNull(genres);
         assertEquals(expectedGenres, genres);
 
         verify(genreService).getAll();
-        verify(converter).convertCollection(genreList, GenreTO.class);
+        verify(converter).convertCollection(genreList, Genre.class);
         verifyNoMoreInteractions(genreService, converter);
         verifyZeroInteractions(genreValidator);
     }
@@ -135,19 +134,19 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testGetGenre_ExistingGenre() {
-        final Genre genreEntity = GenreUtils.newGenre(1);
-        final GenreTO expectedGenre = GenreUtils.newGenreTO(1);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(1);
+        final Genre expectedGenre = GenreUtils.newGenreTO(1);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
-        when(converter.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(expectedGenre);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Genre.class), eq(Genre.class))).thenReturn(expectedGenre);
 
-        final GenreTO genre = genreFacade.getGenre(1);
+        final Genre genre = genreFacade.getGenre(1);
 
         assertNotNull(genre);
         assertEquals(expectedGenre, genre);
 
         verify(genreService).get(1);
-        verify(converter).convert(genreEntity, GenreTO.class);
+        verify(converter).convert(genreEntity, Genre.class);
         verifyNoMoreInteractions(genreService, converter);
         verifyZeroInteractions(genreValidator);
     }
@@ -158,12 +157,12 @@ public class GenreFacadeImplTest {
     @Test
     public void testGetGenre_NotExistingGenre() {
         when(genreService.get(anyInt())).thenReturn(null);
-        when(converter.convert(any(Genre.class), eq(GenreTO.class))).thenReturn(null);
+        when(converter.convert(any(cz.vhromada.catalog.domain.Genre.class), eq(Genre.class))).thenReturn(null);
 
         assertNull(genreFacade.getGenre(Integer.MAX_VALUE));
 
         verify(genreService).get(Integer.MAX_VALUE);
-        verify(converter).convert(null, GenreTO.class);
+        verify(converter).convert(null, Genre.class);
         verifyNoMoreInteractions(genreService, converter);
         verifyZeroInteractions(genreValidator);
     }
@@ -177,39 +176,39 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)}.
+     * Test method for {@link GenreFacade#add(Genre)}.
      */
     @Test
     public void testAdd() {
-        final Genre genreEntity = GenreUtils.newGenre(null);
-        final GenreTO genre = GenreUtils.newGenreTO(null);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(null);
+        final Genre genre = GenreUtils.newGenreTO(null);
 
-        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genreEntity);
+        when(converter.convert(any(Genre.class), eq(cz.vhromada.catalog.domain.Genre.class))).thenReturn(genreEntity);
 
         genreFacade.add(genre);
 
         verify(genreService).add(genreEntity);
-        verify(converter).convert(genre, Genre.class);
-        verify(genreValidator).validateNewGenreTO(genre);
+        verify(converter).convert(genre, cz.vhromada.catalog.domain.Genre.class);
+        verify(genreValidator).validateNewGenre(genre);
         verifyNoMoreInteractions(genreService, converter, genreValidator);
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#add(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreValidator).validateNewGenreTO(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateNewGenre(any(Genre.class));
 
-        genreFacade.add((GenreTO) null);
+        genreFacade.add((Genre) null);
     }
 
     /**
-     * Test method for {@link GenreFacade#add(GenreTO)} with argument with bad data.
+     * Test method for {@link GenreFacade#add(Genre)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(genreValidator).validateNewGenreTO(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateNewGenre(any(Genre.class));
 
         genreFacade.add(GenreUtils.newGenreTO(Integer.MAX_VALUE));
     }
@@ -219,15 +218,15 @@ public class GenreFacadeImplTest {
      */
     @Test
     public void testAddList() {
-        final Genre genre = GenreUtils.newGenre(null);
-        final ArgumentCaptor<Genre> genreArgumentCaptor = ArgumentCaptor.forClass(Genre.class);
+        final cz.vhromada.catalog.domain.Genre genre = GenreUtils.newGenre(null);
+        final ArgumentCaptor<cz.vhromada.catalog.domain.Genre> genreArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Genre.class);
 
         genreFacade.add(CollectionUtils.newList(genre.getName()));
 
         verify(genreService).add(genreArgumentCaptor.capture());
         verifyNoMoreInteractions(genreService);
 
-        final Genre addedGenre = genreArgumentCaptor.getValue();
+        final cz.vhromada.catalog.domain.Genre addedGenre = genreArgumentCaptor.getValue();
         GenreUtils.assertGenreDeepEquals(genre, addedGenre);
     }
 
@@ -248,47 +247,47 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)}.
+     * Test method for {@link GenreFacade#update(Genre)}.
      */
     @Test
     public void testUpdate() {
-        final Genre genreEntity = GenreUtils.newGenre(1);
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(1);
+        final Genre genre = GenreUtils.newGenreTO(1);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
-        when(converter.convert(any(GenreTO.class), eq(Genre.class))).thenReturn(genreEntity);
+        when(converter.convert(any(Genre.class), eq(cz.vhromada.catalog.domain.Genre.class))).thenReturn(genreEntity);
 
         genreFacade.update(genre);
 
         verify(genreService).get(1);
         verify(genreService).update(genreEntity);
-        verify(converter).convert(genre, Genre.class);
-        verify(genreValidator).validateExistingGenreTO(genre);
+        verify(converter).convert(genre, cz.vhromada.catalog.domain.Genre.class);
+        verify(genreValidator).validateExistingGenre(genre);
         verifyNoMoreInteractions(genreService, converter, genreValidator);
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#update(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreValidator).validateExistingGenreTO(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateExistingGenre(any(Genre.class));
 
         genreFacade.update(null);
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with argument with bad data.
+     * Test method for {@link GenreFacade#update(Genre)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(genreValidator).validateExistingGenreTO(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateExistingGenre(any(Genre.class));
 
         genreFacade.update(GenreUtils.newGenreTO(null));
     }
 
     /**
-     * Test method for {@link GenreFacade#update(GenreTO)} with not existing argument.
+     * Test method for {@link GenreFacade#update(Genre)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testUpdate_NotExistingArgument() {
@@ -298,12 +297,12 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)}.
+     * Test method for {@link GenreFacade#remove(Genre)}.
      */
     @Test
     public void testRemove() {
-        final Genre genreEntity = GenreUtils.newGenre(1);
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(1);
+        final Genre genre = GenreUtils.newGenreTO(1);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
 
@@ -311,33 +310,33 @@ public class GenreFacadeImplTest {
 
         verify(genreService).get(1);
         verify(genreService).remove(genreEntity);
-        verify(genreValidator).validateGenreTOWithId(genre);
+        verify(genreValidator).validateGenreWithId(genre);
         verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#remove(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.remove(null);
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)} with argument with bad data.
+     * Test method for {@link GenreFacade#remove(Genre)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.remove(GenreUtils.newGenreTO(null));
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(GenreTO)} with not existing argument.
+     * Test method for {@link GenreFacade#remove(Genre)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testRemove_NotExistingArgument() {
@@ -347,12 +346,12 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)}.
+     * Test method for {@link GenreFacade#duplicate(Genre)}.
      */
     @Test
     public void testDuplicate() {
-        final Genre genreEntity = GenreUtils.newGenre(1);
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(1);
+        final Genre genre = GenreUtils.newGenreTO(1);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
 
@@ -360,33 +359,33 @@ public class GenreFacadeImplTest {
 
         verify(genreService).get(1);
         verify(genreService).duplicate(genreEntity);
-        verify(genreValidator).validateGenreTOWithId(genre);
+        verify(genreValidator).validateGenreWithId(genre);
         verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#duplicate(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.duplicate(null);
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)} with argument with bad data.
+     * Test method for {@link GenreFacade#duplicate(Genre)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.duplicate(GenreUtils.newGenreTO(null));
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(GenreTO)} with not existing argument.
+     * Test method for {@link GenreFacade#duplicate(Genre)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testDuplicate_NotExistingArgument() {
@@ -396,13 +395,13 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(GenreTO)}.
+     * Test method for {@link GenreFacade#moveUp(Genre)}.
      */
     @Test
     public void testMoveUp() {
-        final Genre genreEntity = GenreUtils.newGenre(2);
-        final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), genreEntity);
-        final GenreTO genre = GenreUtils.newGenreTO(2);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(2);
+        final List<cz.vhromada.catalog.domain.Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), genreEntity);
+        final Genre genre = GenreUtils.newGenreTO(2);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);
@@ -412,33 +411,33 @@ public class GenreFacadeImplTest {
         verify(genreService).get(2);
         verify(genreService).getAll();
         verify(genreService).moveUp(genreEntity);
-        verify(genreValidator).validateGenreTOWithId(genre);
+        verify(genreValidator).validateGenreWithId(genre);
         verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#moveUp(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.moveUp(null);
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(GenreTO)} with argument with bad data.
+     * Test method for {@link GenreFacade#moveUp(Genre)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.moveUp(GenreUtils.newGenreTO(null));
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(GenreTO)} with not existing argument.
+     * Test method for {@link GenreFacade#moveUp(Genre)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveUp_NotExistingArgument() {
@@ -448,13 +447,13 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(GenreTO)} with not movable argument.
+     * Test method for {@link GenreFacade#moveUp(Genre)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_NotMovableArgument() {
-        final Genre genreEntity = GenreUtils.newGenre(Integer.MAX_VALUE);
-        final List<Genre> genres = CollectionUtils.newList(genreEntity, GenreUtils.newGenre(1));
-        final GenreTO genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Genre> genres = CollectionUtils.newList(genreEntity, GenreUtils.newGenre(1));
+        final Genre genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);
@@ -463,13 +462,13 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(GenreTO)}.
+     * Test method for {@link GenreFacade#moveDown(Genre)}.
      */
     @Test
     public void testMoveDown() {
-        final Genre genreEntity = GenreUtils.newGenre(1);
-        final List<Genre> genres = CollectionUtils.newList(genreEntity, GenreUtils.newGenre(2));
-        final GenreTO genre = GenreUtils.newGenreTO(1);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(1);
+        final List<cz.vhromada.catalog.domain.Genre> genres = CollectionUtils.newList(genreEntity, GenreUtils.newGenre(2));
+        final Genre genre = GenreUtils.newGenreTO(1);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);
@@ -479,33 +478,33 @@ public class GenreFacadeImplTest {
         verify(genreService).get(1);
         verify(genreService).getAll();
         verify(genreService).moveDown(genreEntity);
-        verify(genreValidator).validateGenreTOWithId(genre);
+        verify(genreValidator).validateGenreWithId(genre);
         verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(GenreTO)} with null argument.
+     * Test method for {@link GenreFacade#moveDown(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.moveDown(null);
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(GenreTO)} with argument with bad data.
+     * Test method for {@link GenreFacade#moveDown(Genre)} with argument with bad data.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreWithId(any(Genre.class));
 
         genreFacade.moveDown(GenreUtils.newGenreTO(null));
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(GenreTO)} with not existing argument.
+     * Test method for {@link GenreFacade#moveDown(Genre)} with not existing argument.
      */
     @Test(expected = RecordNotFoundException.class)
     public void testMoveDown_NotExistingArgument() {
@@ -515,13 +514,13 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(GenreTO)} with not movable argument.
+     * Test method for {@link GenreFacade#moveDown(Genre)} with not movable argument.
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_NotMovableArgument() {
-        final Genre genreEntity = GenreUtils.newGenre(Integer.MAX_VALUE);
-        final List<Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), genreEntity);
-        final GenreTO genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Genre genreEntity = GenreUtils.newGenre(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Genre> genres = CollectionUtils.newList(GenreUtils.newGenre(1), genreEntity);
+        final Genre genre = GenreUtils.newGenreTO(Integer.MAX_VALUE);
 
         when(genreService.get(anyInt())).thenReturn(genreEntity);
         when(genreService.getAll()).thenReturn(genres);

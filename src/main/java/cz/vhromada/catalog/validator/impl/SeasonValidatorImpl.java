@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.util.Constants;
 import cz.vhromada.catalog.validator.SeasonValidator;
 
@@ -19,8 +19,8 @@ public class SeasonValidatorImpl implements SeasonValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewSeasonTO(final SeasonTO season) {
-        validateSeasonTO(season);
+    public void validateNewSeason(final Season season) {
+        validateSeason(season);
         Assert.isNull(season.getId(), "ID must be null.");
     }
 
@@ -28,8 +28,8 @@ public class SeasonValidatorImpl implements SeasonValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingSeasonTO(final SeasonTO season) {
-        validateSeasonTO(season);
+    public void validateExistingSeason(final Season season) {
+        validateSeason(season);
         Assert.notNull(season.getId(), "ID mustn't be null.");
     }
 
@@ -37,7 +37,7 @@ public class SeasonValidatorImpl implements SeasonValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateSeasonTOWithId(final SeasonTO season) {
+    public void validateSeasonWithId(final Season season) {
         Assert.notNull(season, "Season mustn't be null.");
         Assert.notNull(season.getId(), "ID mustn't be null.");
     }
@@ -56,7 +56,7 @@ public class SeasonValidatorImpl implements SeasonValidator {
      *                                  or subtitles contain null value
      *                                  or note is null
      */
-    private static void validateSeasonTO(final SeasonTO season) {
+    private static void validateSeason(final Season season) {
         Assert.notNull(season, "Season mustn't be null.");
         Assert.isTrue(season.getNumber() > 0, "Number of season must be positive number.");
         Assert.isTrue(season.getStartYear() >= Constants.MIN_YEAR && season.getStartYear() <= Constants.CURRENT_YEAR, "Starting year must be between "

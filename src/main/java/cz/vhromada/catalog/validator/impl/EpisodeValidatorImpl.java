@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.EpisodeTO;
+import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.validator.EpisodeValidator;
 
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ public class EpisodeValidatorImpl implements EpisodeValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateNewEpisodeTO(final EpisodeTO episode) {
-        validateEpisodeTO(episode);
+    public void validateNewEpisode(final Episode episode) {
+        validateEpisode(episode);
         Assert.isNull(episode.getId(), "ID must be null.");
     }
 
@@ -28,8 +28,8 @@ public class EpisodeValidatorImpl implements EpisodeValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateExistingEpisodeTO(final EpisodeTO episode) {
-        validateEpisodeTO(episode);
+    public void validateExistingEpisode(final Episode episode) {
+        validateEpisode(episode);
         Assert.notNull(episode.getId(), "ID mustn't be null.");
     }
 
@@ -37,7 +37,7 @@ public class EpisodeValidatorImpl implements EpisodeValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateEpisodeTOWithId(final EpisodeTO episode) {
+    public void validateEpisodeWithId(final Episode episode) {
         Assert.notNull(episode, "Episode mustn't be null.");
         Assert.notNull(episode.getId(), "ID mustn't be null.");
     }
@@ -53,7 +53,7 @@ public class EpisodeValidatorImpl implements EpisodeValidator {
      *                                  or length of episode is negative value
      *                                  or note is null
      */
-    private static void validateEpisodeTO(final EpisodeTO episode) {
+    private static void validateEpisode(final Episode episode) {
         Assert.notNull(episode, "Episode mustn't be null.");
         Assert.isTrue(episode.getNumber() > 0, "Number of episode must be positive number.");
         Assert.notNull(episode.getName(), "Name mustn't be null");

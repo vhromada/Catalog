@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.domain.Genre;
-import cz.vhromada.catalog.domain.Medium;
-import cz.vhromada.catalog.domain.Movie;
-import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.entity.MediumTO;
-import cz.vhromada.catalog.entity.MovieTO;
+import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Medium;
+import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.MovieValidator;
@@ -31,24 +28,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class MovieFacadeImpl implements MovieFacade {
 
     /**
-     * TO for movie argument
+     * Movie argument
      */
-    private static final String MOVIE_TO_ARGUMENT = "TO for movie";
+    private static final String MOVIE_ARGUMENT = "movie";
 
     /**
-     * TO for genre argument
+     * Genre argument
      */
-    private static final String GENRE_TO_ARGUMENT = "TO for genre";
+    private static final String GENRE_ARGUMENT = "genre";
 
     /**
      * Service for movies
      */
-    private CatalogService<Movie> movieService;
+    private CatalogService<cz.vhromada.catalog.domain.Movie> movieService;
 
     /**
      * Service for genres
      */
-    private CatalogService<Genre> genreService;
+    private CatalogService<cz.vhromada.catalog.domain.Genre> genreService;
 
     /**
      * Converter
@@ -56,7 +53,7 @@ public class MovieFacadeImpl implements MovieFacade {
     private Converter converter;
 
     /**
-     * Validator for TO for movie
+     * Validator for movie
      */
     private MovieValidator movieValidator;
 
@@ -66,21 +63,21 @@ public class MovieFacadeImpl implements MovieFacade {
      * @param movieService   service for movies
      * @param genreService   service for genres
      * @param converter      converter
-     * @param movieValidator validator for TO for movie
+     * @param movieValidator validator for movie
      * @throws IllegalArgumentException if service for movies is null
      *                                  or service for genres is null
      *                                  or converter is null
-     *                                  or validator for TO for movie is null
+     *                                  or validator for movie is null
      */
     @Autowired
-    public MovieFacadeImpl(final CatalogService<Movie> movieService,
-            final CatalogService<Genre> genreService,
+    public MovieFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService,
+            final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final MovieValidator movieValidator) {
         Validators.validateArgumentNotNull(movieService, "Service for movies");
         Validators.validateArgumentNotNull(genreService, "Service for genres");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(movieValidator, "Validator for TO for movie");
+        Validators.validateArgumentNotNull(movieValidator, "Validator for movie");
 
         this.movieService = movieService;
         this.genreService = genreService;
@@ -94,18 +91,18 @@ public class MovieFacadeImpl implements MovieFacade {
     }
 
     @Override
-    public List<MovieTO> getMovies() {
-        return converter.convertCollection(movieService.getAll(), MovieTO.class);
+    public List<Movie> getMovies() {
+        return converter.convertCollection(movieService.getAll(), Movie.class);
     }
 
     /**
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public MovieTO getMovie(final Integer id) {
+    public Movie getMovie(final Integer id) {
         Validators.validateArgumentNotNull(id, "ID");
 
-        return converter.convert(movieService.get(id), MovieTO.class);
+        return converter.convert(movieService.get(id), Movie.class);
     }
 
     /**
@@ -113,13 +110,13 @@ public class MovieFacadeImpl implements MovieFacade {
      * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
-    public void add(final MovieTO movie) {
-        movieValidator.validateNewMovieTO(movie);
-        for (final GenreTO genre : movie.getGenres()) {
-            Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
+    public void add(final Movie movie) {
+        movieValidator.validateNewMovie(movie);
+        for (final Genre genre : movie.getGenres()) {
+            Validators.validateExists(genreService.get(genre.getId()), GENRE_ARGUMENT);
         }
 
-        movieService.add(converter.convert(movie, Movie.class));
+        movieService.add(converter.convert(movie, cz.vhromada.catalog.domain.Movie.class));
     }
 
     /**
@@ -128,15 +125,15 @@ public class MovieFacadeImpl implements MovieFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void update(final MovieTO movie) {
-        movieValidator.validateExistingMovieTO(movie);
-        final Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
-        for (final GenreTO genre : movie.getGenres()) {
-            Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
+    public void update(final Movie movie) {
+        movieValidator.validateExistingMovie(movie);
+        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
+        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        for (final Genre genre : movie.getGenres()) {
+            Validators.validateExists(genreService.get(genre.getId()), GENRE_ARGUMENT);
         }
 
-        final Movie updatedMovie = converter.convert(movie, Movie.class);
+        final cz.vhromada.catalog.domain.Movie updatedMovie = converter.convert(movie, cz.vhromada.catalog.domain.Movie.class);
         updatedMovie.setMedia(getUpdatedMedia(movieEntity.getMedia(), movie.getMedia()));
 
         movieService.update(updatedMovie);
@@ -148,10 +145,10 @@ public class MovieFacadeImpl implements MovieFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void remove(final MovieTO movie) {
-        movieValidator.validateMovieTOWithId(movie);
-        final Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
+    public void remove(final Movie movie) {
+        movieValidator.validateMovieWithId(movie);
+        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
+        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
 
         movieService.remove(movieEntity);
     }
@@ -162,10 +159,10 @@ public class MovieFacadeImpl implements MovieFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void duplicate(final MovieTO movie) {
-        movieValidator.validateMovieTOWithId(movie);
-        final Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
+    public void duplicate(final Movie movie) {
+        movieValidator.validateMovieWithId(movie);
+        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
+        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
 
         movieService.duplicate(movieEntity);
     }
@@ -176,12 +173,12 @@ public class MovieFacadeImpl implements MovieFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveUp(final MovieTO movie) {
-        movieValidator.validateMovieTOWithId(movie);
-        final Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
-        final List<Movie> movies = movieService.getAll();
-        Validators.validateMoveUp(movies, movieEntity, MOVIE_TO_ARGUMENT);
+    public void moveUp(final Movie movie) {
+        movieValidator.validateMovieWithId(movie);
+        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
+        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Movie> movies = movieService.getAll();
+        Validators.validateMoveUp(movies, movieEntity, MOVIE_ARGUMENT);
 
         movieService.moveUp(movieEntity);
     }
@@ -192,12 +189,12 @@ public class MovieFacadeImpl implements MovieFacade {
      * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
-    public void moveDown(final MovieTO movie) {
-        movieValidator.validateMovieTOWithId(movie);
-        final Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
-        final List<Movie> movies = movieService.getAll();
-        Validators.validateMoveDown(movies, movieEntity, MOVIE_TO_ARGUMENT);
+    public void moveDown(final Movie movie) {
+        movieValidator.validateMovieWithId(movie);
+        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
+        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        final List<cz.vhromada.catalog.domain.Movie> movies = movieService.getAll();
+        Validators.validateMoveDown(movies, movieEntity, MOVIE_ARGUMENT);
 
         movieService.moveDown(movieEntity);
     }
@@ -210,7 +207,7 @@ public class MovieFacadeImpl implements MovieFacade {
     @Override
     public int getTotalMediaCount() {
         int totalMediaCount = 0;
-        for (final Movie movie : movieService.getAll()) {
+        for (final cz.vhromada.catalog.domain.Movie movie : movieService.getAll()) {
             totalMediaCount += movie.getMedia().size();
         }
 
@@ -220,8 +217,8 @@ public class MovieFacadeImpl implements MovieFacade {
     @Override
     public Time getTotalLength() {
         int totalLength = 0;
-        for (final Movie movie : movieService.getAll()) {
-            for (final Medium medium : movie.getMedia()) {
+        for (final cz.vhromada.catalog.domain.Movie movie : movieService.getAll()) {
+            for (final cz.vhromada.catalog.domain.Medium medium : movie.getMedia()) {
                 totalLength += medium.getLength();
             }
         }
@@ -232,17 +229,18 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * Updates media.
      *
-     * @param originalMedia original list of media
-     * @param updatedMedia  updated list of TO for medium
+     * @param originalMedia original media
+     * @param updatedMedia  updated media
      * @return updated media
      */
-    private static List<Medium> getUpdatedMedia(final List<Medium> originalMedia, final List<MediumTO> updatedMedia) {
-        final List<Medium> result = new ArrayList<>();
+    private static List<cz.vhromada.catalog.domain.Medium> getUpdatedMedia(final List<cz.vhromada.catalog.domain.Medium> originalMedia,
+            final List<Medium> updatedMedia) {
+        final List<cz.vhromada.catalog.domain.Medium> result = new ArrayList<>();
 
         int index = 0;
         final int max = Math.min(originalMedia.size(), updatedMedia.size());
         while (index < max) {
-            final Medium medium = new Medium();
+            final cz.vhromada.catalog.domain.Medium medium = new cz.vhromada.catalog.domain.Medium();
             medium.setId(originalMedia.get(index).getId());
             medium.setNumber(index + 1);
             medium.setLength(updatedMedia.get(index).getLength());
@@ -250,7 +248,7 @@ public class MovieFacadeImpl implements MovieFacade {
             index++;
         }
         while (index < updatedMedia.size()) {
-            final Medium medium = new Medium();
+            final cz.vhromada.catalog.domain.Medium medium = new cz.vhromada.catalog.domain.Medium();
             medium.setNumber(index + 1);
             medium.setLength(updatedMedia.get(index).getLength());
             result.add(medium);

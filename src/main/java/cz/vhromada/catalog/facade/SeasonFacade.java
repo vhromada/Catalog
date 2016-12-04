@@ -2,8 +2,8 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.entity.SeasonTO;
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.catalog.entity.Show;
 
 /**
  * An interface represents facade for shows.
@@ -13,21 +13,21 @@ import cz.vhromada.catalog.entity.ShowTO;
 public interface SeasonFacade {
 
     /**
-     * Returns TO for season with ID or null if there isn't such TO for season.
+     * Returns season with ID or null if there isn't such season.
      *
      * @param id ID
-     * @return TO for season with ID or null if there isn't such TO for season
+     * @return season with ID or null if there isn't such season
      * @throws IllegalArgumentException if ID is null
      */
-    SeasonTO getSeason(Integer id);
+    Season getSeason(Integer id);
 
     /**
-     * Adds TO for season. Sets new ID and position.
+     * Adds season. Sets new ID and position.
      *
-     * @param show   TO for show
-     * @param season TO for season
-     * @throws IllegalArgumentException                                  if TO for show is null
-     *                                                                   or TO for season is null
+     * @param show   show
+     * @param season season
+     * @throws IllegalArgumentException                                  if show is null
+     *                                                                   or season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if show ID is null
      *                                                                   or season ID isn't null
      *                                                                   or number of season isn't positive number
@@ -38,15 +38,15 @@ public interface SeasonFacade {
      *                                                                   or subtitles are null
      *                                                                   or subtitles contain null value
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for show doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
-    void add(ShowTO show, SeasonTO season);
+    void add(Show show, Season season);
 
     /**
-     * Updates TO for season.
+     * Updates season.
      *
-     * @param season new value of TO for season
-     * @throws IllegalArgumentException                                  if TO for season is null
+     * @param season new value of season
+     * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or number of season isn't positive number
      *                                                                   or starting year isn't between 1940 and current year
@@ -56,61 +56,61 @@ public interface SeasonFacade {
      *                                                                   or subtitles are null
      *                                                                   or subtitles contain null value
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for season doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
-    void update(SeasonTO season);
+    void update(Season season);
 
     /**
-     * Removes TO for season.
+     * Removes season.
      *
-     * @param season TO for season
-     * @throws IllegalArgumentException                                  if TO for season is null
+     * @param season season
+     * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for season doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
-    void remove(SeasonTO season);
+    void remove(Season season);
 
     /**
-     * Duplicates TO for season.
+     * Duplicates season.
      *
-     * @param season TO for season
-     * @throws IllegalArgumentException                                  if TO for season is null
+     * @param season season
+     * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for season doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
-    void duplicate(SeasonTO season);
+    void duplicate(Season season);
 
     /**
-     * Moves TO for season in list one position up.
+     * Moves season in list one position up.
      *
-     * @param season TO for season
-     * @throws IllegalArgumentException                                  if TO for season is null
+     * @param season season
+     * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for season can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for season doesn't exist in data storage
+     *                                                                   or season can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
-    void moveUp(SeasonTO season);
+    void moveUp(Season season);
 
     /**
-     * Moves TO for season in list one position down.
+     * Moves season in list one position down.
      *
-     * @param season TO for season
-     * @throws IllegalArgumentException                                  if TO for season is null
+     * @param season season
+     * @throws IllegalArgumentException                                  if season is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for season can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for season doesn't exist in data storage
+     *                                                                   or season can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
      */
-    void moveDown(SeasonTO season);
+    void moveDown(Season season);
 
     /**
-     * Returns list of TO for season for specified TO for show.
+     * Returns seasons for specified show.
      *
-     * @param show TO for show
-     * @return list of TO for seasons for specified TO for show
-     * @throws IllegalArgumentException                                  if TO for show is null
+     * @param show show
+     * @return seasons for specified show
+     * @throws IllegalArgumentException                                  if show is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for show doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
      */
-    List<SeasonTO> findSeasonsByShow(ShowTO show);
+    List<Season> findSeasonsByShow(Show show);
 
 }

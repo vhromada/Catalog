@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.SongTO;
+import cz.vhromada.catalog.entity.Song;
 
 /**
  * An interface represents validator for song.
@@ -20,7 +20,7 @@ public interface SongValidator {
      *                                  or length of song is negative value
      *                                  or note is null
      */
-    void validateNewSongTO(SongTO song);
+    void validateNewSong(Song song);
 
     /**
      * Validates existing song.
@@ -33,7 +33,7 @@ public interface SongValidator {
      *                                  or length of song is negative value
      *                                  or note is null
      */
-    void validateExistingSongTO(SongTO song);
+    void validateExistingSong(Song song);
 
     /**
      * Validates song with ID.
@@ -42,7 +42,7 @@ public interface SongValidator {
      * @throws IllegalArgumentException if song is null
      *                                  or ID is null
      */
-    void validateSongTOWithId(SongTO song);
+    void validateSongWithId(Song song);
 
 }
 

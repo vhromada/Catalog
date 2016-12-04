@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.common.MusicUtils;
-import cz.vhromada.catalog.domain.Music;
-import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for converter between {@link Music} and {@link MusicTO}.
+ * A class represents test for converter between {@link cz.vhromada.catalog.domain.Music} and {@link Music}.
  *
  * @author Vladimir Hromada
  */
@@ -36,8 +35,8 @@ public class MusicConverterTest {
      */
     @Test
     public void testConvertMusic() {
-        final Music music = MusicUtils.newMusic(1);
-        final MusicTO musicTO = converter.convert(music, MusicTO.class);
+        final cz.vhromada.catalog.domain.Music music = MusicUtils.newMusic(1);
+        final Music musicTO = converter.convert(music, Music.class);
 
         MusicUtils.assertMusicDeepEquals(musicTO, music);
     }
@@ -47,7 +46,7 @@ public class MusicConverterTest {
      */
     @Test
     public void testConvertMusic_NullArgument() {
-        assertNull(converter.convert(null, MusicTO.class));
+        assertNull(converter.convert(null, Music.class));
     }
 
     /**
@@ -55,8 +54,8 @@ public class MusicConverterTest {
      */
     @Test
     public void testConvertMusicTO() {
-        final MusicTO musicTO = MusicUtils.newMusicTO(1);
-        final Music music = converter.convert(musicTO, Music.class);
+        final Music musicTO = MusicUtils.newMusicTO(1);
+        final cz.vhromada.catalog.domain.Music music = converter.convert(musicTO, cz.vhromada.catalog.domain.Music.class);
 
         assertNotNull(music);
         MusicUtils.assertMusicDeepEquals(musicTO, music);
@@ -67,7 +66,7 @@ public class MusicConverterTest {
      */
     @Test
     public void testConvertMusicTO_NullArgument() {
-        assertNull(converter.convert(null, Music.class));
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Music.class));
     }
 
 }

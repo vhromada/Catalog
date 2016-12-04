@@ -5,11 +5,11 @@ import java.util.Objects;
 import cz.vhromada.catalog.common.Movable;
 
 /**
- * A class represents TO for song.
+ * A class represents episode.
  *
  * @author Vladimir Hromada
  */
-public class SongTO implements Movable {
+public class Episode implements Movable {
 
     /**
      * SerialVersionUID
@@ -20,6 +20,11 @@ public class SongTO implements Movable {
      * ID
      */
     private Integer id;
+
+    /**
+     * Number of episode
+     */
+    private int number;
 
     /**
      * Name
@@ -49,6 +54,24 @@ public class SongTO implements Movable {
     @Override
     public void setId(final Integer id) {
         this.id = id;
+    }
+
+    /**
+     * Returns number of episode.
+     *
+     * @return number of episode
+     */
+    public int getNumber() {
+        return number;
+    }
+
+    /**
+     * Sets a new value to number of episode.
+     *
+     * @param number new value
+     */
+    public void setNumber(final int number) {
+        this.number = number;
     }
 
     /**
@@ -120,11 +143,11 @@ public class SongTO implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof SongTO) || id == null) {
+        if (obj == null || !(obj instanceof Episode) || id == null) {
             return false;
         }
 
-        return id.equals(((SongTO) obj).id);
+        return id.equals(((Episode) obj).id);
     }
 
     @Override
@@ -134,7 +157,7 @@ public class SongTO implements Movable {
 
     @Override
     public String toString() {
-        return String.format("SongTO [id=%d, name=%s, length=%d, note=%s, position=%d]", id, name, length, note, position);
+        return String.format("Episode [id=%d, number=%d, name=%s, length=%d, note=%s, position=%d]", id, number, name, length, note, position);
     }
 
 }

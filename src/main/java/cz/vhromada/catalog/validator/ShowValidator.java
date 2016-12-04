@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.validator;
 
-import cz.vhromada.catalog.entity.ShowTO;
+import cz.vhromada.catalog.entity.Show;
 
 /**
  * An interface represents validator for show.
@@ -31,7 +31,7 @@ public interface ShowValidator {
      *                                  or genre name is null
      *                                  or genre name is empty string
      */
-    void validateNewShowTO(ShowTO show);
+    void validateNewShow(Show show);
 
     /**
      * Validates existing show.
@@ -55,7 +55,7 @@ public interface ShowValidator {
      *                                  or genre name is null
      *                                  or genre name is empty string
      */
-    void validateExistingShowTO(ShowTO show);
+    void validateExistingShow(Show show);
 
     /**
      * Validates show with ID.
@@ -64,6 +64,6 @@ public interface ShowValidator {
      * @throws IllegalArgumentException if show is null
      *                                  or ID is null
      */
-    void validateShowTOWithId(ShowTO show);
+    void validateShowWithId(Show show);
 
 }

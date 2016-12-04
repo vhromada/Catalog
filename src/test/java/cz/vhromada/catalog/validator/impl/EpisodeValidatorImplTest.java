@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.common.EpisodeUtils;
-import cz.vhromada.catalog.entity.EpisodeTO;
+import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.validator.EpisodeValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -29,11 +29,11 @@ public class EpisodeValidatorImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateNewEpisodeTO(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewEpisodeTO_NullArgument() {
-        episodeValidator.validateNewEpisodeTO(null);
+        episodeValidator.validateNewEpisode(null);
     }
 
     /**
@@ -41,7 +41,7 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewEpisodeTO_NotNullId() {
-        episodeValidator.validateNewEpisodeTO(EpisodeUtils.newEpisodeTO(1));
+        episodeValidator.validateNewEpisode(EpisodeUtils.newEpisodeTO(1));
     }
 
     /**
@@ -49,10 +49,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewEpisodeTO_NotPositiveNumber() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisodeTO(null);
         episode.setNumber(0);
 
-        episodeValidator.validateNewEpisodeTO(episode);
+        episodeValidator.validateNewEpisode(episode);
     }
 
     /**
@@ -60,10 +60,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewEpisodeTO_NullName() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisodeTO(null);
         episode.setName(null);
 
-        episodeValidator.validateNewEpisodeTO(episode);
+        episodeValidator.validateNewEpisode(episode);
     }
 
     /**
@@ -71,10 +71,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewEpisodeTO_EmptyName() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisodeTO(null);
         episode.setName("");
 
-        episodeValidator.validateNewEpisodeTO(episode);
+        episodeValidator.validateNewEpisode(episode);
     }
 
     /**
@@ -82,10 +82,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewEpisodeTO_NegativeLength() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisodeTO(null);
         episode.setLength(-1);
 
-        episodeValidator.validateNewEpisodeTO(episode);
+        episodeValidator.validateNewEpisode(episode);
     }
 
     /**
@@ -93,18 +93,18 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewEpisodeTO_NullNote() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisodeTO(null);
         episode.setNote(null);
 
-        episodeValidator.validateNewEpisodeTO(episode);
+        episodeValidator.validateNewEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateExistingEpisodeTO(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingEpisodeTO_NullArgument() {
-        episodeValidator.validateExistingEpisodeTO(null);
+        episodeValidator.validateExistingEpisode(null);
     }
 
     /**
@@ -112,7 +112,7 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingEpisodeTO_NullId() {
-        episodeValidator.validateExistingEpisodeTO(EpisodeUtils.newEpisodeTO(null));
+        episodeValidator.validateExistingEpisode(EpisodeUtils.newEpisodeTO(null));
     }
 
     /**
@@ -120,10 +120,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingEpisodeTO_NotPositiveNumber() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
         episode.setNumber(0);
 
-        episodeValidator.validateExistingEpisodeTO(episode);
+        episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
@@ -131,10 +131,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingEpisodeTO_NullName() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
         episode.setName(null);
 
-        episodeValidator.validateExistingEpisodeTO(episode);
+        episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
@@ -142,10 +142,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingEpisodeTO_EmptyName() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
         episode.setName("");
 
-        episodeValidator.validateExistingEpisodeTO(episode);
+        episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
@@ -153,10 +153,10 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingEpisodeTO_NegativeLength() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
         episode.setLength(-1);
 
-        episodeValidator.validateExistingEpisodeTO(episode);
+        episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
@@ -164,18 +164,18 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingEpisodeTO_NullNote() {
-        final EpisodeTO episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisodeTO(1);
         episode.setNote(null);
 
-        episodeValidator.validateExistingEpisodeTO(episode);
+        episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateEpisodeTOWithId(EpisodeTO)} with null argument.
+     * Test method for {@link EpisodeValidator#validateEpisodeWithId(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateEpisodeTOWithId_NullArgument() {
-        episodeValidator.validateEpisodeTOWithId(null);
+        episodeValidator.validateEpisodeWithId(null);
     }
 
     /**
@@ -183,7 +183,7 @@ public class EpisodeValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateEpisodeTOWithId_NullId() {
-        episodeValidator.validateEpisodeTOWithId(EpisodeUtils.newEpisodeTO(null));
+        episodeValidator.validateEpisodeWithId(EpisodeUtils.newEpisodeTO(null));
     }
 
 }

@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade;
 
 import java.util.List;
 
-import cz.vhromada.catalog.entity.ProgramTO;
+import cz.vhromada.catalog.entity.Program;
 
 /**
  * An interface represents facade for programs.
@@ -17,26 +17,26 @@ public interface ProgramFacade {
     void newData();
 
     /**
-     * Returns list of TO for program.
+     * Returns programs.
      *
-     * @return list of TO for program
+     * @return programs
      */
-    List<ProgramTO> getPrograms();
+    List<Program> getPrograms();
 
     /**
-     * Returns TO for program with ID or null if there isn't such TO for program.
+     * Returns program with ID or null if there isn't such program.
      *
      * @param id ID
-     * @return TO for program with ID or null if there isn't such TO for program
+     * @return program with ID or null if there isn't such program
      * @throws IllegalArgumentException if ID is null
      */
-    ProgramTO getProgram(Integer id);
+    Program getProgram(Integer id);
 
     /**
-     * Adds TO for program. Sets new ID and position.
+     * Adds program. Sets new ID and position.
      *
-     * @param program TO for program
-     * @throws IllegalArgumentException                              if TO for program is null
+     * @param program program
+     * @throws IllegalArgumentException                              if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
      *                                                               or name is null
      *                                                               or name is empty string
@@ -46,13 +46,13 @@ public interface ProgramFacade {
      *                                                               or other data is null
      *                                                               or note is null
      */
-    void add(ProgramTO program);
+    void add(Program program);
 
     /**
-     * Updates TO for program.
+     * Updates program.
      *
-     * @param program new value of TO for program
-     * @throws IllegalArgumentException                                  if TO for program is null
+     * @param program new value of program
+     * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
@@ -61,51 +61,51 @@ public interface ProgramFacade {
      *                                                                   or count of media isn't positive number
      *                                                                   or other data is null
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for program doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
-    void update(ProgramTO program);
+    void update(Program program);
 
     /**
-     * Removes TO for program.
+     * Removes program.
      *
-     * @param program TO for program
-     * @throws IllegalArgumentException                                  if TO for program is null
+     * @param program program
+     * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for program doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
-    void remove(ProgramTO program);
+    void remove(Program program);
 
     /**
-     * Duplicates TO for program.
+     * Duplicates program.
      *
-     * @param program TO for program
-     * @throws IllegalArgumentException                                  if TO for program is null
+     * @param program program
+     * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for program doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
-    void duplicate(ProgramTO program);
+    void duplicate(Program program);
 
     /**
-     * Moves TO for program in list one position up.
+     * Moves program in list one position up.
      *
-     * @param program TO for program
-     * @throws IllegalArgumentException                                  if TO for program is null
+     * @param program program
+     * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for program can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for program doesn't exist in data storage
+     *                                                                   or program can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
-    void moveUp(ProgramTO program);
+    void moveUp(Program program);
 
     /**
-     * Moves TO for program in list one position down.
+     * Moves program in list one position down.
      *
-     * @param program TO for program
-     * @throws IllegalArgumentException                                  if TO for program is null
+     * @param program program
+     * @throws IllegalArgumentException                                  if program is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for program can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for program doesn't exist in data storage
+     *                                                                   or program can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
      */
-    void moveDown(ProgramTO program);
+    void moveDown(Program program);
 
     /**
      * Updates positions.

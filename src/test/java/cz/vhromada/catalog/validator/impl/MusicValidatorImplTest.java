@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.common.MusicUtils;
-import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.validator.MusicValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -29,11 +29,11 @@ public class MusicValidatorImplTest {
     }
 
     /**
-     * Test method for {@link MusicValidator#validateNewMusicTO(MusicTO)} with null argument.
+     * Test method for {@link MusicValidator#validateNewMusic(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewMusicTO_NullArgument() {
-        musicValidator.validateNewMusicTO(null);
+        musicValidator.validateNewMusic(null);
     }
 
     /**
@@ -41,7 +41,7 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTO_NotNullId() {
-        musicValidator.validateNewMusicTO(MusicUtils.newMusicTO(1));
+        musicValidator.validateNewMusic(MusicUtils.newMusicTO(1));
     }
 
     /**
@@ -49,10 +49,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTO_NullName() {
-        final MusicTO music = MusicUtils.newMusicTO(null);
+        final Music music = MusicUtils.newMusicTO(null);
         music.setName(null);
 
-        musicValidator.validateNewMusicTO(music);
+        musicValidator.validateNewMusic(music);
     }
 
     /**
@@ -60,10 +60,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTO_EmptyName() {
-        final MusicTO music = MusicUtils.newMusicTO(null);
+        final Music music = MusicUtils.newMusicTO(null);
         music.setName("");
 
-        musicValidator.validateNewMusicTO(music);
+        musicValidator.validateNewMusic(music);
     }
 
     /**
@@ -71,10 +71,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTO_NullWikiEn() {
-        final MusicTO music = MusicUtils.newMusicTO(null);
+        final Music music = MusicUtils.newMusicTO(null);
         music.setWikiEn(null);
 
-        musicValidator.validateNewMusicTO(music);
+        musicValidator.validateNewMusic(music);
     }
 
     /**
@@ -82,10 +82,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTO_NullWikiCz() {
-        final MusicTO music = MusicUtils.newMusicTO(null);
+        final Music music = MusicUtils.newMusicTO(null);
         music.setWikiCz(null);
 
-        musicValidator.validateNewMusicTO(music);
+        musicValidator.validateNewMusic(music);
     }
 
     /**
@@ -93,10 +93,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTO_NotPositiveMediaCount() {
-        final MusicTO music = MusicUtils.newMusicTO(null);
+        final Music music = MusicUtils.newMusicTO(null);
         music.setMediaCount(0);
 
-        musicValidator.validateNewMusicTO(music);
+        musicValidator.validateNewMusic(music);
     }
 
     /**
@@ -104,18 +104,18 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewMusicTO_NullNote() {
-        final MusicTO music = MusicUtils.newMusicTO(null);
+        final Music music = MusicUtils.newMusicTO(null);
         music.setNote(null);
 
-        musicValidator.validateNewMusicTO(music);
+        musicValidator.validateNewMusic(music);
     }
 
     /**
-     * Test method for {@link MusicValidator#validateExistingMusicTO(MusicTO)} with null argument.
+     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingMusicTO_NullArgument() {
-        musicValidator.validateExistingMusicTO(null);
+        musicValidator.validateExistingMusic(null);
     }
 
     /**
@@ -123,7 +123,7 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTO_NullId() {
-        musicValidator.validateExistingMusicTO(MusicUtils.newMusicTO(null));
+        musicValidator.validateExistingMusic(MusicUtils.newMusicTO(null));
     }
 
     /**
@@ -131,10 +131,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTO_NullName() {
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final Music music = MusicUtils.newMusicTO(1);
         music.setName(null);
 
-        musicValidator.validateExistingMusicTO(music);
+        musicValidator.validateExistingMusic(music);
     }
 
     /**
@@ -142,10 +142,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTO_EmptyName() {
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final Music music = MusicUtils.newMusicTO(1);
         music.setName("");
 
-        musicValidator.validateExistingMusicTO(music);
+        musicValidator.validateExistingMusic(music);
     }
 
     /**
@@ -153,10 +153,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTO_NullWikiEn() {
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final Music music = MusicUtils.newMusicTO(1);
         music.setWikiEn(null);
 
-        musicValidator.validateExistingMusicTO(music);
+        musicValidator.validateExistingMusic(music);
     }
 
     /**
@@ -164,10 +164,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTO_NullWikiCz() {
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final Music music = MusicUtils.newMusicTO(1);
         music.setWikiCz(null);
 
-        musicValidator.validateExistingMusicTO(music);
+        musicValidator.validateExistingMusic(music);
     }
 
     /**
@@ -175,10 +175,10 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTO_NotPositiveMediaCount() {
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final Music music = MusicUtils.newMusicTO(1);
         music.setMediaCount(0);
 
-        musicValidator.validateExistingMusicTO(music);
+        musicValidator.validateExistingMusic(music);
     }
 
     /**
@@ -186,18 +186,18 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingMusicTO_NullNote() {
-        final MusicTO music = MusicUtils.newMusicTO(1);
+        final Music music = MusicUtils.newMusicTO(1);
         music.setNote(null);
 
-        musicValidator.validateExistingMusicTO(music);
+        musicValidator.validateExistingMusic(music);
     }
 
     /**
-     * Test method for {@link MusicValidator#validateMusicTOWithId(MusicTO)} with null argument.
+     * Test method for {@link MusicValidator#validateMusicWithId(Music)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateMusicTOWithId_NullArgument() {
-        musicValidator.validateMusicTOWithId(null);
+        musicValidator.validateMusicWithId(null);
     }
 
     /**
@@ -205,7 +205,7 @@ public class MusicValidatorImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testValidateMusicTOWithId_NullId() {
-        musicValidator.validateMusicTOWithId(MusicUtils.newMusicTO(null));
+        musicValidator.validateMusicWithId(MusicUtils.newMusicTO(null));
     }
 
 }

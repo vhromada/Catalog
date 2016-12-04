@@ -3,7 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
-import cz.vhromada.catalog.entity.MusicTO;
+import cz.vhromada.catalog.entity.Music;
 
 /**
  * An interface represents facade for music.
@@ -18,26 +18,26 @@ public interface MusicFacade {
     void newData();
 
     /**
-     * Returns list of TO for music.
+     * Returns music.
      *
-     * @return list of TO for music
+     * @return music
      */
-    List<MusicTO> getMusic();
+    List<Music> getMusic();
 
     /**
-     * Returns TO for music with ID or null if there isn't such TO for music.
+     * Returns music with ID or null if there isn't such music.
      *
      * @param id ID
-     * @return TO for music with ID or null if there isn't such TO for music
+     * @return music with ID or null if there isn't such music
      * @throws IllegalArgumentException if ID is null
      */
-    MusicTO getMusic(Integer id);
+    Music getMusic(Integer id);
 
     /**
-     * Adds TO for music. Sets new ID and position.
+     * Adds music. Sets new ID and position.
      *
-     * @param music TO for music
-     * @throws IllegalArgumentException                              if TO for music is null
+     * @param music music
+     * @throws IllegalArgumentException                              if music is null
      * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
      *                                                               or name is null
      *                                                               or name is empty string
@@ -46,13 +46,13 @@ public interface MusicFacade {
      *                                                               or count of media isn't positive number
      *                                                               or note is null
      */
-    void add(MusicTO music);
+    void add(Music music);
 
     /**
-     * Updates TO for music.
+     * Updates music.
      *
-     * @param music new value of TO for music
-     * @throws IllegalArgumentException                                  if TO for music is null
+     * @param music new value of music
+     * @throws IllegalArgumentException                                  if music is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
@@ -60,51 +60,51 @@ public interface MusicFacade {
      *                                                                   or URL to czech Wikipedia page about music is null
      *                                                                   or count of media isn't positive number
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for music doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
-    void update(MusicTO music);
+    void update(Music music);
 
     /**
-     * Removes TO for music.
+     * Removes music.
      *
-     * @param music TO for music
-     * @throws IllegalArgumentException                                  if TO for music is null
+     * @param music music
+     * @throws IllegalArgumentException                                  if music is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for music doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
-    void remove(MusicTO music);
+    void remove(Music music);
 
     /**
-     * Duplicates TO for music.
+     * Duplicates music.
      *
-     * @param music TO for music
-     * @throws IllegalArgumentException                                  if TO for music is null
+     * @param music music
+     * @throws IllegalArgumentException                                  if music is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for music doesn't exist in data storage
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
-    void duplicate(MusicTO music);
+    void duplicate(Music music);
 
     /**
-     * Moves TO for music in list one position up.
+     * Moves music in list one position up.
      *
-     * @param music TO for music
-     * @throws IllegalArgumentException                                  if TO for music is null
+     * @param music music
+     * @throws IllegalArgumentException                                  if music is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for music can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for music doesn't exist in data storage
+     *                                                                   or music can't be moved up
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
-    void moveUp(MusicTO music);
+    void moveUp(Music music);
 
     /**
-     * Moves TO for music in list one position down.
+     * Moves music in list one position down.
      *
-     * @param music TO for music
-     * @throws IllegalArgumentException                                  if TO for music is null
+     * @param music music
+     * @throws IllegalArgumentException                                  if music is null
      * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     *                                                                   or TO for music can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if TO for music doesn't exist in data storage
+     *                                                                   or music can't be moved down
+     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
      */
-    void moveDown(MusicTO music);
+    void moveDown(Music music);
 
     /**
      * Updates positions.

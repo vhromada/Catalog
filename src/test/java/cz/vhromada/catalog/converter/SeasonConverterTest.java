@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import cz.vhromada.catalog.common.SeasonUtils;
-import cz.vhromada.catalog.domain.Season;
-import cz.vhromada.catalog.entity.SeasonTO;
+import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * A class represents test for converter between {@link Season} and {@link SeasonTO}.
+ * A class represents test for converter between {@link cz.vhromada.catalog.domain.Season} and {@link Season}.
  *
  * @author Vladimir Hromada
  */
@@ -36,8 +35,8 @@ public class SeasonConverterTest {
      */
     @Test
     public void testConvertSeason() {
-        final Season season = SeasonUtils.newSeason(1);
-        final SeasonTO seasonTO = converter.convert(season, SeasonTO.class);
+        final cz.vhromada.catalog.domain.Season season = SeasonUtils.newSeason(1);
+        final Season seasonTO = converter.convert(season, Season.class);
 
         SeasonUtils.assertSeasonDeepEquals(seasonTO, season);
     }
@@ -47,7 +46,7 @@ public class SeasonConverterTest {
      */
     @Test
     public void testConvertSeason_NullArgument() {
-        assertNull(converter.convert(null, SeasonTO.class));
+        assertNull(converter.convert(null, Season.class));
     }
 
     /**
@@ -55,8 +54,8 @@ public class SeasonConverterTest {
      */
     @Test
     public void testConvertSeasonTO() {
-        final SeasonTO seasonTO = SeasonUtils.newSeasonTO(1);
-        final Season season = converter.convert(seasonTO, Season.class);
+        final Season seasonTO = SeasonUtils.newSeasonTO(1);
+        final cz.vhromada.catalog.domain.Season season = converter.convert(seasonTO, cz.vhromada.catalog.domain.Season.class);
 
         assertNotNull(season);
         SeasonUtils.assertSeasonDeepEquals(seasonTO, season);
@@ -67,7 +66,7 @@ public class SeasonConverterTest {
      */
     @Test
     public void testConvertSeasonTO_NullArgument() {
-        assertNull(converter.convert(null, Season.class));
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Season.class));
     }
 
 }

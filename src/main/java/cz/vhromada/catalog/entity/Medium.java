@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A class represents TO for medium.
+ * A class represents medium.
  *
  * @author Vladimir Hromada
  */
-public class MediumTO implements Serializable {
+public class Medium implements Serializable {
 
     /**
      * SerialVersionUID
@@ -90,11 +90,11 @@ public class MediumTO implements Serializable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof MediumTO) || id == null) {
+        if (obj == null || !(obj instanceof Medium) || id == null) {
             return false;
         }
 
-        return id.equals(((MediumTO) obj).id);
+        return id.equals(((Medium) obj).id);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class MediumTO implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("MediumTO [id=%d, number=%d, length=%d]", id, number, length);
+        return String.format("Medium [id=%d, number=%d, length=%d]", id, number, length);
     }
 
 }

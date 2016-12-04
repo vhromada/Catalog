@@ -8,8 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.domain.Episode;
-import cz.vhromada.catalog.entity.EpisodeTO;
+import cz.vhromada.catalog.entity.Episode;
 
 /**
  * A class represents utility class for episodes.
@@ -60,8 +59,8 @@ public final class EpisodeUtils {
      * @param id ID
      * @return episode
      */
-    public static Episode newEpisode(final Integer id) {
-        final Episode episode = new Episode();
+    public static cz.vhromada.catalog.domain.Episode newEpisode(final Integer id) {
+        final cz.vhromada.catalog.domain.Episode episode = new cz.vhromada.catalog.domain.Episode();
         updateEpisode(episode);
         if (id != null) {
             episode.setId(id);
@@ -76,7 +75,7 @@ public final class EpisodeUtils {
      *
      * @param episode episode
      */
-    public static void updateEpisode(final Episode episode) {
+    public static void updateEpisode(final cz.vhromada.catalog.domain.Episode episode) {
         episode.setNumber(2);
         episode.setName("Name");
         episode.setLength(5);
@@ -84,13 +83,13 @@ public final class EpisodeUtils {
     }
 
     /**
-     * Returns TO for episode.
+     * Returns episode.
      *
      * @param id ID
-     * @return TO for episode
+     * @return episode
      */
-    public static EpisodeTO newEpisodeTO(final Integer id) {
-        final EpisodeTO episode = new EpisodeTO();
+    public static Episode newEpisodeTO(final Integer id) {
+        final Episode episode = new Episode();
         updateEpisodeTO(episode);
         if (id != null) {
             episode.setId(id);
@@ -101,11 +100,11 @@ public final class EpisodeUtils {
     }
 
     /**
-     * Updates TO for episode fields.
+     * Updates episode fields.
      *
-     * @param episode TO for episode
+     * @param episode episode
      */
-    public static void updateEpisodeTO(final EpisodeTO episode) {
+    public static void updateEpisodeTO(final Episode episode) {
         episode.setNumber(2);
         episode.setName("Name");
         episode.setLength(5);
@@ -119,8 +118,8 @@ public final class EpisodeUtils {
      * @param season season
      * @return episodes for show and season
      */
-    public static List<Episode> getEpisodes(final int show, final int season) {
-        final List<Episode> episodes = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Episode> getEpisodes(final int show, final int season) {
+        final List<cz.vhromada.catalog.domain.Episode> episodes = new ArrayList<>();
         for (int i = 1; i <= EPISODES_PER_SEASON_COUNT; i++) {
             episodes.add(getEpisode(show, season, i));
         }
@@ -134,7 +133,7 @@ public final class EpisodeUtils {
      * @param index index
      * @return episode for index
      */
-    public static Episode getEpisode(final int index) {
+    public static cz.vhromada.catalog.domain.Episode getEpisode(final int index) {
         final int showNumber = (index - 1) / EPISODES_PER_SHOW_COUNT + 1;
         final int seasonNumber = (index - 1) % EPISODES_PER_SHOW_COUNT / EPISODES_PER_SEASON_COUNT + 1;
         final int episodeNumber = (index - 1) % EPISODES_PER_SEASON_COUNT + 1;
@@ -150,8 +149,8 @@ public final class EpisodeUtils {
      * @param episodeIndex episode index
      * @return episode for indexes
      */
-    public static Episode getEpisode(final int showIndex, final int seasonIndex, final int episodeIndex) {
-        final Episode episode = new Episode();
+    public static cz.vhromada.catalog.domain.Episode getEpisode(final int showIndex, final int seasonIndex, final int episodeIndex) {
+        final cz.vhromada.catalog.domain.Episode episode = new cz.vhromada.catalog.domain.Episode();
         episode.setId((showIndex - 1) * EPISODES_PER_SHOW_COUNT + (seasonIndex - 1) * EPISODES_PER_SEASON_COUNT + episodeIndex);
         episode.setNumber(episodeIndex);
         episode.setName("Show " + showIndex + " Season " + seasonIndex + " Episode " + episodeIndex);
@@ -169,8 +168,8 @@ public final class EpisodeUtils {
      * @param id            episode ID
      * @return episode
      */
-    public static Episode getEpisode(final EntityManager entityManager, final int id) {
-        return entityManager.find(Episode.class, id);
+    public static cz.vhromada.catalog.domain.Episode getEpisode(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Episode.class, id);
     }
 
     /**
@@ -189,7 +188,8 @@ public final class EpisodeUtils {
      * @param expected expected episodes
      * @param actual   actual episodes
      */
-    public static void assertEpisodesDeepEquals(final List<Episode> expected, final List<Episode> actual) {
+    public static void assertEpisodesDeepEquals(final List<cz.vhromada.catalog.domain.Episode> expected,
+            final List<cz.vhromada.catalog.domain.Episode> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -205,7 +205,7 @@ public final class EpisodeUtils {
      * @param expected expected episode
      * @param actual   actual episode
      */
-    public static void assertEpisodeDeepEquals(final Episode expected, final Episode actual) {
+    public static void assertEpisodeDeepEquals(final cz.vhromada.catalog.domain.Episode expected, final cz.vhromada.catalog.domain.Episode actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getNumber(), actual.getNumber());
@@ -218,10 +218,10 @@ public final class EpisodeUtils {
     /**
      * Asserts episodes deep equals.
      *
-     * @param expected expected list of TO for episode
+     * @param expected expected list of episode
      * @param actual   actual episodes
      */
-    public static void assertEpisodeListDeepEquals(final List<EpisodeTO> expected, final List<Episode> actual) {
+    public static void assertEpisodeListDeepEquals(final List<Episode> expected, final List<cz.vhromada.catalog.domain.Episode> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -234,10 +234,10 @@ public final class EpisodeUtils {
     /**
      * Asserts episode deep equals.
      *
-     * @param expected expected TO for episode
+     * @param expected expected episode
      * @param actual   actual episode
      */
-    public static void assertEpisodeDeepEquals(final EpisodeTO expected, final Episode actual) {
+    public static void assertEpisodeDeepEquals(final Episode expected, final cz.vhromada.catalog.domain.Episode actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getNumber(), actual.getNumber());

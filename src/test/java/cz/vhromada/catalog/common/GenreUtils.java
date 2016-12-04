@@ -8,8 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.domain.Genre;
-import cz.vhromada.catalog.entity.GenreTO;
+import cz.vhromada.catalog.entity.Genre;
 
 /**
  * A class represents utility class for genres.
@@ -45,8 +44,8 @@ public final class GenreUtils {
      * @param id ID
      * @return genre
      */
-    public static Genre newGenre(final Integer id) {
-        final Genre genre = new Genre();
+    public static cz.vhromada.catalog.domain.Genre newGenre(final Integer id) {
+        final cz.vhromada.catalog.domain.Genre genre = new cz.vhromada.catalog.domain.Genre();
         updateGenre(genre);
         if (id != null) {
             genre.setId(id);
@@ -61,18 +60,18 @@ public final class GenreUtils {
      *
      * @param genre genre
      */
-    public static void updateGenre(final Genre genre) {
+    public static void updateGenre(final cz.vhromada.catalog.domain.Genre genre) {
         genre.setName("Name");
     }
 
     /**
-     * Returns TO for genre.
+     * Returns genre.
      *
      * @param id ID
-     * @return TO for genre
+     * @return genre
      */
-    public static GenreTO newGenreTO(final Integer id) {
-        final GenreTO genre = new GenreTO();
+    public static Genre newGenreTO(final Integer id) {
+        final Genre genre = new Genre();
         updateGenreTO(genre);
         if (id != null) {
             genre.setId(id);
@@ -83,11 +82,11 @@ public final class GenreUtils {
     }
 
     /**
-     * Updates TO for genre fields.
+     * Updates genre fields.
      *
-     * @param genre TO for genre
+     * @param genre genre
      */
-    public static void updateGenreTO(final GenreTO genre) {
+    public static void updateGenreTO(final Genre genre) {
         genre.setName("Name");
     }
 
@@ -96,8 +95,8 @@ public final class GenreUtils {
      *
      * @return genres
      */
-    public static List<Genre> getGenres() {
-        final List<Genre> genres = new ArrayList<>();
+    public static List<cz.vhromada.catalog.domain.Genre> getGenres() {
+        final List<cz.vhromada.catalog.domain.Genre> genres = new ArrayList<>();
         for (int i = 0; i < GENRES_COUNT; i++) {
             genres.add(getGenre(i + 1));
         }
@@ -111,8 +110,8 @@ public final class GenreUtils {
      * @param index index
      * @return genre for index
      */
-    public static Genre getGenre(final int index) {
-        final Genre genre = new Genre();
+    public static cz.vhromada.catalog.domain.Genre getGenre(final int index) {
+        final cz.vhromada.catalog.domain.Genre genre = new cz.vhromada.catalog.domain.Genre();
         genre.setId(index);
         genre.setName("Genre " + index + " name");
         genre.setPosition(index - 1);
@@ -121,13 +120,13 @@ public final class GenreUtils {
     }
 
     /**
-     * Returns TO for genre for index.
+     * Returns genre for index.
      *
      * @param index index
-     * @return TO for genre for index
+     * @return genre for index
      */
-    public static GenreTO getGenreTO(final int index) {
-        final GenreTO genre = new GenreTO();
+    public static Genre getGenreTO(final int index) {
+        final Genre genre = new Genre();
         genre.setId(index);
         genre.setName("Genre " + index + " name");
         genre.setPosition(index - 1);
@@ -142,8 +141,8 @@ public final class GenreUtils {
      * @param id            genre ID
      * @return genre
      */
-    public static Genre getGenre(final EntityManager entityManager, final int id) {
-        return entityManager.find(Genre.class, id);
+    public static cz.vhromada.catalog.domain.Genre getGenre(final EntityManager entityManager, final int id) {
+        return entityManager.find(cz.vhromada.catalog.domain.Genre.class, id);
     }
 
     /**
@@ -153,8 +152,8 @@ public final class GenreUtils {
      * @param id            genre ID
      * @return genre with updated fields
      */
-    public static Genre updateGenre(final EntityManager entityManager, final int id) {
-        final Genre genre = getGenre(entityManager, id);
+    public static cz.vhromada.catalog.domain.Genre updateGenre(final EntityManager entityManager, final int id) {
+        final cz.vhromada.catalog.domain.Genre genre = getGenre(entityManager, id);
         updateGenre(genre);
         genre.setPosition(POSITION);
 
@@ -177,7 +176,7 @@ public final class GenreUtils {
      * @param expected expected genres
      * @param actual   actual genres
      */
-    public static void assertGenresDeepEquals(final List<Genre> expected, final List<Genre> actual) {
+    public static void assertGenresDeepEquals(final List<cz.vhromada.catalog.domain.Genre> expected, final List<cz.vhromada.catalog.domain.Genre> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -193,7 +192,7 @@ public final class GenreUtils {
      * @param expected expected genre
      * @param actual   actual genre
      */
-    public static void assertGenreDeepEquals(final Genre expected, final Genre actual) {
+    public static void assertGenreDeepEquals(final cz.vhromada.catalog.domain.Genre expected, final cz.vhromada.catalog.domain.Genre actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
@@ -203,10 +202,10 @@ public final class GenreUtils {
     /**
      * Asserts genres deep equals.
      *
-     * @param expected expected list of TO for genre
+     * @param expected expected list of genre
      * @param actual   actual genres
      */
-    public static void assertGenreListDeepEquals(final List<GenreTO> expected, final List<Genre> actual) {
+    public static void assertGenreListDeepEquals(final List<Genre> expected, final List<cz.vhromada.catalog.domain.Genre> actual) {
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
@@ -219,10 +218,10 @@ public final class GenreUtils {
     /**
      * Asserts genre deep equals.
      *
-     * @param expected expected TO for genre
+     * @param expected expected genre
      * @param actual   actual genre
      */
-    public static void assertGenreDeepEquals(final GenreTO expected, final Genre actual) {
+    public static void assertGenreDeepEquals(final Genre expected, final cz.vhromada.catalog.domain.Genre actual) {
         assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());

@@ -3,7 +3,7 @@ package cz.vhromada.catalog.validator.impl;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Medium;
 import cz.vhromada.catalog.entity.Movie;
-import cz.vhromada.catalog.util.Constants;
+import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.catalog.validator.MovieValidator;
 

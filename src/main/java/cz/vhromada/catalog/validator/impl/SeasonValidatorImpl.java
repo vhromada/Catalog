@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.entity.Season;
-import cz.vhromada.catalog.util.Constants;
+import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.validator.SeasonValidator;
 
 import org.springframework.stereotype.Component;

@@ -6,7 +6,7 @@ import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

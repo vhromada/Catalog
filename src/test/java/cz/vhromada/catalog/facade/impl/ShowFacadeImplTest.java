@@ -24,7 +24,7 @@ import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;

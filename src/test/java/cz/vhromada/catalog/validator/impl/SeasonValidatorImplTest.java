@@ -4,7 +4,7 @@ import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.entity.Season;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 

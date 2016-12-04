@@ -13,7 +13,7 @@ import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.common.MediumUtils;
 import cz.vhromada.catalog.common.MovieUtils;
 import cz.vhromada.catalog.domain.Movie;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

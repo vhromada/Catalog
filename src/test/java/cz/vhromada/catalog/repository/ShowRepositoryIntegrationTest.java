@@ -14,7 +14,7 @@ import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,7 +5,7 @@ import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.common.TestConstants;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Show;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.validators.exceptions.ValidationException;

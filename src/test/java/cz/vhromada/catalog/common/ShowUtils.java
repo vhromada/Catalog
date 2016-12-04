@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.entity.Show;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 
 /**
  * A class represents utility class for shows.

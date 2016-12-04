@@ -2,7 +2,7 @@ package cz.vhromada.catalog.common;
 
 import java.lang.reflect.Field;
 
-import cz.vhromada.catalog.util.Constants;
+import cz.vhromada.catalog.utils.Constants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

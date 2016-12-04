@@ -21,7 +21,7 @@ import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.util.CollectionUtils;
+import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.MusicValidator;
 import cz.vhromada.catalog.validator.SongValidator;
 import cz.vhromada.converters.Converter;

@@ -48,6 +48,6 @@ public interface GameValidator {
      * @throws IllegalArgumentException if game is null
      *                                  or ID is null
      */
-    void validateGameWith(Game game);
+    void validateGameWithId(Game game);
 
 }

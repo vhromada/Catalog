@@ -37,7 +37,7 @@ public interface ProgramFacade {
      *
      * @param program program
      * @throws IllegalArgumentException                              if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
+     *                                                               or ID isn't null
      *                                                               or name is null
      *                                                               or name is empty string
      *                                                               or URL to english Wikipedia page about program is null
@@ -53,7 +53,7 @@ public interface ProgramFacade {
      *
      * @param program new value of program
      * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or URL to english Wikipedia page about program is null
@@ -61,7 +61,7 @@ public interface ProgramFacade {
      *                                                                   or count of media isn't positive number
      *                                                                   or other data is null
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     *                                                                   or program doesn't exist in data storage
      */
     void update(Program program);
 
@@ -70,8 +70,8 @@ public interface ProgramFacade {
      *
      * @param program program
      * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or program doesn't exist in data storage
      */
     void remove(Program program);
 
@@ -80,8 +80,8 @@ public interface ProgramFacade {
      *
      * @param program program
      * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or program doesn't exist in data storage
      */
     void duplicate(Program program);
 
@@ -90,9 +90,9 @@ public interface ProgramFacade {
      *
      * @param program program
      * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or program can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     *                                                                   or program doesn't exist in data storage
      */
     void moveUp(Program program);
 
@@ -101,9 +101,9 @@ public interface ProgramFacade {
      *
      * @param program program
      * @throws IllegalArgumentException                                  if program is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or program can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if program doesn't exist in data storage
+     *                                                                   or program doesn't exist in data storage
      */
     void moveDown(Program program);
 

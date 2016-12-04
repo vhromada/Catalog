@@ -38,7 +38,7 @@ public interface MovieFacade {
      *
      * @param movie movie
      * @throws IllegalArgumentException                                  if movie is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID isn't null
+     *                                                                   or ID isn't null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
      *                                                                   or original name is null
@@ -61,7 +61,7 @@ public interface MovieFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     *                                                                   or genre doesn't exist in data storage
      */
     void add(Movie movie);
 
@@ -70,7 +70,7 @@ public interface MovieFacade {
      *
      * @param movie new value of movie
      * @throws IllegalArgumentException                                  if movie is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
      *                                                                   or original name is null
@@ -93,7 +93,7 @@ public interface MovieFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
+     *                                                                   or movie doesn't exist in data storage
      *                                                                   or genre doesn't exist in data storage
      */
     void update(Movie movie);
@@ -103,8 +103,8 @@ public interface MovieFacade {
      *
      * @param movie movie
      * @throws IllegalArgumentException                                  if movie is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or movie doesn't exist in data storage
      */
     void remove(Movie movie);
 
@@ -113,8 +113,8 @@ public interface MovieFacade {
      *
      * @param movie movie
      * @throws IllegalArgumentException                                  if movie is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or movie doesn't exist in data storage
      */
     void duplicate(Movie movie);
 
@@ -123,9 +123,9 @@ public interface MovieFacade {
      *
      * @param movie movie
      * @throws IllegalArgumentException                                  if movie is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or movie can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
+     *                                                                   or movie doesn't exist in data storage
      */
     void moveUp(Movie movie);
 
@@ -134,9 +134,9 @@ public interface MovieFacade {
      *
      * @param movie movie
      * @throws IllegalArgumentException                                  if movie is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or movie can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if movie doesn't exist in data storage
+     *                                                                   or movie doesn't exist in data storage
      */
     void moveDown(Movie movie);
 

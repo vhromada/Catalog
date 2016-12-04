@@ -28,14 +28,14 @@ public interface EpisodeFacade {
      * @param episode episode
      * @throws IllegalArgumentException                                  if season is null
      *                                                                   or episode is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if season ID is null
+     *                                                                   or season ID is null
      *                                                                   or episode ID isn't null
      *                                                                   or number of episode isn't positive number
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or length of episode is negative value
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException season doesn't exist in data storage
+     *                                                                   or season doesn't exist in data storage
      */
     void add(Season season, Episode episode);
 
@@ -44,13 +44,13 @@ public interface EpisodeFacade {
      *
      * @param episode new value of episode
      * @throws IllegalArgumentException                                  if episode is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or number of episode isn't positive number
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or length of episode is negative value
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
+     *                                                                   or episode doesn't exist in data storage
      */
     void update(Episode episode);
 
@@ -59,8 +59,8 @@ public interface EpisodeFacade {
      *
      * @param episode episode
      * @throws IllegalArgumentException                                  if episode is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or episode doesn't exist in data storage
      */
     void remove(Episode episode);
 
@@ -69,8 +69,8 @@ public interface EpisodeFacade {
      *
      * @param episode episode
      * @throws IllegalArgumentException                                  if episode is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or episode doesn't exist in data storage
      */
     void duplicate(Episode episode);
 
@@ -79,9 +79,9 @@ public interface EpisodeFacade {
      *
      * @param episode episode
      * @throws IllegalArgumentException                                  if episode is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or episode can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
+     *                                                                   or episode doesn't exist in data storage
      */
     void moveUp(Episode episode);
 
@@ -90,9 +90,9 @@ public interface EpisodeFacade {
      *
      * @param episode episode
      * @throws IllegalArgumentException                                  if episode is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or episode can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if episode doesn't exist in data storage
+     *                                                                   or episode doesn't exist in data storage
      */
     void moveDown(Episode episode);
 
@@ -102,8 +102,8 @@ public interface EpisodeFacade {
      * @param season season
      * @return episodes for specified season
      * @throws IllegalArgumentException                                  if season is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if season doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or season doesn't exist in data storage
      */
     List<Episode> findEpisodesBySeason(Season season);
 

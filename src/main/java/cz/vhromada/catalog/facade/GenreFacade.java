@@ -37,7 +37,7 @@ public interface GenreFacade {
      *
      * @param genre genre
      * @throws IllegalArgumentException                              if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
+     *                                                               or ID isn't null
      *                                                               or name is null
      *                                                               or name is empty string
      *                                                               or URL to english Wikipedia page about genre is null
@@ -49,23 +49,14 @@ public interface GenreFacade {
     void add(Genre genre);
 
     /**
-     * Adds list of genre names.
-     *
-     * @param genres list of genre names
-     * @throws IllegalArgumentException                              if list of genre names is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if list of genre names contains null value
-     */
-    void add(List<String> genres);
-
-    /**
      * Updates genre.
      *
      * @param genre new value of genre
      * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     *                                                                   or genre doesn't exist in data storage
      */
     void update(Genre genre);
 
@@ -74,8 +65,8 @@ public interface GenreFacade {
      *
      * @param genre genre
      * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or genre doesn't exist in data storage
      */
     void remove(Genre genre);
 
@@ -84,8 +75,8 @@ public interface GenreFacade {
      *
      * @param genre genre
      * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or genre doesn't exist in data storage
      */
     void duplicate(Genre genre);
 
@@ -94,9 +85,9 @@ public interface GenreFacade {
      *
      * @param genre genre
      * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or genre can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     *                                                                   or genre doesn't exist in data storage
      */
     void moveUp(Genre genre);
 
@@ -105,9 +96,9 @@ public interface GenreFacade {
      *
      * @param genre genre
      * @throws IllegalArgumentException                                  if genre is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or genre can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     *                                                                   or genre doesn't exist in data storage
      */
     void moveDown(Genre genre);
 

@@ -12,11 +12,11 @@ import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * A class represents implementation of facade for shows.
@@ -27,14 +27,19 @@ import org.springframework.stereotype.Component;
 public class ShowFacadeImpl implements ShowFacade {
 
     /**
-     * Show argument
+     * Message for not existing show
      */
-    private static final String SHOW_ARGUMENT = "show";
+    private static final String NOT_EXISTING_SHOW_MESSAGE = "Show doesn't exist.";
 
     /**
-     * Genre argument
+     * Message for not movable show
      */
-    private static final String GENRE_ARGUMENT = "genre";
+    private static final String NOT_MOVABLE_SHOW_MESSAGE = "ID isn't valid - show can't be moved.";
+
+    /**
+     * Message for not existing genre
+     */
+    private static final String NOT_EXISTING_GENRE_MESSAGE = "Genre doesn't exist.";
 
     /**
      * Service for shows
@@ -73,10 +78,10 @@ public class ShowFacadeImpl implements ShowFacade {
             final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final ShowValidator showValidator) {
-        Validators.validateArgumentNotNull(showService, "Service for shows");
-        Validators.validateArgumentNotNull(genreService, "Service for genres");
-        Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(showValidator, "Validator for show");
+        Assert.notNull(showService, "Service for shows mustn't be null.");
+        Assert.notNull(genreService, "Service for genres mustn't be null.");
+        Assert.notNull(converter, "Converter mustn't be null.");
+        Assert.notNull(showValidator, "Validator for show mustn't be null.");
 
         this.showService = showService;
         this.genreService = genreService;
@@ -99,117 +104,123 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public Show getShow(final Integer id) {
-        Validators.validateArgumentNotNull(id, "ID");
+        Assert.notNull(id, "ID mustn't be null.");
 
         return converter.convert(showService.get(id), Show.class);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void add(final Show show) {
         showValidator.validateNewShow(show);
         for (final Genre genre : show.getGenres()) {
-            Validators.validateExists(genreService.get(genre.getId()), GENRE_ARGUMENT);
+            if (genreService.get(genre.getId()) == null) {
+                throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
+            }
         }
 
-        final cz.vhromada.catalog.domain.Show showEntity = converter.convert(show, cz.vhromada.catalog.domain.Show.class);
-        showEntity.setSeasons(new ArrayList<>());
+        final cz.vhromada.catalog.domain.Show showDomain = converter.convert(show, cz.vhromada.catalog.domain.Show.class);
+        showDomain.setSeasons(new ArrayList<>());
 
-        showService.add(showEntity);
+        showService.add(showDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void update(final Show show) {
         showValidator.validateExistingShow(show);
-        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_ARGUMENT);
-        assert showEntity != null;
-        showEntity.getGenres().clear();
+        final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
+        if (showDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
+        }
+        showDomain.getGenres().clear();
         for (final Genre genre : show.getGenres()) {
-            final cz.vhromada.catalog.domain.Genre genreEntity = genreService.get(genre.getId());
-            Validators.validateExists(genreEntity, GENRE_ARGUMENT);
-            showEntity.getGenres().add(genreEntity);
+            final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
+            if (genreDomain == null) {
+                throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
+            }
+            showDomain.getGenres().add(genreDomain);
         }
 
-        showEntity.setCzechName(show.getCzechName());
-        showEntity.setOriginalName(show.getOriginalName());
-        showEntity.setCsfd(show.getCsfd());
-        showEntity.setImdbCode(show.getImdbCode());
-        showEntity.setWikiEn(show.getWikiEn());
-        showEntity.setWikiCz(show.getWikiCz());
-        showEntity.setPicture(show.getPicture());
-        showEntity.setNote(show.getNote());
-        showEntity.setPosition(show.getPosition());
+        showDomain.setCzechName(show.getCzechName());
+        showDomain.setOriginalName(show.getOriginalName());
+        showDomain.setCsfd(show.getCsfd());
+        showDomain.setImdbCode(show.getImdbCode());
+        showDomain.setWikiEn(show.getWikiEn());
+        showDomain.setWikiCz(show.getWikiCz());
+        showDomain.setPicture(show.getPicture());
+        showDomain.setNote(show.getNote());
+        showDomain.setPosition(show.getPosition());
 
-        showService.update(showEntity);
+        showService.update(showDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void remove(final Show show) {
         showValidator.validateShowWithId(show);
-        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_ARGUMENT);
+        final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
+        if (showDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
+        }
 
-        showService.remove(showEntity);
+        showService.remove(showDomain);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Show show) {
         showValidator.validateShowWithId(show);
-        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_ARGUMENT);
+        final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
+        if (showDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
+        }
 
-        showService.duplicate(showEntity);
+        showService.duplicate(showDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveUp(final Show show) {
         showValidator.validateShowWithId(show);
-        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_ARGUMENT);
+        final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
+        if (showDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Show> shows = showService.getAll();
-        Validators.validateMoveUp(shows, showEntity, SHOW_ARGUMENT);
+        if (shows.indexOf(showDomain) <= 0) {
+            throw new IllegalArgumentException(NOT_MOVABLE_SHOW_MESSAGE);
+        }
 
-        showService.moveUp(showEntity);
+        showService.moveUp(showDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveDown(final Show show) {
         showValidator.validateShowWithId(show);
-        final cz.vhromada.catalog.domain.Show showEntity = showService.get(show.getId());
-        Validators.validateExists(showEntity, SHOW_ARGUMENT);
+        final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
+        if (showDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Show> shows = showService.getAll();
-        Validators.validateMoveDown(shows, showEntity, SHOW_ARGUMENT);
+        if (shows.indexOf(showDomain) >= shows.size() - 1) {
+            throw new IllegalArgumentException(NOT_MOVABLE_SHOW_MESSAGE);
+        }
 
-        showService.moveDown(showEntity);
+        showService.moveDown(showDomain);
     }
 
     @Override

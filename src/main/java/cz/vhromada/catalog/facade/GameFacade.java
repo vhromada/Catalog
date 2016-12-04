@@ -37,7 +37,7 @@ public interface GameFacade {
      *
      * @param game game
      * @throws IllegalArgumentException                              if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
+     *                                                               or ID isn't null
      *                                                               or name is null
      *                                                               or name is empty string
      *                                                               or URL to english Wikipedia page about game is null
@@ -53,7 +53,7 @@ public interface GameFacade {
      *
      * @param game new value of game
      * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or URL to english Wikipedia page about game is null
@@ -61,7 +61,7 @@ public interface GameFacade {
      *                                                                   or count of media isn't positive number
      *                                                                   or other data is null
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     *                                                                   or game doesn't exist in data storage
      */
     void update(Game game);
 
@@ -70,8 +70,8 @@ public interface GameFacade {
      *
      * @param game game
      * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or game doesn't exist in data storage
      */
     void remove(Game game);
 
@@ -80,8 +80,8 @@ public interface GameFacade {
      *
      * @param game game
      * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or game doesn't exist in data storage
      */
     void duplicate(Game game);
 
@@ -90,9 +90,9 @@ public interface GameFacade {
      *
      * @param game game
      * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or game can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     *                                                                   or game doesn't exist in data storage
      */
     void moveUp(Game game);
 
@@ -101,9 +101,9 @@ public interface GameFacade {
      *
      * @param game game
      * @throws IllegalArgumentException                                  if game is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or game can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if game doesn't exist in data storage
+     *                                                                   or game doesn't exist in data storage
      */
     void moveDown(Game game);
 

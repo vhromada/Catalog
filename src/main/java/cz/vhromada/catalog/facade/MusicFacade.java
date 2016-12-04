@@ -38,7 +38,7 @@ public interface MusicFacade {
      *
      * @param music music
      * @throws IllegalArgumentException                              if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if ID isn't null
+     *                                                               or ID isn't null
      *                                                               or name is null
      *                                                               or name is empty string
      *                                                               or URL to english Wikipedia page about music is null
@@ -53,14 +53,14 @@ public interface MusicFacade {
      *
      * @param music new value of music
      * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or URL to english Wikipedia page about music is null
      *                                                                   or URL to czech Wikipedia page about music is null
      *                                                                   or count of media isn't positive number
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     *                                                                   or music doesn't exist in data storage
      */
     void update(Music music);
 
@@ -69,8 +69,8 @@ public interface MusicFacade {
      *
      * @param music music
      * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or music doesn't exist in data storage
      */
     void remove(Music music);
 
@@ -79,8 +79,8 @@ public interface MusicFacade {
      *
      * @param music music
      * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or music doesn't exist in data storage
      */
     void duplicate(Music music);
 
@@ -89,9 +89,9 @@ public interface MusicFacade {
      *
      * @param music music
      * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or music can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     *                                                                   or music doesn't exist in data storage
      */
     void moveUp(Music music);
 
@@ -100,9 +100,9 @@ public interface MusicFacade {
      *
      * @param music music
      * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or music can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     *                                                                   or music doesn't exist in data storage
      */
     void moveDown(Music music);
 

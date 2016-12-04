@@ -10,11 +10,11 @@ import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.MusicValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * A class represents implementation of service for music.
@@ -25,9 +25,14 @@ import org.springframework.stereotype.Component;
 public class MusicFacadeImpl implements MusicFacade {
 
     /**
-     * Music argument
+     * Message for not existing music
      */
-    private static final String MUSIC_ARGUMENT = "music";
+    private static final String NOT_EXISTING_MUSIC_MESSAGE = "Music doesn't exist.";
+
+    /**
+     * Message for not movable music
+     */
+    private static final String NOT_MOVABLE_MUSIC_MESSAGE = "ID isn't valid - music can't be moved.";
 
     /**
      * Service for music
@@ -58,9 +63,9 @@ public class MusicFacadeImpl implements MusicFacade {
     public MusicFacadeImpl(@Qualifier("musicService") final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final MusicValidator musicValidator) {
-        Validators.validateArgumentNotNull(musicService, "Service for music");
-        Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(musicValidator, "Validator for music");
+        Assert.notNull(musicService, "Service for music mustn't be null.");
+        Assert.notNull(converter, "Converter mustn't be null.");
+        Assert.notNull(musicValidator, "Validator for music mustn't be null.");
 
         this.musicService = musicService;
         this.converter = converter;
@@ -82,101 +87,107 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public Music getMusic(final Integer id) {
-        Validators.validateArgumentNotNull(id, "ID");
+        Assert.notNull(id, "ID mustn't be null.");
 
         return converter.convert(musicService.get(id), Music.class);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void add(final Music music) {
         musicValidator.validateNewMusic(music);
 
-        final cz.vhromada.catalog.domain.Music musicEntity = converter.convert(music, cz.vhromada.catalog.domain.Music.class);
-        musicEntity.setSongs(new ArrayList<>());
+        final cz.vhromada.catalog.domain.Music musicDomain = converter.convert(music, cz.vhromada.catalog.domain.Music.class);
+        musicDomain.setSongs(new ArrayList<>());
 
-        musicService.add(musicEntity);
+        musicService.add(musicDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void update(final Music music) {
         musicValidator.validateExistingMusic(music);
-        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
-        assert musicEntity != null;
+        final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
+        if (musicDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
+        }
 
-        musicEntity.setName(music.getName());
-        musicEntity.setWikiEn(music.getWikiEn());
-        musicEntity.setWikiCz(music.getWikiCz());
-        musicEntity.setMediaCount(music.getMediaCount());
-        musicEntity.setNote(music.getNote());
-        musicEntity.setPosition(music.getPosition());
+        musicDomain.setName(music.getName());
+        musicDomain.setWikiEn(music.getWikiEn());
+        musicDomain.setWikiCz(music.getWikiCz());
+        musicDomain.setMediaCount(music.getMediaCount());
+        musicDomain.setNote(music.getNote());
+        musicDomain.setPosition(music.getPosition());
 
-        musicService.update(musicEntity);
+        musicService.update(musicDomain);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void remove(final Music music) {
         musicValidator.validateMusicWithId(music);
-        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
+        if (musicDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
+        }
 
-        musicService.remove(musicEntity);
+        musicService.remove(musicDomain);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void duplicate(final Music music) {
         musicValidator.validateMusicWithId(music);
-        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
+        if (musicDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
+        }
 
-        musicService.duplicate(musicEntity);
+        musicService.duplicate(musicDomain);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void moveUp(final Music music) {
         musicValidator.validateMusicWithId(music);
-        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
+        if (musicDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Music> musicList = musicService.getAll();
-        Validators.validateMoveUp(musicList, musicEntity, MUSIC_ARGUMENT);
+        if (musicList.indexOf(musicDomain) <= 0) {
+            throw new IllegalArgumentException(NOT_MOVABLE_MUSIC_MESSAGE);
+        }
 
-        musicService.moveUp(musicEntity);
+        musicService.moveUp(musicDomain);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void moveDown(final Music music) {
         musicValidator.validateMusicWithId(music);
-        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
+        if (musicDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Music> musicList = musicService.getAll();
-        Validators.validateMoveDown(musicList, musicEntity, MUSIC_ARGUMENT);
+        if (musicList.indexOf(musicDomain) >= musicList.size() - 1) {
+            throw new IllegalArgumentException(NOT_MOVABLE_MUSIC_MESSAGE);
+        }
 
-        musicService.moveDown(musicEntity);
+        musicService.moveDown(musicDomain);
     }
 
     @Override

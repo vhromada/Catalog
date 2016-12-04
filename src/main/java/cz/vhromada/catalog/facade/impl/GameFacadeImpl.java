@@ -7,11 +7,11 @@ import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.GameValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * A class represents implementation of facade for games.
@@ -22,9 +22,14 @@ import org.springframework.stereotype.Component;
 public class GameFacadeImpl implements GameFacade {
 
     /**
-     * Game argument
+     * Message for not existing game
      */
-    private static final String GAME_ARGUMENT = "game";
+    private static final String NOT_EXISTING_GAME_MESSAGE = "Game doesn't exist.";
+
+    /**
+     * Message for not movable game
+     */
+    private static final String NOT_MOVABLE_GAME_MESSAGE = "ID isn't valid - game can't be moved.";
 
     /**
      * Service for games
@@ -55,9 +60,9 @@ public class GameFacadeImpl implements GameFacade {
     public GameFacadeImpl(@Qualifier("gameService") final CatalogService<cz.vhromada.catalog.domain.Game> gameService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final GameValidator gameValidator) {
-        Validators.validateArgumentNotNull(gameService, "Service for games");
-        Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(gameValidator, "Validator for game");
+        Assert.notNull(gameService, "Service for games mustn't be null.");
+        Assert.notNull(converter, "Converter mustn't be null.");
+        Assert.notNull(gameValidator, "Validator for game mustn't be null.");
 
         this.gameService = gameService;
         this.converter = converter;
@@ -79,14 +84,13 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public Game getGame(final Integer id) {
-        Validators.validateArgumentNotNull(id, "ID");
+        Assert.notNull(id, "ID mustn't be null.");
 
         return converter.convert(gameService.get(id), Game.class);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void add(final Game game) {
@@ -97,75 +101,79 @@ public class GameFacadeImpl implements GameFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void update(final Game game) {
         gameValidator.validateExistingGame(game);
-        Validators.validateExists(gameService.get(game.getId()), GAME_ARGUMENT);
+        if (gameService.get(game.getId()) == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
+        }
 
         gameService.update(converter.convert(game, cz.vhromada.catalog.domain.Game.class));
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void remove(final Game game) {
-        gameValidator.validateGameWith(game);
-        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_ARGUMENT);
+        gameValidator.validateGameWithId(game);
+        final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
+        if (gameDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
+        }
 
-        gameService.remove(gameEntity);
+        gameService.remove(gameDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void duplicate(final Game game) {
-        gameValidator.validateGameWith(game);
-        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_ARGUMENT);
+        gameValidator.validateGameWithId(game);
+        final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
+        if (gameDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
+        }
 
-        gameService.duplicate(gameEntity);
+        gameService.duplicate(gameDomain);
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc
      */
     @Override
     public void moveUp(final Game game) {
-        gameValidator.validateGameWith(game);
-        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_ARGUMENT);
+        gameValidator.validateGameWithId(game);
+        final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
+        if (gameDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Game> games = gameService.getAll();
-        Validators.validateMoveUp(games, gameEntity, GAME_ARGUMENT);
+        if (games.indexOf(gameDomain) <= 0) {
+            throw new IllegalArgumentException(NOT_MOVABLE_GAME_MESSAGE);
+        }
 
-        gameService.moveUp(gameEntity);
+        gameService.moveUp(gameDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveDown(final Game game) {
-        gameValidator.validateGameWith(game);
-        final cz.vhromada.catalog.domain.Game gameEntity = gameService.get(game.getId());
-        Validators.validateExists(gameEntity, GAME_ARGUMENT);
+        gameValidator.validateGameWithId(game);
+        final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
+        if (gameDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Game> games = gameService.getAll();
-        Validators.validateMoveDown(games, gameEntity, GAME_ARGUMENT);
+        if (games.indexOf(gameDomain) >= games.size() - 1) {
+            throw new IllegalArgumentException(NOT_MOVABLE_GAME_MESSAGE);
+        }
 
-        gameService.moveDown(gameEntity);
+        gameService.moveDown(gameDomain);
     }
 
     @Override

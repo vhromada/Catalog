@@ -28,7 +28,6 @@ import cz.vhromada.validators.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -211,39 +210,6 @@ public class GenreFacadeImplTest {
         doThrow(ValidationException.class).when(genreValidator).validateNewGenre(any(Genre.class));
 
         genreFacade.add(GenreUtils.newGenreTO(Integer.MAX_VALUE));
-    }
-
-    /**
-     * Test method for {@link GenreFacade#add(List)}.
-     */
-    @Test
-    public void testAddList() {
-        final cz.vhromada.catalog.domain.Genre genre = GenreUtils.newGenre(null);
-        final ArgumentCaptor<cz.vhromada.catalog.domain.Genre> genreArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Genre.class);
-
-        genreFacade.add(CollectionUtils.newList(genre.getName()));
-
-        verify(genreService).add(genreArgumentCaptor.capture());
-        verifyNoMoreInteractions(genreService);
-
-        final cz.vhromada.catalog.domain.Genre addedGenre = genreArgumentCaptor.getValue();
-        GenreUtils.assertGenreDeepEquals(genre, addedGenre);
-    }
-
-    /**
-     * Test method for {@link GenreFacade#add(List)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddList_NullArgument() {
-        genreFacade.add((List<String>) null);
-    }
-
-    /**
-     * Test method for {@link GenreFacade#add(List)} with bad argument.
-     */
-    @Test(expected = ValidationException.class)
-    public void testAddListWithBadArgument() {
-        genreFacade.add(CollectionUtils.newList("Genre", null));
     }
 
     /**

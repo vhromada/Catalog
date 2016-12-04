@@ -13,11 +13,11 @@ import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.catalog.validator.MusicValidator;
 import cz.vhromada.catalog.validator.SongValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * A class represents implementation of service for songs.
@@ -28,14 +28,19 @@ import org.springframework.stereotype.Component;
 public class SongFacadeImpl implements SongFacade {
 
     /**
-     * Music argument
+     * Message for not existing song
      */
-    private static final String MUSIC_ARGUMENT = "music";
+    private static final String NOT_EXISTING_SONG_MESSAGE = "Song doesn't exist.";
 
     /**
-     * Song argument
+     * Message for not movable song
      */
-    private static final String SONG_ARGUMENT = "song";
+    private static final String NOT_MOVABLE_SONG_MESSAGE = "ID isn't valid - song can't be moved.";
+
+    /**
+     * Message for not existing music
+     */
+    private static final String NOT_EXISTING_MUSIC_MESSAGE = "Music doesn't exist.";
 
     /**
      * Service for music
@@ -74,10 +79,10 @@ public class SongFacadeImpl implements SongFacade {
             @Qualifier("catalogDozerConverter") final Converter converter,
             final MusicValidator musicValidator,
             final SongValidator songValidator) {
-        Validators.validateArgumentNotNull(musicService, "Service for music");
-        Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(musicValidator, "Validator for music");
-        Validators.validateArgumentNotNull(songValidator, "Validator for song");
+        Assert.notNull(musicService, "Service for music mustn't be null.");
+        Assert.notNull(converter, "Converter mustn't be null.");
+        Assert.notNull(musicValidator, "Validator for music mustn't be null.");
+        Assert.notNull(songValidator, "Validator for song mustn't be null.");
 
         this.musicService = musicService;
         this.converter = converter;
@@ -90,41 +95,41 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public Song getSong(final Integer id) {
-        Validators.validateArgumentNotNull(id, "ID");
+        Assert.notNull(id, "ID mustn't be null.");
 
-        return converter.convert(getSongEntity(id), Song.class);
+        return converter.convert(getSongDomain(id), Song.class);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void add(final Music music, final Song song) {
         musicValidator.validateMusicWithId(music);
         songValidator.validateNewSong(song);
-        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
+        if (musicDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
+        }
 
-        final cz.vhromada.catalog.domain.Song songEntity = converter.convert(song, cz.vhromada.catalog.domain.Song.class);
-        songEntity.setPosition(Integer.MAX_VALUE);
-        musicEntity.getSongs().add(songEntity);
+        final cz.vhromada.catalog.domain.Song songDomain = converter.convert(song, cz.vhromada.catalog.domain.Song.class);
+        songDomain.setPosition(Integer.MAX_VALUE);
+        musicDomain.getSongs().add(songDomain);
 
-        musicService.update(musicEntity);
+        musicService.update(musicDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void update(final Song song) {
         songValidator.validateExistingSong(song);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
-        final cz.vhromada.catalog.domain.Song songEntity = getSong(song.getId(), music);
-        Validators.validateExists(songEntity, SONG_ARGUMENT);
+        final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
+        if (songDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SONG_MESSAGE);
+        }
 
         updateSong(music, converter.convert(song, cz.vhromada.catalog.domain.Song.class));
 
@@ -133,16 +138,15 @@ public class SongFacadeImpl implements SongFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void remove(final Song song) {
         songValidator.validateSongWithId(song);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
-        final cz.vhromada.catalog.domain.Song songEntity = getSong(song.getId(), music);
-        Validators.validateExists(songEntity, SONG_ARGUMENT);
-        assert music != null;
+        final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
+        if (songDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SONG_MESSAGE);
+        }
 
         final List<cz.vhromada.catalog.domain.Song> songs = music.getSongs().stream().filter(songValue -> !songValue.getId().equals(song.getId()))
                 .collect(Collectors.toList());
@@ -153,18 +157,17 @@ public class SongFacadeImpl implements SongFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void duplicate(final Song song) {
         songValidator.validateSongWithId(song);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
-        final cz.vhromada.catalog.domain.Song songEntity = getSong(song.getId(), music);
-        Validators.validateExists(songEntity, SONG_ARGUMENT);
-        assert music != null;
+        final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
+        if (songDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SONG_MESSAGE);
+        }
 
-        final cz.vhromada.catalog.domain.Song newSong = CatalogUtils.duplicateSong(songEntity);
+        final cz.vhromada.catalog.domain.Song newSong = CatalogUtils.duplicateSong(songDomain);
         music.getSongs().add(newSong);
 
         musicService.update(music);
@@ -172,8 +175,6 @@ public class SongFacadeImpl implements SongFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveUp(final Song song) {
@@ -182,8 +183,6 @@ public class SongFacadeImpl implements SongFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveDown(final Song song) {
@@ -192,16 +191,16 @@ public class SongFacadeImpl implements SongFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public List<Song> findSongsByMusic(final Music music) {
         musicValidator.validateMusicWithId(music);
-        final cz.vhromada.catalog.domain.Music musicEntity = musicService.get(music.getId());
-        Validators.validateExists(musicEntity, MUSIC_ARGUMENT);
+        final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
+        if (musicDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
+        }
 
-        return CollectionUtils.getSortedData(converter.convertCollection(musicEntity.getSongs(), Song.class));
+        return CollectionUtils.getSortedData(converter.convertCollection(musicDomain.getSongs(), Song.class));
     }
 
     /**
@@ -233,11 +232,11 @@ public class SongFacadeImpl implements SongFacade {
      */
     private static void updateSong(final cz.vhromada.catalog.domain.Music music, final cz.vhromada.catalog.domain.Song song) {
         final List<cz.vhromada.catalog.domain.Song> songs = new ArrayList<>();
-        for (final cz.vhromada.catalog.domain.Song songEntity : music.getSongs()) {
-            if (songEntity.equals(song)) {
+        for (final cz.vhromada.catalog.domain.Song songDomain : music.getSongs()) {
+            if (songDomain.equals(song)) {
                 songs.add(song);
             } else {
-                songs.add(songEntity);
+                songs.add(songDomain);
             }
         }
         music.setSongs(songs);
@@ -249,7 +248,7 @@ public class SongFacadeImpl implements SongFacade {
      * @param id ID
      * @return song with ID
      */
-    private cz.vhromada.catalog.domain.Song getSongEntity(final Integer id) {
+    private cz.vhromada.catalog.domain.Song getSongDomain(final Integer id) {
         final List<cz.vhromada.catalog.domain.Music> musicList = musicService.getAll();
         for (final cz.vhromada.catalog.domain.Music music : musicList) {
             for (final cz.vhromada.catalog.domain.Song song : music.getSongs()) {
@@ -270,8 +269,8 @@ public class SongFacadeImpl implements SongFacade {
      */
     private cz.vhromada.catalog.domain.Music getMusic(final Song song) {
         for (final cz.vhromada.catalog.domain.Music music : musicService.getAll()) {
-            for (final cz.vhromada.catalog.domain.Song songEntity : music.getSongs()) {
-                if (song.getId().equals(songEntity.getId())) {
+            for (final cz.vhromada.catalog.domain.Song songDomain : music.getSongs()) {
+                if (song.getId().equals(songDomain.getId())) {
                     return music;
                 }
             }
@@ -289,23 +288,26 @@ public class SongFacadeImpl implements SongFacade {
     private void move(final Song song, final boolean up) {
         songValidator.validateSongWithId(song);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
-        final cz.vhromada.catalog.domain.Song songEntity = getSong(song.getId(), music);
-        Validators.validateExists(songEntity, SONG_ARGUMENT);
-        assert music != null;
+        final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
+        if (songDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_SONG_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Song> songs = CollectionUtils.getSortedData(music.getSongs());
         if (up) {
-            Validators.validateMoveUp(songs, songEntity, SONG_ARGUMENT);
-        } else {
-            Validators.validateMoveDown(songs, songEntity, SONG_ARGUMENT);
+            if (songs.indexOf(songDomain) <= 0) {
+                throw new IllegalArgumentException(NOT_MOVABLE_SONG_MESSAGE);
+            }
+        } else if (songs.indexOf(songDomain) >= songs.size() - 1) {
+            throw new IllegalArgumentException(NOT_MOVABLE_SONG_MESSAGE);
         }
 
-        final int index = songs.indexOf(songEntity);
+        final int index = songs.indexOf(songDomain);
         final cz.vhromada.catalog.domain.Song other = songs.get(up ? index - 1 : index + 1);
-        final int position = songEntity.getPosition();
-        songEntity.setPosition(other.getPosition());
+        final int position = songDomain.getPosition();
+        songDomain.setPosition(other.getPosition());
         other.setPosition(position);
 
-        updateSong(music, songEntity);
+        updateSong(music, songDomain);
         updateSong(music, other);
 
         musicService.update(music);

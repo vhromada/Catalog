@@ -204,19 +204,19 @@ public class GameValidatorImplTest {
     }
 
     /**
-     * Test method for {@link GameValidator#validateGameWith(Game)} with null argument.
+     * Test method for {@link GameValidator#validateGameWithId(Game)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateGameTOWithId_NullArgument() {
-        gameValidator.validateGameWith(null);
+        gameValidator.validateGameWithId(null);
     }
 
     /**
-     * Test method for {@link GameValidator#validateGameTOWithId(GameTO)} with TO for game with null ID.
+     * Test method for {@link GameValidator#validateGameWithId(GameTO)} with TO for game with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testValidateGameTOWithId_NullId() {
-        gameValidator.validateGameWith(new Game());
+        gameValidator.validateGameWithId(new Game());
     }
 
 }

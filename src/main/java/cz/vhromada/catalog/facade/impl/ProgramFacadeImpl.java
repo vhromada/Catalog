@@ -7,11 +7,11 @@ import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.ProgramValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * A class represents implementation of facade for programs.
@@ -22,9 +22,14 @@ import org.springframework.stereotype.Component;
 public class ProgramFacadeImpl implements ProgramFacade {
 
     /**
-     * Program argument
+     * Message for not existing program
      */
-    private static final String PROGRAM_ARGUMENT = "program";
+    private static final String NOT_EXISTING_PROGRAM_MESSAGE = "Program doesn't exist.";
+
+    /**
+     * Message for not movable program
+     */
+    private static final String NOT_MOVABLE_PROGRAM_MESSAGE = "ID isn't valid - program can't be moved.";
 
     /**
      * Service for programs
@@ -55,9 +60,9 @@ public class ProgramFacadeImpl implements ProgramFacade {
     public ProgramFacadeImpl(@Qualifier("programService") final CatalogService<cz.vhromada.catalog.domain.Program> programService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final ProgramValidator programValidator) {
-        Validators.validateArgumentNotNull(programService, "Service for programs");
-        Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(programValidator, "Validator for program");
+        Assert.notNull(programService, "Service for programs mustn't be null.");
+        Assert.notNull(converter, "Converter mustn't be null.");
+        Assert.notNull(programValidator, "Validator for program mustn't be null.");
 
         this.programService = programService;
         this.converter = converter;
@@ -79,14 +84,13 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public Program getProgram(final Integer id) {
-        Validators.validateArgumentNotNull(id, "ID");
+        Assert.notNull(id, "ID mustn't be null.");
 
         return converter.convert(programService.get(id), Program.class);
     }
 
     /**
      * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
      */
     @Override
     public void add(final Program program) {
@@ -97,75 +101,79 @@ public class ProgramFacadeImpl implements ProgramFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void update(final Program program) {
         programValidator.validateExistingProgram(program);
-        Validators.validateExists(programService.get(program.getId()), PROGRAM_ARGUMENT);
+        if (programService.get(program.getId()) == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
+        }
 
         programService.update(converter.convert(program, cz.vhromada.catalog.domain.Program.class));
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void remove(final Program program) {
         programValidator.validateProgramWithId(program);
-        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
+        final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
+        if (programDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
+        }
 
-        programService.remove(programEntity);
+        programService.remove(programDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void duplicate(final Program program) {
         programValidator.validateProgramWithId(program);
-        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
+        final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
+        if (programDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
+        }
 
-        programService.duplicate(programEntity);
+        programService.duplicate(programDomain);
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc
      */
     @Override
     public void moveUp(final Program program) {
         programValidator.validateProgramWithId(program);
-        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
+        final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
+        if (programDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Program> programs = programService.getAll();
-        Validators.validateMoveUp(programs, programEntity, PROGRAM_ARGUMENT);
+        if (programs.indexOf(programDomain) <= 0) {
+            throw new IllegalArgumentException(NOT_MOVABLE_PROGRAM_MESSAGE);
+        }
 
-        programService.moveUp(programEntity);
+        programService.moveUp(programDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveDown(final Program program) {
         programValidator.validateProgramWithId(program);
-        final cz.vhromada.catalog.domain.Program programEntity = programService.get(program.getId());
-        Validators.validateExists(programEntity, PROGRAM_ARGUMENT);
+        final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
+        if (programDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Program> programs = programService.getAll();
-        Validators.validateMoveDown(programs, programEntity, PROGRAM_ARGUMENT);
+        if (programs.indexOf(programDomain) >= programs.size() - 1) {
+            throw new IllegalArgumentException(NOT_MOVABLE_PROGRAM_MESSAGE);
+        }
 
-        programService.moveDown(programEntity);
+        programService.moveDown(programDomain);
     }
 
     @Override

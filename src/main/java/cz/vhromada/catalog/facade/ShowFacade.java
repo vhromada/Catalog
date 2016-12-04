@@ -38,7 +38,7 @@ public interface ShowFacade {
      *
      * @param show show
      * @throws IllegalArgumentException                                  if show is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID isn't null
+     *                                                                   or ID isn't null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
      *                                                                   or original name is null
@@ -54,7 +54,7 @@ public interface ShowFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if genre doesn't exist in data storage
+     *                                                                   or genre doesn't exist in data storage
      */
     void add(Show show);
 
@@ -63,7 +63,7 @@ public interface ShowFacade {
      *
      * @param show new value of show
      * @throws IllegalArgumentException                                  if show is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or czech name is null
      *                                                                   or czech name is empty string
      *                                                                   or original name is null
@@ -79,7 +79,7 @@ public interface ShowFacade {
      *                                                                   or genre ID is null
      *                                                                   or genre name is null
      *                                                                   or genre name is empty string
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
+     *                                                                   or show doesn't exist in data storage
      *                                                                   or genre doesn't exist in data storage
      */
     void update(Show show);
@@ -89,8 +89,8 @@ public interface ShowFacade {
      *
      * @param show show
      * @throws IllegalArgumentException                                  if show is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or show doesn't exist in data storage
      */
     void remove(Show show);
 
@@ -99,8 +99,8 @@ public interface ShowFacade {
      *
      * @param show show
      * @throws IllegalArgumentException                                  if show is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or show doesn't exist in data storage
      */
     void duplicate(Show show);
 
@@ -109,9 +109,9 @@ public interface ShowFacade {
      *
      * @param show show
      * @throws IllegalArgumentException                                  if show is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or show can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
+     *                                                                   or show doesn't exist in data storage
      */
     void moveUp(Show show);
 
@@ -120,9 +120,9 @@ public interface ShowFacade {
      *
      * @param show show
      * @throws IllegalArgumentException                                  if show is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or show can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if show doesn't exist in data storage
+     *                                                                   or show doesn't exist in data storage
      */
     void moveDown(Show show);
 

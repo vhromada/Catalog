@@ -37,7 +37,7 @@ public class GameValidatorImpl implements GameValidator {
      * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
-    public void validateGameWith(final Game game) {
+    public void validateGameWithId(final Game game) {
         Assert.notNull(game, "Game mustn't be null.");
         Assert.notNull(game.getId(), "ID mustn't be null.");
     }

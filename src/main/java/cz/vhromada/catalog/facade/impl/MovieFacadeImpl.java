@@ -11,12 +11,12 @@ import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.MovieValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.Validators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 /**
  * A class represents implementation of facade for movies.
@@ -28,14 +28,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class MovieFacadeImpl implements MovieFacade {
 
     /**
-     * Movie argument
+     * Message for not existing movie
      */
-    private static final String MOVIE_ARGUMENT = "movie";
+    private static final String NOT_EXISTING_MOVIE_MESSAGE = "Movie doesn't exist.";
 
     /**
-     * Genre argument
+     * Message for not movable movie
      */
-    private static final String GENRE_ARGUMENT = "genre";
+    private static final String NOT_MOVABLE_MOVIE_MESSAGE = "ID isn't valid - movie can't be moved.";
+
+    /**
+     * Message for not existing genre
+     */
+    private static final String NOT_EXISTING_GENRE_MESSAGE = "Genre doesn't exist.";
 
     /**
      * Service for movies
@@ -74,10 +79,10 @@ public class MovieFacadeImpl implements MovieFacade {
             final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             @Qualifier("catalogDozerConverter") final Converter converter,
             final MovieValidator movieValidator) {
-        Validators.validateArgumentNotNull(movieService, "Service for movies");
-        Validators.validateArgumentNotNull(genreService, "Service for genres");
-        Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(movieValidator, "Validator for movie");
+        Assert.notNull(movieService, "Service for movies mustn't be null.");
+        Assert.notNull(genreService, "Service for genres mustn't be null.");
+        Assert.notNull(converter, "Converter mustn't be null.");
+        Assert.notNull(movieValidator, "Validator for movie mustn't be null.");
 
         this.movieService = movieService;
         this.genreService = genreService;
@@ -100,20 +105,21 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public Movie getMovie(final Integer id) {
-        Validators.validateArgumentNotNull(id, "ID");
+        Assert.notNull(id, "ID mustn't be null.");
 
         return converter.convert(movieService.get(id), Movie.class);
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException {@inheritDoc}
+     * @throws IllegalArgumentException                                  {@inheritDoc}
      */
     @Override
     public void add(final Movie movie) {
         movieValidator.validateNewMovie(movie);
         for (final Genre genre : movie.getGenres()) {
-            Validators.validateExists(genreService.get(genre.getId()), GENRE_ARGUMENT);
+            if (genreService.get(genre.getId()) == null) {
+                throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
+            }
         }
 
         movieService.add(converter.convert(movie, cz.vhromada.catalog.domain.Movie.class));
@@ -121,82 +127,88 @@ public class MovieFacadeImpl implements MovieFacade {
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void update(final Movie movie) {
         movieValidator.validateExistingMovie(movie);
-        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
+        if (movieDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
+        }
         for (final Genre genre : movie.getGenres()) {
-            Validators.validateExists(genreService.get(genre.getId()), GENRE_ARGUMENT);
+            if (genreService.get(genre.getId()) == null) {
+                throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
+            }
         }
 
         final cz.vhromada.catalog.domain.Movie updatedMovie = converter.convert(movie, cz.vhromada.catalog.domain.Movie.class);
-        updatedMovie.setMedia(getUpdatedMedia(movieEntity.getMedia(), movie.getMedia()));
+        updatedMovie.setMedia(getUpdatedMedia(movieDomain.getMedia(), movie.getMedia()));
 
         movieService.update(updatedMovie);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void remove(final Movie movie) {
         movieValidator.validateMovieWithId(movie);
-        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
+        if (movieDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
+        }
 
-        movieService.remove(movieEntity);
+        movieService.remove(movieDomain);
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
+     * @throws IllegalArgumentException                              {@inheritDoc}
      */
     @Override
     public void duplicate(final Movie movie) {
         movieValidator.validateMovieWithId(movie);
-        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
+        if (movieDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
+        }
 
-        movieService.duplicate(movieEntity);
+        movieService.duplicate(movieDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveUp(final Movie movie) {
         movieValidator.validateMovieWithId(movie);
-        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
+        if (movieDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Movie> movies = movieService.getAll();
-        Validators.validateMoveUp(movies, movieEntity, MOVIE_ARGUMENT);
+        if (movies.indexOf(movieDomain) <= 0) {
+            throw new IllegalArgumentException(NOT_MOVABLE_MOVIE_MESSAGE);
+        }
 
-        movieService.moveUp(movieEntity);
+        movieService.moveUp(movieDomain);
     }
 
     /**
      * @throws IllegalArgumentException                                  {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.ValidationException     {@inheritDoc}
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException {@inheritDoc}
      */
     @Override
     public void moveDown(final Movie movie) {
         movieValidator.validateMovieWithId(movie);
-        final cz.vhromada.catalog.domain.Movie movieEntity = movieService.get(movie.getId());
-        Validators.validateExists(movieEntity, MOVIE_ARGUMENT);
+        final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
+        if (movieDomain == null) {
+            throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
+        }
         final List<cz.vhromada.catalog.domain.Movie> movies = movieService.getAll();
-        Validators.validateMoveDown(movies, movieEntity, MOVIE_ARGUMENT);
+        if (movies.indexOf(movieDomain) >= movies.size() - 1) {
+            throw new IllegalArgumentException(NOT_MOVABLE_MOVIE_MESSAGE);
+        }
 
-        movieService.moveDown(movieEntity);
+        movieService.moveDown(movieDomain);
     }
 
     @Override

@@ -3,14 +3,11 @@ package cz.vhromada.catalog.facade.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.catalog.util.CollectionUtils;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
 
@@ -149,40 +146,6 @@ public class GenreFacadeImplIntegrationTest {
         genre.setName("");
 
         genreFacade.add(genre);
-    }
-
-    /**
-     * Test method for {@link GenreFacade#add(List)}.
-     */
-    @Test
-    @DirtiesContext
-    public void testAddList() {
-        final List<String> names = CollectionUtils.newList("Name1", "Name2");
-
-        genreFacade.add(names);
-
-        final cz.vhromada.catalog.domain.Genre addedGenre1 = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
-        final cz.vhromada.catalog.domain.Genre addedGenre2 = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 2);
-        GenreUtils.assertGenreDeepEquals(createGenre(GenreUtils.GENRES_COUNT + 1, names.get(0)), addedGenre1);
-        GenreUtils.assertGenreDeepEquals(createGenre(GenreUtils.GENRES_COUNT + 2, names.get(1)), addedGenre2);
-
-        assertEquals(GenreUtils.GENRES_COUNT + 2, GenreUtils.getGenresCount(entityManager));
-    }
-
-    /**
-     * Test method for {@link GenreFacade#add(Genre)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddList_NullArgument() {
-        genreFacade.add((List<String>) null);
-    }
-
-    /**
-     * Test method for {@link GenreFacade#add(List)} with list of genre names with null value.
-     */
-    @Test(expected = ValidationException.class)
-    public void testAddList_NullGenreNames() {
-        genreFacade.add(CollectionUtils.newList("Name", null));
     }
 
     /**

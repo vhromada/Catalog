@@ -28,13 +28,13 @@ public interface SongFacade {
      * @param song  song
      * @throws IllegalArgumentException                                  if music is null
      *                                                                   or song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if music ID is null
+     *                                                                   or music ID is null
      *                                                                   or song ID isn't null
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or length of song is negative value
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     *                                                                   or music doesn't exist in data storage
      */
     void add(Music music, Song song);
 
@@ -43,12 +43,12 @@ public interface SongFacade {
      *
      * @param song new value of song
      * @throws IllegalArgumentException                                  if song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or name is null
      *                                                                   or name is empty string
      *                                                                   or length of song is negative value
      *                                                                   or note is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
+     *                                                                   or song doesn't exist in data storage
      */
     void update(Song song);
 
@@ -57,8 +57,8 @@ public interface SongFacade {
      *
      * @param song song
      * @throws IllegalArgumentException                                  if song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or song doesn't exist in data storage
      */
     void remove(Song song);
 
@@ -67,8 +67,8 @@ public interface SongFacade {
      *
      * @param song song
      * @throws IllegalArgumentException                                  if song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or song doesn't exist in data storage
      */
     void duplicate(Song song);
 
@@ -77,9 +77,9 @@ public interface SongFacade {
      *
      * @param song song
      * @throws IllegalArgumentException                                  if song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or song can't be moved up
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
+     *                                                                   or song doesn't exist in data storage
      */
     void moveUp(Song song);
 
@@ -88,9 +88,9 @@ public interface SongFacade {
      *
      * @param song song
      * @throws IllegalArgumentException                                  if song is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
+     *                                                                   or ID is null
      *                                                                   or song can't be moved down
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if song doesn't exist in data storage
+     *                                                                   or song doesn't exist in data storage
      */
     void moveDown(Song song);
 
@@ -100,8 +100,8 @@ public interface SongFacade {
      * @param music music
      * @return songs for specified music
      * @throws IllegalArgumentException                                  if music is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException     if ID is null
-     * @throws cz.vhromada.validators.exceptions.RecordNotFoundException if music doesn't exist in data storage
+     *                                                                   or ID is null
+     *                                                                   or music doesn't exist in data storage
      */
     List<Song> findSongsByMusic(Music music);
 

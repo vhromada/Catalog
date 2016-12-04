@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,10 +9,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.entity.Movie;
-import cz.vhromada.catalog.utils.CollectionUtils;
 
 /**
  * A class represents utility class for movies.
@@ -58,11 +58,11 @@ public final class MovieUtils {
      * @param id ID
      * @return movie
      */
-    public static cz.vhromada.catalog.domain.Movie newMovie(final Integer id) {
+    public static cz.vhromada.catalog.domain.Movie newMovieDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Movie movie = new cz.vhromada.catalog.domain.Movie();
         updateMovie(movie);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(id)));
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(id)));
+        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreDomain(id)));
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
@@ -96,11 +96,11 @@ public final class MovieUtils {
      * @param id ID
      * @return movie
      */
-    public static Movie newMovieTO(final Integer id) {
+    public static Movie newMovie(final Integer id) {
         final Movie movie = new Movie();
-        updateMovieTO(movie);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumTO(id)));
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(id)));
+        updateMovie(movie);
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(id)));
+        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
@@ -114,7 +114,7 @@ public final class MovieUtils {
      *
      * @param movie movie
      */
-    public static void updateMovieTO(final Movie movie) {
+    public static void updateMovie(final Movie movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
         movie.setYear(START_YEAR);
@@ -166,7 +166,7 @@ public final class MovieUtils {
         final List<Medium> media = new ArrayList<>();
         final List<Genre> genres = new ArrayList<>();
         media.add(MediumUtils.getMedium(index));
-        genres.add(GenreUtils.getGenre(index));
+        genres.add(GenreUtils.getGenreDomain(index));
         fillData(index, subtitles, media, genres);
         movie.setSubtitles(subtitles);
         movie.setMedia(media);
@@ -213,7 +213,7 @@ public final class MovieUtils {
                 subtitles.add(Language.CZ);
                 subtitles.add(Language.EN);
                 media.add(MediumUtils.getMedium(4));
-                genres.add(GenreUtils.getGenre(4));
+                genres.add(GenreUtils.getGenreDomain(4));
                 break;
             default:
                 throw new IllegalArgumentException("Bad index");
@@ -241,7 +241,7 @@ public final class MovieUtils {
     public static cz.vhromada.catalog.domain.Movie updateMovie(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Movie movie = getMovie(entityManager, id);
         updateMovie(movie);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         movie.setPosition(POSITION);
 
         return movie;

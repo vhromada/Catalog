@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
-import cz.vhromada.catalog.utils.CollectionUtils;
 
 /**
  * A class represents utility class for music.
@@ -52,7 +51,7 @@ public final class MusicUtils {
      * @param id ID
      * @return music
      */
-    public static cz.vhromada.catalog.domain.Music newMusic(final Integer id) {
+    public static cz.vhromada.catalog.domain.Music newMusicDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Music music = new cz.vhromada.catalog.domain.Music();
         updateMusic(music);
         if (id != null) {
@@ -71,12 +70,12 @@ public final class MusicUtils {
      * @return music with songs
      */
     public static cz.vhromada.catalog.domain.Music newMusicWithSongs(final Integer id) {
-        final Song song = SongUtils.newSong(id);
+        final Song song = SongUtils.newSongDomain(id);
         if (id == null) {
             song.setPosition(0);
         }
 
-        final cz.vhromada.catalog.domain.Music music = newMusic(id);
+        final cz.vhromada.catalog.domain.Music music = newMusicDomain(id);
         music.setSongs(CollectionUtils.newList(song));
 
         return music;
@@ -101,9 +100,9 @@ public final class MusicUtils {
      * @param id ID
      * @return music
      */
-    public static Music newMusicTO(final Integer id) {
+    public static Music newMusic(final Integer id) {
         final Music music = new Music();
-        updateMusicTO(music);
+        updateMusic(music);
         if (id != null) {
             music.setId(id);
             music.setPosition(id - 1);
@@ -117,7 +116,7 @@ public final class MusicUtils {
      *
      * @param music music
      */
-    public static void updateMusicTO(final Music music) {
+    public static void updateMusic(final Music music) {
         music.setName("Name");
         music.setWikiEn("enWiki");
         music.setWikiCz("czWiki");

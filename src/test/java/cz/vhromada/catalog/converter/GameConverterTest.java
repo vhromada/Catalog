@@ -3,8 +3,8 @@ package cz.vhromada.catalog.converter;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.GameUtils;
 import cz.vhromada.catalog.entity.Game;
+import cz.vhromada.catalog.utils.GameUtils;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
+@ContextConfiguration("classpath:dozerMappingContext.xml")
 public class GameConverterTest {
 
     /**
@@ -31,41 +31,41 @@ public class GameConverterTest {
     private Converter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertGame() {
-        final cz.vhromada.catalog.domain.Game game = GameUtils.newGame(1);
-        final Game gameTO = converter.convert(game, Game.class);
+    public void testConvertGameDomain() {
+        final cz.vhromada.catalog.domain.Game gameDomain = GameUtils.newGameDomain(1);
+        final Game game = converter.convert(gameDomain, Game.class);
 
-        GameUtils.assertGameDeepEquals(gameTO, game);
+        GameUtils.assertGameDeepEquals(game, gameDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertGame_NullArgument() {
+    public void testConvertGameDomain_NullArgument() {
         assertNull(converter.convert(null, Game.class));
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertGameTO() {
-        final Game gameTO = GameUtils.newGameTO(1);
-        final cz.vhromada.catalog.domain.Game game = converter.convert(gameTO, cz.vhromada.catalog.domain.Game.class);
+    public void testConvertGame() {
+        final Game game = GameUtils.newGame(1);
+        final cz.vhromada.catalog.domain.Game gameDomain = converter.convert(game, cz.vhromada.catalog.domain.Game.class);
 
-        assertNotNull(game);
-        GameUtils.assertGameDeepEquals(gameTO, game);
+        assertNotNull(gameDomain);
+        GameUtils.assertGameDeepEquals(game, gameDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertGameTO_NullArgument() {
+    public void testConvertGame_NullArgument() {
         assertNull(converter.convert(null, cz.vhromada.catalog.domain.Game.class));
     }
 

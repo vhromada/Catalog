@@ -1,8 +1,8 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import java.lang.reflect.Field;
 
-import cz.vhromada.catalog.utils.Constants;
+import cz.vhromada.catalog.common.Time;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.utils.GenreUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testRepositoryContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @Transactional
 @Rollback
 public class GenreRepositoryIntegrationTest {
@@ -65,7 +65,7 @@ public class GenreRepositoryIntegrationTest {
         for (int i = 1; i <= GenreUtils.GENRES_COUNT; i++) {
             final Genre genre = genreRepository.findOne(i);
 
-            GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), genre);
+            GenreUtils.assertGenreDeepEquals(GenreUtils.getGenreDomain(i), genre);
         }
 
         assertNull(genreRepository.findOne(Integer.MAX_VALUE));
@@ -78,7 +78,7 @@ public class GenreRepositoryIntegrationTest {
      */
     @Test
     public void testAdd() {
-        final Genre genre = GenreUtils.newGenre(null);
+        final Genre genre = GenreUtils.newGenreDomain(null);
 
         genreRepository.saveAndFlush(genre);
 
@@ -86,7 +86,7 @@ public class GenreRepositoryIntegrationTest {
         assertEquals(GenreUtils.GENRES_COUNT + 1, genre.getId().intValue());
 
         final Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
-        final Genre expectedAddGenre = GenreUtils.newGenre(null);
+        final Genre expectedAddGenre = GenreUtils.newGenreDomain(null);
         expectedAddGenre.setId(GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(expectedAddGenre, addedGenre);
 
@@ -103,7 +103,7 @@ public class GenreRepositoryIntegrationTest {
         genreRepository.saveAndFlush(genre);
 
         final Genre updatedGenre = GenreUtils.getGenre(entityManager, 1);
-        final Genre expectedUpdatedGenre = GenreUtils.getGenre(1);
+        final Genre expectedUpdatedGenre = GenreUtils.getGenreDomain(1);
         GenreUtils.updateGenre(expectedUpdatedGenre);
         expectedUpdatedGenre.setPosition(GenreUtils.POSITION);
         GenreUtils.assertGenreDeepEquals(expectedUpdatedGenre, updatedGenre);
@@ -116,7 +116,7 @@ public class GenreRepositoryIntegrationTest {
      */
     @Test
     public void testRemove() {
-        final Genre genre = GenreUtils.newGenre(null);
+        final Genre genre = GenreUtils.newGenreDomain(null);
         entityManager.persist(genre);
         assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
 

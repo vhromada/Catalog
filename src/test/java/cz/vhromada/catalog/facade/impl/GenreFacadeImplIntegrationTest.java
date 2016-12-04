@@ -5,11 +5,9 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
+import cz.vhromada.catalog.utils.GenreUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +26,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testFacadeContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class GenreFacadeImplIntegrationTest {
 
@@ -80,7 +78,7 @@ public class GenreFacadeImplIntegrationTest {
     @Test
     public void testGetGenre() {
         for (int i = 1; i <= GenreUtils.GENRES_COUNT; i++) {
-            GenreUtils.assertGenreDeepEquals(genreFacade.getGenre(i), GenreUtils.getGenre(i));
+            GenreUtils.assertGenreDeepEquals(genreFacade.getGenre(i), GenreUtils.getGenreDomain(i));
         }
 
         assertNull(genreFacade.getGenre(Integer.MAX_VALUE));
@@ -102,10 +100,10 @@ public class GenreFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testAdd() {
-        genreFacade.add(GenreUtils.newGenreTO(null));
+        genreFacade.add(GenreUtils.newGenre(null));
 
         final cz.vhromada.catalog.domain.Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
-        GenreUtils.assertGenreDeepEquals(GenreUtils.newGenre(GenreUtils.GENRES_COUNT + 1), addedGenre);
+        GenreUtils.assertGenreDeepEquals(GenreUtils.newGenreDomain(GenreUtils.GENRES_COUNT + 1), addedGenre);
 
         assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
     }
@@ -121,17 +119,17 @@ public class GenreFacadeImplIntegrationTest {
     /**
      * Test method for {@link GenreFacade#add(Genre)} with genre with not null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotNullId() {
-        genreFacade.add(GenreUtils.newGenreTO(Integer.MAX_VALUE));
+        genreFacade.add(GenreUtils.newGenre(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link GenreFacade#add(Genre)} with genre with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullName() {
-        final Genre genre = GenreUtils.newGenreTO(null);
+        final Genre genre = GenreUtils.newGenre(null);
         genre.setName(null);
 
         genreFacade.add(genre);
@@ -140,9 +138,9 @@ public class GenreFacadeImplIntegrationTest {
     /**
      * Test method for {@link GenreFacade#add(Genre)} with genre with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_EmptyName() {
-        final Genre genre = GenreUtils.newGenreTO(null);
+        final Genre genre = GenreUtils.newGenre(null);
         genre.setName("");
 
         genreFacade.add(genre);
@@ -154,7 +152,7 @@ public class GenreFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final Genre genre = GenreUtils.newGenreTO(1);
+        final Genre genre = GenreUtils.newGenre(1);
 
         genreFacade.update(genre);
 
@@ -175,17 +173,17 @@ public class GenreFacadeImplIntegrationTest {
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullId() {
-        genreFacade.update(GenreUtils.newGenreTO(null));
+        genreFacade.update(GenreUtils.newGenre(null));
     }
 
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullName() {
-        final Genre genre = GenreUtils.newGenreTO(1);
+        final Genre genre = GenreUtils.newGenre(1);
         genre.setName(null);
 
         genreFacade.update(genre);
@@ -194,9 +192,9 @@ public class GenreFacadeImplIntegrationTest {
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_EmptyName() {
-        final Genre genre = GenreUtils.newGenreTO(1);
+        final Genre genre = GenreUtils.newGenre(1);
         genre.setName("");
 
         genreFacade.update(genre);
@@ -205,9 +203,9 @@ public class GenreFacadeImplIntegrationTest {
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadId() {
-        genreFacade.update(GenreUtils.newGenreTO(Integer.MAX_VALUE));
+        genreFacade.update(GenreUtils.newGenre(Integer.MAX_VALUE));
     }
 
     /**
@@ -218,7 +216,7 @@ public class GenreFacadeImplIntegrationTest {
     public void testRemove() {
         clearReferencedData();
 
-        genreFacade.remove(GenreUtils.newGenreTO(1));
+        genreFacade.remove(GenreUtils.newGenre(1));
 
         assertNull(GenreUtils.getGenre(entityManager, 1));
 
@@ -236,17 +234,17 @@ public class GenreFacadeImplIntegrationTest {
     /**
      * Test method for {@link GenreFacade#remove(Genre)} with genre with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullId() {
-        genreFacade.remove(GenreUtils.newGenreTO(null));
+        genreFacade.remove(GenreUtils.newGenre(null));
     }
 
     /**
      * Test method for {@link GenreFacade#remove(Genre)} with genre with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadId() {
-        genreFacade.remove(GenreUtils.newGenreTO(Integer.MAX_VALUE));
+        genreFacade.remove(GenreUtils.newGenre(Integer.MAX_VALUE));
     }
 
     /**
@@ -255,10 +253,10 @@ public class GenreFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testDuplicate() {
-        final cz.vhromada.catalog.domain.Genre genre = GenreUtils.getGenre(GenreUtils.GENRES_COUNT);
+        final cz.vhromada.catalog.domain.Genre genre = GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT);
         genre.setId(GenreUtils.GENRES_COUNT + 1);
 
-        genreFacade.duplicate(GenreUtils.newGenreTO(GenreUtils.GENRES_COUNT));
+        genreFacade.duplicate(GenreUtils.newGenre(GenreUtils.GENRES_COUNT));
 
         final cz.vhromada.catalog.domain.Genre duplicatedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(genre, duplicatedGenre);
@@ -277,17 +275,17 @@ public class GenreFacadeImplIntegrationTest {
     /**
      * Test method for {@link GenreFacade#duplicate(Genre)} with genre with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullId() {
-        genreFacade.duplicate(GenreUtils.newGenreTO(null));
+        genreFacade.duplicate(GenreUtils.newGenre(null));
     }
 
     /**
      * Test method for {@link GenreFacade#duplicate(Genre)} with genre with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadId() {
-        genreFacade.duplicate(GenreUtils.newGenreTO(Integer.MAX_VALUE));
+        genreFacade.duplicate(GenreUtils.newGenre(Integer.MAX_VALUE));
     }
 
     /**

@@ -9,11 +9,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.GenreUtils;
-import cz.vhromada.catalog.common.MediumUtils;
-import cz.vhromada.catalog.common.MovieUtils;
 import cz.vhromada.catalog.domain.Movie;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.GenreUtils;
+import cz.vhromada.catalog.utils.MediumUtils;
+import cz.vhromada.catalog.utils.MovieUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testRepositoryContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @Transactional
 @Rollback
 public class MovieRepositoryIntegrationTest {
@@ -85,8 +85,8 @@ public class MovieRepositoryIntegrationTest {
      */
     @Test
     public void testAdd() {
-        final Movie movie = MovieUtils.newMovie(null);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(null)));
+        final Movie movie = MovieUtils.newMovieDomain(null);
+        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(null)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
 
         movieRepository.saveAndFlush(movie);
@@ -95,10 +95,10 @@ public class MovieRepositoryIntegrationTest {
         assertEquals(MovieUtils.MOVIES_COUNT + 1, movie.getId().intValue());
 
         final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
-        final Movie expectedAddedMovie = MovieUtils.newMovie(null);
+        final Movie expectedAddedMovie = MovieUtils.newMovieDomain(null);
         expectedAddedMovie.setId(MovieUtils.MOVIES_COUNT + 1);
-        expectedAddedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(MediumUtils.MEDIA_COUNT + 1)));
-        expectedAddedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
+        expectedAddedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
+        expectedAddedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         MovieUtils.assertMovieDeepEquals(expectedAddedMovie, addedMovie);
 
         assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
@@ -131,14 +131,14 @@ public class MovieRepositoryIntegrationTest {
     @DirtiesContext
     public void testUpdate_AddedMedium() {
         final Movie movie = MovieUtils.updateMovie(entityManager, 1);
-        movie.getMedia().add(MediumUtils.newMedium(null));
+        movie.getMedia().add(MediumUtils.newMediumDomain(null));
 
         movieRepository.saveAndFlush(movie);
 
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
         MovieUtils.updateMovie(expectedUpdatedMovie);
-        expectedUpdatedMovie.getMedia().add(MediumUtils.newMedium(MediumUtils.MEDIA_COUNT + 1));
+        expectedUpdatedMovie.getMedia().add(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1));
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 

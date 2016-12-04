@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -39,7 +39,7 @@ public final class MediumUtils {
      * @param id ID
      * @return medium
      */
-    public static cz.vhromada.catalog.domain.Medium newMedium(final Integer id) {
+    public static cz.vhromada.catalog.domain.Medium newMediumDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Medium medium = new cz.vhromada.catalog.domain.Medium();
         medium.setLength(10);
         medium.setNumber(1);
@@ -56,7 +56,7 @@ public final class MediumUtils {
      * @param id ID
      * @return medium
      */
-    public static Medium newMediumTO(final Integer id) {
+    public static Medium newMedium(final Integer id) {
         final Medium medium = new Medium();
         medium.setLength(10);
         medium.setNumber(1);

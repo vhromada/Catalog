@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.GameUtils;
 import cz.vhromada.catalog.domain.Game;
+import cz.vhromada.catalog.utils.GameUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testRepositoryContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @Transactional
 @Rollback
 public class GameRepositoryIntegrationTest {
@@ -61,7 +61,7 @@ public class GameRepositoryIntegrationTest {
      */
     @Test
     public void testAdd() {
-        final Game game = GameUtils.newGame(null);
+        final Game game = GameUtils.newGameDomain(null);
 
         gameRepository.save(game);
 
@@ -69,7 +69,7 @@ public class GameRepositoryIntegrationTest {
         assertEquals(GameUtils.GAMES_COUNT + 1, game.getId().intValue());
 
         final Game addedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1);
-        final Game expectedAddGame = GameUtils.newGame(null);
+        final Game expectedAddGame = GameUtils.newGameDomain(null);
         expectedAddGame.setId(GameUtils.GAMES_COUNT + 1);
         GameUtils.assertGameDeepEquals(expectedAddGame, addedGame);
 

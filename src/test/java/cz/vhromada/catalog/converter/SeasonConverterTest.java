@@ -3,8 +3,8 @@ package cz.vhromada.catalog.converter;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
+@ContextConfiguration("classpath:dozerMappingContext.xml")
 public class SeasonConverterTest {
 
     /**
@@ -31,41 +31,41 @@ public class SeasonConverterTest {
     private Converter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertSeason() {
-        final cz.vhromada.catalog.domain.Season season = SeasonUtils.newSeason(1);
-        final Season seasonTO = converter.convert(season, Season.class);
+    public void testConvertSeasonDomain() {
+        final cz.vhromada.catalog.domain.Season seasonDomain = SeasonUtils.newSeasonDomain(1);
+        final Season season = converter.convert(seasonDomain, Season.class);
 
-        SeasonUtils.assertSeasonDeepEquals(seasonTO, season);
+        SeasonUtils.assertSeasonDeepEquals(season, seasonDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertSeason_NullArgument() {
+    public void testConvertSeasonDomain_NullArgument() {
         assertNull(converter.convert(null, Season.class));
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertSeasonTO() {
-        final Season seasonTO = SeasonUtils.newSeasonTO(1);
-        final cz.vhromada.catalog.domain.Season season = converter.convert(seasonTO, cz.vhromada.catalog.domain.Season.class);
+    public void testConvertSeason() {
+        final Season season = SeasonUtils.newSeason(1);
+        final cz.vhromada.catalog.domain.Season seasonDomain = converter.convert(season, cz.vhromada.catalog.domain.Season.class);
 
         assertNotNull(season);
-        SeasonUtils.assertSeasonDeepEquals(seasonTO, season);
+        SeasonUtils.assertSeasonDeepEquals(season, seasonDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertSeasonTO_NullArgument() {
+    public void testConvertSeason_NullArgument() {
         assertNull(converter.convert(null, cz.vhromada.catalog.domain.Season.class));
     }
 

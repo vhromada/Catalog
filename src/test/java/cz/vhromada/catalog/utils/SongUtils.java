@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -54,7 +54,7 @@ public final class SongUtils {
      * @param id ID
      * @return song
      */
-    public static cz.vhromada.catalog.domain.Song newSong(final Integer id) {
+    public static cz.vhromada.catalog.domain.Song newSongDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Song song = new cz.vhromada.catalog.domain.Song();
         updateSong(song);
         if (id != null) {
@@ -82,9 +82,9 @@ public final class SongUtils {
      * @param id ID
      * @return song
      */
-    public static Song newSongTO(final Integer id) {
+    public static Song newSong(final Integer id) {
         final Song song = new Song();
-        updateSongTO(song);
+        updateSong(song);
         if (id != null) {
             song.setId(id);
             song.setPosition(id - 1);
@@ -98,7 +98,7 @@ public final class SongUtils {
      *
      * @param song song
      */
-    public static void updateSongTO(final Song song) {
+    public static void updateSong(final Song song) {
         song.setName("Name");
         song.setLength(5);
         song.setNote("Note");

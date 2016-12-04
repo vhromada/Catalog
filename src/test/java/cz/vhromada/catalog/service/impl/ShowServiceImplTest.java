@@ -1,10 +1,10 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.repository.ShowRepository;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.utils.ShowUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,7 +70,7 @@ public class ShowServiceImplTest extends AbstractServiceTest<Show> {
 
     @Override
     protected Show getAddItem() {
-        return ShowUtils.newShow(null);
+        return ShowUtils.newShowDomain(null);
     }
 
     @Override

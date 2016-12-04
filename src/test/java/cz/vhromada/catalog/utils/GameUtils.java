@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -49,7 +49,7 @@ public final class GameUtils {
      * @param id ID
      * @return game
      */
-    public static cz.vhromada.catalog.domain.Game newGame(final Integer id) {
+    public static cz.vhromada.catalog.domain.Game newGameDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Game game = new cz.vhromada.catalog.domain.Game();
         updateGame(game);
         if (id != null) {
@@ -87,9 +87,9 @@ public final class GameUtils {
      * @param id ID
      * @return game
      */
-    public static Game newGameTO(final Integer id) {
+    public static Game newGame(final Integer id) {
         final Game game = new Game();
-        updateGameTO(game);
+        updateGame(game);
         if (id != null) {
             game.setId(id);
             game.setPosition(id - 1);
@@ -103,7 +103,7 @@ public final class GameUtils {
      *
      * @param game game
      */
-    public static void updateGameTO(final Game game) {
+    public static void updateGame(final Game game) {
         game.setName("Name");
         game.setWikiEn("enWiki");
         game.setWikiCz("czWiki");

@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -44,7 +44,7 @@ public final class GenreUtils {
      * @param id ID
      * @return genre
      */
-    public static cz.vhromada.catalog.domain.Genre newGenre(final Integer id) {
+    public static cz.vhromada.catalog.domain.Genre newGenreDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Genre genre = new cz.vhromada.catalog.domain.Genre();
         updateGenre(genre);
         if (id != null) {
@@ -70,9 +70,9 @@ public final class GenreUtils {
      * @param id ID
      * @return genre
      */
-    public static Genre newGenreTO(final Integer id) {
+    public static Genre newGenre(final Integer id) {
         final Genre genre = new Genre();
-        updateGenreTO(genre);
+        updateGenre(genre);
         if (id != null) {
             genre.setId(id);
             genre.setPosition(id - 1);
@@ -86,7 +86,7 @@ public final class GenreUtils {
      *
      * @param genre genre
      */
-    public static void updateGenreTO(final Genre genre) {
+    public static void updateGenre(final Genre genre) {
         genre.setName("Name");
     }
 
@@ -98,7 +98,7 @@ public final class GenreUtils {
     public static List<cz.vhromada.catalog.domain.Genre> getGenres() {
         final List<cz.vhromada.catalog.domain.Genre> genres = new ArrayList<>();
         for (int i = 0; i < GENRES_COUNT; i++) {
-            genres.add(getGenre(i + 1));
+            genres.add(getGenreDomain(i + 1));
         }
 
         return genres;
@@ -110,7 +110,7 @@ public final class GenreUtils {
      * @param index index
      * @return genre for index
      */
-    public static cz.vhromada.catalog.domain.Genre getGenre(final int index) {
+    public static cz.vhromada.catalog.domain.Genre getGenreDomain(final int index) {
         final cz.vhromada.catalog.domain.Genre genre = new cz.vhromada.catalog.domain.Genre();
         genre.setId(index);
         genre.setName("Genre " + index + " name");
@@ -125,7 +125,7 @@ public final class GenreUtils {
      * @param index index
      * @return genre for index
      */
-    public static Genre getGenreTO(final int index) {
+    public static Genre getGenre(final int index) {
         final Genre genre = new Genre();
         genre.setId(index);
         genre.setName("Genre " + index + " name");

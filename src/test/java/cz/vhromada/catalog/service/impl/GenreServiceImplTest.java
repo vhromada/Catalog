@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.repository.GenreRepository;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.utils.GenreUtils;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -56,22 +56,22 @@ public class GenreServiceImplTest extends AbstractServiceTest<Genre> {
 
     @Override
     protected Genre getItem1() {
-        return GenreUtils.newGenre(1);
+        return GenreUtils.newGenreDomain(1);
     }
 
     @Override
     protected Genre getItem2() {
-        return GenreUtils.newGenre(2);
+        return GenreUtils.newGenreDomain(2);
     }
 
     @Override
     protected Genre getAddItem() {
-        return GenreUtils.newGenre(null);
+        return GenreUtils.newGenreDomain(null);
     }
 
     @Override
     protected Genre getCopyItem() {
-        final Genre genre = GenreUtils.newGenre(null);
+        final Genre genre = GenreUtils.newGenreDomain(null);
         genre.setPosition(0);
 
         return genre;

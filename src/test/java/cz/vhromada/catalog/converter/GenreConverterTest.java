@@ -3,8 +3,8 @@ package cz.vhromada.catalog.converter;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
+@ContextConfiguration("classpath:dozerMappingContext.xml")
 public class GenreConverterTest {
 
     /**
@@ -31,41 +31,41 @@ public class GenreConverterTest {
     private Converter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertGenre() {
-        final cz.vhromada.catalog.domain.Genre genre = GenreUtils.newGenre(1);
-        final Genre genreTO = converter.convert(genre, Genre.class);
+    public void testConvertGenreDomain() {
+        final cz.vhromada.catalog.domain.Genre genreDomain = GenreUtils.newGenreDomain(1);
+        final Genre genre = converter.convert(genreDomain, Genre.class);
 
-        GenreUtils.assertGenreDeepEquals(genreTO, genre);
+        GenreUtils.assertGenreDeepEquals(genre, genreDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertGenre_NullArgument() {
+    public void testConvertGenreDomain_NullArgument() {
         assertNull(converter.convert(null, Genre.class));
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertGenreTO() {
-        final Genre genreTO = GenreUtils.newGenreTO(1);
-        final cz.vhromada.catalog.domain.Genre genre = converter.convert(genreTO, cz.vhromada.catalog.domain.Genre.class);
+    public void testConvertGenre() {
+        final Genre genre = GenreUtils.newGenre(1);
+        final cz.vhromada.catalog.domain.Genre genreDomain = converter.convert(genre, cz.vhromada.catalog.domain.Genre.class);
 
         assertNotNull(genre);
-        GenreUtils.assertGenreDeepEquals(genreTO, genre);
+        GenreUtils.assertGenreDeepEquals(genre, genreDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertGenreTO_NullArgument() {
+    public void testConvertGenre_NullArgument() {
         assertNull(converter.convert(null, cz.vhromada.catalog.domain.Genre.class));
     }
 

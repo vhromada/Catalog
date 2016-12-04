@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * A class represents test suite for package cz.vhromada.catalog.facade.validators.impl.
+ * A class represents test suite for package cz.vhromada.catalog.validator.impl.
  *
  * @author Vladimir Hromada
  */

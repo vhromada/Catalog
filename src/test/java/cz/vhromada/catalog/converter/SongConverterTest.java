@@ -3,8 +3,8 @@ package cz.vhromada.catalog.converter;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.SongUtils;
 import cz.vhromada.catalog.entity.Song;
+import cz.vhromada.catalog.utils.SongUtils;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
+@ContextConfiguration("classpath:dozerMappingContext.xml")
 public class SongConverterTest {
 
     /**
@@ -31,41 +31,41 @@ public class SongConverterTest {
     private Converter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertSong() {
-        final cz.vhromada.catalog.domain.Song song = SongUtils.newSong(1);
-        final Song songTO = converter.convert(song, Song.class);
+    public void testConvertSongDomain() {
+        final cz.vhromada.catalog.domain.Song songDomain = SongUtils.newSongDomain(1);
+        final Song song = converter.convert(songDomain, Song.class);
 
-        SongUtils.assertSongDeepEquals(songTO, song);
+        SongUtils.assertSongDeepEquals(song, songDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertSong_NullArgument() {
+    public void testConvertSongDomain_NullArgument() {
         assertNull(converter.convert(null, Song.class));
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertSongTO() {
-        final Song songTO = SongUtils.newSongTO(1);
-        final cz.vhromada.catalog.domain.Song song = converter.convert(songTO, cz.vhromada.catalog.domain.Song.class);
+    public void testConvertSong() {
+        final Song song = SongUtils.newSong(1);
+        final cz.vhromada.catalog.domain.Song songDomain = converter.convert(song, cz.vhromada.catalog.domain.Song.class);
 
         assertNotNull(song);
-        SongUtils.assertSongDeepEquals(songTO, song);
+        SongUtils.assertSongDeepEquals(song, songDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertSongTO_NullArgument() {
+    public void testConvertSong_NullArgument() {
         assertNull(converter.convert(null, cz.vhromada.catalog.domain.Song.class));
     }
 

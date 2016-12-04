@@ -14,5 +14,5 @@ import org.junit.runners.Suite;
         ShowFacadeImplIntegrationTest.class, SeasonFacadeImplIntegrationTest.class, EpisodeFacadeImplIntegrationTest.class, GameFacadeImplIntegrationTest.class,
         MusicFacadeImplIntegrationTest.class, SongFacadeImplIntegrationTest.class, ProgramFacadeImplIntegrationTest.class,
         GenreFacadeImplIntegrationTest.class })
-public class FacadeImplSuite {
+public class FacadeSuite {
 }

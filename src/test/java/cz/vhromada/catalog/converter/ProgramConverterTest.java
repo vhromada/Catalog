@@ -3,8 +3,8 @@ package cz.vhromada.catalog.converter;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import cz.vhromada.catalog.common.ProgramUtils;
 import cz.vhromada.catalog.entity.Program;
+import cz.vhromada.catalog.utils.ProgramUtils;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:catalogDozerMappingContext.xml")
+@ContextConfiguration("classpath:dozerMappingContext.xml")
 public class ProgramConverterTest {
 
     /**
@@ -31,41 +31,41 @@ public class ProgramConverterTest {
     private Converter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertProgram() {
-        final cz.vhromada.catalog.domain.Program program = ProgramUtils.newProgram(1);
-        final Program programTO = converter.convert(program, Program.class);
+    public void testConvertProgramDomain() {
+        final cz.vhromada.catalog.domain.Program programDomain = ProgramUtils.newProgramDomain(1);
+        final Program program = converter.convert(programDomain, Program.class);
 
-        ProgramUtils.assertProgramDeepEquals(programTO, program);
+        ProgramUtils.assertProgramDeepEquals(program, programDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to TO with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertProgram_NullArgument() {
+    public void testConvertProgramDomain_NullArgument() {
         assertNull(converter.convert(null, Program.class));
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertProgramTO() {
-        final Program programTO = ProgramUtils.newProgramTO(1);
-        final cz.vhromada.catalog.domain.Program program = converter.convert(programTO, cz.vhromada.catalog.domain.Program.class);
+    public void testConvertProgram() {
+        final Program program = ProgramUtils.newProgram(1);
+        final cz.vhromada.catalog.domain.Program programDomain = converter.convert(program, cz.vhromada.catalog.domain.Program.class);
 
         assertNotNull(program);
-        ProgramUtils.assertProgramDeepEquals(programTO, program);
+        ProgramUtils.assertProgramDeepEquals(program, programDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from TO to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertProgramTO_NullArgument() {
+    public void testConvertProgram_NullArgument() {
         assertNull(converter.convert(null, cz.vhromada.catalog.domain.Program.class));
     }
 

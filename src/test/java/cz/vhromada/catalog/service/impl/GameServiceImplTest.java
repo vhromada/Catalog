@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.common.GameUtils;
 import cz.vhromada.catalog.domain.Game;
 import cz.vhromada.catalog.repository.GameRepository;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.utils.GameUtils;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -56,22 +56,22 @@ public class GameServiceImplTest extends AbstractServiceTest<Game> {
 
     @Override
     protected Game getItem1() {
-        return GameUtils.newGame(1);
+        return GameUtils.newGameDomain(1);
     }
 
     @Override
     protected Game getItem2() {
-        return GameUtils.newGame(2);
+        return GameUtils.newGameDomain(2);
     }
 
     @Override
     protected Game getAddItem() {
-        return GameUtils.newGame(null);
+        return GameUtils.newGameDomain(null);
     }
 
     @Override
     protected Game getCopyItem() {
-        final Game game = GameUtils.newGame(null);
+        final Game game = GameUtils.newGameDomain(null);
         game.setPosition(0);
 
         return game;

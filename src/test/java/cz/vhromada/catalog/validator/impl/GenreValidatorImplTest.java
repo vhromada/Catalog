@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.validator.GenreValidator;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class GenreValidatorImplTest {
     private GenreValidator genreValidator;
 
     /**
-     * Initializes validator for TO for genre.
+     * Initializes validator for genre.
      */
     @Before
     public void setUp() {
@@ -32,35 +31,35 @@ public class GenreValidatorImplTest {
      * Test method for {@link GenreValidator#validateNewGenre(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGenreTO_NullArgument() {
+    public void testValidateNewGenre_NullArgument() {
         genreValidator.validateNewGenre(null);
     }
 
     /**
-     * Test method for {@link GenreValidator#validateNewGenre(GenreTO)} with TO for genre with not null ID.
+     * Test method for {@link GenreValidator#validateNewGenre(Genre)} with genre with not null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewGenreTO_NotNullId() {
-        genreValidator.validateNewGenre(GenreUtils.newGenreTO(1));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewGenre_NotNullId() {
+        genreValidator.validateNewGenre(GenreUtils.newGenre(1));
     }
 
     /**
-     * Test method for {@link GenreValidator#validateNewGenre(GenreTO)} with TO for genre with null name.
+     * Test method for {@link GenreValidator#validateNewGenre(Genre)} with genre with null name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewGenreTO_NullName() {
-        final Genre genre = GenreUtils.newGenreTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewGenre_NullName() {
+        final Genre genre = GenreUtils.newGenre(null);
         genre.setName(null);
 
         genreValidator.validateNewGenre(genre);
     }
 
     /**
-     * Test method for {@link GenreValidator#validateNewGenre(GenreTO)} with TO for genre with empty string as name.
+     * Test method for {@link GenreValidator#validateNewGenre(Genre)} with genre with empty string as name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewGenreTO_EmptyName() {
-        final Genre genre = GenreUtils.newGenreTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewGenre_EmptyName() {
+        final Genre genre = GenreUtils.newGenre(null);
         genre.setName("");
 
         genreValidator.validateNewGenre(genre);
@@ -70,35 +69,35 @@ public class GenreValidatorImplTest {
      * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGenreTO_NullArgument() {
+    public void testValidateExistingGenre_NullArgument() {
         genreValidator.validateExistingGenre(null);
     }
 
     /**
-     * Test method for {@link GenreValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null ID.
+     * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with genre with null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingGenreTO_NullId() {
-        genreValidator.validateExistingGenre(GenreUtils.newGenreTO(null));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingGenre_NullId() {
+        genreValidator.validateExistingGenre(GenreUtils.newGenre(null));
     }
 
     /**
-     * Test method for {@link GenreValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null name.
+     * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with genre with null name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingGenreTO_NullName() {
-        final Genre genre = GenreUtils.newGenreTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingGenre_NullName() {
+        final Genre genre = GenreUtils.newGenre(1);
         genre.setName(null);
 
         genreValidator.validateExistingGenre(genre);
     }
 
     /**
-     * Test method for {@link GenreValidator#validateExistingGenreTO(GenreTO)} with TO for genre with empty string as name.
+     * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with genre with empty string as name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingGenreTO_EmptyName() {
-        final Genre genre = GenreUtils.newGenreTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingGenre_EmptyName() {
+        final Genre genre = GenreUtils.newGenre(1);
         genre.setName("");
 
         genreValidator.validateExistingGenre(genre);
@@ -108,15 +107,15 @@ public class GenreValidatorImplTest {
      * Test method for {@link GenreValidator#validateGenreWithId(Genre)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateGenreTOWithId_NullArgument() {
+    public void testValidateGenreWithId_NullArgument() {
         genreValidator.validateGenreWithId(null);
     }
 
     /**
-     * Test method for {@link GenreValidator#validateGenreTOWithId(GenreTO)} with TO for genre with null ID.
+     * Test method for {@link GenreValidator#validateGenreWithId(Genre)} with genre with null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateGenreTOWithId_NullId() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateGenreWithId_NullId() {
         genreValidator.validateGenreWithId(new Genre());
     }
 

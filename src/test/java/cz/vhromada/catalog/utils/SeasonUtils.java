@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.entity.Season;
-import cz.vhromada.catalog.utils.CollectionUtils;
 
 /**
  * A class represents utility class for seasons.
@@ -57,7 +57,7 @@ public final class SeasonUtils {
      * @param id ID
      * @return season
      */
-    public static cz.vhromada.catalog.domain.Season newSeason(final Integer id) {
+    public static cz.vhromada.catalog.domain.Season newSeasonDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Season season = new cz.vhromada.catalog.domain.Season();
         updateSeason(season);
         if (id != null) {
@@ -76,8 +76,8 @@ public final class SeasonUtils {
      * @return season with episodes
      */
     public static cz.vhromada.catalog.domain.Season newSeasonWithEpisodes(final Integer id) {
-        final cz.vhromada.catalog.domain.Season season = newSeason(id);
-        season.setEpisodes(CollectionUtils.newList(EpisodeUtils.newEpisode(id)));
+        final cz.vhromada.catalog.domain.Season season = newSeasonDomain(id);
+        season.setEpisodes(CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(id)));
 
         return season;
     }
@@ -102,9 +102,9 @@ public final class SeasonUtils {
      * @param id ID
      * @return season
      */
-    public static Season newSeasonTO(final Integer id) {
+    public static Season newSeason(final Integer id) {
         final Season season = new Season();
-        updateSeasonTO(season);
+        updateSeason(season);
         if (id != null) {
             season.setId(id);
             season.setPosition(id - 1);
@@ -118,7 +118,7 @@ public final class SeasonUtils {
      *
      * @param season season
      */
-    public static void updateSeasonTO(final Season season) {
+    public static void updateSeason(final Season season) {
         season.setNumber(2);
         season.setStartYear(START_YEAR);
         season.setEndYear(START_YEAR + 1);

@@ -7,11 +7,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.ProgramUtils;
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
+import cz.vhromada.catalog.utils.ProgramUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testFacadeContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ProgramFacadeImplIntegrationTest {
 
@@ -95,10 +93,10 @@ public class ProgramFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testAdd() {
-        programFacade.add(ProgramUtils.newProgramTO(null));
+        programFacade.add(ProgramUtils.newProgram(null));
 
         final cz.vhromada.catalog.domain.Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
-        ProgramUtils.assertProgramDeepEquals(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT + 1), addedProgram);
+        ProgramUtils.assertProgramDeepEquals(ProgramUtils.newProgramDomain(ProgramUtils.PROGRAMS_COUNT + 1), addedProgram);
 
         assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, ProgramUtils.getProgramsCount(entityManager));
     }
@@ -114,17 +112,17 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with not null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotNullId() {
-        programFacade.add(ProgramUtils.newProgramTO(1));
+        programFacade.add(ProgramUtils.newProgram(1));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullName() {
-        final Program program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgram(null);
         program.setName(null);
 
         programFacade.add(program);
@@ -133,9 +131,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_EmptyName() {
-        final Program program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgram(null);
         program.setName("");
 
         programFacade.add(program);
@@ -144,9 +142,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null URL to english Wikipedia about program.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullWikiEn() {
-        final Program program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgram(null);
         program.setWikiEn(null);
 
         programFacade.add(program);
@@ -155,9 +153,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null URL to czech Wikipedia about program.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullWikiCz() {
-        final Program program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgram(null);
         program.setWikiCz(null);
 
         programFacade.add(program);
@@ -166,9 +164,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with not positive count of media.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotPositiveMediaCount() {
-        final Program program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgram(null);
         program.setMediaCount(0);
 
         programFacade.add(program);
@@ -177,9 +175,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null other data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullOtherData() {
-        final Program program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgram(null);
         program.setOtherData(null);
 
         programFacade.add(program);
@@ -188,9 +186,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullNote() {
-        final Program program = ProgramUtils.newProgramTO(null);
+        final Program program = ProgramUtils.newProgram(null);
         program.setNote(null);
 
         programFacade.add(program);
@@ -202,7 +200,7 @@ public class ProgramFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
 
         programFacade.update(program);
 
@@ -223,17 +221,17 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullId() {
-        programFacade.update(ProgramUtils.newProgramTO(null));
+        programFacade.update(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullName() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
         program.setName(null);
 
         programFacade.update(program);
@@ -242,9 +240,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_EmptyName() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
         program.setName(null);
 
         programFacade.update(program);
@@ -253,9 +251,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null URL to english Wikipedia about program.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullWikiEn() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
         program.setWikiEn(null);
 
         programFacade.update(program);
@@ -264,9 +262,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null URL to czech Wikipedia about program.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullWikiCz() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
         program.setWikiCz(null);
 
         programFacade.update(program);
@@ -275,9 +273,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with not positive count of media.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotPositiveMediaCount() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
         program.setMediaCount(0);
 
         programFacade.update(program);
@@ -286,9 +284,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null other data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullOtherData() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
         program.setOtherData(null);
 
         programFacade.update(program);
@@ -297,9 +295,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullNote() {
-        final Program program = ProgramUtils.newProgramTO(1);
+        final Program program = ProgramUtils.newProgram(1);
         program.setNote(null);
 
         programFacade.update(program);
@@ -308,9 +306,9 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadId() {
-        programFacade.update(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.update(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -319,7 +317,7 @@ public class ProgramFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testRemove() {
-        programFacade.remove(ProgramUtils.newProgramTO(1));
+        programFacade.remove(ProgramUtils.newProgram(1));
 
         assertNull(ProgramUtils.getProgram(entityManager, 1));
 
@@ -337,17 +335,17 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#remove(Program)} with program with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullId() {
-        programFacade.remove(ProgramUtils.newProgramTO(null));
+        programFacade.remove(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#remove(Program)} with program with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadId() {
-        programFacade.remove(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.remove(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -359,7 +357,7 @@ public class ProgramFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Program program = ProgramUtils.getProgram(ProgramUtils.PROGRAMS_COUNT);
         program.setId(ProgramUtils.PROGRAMS_COUNT + 1);
 
-        programFacade.duplicate(ProgramUtils.newProgramTO(ProgramUtils.PROGRAMS_COUNT));
+        programFacade.duplicate(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT));
 
         final cz.vhromada.catalog.domain.Program duplicatedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
         ProgramUtils.assertProgramDeepEquals(program, duplicatedProgram);
@@ -378,17 +376,17 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#duplicate(Program)} with program with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullId() {
-        programFacade.duplicate(ProgramUtils.newProgramTO(null));
+        programFacade.duplicate(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#duplicate(Program)} with program with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadId() {
-        programFacade.duplicate(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.duplicate(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -402,7 +400,7 @@ public class ProgramFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.getProgram(2);
         program2.setPosition(0);
 
-        programFacade.moveUp(ProgramUtils.newProgramTO(2));
+        programFacade.moveUp(ProgramUtils.newProgram(2));
 
         ProgramUtils.assertProgramDeepEquals(program1, ProgramUtils.getProgram(entityManager, 1));
         ProgramUtils.assertProgramDeepEquals(program2, ProgramUtils.getProgram(entityManager, 2));
@@ -424,25 +422,25 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#moveUp(Program)} with program with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullId() {
-        programFacade.moveUp(ProgramUtils.newProgramTO(null));
+        programFacade.moveUp(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveUp(Program)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
-        programFacade.moveUp(ProgramUtils.newProgramTO(1));
+        programFacade.moveUp(ProgramUtils.newProgram(1));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveUp(Program)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadId() {
-        programFacade.moveUp(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.moveUp(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -456,7 +454,7 @@ public class ProgramFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.getProgram(2);
         program2.setPosition(0);
 
-        programFacade.moveDown(ProgramUtils.newProgramTO(1));
+        programFacade.moveDown(ProgramUtils.newProgram(1));
 
         ProgramUtils.assertProgramDeepEquals(program1, ProgramUtils.getProgram(entityManager, 1));
         ProgramUtils.assertProgramDeepEquals(program2, ProgramUtils.getProgram(entityManager, 2));
@@ -478,25 +476,25 @@ public class ProgramFacadeImplIntegrationTest {
     /**
      * Test method for {@link ProgramFacade#moveDown(Program)} with program with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullId() {
-        programFacade.moveDown(ProgramUtils.newProgramTO(null));
+        programFacade.moveDown(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveDown(Program)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
-        programFacade.moveDown(ProgramUtils.newProgramTO(ProgramUtils.PROGRAMS_COUNT));
+        programFacade.moveDown(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveDown(Program)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadId() {
-        programFacade.moveDown(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.moveDown(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**

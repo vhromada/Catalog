@@ -15,15 +15,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.ProgramUtils;
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.ProgramUtils;
 import cz.vhromada.catalog.validator.ProgramValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -111,8 +109,9 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testGetPrograms() {
-        final List<cz.vhromada.catalog.domain.Program> programList = CollectionUtils.newList(ProgramUtils.newProgram(1), ProgramUtils.newProgram(2));
-        final List<Program> expectedPrograms = CollectionUtils.newList(ProgramUtils.newProgramTO(1), ProgramUtils.newProgramTO(2));
+        final List<cz.vhromada.catalog.domain.Program> programList = CollectionUtils
+                .newList(ProgramUtils.newProgramDomain(1), ProgramUtils.newProgramDomain(2));
+        final List<Program> expectedPrograms = CollectionUtils.newList(ProgramUtils.newProgram(1), ProgramUtils.newProgram(2));
 
         when(programService.getAll()).thenReturn(programList);
         when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Program.class), eq(Program.class))).thenReturn(expectedPrograms);
@@ -133,8 +132,8 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testGetProgram_ExistingProgram() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(1);
-        final Program expectedProgram = ProgramUtils.newProgramTO(1);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
+        final Program expectedProgram = ProgramUtils.newProgram(1);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Program.class), eq(Program.class))).thenReturn(expectedProgram);
@@ -179,8 +178,8 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testAdd() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(null);
-        final Program program = ProgramUtils.newProgramTO(null);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(null);
+        final Program program = ProgramUtils.newProgram(null);
 
         when(converter.convert(any(Program.class), eq(cz.vhromada.catalog.domain.Program.class))).thenReturn(programEntity);
 
@@ -205,11 +204,11 @@ public class ProgramFacadeImplTest {
     /**
      * Test method for {@link ProgramFacade#add(Program)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(programValidator).validateNewProgram(any(Program.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateNewProgram(any(Program.class));
 
-        programFacade.add(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.add(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -217,8 +216,8 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(1);
-        final Program program = ProgramUtils.newProgramTO(1);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
+        final Program program = ProgramUtils.newProgram(1);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
         when(converter.convert(any(Program.class), eq(cz.vhromada.catalog.domain.Program.class))).thenReturn(programEntity);
@@ -245,21 +244,21 @@ public class ProgramFacadeImplTest {
     /**
      * Test method for {@link ProgramFacade#update(Program)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(programValidator).validateExistingProgram(any(Program.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateExistingProgram(any(Program.class));
 
-        programFacade.update(ProgramUtils.newProgramTO(null));
+        programFacade.update(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingArgument() {
         when(programService.get(anyInt())).thenReturn(null);
 
-        programFacade.update(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.update(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -267,8 +266,8 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testRemove() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(1);
-        final Program program = ProgramUtils.newProgramTO(1);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
+        final Program program = ProgramUtils.newProgram(1);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
 
@@ -294,21 +293,21 @@ public class ProgramFacadeImplTest {
     /**
      * Test method for {@link ProgramFacade#remove(Program)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(programValidator).validateProgramWithId(any(Program.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramWithId(any(Program.class));
 
-        programFacade.remove(ProgramUtils.newProgramTO(null));
+        programFacade.remove(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#remove(Program)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
         when(programService.get(anyInt())).thenReturn(null);
 
-        programFacade.remove(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.remove(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -316,8 +315,8 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testDuplicate() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(1);
-        final Program program = ProgramUtils.newProgramTO(1);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
+        final Program program = ProgramUtils.newProgram(1);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
 
@@ -343,21 +342,21 @@ public class ProgramFacadeImplTest {
     /**
      * Test method for {@link ProgramFacade#duplicate(Program)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(programValidator).validateProgramWithId(any(Program.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramWithId(any(Program.class));
 
-        programFacade.duplicate(ProgramUtils.newProgramTO(null));
+        programFacade.duplicate(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#duplicate(Program)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
         when(programService.get(anyInt())).thenReturn(null);
 
-        programFacade.duplicate(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.duplicate(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
@@ -365,9 +364,9 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testMoveUp() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(2);
-        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), programEntity);
-        final Program program = ProgramUtils.newProgramTO(2);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(2);
+        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(ProgramUtils.newProgramDomain(1), programEntity);
+        final Program program = ProgramUtils.newProgram(2);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
@@ -395,31 +394,31 @@ public class ProgramFacadeImplTest {
     /**
      * Test method for {@link ProgramFacade#moveUp(Program)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(programValidator).validateProgramWithId(any(Program.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramWithId(any(Program.class));
 
-        programFacade.moveUp(ProgramUtils.newProgramTO(null));
+        programFacade.moveUp(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveUp(Program)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
         when(programService.get(anyInt())).thenReturn(null);
 
-        programFacade.moveUp(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.moveUp(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveUp(Program)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgram(1));
-        final Program program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgramDomain(1));
+        final Program program = ProgramUtils.newProgram(Integer.MAX_VALUE);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
@@ -432,9 +431,9 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testMoveDown() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(1);
-        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgram(2));
-        final Program program = ProgramUtils.newProgramTO(1);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
+        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgramDomain(2));
+        final Program program = ProgramUtils.newProgram(1);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
@@ -462,31 +461,31 @@ public class ProgramFacadeImplTest {
     /**
      * Test method for {@link ProgramFacade#moveDown(Program)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(programValidator).validateProgramWithId(any(Program.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramWithId(any(Program.class));
 
-        programFacade.moveDown(ProgramUtils.newProgramTO(null));
+        programFacade.moveDown(ProgramUtils.newProgram(null));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveDown(Program)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
         when(programService.get(anyInt())).thenReturn(null);
 
-        programFacade.moveDown(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
+        programFacade.moveDown(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveDown(Program)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
-        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgram(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(ProgramUtils.newProgram(1), programEntity);
-        final Program program = ProgramUtils.newProgramTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(ProgramUtils.newProgramDomain(1), programEntity);
+        final Program program = ProgramUtils.newProgram(Integer.MAX_VALUE);
 
         when(programService.get(anyInt())).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
@@ -511,8 +510,8 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testGetTotalMediaCount() {
-        final cz.vhromada.catalog.domain.Program program1 = ProgramUtils.newProgram(1);
-        final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.newProgram(2);
+        final cz.vhromada.catalog.domain.Program program1 = ProgramUtils.newProgramDomain(1);
+        final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.newProgramDomain(2);
         final int expectedCount = program1.getMediaCount() + program2.getMediaCount();
 
         when(programService.getAll()).thenReturn(CollectionUtils.newList(program1, program2));

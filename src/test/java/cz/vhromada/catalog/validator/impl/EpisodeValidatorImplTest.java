@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.EpisodeUtils;
 import cz.vhromada.catalog.entity.Episode;
+import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.validator.EpisodeValidator;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class EpisodeValidatorImplTest {
     private EpisodeValidator episodeValidator;
 
     /**
-     * Initializes validator for TO for episode.
+     * Initializes validator for episode.
      */
     @Before
     public void setUp() {
@@ -32,68 +31,68 @@ public class EpisodeValidatorImplTest {
      * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewEpisodeTO_NullArgument() {
+    public void testValidateNewEpisode_NullArgument() {
         episodeValidator.validateNewEpisode(null);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateNewEpisodeTO(EpisodeTO)} with TO for episode with not null ID.
+     * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with episode with not null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewEpisodeTO_NotNullId() {
-        episodeValidator.validateNewEpisode(EpisodeUtils.newEpisodeTO(1));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewEpisode_NotNullId() {
+        episodeValidator.validateNewEpisode(EpisodeUtils.newEpisode(1));
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateNewEpisodeTO(EpisodeTO)} with TO for episode with not positive number of episode.
+     * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with episode with not positive number of episode.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewEpisodeTO_NotPositiveNumber() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewEpisode_NotPositiveNumber() {
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setNumber(0);
 
         episodeValidator.validateNewEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateNewEpisodeTO(EpisodeTO)} with TO for episode with null name.
+     * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with episode with null name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewEpisodeTO_NullName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewEpisode_NullName() {
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setName(null);
 
         episodeValidator.validateNewEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateNewEpisodeTO(EpisodeTO)} with TO for episode with empty string as name.
+     * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with episode with empty string as name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewEpisodeTO_EmptyName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewEpisode_EmptyName() {
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setName("");
 
         episodeValidator.validateNewEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateNewEpisodeTO(EpisodeTO)} with TO for episode with negative length of episode.
+     * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with episode with negative length of episode.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewEpisodeTO_NegativeLength() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewEpisode_NegativeLength() {
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setLength(-1);
 
         episodeValidator.validateNewEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateNewEpisodeTO(EpisodeTO)} with TO for episode with null note.
+     * Test method for {@link EpisodeValidator#validateNewEpisode(Episode)} with episode with null note.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewEpisodeTO_NullNote() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewEpisode_NullNote() {
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setNote(null);
 
         episodeValidator.validateNewEpisode(episode);
@@ -103,68 +102,68 @@ public class EpisodeValidatorImplTest {
      * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingEpisodeTO_NullArgument() {
+    public void testValidateExistingEpisode_NullArgument() {
         episodeValidator.validateExistingEpisode(null);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateExistingEpisodeTO(EpisodeTO)} with TO for episode with null ID.
+     * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with episode with null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingEpisodeTO_NullId() {
-        episodeValidator.validateExistingEpisode(EpisodeUtils.newEpisodeTO(null));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingEpisode_NullId() {
+        episodeValidator.validateExistingEpisode(EpisodeUtils.newEpisode(null));
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateExistingEpisodeTO(EpisodeTO)} with TO for episode with not positive number of episode.
+     * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with episode with not positive number of episode.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingEpisodeTO_NotPositiveNumber() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingEpisode_NotPositiveNumber() {
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setNumber(0);
 
         episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateExistingEpisodeTO(EpisodeTO)} with TO for episode with null name.
+     * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with episode with null name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingEpisodeTO_NullName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingEpisode_NullName() {
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setName(null);
 
         episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateExistingEpisodeTO(EpisodeTO)} with TO for episode with empty string as name.
+     * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with episode with empty string as name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingEpisodeTO_EmptyName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingEpisode_EmptyName() {
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setName("");
 
         episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateExistingEpisodeTO(EpisodeTO)} with TO for episode with negative length of episode.
+     * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with episode with negative length of episode.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingEpisodeTO_NegativeLength() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingEpisode_NegativeLength() {
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setLength(-1);
 
         episodeValidator.validateExistingEpisode(episode);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateExistingEpisodeTO(EpisodeTO)} with TO for episode with null note.
+     * Test method for {@link EpisodeValidator#validateExistingEpisode(Episode)} with episode with null note.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingEpisodeTO_NullNote() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingEpisode_NullNote() {
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setNote(null);
 
         episodeValidator.validateExistingEpisode(episode);
@@ -174,16 +173,16 @@ public class EpisodeValidatorImplTest {
      * Test method for {@link EpisodeValidator#validateEpisodeWithId(Episode)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateEpisodeTOWithId_NullArgument() {
+    public void testValidateEpisodeWithId_NullArgument() {
         episodeValidator.validateEpisodeWithId(null);
     }
 
     /**
-     * Test method for {@link EpisodeValidator#validateEpisodeTOWithId(EpisodeTO)} with TO for episode with null ID.
+     * Test method for {@link EpisodeValidator#validateEpisodeWithId(Episode)} with episode with null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateEpisodeTOWithId_NullId() {
-        episodeValidator.validateEpisodeWithId(EpisodeUtils.newEpisodeTO(null));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateEpisodeWithId_NullId() {
+        episodeValidator.validateEpisodeWithId(EpisodeUtils.newEpisode(null));
     }
 
 }

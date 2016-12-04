@@ -15,8 +15,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.GenreUtils;
-import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Season;
@@ -25,10 +23,10 @@ import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.GenreUtils;
+import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -131,8 +129,8 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetShows() {
-        final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShow(1), ShowUtils.newShow(2));
-        final List<Show> expectedShows = CollectionUtils.newList(ShowUtils.newShowTO(1), ShowUtils.newShowTO(2));
+        final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShowDomain(1), ShowUtils.newShowDomain(2));
+        final List<Show> expectedShows = CollectionUtils.newList(ShowUtils.newShow(1), ShowUtils.newShow(2));
 
         when(showService.getAll()).thenReturn(showList);
         when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Show.class), eq(Show.class))).thenReturn(expectedShows);
@@ -153,8 +151,8 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetShow_ExistingShow() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
-        final Show expectedShow = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(1);
+        final Show expectedShow = ShowUtils.newShow(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Show.class), eq(Show.class))).thenReturn(expectedShow);
@@ -199,10 +197,10 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testAdd() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(null);
-        final Show show = ShowUtils.newShowTO(null);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(null);
+        final Show show = ShowUtils.newShow(null);
 
-        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
+        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenreDomain(1));
         when(converter.convert(any(Show.class), eq(cz.vhromada.catalog.domain.Show.class))).thenReturn(showEntity);
 
         showFacade.add(show);
@@ -229,21 +227,21 @@ public class ShowFacadeImplTest {
     /**
      * Test method for {@link ShowFacade#add(Show)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateNewShow(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateNewShow(any(Show.class));
 
-        showFacade.add(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.add(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with argument with not existing genre.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingGenre() {
         when(genreService.get(anyInt())).thenReturn(null);
 
-        showFacade.add(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.add(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
@@ -251,11 +249,11 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Show show = ShowUtils.newShowTO(1);
+        final Show show = ShowUtils.newShow(1);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
-        when(showService.get(anyInt())).thenReturn(ShowUtils.newShow(1));
-        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenre(1));
+        when(showService.get(anyInt())).thenReturn(ShowUtils.newShowDomain(1));
+        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenreDomain(1));
 
         showFacade.update(show);
 
@@ -268,7 +266,7 @@ public class ShowFacadeImplTest {
         verifyNoMoreInteractions(showService, genreService, showValidator);
         verifyZeroInteractions(converter);
 
-        ShowUtils.assertShowDeepEquals(ShowUtils.newShow(1), showArgumentCaptor.getValue());
+        ShowUtils.assertShowDeepEquals(ShowUtils.newShowDomain(1), showArgumentCaptor.getValue());
     }
 
     /**
@@ -284,32 +282,32 @@ public class ShowFacadeImplTest {
     /**
      * Test method for {@link ShowFacade#update(Show)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateExistingShow(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateExistingShow(any(Show.class));
 
-        showFacade.update(ShowUtils.newShowTO(null));
+        showFacade.update(ShowUtils.newShow(null));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with not existing show.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingShow() {
         when(showService.get(anyInt())).thenReturn(null);
 
-        showFacade.update(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.update(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with not existing genre.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingGenre() {
-        when(showService.get(anyInt())).thenReturn(ShowUtils.newShow(1));
+        when(showService.get(anyInt())).thenReturn(ShowUtils.newShowDomain(1));
         when(genreService.get(anyInt())).thenReturn(null);
 
-        showFacade.update(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.update(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
@@ -317,8 +315,8 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testRemove() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
-        final Show show = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(1);
+        final Show show = ShowUtils.newShow(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
 
@@ -344,21 +342,21 @@ public class ShowFacadeImplTest {
     /**
      * Test method for {@link ShowFacade#remove(Show)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
-        showFacade.remove(ShowUtils.newShowTO(null));
+        showFacade.remove(ShowUtils.newShow(null));
     }
 
     /**
      * Test method for {@link ShowFacade#remove(Show)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
         when(showService.get(anyInt())).thenReturn(null);
 
-        showFacade.remove(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.remove(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
@@ -366,8 +364,8 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testDuplicate() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
-        final Show show = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(1);
+        final Show show = ShowUtils.newShow(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
 
@@ -393,21 +391,21 @@ public class ShowFacadeImplTest {
     /**
      * Test method for {@link ShowFacade#duplicate(Show)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
-        showFacade.duplicate(ShowUtils.newShowTO(null));
+        showFacade.duplicate(ShowUtils.newShow(null));
     }
 
     /**
      * Test method for {@link ShowFacade#duplicate(Show)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
         when(showService.get(anyInt())).thenReturn(null);
 
-        showFacade.duplicate(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.duplicate(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
@@ -415,9 +413,9 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testMoveUp() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(2);
-        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShow(1), showEntity);
-        final Show show = ShowUtils.newShowTO(2);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(2);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShowDomain(1), showEntity);
+        final Show show = ShowUtils.newShow(2);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
@@ -445,31 +443,31 @@ public class ShowFacadeImplTest {
     /**
      * Test method for {@link ShowFacade#moveUp(Show)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
-        showFacade.moveUp(ShowUtils.newShowTO(null));
+        showFacade.moveUp(ShowUtils.newShow(null));
     }
 
     /**
      * Test method for {@link ShowFacade#moveUp(Show)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
         when(showService.get(anyInt())).thenReturn(null);
 
-        showFacade.moveUp(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.moveUp(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link ShowFacade#moveUp(Show)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShow(1));
-        final Show show = ShowUtils.newShowTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShowDomain(1));
+        final Show show = ShowUtils.newShow(Integer.MAX_VALUE);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
@@ -482,9 +480,9 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testMoveDown() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(1);
-        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShow(2));
-        final Show show = ShowUtils.newShowTO(1);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(1);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShowDomain(2));
+        final Show show = ShowUtils.newShow(1);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
@@ -512,31 +510,31 @@ public class ShowFacadeImplTest {
     /**
      * Test method for {@link ShowFacade#moveDown(Show)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
-        showFacade.moveDown(ShowUtils.newShowTO(null));
+        showFacade.moveDown(ShowUtils.newShow(null));
     }
 
     /**
      * Test method for {@link ShowFacade#moveDown(Show)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
         when(showService.get(anyInt())).thenReturn(null);
 
-        showFacade.moveDown(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        showFacade.moveDown(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link ShowFacade#moveDown(Show)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
-        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShow(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShow(1), showEntity);
-        final Show show = ShowUtils.newShowTO(Integer.MAX_VALUE);
+        final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(Integer.MAX_VALUE);
+        final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShowDomain(1), showEntity);
+        final Show show = ShowUtils.newShow(Integer.MAX_VALUE);
 
         when(showService.get(anyInt())).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);

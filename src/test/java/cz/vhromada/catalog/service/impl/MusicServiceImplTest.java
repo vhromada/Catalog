@@ -1,12 +1,12 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.common.MusicUtils;
-import cz.vhromada.catalog.common.SongUtils;
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.MusicUtils;
+import cz.vhromada.catalog.utils.SongUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,22 +62,22 @@ public class MusicServiceImplTest extends AbstractServiceTest<Music> {
 
     @Override
     protected Music getItem1() {
-        return setSongs(MusicUtils.newMusic(1));
+        return setSongs(MusicUtils.newMusicDomain(1));
     }
 
     @Override
     protected Music getItem2() {
-        return setSongs(MusicUtils.newMusic(2));
+        return setSongs(MusicUtils.newMusicDomain(2));
     }
 
     @Override
     protected Music getAddItem() {
-        return MusicUtils.newMusic(null);
+        return MusicUtils.newMusicDomain(null);
     }
 
     @Override
     protected Music getCopyItem() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = MusicUtils.newMusicDomain(null);
         music.setPosition(0);
         setSongs(music);
 
@@ -102,7 +102,7 @@ public class MusicServiceImplTest extends AbstractServiceTest<Music> {
      */
     private static Music setSongs(final Music music) {
         final Integer id = music.getId();
-        final Song song = SongUtils.newSong(id);
+        final Song song = SongUtils.newSongDomain(id);
         if (id == null) {
             song.setPosition(0);
         }

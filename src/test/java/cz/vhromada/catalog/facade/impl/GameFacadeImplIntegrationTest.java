@@ -7,11 +7,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.GameUtils;
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
+import cz.vhromada.catalog.utils.GameUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testFacadeContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class GameFacadeImplIntegrationTest {
 
@@ -95,10 +93,10 @@ public class GameFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testAdd() {
-        gameFacade.add(GameUtils.newGameTO(null));
+        gameFacade.add(GameUtils.newGame(null));
 
         final cz.vhromada.catalog.domain.Game addedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1);
-        GameUtils.assertGameDeepEquals(GameUtils.newGame(GameUtils.GAMES_COUNT + 1), addedGame);
+        GameUtils.assertGameDeepEquals(GameUtils.newGameDomain(GameUtils.GAMES_COUNT + 1), addedGame);
 
         assertEquals(GameUtils.GAMES_COUNT + 1, GameUtils.getGamesCount(entityManager));
     }
@@ -114,17 +112,17 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#add(Game)} with game with not null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotNullId() {
-        gameFacade.add(GameUtils.newGameTO(1));
+        gameFacade.add(GameUtils.newGame(1));
     }
 
     /**
      * Test method for {@link GameFacade#add(Game)} with game with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullName() {
-        final Game game = GameUtils.newGameTO(null);
+        final Game game = GameUtils.newGame(null);
         game.setName(null);
 
         gameFacade.add(game);
@@ -133,9 +131,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#add(Game)} with game with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_EmptyName() {
-        final Game game = GameUtils.newGameTO(null);
+        final Game game = GameUtils.newGame(null);
         game.setName("");
 
         gameFacade.add(game);
@@ -144,9 +142,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#add(Game)} with game with null URL to english Wikipedia about game.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullWikiEn() {
-        final Game game = GameUtils.newGameTO(null);
+        final Game game = GameUtils.newGame(null);
         game.setWikiEn(null);
 
         gameFacade.add(game);
@@ -155,9 +153,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#add(Game)} with game with null URL to czech Wikipedia about game.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullWikiCz() {
-        final Game game = GameUtils.newGameTO(null);
+        final Game game = GameUtils.newGame(null);
         game.setWikiCz(null);
 
         gameFacade.add(game);
@@ -166,9 +164,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#add(Game)} with game with not positive count of media.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotPositiveMediaCount() {
-        final Game game = GameUtils.newGameTO(null);
+        final Game game = GameUtils.newGame(null);
         game.setMediaCount(0);
 
         gameFacade.add(game);
@@ -177,9 +175,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#add(Game)} with game with null other data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullOtherData() {
-        final Game game = GameUtils.newGameTO(null);
+        final Game game = GameUtils.newGame(null);
         game.setOtherData(null);
 
         gameFacade.add(game);
@@ -188,9 +186,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#add(Game)} with game with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullNote() {
-        final Game game = GameUtils.newGameTO(null);
+        final Game game = GameUtils.newGame(null);
         game.setNote(null);
 
         gameFacade.add(game);
@@ -202,7 +200,7 @@ public class GameFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
 
         gameFacade.update(game);
 
@@ -223,17 +221,17 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullId() {
-        gameFacade.update(GameUtils.newGameTO(null));
+        gameFacade.update(GameUtils.newGame(null));
     }
 
     /**
      * Test method for {@link GameFacade#update(Game)} with game with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullName() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
         game.setName(null);
 
         gameFacade.update(game);
@@ -242,9 +240,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_EmptyName() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
         game.setName(null);
 
         gameFacade.update(game);
@@ -253,9 +251,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with null URL to english Wikipedia about game.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullWikiEn() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
         game.setWikiEn(null);
 
         gameFacade.update(game);
@@ -264,9 +262,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with null URL to czech Wikipedia about game.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullWikiCz() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
         game.setWikiCz(null);
 
         gameFacade.update(game);
@@ -275,9 +273,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with not positive count of media.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotPositiveMediaCount() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
         game.setMediaCount(0);
 
         gameFacade.update(game);
@@ -286,9 +284,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with null other data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullOtherData() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
         game.setOtherData(null);
 
         gameFacade.update(game);
@@ -297,9 +295,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullNote() {
-        final Game game = GameUtils.newGameTO(1);
+        final Game game = GameUtils.newGame(1);
         game.setNote(null);
 
         gameFacade.update(game);
@@ -308,9 +306,9 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#update(Game)} with game with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadId() {
-        gameFacade.update(GameUtils.newGameTO(Integer.MAX_VALUE));
+        gameFacade.update(GameUtils.newGame(Integer.MAX_VALUE));
     }
 
     /**
@@ -319,7 +317,7 @@ public class GameFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testRemove() {
-        gameFacade.remove(GameUtils.newGameTO(1));
+        gameFacade.remove(GameUtils.newGame(1));
 
         assertNull(GameUtils.getGame(entityManager, 1));
 
@@ -337,17 +335,17 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#remove(Game)} with game with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullId() {
-        gameFacade.remove(GameUtils.newGameTO(null));
+        gameFacade.remove(GameUtils.newGame(null));
     }
 
     /**
      * Test method for {@link GameFacade#remove(Game)} with game with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadId() {
-        gameFacade.remove(GameUtils.newGameTO(Integer.MAX_VALUE));
+        gameFacade.remove(GameUtils.newGame(Integer.MAX_VALUE));
     }
 
     /**
@@ -359,7 +357,7 @@ public class GameFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Game game = GameUtils.getGame(GameUtils.GAMES_COUNT);
         game.setId(GameUtils.GAMES_COUNT + 1);
 
-        gameFacade.duplicate(GameUtils.newGameTO(GameUtils.GAMES_COUNT));
+        gameFacade.duplicate(GameUtils.newGame(GameUtils.GAMES_COUNT));
 
         final cz.vhromada.catalog.domain.Game duplicatedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1);
         GameUtils.assertGameDeepEquals(game, duplicatedGame);
@@ -378,17 +376,17 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#duplicate(Game)} with game with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullId() {
-        gameFacade.duplicate(GameUtils.newGameTO(null));
+        gameFacade.duplicate(GameUtils.newGame(null));
     }
 
     /**
      * Test method for {@link GameFacade#duplicate(Game)} with game with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadId() {
-        gameFacade.duplicate(GameUtils.newGameTO(Integer.MAX_VALUE));
+        gameFacade.duplicate(GameUtils.newGame(Integer.MAX_VALUE));
     }
 
     /**
@@ -402,7 +400,7 @@ public class GameFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Game game2 = GameUtils.getGame(2);
         game2.setPosition(0);
 
-        gameFacade.moveUp(GameUtils.newGameTO(2));
+        gameFacade.moveUp(GameUtils.newGame(2));
 
         GameUtils.assertGameDeepEquals(game1, GameUtils.getGame(entityManager, 1));
         GameUtils.assertGameDeepEquals(game2, GameUtils.getGame(entityManager, 2));
@@ -424,25 +422,25 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#moveUp(Game)} with game with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullId() {
-        gameFacade.moveUp(GameUtils.newGameTO(null));
+        gameFacade.moveUp(GameUtils.newGame(null));
     }
 
     /**
      * Test method for {@link GameFacade#moveUp(Game)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
-        gameFacade.moveUp(GameUtils.newGameTO(1));
+        gameFacade.moveUp(GameUtils.newGame(1));
     }
 
     /**
      * Test method for {@link GameFacade#moveUp(Game)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadId() {
-        gameFacade.moveUp(GameUtils.newGameTO(Integer.MAX_VALUE));
+        gameFacade.moveUp(GameUtils.newGame(Integer.MAX_VALUE));
     }
 
     /**
@@ -456,7 +454,7 @@ public class GameFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Game game2 = GameUtils.getGame(2);
         game2.setPosition(0);
 
-        gameFacade.moveDown(GameUtils.newGameTO(1));
+        gameFacade.moveDown(GameUtils.newGame(1));
 
         GameUtils.assertGameDeepEquals(game1, GameUtils.getGame(entityManager, 1));
         GameUtils.assertGameDeepEquals(game2, GameUtils.getGame(entityManager, 2));
@@ -478,25 +476,25 @@ public class GameFacadeImplIntegrationTest {
     /**
      * Test method for {@link GameFacade#moveDown(Game)} with game with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullId() {
-        gameFacade.moveDown(GameUtils.newGameTO(null));
+        gameFacade.moveDown(GameUtils.newGame(null));
     }
 
     /**
      * Test method for {@link GameFacade#moveDown(Game)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
-        gameFacade.moveDown(GameUtils.newGameTO(GameUtils.GAMES_COUNT));
+        gameFacade.moveDown(GameUtils.newGame(GameUtils.GAMES_COUNT));
     }
 
     /**
      * Test method for {@link GameFacade#moveDown(Game)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadId() {
-        gameFacade.moveDown(GameUtils.newGameTO(Integer.MAX_VALUE));
+        gameFacade.moveDown(GameUtils.newGame(Integer.MAX_VALUE));
     }
 
     /**

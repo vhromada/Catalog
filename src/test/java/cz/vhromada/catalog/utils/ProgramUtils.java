@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -49,7 +49,7 @@ public final class ProgramUtils {
      * @param id ID
      * @return program
      */
-    public static cz.vhromada.catalog.domain.Program newProgram(final Integer id) {
+    public static cz.vhromada.catalog.domain.Program newProgramDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Program program = new cz.vhromada.catalog.domain.Program();
         updateProgram(program);
         if (id != null) {
@@ -82,9 +82,9 @@ public final class ProgramUtils {
      * @param id ID
      * @return program
      */
-    public static Program newProgramTO(final Integer id) {
+    public static Program newProgram(final Integer id) {
         final Program program = new Program();
-        updateProgramTO(program);
+        updateProgram(program);
         if (id != null) {
             program.setId(id);
             program.setPosition(id - 1);
@@ -98,7 +98,7 @@ public final class ProgramUtils {
      *
      * @param program program
      */
-    public static void updateProgramTO(final Program program) {
+    public static void updateProgram(final Program program) {
         program.setName("Name");
         program.setWikiEn("enWiki");
         program.setWikiCz("czWiki");

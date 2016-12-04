@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -59,7 +59,7 @@ public final class EpisodeUtils {
      * @param id ID
      * @return episode
      */
-    public static cz.vhromada.catalog.domain.Episode newEpisode(final Integer id) {
+    public static cz.vhromada.catalog.domain.Episode newEpisodeDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Episode episode = new cz.vhromada.catalog.domain.Episode();
         updateEpisode(episode);
         if (id != null) {
@@ -88,9 +88,9 @@ public final class EpisodeUtils {
      * @param id ID
      * @return episode
      */
-    public static Episode newEpisodeTO(final Integer id) {
+    public static Episode newEpisode(final Integer id) {
         final Episode episode = new Episode();
-        updateEpisodeTO(episode);
+        updateEpisode(episode);
         if (id != null) {
             episode.setId(id);
             episode.setPosition(id - 1);
@@ -104,7 +104,7 @@ public final class EpisodeUtils {
      *
      * @param episode episode
      */
-    public static void updateEpisodeTO(final Episode episode) {
+    public static void updateEpisode(final Episode episode) {
         episode.setNumber(2);
         episode.setName("Name");
         episode.setLength(5);

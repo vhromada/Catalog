@@ -15,18 +15,16 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.SeasonUtils;
-import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.SeasonUtils;
+import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -120,7 +118,7 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testGetSeason_ExistingSeason() {
-        final Season expectedSeason = SeasonUtils.newSeasonTO(1);
+        final Season expectedSeason = SeasonUtils.newSeason(1);
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
         when(converter.convert(any(cz.vhromada.catalog.domain.Season.class), eq(Season.class))).thenReturn(expectedSeason);
@@ -131,7 +129,7 @@ public class SeasonFacadeImplTest {
         assertEquals(expectedSeason, season);
 
         verify(showService).getAll();
-        verify(converter).convert(SeasonUtils.newSeason(1), Season.class);
+        verify(converter).convert(SeasonUtils.newSeasonDomain(1), Season.class);
         verifyNoMoreInteractions(showService, converter);
         verifyZeroInteractions(showValidator, seasonValidator);
     }
@@ -164,9 +162,9 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testAdd() {
-        final Show show = ShowUtils.newShowTO(1);
-        final Season season = SeasonUtils.newSeasonTO(null);
-        final cz.vhromada.catalog.domain.Season seasonEntity = SeasonUtils.newSeason(null);
+        final Show show = ShowUtils.newShow(1);
+        final Season season = SeasonUtils.newSeason(null);
+        final cz.vhromada.catalog.domain.Season seasonEntity = SeasonUtils.newSeasonDomain(null);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
         when(showService.get(anyInt())).thenReturn(ShowUtils.newShowWithSeasons(1));
@@ -191,7 +189,7 @@ public class SeasonFacadeImplTest {
     public void testAdd_NullShowTO() {
         doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
-        seasonFacade.add(null, SeasonUtils.newSeasonTO(null));
+        seasonFacade.add(null, SeasonUtils.newSeason(null));
     }
 
     /**
@@ -201,37 +199,37 @@ public class SeasonFacadeImplTest {
     public void testAdd_NullSeasonTO() {
         doThrow(IllegalArgumentException.class).when(seasonValidator).validateNewSeason(any(Season.class));
 
-        seasonFacade.add(ShowUtils.newShowTO(1), null);
+        seasonFacade.add(ShowUtils.newShow(1), null);
     }
 
     /**
      * Test method for {@link SeasonFacade#add(Show, Season)} with TO for show with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_BadShowTO() {
-        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
-        seasonFacade.add(ShowUtils.newShowTO(1), SeasonUtils.newSeasonTO(null));
+        seasonFacade.add(ShowUtils.newShow(1), SeasonUtils.newSeason(null));
     }
 
     /**
      * Test method for {@link SeasonFacade#add(Show, Season)} with TO for season with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_BadSeasonTO() {
-        doThrow(ValidationException.class).when(seasonValidator).validateNewSeason(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateNewSeason(any(Season.class));
 
-        seasonFacade.add(ShowUtils.newShowTO(1), SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.add(ShowUtils.newShow(1), SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#add(Show, Season)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingArgument() {
         when(showService.get(anyInt())).thenReturn(null);
 
-        seasonFacade.add(ShowUtils.newShowTO(Integer.MAX_VALUE), SeasonUtils.newSeasonTO(null));
+        seasonFacade.add(ShowUtils.newShow(Integer.MAX_VALUE), SeasonUtils.newSeason(null));
     }
 
     /**
@@ -239,7 +237,7 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testUpdate() {
-        final Season season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeason(1);
         final cz.vhromada.catalog.domain.Season seasonEntity = SeasonUtils.newSeasonWithEpisodes(1);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
@@ -269,21 +267,21 @@ public class SeasonFacadeImplTest {
     /**
      * Test method for {@link SeasonFacade#update(Season)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(seasonValidator).validateExistingSeason(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateExistingSeason(any(Season.class));
 
-        seasonFacade.update(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.update(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#update(Season)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingArgument() {
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
 
-        seasonFacade.update(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.update(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
@@ -291,7 +289,7 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testRemove() {
-        final Season season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeason(1);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
@@ -304,7 +302,7 @@ public class SeasonFacadeImplTest {
         verifyNoMoreInteractions(showService, seasonValidator);
         verifyZeroInteractions(converter, showValidator);
 
-        ShowUtils.assertShowDeepEquals(ShowUtils.newShow(1), showArgumentCaptor.getValue());
+        ShowUtils.assertShowDeepEquals(ShowUtils.newShowDomain(1), showArgumentCaptor.getValue());
     }
 
     /**
@@ -320,21 +318,21 @@ public class SeasonFacadeImplTest {
     /**
      * Test method for {@link SeasonFacade#remove(Season)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
-        seasonFacade.remove(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.remove(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#remove(Season)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
 
-        seasonFacade.remove(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.remove(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
@@ -342,7 +340,7 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testDuplicate() {
-        final Season season = SeasonUtils.newSeasonTO(1);
+        final Season season = SeasonUtils.newSeason(1);
         final cz.vhromada.catalog.domain.Season seasonEntity = SeasonUtils.newSeasonWithEpisodes(null);
         season.setPosition(0);
         final cz.vhromada.catalog.domain.Show expectedShow = newShowWithSeasons(1, SeasonUtils.newSeasonWithEpisodes(1), seasonEntity);
@@ -374,21 +372,21 @@ public class SeasonFacadeImplTest {
     /**
      * Test method for {@link SeasonFacade#duplicate(Season)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
-        seasonFacade.duplicate(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.duplicate(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#duplicate(Season)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
 
-        seasonFacade.duplicate(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.duplicate(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
@@ -396,14 +394,14 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testMoveUp() {
-        final Season season = SeasonUtils.newSeasonTO(2);
-        final cz.vhromada.catalog.domain.Season expectedSeason1 = SeasonUtils.newSeason(1);
+        final Season season = SeasonUtils.newSeason(2);
+        final cz.vhromada.catalog.domain.Season expectedSeason1 = SeasonUtils.newSeasonDomain(1);
         expectedSeason1.setPosition(1);
-        final cz.vhromada.catalog.domain.Season expectedSeason2 = SeasonUtils.newSeason(2);
+        final cz.vhromada.catalog.domain.Season expectedSeason2 = SeasonUtils.newSeasonDomain(2);
         expectedSeason2.setPosition(0);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
-        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeason(1), SeasonUtils.newSeason(2))));
+        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(2))));
 
         seasonFacade.moveUp(season);
 
@@ -429,31 +427,31 @@ public class SeasonFacadeImplTest {
     /**
      * Test method for {@link SeasonFacade#moveUp(Season)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
-        seasonFacade.moveUp(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.moveUp(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#moveUp(Season)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
 
-        seasonFacade.moveUp(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.moveUp(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#moveUp(Season)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
-        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeason(1), SeasonUtils.newSeason(2))));
+        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(2))));
 
-        seasonFacade.moveUp(SeasonUtils.newSeasonTO(1));
+        seasonFacade.moveUp(SeasonUtils.newSeason(1));
     }
 
     /**
@@ -461,14 +459,14 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testMoveDown() {
-        final Season season = SeasonUtils.newSeasonTO(1);
-        final cz.vhromada.catalog.domain.Season expectedSeason1 = SeasonUtils.newSeason(1);
+        final Season season = SeasonUtils.newSeason(1);
+        final cz.vhromada.catalog.domain.Season expectedSeason1 = SeasonUtils.newSeasonDomain(1);
         expectedSeason1.setPosition(1);
-        final cz.vhromada.catalog.domain.Season expectedSeason2 = SeasonUtils.newSeason(2);
+        final cz.vhromada.catalog.domain.Season expectedSeason2 = SeasonUtils.newSeasonDomain(2);
         expectedSeason2.setPosition(0);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
-        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeason(1), SeasonUtils.newSeason(2))));
+        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(2))));
 
         seasonFacade.moveDown(season);
 
@@ -494,31 +492,31 @@ public class SeasonFacadeImplTest {
     /**
      * Test method for {@link SeasonFacade#moveDown(Season)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
 
-        seasonFacade.moveDown(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.moveDown(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#moveDown(Season)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));
 
-        seasonFacade.moveDown(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        seasonFacade.moveDown(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#moveDown(Season)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
-        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeason(1), SeasonUtils.newSeason(2))));
+        when(showService.getAll()).thenReturn(CollectionUtils.newList(newShowWithSeasons(1, SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(2))));
 
-        seasonFacade.moveDown(SeasonUtils.newSeasonTO(2));
+        seasonFacade.moveDown(SeasonUtils.newSeason(2));
     }
 
     /**
@@ -526,8 +524,8 @@ public class SeasonFacadeImplTest {
      */
     @Test
     public void testFindSeasonsByShow() {
-        final Show show = ShowUtils.newShowTO(1);
-        final List<Season> expectedSeasons = CollectionUtils.newList(SeasonUtils.newSeasonTO(1));
+        final Show show = ShowUtils.newShow(1);
+        final List<Season> expectedSeasons = CollectionUtils.newList(SeasonUtils.newSeason(1));
 
         when(showService.get(anyInt())).thenReturn(ShowUtils.newShowWithSeasons(1));
         when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Season.class), eq(Season.class))).thenReturn(expectedSeasons);
@@ -538,7 +536,7 @@ public class SeasonFacadeImplTest {
         assertEquals(expectedSeasons, seasons);
 
         verify(showService).get(show.getId());
-        verify(converter).convertCollection(CollectionUtils.newList(SeasonUtils.newSeason(1)), Season.class);
+        verify(converter).convertCollection(CollectionUtils.newList(SeasonUtils.newSeasonDomain(1)), Season.class);
         verify(showValidator).validateShowWithId(show);
         verifyNoMoreInteractions(showService, converter, showValidator);
         verifyZeroInteractions(seasonValidator);
@@ -557,21 +555,21 @@ public class SeasonFacadeImplTest {
     /**
      * Test method for {@link SeasonFacade#findSeasonsByShow(Show)} with argument with bad data.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFindSeasonsByShow_BadArgument() {
-        doThrow(ValidationException.class).when(showValidator).validateShowWithId(any(Show.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
-        seasonFacade.findSeasonsByShow(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        seasonFacade.findSeasonsByShow(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
      * Test method for {@link SeasonFacade#findSeasonsByShow(Show)} with not existing argument.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFindSeasonsByShow_NotExistingArgument() {
         when(showService.get(anyInt())).thenReturn(null);
 
-        seasonFacade.findSeasonsByShow(ShowUtils.newShowTO(Integer.MAX_VALUE));
+        seasonFacade.findSeasonsByShow(ShowUtils.newShow(Integer.MAX_VALUE));
     }
 
     /**
@@ -582,7 +580,7 @@ public class SeasonFacadeImplTest {
      * @return show with shows
      */
     private static cz.vhromada.catalog.domain.Show newShowWithSeasons(final Integer id, final cz.vhromada.catalog.domain.Season... seasons) {
-        final cz.vhromada.catalog.domain.Show show = ShowUtils.newShow(id);
+        final cz.vhromada.catalog.domain.Show show = ShowUtils.newShowDomain(id);
         show.setSeasons(CollectionUtils.newList(seasons));
 
         return show;

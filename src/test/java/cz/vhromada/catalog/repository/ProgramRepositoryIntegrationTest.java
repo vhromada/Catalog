@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.ProgramUtils;
 import cz.vhromada.catalog.domain.Program;
+import cz.vhromada.catalog.utils.ProgramUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testRepositoryContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @Transactional
 @Rollback
 public class ProgramRepositoryIntegrationTest {
@@ -78,7 +78,7 @@ public class ProgramRepositoryIntegrationTest {
      */
     @Test
     public void testAdd() {
-        final Program program = ProgramUtils.newProgram(null);
+        final Program program = ProgramUtils.newProgramDomain(null);
 
         programRepository.saveAndFlush(program);
 
@@ -86,7 +86,7 @@ public class ProgramRepositoryIntegrationTest {
         assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, program.getId().intValue());
 
         final Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
-        final Program expectedAddProgram = ProgramUtils.newProgram(null);
+        final Program expectedAddProgram = ProgramUtils.newProgramDomain(null);
         expectedAddProgram.setId(ProgramUtils.PROGRAMS_COUNT + 1);
         ProgramUtils.assertProgramDeepEquals(expectedAddProgram, addedProgram);
 

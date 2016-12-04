@@ -5,13 +5,11 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.MusicUtils;
-import cz.vhromada.catalog.common.SongUtils;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
+import cz.vhromada.catalog.utils.MusicUtils;
+import cz.vhromada.catalog.utils.SongUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testFacadeContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class SongFacadeImplIntegrationTest {
 
@@ -72,10 +70,10 @@ public class SongFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testAdd() {
-        final cz.vhromada.catalog.domain.Song expectedSong = SongUtils.newSong(SongUtils.SONGS_COUNT + 1);
+        final cz.vhromada.catalog.domain.Song expectedSong = SongUtils.newSongDomain(SongUtils.SONGS_COUNT + 1);
         expectedSong.setPosition(Integer.MAX_VALUE);
 
-        songFacade.add(MusicUtils.newMusicTO(1), SongUtils.newSongTO(null));
+        songFacade.add(MusicUtils.newMusic(1), SongUtils.newSong(null));
 
         final cz.vhromada.catalog.domain.Song addedSong = SongUtils.getSong(entityManager, SongUtils.SONGS_COUNT + 1);
         SongUtils.assertSongDeepEquals(expectedSong, addedSong);
@@ -88,7 +86,7 @@ public class SongFacadeImplIntegrationTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullMusicTO() {
-        songFacade.add(null, SongUtils.newSongTO(null));
+        songFacade.add(null, SongUtils.newSong(null));
     }
 
     /**
@@ -96,75 +94,75 @@ public class SongFacadeImplIntegrationTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSongTO() {
-        songFacade.add(MusicUtils.newMusicTO(1), null);
+        songFacade.add(MusicUtils.newMusic(1), null);
     }
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with music with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullId() {
-        songFacade.add(MusicUtils.newMusicTO(null), SongUtils.newSongTO(null));
+        songFacade.add(MusicUtils.newMusic(null), SongUtils.newSong(null));
     }
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with song with not null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotNullId() {
-        songFacade.add(MusicUtils.newMusicTO(1), SongUtils.newSongTO(1));
+        songFacade.add(MusicUtils.newMusic(1), SongUtils.newSong(1));
     }
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with song with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullName() {
-        final Song song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSong(null);
         song.setName(null);
 
-        songFacade.add(MusicUtils.newMusicTO(1), song);
+        songFacade.add(MusicUtils.newMusic(1), song);
     }
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with song with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_EmptyName() {
-        final Song song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSong(null);
         song.setName("");
 
-        songFacade.add(MusicUtils.newMusicTO(1), song);
+        songFacade.add(MusicUtils.newMusic(1), song);
     }
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with song with negative length.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NegativeLength() {
-        final Song song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSong(null);
         song.setLength(-1);
 
-        songFacade.add(MusicUtils.newMusicTO(1), song);
+        songFacade.add(MusicUtils.newMusic(1), song);
     }
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with song with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullNote() {
-        final Song song = SongUtils.newSongTO(null);
+        final Song song = SongUtils.newSong(null);
         song.setNote(null);
 
-        songFacade.add(MusicUtils.newMusicTO(1), song);
+        songFacade.add(MusicUtils.newMusic(1), song);
     }
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with song with not existing music.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingMusic() {
-        songFacade.add(MusicUtils.newMusicTO(Integer.MAX_VALUE), SongUtils.newSongTO(null));
+        songFacade.add(MusicUtils.newMusic(Integer.MAX_VALUE), SongUtils.newSong(null));
     }
 
     /**
@@ -173,7 +171,7 @@ public class SongFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final Song song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSong(1);
 
         songFacade.update(song);
 
@@ -194,17 +192,17 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#update(Song)} with song with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullId() {
-        songFacade.update(SongUtils.newSongTO(null));
+        songFacade.update(SongUtils.newSong(null));
     }
 
     /**
      * Test method for {@link SongFacade#update(Song)} with song with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullName() {
-        final Song song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSong(1);
         song.setName(null);
 
         songFacade.update(song);
@@ -213,9 +211,9 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#update(Song)} with song with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_EmptyName() {
-        final Song song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSong(1);
         song.setName(null);
 
         songFacade.update(song);
@@ -224,9 +222,9 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#update(Song)} with song with negative length.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NegativeLength() {
-        final Song song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSong(1);
         song.setLength(-1);
 
         songFacade.update(song);
@@ -235,9 +233,9 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#update(Song)} with song with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullNote() {
-        final Song song = SongUtils.newSongTO(1);
+        final Song song = SongUtils.newSong(1);
         song.setNote(null);
 
         songFacade.update(song);
@@ -246,9 +244,9 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#update(Song)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadId() {
-        songFacade.update(SongUtils.newSongTO(Integer.MAX_VALUE));
+        songFacade.update(SongUtils.newSong(Integer.MAX_VALUE));
     }
 
     /**
@@ -257,7 +255,7 @@ public class SongFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testRemove() {
-        songFacade.remove(SongUtils.newSongTO(1));
+        songFacade.remove(SongUtils.newSong(1));
 
         assertNull(SongUtils.getSong(entityManager, 1));
 
@@ -275,17 +273,17 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#remove(Song)} with song with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullId() {
-        songFacade.remove(SongUtils.newSongTO(null));
+        songFacade.remove(SongUtils.newSong(null));
     }
 
     /**
      * Test method for {@link SongFacade#remove(Song)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadId() {
-        songFacade.remove(SongUtils.newSongTO(Integer.MAX_VALUE));
+        songFacade.remove(SongUtils.newSong(Integer.MAX_VALUE));
     }
 
     /**
@@ -297,7 +295,7 @@ public class SongFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Song song = SongUtils.getSong(1);
         song.setId(SongUtils.SONGS_COUNT + 1);
 
-        songFacade.duplicate(SongUtils.newSongTO(1));
+        songFacade.duplicate(SongUtils.newSong(1));
 
         final cz.vhromada.catalog.domain.Song duplicatedSong = SongUtils.getSong(entityManager, SongUtils.SONGS_COUNT + 1);
         SongUtils.assertSongDeepEquals(song, duplicatedSong);
@@ -316,17 +314,17 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#duplicate(Song)} with song with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullId() {
-        songFacade.duplicate(SongUtils.newSongTO(null));
+        songFacade.duplicate(SongUtils.newSong(null));
     }
 
     /**
      * Test method for {@link SongFacade#duplicate(Song)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadId() {
-        songFacade.duplicate(SongUtils.newSongTO(Integer.MAX_VALUE));
+        songFacade.duplicate(SongUtils.newSong(Integer.MAX_VALUE));
     }
 
     /**
@@ -340,7 +338,7 @@ public class SongFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Song song2 = SongUtils.getSong(2);
         song2.setPosition(0);
 
-        songFacade.moveUp(SongUtils.newSongTO(2));
+        songFacade.moveUp(SongUtils.newSong(2));
 
         SongUtils.assertSongDeepEquals(song1, SongUtils.getSong(entityManager, 1));
         SongUtils.assertSongDeepEquals(song2, SongUtils.getSong(entityManager, 2));
@@ -362,25 +360,25 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#moveUp(Song)} with song with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullId() {
-        songFacade.moveUp(SongUtils.newSongTO(null));
+        songFacade.moveUp(SongUtils.newSong(null));
     }
 
     /**
      * Test method for {@link SongFacade#moveUp(Song)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
-        songFacade.moveUp(SongUtils.newSongTO(1));
+        songFacade.moveUp(SongUtils.newSong(1));
     }
 
     /**
      * Test method for {@link SongFacade#moveUp(Song)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadId() {
-        songFacade.moveUp(SongUtils.newSongTO(Integer.MAX_VALUE));
+        songFacade.moveUp(SongUtils.newSong(Integer.MAX_VALUE));
     }
 
     /**
@@ -394,7 +392,7 @@ public class SongFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Song song2 = SongUtils.getSong(2);
         song2.setPosition(0);
 
-        songFacade.moveDown(SongUtils.newSongTO(1));
+        songFacade.moveDown(SongUtils.newSong(1));
 
         SongUtils.assertSongDeepEquals(song1, SongUtils.getSong(entityManager, 1));
         SongUtils.assertSongDeepEquals(song2, SongUtils.getSong(entityManager, 2));
@@ -416,25 +414,25 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#moveDown(Song)} with song with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullId() {
-        songFacade.moveDown(SongUtils.newSongTO(null));
+        songFacade.moveDown(SongUtils.newSong(null));
     }
 
     /**
      * Test method for {@link SongFacade#moveDown(Song)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
-        songFacade.moveDown(SongUtils.newSongTO(SongUtils.SONGS_COUNT));
+        songFacade.moveDown(SongUtils.newSong(SongUtils.SONGS_COUNT));
     }
 
     /**
      * Test method for {@link SongFacade#moveDown(Song)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadId() {
-        songFacade.moveDown(SongUtils.newSongTO(Integer.MAX_VALUE));
+        songFacade.moveDown(SongUtils.newSong(Integer.MAX_VALUE));
     }
 
     /**
@@ -443,7 +441,7 @@ public class SongFacadeImplIntegrationTest {
     @Test
     public void testFindSongsByMusic() {
         for (int i = 1; i <= MusicUtils.MUSIC_COUNT; i++) {
-            SongUtils.assertSongListDeepEquals(songFacade.findSongsByMusic(MusicUtils.newMusicTO(i)), SongUtils.getSongs(i));
+            SongUtils.assertSongListDeepEquals(songFacade.findSongsByMusic(MusicUtils.newMusic(i)), SongUtils.getSongs(i));
         }
 
         assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
@@ -460,17 +458,17 @@ public class SongFacadeImplIntegrationTest {
     /**
      * Test method for {@link SongFacade#findSongsByMusic(Music)} with music with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFindSongsByMusic_NullId() {
-        songFacade.findSongsByMusic(MusicUtils.newMusicTO(null));
+        songFacade.findSongsByMusic(MusicUtils.newMusic(null));
     }
 
     /**
      * Test method for {@link SongFacade#findSongsByMusic(Music)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFindSongsByMusic_BadId() {
-        songFacade.findSongsByMusic(MusicUtils.newMusicTO(Integer.MAX_VALUE));
+        songFacade.findSongsByMusic(MusicUtils.newMusic(Integer.MAX_VALUE));
     }
 
 }

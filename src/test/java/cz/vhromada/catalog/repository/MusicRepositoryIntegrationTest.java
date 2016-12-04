@@ -8,10 +8,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.MusicUtils;
-import cz.vhromada.catalog.common.SongUtils;
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
+import cz.vhromada.catalog.utils.MusicUtils;
+import cz.vhromada.catalog.utils.SongUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testRepositoryContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @Transactional
 @Rollback
 public class MusicRepositoryIntegrationTest {
@@ -82,7 +82,7 @@ public class MusicRepositoryIntegrationTest {
      */
     @Test
     public void testAdd() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = MusicUtils.newMusicDomain(null);
 
         musicRepository.saveAndFlush(music);
 
@@ -90,7 +90,7 @@ public class MusicRepositoryIntegrationTest {
         assertEquals(MusicUtils.MUSIC_COUNT + 1, music.getId().intValue());
 
         final Music addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
-        final Music expectedAddMusic = MusicUtils.newMusic(null);
+        final Music expectedAddMusic = MusicUtils.newMusicDomain(null);
         expectedAddMusic.setId(MusicUtils.MUSIC_COUNT + 1);
         MusicUtils.assertMusicDeepEquals(expectedAddMusic, addedMusic);
 
@@ -122,7 +122,7 @@ public class MusicRepositoryIntegrationTest {
      */
     @Test
     public void testUpdate_Song() {
-        final Song song = SongUtils.newSong(null);
+        final Song song = SongUtils.newSongDomain(null);
         entityManager.persist(song);
 
         final Music music = MusicUtils.getMusic(entityManager, 1);
@@ -131,7 +131,7 @@ public class MusicRepositoryIntegrationTest {
         musicRepository.saveAndFlush(music);
 
         final Music updatedMusic = MusicUtils.getMusic(entityManager, 1);
-        final Song expectedSong = SongUtils.newSong(null);
+        final Song expectedSong = SongUtils.newSongDomain(null);
         expectedSong.setId(SongUtils.SONGS_COUNT + 1);
         final Music expectedUpdatedMusic = MusicUtils.getMusic(1);
         expectedUpdatedMusic.getSongs().add(expectedSong);

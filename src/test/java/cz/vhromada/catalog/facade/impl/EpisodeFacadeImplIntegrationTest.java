@@ -5,13 +5,11 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EpisodeUtils;
-import cz.vhromada.catalog.common.SeasonUtils;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
-import cz.vhromada.validators.exceptions.RecordNotFoundException;
-import cz.vhromada.validators.exceptions.ValidationException;
+import cz.vhromada.catalog.utils.EpisodeUtils;
+import cz.vhromada.catalog.utils.SeasonUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testFacadeContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class EpisodeFacadeImplIntegrationTest {
 
@@ -72,10 +70,10 @@ public class EpisodeFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testAdd() {
-        final cz.vhromada.catalog.domain.Episode expectedEpisode = EpisodeUtils.newEpisode(EpisodeUtils.EPISODES_COUNT + 1);
+        final cz.vhromada.catalog.domain.Episode expectedEpisode = EpisodeUtils.newEpisodeDomain(EpisodeUtils.EPISODES_COUNT + 1);
         expectedEpisode.setPosition(Integer.MAX_VALUE);
 
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.add(SeasonUtils.newSeason(1), EpisodeUtils.newEpisode(null));
 
         final cz.vhromada.catalog.domain.Episode addedEpisode = EpisodeUtils.getEpisode(entityManager, EpisodeUtils.EPISODES_COUNT + 1);
         EpisodeUtils.assertEpisodeDeepEquals(expectedEpisode, addedEpisode);
@@ -88,7 +86,7 @@ public class EpisodeFacadeImplIntegrationTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonTO() {
-        episodeFacade.add(null, EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.add(null, EpisodeUtils.newEpisode(null));
     }
 
     /**
@@ -96,86 +94,86 @@ public class EpisodeFacadeImplIntegrationTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullEpisodeTO() {
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), null);
+        episodeFacade.add(SeasonUtils.newSeason(1), null);
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with season with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullId() {
-        episodeFacade.add(SeasonUtils.newSeasonTO(null), EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.add(SeasonUtils.newSeason(null), EpisodeUtils.newEpisode(null));
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with not null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotNullId() {
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(1));
+        episodeFacade.add(SeasonUtils.newSeason(1), EpisodeUtils.newEpisode(1));
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with not positive number of episode.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotPositiveNumber() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setNumber(0);
 
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), episode);
+        episodeFacade.add(SeasonUtils.newSeason(1), episode);
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setName(null);
 
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), episode);
+        episodeFacade.add(SeasonUtils.newSeason(1), episode);
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_EmptyName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setName("");
 
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), episode);
+        episodeFacade.add(SeasonUtils.newSeason(1), episode);
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with negative length.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NegativeLength() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setLength(-1);
 
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), episode);
+        episodeFacade.add(SeasonUtils.newSeason(1), episode);
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullNote() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(null);
+        final Episode episode = EpisodeUtils.newEpisode(null);
         episode.setNote(null);
 
-        episodeFacade.add(SeasonUtils.newSeasonTO(1), episode);
+        episodeFacade.add(SeasonUtils.newSeason(1), episode);
     }
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with not existing season.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingSeason() {
-        episodeFacade.add(SeasonUtils.newSeasonTO(Integer.MAX_VALUE), EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.add(SeasonUtils.newSeason(Integer.MAX_VALUE), EpisodeUtils.newEpisode(null));
     }
 
     /**
@@ -184,7 +182,7 @@ public class EpisodeFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testUpdate() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisode(1);
 
         episodeFacade.update(episode);
 
@@ -205,17 +203,17 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#update(Episode)} with episode with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullId() {
-        episodeFacade.update(EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.update(EpisodeUtils.newEpisode(null));
     }
 
     /**
      * Test method for {@link EpisodeFacade#update(Episode)} with episode with not positive number of episode.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotPositiveNumber() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setNumber(0);
 
         episodeFacade.update(episode);
@@ -224,9 +222,9 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#update(Episode)} with episode with null name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setName(null);
 
         episodeFacade.update(episode);
@@ -235,9 +233,9 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#update(Episode)} with episode with empty string as name.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_EmptyName() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setName(null);
 
         episodeFacade.update(episode);
@@ -246,9 +244,9 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#update(Episode)} with episode with negative length.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NegativeLength() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setLength(-1);
 
         episodeFacade.update(episode);
@@ -257,9 +255,9 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#update(Episode)} with episode with null note.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullNote() {
-        final Episode episode = EpisodeUtils.newEpisodeTO(1);
+        final Episode episode = EpisodeUtils.newEpisode(1);
         episode.setNote(null);
 
         episodeFacade.update(episode);
@@ -268,9 +266,9 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#update(Episode)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadId() {
-        episodeFacade.update(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
+        episodeFacade.update(EpisodeUtils.newEpisode(Integer.MAX_VALUE));
     }
 
     /**
@@ -279,7 +277,7 @@ public class EpisodeFacadeImplIntegrationTest {
     @Test
     @DirtiesContext
     public void testRemove() {
-        episodeFacade.remove(EpisodeUtils.newEpisodeTO(1));
+        episodeFacade.remove(EpisodeUtils.newEpisode(1));
 
         assertNull(EpisodeUtils.getEpisode(entityManager, 1));
 
@@ -297,17 +295,17 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#remove(Episode)} with episode with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullId() {
-        episodeFacade.remove(EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.remove(EpisodeUtils.newEpisode(null));
     }
 
     /**
      * Test method for {@link EpisodeFacade#remove(Episode)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadId() {
-        episodeFacade.remove(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
+        episodeFacade.remove(EpisodeUtils.newEpisode(Integer.MAX_VALUE));
     }
 
     /**
@@ -319,7 +317,7 @@ public class EpisodeFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Episode episode = EpisodeUtils.getEpisode(1);
         episode.setId(EpisodeUtils.EPISODES_COUNT + 1);
 
-        episodeFacade.duplicate(EpisodeUtils.newEpisodeTO(1));
+        episodeFacade.duplicate(EpisodeUtils.newEpisode(1));
 
         final cz.vhromada.catalog.domain.Episode duplicatedEpisode = EpisodeUtils.getEpisode(entityManager, EpisodeUtils.EPISODES_COUNT + 1);
         EpisodeUtils.assertEpisodeDeepEquals(episode, duplicatedEpisode);
@@ -338,17 +336,17 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#duplicate(Episode)} with episode with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullId() {
-        episodeFacade.duplicate(EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.duplicate(EpisodeUtils.newEpisode(null));
     }
 
     /**
      * Test method for {@link EpisodeFacade#duplicate(Episode)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadId() {
-        episodeFacade.duplicate(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
+        episodeFacade.duplicate(EpisodeUtils.newEpisode(Integer.MAX_VALUE));
     }
 
     /**
@@ -362,7 +360,7 @@ public class EpisodeFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Episode episode2 = EpisodeUtils.getEpisode(2);
         episode2.setPosition(0);
 
-        episodeFacade.moveUp(EpisodeUtils.newEpisodeTO(2));
+        episodeFacade.moveUp(EpisodeUtils.newEpisode(2));
 
         EpisodeUtils.assertEpisodeDeepEquals(episode1, EpisodeUtils.getEpisode(entityManager, 1));
         EpisodeUtils.assertEpisodeDeepEquals(episode2, EpisodeUtils.getEpisode(entityManager, 2));
@@ -384,25 +382,25 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#moveUp(Episode)} with episode with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullId() {
-        episodeFacade.moveUp(EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.moveUp(EpisodeUtils.newEpisode(null));
     }
 
     /**
      * Test method for {@link EpisodeFacade#moveUp(Episode)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
-        episodeFacade.moveUp(EpisodeUtils.newEpisodeTO(1));
+        episodeFacade.moveUp(EpisodeUtils.newEpisode(1));
     }
 
     /**
      * Test method for {@link EpisodeFacade#moveUp(Episode)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadId() {
-        episodeFacade.moveUp(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
+        episodeFacade.moveUp(EpisodeUtils.newEpisode(Integer.MAX_VALUE));
     }
 
     /**
@@ -416,7 +414,7 @@ public class EpisodeFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Episode episode2 = EpisodeUtils.getEpisode(2);
         episode2.setPosition(0);
 
-        episodeFacade.moveDown(EpisodeUtils.newEpisodeTO(1));
+        episodeFacade.moveDown(EpisodeUtils.newEpisode(1));
 
         EpisodeUtils.assertEpisodeDeepEquals(episode1, EpisodeUtils.getEpisode(entityManager, 1));
         EpisodeUtils.assertEpisodeDeepEquals(episode2, EpisodeUtils.getEpisode(entityManager, 2));
@@ -438,25 +436,25 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#moveDown(Episode)} with episode with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullId() {
-        episodeFacade.moveDown(EpisodeUtils.newEpisodeTO(null));
+        episodeFacade.moveDown(EpisodeUtils.newEpisode(null));
     }
 
     /**
      * Test method for {@link EpisodeFacade#moveDown(Episode)} with not movable argument.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
-        episodeFacade.moveDown(EpisodeUtils.newEpisodeTO(EpisodeUtils.EPISODES_COUNT));
+        episodeFacade.moveDown(EpisodeUtils.newEpisode(EpisodeUtils.EPISODES_COUNT));
     }
 
     /**
      * Test method for {@link EpisodeFacade#moveDown(Episode)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadId() {
-        episodeFacade.moveDown(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
+        episodeFacade.moveDown(EpisodeUtils.newEpisode(Integer.MAX_VALUE));
     }
 
     /**
@@ -467,7 +465,7 @@ public class EpisodeFacadeImplIntegrationTest {
         for (int i = 0; i < SeasonUtils.SEASONS_COUNT; i++) {
             final int showNumber = i / SeasonUtils.SEASONS_PER_SHOW_COUNT + 1;
             final int seasonNumber = i % SeasonUtils.SEASONS_PER_SHOW_COUNT + 1;
-            EpisodeUtils.assertEpisodeListDeepEquals(episodeFacade.findEpisodesBySeason(SeasonUtils.newSeasonTO(i + 1)),
+            EpisodeUtils.assertEpisodeListDeepEquals(episodeFacade.findEpisodesBySeason(SeasonUtils.newSeason(i + 1)),
                     EpisodeUtils.getEpisodes(showNumber, seasonNumber));
         }
 
@@ -485,17 +483,17 @@ public class EpisodeFacadeImplIntegrationTest {
     /**
      * Test method for {@link EpisodeFacade#findEpisodesBySeason(Season)} with season with null ID.
      */
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFindEpisodesBySeason_NullId() {
-        episodeFacade.findEpisodesBySeason(SeasonUtils.newSeasonTO(null));
+        episodeFacade.findEpisodesBySeason(SeasonUtils.newSeason(null));
     }
 
     /**
      * Test method for {@link EpisodeFacade#findEpisodesBySeason(Season)} with bad ID.
      */
-    @Test(expected = RecordNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFindEpisodesBySeason_BadId() {
-        episodeFacade.findEpisodesBySeason(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
+        episodeFacade.findEpisodesBySeason(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }
 
 }

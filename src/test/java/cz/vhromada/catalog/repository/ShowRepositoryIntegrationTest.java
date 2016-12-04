@@ -8,13 +8,13 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.EpisodeUtils;
-import cz.vhromada.catalog.common.GenreUtils;
-import cz.vhromada.catalog.common.SeasonUtils;
-import cz.vhromada.catalog.common.ShowUtils;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.EpisodeUtils;
+import cz.vhromada.catalog.utils.GenreUtils;
+import cz.vhromada.catalog.utils.SeasonUtils;
+import cz.vhromada.catalog.utils.ShowUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testRepositoryContext.xml")
+@ContextConfiguration("classpath:testCatalogContext.xml")
 @Transactional
 @Rollback
 public class ShowRepositoryIntegrationTest {
@@ -87,7 +87,7 @@ public class ShowRepositoryIntegrationTest {
      */
     @Test
     public void testAdd() {
-        final Show show = ShowUtils.newShow(null);
+        final Show show = ShowUtils.newShowDomain(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
 
         showRepository.saveAndFlush(show);
@@ -96,9 +96,9 @@ public class ShowRepositoryIntegrationTest {
         assertEquals(ShowUtils.SHOWS_COUNT + 1, show.getId().intValue());
 
         final Show addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
-        final Show expectedAddedShow = ShowUtils.newShow(null);
+        final Show expectedAddedShow = ShowUtils.newShowDomain(null);
         expectedAddedShow.setId(ShowUtils.SHOWS_COUNT + 1);
-        expectedAddedShow.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
+        expectedAddedShow.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         ShowUtils.assertShowDeepEquals(expectedAddedShow, addedShow);
 
         assertEquals(ShowUtils.SHOWS_COUNT + 1, ShowUtils.getShowsCount(entityManager));
@@ -131,7 +131,7 @@ public class ShowRepositoryIntegrationTest {
      */
     @Test
     public void testUpdate_Season() {
-        final Season season = SeasonUtils.newSeason(null);
+        final Season season = SeasonUtils.newSeasonDomain(null);
         entityManager.persist(season);
 
         final Show show = ShowUtils.getShow(entityManager, 1);
@@ -140,7 +140,7 @@ public class ShowRepositoryIntegrationTest {
         showRepository.saveAndFlush(show);
 
         final Show updatedShow = ShowUtils.getShow(entityManager, 1);
-        final Season expectedSeason = SeasonUtils.newSeason(null);
+        final Season expectedSeason = SeasonUtils.newSeasonDomain(null);
         expectedSeason.setId(SeasonUtils.SEASONS_COUNT + 1);
         final Show expectedUpdatedShow = ShowUtils.getShow(1);
         expectedUpdatedShow.getSeasons().add(expectedSeason);

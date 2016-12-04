@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.service.impl;
 
-import cz.vhromada.catalog.common.ProgramUtils;
 import cz.vhromada.catalog.domain.Program;
 import cz.vhromada.catalog.repository.ProgramRepository;
 import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.catalog.utils.ProgramUtils;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -56,22 +56,22 @@ public class ProgramServiceImplTest extends AbstractServiceTest<Program> {
 
     @Override
     protected Program getItem1() {
-        return ProgramUtils.newProgram(1);
+        return ProgramUtils.newProgramDomain(1);
     }
 
     @Override
     protected Program getItem2() {
-        return ProgramUtils.newProgram(2);
+        return ProgramUtils.newProgramDomain(2);
     }
 
     @Override
     protected Program getAddItem() {
-        return ProgramUtils.newProgram(null);
+        return ProgramUtils.newProgramDomain(null);
     }
 
     @Override
     protected Program getCopyItem() {
-        final Program program = ProgramUtils.newProgram(null);
+        final Program program = ProgramUtils.newProgramDomain(null);
         program.setPosition(0);
 
         return program;

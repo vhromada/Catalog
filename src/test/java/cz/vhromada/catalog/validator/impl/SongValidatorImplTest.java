@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.common.SongUtils;
 import cz.vhromada.catalog.entity.Song;
+import cz.vhromada.catalog.utils.SongUtils;
 import cz.vhromada.catalog.validator.SongValidator;
-import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class SongValidatorImplTest {
     private SongValidator songValidator;
 
     /**
-     * Initializes validator for TO for song.
+     * Initializes validator for song.
      */
     @Before
     public void setUp() {
@@ -32,57 +31,57 @@ public class SongValidatorImplTest {
      * Test method for {@link SongValidator#validateNewSong(Song)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSongTO_NullArgument() {
+    public void testValidateNewSong_NullArgument() {
         songValidator.validateNewSong(null);
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSongTO(SongTO)} with TO for song with not null ID.
+     * Test method for {@link SongValidator#validateNewSong(Song)} with song with not null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSongTO_NotNullId() {
-        songValidator.validateNewSong(SongUtils.newSongTO(1));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewSong_NotNullId() {
+        songValidator.validateNewSong(SongUtils.newSong(1));
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSongTO(SongTO)} with TO for song with null name.
+     * Test method for {@link SongValidator#validateNewSong(Song)} with song with null name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSongTO_NullName() {
-        final Song song = SongUtils.newSongTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewSong_NullName() {
+        final Song song = SongUtils.newSong(null);
         song.setName(null);
 
         songValidator.validateNewSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSongTO(SongTO)} with TO for song with empty string as name.
+     * Test method for {@link SongValidator#validateNewSong(Song)} with song with empty string as name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSongTO_EmptyName() {
-        final Song song = SongUtils.newSongTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewSong_EmptyName() {
+        final Song song = SongUtils.newSong(null);
         song.setName("");
 
         songValidator.validateNewSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSongTO(SongTO)} with TO for song with negative length of song.
+     * Test method for {@link SongValidator#validateNewSong(Song)} with song with negative length of song.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSongTO_NegativeLength() {
-        final Song song = SongUtils.newSongTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewSong_NegativeLength() {
+        final Song song = SongUtils.newSong(null);
         song.setLength(-1);
 
         songValidator.validateNewSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSongTO(SongTO)} with TO for song with null note.
+     * Test method for {@link SongValidator#validateNewSong(Song)} with song with null note.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateNewSongTO_NullNote() {
-        final Song song = SongUtils.newSongTO(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateNewSong_NullNote() {
+        final Song song = SongUtils.newSong(null);
         song.setNote(null);
 
         songValidator.validateNewSong(song);
@@ -92,57 +91,57 @@ public class SongValidatorImplTest {
      * Test method for {@link SongValidator#validateExistingSong(Song)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSongTO_NullArgument() {
+    public void testValidateExistingSong_NullArgument() {
         songValidator.validateExistingSong(null);
     }
 
     /**
-     * Test method for {@link SongValidator#validateExistingSongTO(SongTO)} with TO for song with null ID.
+     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSongTO_NullId() {
-        songValidator.validateExistingSong(SongUtils.newSongTO(null));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingSong_NullId() {
+        songValidator.validateExistingSong(SongUtils.newSong(null));
     }
 
     /**
-     * Test method for {@link SongValidator#validateExistingSongTO(SongTO)} with TO for song with null name.
+     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with null name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSongTO_NullName() {
-        final Song song = SongUtils.newSongTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingSong_NullName() {
+        final Song song = SongUtils.newSong(1);
         song.setName(null);
 
         songValidator.validateExistingSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateExistingSongTO(SongTO)} with TO for song with empty string as name.
+     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with empty string as name.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSongTO_EmptyName() {
-        final Song song = SongUtils.newSongTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingSong_EmptyName() {
+        final Song song = SongUtils.newSong(1);
         song.setName("");
 
         songValidator.validateExistingSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateExistingSongTO(SongTO)} with TO for song with negative length of song.
+     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with negative length of song.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSongTO_NegativeLength() {
-        final Song song = SongUtils.newSongTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingSong_NegativeLength() {
+        final Song song = SongUtils.newSong(1);
         song.setLength(-1);
 
         songValidator.validateExistingSong(song);
     }
 
     /**
-     * Test method for {@link SongValidator#validateExistingSongTO(SongTO)} with TO for song with null note.
+     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with null note.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateExistingSongTO_NullNote() {
-        final Song song = SongUtils.newSongTO(1);
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateExistingSong_NullNote() {
+        final Song song = SongUtils.newSong(1);
         song.setNote(null);
 
         songValidator.validateExistingSong(song);
@@ -152,16 +151,16 @@ public class SongValidatorImplTest {
      * Test method for {@link SongValidator#validateSongWithId(Song)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateSongTOWithId_NullArgument() {
+    public void testValidateSongWithId_NullArgument() {
         songValidator.validateSongWithId(null);
     }
 
     /**
-     * Test method for {@link SongValidator#validateSongTOWithId(SongTO)} with TO for song with null ID.
+     * Test method for {@link SongValidator#validateSongWithId(Song)} with song with null ID.
      */
-    @Test(expected = ValidationException.class)
-    public void testValidateSongTOWithId_NullId() {
-        songValidator.validateSongWithId(SongUtils.newSongTO(null));
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateSongWithId_NullId() {
+        songValidator.validateSongWithId(SongUtils.newSong(null));
     }
 
 }

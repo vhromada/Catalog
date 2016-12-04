@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.common;
+package cz.vhromada.catalog.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.entity.Show;
-import cz.vhromada.catalog.utils.CollectionUtils;
 
 /**
  * A class represents utility class for shows.
@@ -52,10 +51,10 @@ public final class ShowUtils {
      * @param id ID
      * @return show
      */
-    public static cz.vhromada.catalog.domain.Show newShow(final Integer id) {
+    public static cz.vhromada.catalog.domain.Show newShowDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Show show = new cz.vhromada.catalog.domain.Show();
         updateShow(show);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenreDomain(id)));
         if (id != null) {
             show.setId(id);
             show.setPosition(id - 1);
@@ -72,7 +71,7 @@ public final class ShowUtils {
      * @return show with seasons
      */
     public static cz.vhromada.catalog.domain.Show newShowWithSeasons(final Integer id) {
-        final cz.vhromada.catalog.domain.Show show = newShow(id);
+        final cz.vhromada.catalog.domain.Show show = newShowDomain(id);
         show.setSeasons(CollectionUtils.newList(SeasonUtils.newSeasonWithEpisodes(id)));
 
         return show;
@@ -100,10 +99,10 @@ public final class ShowUtils {
      * @param id ID
      * @return show
      */
-    public static Show newShowTO(final Integer id) {
+    public static Show newShow(final Integer id) {
         final Show show = new Show();
-        updateShowTO(show);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenreTO(id)));
+        updateShow(show);
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
         if (id != null) {
             show.setId(id);
             show.setPosition(id - 1);
@@ -117,7 +116,7 @@ public final class ShowUtils {
      *
      * @param show show
      */
-    public static void updateShowTO(final Show show) {
+    public static void updateShow(final Show show) {
         show.setCzechName("czName");
         show.setOriginalName("origName");
         show.setCsfd("Csfd");
@@ -163,9 +162,9 @@ public final class ShowUtils {
         show.setNote(index == 2 ? SHOW + "2 note" : "");
         show.setPosition(index - 1);
         final List<Genre> genres = new ArrayList<>();
-        genres.add(GenreUtils.getGenre(index));
+        genres.add(GenreUtils.getGenreDomain(index));
         if (index == 3) {
-            genres.add(GenreUtils.getGenre(4));
+            genres.add(GenreUtils.getGenreDomain(4));
         }
         show.setGenres(genres);
         show.setSeasons(SeasonUtils.getSeasons(index));
@@ -194,7 +193,7 @@ public final class ShowUtils {
     public static cz.vhromada.catalog.domain.Show updateShow(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Show show = getShow(entityManager, id);
         updateShow(show);
-        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         show.setPosition(POSITION);
 
         return show;

@@ -12,4 +12,14 @@
         <jdbc:script location="data.sql"/>
     </jdbc:initialize-database>
 
+    <import resource="repositoryContext.xml"/>
+
+    <import resource="cacheContext.xml"/>
+
+    <import resource="aopContext.xml"/>
+
+    <import resource="serviceContext.xml"/>
+
+    <import resource="facadeContext.xml"/>
+
 </beans>

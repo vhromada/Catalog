@@ -2,122 +2,122 @@ package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.common.GenreUtils;
 import cz.vhromada.catalog.entity.GenreTO;
-import cz.vhromada.catalog.validator.GenreTOValidator;
+import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.validators.exceptions.ValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * A class represents test for class {@link GenreTOValidatorImpl}.
+ * A class represents test for class {@link GenreValidatorImpl}.
  *
  * @author Vladimir Hromada
  */
-public class GenreTOValidatorImplTest {
+public class GenreValidatorImplTest {
 
     /**
-     * Instance of {@link GenreTOValidator}
+     * Instance of {@link GenreValidator}
      */
-    private GenreTOValidator genreTOValidator;
+    private GenreValidator genreValidator;
 
     /**
      * Initializes validator for TO for genre.
      */
     @Before
     public void setUp() {
-        genreTOValidator = new GenreTOValidatorImpl();
+        genreValidator = new GenreValidatorImpl();
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateNewGenreTO(GenreTO)} with null argument.
+     * Test method for {@link GenreValidator#validateNewGenreTO(GenreTO)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewGenreTO_NullArgument() {
-        genreTOValidator.validateNewGenreTO(null);
+        genreValidator.validateNewGenreTO(null);
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateNewGenreTO(GenreTO)} with TO for genre with not null ID.
+     * Test method for {@link GenreValidator#validateNewGenreTO(GenreTO)} with TO for genre with not null ID.
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewGenreTO_NotNullId() {
-        genreTOValidator.validateNewGenreTO(GenreUtils.newGenreTO(1));
+        genreValidator.validateNewGenreTO(GenreUtils.newGenreTO(1));
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateNewGenreTO(GenreTO)} with TO for genre with null name.
+     * Test method for {@link GenreValidator#validateNewGenreTO(GenreTO)} with TO for genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewGenreTO_NullName() {
         final GenreTO genre = GenreUtils.newGenreTO(null);
         genre.setName(null);
 
-        genreTOValidator.validateNewGenreTO(genre);
+        genreValidator.validateNewGenreTO(genre);
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateNewGenreTO(GenreTO)} with TO for genre with empty string as name.
+     * Test method for {@link GenreValidator#validateNewGenreTO(GenreTO)} with TO for genre with empty string as name.
      */
     @Test(expected = ValidationException.class)
     public void testValidateNewGenreTO_EmptyName() {
         final GenreTO genre = GenreUtils.newGenreTO(null);
         genre.setName("");
 
-        genreTOValidator.validateNewGenreTO(genre);
+        genreValidator.validateNewGenreTO(genre);
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateExistingGenreTO(GenreTO)} with null argument.
+     * Test method for {@link GenreValidator#validateExistingGenreTO(GenreTO)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingGenreTO_NullArgument() {
-        genreTOValidator.validateExistingGenreTO(null);
+        genreValidator.validateExistingGenreTO(null);
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null ID.
+     * Test method for {@link GenreValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingGenreTO_NullId() {
-        genreTOValidator.validateExistingGenreTO(GenreUtils.newGenreTO(null));
+        genreValidator.validateExistingGenreTO(GenreUtils.newGenreTO(null));
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null name.
+     * Test method for {@link GenreValidator#validateExistingGenreTO(GenreTO)} with TO for genre with null name.
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingGenreTO_NullName() {
         final GenreTO genre = GenreUtils.newGenreTO(1);
         genre.setName(null);
 
-        genreTOValidator.validateExistingGenreTO(genre);
+        genreValidator.validateExistingGenreTO(genre);
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateExistingGenreTO(GenreTO)} with TO for genre with empty string as name.
+     * Test method for {@link GenreValidator#validateExistingGenreTO(GenreTO)} with TO for genre with empty string as name.
      */
     @Test(expected = ValidationException.class)
     public void testValidateExistingGenreTO_EmptyName() {
         final GenreTO genre = GenreUtils.newGenreTO(1);
         genre.setName("");
 
-        genreTOValidator.validateExistingGenreTO(genre);
+        genreValidator.validateExistingGenreTO(genre);
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateGenreTOWithId(GenreTO)} with null argument.
+     * Test method for {@link GenreValidator#validateGenreTOWithId(GenreTO)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateGenreTOWithId_NullArgument() {
-        genreTOValidator.validateGenreTOWithId(null);
+        genreValidator.validateGenreTOWithId(null);
     }
 
     /**
-     * Test method for {@link GenreTOValidator#validateGenreTOWithId(GenreTO)} with TO for genre with null ID.
+     * Test method for {@link GenreValidator#validateGenreTOWithId(GenreTO)} with TO for genre with null ID.
      */
     @Test(expected = ValidationException.class)
     public void testValidateGenreTOWithId_NullId() {
-        genreTOValidator.validateGenreTOWithId(new GenreTO());
+        genreValidator.validateGenreTOWithId(new GenreTO());
     }
 
 }

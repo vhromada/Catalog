@@ -25,8 +25,8 @@ import cz.vhromada.catalog.entity.SeasonTO;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.EpisodeTOValidator;
-import cz.vhromada.catalog.validator.SeasonTOValidator;
+import cz.vhromada.catalog.validator.EpisodeValidator;
+import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -59,16 +59,16 @@ public class EpisodeFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link SeasonTOValidator}
+     * Instance of {@link SeasonValidator}
      */
     @Mock
-    private SeasonTOValidator seasonTOValidator;
+    private SeasonValidator seasonValidator;
 
     /**
-     * Instance of {@link EpisodeTOValidator}
+     * Instance of {@link EpisodeValidator}
      */
     @Mock
-    private EpisodeTOValidator episodeTOValidator;
+    private EpisodeValidator episodeValidator;
 
     /**
      * Instance of (@link EpisodeFacade}
@@ -80,42 +80,42 @@ public class EpisodeFacadeImplTest {
      */
     @Before
     public void setUp() {
-        episodeFacade = new EpisodeFacadeImpl(showService, converter, seasonTOValidator, episodeTOValidator);
+        episodeFacade = new EpisodeFacadeImpl(showService, converter, seasonValidator, episodeValidator);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonTOValidator, EpisodeTOValidator)} with null service for
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, EpisodeValidator)} with null service for
      * shows.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullShowService() {
-        new EpisodeFacadeImpl(null, converter, seasonTOValidator, episodeTOValidator);
+        new EpisodeFacadeImpl(null, converter, seasonValidator, episodeValidator);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonTOValidator, EpisodeTOValidator)} with null converter.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, EpisodeValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new EpisodeFacadeImpl(showService, null, seasonTOValidator, episodeTOValidator);
+        new EpisodeFacadeImpl(showService, null, seasonValidator, episodeValidator);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonTOValidator, EpisodeTOValidator)} with null validator for TO
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, EpisodeValidator)} with null validator for TO
      * for season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullSeasonTOValidator() {
-        new EpisodeFacadeImpl(showService, converter, null, episodeTOValidator);
+        new EpisodeFacadeImpl(showService, converter, null, episodeValidator);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonTOValidator, EpisodeTOValidator)} with null validator for TO
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, EpisodeValidator)} with null validator for TO
      * for episode.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullEpisodeTOValidator() {
-        new EpisodeFacadeImpl(showService, converter, seasonTOValidator, null);
+        new EpisodeFacadeImpl(showService, converter, seasonValidator, null);
     }
 
     /**
@@ -136,7 +136,7 @@ public class EpisodeFacadeImplTest {
         verify(showService).getAll();
         verify(converter).convert(EpisodeUtils.newEpisode(1), EpisodeTO.class);
         verifyNoMoreInteractions(showService, converter);
-        verifyZeroInteractions(seasonTOValidator, episodeTOValidator);
+        verifyZeroInteractions(seasonValidator, episodeValidator);
     }
 
     /**
@@ -179,10 +179,10 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonTOValidator).validateSeasonTOWithId(season);
-        verify(episodeTOValidator).validateNewEpisodeTO(episode);
+        verify(seasonValidator).validateSeasonTOWithId(season);
+        verify(episodeValidator).validateNewEpisodeTO(episode);
         verify(converter).convert(episode, Episode.class);
-        verifyNoMoreInteractions(showService, converter, seasonTOValidator, episodeTOValidator);
+        verifyNoMoreInteractions(showService, converter, seasonValidator, episodeValidator);
 
         ShowUtils.assertShowDeepEquals(newShowWithSeasons(1, EpisodeUtils.newEpisode(1), episodeEntity), showArgumentCaptor.getValue());
     }
@@ -192,7 +192,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonTO() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         episodeFacade.add(null, EpisodeUtils.newEpisodeTO(null));
     }
@@ -202,7 +202,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullEpisodeTO() {
-        doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateNewEpisodeTO(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateNewEpisodeTO(any(EpisodeTO.class));
 
         episodeFacade.add(SeasonUtils.newSeasonTO(1), null);
     }
@@ -212,7 +212,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadSeasonTO() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(null));
     }
@@ -222,7 +222,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadEpisodeTO() {
-        doThrow(ValidationException.class).when(episodeTOValidator).validateNewEpisodeTO(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateNewEpisodeTO(any(EpisodeTO.class));
 
         episodeFacade.add(SeasonUtils.newSeasonTO(1), EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
@@ -254,9 +254,9 @@ public class EpisodeFacadeImplTest {
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
         verify(converter).convert(episode, Episode.class);
-        verify(episodeTOValidator).validateExistingEpisodeTO(episode);
-        verifyNoMoreInteractions(showService, converter, episodeTOValidator);
-        verifyZeroInteractions(seasonTOValidator);
+        verify(episodeValidator).validateExistingEpisodeTO(episode);
+        verifyNoMoreInteractions(showService, converter, episodeValidator);
+        verifyZeroInteractions(seasonValidator);
 
         ShowUtils.assertShowDeepEquals(ShowUtils.newShowWithSeasons(1), showArgumentCaptor.getValue());
     }
@@ -266,7 +266,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
 
         episodeFacade.update(null);
     }
@@ -276,7 +276,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(episodeTOValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateExistingEpisodeTO(any(EpisodeTO.class));
 
         episodeFacade.update(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
@@ -307,9 +307,9 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeTOValidator).validateEpisodeTOWithId(episode);
-        verifyNoMoreInteractions(showService, episodeTOValidator);
-        verifyZeroInteractions(converter, seasonTOValidator);
+        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verifyNoMoreInteractions(showService, episodeValidator);
+        verifyZeroInteractions(converter, seasonValidator);
 
         ShowUtils.assertShowDeepEquals(expectedShow, showArgumentCaptor.getValue());
     }
@@ -319,7 +319,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.remove(null);
     }
@@ -329,7 +329,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.remove(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
@@ -361,9 +361,9 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeTOValidator).validateEpisodeTOWithId(episode);
-        verifyNoMoreInteractions(showService, episodeTOValidator);
-        verifyZeroInteractions(converter, seasonTOValidator);
+        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verifyNoMoreInteractions(showService, episodeValidator);
+        verifyZeroInteractions(converter, seasonValidator);
 
         ShowUtils.assertShowDeepEquals(expectedShow, showArgumentCaptor.getValue());
     }
@@ -373,7 +373,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.duplicate(null);
     }
@@ -383,7 +383,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.duplicate(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
@@ -416,9 +416,9 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeTOValidator).validateEpisodeTOWithId(episode);
-        verifyNoMoreInteractions(showService, episodeTOValidator);
-        verifyZeroInteractions(converter, seasonTOValidator);
+        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verifyNoMoreInteractions(showService, episodeValidator);
+        verifyZeroInteractions(converter, seasonValidator);
 
         ShowUtils.assertShowDeepEquals(newShowWithSeasons(1, expectedEpisode1, expectedEpisode2), showArgumentCaptor.getValue());
     }
@@ -428,7 +428,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.moveUp(null);
     }
@@ -438,7 +438,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.moveUp(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
@@ -481,9 +481,9 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(episodeTOValidator).validateEpisodeTOWithId(episode);
-        verifyNoMoreInteractions(showService, episodeTOValidator);
-        verifyZeroInteractions(converter, seasonTOValidator);
+        verify(episodeValidator).validateEpisodeTOWithId(episode);
+        verifyNoMoreInteractions(showService, episodeValidator);
+        verifyZeroInteractions(converter, seasonValidator);
 
         ShowUtils.assertShowDeepEquals(newShowWithSeasons(1, expectedEpisode1, expectedEpisode2), showArgumentCaptor.getValue());
     }
@@ -493,7 +493,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(IllegalArgumentException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.moveDown(null);
     }
@@ -503,7 +503,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(episodeTOValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
+        doThrow(ValidationException.class).when(episodeValidator).validateEpisodeTOWithId(any(EpisodeTO.class));
 
         episodeFacade.moveDown(EpisodeUtils.newEpisodeTO(Integer.MAX_VALUE));
     }
@@ -546,9 +546,9 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(converter).convertCollection(CollectionUtils.newList(EpisodeUtils.newEpisode(1)), EpisodeTO.class);
-        verify(seasonTOValidator).validateSeasonTOWithId(season);
-        verifyNoMoreInteractions(showService, converter, seasonTOValidator);
-        verifyZeroInteractions(episodeTOValidator);
+        verify(seasonValidator).validateSeasonTOWithId(season);
+        verifyNoMoreInteractions(showService, converter, seasonValidator);
+        verifyZeroInteractions(episodeValidator);
     }
 
     /**
@@ -556,7 +556,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindEpisodesBySeason_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         episodeFacade.findEpisodesBySeason(null);
     }
@@ -566,7 +566,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testFindEpisodesBySeason_BadArgument() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         episodeFacade.findEpisodesBySeason(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }

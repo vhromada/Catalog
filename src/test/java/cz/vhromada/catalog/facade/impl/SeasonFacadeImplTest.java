@@ -24,8 +24,8 @@ import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.SeasonTOValidator;
-import cz.vhromada.catalog.validator.ShowTOValidator;
+import cz.vhromada.catalog.validator.SeasonValidator;
+import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -58,16 +58,16 @@ public class SeasonFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link ShowTOValidator}
+     * Instance of {@link ShowValidator}
      */
     @Mock
-    private ShowTOValidator showTOValidator;
+    private ShowValidator showValidator;
 
     /**
-     * Instance of {@link SeasonTOValidator}
+     * Instance of {@link SeasonValidator}
      */
     @Mock
-    private SeasonTOValidator seasonTOValidator;
+    private SeasonValidator seasonValidator;
 
     /**
      * Instance of (@link SeasonFacade}
@@ -79,42 +79,42 @@ public class SeasonFacadeImplTest {
      */
     @Before
     public void setUp() {
-        seasonFacade = new SeasonFacadeImpl(showService, converter, showTOValidator, seasonTOValidator);
+        seasonFacade = new SeasonFacadeImpl(showService, converter, showValidator, seasonValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowTOValidator, SeasonTOValidator)} with null service for
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null service for
      * shows.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullShowService() {
-        new SeasonFacadeImpl(null, converter, showTOValidator, seasonTOValidator);
+        new SeasonFacadeImpl(null, converter, showValidator, seasonValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowTOValidator, SeasonTOValidator)} with null converter.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new SeasonFacadeImpl(showService, null, showTOValidator, seasonTOValidator);
+        new SeasonFacadeImpl(showService, null, showValidator, seasonValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowTOValidator, SeasonTOValidator)} with null validator for TO
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null validator for TO
      * for show.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullShowTOValidator() {
-        new SeasonFacadeImpl(showService, converter, null, seasonTOValidator);
+        new SeasonFacadeImpl(showService, converter, null, seasonValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowTOValidator, SeasonTOValidator)} with null validator for TO
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null validator for TO
      * for season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullSeasonTOValidator() {
-        new SeasonFacadeImpl(showService, converter, showTOValidator, null);
+        new SeasonFacadeImpl(showService, converter, showValidator, null);
     }
 
     /**
@@ -135,7 +135,7 @@ public class SeasonFacadeImplTest {
         verify(showService).getAll();
         verify(converter).convert(SeasonUtils.newSeason(1), SeasonTO.class);
         verifyNoMoreInteractions(showService, converter);
-        verifyZeroInteractions(showTOValidator, seasonTOValidator);
+        verifyZeroInteractions(showValidator, seasonValidator);
     }
 
     /**
@@ -178,10 +178,10 @@ public class SeasonFacadeImplTest {
 
         verify(showService).get(show.getId());
         verify(showService).update(showArgumentCaptor.capture());
-        verify(showTOValidator).validateShowTOWithId(show);
-        verify(seasonTOValidator).validateNewSeasonTO(season);
+        verify(showValidator).validateShowTOWithId(show);
+        verify(seasonValidator).validateNewSeasonTO(season);
         verify(converter).convert(season, Season.class);
-        verifyNoMoreInteractions(showService, converter, showTOValidator, seasonTOValidator);
+        verifyNoMoreInteractions(showService, converter, showValidator, seasonValidator);
 
         ShowUtils.assertShowDeepEquals(newShowWithSeasons(1, SeasonUtils.newSeasonWithEpisodes(1), seasonEntity), showArgumentCaptor.getValue());
     }
@@ -191,7 +191,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullShowTO() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         seasonFacade.add(null, SeasonUtils.newSeasonTO(null));
     }
@@ -201,7 +201,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonTO() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateNewSeasonTO(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateNewSeasonTO(any(SeasonTO.class));
 
         seasonFacade.add(ShowUtils.newShowTO(1), null);
     }
@@ -211,7 +211,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadShowTO() {
-        doThrow(ValidationException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         seasonFacade.add(ShowUtils.newShowTO(1), SeasonUtils.newSeasonTO(null));
     }
@@ -221,7 +221,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadSeasonTO() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateNewSeasonTO(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateNewSeasonTO(any(SeasonTO.class));
 
         seasonFacade.add(ShowUtils.newShowTO(1), SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }
@@ -251,9 +251,9 @@ public class SeasonFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonTOValidator).validateExistingSeasonTO(season);
-        verifyNoMoreInteractions(showService, seasonTOValidator);
-        verifyZeroInteractions(converter, showTOValidator);
+        verify(seasonValidator).validateExistingSeasonTO(season);
+        verifyNoMoreInteractions(showService, seasonValidator);
+        verifyZeroInteractions(converter, showValidator);
 
         ShowUtils.assertShowDeepEquals(ShowUtils.newShowWithSeasons(1), showArgumentCaptor.getValue());
     }
@@ -263,7 +263,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateExistingSeasonTO(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateExistingSeasonTO(any(SeasonTO.class));
 
         seasonFacade.update(null);
     }
@@ -273,7 +273,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateExistingSeasonTO(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateExistingSeasonTO(any(SeasonTO.class));
 
         seasonFacade.update(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }
@@ -302,9 +302,9 @@ public class SeasonFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonTOValidator).validateSeasonTOWithId(season);
-        verifyNoMoreInteractions(showService, seasonTOValidator);
-        verifyZeroInteractions(converter, showTOValidator);
+        verify(seasonValidator).validateSeasonTOWithId(season);
+        verifyNoMoreInteractions(showService, seasonValidator);
+        verifyZeroInteractions(converter, showValidator);
 
         ShowUtils.assertShowDeepEquals(ShowUtils.newShow(1), showArgumentCaptor.getValue());
     }
@@ -314,7 +314,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.remove(null);
     }
@@ -324,7 +324,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.remove(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }
@@ -356,9 +356,9 @@ public class SeasonFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonTOValidator).validateSeasonTOWithId(season);
-        verifyNoMoreInteractions(showService, seasonTOValidator);
-        verifyZeroInteractions(converter, showTOValidator);
+        verify(seasonValidator).validateSeasonTOWithId(season);
+        verifyNoMoreInteractions(showService, seasonValidator);
+        verifyZeroInteractions(converter, showValidator);
 
         ShowUtils.assertShowDeepEquals(expectedShow, showArgumentCaptor.getValue());
     }
@@ -368,7 +368,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.duplicate(null);
     }
@@ -378,7 +378,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.duplicate(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }
@@ -411,9 +411,9 @@ public class SeasonFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonTOValidator).validateSeasonTOWithId(season);
-        verifyNoMoreInteractions(showService, seasonTOValidator);
-        verifyZeroInteractions(converter, showTOValidator);
+        verify(seasonValidator).validateSeasonTOWithId(season);
+        verifyNoMoreInteractions(showService, seasonValidator);
+        verifyZeroInteractions(converter, showValidator);
 
         ShowUtils.assertShowDeepEquals(newShowWithSeasons(1, expectedSeason1, expectedSeason2), showArgumentCaptor.getValue());
     }
@@ -423,7 +423,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.moveUp(null);
     }
@@ -433,7 +433,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.moveUp(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }
@@ -476,9 +476,9 @@ public class SeasonFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonTOValidator).validateSeasonTOWithId(season);
-        verifyNoMoreInteractions(showService, seasonTOValidator);
-        verifyZeroInteractions(converter, showTOValidator);
+        verify(seasonValidator).validateSeasonTOWithId(season);
+        verifyNoMoreInteractions(showService, seasonValidator);
+        verifyZeroInteractions(converter, showValidator);
 
         ShowUtils.assertShowDeepEquals(newShowWithSeasons(1, expectedSeason1, expectedSeason2), showArgumentCaptor.getValue());
     }
@@ -488,7 +488,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.moveDown(null);
     }
@@ -498,7 +498,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(seasonTOValidator).validateSeasonTOWithId(any(SeasonTO.class));
+        doThrow(ValidationException.class).when(seasonValidator).validateSeasonTOWithId(any(SeasonTO.class));
 
         seasonFacade.moveDown(SeasonUtils.newSeasonTO(Integer.MAX_VALUE));
     }
@@ -541,9 +541,9 @@ public class SeasonFacadeImplTest {
 
         verify(showService).get(show.getId());
         verify(converter).convertCollection(CollectionUtils.newList(SeasonUtils.newSeason(1)), SeasonTO.class);
-        verify(showTOValidator).validateShowTOWithId(show);
-        verifyNoMoreInteractions(showService, converter, showTOValidator);
-        verifyZeroInteractions(seasonTOValidator);
+        verify(showValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showService, converter, showValidator);
+        verifyZeroInteractions(seasonValidator);
     }
 
     /**
@@ -551,7 +551,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSeasonsByShow_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         seasonFacade.findSeasonsByShow(null);
     }
@@ -561,7 +561,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testFindSeasonsByShow_BadArgument() {
-        doThrow(ValidationException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         seasonFacade.findSeasonsByShow(ShowUtils.newShowTO(Integer.MAX_VALUE));
     }

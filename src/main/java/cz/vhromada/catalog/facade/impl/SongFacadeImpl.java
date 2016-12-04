@@ -12,8 +12,8 @@ import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CatalogUtils;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.MusicTOValidator;
-import cz.vhromada.catalog.validator.SongTOValidator;
+import cz.vhromada.catalog.validator.MusicValidator;
+import cz.vhromada.catalog.validator.SongValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
@@ -52,20 +52,20 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * Validator for TO for music
      */
-    private MusicTOValidator musicTOValidator;
+    private MusicValidator musicValidator;
 
     /**
      * Validator for TO for song
      */
-    private SongTOValidator songTOValidator;
+    private SongValidator songValidator;
 
     /**
      * Creates a new instance of SongFacadeImpl.
      *
-     * @param musicService     service for music
-     * @param converter        converter
-     * @param musicTOValidator validator for TO for music
-     * @param songTOValidator  validator for TO for song
+     * @param musicService   service for music
+     * @param converter      converter
+     * @param musicValidator validator for TO for music
+     * @param songValidator  validator for TO for song
      * @throws IllegalArgumentException if service for music is null
      *                                  or converter is null
      *                                  or validator for TO for music is null
@@ -74,17 +74,17 @@ public class SongFacadeImpl implements SongFacade {
     @Autowired
     public SongFacadeImpl(@Qualifier("musicService") final CatalogService<Music> musicService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final MusicTOValidator musicTOValidator,
-            final SongTOValidator songTOValidator) {
+            final MusicValidator musicValidator,
+            final SongValidator songValidator) {
         Validators.validateArgumentNotNull(musicService, "Service for music");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(musicTOValidator, "Validator for TO for music");
-        Validators.validateArgumentNotNull(songTOValidator, "Validator for TO for song");
+        Validators.validateArgumentNotNull(musicValidator, "Validator for TO for music");
+        Validators.validateArgumentNotNull(songValidator, "Validator for TO for song");
 
         this.musicService = musicService;
         this.converter = converter;
-        this.musicTOValidator = musicTOValidator;
-        this.songTOValidator = songTOValidator;
+        this.musicValidator = musicValidator;
+        this.songValidator = songValidator;
     }
 
     /**
@@ -104,8 +104,8 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void add(final MusicTO music, final SongTO song) {
-        musicTOValidator.validateMusicTOWithId(music);
-        songTOValidator.validateNewSongTO(song);
+        musicValidator.validateMusicTOWithId(music);
+        songValidator.validateNewSongTO(song);
         final Music musicEntity = musicService.get(music.getId());
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
@@ -123,7 +123,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void update(final SongTO song) {
-        songTOValidator.validateExistingSongTO(song);
+        songValidator.validateExistingSongTO(song);
         final Music music = getMusic(song);
         final Song songEntity = getSong(song.getId(), music);
         Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
@@ -140,7 +140,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void remove(final SongTO song) {
-        songTOValidator.validateSongTOWithId(song);
+        songValidator.validateSongTOWithId(song);
         final Music music = getMusic(song);
         final Song songEntity = getSong(song.getId(), music);
         Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
@@ -159,7 +159,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void duplicate(final SongTO song) {
-        songTOValidator.validateSongTOWithId(song);
+        songValidator.validateSongTOWithId(song);
         final Music music = getMusic(song);
         final Song songEntity = getSong(song.getId(), music);
         Validators.validateExists(songEntity, SONG_TO_ARGUMENT);
@@ -198,7 +198,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public List<SongTO> findSongsByMusic(final MusicTO music) {
-        musicTOValidator.validateMusicTOWithId(music);
+        musicValidator.validateMusicTOWithId(music);
         final Music musicEntity = musicService.get(music.getId());
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
@@ -288,7 +288,7 @@ public class SongFacadeImpl implements SongFacade {
      * @param up   true if moving TO for song up
      */
     private void move(final SongTO song, final boolean up) {
-        songTOValidator.validateSongTOWithId(song);
+        songValidator.validateSongTOWithId(song);
         final Music music = getMusic(song);
         final Song songEntity = getSong(song.getId(), music);
         Validators.validateExists(songEntity, SONG_TO_ARGUMENT);

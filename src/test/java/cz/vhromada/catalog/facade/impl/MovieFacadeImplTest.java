@@ -26,7 +26,7 @@ import cz.vhromada.catalog.entity.MovieTO;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.MovieTOValidator;
+import cz.vhromada.catalog.validator.MovieValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -64,10 +64,10 @@ public class MovieFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link MovieTOValidator}
+     * Instance of {@link MovieValidator}
      */
     @Mock
-    private MovieTOValidator movieTOValidator;
+    private MovieValidator movieValidator;
 
     /**
      * Instance of {@link MovieFacade}
@@ -79,35 +79,35 @@ public class MovieFacadeImplTest {
      */
     @Before
     public void setUp() {
-        movieFacade = new MovieFacadeImpl(movieService, genreService, converter, movieTOValidator);
+        movieFacade = new MovieFacadeImpl(movieService, genreService, converter, movieValidator);
     }
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null service for movies.
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieValidator)} with null service for movies.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullMovieService() {
-        new MovieFacadeImpl(null, genreService, converter, movieTOValidator);
+        new MovieFacadeImpl(null, genreService, converter, movieValidator);
     }
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null service for genres.
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieValidator)} with null service for genres.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullGenreService() {
-        new MovieFacadeImpl(movieService, null, converter, movieTOValidator);
+        new MovieFacadeImpl(movieService, null, converter, movieValidator);
     }
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null converter.
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new MovieFacadeImpl(movieService, genreService, null, movieTOValidator);
+        new MovieFacadeImpl(movieService, genreService, null, movieValidator);
     }
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieTOValidator)} with null validator for TO for
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieValidator)} with null validator for TO for
      * movie.
      */
     @Test(expected = IllegalArgumentException.class)
@@ -124,7 +124,7 @@ public class MovieFacadeImplTest {
 
         verify(movieService).newData();
         verifyNoMoreInteractions(movieService);
-        verifyZeroInteractions(genreService, converter, movieTOValidator);
+        verifyZeroInteractions(genreService, converter, movieValidator);
     }
 
     /**
@@ -146,7 +146,7 @@ public class MovieFacadeImplTest {
         verify(movieService).getAll();
         verify(converter).convertCollection(movieList, MovieTO.class);
         verifyNoMoreInteractions(movieService, converter);
-        verifyZeroInteractions(genreService, movieTOValidator);
+        verifyZeroInteractions(genreService, movieValidator);
     }
 
     /**
@@ -168,7 +168,7 @@ public class MovieFacadeImplTest {
         verify(movieService).get(1);
         verify(converter).convert(movieEntity, MovieTO.class);
         verifyNoMoreInteractions(movieService, converter);
-        verifyZeroInteractions(genreService, movieTOValidator);
+        verifyZeroInteractions(genreService, movieValidator);
     }
 
     /**
@@ -184,7 +184,7 @@ public class MovieFacadeImplTest {
         verify(movieService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, MovieTO.class);
         verifyNoMoreInteractions(movieService, converter);
-        verifyZeroInteractions(genreService, movieTOValidator);
+        verifyZeroInteractions(genreService, movieValidator);
     }
 
     /**
@@ -213,8 +213,8 @@ public class MovieFacadeImplTest {
             verify(genreService).get(genre.getId());
         }
         verify(converter).convert(movie, Movie.class);
-        verify(movieTOValidator).validateNewMovieTO(movie);
-        verifyNoMoreInteractions(movieService, genreService, converter, movieTOValidator);
+        verify(movieValidator).validateNewMovieTO(movie);
+        verifyNoMoreInteractions(movieService, genreService, converter, movieValidator);
     }
 
     /**
@@ -222,7 +222,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateNewMovieTO(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateNewMovieTO(any(MovieTO.class));
 
         movieFacade.add(null);
     }
@@ -232,7 +232,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(movieTOValidator).validateNewMovieTO(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateNewMovieTO(any(MovieTO.class));
 
         movieFacade.add(MovieUtils.newMovieTO(Integer.MAX_VALUE));
     }
@@ -267,8 +267,8 @@ public class MovieFacadeImplTest {
             verify(genreService).get(genre.getId());
         }
         verify(converter).convert(movie, Movie.class);
-        verify(movieTOValidator).validateExistingMovieTO(movie);
-        verifyNoMoreInteractions(movieService, genreService, converter, movieTOValidator);
+        verify(movieValidator).validateExistingMovieTO(movie);
+        verifyNoMoreInteractions(movieService, genreService, converter, movieValidator);
     }
 
     /**
@@ -276,7 +276,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateExistingMovieTO(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateExistingMovieTO(any(MovieTO.class));
 
         movieFacade.update(null);
     }
@@ -286,7 +286,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(movieTOValidator).validateExistingMovieTO(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateExistingMovieTO(any(MovieTO.class));
 
         movieFacade.update(MovieUtils.newMovieTO(null));
     }
@@ -326,8 +326,8 @@ public class MovieFacadeImplTest {
 
         verify(movieService).get(1);
         verify(movieService).remove(movieEntity);
-        verify(movieTOValidator).validateMovieTOWithId(movie);
-        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verify(movieValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -336,7 +336,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.remove(null);
     }
@@ -346,7 +346,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.remove(MovieUtils.newMovieTO(null));
     }
@@ -375,8 +375,8 @@ public class MovieFacadeImplTest {
 
         verify(movieService).get(1);
         verify(movieService).duplicate(movieEntity);
-        verify(movieTOValidator).validateMovieTOWithId(movie);
-        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verify(movieValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -385,7 +385,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.duplicate(null);
     }
@@ -395,7 +395,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.duplicate(MovieUtils.newMovieTO(null));
     }
@@ -427,8 +427,8 @@ public class MovieFacadeImplTest {
         verify(movieService).get(2);
         verify(movieService).getAll();
         verify(movieService).moveUp(movieEntity);
-        verify(movieTOValidator).validateMovieTOWithId(movie);
-        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verify(movieValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -437,7 +437,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.moveUp(null);
     }
@@ -447,7 +447,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.moveUp(MovieUtils.newMovieTO(null));
     }
@@ -494,8 +494,8 @@ public class MovieFacadeImplTest {
         verify(movieService).get(1);
         verify(movieService).getAll();
         verify(movieService).moveDown(movieEntity);
-        verify(movieTOValidator).validateMovieTOWithId(movie);
-        verifyNoMoreInteractions(movieService, movieTOValidator);
+        verify(movieValidator).validateMovieTOWithId(movie);
+        verifyNoMoreInteractions(movieService, movieValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -504,7 +504,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(IllegalArgumentException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.moveDown(null);
     }
@@ -514,7 +514,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(movieTOValidator).validateMovieTOWithId(any(MovieTO.class));
+        doThrow(ValidationException.class).when(movieValidator).validateMovieTOWithId(any(MovieTO.class));
 
         movieFacade.moveDown(MovieUtils.newMovieTO(null));
     }
@@ -553,7 +553,7 @@ public class MovieFacadeImplTest {
 
         verify(movieService).updatePositions();
         verifyNoMoreInteractions(movieService);
-        verifyZeroInteractions(genreService, converter, movieTOValidator);
+        verifyZeroInteractions(genreService, converter, movieValidator);
     }
 
     /**
@@ -571,7 +571,7 @@ public class MovieFacadeImplTest {
 
         verify(movieService).getAll();
         verifyNoMoreInteractions(movieService);
-        verifyZeroInteractions(genreService, converter, movieTOValidator);
+        verifyZeroInteractions(genreService, converter, movieValidator);
     }
 
     /**
@@ -593,7 +593,7 @@ public class MovieFacadeImplTest {
 
         verify(movieService).getAll();
         verifyNoMoreInteractions(movieService);
-        verifyZeroInteractions(genreService, converter, movieTOValidator);
+        verifyZeroInteractions(genreService, converter, movieValidator);
     }
 
 }

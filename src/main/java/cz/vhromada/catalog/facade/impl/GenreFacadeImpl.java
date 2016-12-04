@@ -6,7 +6,7 @@ import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.GenreTOValidator;
+import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
@@ -40,14 +40,14 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * Validator for TO for genre
      */
-    private GenreTOValidator genreTOValidator;
+    private GenreValidator genreValidator;
 
     /**
      * Creates a new instance of GenreFacadeImpl.
      *
-     * @param genreService     service for genres
-     * @param converter        converter
-     * @param genreTOValidator validator for TO for genre
+     * @param genreService   service for genres
+     * @param converter      converter
+     * @param genreValidator validator for TO for genre
      * @throws IllegalArgumentException if service for genres is null
      *                                  or converter is null
      *                                  or validator for TO for genre is null
@@ -55,14 +55,14 @@ public class GenreFacadeImpl implements GenreFacade {
     @Autowired
     public GenreFacadeImpl(@Qualifier("genreService") final CatalogService<Genre> genreService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final GenreTOValidator genreTOValidator) {
+            final GenreValidator genreValidator) {
         Validators.validateArgumentNotNull(genreService, "Service for genres");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(genreTOValidator, "Validator for TO for genre");
+        Validators.validateArgumentNotNull(genreValidator, "Validator for TO for genre");
 
         this.genreService = genreService;
         this.converter = converter;
-        this.genreTOValidator = genreTOValidator;
+        this.genreValidator = genreValidator;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void add(final GenreTO genre) {
-        genreTOValidator.validateNewGenreTO(genre);
+        genreValidator.validateNewGenreTO(genre);
 
         genreService.add(converter.convert(genre, Genre.class));
     }
@@ -119,7 +119,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void update(final GenreTO genre) {
-        genreTOValidator.validateExistingGenreTO(genre);
+        genreValidator.validateExistingGenreTO(genre);
         Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
 
         genreService.update(converter.convert(genre, Genre.class));
@@ -132,7 +132,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void remove(final GenreTO genre) {
-        genreTOValidator.validateGenreTOWithId(genre);
+        genreValidator.validateGenreTOWithId(genre);
         final Genre genreEntity = genreService.get(genre.getId());
         Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
 
@@ -146,7 +146,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void duplicate(final GenreTO genre) {
-        genreTOValidator.validateGenreTOWithId(genre);
+        genreValidator.validateGenreTOWithId(genre);
         final Genre genreEntity = genreService.get(genre.getId());
         Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
 
@@ -160,7 +160,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void moveUp(final GenreTO genre) {
-        genreTOValidator.validateGenreTOWithId(genre);
+        genreValidator.validateGenreTOWithId(genre);
         final Genre genreEntity = genreService.get(genre.getId());
         Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
         final List<Genre> genres = genreService.getAll();
@@ -176,7 +176,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void moveDown(final GenreTO genre) {
-        genreTOValidator.validateGenreTOWithId(genre);
+        genreValidator.validateGenreTOWithId(genre);
         final Genre genreEntity = genreService.get(genre.getId());
         Validators.validateExists(genreEntity, GENRE_TO_ARGUMENT);
         final List<Genre> genres = genreService.getAll();

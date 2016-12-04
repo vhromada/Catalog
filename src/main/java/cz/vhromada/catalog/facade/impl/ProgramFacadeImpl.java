@@ -6,7 +6,7 @@ import cz.vhromada.catalog.domain.Program;
 import cz.vhromada.catalog.entity.ProgramTO;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.ProgramTOValidator;
+import cz.vhromada.catalog.validator.ProgramValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
@@ -40,14 +40,14 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * Validator for TO for program
      */
-    private ProgramTOValidator programTOValidator;
+    private ProgramValidator programValidator;
 
     /**
      * Creates a new instance of ProgramFacadeImpl.
      *
-     * @param programService     service for programs
-     * @param converter          converter
-     * @param programTOValidator validator for TO for program
+     * @param programService   service for programs
+     * @param converter        converter
+     * @param programValidator validator for TO for program
      * @throws IllegalArgumentException if service for programs is null
      *                                  or converter is null
      *                                  or validator for TO for program is null
@@ -55,14 +55,14 @@ public class ProgramFacadeImpl implements ProgramFacade {
     @Autowired
     public ProgramFacadeImpl(@Qualifier("programService") final CatalogService<Program> programService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final ProgramTOValidator programTOValidator) {
+            final ProgramValidator programValidator) {
         Validators.validateArgumentNotNull(programService, "Service for programs");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(programTOValidator, "Validator for TO for program");
+        Validators.validateArgumentNotNull(programValidator, "Validator for TO for program");
 
         this.programService = programService;
         this.converter = converter;
-        this.programTOValidator = programTOValidator;
+        this.programValidator = programValidator;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void add(final ProgramTO program) {
-        programTOValidator.validateNewProgramTO(program);
+        programValidator.validateNewProgramTO(program);
 
         programService.add(converter.convert(program, Program.class));
     }
@@ -103,7 +103,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void update(final ProgramTO program) {
-        programTOValidator.validateExistingProgramTO(program);
+        programValidator.validateExistingProgramTO(program);
         Validators.validateExists(programService.get(program.getId()), PROGRAM_TO_ARGUMENT);
 
         programService.update(converter.convert(program, Program.class));
@@ -116,7 +116,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void remove(final ProgramTO program) {
-        programTOValidator.validateProgramTOWithId(program);
+        programValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
         Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
 
@@ -130,7 +130,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void duplicate(final ProgramTO program) {
-        programTOValidator.validateProgramTOWithId(program);
+        programValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
         Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
 
@@ -144,7 +144,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void moveUp(final ProgramTO program) {
-        programTOValidator.validateProgramTOWithId(program);
+        programValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
         Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
         final List<Program> programs = programService.getAll();
@@ -160,7 +160,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void moveDown(final ProgramTO program) {
-        programTOValidator.validateProgramTOWithId(program);
+        programValidator.validateProgramTOWithId(program);
         final Program programEntity = programService.get(program.getId());
         Validators.validateExists(programEntity, PROGRAM_TO_ARGUMENT);
         final List<Program> programs = programService.getAll();

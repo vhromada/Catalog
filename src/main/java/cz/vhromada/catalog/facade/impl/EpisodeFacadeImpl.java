@@ -14,8 +14,8 @@ import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CatalogUtils;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.EpisodeTOValidator;
-import cz.vhromada.catalog.validator.SeasonTOValidator;
+import cz.vhromada.catalog.validator.EpisodeValidator;
+import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
@@ -50,20 +50,20 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * Validator for TO for season
      */
-    private SeasonTOValidator seasonTOValidator;
+    private SeasonValidator seasonValidator;
 
     /**
      * Validator for TO for episode
      */
-    private EpisodeTOValidator episodeTOValidator;
+    private EpisodeValidator episodeValidator;
 
     /**
      * Creates a new instance of EpisodeFacadeImpl.
      *
-     * @param showService        service for shows
-     * @param converter          converter
-     * @param seasonTOValidator  validator for TO for season
-     * @param episodeTOValidator validator for TO for episode
+     * @param showService      service for shows
+     * @param converter        converter
+     * @param seasonValidator  validator for TO for season
+     * @param episodeValidator validator for TO for episode
      * @throws IllegalArgumentException if service for shows is null
      *                                  or converter is null
      *                                  or validator for TO for season is null
@@ -72,17 +72,17 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Autowired
     public EpisodeFacadeImpl(final CatalogService<Show> showService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final SeasonTOValidator seasonTOValidator,
-            final EpisodeTOValidator episodeTOValidator) {
+            final SeasonValidator seasonValidator,
+            final EpisodeValidator episodeValidator) {
         Validators.validateArgumentNotNull(showService, "Service for shows");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(seasonTOValidator, "Validator for TO for season");
-        Validators.validateArgumentNotNull(episodeTOValidator, "Validator for TO for episode");
+        Validators.validateArgumentNotNull(seasonValidator, "Validator for TO for season");
+        Validators.validateArgumentNotNull(episodeValidator, "Validator for TO for episode");
 
         this.showService = showService;
         this.converter = converter;
-        this.seasonTOValidator = seasonTOValidator;
-        this.episodeTOValidator = episodeTOValidator;
+        this.seasonValidator = seasonValidator;
+        this.episodeValidator = episodeValidator;
     }
 
     /**
@@ -102,8 +102,8 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void add(final SeasonTO season, final EpisodeTO episode) {
-        seasonTOValidator.validateSeasonTOWithId(season);
-        episodeTOValidator.validateNewEpisodeTO(episode);
+        seasonValidator.validateSeasonTOWithId(season);
+        episodeValidator.validateNewEpisodeTO(episode);
         final Show show = getShow(season);
         final Season seasonEntity = getSeason(show, season);
         Validators.validateExists(seasonEntity, "TO for season");
@@ -123,7 +123,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void update(final EpisodeTO episode) {
-        episodeTOValidator.validateExistingEpisodeTO(episode);
+        episodeValidator.validateExistingEpisodeTO(episode);
         final Show show = getShow(episode);
         final Episode episodeEntity = getEpisode(episode.getId(), show);
         Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
@@ -140,7 +140,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void remove(final EpisodeTO episode) {
-        episodeTOValidator.validateEpisodeTOWithId(episode);
+        episodeValidator.validateEpisodeTOWithId(episode);
         final Show show = getShow(episode);
         final Episode episodeEntity = getEpisode(episode.getId(), show);
         Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
@@ -160,7 +160,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void duplicate(final EpisodeTO episode) {
-        episodeTOValidator.validateEpisodeTOWithId(episode);
+        episodeValidator.validateEpisodeTOWithId(episode);
         final Show show = getShow(episode);
         final Episode episodeEntity = getEpisode(episode.getId(), show);
         Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);
@@ -199,7 +199,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public List<EpisodeTO> findEpisodesBySeason(final SeasonTO season) {
-        seasonTOValidator.validateSeasonTOWithId(season);
+        seasonValidator.validateSeasonTOWithId(season);
         final List<Show> shows = showService.getAll();
         for (final Show show : shows) {
             for (final Season seasonEntity : show.getSeasons()) {
@@ -360,7 +360,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @param up      true if moving TO for episode up
      */
     private void move(final EpisodeTO episode, final boolean up) {
-        episodeTOValidator.validateEpisodeTOWithId(episode);
+        episodeValidator.validateEpisodeTOWithId(episode);
         final Show show = getShow(episode);
         final Episode episodeEntity = getEpisode(episode.getId(), show);
         Validators.validateExists(episodeEntity, EPISODE_TO_ARGUMENT);

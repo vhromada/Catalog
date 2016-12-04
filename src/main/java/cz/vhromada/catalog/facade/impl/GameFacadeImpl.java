@@ -6,7 +6,7 @@ import cz.vhromada.catalog.domain.Game;
 import cz.vhromada.catalog.entity.GameTO;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.GameTOValidator;
+import cz.vhromada.catalog.validator.GameValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
@@ -40,14 +40,14 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * Validator for TO for game
      */
-    private GameTOValidator gameTOValidator;
+    private GameValidator gameValidator;
 
     /**
      * Creates a new instance of GameFacadeImpl.
      *
-     * @param gameService     service for games
-     * @param converter       converter
-     * @param gameTOValidator validator for TO for game
+     * @param gameService   service for games
+     * @param converter     converter
+     * @param gameValidator validator for TO for game
      * @throws IllegalArgumentException if service for games is null
      *                                  or converter is null
      *                                  or validator for TO for game is null
@@ -55,14 +55,14 @@ public class GameFacadeImpl implements GameFacade {
     @Autowired
     public GameFacadeImpl(@Qualifier("gameService") final CatalogService<Game> gameService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final GameTOValidator gameTOValidator) {
+            final GameValidator gameValidator) {
         Validators.validateArgumentNotNull(gameService, "Service for games");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(gameTOValidator, "Validator for TO for game");
+        Validators.validateArgumentNotNull(gameValidator, "Validator for TO for game");
 
         this.gameService = gameService;
         this.converter = converter;
-        this.gameTOValidator = gameTOValidator;
+        this.gameValidator = gameValidator;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void add(final GameTO game) {
-        gameTOValidator.validateNewGameTO(game);
+        gameValidator.validateNewGameTO(game);
 
         gameService.add(converter.convert(game, Game.class));
     }
@@ -103,7 +103,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void update(final GameTO game) {
-        gameTOValidator.validateExistingGameTO(game);
+        gameValidator.validateExistingGameTO(game);
         Validators.validateExists(gameService.get(game.getId()), GAME_TO_ARGUMENT);
 
         gameService.update(converter.convert(game, Game.class));
@@ -116,7 +116,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void remove(final GameTO game) {
-        gameTOValidator.validateGameTOWithId(game);
+        gameValidator.validateGameTOWithId(game);
         final Game gameEntity = gameService.get(game.getId());
         Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
 
@@ -130,7 +130,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void duplicate(final GameTO game) {
-        gameTOValidator.validateGameTOWithId(game);
+        gameValidator.validateGameTOWithId(game);
         final Game gameEntity = gameService.get(game.getId());
         Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
 
@@ -144,7 +144,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveUp(final GameTO game) {
-        gameTOValidator.validateGameTOWithId(game);
+        gameValidator.validateGameTOWithId(game);
         final Game gameEntity = gameService.get(game.getId());
         Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
         final List<Game> games = gameService.getAll();
@@ -160,7 +160,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveDown(final GameTO game) {
-        gameTOValidator.validateGameTOWithId(game);
+        gameValidator.validateGameTOWithId(game);
         final Game gameEntity = gameService.get(game.getId());
         Validators.validateExists(gameEntity, GAME_TO_ARGUMENT);
         final List<Game> games = gameService.getAll();

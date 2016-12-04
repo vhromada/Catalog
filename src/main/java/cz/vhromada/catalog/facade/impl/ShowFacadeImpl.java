@@ -12,7 +12,7 @@ import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.ShowTOValidator;
+import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
@@ -56,15 +56,15 @@ public class ShowFacadeImpl implements ShowFacade {
     /**
      * Validator for TO for show
      */
-    private ShowTOValidator showTOValidator;
+    private ShowValidator showValidator;
 
     /**
      * Creates a new instance of ShowFacadeImpl.
      *
-     * @param showService     service for shows
-     * @param genreService    service for genres
-     * @param converter       converter
-     * @param showTOValidator validator for TO for show
+     * @param showService   service for shows
+     * @param genreService  service for genres
+     * @param converter     converter
+     * @param showValidator validator for TO for show
      * @throws IllegalArgumentException if service for shows is null
      *                                  or service for genres is null
      *                                  or converter is null
@@ -74,16 +74,16 @@ public class ShowFacadeImpl implements ShowFacade {
     public ShowFacadeImpl(final CatalogService<Show> showService,
             final CatalogService<Genre> genreService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final ShowTOValidator showTOValidator) {
+            final ShowValidator showValidator) {
         Validators.validateArgumentNotNull(showService, "Service for shows");
         Validators.validateArgumentNotNull(genreService, "Service for genres");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(showTOValidator, "Validator for TO for show");
+        Validators.validateArgumentNotNull(showValidator, "Validator for TO for show");
 
         this.showService = showService;
         this.genreService = genreService;
         this.converter = converter;
-        this.showTOValidator = showTOValidator;
+        this.showValidator = showValidator;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void add(final ShowTO show) {
-        showTOValidator.validateNewShowTO(show);
+        showValidator.validateNewShowTO(show);
         for (final GenreTO genre : show.getGenres()) {
             Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
         }
@@ -131,7 +131,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void update(final ShowTO show) {
-        showTOValidator.validateExistingShowTO(show);
+        showValidator.validateExistingShowTO(show);
         final Show showEntity = showService.get(show.getId());
         Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
         assert showEntity != null;
@@ -162,7 +162,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void remove(final ShowTO show) {
-        showTOValidator.validateShowTOWithId(show);
+        showValidator.validateShowTOWithId(show);
         final Show showEntity = showService.get(show.getId());
         Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
 
@@ -175,7 +175,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void duplicate(final ShowTO show) {
-        showTOValidator.validateShowTOWithId(show);
+        showValidator.validateShowTOWithId(show);
         final Show showEntity = showService.get(show.getId());
         Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
 
@@ -189,7 +189,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void moveUp(final ShowTO show) {
-        showTOValidator.validateShowTOWithId(show);
+        showValidator.validateShowTOWithId(show);
         final Show showEntity = showService.get(show.getId());
         Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
         final List<Show> shows = showService.getAll();
@@ -205,7 +205,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void moveDown(final ShowTO show) {
-        showTOValidator.validateShowTOWithId(show);
+        showValidator.validateShowTOWithId(show);
         final Show showEntity = showService.get(show.getId());
         Validators.validateExists(showEntity, SHOW_TO_ARGUMENT);
         final List<Show> shows = showService.getAll();

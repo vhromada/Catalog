@@ -27,7 +27,7 @@ import cz.vhromada.catalog.entity.ShowTO;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.ShowTOValidator;
+import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -66,10 +66,10 @@ public class ShowFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link ShowTOValidator}
+     * Instance of {@link ShowValidator}
      */
     @Mock
-    private ShowTOValidator showTOValidator;
+    private ShowValidator showValidator;
 
     /**
      * Instance of {@link ShowFacade}
@@ -81,35 +81,35 @@ public class ShowFacadeImplTest {
      */
     @Before
     public void setUp() {
-        showFacade = new ShowFacadeImpl(showService, genreService, converter, showTOValidator);
+        showFacade = new ShowFacadeImpl(showService, genreService, converter, showValidator);
     }
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowTOValidator)} with null service for shows.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowValidator)} with null service for shows.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullShowService() {
-        new ShowFacadeImpl(null, genreService, converter, showTOValidator);
+        new ShowFacadeImpl(null, genreService, converter, showValidator);
     }
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowTOValidator)} with null service for genres.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowValidator)} with null service for genres.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullGenreService() {
-        new ShowFacadeImpl(showService, null, converter, showTOValidator);
+        new ShowFacadeImpl(showService, null, converter, showValidator);
     }
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowTOValidator)} with null converter.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new ShowFacadeImpl(showService, genreService, null, showTOValidator);
+        new ShowFacadeImpl(showService, genreService, null, showValidator);
     }
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowTOValidator)} with null validator for TO for show.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowValidator)} with null validator for TO for show.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullShowTOValidator() {
@@ -125,7 +125,7 @@ public class ShowFacadeImplTest {
 
         verify(showService).newData();
         verifyNoMoreInteractions(showService);
-        verifyZeroInteractions(genreService, converter, showTOValidator);
+        verifyZeroInteractions(genreService, converter, showValidator);
     }
 
     /**
@@ -147,7 +147,7 @@ public class ShowFacadeImplTest {
         verify(showService).getAll();
         verify(converter).convertCollection(showList, ShowTO.class);
         verifyNoMoreInteractions(showService, converter);
-        verifyZeroInteractions(genreService, showTOValidator);
+        verifyZeroInteractions(genreService, showValidator);
     }
 
     /**
@@ -169,7 +169,7 @@ public class ShowFacadeImplTest {
         verify(showService).get(1);
         verify(converter).convert(showEntity, ShowTO.class);
         verifyNoMoreInteractions(showService, converter);
-        verifyZeroInteractions(genreService, showTOValidator);
+        verifyZeroInteractions(genreService, showValidator);
     }
 
     /**
@@ -185,7 +185,7 @@ public class ShowFacadeImplTest {
         verify(showService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, ShowTO.class);
         verifyNoMoreInteractions(showService, converter);
-        verifyZeroInteractions(genreService, showTOValidator);
+        verifyZeroInteractions(genreService, showValidator);
     }
 
     /**
@@ -214,8 +214,8 @@ public class ShowFacadeImplTest {
             verify(genreService).get(genre.getId());
         }
         verify(converter).convert(show, Show.class);
-        verify(showTOValidator).validateNewShowTO(show);
-        verifyNoMoreInteractions(showService, genreService, converter, showTOValidator);
+        verify(showValidator).validateNewShowTO(show);
+        verifyNoMoreInteractions(showService, genreService, converter, showValidator);
     }
 
     /**
@@ -223,7 +223,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateNewShowTO(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateNewShowTO(any(ShowTO.class));
 
         showFacade.add(null);
     }
@@ -233,7 +233,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(showTOValidator).validateNewShowTO(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateNewShowTO(any(ShowTO.class));
 
         showFacade.add(ShowUtils.newShowTO(Integer.MAX_VALUE));
     }
@@ -266,8 +266,8 @@ public class ShowFacadeImplTest {
         for (final GenreTO genre : show.getGenres()) {
             verify(genreService).get(genre.getId());
         }
-        verify(showTOValidator).validateExistingShowTO(show);
-        verifyNoMoreInteractions(showService, genreService, showTOValidator);
+        verify(showValidator).validateExistingShowTO(show);
+        verifyNoMoreInteractions(showService, genreService, showValidator);
         verifyZeroInteractions(converter);
 
         ShowUtils.assertShowDeepEquals(ShowUtils.newShow(1), showArgumentCaptor.getValue());
@@ -278,7 +278,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateExistingShowTO(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateExistingShowTO(any(ShowTO.class));
 
         showFacade.update(null);
     }
@@ -288,7 +288,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(showTOValidator).validateExistingShowTO(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateExistingShowTO(any(ShowTO.class));
 
         showFacade.update(ShowUtils.newShowTO(null));
     }
@@ -328,8 +328,8 @@ public class ShowFacadeImplTest {
 
         verify(showService).get(1);
         verify(showService).remove(showEntity);
-        verify(showTOValidator).validateShowTOWithId(show);
-        verifyNoMoreInteractions(showService, showTOValidator);
+        verify(showValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -338,7 +338,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.remove(null);
     }
@@ -348,7 +348,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.remove(ShowUtils.newShowTO(null));
     }
@@ -377,8 +377,8 @@ public class ShowFacadeImplTest {
 
         verify(showService).get(1);
         verify(showService).duplicate(showEntity);
-        verify(showTOValidator).validateShowTOWithId(show);
-        verifyNoMoreInteractions(showService, showTOValidator);
+        verify(showValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -387,7 +387,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.duplicate(null);
     }
@@ -397,7 +397,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.duplicate(ShowUtils.newShowTO(null));
     }
@@ -429,8 +429,8 @@ public class ShowFacadeImplTest {
         verify(showService).get(2);
         verify(showService).getAll();
         verify(showService).moveUp(showEntity);
-        verify(showTOValidator).validateShowTOWithId(show);
-        verifyNoMoreInteractions(showService, showTOValidator);
+        verify(showValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -439,7 +439,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.moveUp(null);
     }
@@ -449,7 +449,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.moveUp(ShowUtils.newShowTO(null));
     }
@@ -496,8 +496,8 @@ public class ShowFacadeImplTest {
         verify(showService).get(1);
         verify(showService).getAll();
         verify(showService).moveDown(showEntity);
-        verify(showTOValidator).validateShowTOWithId(show);
-        verifyNoMoreInteractions(showService, showTOValidator);
+        verify(showValidator).validateShowTOWithId(show);
+        verifyNoMoreInteractions(showService, showValidator);
         verifyZeroInteractions(genreService, converter);
     }
 
@@ -506,7 +506,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(IllegalArgumentException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.moveDown(null);
     }
@@ -516,7 +516,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(showTOValidator).validateShowTOWithId(any(ShowTO.class));
+        doThrow(ValidationException.class).when(showValidator).validateShowTOWithId(any(ShowTO.class));
 
         showFacade.moveDown(ShowUtils.newShowTO(null));
     }
@@ -555,7 +555,7 @@ public class ShowFacadeImplTest {
 
         verify(showService).updatePositions();
         verifyNoMoreInteractions(showService);
-        verifyZeroInteractions(genreService, converter, showTOValidator);
+        verifyZeroInteractions(genreService, converter, showValidator);
     }
 
     /**
@@ -579,7 +579,7 @@ public class ShowFacadeImplTest {
 
         verify(showService).getAll();
         verifyNoMoreInteractions(showService);
-        verifyZeroInteractions(genreService, converter, showTOValidator);
+        verifyZeroInteractions(genreService, converter, showValidator);
     }
 
     /**
@@ -597,7 +597,7 @@ public class ShowFacadeImplTest {
 
         verify(showService).getAll();
         verifyNoMoreInteractions(showService);
-        verifyZeroInteractions(genreService, converter, showTOValidator);
+        verifyZeroInteractions(genreService, converter, showValidator);
     }
 
     /**
@@ -619,7 +619,7 @@ public class ShowFacadeImplTest {
 
         verify(showService).getAll();
         verifyNoMoreInteractions(showService);
-        verifyZeroInteractions(genreService, converter, showTOValidator);
+        verifyZeroInteractions(genreService, converter, showValidator);
     }
 
 }

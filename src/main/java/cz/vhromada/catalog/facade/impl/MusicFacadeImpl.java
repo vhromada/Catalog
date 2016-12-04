@@ -9,7 +9,7 @@ import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.MusicTO;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.MusicTOValidator;
+import cz.vhromada.catalog.validator.MusicValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
@@ -43,14 +43,14 @@ public class MusicFacadeImpl implements MusicFacade {
     /**
      * Validator for TO for music
      */
-    private MusicTOValidator musicTOValidator;
+    private MusicValidator musicValidator;
 
     /**
      * Creates a new instance of MusicFacadeImpl.
      *
-     * @param musicService     service for music
-     * @param converter        converter
-     * @param musicTOValidator validator for TO for music
+     * @param musicService   service for music
+     * @param converter      converter
+     * @param musicValidator validator for TO for music
      * @throws IllegalArgumentException if service for music is null
      *                                  or converter is null
      *                                  or validator for TO for music is null
@@ -58,14 +58,14 @@ public class MusicFacadeImpl implements MusicFacade {
     @Autowired
     public MusicFacadeImpl(@Qualifier("musicService") final CatalogService<Music> musicService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final MusicTOValidator musicTOValidator) {
+            final MusicValidator musicValidator) {
         Validators.validateArgumentNotNull(musicService, "Service for music");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(musicTOValidator, "Validator for TO for music");
+        Validators.validateArgumentNotNull(musicValidator, "Validator for TO for music");
 
         this.musicService = musicService;
         this.converter = converter;
-        this.musicTOValidator = musicTOValidator;
+        this.musicValidator = musicValidator;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void add(final MusicTO music) {
-        musicTOValidator.validateNewMusicTO(music);
+        musicValidator.validateNewMusicTO(music);
 
         final Music musicEntity = converter.convert(music, Music.class);
         musicEntity.setSongs(new ArrayList<>());
@@ -109,7 +109,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void update(final MusicTO music) {
-        musicTOValidator.validateExistingMusicTO(music);
+        musicValidator.validateExistingMusicTO(music);
         final Music musicEntity = musicService.get(music.getId());
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
         assert musicEntity != null;
@@ -130,7 +130,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void remove(final MusicTO music) {
-        musicTOValidator.validateMusicTOWithId(music);
+        musicValidator.validateMusicTOWithId(music);
         final Music musicEntity = musicService.get(music.getId());
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
@@ -143,7 +143,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void duplicate(final MusicTO music) {
-        musicTOValidator.validateMusicTOWithId(music);
+        musicValidator.validateMusicTOWithId(music);
         final Music musicEntity = musicService.get(music.getId());
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
 
@@ -156,7 +156,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void moveUp(final MusicTO music) {
-        musicTOValidator.validateMusicTOWithId(music);
+        musicValidator.validateMusicTOWithId(music);
         final Music musicEntity = musicService.get(music.getId());
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
         final List<Music> musicList = musicService.getAll();
@@ -171,7 +171,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void moveDown(final MusicTO music) {
-        musicTOValidator.validateMusicTOWithId(music);
+        musicValidator.validateMusicTOWithId(music);
         final Music musicEntity = musicService.get(music.getId());
         Validators.validateExists(musicEntity, MUSIC_TO_ARGUMENT);
         final List<Music> musicList = musicService.getAll();

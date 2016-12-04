@@ -21,7 +21,7 @@ import cz.vhromada.catalog.entity.GameTO;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.GameTOValidator;
+import cz.vhromada.catalog.validator.GameValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -53,10 +53,10 @@ public class GameFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link GameTOValidator}
+     * Instance of {@link GameValidator}
      */
     @Mock
-    private GameTOValidator gameTOValidator;
+    private GameValidator gameValidator;
 
     /**
      * Instance of {@link GameFacade}
@@ -68,27 +68,27 @@ public class GameFacadeImplTest {
      */
     @Before
     public void setUp() {
-        gameFacade = new GameFacadeImpl(gameService, converter, gameTOValidator);
+        gameFacade = new GameFacadeImpl(gameService, converter, gameValidator);
     }
 
     /**
-     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, GameTOValidator)} with null service for games.
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, GameValidator)} with null service for games.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullGameService() {
-        new GameFacadeImpl(null, converter, gameTOValidator);
+        new GameFacadeImpl(null, converter, gameValidator);
     }
 
     /**
-     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, GameTOValidator)} with null converter.
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, GameValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new GameFacadeImpl(gameService, null, gameTOValidator);
+        new GameFacadeImpl(gameService, null, gameValidator);
     }
 
     /**
-     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, GameTOValidator)} with null validator for TO for game.
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, GameValidator)} with null validator for TO for game.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullGameTOValidator() {
@@ -104,7 +104,7 @@ public class GameFacadeImplTest {
 
         verify(gameService).newData();
         verifyNoMoreInteractions(gameService);
-        verifyZeroInteractions(converter, gameTOValidator);
+        verifyZeroInteractions(converter, gameValidator);
     }
 
     /**
@@ -126,7 +126,7 @@ public class GameFacadeImplTest {
         verify(gameService).getAll();
         verify(converter).convertCollection(gameList, GameTO.class);
         verifyNoMoreInteractions(gameService, converter);
-        verifyZeroInteractions(gameTOValidator);
+        verifyZeroInteractions(gameValidator);
     }
 
     /**
@@ -148,7 +148,7 @@ public class GameFacadeImplTest {
         verify(gameService).get(1);
         verify(converter).convert(gameEntity, GameTO.class);
         verifyNoMoreInteractions(gameService, converter);
-        verifyZeroInteractions(gameTOValidator);
+        verifyZeroInteractions(gameValidator);
     }
 
     /**
@@ -164,7 +164,7 @@ public class GameFacadeImplTest {
         verify(gameService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, GameTO.class);
         verifyNoMoreInteractions(gameService, converter);
-        verifyZeroInteractions(gameTOValidator);
+        verifyZeroInteractions(gameValidator);
     }
 
     /**
@@ -189,8 +189,8 @@ public class GameFacadeImplTest {
 
         verify(gameService).add(gameEntity);
         verify(converter).convert(game, Game.class);
-        verify(gameTOValidator).validateNewGameTO(game);
-        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
+        verify(gameValidator).validateNewGameTO(game);
+        verifyNoMoreInteractions(gameService, converter, gameValidator);
     }
 
     /**
@@ -198,7 +198,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameTOValidator).validateNewGameTO(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateNewGameTO(any(GameTO.class));
 
         gameFacade.add(null);
     }
@@ -208,7 +208,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(gameTOValidator).validateNewGameTO(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateNewGameTO(any(GameTO.class));
 
         gameFacade.add(GameUtils.newGameTO(Integer.MAX_VALUE));
     }
@@ -229,8 +229,8 @@ public class GameFacadeImplTest {
         verify(gameService).get(1);
         verify(gameService).update(gameEntity);
         verify(converter).convert(game, Game.class);
-        verify(gameTOValidator).validateExistingGameTO(game);
-        verifyNoMoreInteractions(gameService, converter, gameTOValidator);
+        verify(gameValidator).validateExistingGameTO(game);
+        verifyNoMoreInteractions(gameService, converter, gameValidator);
     }
 
     /**
@@ -238,7 +238,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameTOValidator).validateExistingGameTO(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateExistingGameTO(any(GameTO.class));
 
         gameFacade.update(null);
     }
@@ -248,7 +248,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(gameTOValidator).validateExistingGameTO(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateExistingGameTO(any(GameTO.class));
 
         gameFacade.update(GameUtils.newGameTO(null));
     }
@@ -277,8 +277,8 @@ public class GameFacadeImplTest {
 
         verify(gameService).get(1);
         verify(gameService).remove(gameEntity);
-        verify(gameTOValidator).validateGameTOWithId(game);
-        verifyNoMoreInteractions(gameService, gameTOValidator);
+        verify(gameValidator).validateGameTOWithId(game);
+        verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -287,7 +287,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.remove(null);
     }
@@ -297,7 +297,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.remove(GameUtils.newGameTO(null));
     }
@@ -326,8 +326,8 @@ public class GameFacadeImplTest {
 
         verify(gameService).get(1);
         verify(gameService).duplicate(gameEntity);
-        verify(gameTOValidator).validateGameTOWithId(game);
-        verifyNoMoreInteractions(gameService, gameTOValidator);
+        verify(gameValidator).validateGameTOWithId(game);
+        verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -336,7 +336,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.duplicate(null);
     }
@@ -346,7 +346,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.duplicate(GameUtils.newGameTO(null));
     }
@@ -378,8 +378,8 @@ public class GameFacadeImplTest {
         verify(gameService).get(2);
         verify(gameService).getAll();
         verify(gameService).moveUp(gameEntity);
-        verify(gameTOValidator).validateGameTOWithId(game);
-        verifyNoMoreInteractions(gameService, gameTOValidator);
+        verify(gameValidator).validateGameTOWithId(game);
+        verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -388,7 +388,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.moveUp(null);
     }
@@ -398,7 +398,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.moveUp(GameUtils.newGameTO(null));
     }
@@ -445,8 +445,8 @@ public class GameFacadeImplTest {
         verify(gameService).get(1);
         verify(gameService).getAll();
         verify(gameService).moveDown(gameEntity);
-        verify(gameTOValidator).validateGameTOWithId(game);
-        verifyNoMoreInteractions(gameService, gameTOValidator);
+        verify(gameValidator).validateGameTOWithId(game);
+        verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -455,7 +455,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(IllegalArgumentException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.moveDown(null);
     }
@@ -465,7 +465,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(gameTOValidator).validateGameTOWithId(any(GameTO.class));
+        doThrow(ValidationException.class).when(gameValidator).validateGameTOWithId(any(GameTO.class));
 
         gameFacade.moveDown(GameUtils.newGameTO(null));
     }
@@ -504,7 +504,7 @@ public class GameFacadeImplTest {
 
         verify(gameService).updatePositions();
         verifyNoMoreInteractions(gameService);
-        verifyZeroInteractions(converter, gameTOValidator);
+        verifyZeroInteractions(converter, gameValidator);
     }
 
     /**
@@ -522,7 +522,7 @@ public class GameFacadeImplTest {
 
         verify(gameService).getAll();
         verifyNoMoreInteractions(gameService);
-        verifyZeroInteractions(converter, gameTOValidator);
+        verifyZeroInteractions(converter, gameValidator);
     }
 
 }

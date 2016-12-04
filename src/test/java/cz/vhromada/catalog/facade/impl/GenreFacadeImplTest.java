@@ -21,7 +21,7 @@ import cz.vhromada.catalog.entity.GenreTO;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.GenreTOValidator;
+import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -54,10 +54,10 @@ public class GenreFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link GenreTOValidator}
+     * Instance of {@link GenreValidator}
      */
     @Mock
-    private GenreTOValidator genreTOValidator;
+    private GenreValidator genreValidator;
 
     /**
      * Instance of {@link GenreFacade}
@@ -69,27 +69,27 @@ public class GenreFacadeImplTest {
      */
     @Before
     public void setUp() {
-        genreFacade = new GenreFacadeImpl(genreService, converter, genreTOValidator);
+        genreFacade = new GenreFacadeImpl(genreService, converter, genreValidator);
     }
 
     /**
-     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreTOValidator)} with null service for genres.
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreValidator)} with null service for genres.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullGenreService() {
-        new GenreFacadeImpl(null, converter, genreTOValidator);
+        new GenreFacadeImpl(null, converter, genreValidator);
     }
 
     /**
-     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreTOValidator)} with null converter.
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new GenreFacadeImpl(genreService, null, genreTOValidator);
+        new GenreFacadeImpl(genreService, null, genreValidator);
     }
 
     /**
-     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreTOValidator)} with null validator for TO for genre.
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreValidator)} with null validator for TO for genre.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullGenreTOValidator() {
@@ -105,7 +105,7 @@ public class GenreFacadeImplTest {
 
         verify(genreService).newData();
         verifyNoMoreInteractions(genreService);
-        verifyZeroInteractions(converter, genreTOValidator);
+        verifyZeroInteractions(converter, genreValidator);
     }
 
     /**
@@ -127,7 +127,7 @@ public class GenreFacadeImplTest {
         verify(genreService).getAll();
         verify(converter).convertCollection(genreList, GenreTO.class);
         verifyNoMoreInteractions(genreService, converter);
-        verifyZeroInteractions(genreTOValidator);
+        verifyZeroInteractions(genreValidator);
     }
 
     /**
@@ -149,7 +149,7 @@ public class GenreFacadeImplTest {
         verify(genreService).get(1);
         verify(converter).convert(genreEntity, GenreTO.class);
         verifyNoMoreInteractions(genreService, converter);
-        verifyZeroInteractions(genreTOValidator);
+        verifyZeroInteractions(genreValidator);
     }
 
     /**
@@ -165,7 +165,7 @@ public class GenreFacadeImplTest {
         verify(genreService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, GenreTO.class);
         verifyNoMoreInteractions(genreService, converter);
-        verifyZeroInteractions(genreTOValidator);
+        verifyZeroInteractions(genreValidator);
     }
 
     /**
@@ -190,8 +190,8 @@ public class GenreFacadeImplTest {
 
         verify(genreService).add(genreEntity);
         verify(converter).convert(genre, Genre.class);
-        verify(genreTOValidator).validateNewGenreTO(genre);
-        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
+        verify(genreValidator).validateNewGenreTO(genre);
+        verifyNoMoreInteractions(genreService, converter, genreValidator);
     }
 
     /**
@@ -199,7 +199,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreTOValidator).validateNewGenreTO(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateNewGenreTO(any(GenreTO.class));
 
         genreFacade.add((GenreTO) null);
     }
@@ -209,7 +209,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(genreTOValidator).validateNewGenreTO(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateNewGenreTO(any(GenreTO.class));
 
         genreFacade.add(GenreUtils.newGenreTO(Integer.MAX_VALUE));
     }
@@ -263,8 +263,8 @@ public class GenreFacadeImplTest {
         verify(genreService).get(1);
         verify(genreService).update(genreEntity);
         verify(converter).convert(genre, Genre.class);
-        verify(genreTOValidator).validateExistingGenreTO(genre);
-        verifyNoMoreInteractions(genreService, converter, genreTOValidator);
+        verify(genreValidator).validateExistingGenreTO(genre);
+        verifyNoMoreInteractions(genreService, converter, genreValidator);
     }
 
     /**
@@ -272,7 +272,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreTOValidator).validateExistingGenreTO(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateExistingGenreTO(any(GenreTO.class));
 
         genreFacade.update(null);
     }
@@ -282,7 +282,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(genreTOValidator).validateExistingGenreTO(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateExistingGenreTO(any(GenreTO.class));
 
         genreFacade.update(GenreUtils.newGenreTO(null));
     }
@@ -311,8 +311,8 @@ public class GenreFacadeImplTest {
 
         verify(genreService).get(1);
         verify(genreService).remove(genreEntity);
-        verify(genreTOValidator).validateGenreTOWithId(genre);
-        verifyNoMoreInteractions(genreService, genreTOValidator);
+        verify(genreValidator).validateGenreTOWithId(genre);
+        verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -321,7 +321,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.remove(null);
     }
@@ -331,7 +331,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.remove(GenreUtils.newGenreTO(null));
     }
@@ -360,8 +360,8 @@ public class GenreFacadeImplTest {
 
         verify(genreService).get(1);
         verify(genreService).duplicate(genreEntity);
-        verify(genreTOValidator).validateGenreTOWithId(genre);
-        verifyNoMoreInteractions(genreService, genreTOValidator);
+        verify(genreValidator).validateGenreTOWithId(genre);
+        verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -370,7 +370,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.duplicate(null);
     }
@@ -380,7 +380,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.duplicate(GenreUtils.newGenreTO(null));
     }
@@ -412,8 +412,8 @@ public class GenreFacadeImplTest {
         verify(genreService).get(2);
         verify(genreService).getAll();
         verify(genreService).moveUp(genreEntity);
-        verify(genreTOValidator).validateGenreTOWithId(genre);
-        verifyNoMoreInteractions(genreService, genreTOValidator);
+        verify(genreValidator).validateGenreTOWithId(genre);
+        verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -422,7 +422,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.moveUp(null);
     }
@@ -432,7 +432,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.moveUp(GenreUtils.newGenreTO(null));
     }
@@ -479,8 +479,8 @@ public class GenreFacadeImplTest {
         verify(genreService).get(1);
         verify(genreService).getAll();
         verify(genreService).moveDown(genreEntity);
-        verify(genreTOValidator).validateGenreTOWithId(genre);
-        verifyNoMoreInteractions(genreService, genreTOValidator);
+        verify(genreValidator).validateGenreTOWithId(genre);
+        verifyNoMoreInteractions(genreService, genreValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -489,7 +489,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(IllegalArgumentException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.moveDown(null);
     }
@@ -499,7 +499,7 @@ public class GenreFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(genreTOValidator).validateGenreTOWithId(any(GenreTO.class));
+        doThrow(ValidationException.class).when(genreValidator).validateGenreTOWithId(any(GenreTO.class));
 
         genreFacade.moveDown(GenreUtils.newGenreTO(null));
     }
@@ -538,7 +538,7 @@ public class GenreFacadeImplTest {
 
         verify(genreService).updatePositions();
         verifyNoMoreInteractions(genreService);
-        verifyZeroInteractions(converter, genreTOValidator);
+        verifyZeroInteractions(converter, genreValidator);
     }
 
 }

@@ -21,7 +21,7 @@ import cz.vhromada.catalog.entity.ProgramTO;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.ProgramTOValidator;
+import cz.vhromada.catalog.validator.ProgramValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -53,10 +53,10 @@ public class ProgramFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link ProgramTOValidator}
+     * Instance of {@link ProgramValidator}
      */
     @Mock
-    private ProgramTOValidator programTOValidator;
+    private ProgramValidator programValidator;
 
     /**
      * Instance of {@link ProgramFacade}
@@ -68,27 +68,27 @@ public class ProgramFacadeImplTest {
      */
     @Before
     public void setUp() {
-        programFacade = new ProgramFacadeImpl(programService, converter, programTOValidator);
+        programFacade = new ProgramFacadeImpl(programService, converter, programValidator);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramTOValidator)} with null service for programs.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramValidator)} with null service for programs.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullProgramService() {
-        new ProgramFacadeImpl(null, converter, programTOValidator);
+        new ProgramFacadeImpl(null, converter, programValidator);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramTOValidator)} with null converter.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new ProgramFacadeImpl(programService, null, programTOValidator);
+        new ProgramFacadeImpl(programService, null, programValidator);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramTOValidator)} with null validator for TO for program.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, ProgramValidator)} with null validator for TO for program.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullProgramTOValidator() {
@@ -104,7 +104,7 @@ public class ProgramFacadeImplTest {
 
         verify(programService).newData();
         verifyNoMoreInteractions(programService);
-        verifyZeroInteractions(converter, programTOValidator);
+        verifyZeroInteractions(converter, programValidator);
     }
 
     /**
@@ -126,7 +126,7 @@ public class ProgramFacadeImplTest {
         verify(programService).getAll();
         verify(converter).convertCollection(programList, ProgramTO.class);
         verifyNoMoreInteractions(programService, converter);
-        verifyZeroInteractions(programTOValidator);
+        verifyZeroInteractions(programValidator);
     }
 
     /**
@@ -148,7 +148,7 @@ public class ProgramFacadeImplTest {
         verify(programService).get(1);
         verify(converter).convert(programEntity, ProgramTO.class);
         verifyNoMoreInteractions(programService, converter);
-        verifyZeroInteractions(programTOValidator);
+        verifyZeroInteractions(programValidator);
     }
 
     /**
@@ -164,7 +164,7 @@ public class ProgramFacadeImplTest {
         verify(programService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, ProgramTO.class);
         verifyNoMoreInteractions(programService, converter);
-        verifyZeroInteractions(programTOValidator);
+        verifyZeroInteractions(programValidator);
     }
 
     /**
@@ -189,8 +189,8 @@ public class ProgramFacadeImplTest {
 
         verify(programService).add(programEntity);
         verify(converter).convert(program, Program.class);
-        verify(programTOValidator).validateNewProgramTO(program);
-        verifyNoMoreInteractions(programService, converter, programTOValidator);
+        verify(programValidator).validateNewProgramTO(program);
+        verifyNoMoreInteractions(programService, converter, programValidator);
     }
 
     /**
@@ -198,7 +198,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(programTOValidator).validateNewProgramTO(any(ProgramTO.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateNewProgramTO(any(ProgramTO.class));
 
         programFacade.add(null);
     }
@@ -208,7 +208,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(programTOValidator).validateNewProgramTO(any(ProgramTO.class));
+        doThrow(ValidationException.class).when(programValidator).validateNewProgramTO(any(ProgramTO.class));
 
         programFacade.add(ProgramUtils.newProgramTO(Integer.MAX_VALUE));
     }
@@ -229,8 +229,8 @@ public class ProgramFacadeImplTest {
         verify(programService).get(1);
         verify(programService).update(programEntity);
         verify(converter).convert(program, Program.class);
-        verify(programTOValidator).validateExistingProgramTO(program);
-        verifyNoMoreInteractions(programService, converter, programTOValidator);
+        verify(programValidator).validateExistingProgramTO(program);
+        verifyNoMoreInteractions(programService, converter, programValidator);
     }
 
     /**
@@ -238,7 +238,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(programTOValidator).validateExistingProgramTO(any(ProgramTO.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateExistingProgramTO(any(ProgramTO.class));
 
         programFacade.update(null);
     }
@@ -248,7 +248,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(programTOValidator).validateExistingProgramTO(any(ProgramTO.class));
+        doThrow(ValidationException.class).when(programValidator).validateExistingProgramTO(any(ProgramTO.class));
 
         programFacade.update(ProgramUtils.newProgramTO(null));
     }
@@ -277,8 +277,8 @@ public class ProgramFacadeImplTest {
 
         verify(programService).get(1);
         verify(programService).remove(programEntity);
-        verify(programTOValidator).validateProgramTOWithId(program);
-        verifyNoMoreInteractions(programService, programTOValidator);
+        verify(programValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -287,7 +287,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.remove(null);
     }
@@ -297,7 +297,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(ValidationException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.remove(ProgramUtils.newProgramTO(null));
     }
@@ -326,8 +326,8 @@ public class ProgramFacadeImplTest {
 
         verify(programService).get(1);
         verify(programService).duplicate(programEntity);
-        verify(programTOValidator).validateProgramTOWithId(program);
-        verifyNoMoreInteractions(programService, programTOValidator);
+        verify(programValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -336,7 +336,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.duplicate(null);
     }
@@ -346,7 +346,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(ValidationException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.duplicate(ProgramUtils.newProgramTO(null));
     }
@@ -378,8 +378,8 @@ public class ProgramFacadeImplTest {
         verify(programService).get(2);
         verify(programService).getAll();
         verify(programService).moveUp(programEntity);
-        verify(programTOValidator).validateProgramTOWithId(program);
-        verifyNoMoreInteractions(programService, programTOValidator);
+        verify(programValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -388,7 +388,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.moveUp(null);
     }
@@ -398,7 +398,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(ValidationException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.moveUp(ProgramUtils.newProgramTO(null));
     }
@@ -445,8 +445,8 @@ public class ProgramFacadeImplTest {
         verify(programService).get(1);
         verify(programService).getAll();
         verify(programService).moveDown(programEntity);
-        verify(programTOValidator).validateProgramTOWithId(program);
-        verifyNoMoreInteractions(programService, programTOValidator);
+        verify(programValidator).validateProgramTOWithId(program);
+        verifyNoMoreInteractions(programService, programValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -455,7 +455,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(IllegalArgumentException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.moveDown(null);
     }
@@ -465,7 +465,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(programTOValidator).validateProgramTOWithId(any(ProgramTO.class));
+        doThrow(ValidationException.class).when(programValidator).validateProgramTOWithId(any(ProgramTO.class));
 
         programFacade.moveDown(ProgramUtils.newProgramTO(null));
     }
@@ -504,7 +504,7 @@ public class ProgramFacadeImplTest {
 
         verify(programService).updatePositions();
         verifyNoMoreInteractions(programService);
-        verifyZeroInteractions(converter, programTOValidator);
+        verifyZeroInteractions(converter, programValidator);
     }
 
     /**
@@ -522,7 +522,7 @@ public class ProgramFacadeImplTest {
 
         verify(programService).getAll();
         verifyNoMoreInteractions(programService);
-        verifyZeroInteractions(converter, programTOValidator);
+        verifyZeroInteractions(converter, programValidator);
     }
 
 }

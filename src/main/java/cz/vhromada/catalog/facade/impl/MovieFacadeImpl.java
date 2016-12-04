@@ -12,7 +12,7 @@ import cz.vhromada.catalog.entity.MediumTO;
 import cz.vhromada.catalog.entity.MovieTO;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.MovieTOValidator;
+import cz.vhromada.catalog.validator.MovieValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.Validators;
 
@@ -58,15 +58,15 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * Validator for TO for movie
      */
-    private MovieTOValidator movieTOValidator;
+    private MovieValidator movieValidator;
 
     /**
      * Creates a new instance of MovieFacadeImpl.
      *
-     * @param movieService     service for movies
-     * @param genreService     service for genres
-     * @param converter        converter
-     * @param movieTOValidator validator for TO for movie
+     * @param movieService   service for movies
+     * @param genreService   service for genres
+     * @param converter      converter
+     * @param movieValidator validator for TO for movie
      * @throws IllegalArgumentException if service for movies is null
      *                                  or service for genres is null
      *                                  or converter is null
@@ -76,16 +76,16 @@ public class MovieFacadeImpl implements MovieFacade {
     public MovieFacadeImpl(final CatalogService<Movie> movieService,
             final CatalogService<Genre> genreService,
             @Qualifier("catalogDozerConverter") final Converter converter,
-            final MovieTOValidator movieTOValidator) {
+            final MovieValidator movieValidator) {
         Validators.validateArgumentNotNull(movieService, "Service for movies");
         Validators.validateArgumentNotNull(genreService, "Service for genres");
         Validators.validateArgumentNotNull(converter, "Converter");
-        Validators.validateArgumentNotNull(movieTOValidator, "Validator for TO for movie");
+        Validators.validateArgumentNotNull(movieValidator, "Validator for TO for movie");
 
         this.movieService = movieService;
         this.genreService = genreService;
         this.converter = converter;
-        this.movieTOValidator = movieTOValidator;
+        this.movieValidator = movieValidator;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void add(final MovieTO movie) {
-        movieTOValidator.validateNewMovieTO(movie);
+        movieValidator.validateNewMovieTO(movie);
         for (final GenreTO genre : movie.getGenres()) {
             Validators.validateExists(genreService.get(genre.getId()), GENRE_TO_ARGUMENT);
         }
@@ -129,7 +129,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void update(final MovieTO movie) {
-        movieTOValidator.validateExistingMovieTO(movie);
+        movieValidator.validateExistingMovieTO(movie);
         final Movie movieEntity = movieService.get(movie.getId());
         Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
         for (final GenreTO genre : movie.getGenres()) {
@@ -149,7 +149,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void remove(final MovieTO movie) {
-        movieTOValidator.validateMovieTOWithId(movie);
+        movieValidator.validateMovieTOWithId(movie);
         final Movie movieEntity = movieService.get(movie.getId());
         Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
 
@@ -163,7 +163,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void duplicate(final MovieTO movie) {
-        movieTOValidator.validateMovieTOWithId(movie);
+        movieValidator.validateMovieTOWithId(movie);
         final Movie movieEntity = movieService.get(movie.getId());
         Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
 
@@ -177,7 +177,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void moveUp(final MovieTO movie) {
-        movieTOValidator.validateMovieTOWithId(movie);
+        movieValidator.validateMovieTOWithId(movie);
         final Movie movieEntity = movieService.get(movie.getId());
         Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
         final List<Movie> movies = movieService.getAll();
@@ -193,7 +193,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void moveDown(final MovieTO movie) {
-        movieTOValidator.validateMovieTOWithId(movie);
+        movieValidator.validateMovieTOWithId(movie);
         final Movie movieEntity = movieService.get(movie.getId());
         Validators.validateExists(movieEntity, MOVIE_TO_ARGUMENT);
         final List<Movie> movies = movieService.getAll();

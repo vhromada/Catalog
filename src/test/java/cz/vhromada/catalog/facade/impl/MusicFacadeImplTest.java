@@ -22,7 +22,7 @@ import cz.vhromada.catalog.entity.MusicTO;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.util.CollectionUtils;
-import cz.vhromada.catalog.validator.MusicTOValidator;
+import cz.vhromada.catalog.validator.MusicValidator;
 import cz.vhromada.converters.Converter;
 import cz.vhromada.validators.exceptions.RecordNotFoundException;
 import cz.vhromada.validators.exceptions.ValidationException;
@@ -55,10 +55,10 @@ public class MusicFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link MusicTOValidator}
+     * Instance of {@link MusicValidator}
      */
     @Mock
-    private MusicTOValidator musicTOValidator;
+    private MusicValidator musicValidator;
 
     /**
      * Instance of {@link MusicFacade}
@@ -70,27 +70,27 @@ public class MusicFacadeImplTest {
      */
     @Before
     public void setUp() {
-        musicFacade = new MusicFacadeImpl(musicService, converter, musicTOValidator);
+        musicFacade = new MusicFacadeImpl(musicService, converter, musicValidator);
     }
 
     /**
-     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(CatalogService, Converter, MusicTOValidator)} with null service for music.
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(CatalogService, Converter, MusicValidator)} with null service for music.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullMusicService() {
-        new MusicFacadeImpl(null, converter, musicTOValidator);
+        new MusicFacadeImpl(null, converter, musicValidator);
     }
 
     /**
-     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(CatalogService, Converter, MusicTOValidator)} with null converter.
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(CatalogService, Converter, MusicValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
-        new MusicFacadeImpl(musicService, null, musicTOValidator);
+        new MusicFacadeImpl(musicService, null, musicValidator);
     }
 
     /**
-     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(CatalogService, Converter, MusicTOValidator)} with null validator for TO for music.
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(CatalogService, Converter, MusicValidator)} with null validator for TO for music.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullMusicTOValidator() {
@@ -106,7 +106,7 @@ public class MusicFacadeImplTest {
 
         verify(musicService).newData();
         verifyNoMoreInteractions(musicService);
-        verifyZeroInteractions(converter, musicTOValidator);
+        verifyZeroInteractions(converter, musicValidator);
     }
 
     /**
@@ -128,7 +128,7 @@ public class MusicFacadeImplTest {
         verify(musicService).getAll();
         verify(converter).convertCollection(musicList, MusicTO.class);
         verifyNoMoreInteractions(musicService, converter);
-        verifyZeroInteractions(musicTOValidator);
+        verifyZeroInteractions(musicValidator);
     }
 
     /**
@@ -150,7 +150,7 @@ public class MusicFacadeImplTest {
         verify(musicService).get(expectedMusic.getId());
         verify(converter).convert(musicEntity, MusicTO.class);
         verifyNoMoreInteractions(musicService, converter);
-        verifyZeroInteractions(musicTOValidator);
+        verifyZeroInteractions(musicValidator);
     }
 
     /**
@@ -166,7 +166,7 @@ public class MusicFacadeImplTest {
         verify(musicService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, MusicTO.class);
         verifyNoMoreInteractions(musicService, converter);
-        verifyZeroInteractions(musicTOValidator);
+        verifyZeroInteractions(musicValidator);
     }
 
     /**
@@ -191,8 +191,8 @@ public class MusicFacadeImplTest {
 
         verify(musicService).add(musicEntity);
         verify(converter).convert(music, Music.class);
-        verify(musicTOValidator).validateNewMusicTO(music);
-        verifyNoMoreInteractions(musicService, converter, musicTOValidator);
+        verify(musicValidator).validateNewMusicTO(music);
+        verifyNoMoreInteractions(musicService, converter, musicValidator);
     }
 
     /**
@@ -200,7 +200,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicTOValidator).validateNewMusicTO(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateNewMusicTO(any(MusicTO.class));
 
         musicFacade.add(null);
     }
@@ -210,7 +210,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testAdd_BadArgument() {
-        doThrow(ValidationException.class).when(musicTOValidator).validateNewMusicTO(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateNewMusicTO(any(MusicTO.class));
 
         musicFacade.add(MusicUtils.newMusicTO(Integer.MAX_VALUE));
     }
@@ -229,8 +229,8 @@ public class MusicFacadeImplTest {
 
         verify(musicService).get(1);
         verify(musicService).update(musicArgumentCaptor.capture());
-        verify(musicTOValidator).validateExistingMusicTO(music);
-        verifyNoMoreInteractions(musicService, musicTOValidator);
+        verify(musicValidator).validateExistingMusicTO(music);
+        verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
 
         MusicUtils.assertMusicDeepEquals(MusicUtils.newMusic(1), musicArgumentCaptor.getValue());
@@ -241,7 +241,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicTOValidator).validateExistingMusicTO(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateExistingMusicTO(any(MusicTO.class));
 
         musicFacade.update(null);
     }
@@ -251,7 +251,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testUpdate_BadArgument() {
-        doThrow(ValidationException.class).when(musicTOValidator).validateExistingMusicTO(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateExistingMusicTO(any(MusicTO.class));
 
         musicFacade.update(MusicUtils.newMusicTO(null));
     }
@@ -280,8 +280,8 @@ public class MusicFacadeImplTest {
 
         verify(musicService).get(1);
         verify(musicService).remove(musicEntity);
-        verify(musicTOValidator).validateMusicTOWithId(music);
-        verifyNoMoreInteractions(musicService, musicTOValidator);
+        verify(musicValidator).validateMusicTOWithId(music);
+        verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -290,7 +290,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.remove(null);
     }
@@ -300,7 +300,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testRemove_BadArgument() {
-        doThrow(ValidationException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.remove(MusicUtils.newMusicTO(null));
     }
@@ -329,8 +329,8 @@ public class MusicFacadeImplTest {
 
         verify(musicService).get(1);
         verify(musicService).duplicate(musicEntity);
-        verify(musicTOValidator).validateMusicTOWithId(music);
-        verifyNoMoreInteractions(musicService, musicTOValidator);
+        verify(musicValidator).validateMusicTOWithId(music);
+        verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -339,7 +339,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.duplicate(null);
     }
@@ -349,7 +349,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(ValidationException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.duplicate(MusicUtils.newMusicTO(null));
     }
@@ -381,8 +381,8 @@ public class MusicFacadeImplTest {
         verify(musicService).get(2);
         verify(musicService).getAll();
         verify(musicService).moveUp(musicEntity);
-        verify(musicTOValidator).validateMusicTOWithId(music);
-        verifyNoMoreInteractions(musicService, musicTOValidator);
+        verify(musicValidator).validateMusicTOWithId(music);
+        verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -391,7 +391,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.moveUp(null);
     }
@@ -401,7 +401,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(ValidationException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.moveUp(MusicUtils.newMusicTO(null));
     }
@@ -448,8 +448,8 @@ public class MusicFacadeImplTest {
         verify(musicService).get(1);
         verify(musicService).getAll();
         verify(musicService).moveDown(musicEntity);
-        verify(musicTOValidator).validateMusicTOWithId(music);
-        verifyNoMoreInteractions(musicService, musicTOValidator);
+        verify(musicValidator).validateMusicTOWithId(music);
+        verifyNoMoreInteractions(musicService, musicValidator);
         verifyZeroInteractions(converter);
     }
 
@@ -458,7 +458,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.moveDown(null);
     }
@@ -468,7 +468,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = ValidationException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(ValidationException.class).when(musicTOValidator).validateMusicTOWithId(any(MusicTO.class));
+        doThrow(ValidationException.class).when(musicValidator).validateMusicTOWithId(any(MusicTO.class));
 
         musicFacade.moveDown(MusicUtils.newMusicTO(null));
     }
@@ -507,7 +507,7 @@ public class MusicFacadeImplTest {
 
         verify(musicService).updatePositions();
         verifyNoMoreInteractions(musicService);
-        verifyZeroInteractions(converter, musicTOValidator);
+        verifyZeroInteractions(converter, musicValidator);
     }
 
     /**
@@ -525,7 +525,7 @@ public class MusicFacadeImplTest {
 
         verify(musicService).getAll();
         verifyNoMoreInteractions(musicService);
-        verifyZeroInteractions(converter, musicTOValidator);
+        verifyZeroInteractions(converter, musicValidator);
     }
 
     /**
@@ -547,7 +547,7 @@ public class MusicFacadeImplTest {
 
         verify(musicService).getAll();
         verifyNoMoreInteractions(musicService);
-        verifyZeroInteractions(converter, musicTOValidator);
+        verifyZeroInteractions(converter, musicValidator);
     }
 
     /**
@@ -565,7 +565,7 @@ public class MusicFacadeImplTest {
 
         verify(musicService).getAll();
         verifyNoMoreInteractions(musicService);
-        verifyZeroInteractions(converter, musicTOValidator);
+        verifyZeroInteractions(converter, musicValidator);
     }
 
 }

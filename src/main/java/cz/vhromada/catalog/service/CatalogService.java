@@ -7,6 +7,7 @@ import cz.vhromada.catalog.common.Movable;
 /**
  * An interface represents service for catalog.
  *
+ * @param <T> type of data
  * @author Vladimir Hromada
  */
 public interface CatalogService<T extends Movable> {

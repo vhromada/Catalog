@@ -2,7 +2,6 @@ package cz.vhromada.catalog.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -41,7 +40,7 @@ public final class CollectionUtils {
      */
     public static <T extends Movable> List<T> getSortedData(final List<T> data) {
         final List<T> sortedData = new ArrayList<>(data);
-        Collections.sort(sortedData, (o1, o2) -> {
+        sortedData.sort((o1, o2) -> {
             if (o1 == null) {
                 return -1;
             }

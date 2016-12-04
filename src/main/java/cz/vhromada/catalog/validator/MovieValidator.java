@@ -25,7 +25,7 @@ public interface MovieValidator {
      *                                  or subtitles contain null value
      *                                  or media are null
      *                                  or media contain null value
-     *                                  or media contain negative value
+     *                                  or length of medium is negative value
      *                                  or URL to ČSFD page about movie is null
      *                                  or IMDB code isn't -1 or between 1 and 9999999
      *                                  or URL to english Wikipedia page about movie is null
@@ -56,7 +56,7 @@ public interface MovieValidator {
      *                                  or subtitles contain null value
      *                                  or media are null
      *                                  or media contain null value
-     *                                  or media contain negative value
+     *                                  or length of medium is negative value
      *                                  or URL to ČSFD page about movie is null
      *                                  or IMDB code isn't -1 or between 1 and 9999999
      *                                  or URL to english Wikipedia page about movie is null

@@ -5,7 +5,7 @@ import cz.vhromada.catalog.domain.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * An interface represents repository for genre.
+ * An interface represents repository for genres.
  *
  * @author Vladimir Hromada
  */

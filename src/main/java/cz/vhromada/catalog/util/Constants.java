@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.util;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 /**
  * A class represents constants.
@@ -17,7 +17,7 @@ public final class Constants {
     /**
      * Current year
      */
-    public static final int CURRENT_YEAR = Calendar.getInstance().get(Calendar.YEAR);
+    public static final int CURRENT_YEAR = LocalDate.now().getYear();
 
     /**
      * Maximum IMDB code

@@ -2,6 +2,7 @@ package cz.vhromada.catalog.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Season;
@@ -52,10 +53,7 @@ public final class CatalogUtils {
         newSeason.setSubtitles(new ArrayList<>(season.getSubtitles()));
         newSeason.setNote(season.getNote());
         newSeason.setPosition(season.getPosition());
-        final List<Episode> newEpisodes = new ArrayList<>();
-        for (final Episode episode : season.getEpisodes()) {
-            newEpisodes.add(duplicateEpisode(episode));
-        }
+        final List<Episode> newEpisodes = season.getEpisodes().stream().map(CatalogUtils::duplicateEpisode).collect(Collectors.toList());
         newSeason.setEpisodes(newEpisodes);
 
         return newSeason;

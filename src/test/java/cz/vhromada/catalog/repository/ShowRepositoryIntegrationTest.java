@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.CatalogConfiguration;
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.utils.CollectionUtils;
@@ -32,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testCatalogContext.xml")
+@ContextConfiguration(classes = { CatalogConfiguration.class, CatalogTestConfiguration.class })
 @Transactional
 @Rollback
 public class ShowRepositoryIntegrationTest {

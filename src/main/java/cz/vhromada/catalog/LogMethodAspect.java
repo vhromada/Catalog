@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * A class represents aspect for logging method.
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
  * @author Vladimir Hromada
  */
 @Aspect
+@Component
 public class LogMethodAspect {
 
     /**

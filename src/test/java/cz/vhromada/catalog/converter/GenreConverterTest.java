@@ -3,6 +3,8 @@ package cz.vhromada.catalog.converter;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import cz.vhromada.catalog.CatalogConfiguration;
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.converters.Converter;
@@ -20,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:dozerMappingContext.xml")
+@ContextConfiguration(classes = { CatalogConfiguration.class, CatalogTestConfiguration.class })
 public class GenreConverterTest {
 
     /**

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.CatalogConfiguration;
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
@@ -25,7 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testCatalogContext.xml")
+@ContextConfiguration(classes = { CatalogConfiguration.class, CatalogTestConfiguration.class })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class EpisodeFacadeImplIntegrationTest {
 

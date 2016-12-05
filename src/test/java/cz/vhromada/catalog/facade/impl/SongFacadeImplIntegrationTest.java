@@ -84,18 +84,18 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(Music, Song)} with null TO for music.
+     * Test method for {@link SongFacade#add(Music, Song)} with null music.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullMusicTO() {
+    public void testAdd_NullMusicEpisode() {
         songFacade.add(null, SongUtils.newSong(null));
     }
 
     /**
-     * Test method for {@link SongFacade#add(Music, Song)} with null TO for song.
+     * Test method for {@link SongFacade#add(Music, Song)} with null song.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullSongTO() {
+    public void testAdd_NullSongEpisode() {
         songFacade.add(MusicUtils.newMusic(1), null);
     }
 

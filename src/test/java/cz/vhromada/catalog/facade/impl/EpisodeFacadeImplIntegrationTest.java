@@ -84,18 +84,18 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(Season, Episode)} with null TO for season.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)} with null season.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullSeasonTO() {
+    public void testAdd_NullSeasonEpisode() {
         episodeFacade.add(null, EpisodeUtils.newEpisode(null));
     }
 
     /**
-     * Test method for {@link EpisodeFacade#add(Season, Episode)} with null TO for episode.
+     * Test method for {@link EpisodeFacade#add(Season, Episode)} with null episode.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullEpisodeTO() {
+    public void testAdd_NullEpisode() {
         episodeFacade.add(SeasonUtils.newSeason(1), null);
     }
 

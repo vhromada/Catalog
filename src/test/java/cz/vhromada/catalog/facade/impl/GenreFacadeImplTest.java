@@ -85,10 +85,10 @@ public class GenreFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreValidator)} with null validator for TO for genre.
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, GenreValidator)} with null validator for genre.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullGenreTOValidator() {
+    public void testConstructor_NullGenreEpisodeValidator() {
         new GenreFacadeImpl(genreService, converter, null);
     }
 

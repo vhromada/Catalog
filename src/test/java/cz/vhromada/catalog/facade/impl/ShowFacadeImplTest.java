@@ -105,10 +105,10 @@ public class ShowFacadeImplTest {
     }
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowValidator)} with null validator for TO for show.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, CatalogService, Converter, ShowValidator)} with null validator for show.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullShowTOValidator() {
+    public void testConstructor_NullShowValidator() {
         new ShowFacadeImpl(showService, genreService, converter, null);
     }
 

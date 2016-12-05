@@ -96,20 +96,18 @@ public class SeasonFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null validator for TO
-     * for show.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null validator for show.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullShowTOValidator() {
+    public void testConstructor_NullShowValidator() {
         new SeasonFacadeImpl(showService, converter, null, seasonValidator);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null validator for TO
-     * for season.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, ShowValidator, SeasonValidator)} with null validator for season.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullSeasonTOValidator() {
+    public void testConstructor_NullSeasonValidator() {
         new SeasonFacadeImpl(showService, converter, showValidator, null);
     }
 
@@ -183,40 +181,40 @@ public class SeasonFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(Show, Season)} with null TO for show.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with null show.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullShowTO() {
+    public void testAdd_NullShow() {
         doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         seasonFacade.add(null, SeasonUtils.newSeason(null));
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(Show, Season)} with null TO for season.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with null season.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullSeasonTO() {
+    public void testAdd_NullSeasonEpisode() {
         doThrow(IllegalArgumentException.class).when(seasonValidator).validateNewSeason(any(Season.class));
 
         seasonFacade.add(ShowUtils.newShow(1), null);
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(Show, Season)} with TO for show with bad data.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with show with bad data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadShowTO() {
+    public void testAdd_BadShow() {
         doThrow(IllegalArgumentException.class).when(showValidator).validateShowWithId(any(Show.class));
 
         seasonFacade.add(ShowUtils.newShow(1), SeasonUtils.newSeason(null));
     }
 
     /**
-     * Test method for {@link SeasonFacade#add(Show, Season)} with TO for season with bad data.
+     * Test method for {@link SeasonFacade#add(Show, Season)} with season with bad data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadSeasonTO() {
+    public void testAdd_BadSeasonEpisode() {
         doThrow(IllegalArgumentException.class).when(seasonValidator).validateNewSeason(any(Season.class));
 
         seasonFacade.add(ShowUtils.newShow(1), SeasonUtils.newSeason(Integer.MAX_VALUE));

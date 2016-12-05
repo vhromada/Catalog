@@ -36,11 +36,10 @@ public class MovieValidatorImplTest {
     }
 
     /**
-     * Test method for {@link MovieValidatorImpl#MovieValidatorImpl(GenreValidator)} with null validator for
-     * genre.
+     * Test method for {@link MovieValidatorImpl#MovieValidatorImpl(GenreValidator)} with null validator for genre.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullGenreTOValidator() {
+    public void testConstructor_NullGenreValidator() {
         new MovieValidatorImpl(null);
     }
 

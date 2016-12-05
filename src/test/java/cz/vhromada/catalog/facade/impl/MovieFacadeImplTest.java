@@ -103,11 +103,10 @@ public class MovieFacadeImplTest {
     }
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieValidator)} with null validator for TO for
-     * movie.
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, MovieValidator)} with null validator for movie.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullMovieTOValidator() {
+    public void testConstructor_NullMovieValidator() {
         new MovieFacadeImpl(movieService, genreService, converter, null);
     }
 

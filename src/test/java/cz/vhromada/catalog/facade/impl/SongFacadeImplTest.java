@@ -95,19 +95,18 @@ public class SongFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, MusicValidator, SongValidator)} with null validator for TO for
-     * music.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, MusicValidator, SongValidator)} with null validator for music.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullMusicTOValidator() {
+    public void testConstructor_NullMusicEpisodeValidator() {
         new SongFacadeImpl(musicService, converter, null, songValidator);
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, MusicValidator, SongValidator)} with null validator for TO for song.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, MusicValidator, SongValidator)} with null validator for song.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullSongTOValidator() {
+    public void testConstructor_NullSongEpisodeValidator() {
         new SongFacadeImpl(musicService, converter, musicValidator, null);
     }
 
@@ -181,40 +180,40 @@ public class SongFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SongFacade#add(Music, Song)} with null TO for music.
+     * Test method for {@link SongFacade#add(Music, Song)} with null music.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullMusicTO() {
+    public void testAdd_NullMusicEpisode() {
         doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         songFacade.add(null, SongUtils.newSong(null));
     }
 
     /**
-     * Test method for {@link SongFacade#add(Music, Song)} with null TO for song.
+     * Test method for {@link SongFacade#add(Music, Song)} with null song.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullSongTO() {
+    public void testAdd_NullSongEpisode() {
         doThrow(IllegalArgumentException.class).when(songValidator).validateNewSong(any(Song.class));
 
         songFacade.add(MusicUtils.newMusic(1), null);
     }
 
     /**
-     * Test method for {@link SongFacade#add(Music, Song)} with TO for music with bad data.
+     * Test method for {@link SongFacade#add(Music, Song)} with music with bad data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMusicTO() {
+    public void testAdd_BadMusicEpisode() {
         doThrow(IllegalArgumentException.class).when(musicValidator).validateMusicWithId(any(Music.class));
 
         songFacade.add(MusicUtils.newMusic(1), SongUtils.newSong(null));
     }
 
     /**
-     * Test method for {@link SongFacade#add(Music, Song)} with TO for song with bad data.
+     * Test method for {@link SongFacade#add(Music, Song)} with song with bad data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadSongTO() {
+    public void testAdd_BadSongEpisode() {
         doThrow(IllegalArgumentException.class).when(songValidator).validateNewSong(any(Song.class));
 
         songFacade.add(MusicUtils.newMusic(1), SongUtils.newSong(Integer.MAX_VALUE));

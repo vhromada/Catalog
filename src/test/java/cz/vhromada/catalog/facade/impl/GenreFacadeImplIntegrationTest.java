@@ -291,11 +291,11 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Returns new TO for genre.
+     * Returns new genre.
      *
      * @param id   ID
      * @param name name
-     * @return new TO for genre
+     * @return new genre
      */
     private static Genre createGenre(final int id, final String name) {
         final Genre genre = new Genre();

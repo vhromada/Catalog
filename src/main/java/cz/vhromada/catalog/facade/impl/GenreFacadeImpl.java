@@ -90,7 +90,7 @@ public class GenreFacadeImpl implements GenreFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Genre genre) {
@@ -100,7 +100,7 @@ public class GenreFacadeImpl implements GenreFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Genre genre) {
@@ -113,7 +113,7 @@ public class GenreFacadeImpl implements GenreFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Genre genre) {
@@ -127,7 +127,7 @@ public class GenreFacadeImpl implements GenreFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Genre genre) {
@@ -141,7 +141,7 @@ public class GenreFacadeImpl implements GenreFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Genre genre) {
@@ -159,7 +159,7 @@ public class GenreFacadeImpl implements GenreFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Genre genre) {

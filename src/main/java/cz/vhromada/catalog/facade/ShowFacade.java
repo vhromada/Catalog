@@ -37,24 +37,24 @@ public interface ShowFacade {
      * Adds show. Sets new ID and position.
      *
      * @param show show
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or ID isn't null
-     *                                                                   or czech name is null
-     *                                                                   or czech name is empty string
-     *                                                                   or original name is null
-     *                                                                   or original name is empty string
-     *                                                                   or URL to ČSFD page about show is null
-     *                                                                   or IMDB code isn't -1 or between 1 and 9999999
-     *                                                                   or URL to english Wikipedia page about show is null
-     *                                                                   or URL to czech Wikipedia page about show is null
-     *                                                                   or path to file with show picture is null
-     *                                                                   or note is null
-     *                                                                   or genres are null
-     *                                                                   or genres contain null value
-     *                                                                   or genre ID is null
-     *                                                                   or genre name is null
-     *                                                                   or genre name is empty string
-     *                                                                   or genre doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or ID isn't null
+     *                                  or czech name is null
+     *                                  or czech name is empty string
+     *                                  or original name is null
+     *                                  or original name is empty string
+     *                                  or URL to ČSFD page about show is null
+     *                                  or IMDB code isn't -1 or between 1 and 9999999
+     *                                  or URL to english Wikipedia page about show is null
+     *                                  or URL to czech Wikipedia page about show is null
+     *                                  or path to file with show picture is null
+     *                                  or note is null
+     *                                  or genres are null
+     *                                  or genres contain null value
+     *                                  or genre ID is null
+     *                                  or genre name is null
+     *                                  or genre name is empty string
+     *                                  or genre doesn't exist in data storage
      */
     void add(Show show);
 
@@ -62,25 +62,25 @@ public interface ShowFacade {
      * Updates show.
      *
      * @param show new value of show
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or ID is null
-     *                                                                   or czech name is null
-     *                                                                   or czech name is empty string
-     *                                                                   or original name is null
-     *                                                                   or original name is empty string
-     *                                                                   or URL to ČSFD page about show is null
-     *                                                                   or IMDB code isn't -1 or between 1 and 9999999
-     *                                                                   or URL to english Wikipedia page about show is null
-     *                                                                   or URL to czech Wikipedia page about show is null
-     *                                                                   or path to file with show picture is null
-     *                                                                   or note is null
-     *                                                                   or genres are null
-     *                                                                   or genres contain null value
-     *                                                                   or genre ID is null
-     *                                                                   or genre name is null
-     *                                                                   or genre name is empty string
-     *                                                                   or show doesn't exist in data storage
-     *                                                                   or genre doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or ID is null
+     *                                  or czech name is null
+     *                                  or czech name is empty string
+     *                                  or original name is null
+     *                                  or original name is empty string
+     *                                  or URL to ČSFD page about show is null
+     *                                  or IMDB code isn't -1 or between 1 and 9999999
+     *                                  or URL to english Wikipedia page about show is null
+     *                                  or URL to czech Wikipedia page about show is null
+     *                                  or path to file with show picture is null
+     *                                  or note is null
+     *                                  or genres are null
+     *                                  or genres contain null value
+     *                                  or genre ID is null
+     *                                  or genre name is null
+     *                                  or genre name is empty string
+     *                                  or show doesn't exist in data storage
+     *                                  or genre doesn't exist in data storage
      */
     void update(Show show);
 
@@ -88,9 +88,9 @@ public interface ShowFacade {
      * Removes show.
      *
      * @param show show
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or ID is null
-     *                                                                   or show doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or ID is null
+     *                                  or show doesn't exist in data storage
      */
     void remove(Show show);
 
@@ -98,9 +98,9 @@ public interface ShowFacade {
      * Duplicates show.
      *
      * @param show show
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or ID is null
-     *                                                                   or show doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or ID is null
+     *                                  or show doesn't exist in data storage
      */
     void duplicate(Show show);
 
@@ -108,10 +108,10 @@ public interface ShowFacade {
      * Moves show in list one position up.
      *
      * @param show show
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or ID is null
-     *                                                                   or show can't be moved up
-     *                                                                   or show doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or ID is null
+     *                                  or show can't be moved up
+     *                                  or show doesn't exist in data storage
      */
     void moveUp(Show show);
 
@@ -119,10 +119,10 @@ public interface ShowFacade {
      * Moves show in list one position down.
      *
      * @param show show
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or ID is null
-     *                                                                   or show can't be moved down
-     *                                                                   or show doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or ID is null
+     *                                  or show can't be moved down
+     *                                  or show doesn't exist in data storage
      */
     void moveDown(Show show);
 

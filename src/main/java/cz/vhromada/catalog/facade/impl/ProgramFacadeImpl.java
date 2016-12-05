@@ -90,7 +90,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Program program) {
@@ -100,7 +100,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Program program) {
@@ -113,7 +113,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Program program) {
@@ -127,7 +127,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Program program) {
@@ -141,7 +141,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Program program) {
@@ -159,7 +159,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Program program) {

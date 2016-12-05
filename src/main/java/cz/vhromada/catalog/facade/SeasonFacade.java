@@ -26,19 +26,19 @@ public interface SeasonFacade {
      *
      * @param show   show
      * @param season season
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or season is null
-     *                                                                   or show ID is null
-     *                                                                   or season ID isn't null
-     *                                                                   or number of season isn't positive number
-     *                                                                   or starting year isn't between 1940 and current year
-     *                                                                   or ending year isn't between 1940 and current year
-     *                                                                   or starting year is greater than ending year
-     *                                                                   or language is null
-     *                                                                   or subtitles are null
-     *                                                                   or subtitles contain null value
-     *                                                                   or note is null
-     *                                                                   or show doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or season is null
+     *                                  or show ID is null
+     *                                  or season ID isn't null
+     *                                  or number of season isn't positive number
+     *                                  or starting year isn't between 1940 and current year
+     *                                  or ending year isn't between 1940 and current year
+     *                                  or starting year is greater than ending year
+     *                                  or language is null
+     *                                  or subtitles are null
+     *                                  or subtitles contain null value
+     *                                  or note is null
+     *                                  or show doesn't exist in data storage
      */
     void add(Show show, Season season);
 
@@ -46,17 +46,17 @@ public interface SeasonFacade {
      * Updates season.
      *
      * @param season new value of season
-     * @throws IllegalArgumentException                                  if season is null
-     *                                                                   or ID is null
-     *                                                                   or number of season isn't positive number
-     *                                                                   or starting year isn't between 1940 and current year
-     *                                                                   or ending year isn't between 1940 and current year
-     *                                                                   or starting year is greater than ending year
-     *                                                                   or language is null
-     *                                                                   or subtitles are null
-     *                                                                   or subtitles contain null value
-     *                                                                   or note is null
-     *                                                                   or season doesn't exist in data storage
+     * @throws IllegalArgumentException if season is null
+     *                                  or ID is null
+     *                                  or number of season isn't positive number
+     *                                  or starting year isn't between 1940 and current year
+     *                                  or ending year isn't between 1940 and current year
+     *                                  or starting year is greater than ending year
+     *                                  or language is null
+     *                                  or subtitles are null
+     *                                  or subtitles contain null value
+     *                                  or note is null
+     *                                  or season doesn't exist in data storage
      */
     void update(Season season);
 
@@ -64,9 +64,9 @@ public interface SeasonFacade {
      * Removes season.
      *
      * @param season season
-     * @throws IllegalArgumentException                                  if season is null
-     *                                                                   or ID is null
-     *                                                                   or season doesn't exist in data storage
+     * @throws IllegalArgumentException if season is null
+     *                                  or ID is null
+     *                                  or season doesn't exist in data storage
      */
     void remove(Season season);
 
@@ -74,9 +74,9 @@ public interface SeasonFacade {
      * Duplicates season.
      *
      * @param season season
-     * @throws IllegalArgumentException                                  if season is null
-     *                                                                   or ID is null
-     *                                                                   or season doesn't exist in data storage
+     * @throws IllegalArgumentException if season is null
+     *                                  or ID is null
+     *                                  or season doesn't exist in data storage
      */
     void duplicate(Season season);
 
@@ -84,10 +84,10 @@ public interface SeasonFacade {
      * Moves season in list one position up.
      *
      * @param season season
-     * @throws IllegalArgumentException                                  if season is null
-     *                                                                   or ID is null
-     *                                                                   or season can't be moved up
-     *                                                                   or season doesn't exist in data storage
+     * @throws IllegalArgumentException if season is null
+     *                                  or ID is null
+     *                                  or season can't be moved up
+     *                                  or season doesn't exist in data storage
      */
     void moveUp(Season season);
 
@@ -95,10 +95,10 @@ public interface SeasonFacade {
      * Moves season in list one position down.
      *
      * @param season season
-     * @throws IllegalArgumentException                                  if season is null
-     *                                                                   or ID is null
-     *                                                                   or season can't be moved down
-     *                                                                   or season doesn't exist in data storage
+     * @throws IllegalArgumentException if season is null
+     *                                  or ID is null
+     *                                  or season can't be moved down
+     *                                  or season doesn't exist in data storage
      */
     void moveDown(Season season);
 
@@ -107,9 +107,9 @@ public interface SeasonFacade {
      *
      * @param show show
      * @return seasons for specified show
-     * @throws IllegalArgumentException                                  if show is null
-     *                                                                   or ID is null
-     *                                                                   or show doesn't exist in data storage
+     * @throws IllegalArgumentException if show is null
+     *                                  or ID is null
+     *                                  or show doesn't exist in data storage
      */
     List<Season> findSeasonsByShow(Show show);
 

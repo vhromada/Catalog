@@ -111,7 +111,7 @@ public class MovieFacadeImpl implements MovieFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Movie movie) {
@@ -126,7 +126,7 @@ public class MovieFacadeImpl implements MovieFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Movie movie) {
@@ -148,7 +148,7 @@ public class MovieFacadeImpl implements MovieFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Movie movie) {
@@ -162,7 +162,7 @@ public class MovieFacadeImpl implements MovieFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Movie movie) {
@@ -176,7 +176,7 @@ public class MovieFacadeImpl implements MovieFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Movie movie) {
@@ -194,7 +194,7 @@ public class MovieFacadeImpl implements MovieFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Movie movie) {

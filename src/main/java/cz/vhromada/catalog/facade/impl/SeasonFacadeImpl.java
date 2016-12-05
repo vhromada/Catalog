@@ -101,7 +101,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Show show, final Season season) {
@@ -121,7 +121,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Season season) {
@@ -146,7 +146,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Season season) {
@@ -165,7 +165,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Season season) {
@@ -183,7 +183,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Season season) {
@@ -191,7 +191,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Season season) {
@@ -199,7 +199,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public List<Season> findSeasonsByShow(final Show show) {

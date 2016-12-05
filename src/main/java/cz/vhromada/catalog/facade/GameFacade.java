@@ -36,15 +36,15 @@ public interface GameFacade {
      * Adds game. Sets new ID and position.
      *
      * @param game game
-     * @throws IllegalArgumentException                              if game is null
-     *                                                               or ID isn't null
-     *                                                               or name is null
-     *                                                               or name is empty string
-     *                                                               or URL to english Wikipedia page about game is null
-     *                                                               or URL to czech Wikipedia page about game is null
-     *                                                               or count of media isn't positive number
-     *                                                               or other data is null
-     *                                                               or note is null
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about game is null
+     *                                  or URL to czech Wikipedia page about game is null
+     *                                  or count of media isn't positive number
+     *                                  or other data is null
+     *                                  or note is null
      */
     void add(Game game);
 
@@ -52,16 +52,16 @@ public interface GameFacade {
      * Updates game.
      *
      * @param game new value of game
-     * @throws IllegalArgumentException                                  if game is null
-     *                                                                   or ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or URL to english Wikipedia page about game is null
-     *                                                                   or URL to czech Wikipedia page about game is null
-     *                                                                   or count of media isn't positive number
-     *                                                                   or other data is null
-     *                                                                   or note is null
-     *                                                                   or game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about game is null
+     *                                  or URL to czech Wikipedia page about game is null
+     *                                  or count of media isn't positive number
+     *                                  or other data is null
+     *                                  or note is null
+     *                                  or game doesn't exist in data storage
      */
     void update(Game game);
 
@@ -69,9 +69,9 @@ public interface GameFacade {
      * Removes game.
      *
      * @param game game
-     * @throws IllegalArgumentException                                  if game is null
-     *                                                                   or ID is null
-     *                                                                   or game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game doesn't exist in data storage
      */
     void remove(Game game);
 
@@ -79,9 +79,9 @@ public interface GameFacade {
      * Duplicates game.
      *
      * @param game game
-     * @throws IllegalArgumentException                                  if game is null
-     *                                                                   or ID is null
-     *                                                                   or game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game doesn't exist in data storage
      */
     void duplicate(Game game);
 
@@ -89,10 +89,10 @@ public interface GameFacade {
      * Moves game in list one position up.
      *
      * @param game game
-     * @throws IllegalArgumentException                                  if game is null
-     *                                                                   or ID is null
-     *                                                                   or game can't be moved up
-     *                                                                   or game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game can't be moved up
+     *                                  or game doesn't exist in data storage
      */
     void moveUp(Game game);
 
@@ -100,10 +100,10 @@ public interface GameFacade {
      * Moves game in list one position down.
      *
      * @param game game
-     * @throws IllegalArgumentException                                  if game is null
-     *                                                                   or ID is null
-     *                                                                   or game can't be moved down
-     *                                                                   or game doesn't exist in data storage
+     * @throws IllegalArgumentException if game is null
+     *                                  or ID is null
+     *                                  or game can't be moved down
+     *                                  or game doesn't exist in data storage
      */
     void moveDown(Game game);
 

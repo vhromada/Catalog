@@ -93,7 +93,7 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Music music) {
@@ -106,7 +106,7 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Music music) {
@@ -127,7 +127,7 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Music music) {
@@ -141,7 +141,7 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Music music) {
@@ -155,7 +155,7 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Music music) {
@@ -173,7 +173,7 @@ public class MusicFacadeImpl implements MusicFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Music music) {

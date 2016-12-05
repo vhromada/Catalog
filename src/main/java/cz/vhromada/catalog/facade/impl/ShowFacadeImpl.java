@@ -110,7 +110,7 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Show show) {
@@ -128,7 +128,7 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Show show) {
@@ -160,7 +160,7 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Show show) {
@@ -174,7 +174,7 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Show show) {
@@ -188,7 +188,7 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Show show) {
@@ -206,7 +206,7 @@ public class ShowFacadeImpl implements ShowFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Show show) {

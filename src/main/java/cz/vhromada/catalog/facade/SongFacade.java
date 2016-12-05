@@ -26,15 +26,15 @@ public interface SongFacade {
      *
      * @param music music
      * @param song  song
-     * @throws IllegalArgumentException                                  if music is null
-     *                                                                   or song is null
-     *                                                                   or music ID is null
-     *                                                                   or song ID isn't null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or length of song is negative value
-     *                                                                   or note is null
-     *                                                                   or music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or song is null
+     *                                  or music ID is null
+     *                                  or song ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or length of song is negative value
+     *                                  or note is null
+     *                                  or music doesn't exist in data storage
      */
     void add(Music music, Song song);
 
@@ -42,13 +42,13 @@ public interface SongFacade {
      * Updates song.
      *
      * @param song new value of song
-     * @throws IllegalArgumentException                                  if song is null
-     *                                                                   or ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or length of song is negative value
-     *                                                                   or note is null
-     *                                                                   or song doesn't exist in data storage
+     * @throws IllegalArgumentException if song is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or length of song is negative value
+     *                                  or note is null
+     *                                  or song doesn't exist in data storage
      */
     void update(Song song);
 
@@ -56,9 +56,9 @@ public interface SongFacade {
      * Removes song.
      *
      * @param song song
-     * @throws IllegalArgumentException                                  if song is null
-     *                                                                   or ID is null
-     *                                                                   or song doesn't exist in data storage
+     * @throws IllegalArgumentException if song is null
+     *                                  or ID is null
+     *                                  or song doesn't exist in data storage
      */
     void remove(Song song);
 
@@ -66,9 +66,9 @@ public interface SongFacade {
      * Duplicates song.
      *
      * @param song song
-     * @throws IllegalArgumentException                                  if song is null
-     *                                                                   or ID is null
-     *                                                                   or song doesn't exist in data storage
+     * @throws IllegalArgumentException if song is null
+     *                                  or ID is null
+     *                                  or song doesn't exist in data storage
      */
     void duplicate(Song song);
 
@@ -76,10 +76,10 @@ public interface SongFacade {
      * Moves song in list one position up.
      *
      * @param song song
-     * @throws IllegalArgumentException                                  if song is null
-     *                                                                   or ID is null
-     *                                                                   or song can't be moved up
-     *                                                                   or song doesn't exist in data storage
+     * @throws IllegalArgumentException if song is null
+     *                                  or ID is null
+     *                                  or song can't be moved up
+     *                                  or song doesn't exist in data storage
      */
     void moveUp(Song song);
 
@@ -87,10 +87,10 @@ public interface SongFacade {
      * Moves song in list one position down.
      *
      * @param song song
-     * @throws IllegalArgumentException                                  if song is null
-     *                                                                   or ID is null
-     *                                                                   or song can't be moved down
-     *                                                                   or song doesn't exist in data storage
+     * @throws IllegalArgumentException if song is null
+     *                                  or ID is null
+     *                                  or song can't be moved down
+     *                                  or song doesn't exist in data storage
      */
     void moveDown(Song song);
 
@@ -99,9 +99,9 @@ public interface SongFacade {
      *
      * @param music music
      * @return songs for specified music
-     * @throws IllegalArgumentException                                  if music is null
-     *                                                                   or ID is null
-     *                                                                   or music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music doesn't exist in data storage
      */
     List<Song> findSongsByMusic(Music music);
 

@@ -36,15 +36,15 @@ public interface GenreFacade {
      * Adds genre. Sets new ID and position.
      *
      * @param genre genre
-     * @throws IllegalArgumentException                              if genre is null
-     *                                                               or ID isn't null
-     *                                                               or name is null
-     *                                                               or name is empty string
-     *                                                               or URL to english Wikipedia page about genre is null
-     *                                                               or URL to czech Wikipedia page about genre is null
-     *                                                               or count of media isn't positive number
-     *                                                               or other data is null
-     *                                                               or note is null
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about genre is null
+     *                                  or URL to czech Wikipedia page about genre is null
+     *                                  or count of media isn't positive number
+     *                                  or other data is null
+     *                                  or note is null
      */
     void add(Genre genre);
 
@@ -52,11 +52,11 @@ public interface GenreFacade {
      * Updates genre.
      *
      * @param genre new value of genre
-     * @throws IllegalArgumentException                                  if genre is null
-     *                                                                   or ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or genre doesn't exist in data storage
      */
     void update(Genre genre);
 
@@ -64,9 +64,9 @@ public interface GenreFacade {
      * Removes genre.
      *
      * @param genre genre
-     * @throws IllegalArgumentException                                  if genre is null
-     *                                                                   or ID is null
-     *                                                                   or genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre doesn't exist in data storage
      */
     void remove(Genre genre);
 
@@ -74,9 +74,9 @@ public interface GenreFacade {
      * Duplicates genre.
      *
      * @param genre genre
-     * @throws IllegalArgumentException                                  if genre is null
-     *                                                                   or ID is null
-     *                                                                   or genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre doesn't exist in data storage
      */
     void duplicate(Genre genre);
 
@@ -84,10 +84,10 @@ public interface GenreFacade {
      * Moves genre in list one position up.
      *
      * @param genre genre
-     * @throws IllegalArgumentException                                  if genre is null
-     *                                                                   or ID is null
-     *                                                                   or genre can't be moved up
-     *                                                                   or genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre can't be moved up
+     *                                  or genre doesn't exist in data storage
      */
     void moveUp(Genre genre);
 
@@ -95,10 +95,10 @@ public interface GenreFacade {
      * Moves genre in list one position down.
      *
      * @param genre genre
-     * @throws IllegalArgumentException                                  if genre is null
-     *                                                                   or ID is null
-     *                                                                   or genre can't be moved down
-     *                                                                   or genre doesn't exist in data storage
+     * @throws IllegalArgumentException if genre is null
+     *                                  or ID is null
+     *                                  or genre can't be moved down
+     *                                  or genre doesn't exist in data storage
      */
     void moveDown(Genre genre);
 

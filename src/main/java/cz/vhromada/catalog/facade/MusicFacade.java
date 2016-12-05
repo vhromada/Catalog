@@ -37,14 +37,14 @@ public interface MusicFacade {
      * Adds music. Sets new ID and position.
      *
      * @param music music
-     * @throws IllegalArgumentException                              if music is null
-     *                                                               or ID isn't null
-     *                                                               or name is null
-     *                                                               or name is empty string
-     *                                                               or URL to english Wikipedia page about music is null
-     *                                                               or URL to czech Wikipedia page about music is null
-     *                                                               or count of media isn't positive number
-     *                                                               or note is null
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID isn't null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about music is null
+     *                                  or URL to czech Wikipedia page about music is null
+     *                                  or count of media isn't positive number
+     *                                  or note is null
      */
     void add(Music music);
 
@@ -52,15 +52,15 @@ public interface MusicFacade {
      * Updates music.
      *
      * @param music new value of music
-     * @throws IllegalArgumentException                                  if music is null
-     *                                                                   or ID is null
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or URL to english Wikipedia page about music is null
-     *                                                                   or URL to czech Wikipedia page about music is null
-     *                                                                   or count of media isn't positive number
-     *                                                                   or note is null
-     *                                                                   or music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or URL to english Wikipedia page about music is null
+     *                                  or URL to czech Wikipedia page about music is null
+     *                                  or count of media isn't positive number
+     *                                  or note is null
+     *                                  or music doesn't exist in data storage
      */
     void update(Music music);
 
@@ -68,9 +68,9 @@ public interface MusicFacade {
      * Removes music.
      *
      * @param music music
-     * @throws IllegalArgumentException                                  if music is null
-     *                                                                   or ID is null
-     *                                                                   or music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music doesn't exist in data storage
      */
     void remove(Music music);
 
@@ -78,9 +78,9 @@ public interface MusicFacade {
      * Duplicates music.
      *
      * @param music music
-     * @throws IllegalArgumentException                                  if music is null
-     *                                                                   or ID is null
-     *                                                                   or music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music doesn't exist in data storage
      */
     void duplicate(Music music);
 
@@ -88,10 +88,10 @@ public interface MusicFacade {
      * Moves music in list one position up.
      *
      * @param music music
-     * @throws IllegalArgumentException                                  if music is null
-     *                                                                   or ID is null
-     *                                                                   or music can't be moved up
-     *                                                                   or music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music can't be moved up
+     *                                  or music doesn't exist in data storage
      */
     void moveUp(Music music);
 
@@ -99,10 +99,10 @@ public interface MusicFacade {
      * Moves music in list one position down.
      *
      * @param music music
-     * @throws IllegalArgumentException                                  if music is null
-     *                                                                   or ID is null
-     *                                                                   or music can't be moved down
-     *                                                                   or music doesn't exist in data storage
+     * @throws IllegalArgumentException if music is null
+     *                                  or ID is null
+     *                                  or music can't be moved down
+     *                                  or music doesn't exist in data storage
      */
     void moveDown(Music music);
 

@@ -90,7 +90,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                              {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Game game) {
@@ -100,7 +100,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Game game) {
@@ -113,7 +113,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Game game) {
@@ -127,7 +127,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Game game) {
@@ -141,7 +141,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Game game) {
@@ -159,7 +159,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Game game) {

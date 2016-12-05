@@ -26,16 +26,16 @@ public interface EpisodeFacade {
      *
      * @param season  season
      * @param episode episode
-     * @throws IllegalArgumentException                                  if season is null
-     *                                                                   or episode is null
-     *                                                                   or season ID is null
-     *                                                                   or episode ID isn't null
-     *                                                                   or number of episode isn't positive number
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or length of episode is negative value
-     *                                                                   or note is null
-     *                                                                   or season doesn't exist in data storage
+     * @throws IllegalArgumentException if season is null
+     *                                  or episode is null
+     *                                  or season ID is null
+     *                                  or episode ID isn't null
+     *                                  or number of episode isn't positive number
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or length of episode is negative value
+     *                                  or note is null
+     *                                  or season doesn't exist in data storage
      */
     void add(Season season, Episode episode);
 
@@ -43,14 +43,14 @@ public interface EpisodeFacade {
      * Updates episode.
      *
      * @param episode new value of episode
-     * @throws IllegalArgumentException                                  if episode is null
-     *                                                                   or ID is null
-     *                                                                   or number of episode isn't positive number
-     *                                                                   or name is null
-     *                                                                   or name is empty string
-     *                                                                   or length of episode is negative value
-     *                                                                   or note is null
-     *                                                                   or episode doesn't exist in data storage
+     * @throws IllegalArgumentException if episode is null
+     *                                  or ID is null
+     *                                  or number of episode isn't positive number
+     *                                  or name is null
+     *                                  or name is empty string
+     *                                  or length of episode is negative value
+     *                                  or note is null
+     *                                  or episode doesn't exist in data storage
      */
     void update(Episode episode);
 
@@ -58,9 +58,9 @@ public interface EpisodeFacade {
      * Removes episode.
      *
      * @param episode episode
-     * @throws IllegalArgumentException                                  if episode is null
-     *                                                                   or ID is null
-     *                                                                   or episode doesn't exist in data storage
+     * @throws IllegalArgumentException if episode is null
+     *                                  or ID is null
+     *                                  or episode doesn't exist in data storage
      */
     void remove(Episode episode);
 
@@ -68,9 +68,9 @@ public interface EpisodeFacade {
      * Duplicates episode.
      *
      * @param episode episode
-     * @throws IllegalArgumentException                                  if episode is null
-     *                                                                   or ID is null
-     *                                                                   or episode doesn't exist in data storage
+     * @throws IllegalArgumentException if episode is null
+     *                                  or ID is null
+     *                                  or episode doesn't exist in data storage
      */
     void duplicate(Episode episode);
 
@@ -78,10 +78,10 @@ public interface EpisodeFacade {
      * Moves episode in list one position up.
      *
      * @param episode episode
-     * @throws IllegalArgumentException                                  if episode is null
-     *                                                                   or ID is null
-     *                                                                   or episode can't be moved up
-     *                                                                   or episode doesn't exist in data storage
+     * @throws IllegalArgumentException if episode is null
+     *                                  or ID is null
+     *                                  or episode can't be moved up
+     *                                  or episode doesn't exist in data storage
      */
     void moveUp(Episode episode);
 
@@ -89,10 +89,10 @@ public interface EpisodeFacade {
      * Moves episode in list one position down.
      *
      * @param episode episode
-     * @throws IllegalArgumentException                                  if episode is null
-     *                                                                   or ID is null
-     *                                                                   or episode can't be moved down
-     *                                                                   or episode doesn't exist in data storage
+     * @throws IllegalArgumentException if episode is null
+     *                                  or ID is null
+     *                                  or episode can't be moved down
+     *                                  or episode doesn't exist in data storage
      */
     void moveDown(Episode episode);
 
@@ -101,9 +101,9 @@ public interface EpisodeFacade {
      *
      * @param season season
      * @return episodes for specified season
-     * @throws IllegalArgumentException                                  if season is null
-     *                                                                   or ID is null
-     *                                                                   or season doesn't exist in data storage
+     * @throws IllegalArgumentException if season is null
+     *                                  or ID is null
+     *                                  or season doesn't exist in data storage
      */
     List<Episode> findEpisodesBySeason(Season season);
 

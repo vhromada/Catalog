@@ -101,7 +101,7 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void add(final Music music, final Song song) {
@@ -120,7 +120,7 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void update(final Song song) {
@@ -137,7 +137,7 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void remove(final Song song) {
@@ -156,7 +156,7 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void duplicate(final Song song) {
@@ -174,7 +174,7 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveUp(final Song song) {
@@ -182,7 +182,7 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public void moveDown(final Song song) {
@@ -190,7 +190,7 @@ public class SongFacadeImpl implements SongFacade {
     }
 
     /**
-     * @throws IllegalArgumentException                                  {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
      */
     @Override
     public List<Song> findSongsByMusic(final Music music) {

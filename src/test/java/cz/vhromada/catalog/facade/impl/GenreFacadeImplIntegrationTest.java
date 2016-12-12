@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.CatalogConfiguration;
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
@@ -28,7 +27,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  * @author Vladimir Hromada
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { CatalogConfiguration.class, CatalogTestConfiguration.class })
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class GenreFacadeImplIntegrationTest {
 

@@ -80,8 +80,7 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, EpisodeValidator)} with null service for
-     * shows.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, EpisodeValidator)} with null service for shows.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullShowService() {

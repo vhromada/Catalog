@@ -33,7 +33,7 @@ public class ShowValidatorImplTest {
     }
 
     /**
-     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(GenreValidator)} with null validator forgenre.
+     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(GenreValidator)} with null validator for genre.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullGenreValidator() {

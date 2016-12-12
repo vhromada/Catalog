@@ -109,8 +109,8 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testGetPrograms() {
-        final List<cz.vhromada.catalog.domain.Program> programList = CollectionUtils
-                .newList(ProgramUtils.newProgramDomain(1), ProgramUtils.newProgramDomain(2));
+        final List<cz.vhromada.catalog.domain.Program> programList = CollectionUtils.newList(ProgramUtils.newProgramDomain(1),
+                ProgramUtils.newProgramDomain(2));
         final List<Program> expectedPrograms = CollectionUtils.newList(ProgramUtils.newProgram(1), ProgramUtils.newProgram(2));
 
         when(programService.getAll()).thenReturn(programList);

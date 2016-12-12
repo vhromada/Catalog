@@ -115,7 +115,7 @@ public class GenreFacadeImplIntegrationTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullArgument() {
-        genreFacade.add((Genre) null);
+        genreFacade.add(null);
     }
 
     /**
@@ -288,22 +288,6 @@ public class GenreFacadeImplIntegrationTest {
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadId() {
         genreFacade.duplicate(GenreUtils.newGenre(Integer.MAX_VALUE));
-    }
-
-    /**
-     * Returns new genre.
-     *
-     * @param id   ID
-     * @param name name
-     * @return new genre
-     */
-    private static Genre createGenre(final int id, final String name) {
-        final Genre genre = new Genre();
-        genre.setId(id);
-        genre.setName(name);
-        genre.setPosition(id - 1);
-
-        return genre;
     }
 
     /**

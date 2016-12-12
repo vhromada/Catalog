@@ -197,7 +197,7 @@ public class GenreFacadeImplTest {
     public void testAdd_NullArgument() {
         doThrow(IllegalArgumentException.class).when(genreValidator).validateNewGenre(any(Genre.class));
 
-        genreFacade.add((Genre) null);
+        genreFacade.add(null);
     }
 
     /**

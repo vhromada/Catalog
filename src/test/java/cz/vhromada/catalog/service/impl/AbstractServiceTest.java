@@ -31,7 +31,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * A class represents AbstractServiceTest.
+ * An abstract class represents test for service.
  *
  * @author Vladimir Hromada
  */

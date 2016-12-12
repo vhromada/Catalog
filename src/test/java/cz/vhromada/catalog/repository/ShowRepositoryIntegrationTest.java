@@ -132,7 +132,7 @@ public class ShowRepositoryIntegrationTest {
      * Test method for update show with added season.
      */
     @Test
-    public void testUpdate_Season() {
+    public void testUpdate_AddedSeason() {
         final Season season = SeasonUtils.newSeasonDomain(null);
         entityManager.persist(season);
 

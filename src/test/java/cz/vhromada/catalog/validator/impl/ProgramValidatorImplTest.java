@@ -66,8 +66,7 @@ public class ProgramValidatorImplTest {
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null URL to english Wikipedia page about program is
-     * null.
+     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null URL to english Wikipedia page about program is null.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewProgram_NullWikiEn() {
@@ -78,8 +77,7 @@ public class ProgramValidatorImplTest {
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null URL to czech Wikipedia page about program is
-     * null.
+     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null URL to czech Wikipedia page about program is null.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateNewProgram_NullWikiCz() {
@@ -161,8 +159,7 @@ public class ProgramValidatorImplTest {
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with null URL to Wikipedia page about program is
-     * null.
+     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with null URL to Wikipedia page about program is null.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testValidateExistingProgram_NullWiki() {

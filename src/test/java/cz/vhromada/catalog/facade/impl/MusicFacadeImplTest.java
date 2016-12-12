@@ -367,11 +367,11 @@ public class MusicFacadeImplTest {
     @Test
     public void testMoveUp() {
         final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusicDomain(2);
-        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(MusicUtils.newMusicDomain(1), musicEntity);
+        final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusicDomain(1), musicEntity);
         final Music music = MusicUtils.newMusic(2);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
-        when(musicService.getAll()).thenReturn(musics);
+        when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveUp(music);
 
@@ -419,11 +419,11 @@ public class MusicFacadeImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotMovableArgument() {
         final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusicDomain(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusicDomain(1));
+        final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(musicEntity, MusicUtils.newMusicDomain(1));
         final Music music = MusicUtils.newMusic(Integer.MAX_VALUE);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
-        when(musicService.getAll()).thenReturn(musics);
+        when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveUp(music);
     }
@@ -434,11 +434,11 @@ public class MusicFacadeImplTest {
     @Test
     public void testMoveDown() {
         final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusicDomain(1);
-        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(musicEntity, MusicUtils.newMusicDomain(2));
+        final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(musicEntity, MusicUtils.newMusicDomain(2));
         final Music music = MusicUtils.newMusic(1);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
-        when(musicService.getAll()).thenReturn(musics);
+        when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveDown(music);
 
@@ -486,11 +486,11 @@ public class MusicFacadeImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotMovableArgument() {
         final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusicDomain(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Music> musics = CollectionUtils.newList(MusicUtils.newMusicDomain(1), musicEntity);
+        final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusicDomain(1), musicEntity);
         final Music music = MusicUtils.newMusic(Integer.MAX_VALUE);
 
         when(musicService.get(anyInt())).thenReturn(musicEntity);
-        when(musicService.getAll()).thenReturn(musics);
+        when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveDown(music);
     }

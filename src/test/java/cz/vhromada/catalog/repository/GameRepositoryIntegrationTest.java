@@ -59,6 +59,22 @@ public class GameRepositoryIntegrationTest {
     }
 
     /**
+     * Test method for get game.
+     */
+    @Test
+    public void testGetGame() {
+        for (int i = 1; i <= GameUtils.GAMES_COUNT; i++) {
+            final Game game = gameRepository.findOne(i);
+
+            GameUtils.assertGameDeepEquals(GameUtils.getGame(i), game);
+        }
+
+        assertNull(gameRepository.findOne(Integer.MAX_VALUE));
+
+        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
+    }
+
+    /**
      * Test method for add game.
      */
     @Test

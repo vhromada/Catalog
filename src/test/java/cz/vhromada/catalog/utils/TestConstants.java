@@ -1,12 +1,5 @@
 package cz.vhromada.catalog.utils;
 
-import java.lang.reflect.Field;
-
-import cz.vhromada.catalog.common.Time;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A class represents constants for tests.
  *
@@ -35,29 +28,9 @@ public final class TestConstants {
     public static final int BAD_MAX_IMDB_CODE = Constants.MAX_IMDB_CODE + 1;
 
     /**
-     * Negative time
-     */
-    public static final Time NEGATIVE_TIME = new Time(0);
-
-    /**
-     * Logger
-     */
-    private static final Logger logger = LoggerFactory.getLogger(TestConstants.class);
-
-    /**
      * Creates a new instance of TestConstants.
      */
     private TestConstants() {
-    }
-
-    static {
-        try {
-            final Field length = Time.class.getDeclaredField("length");
-            length.setAccessible(true);
-            length.setInt(NEGATIVE_TIME, -1);
-        } catch (final IllegalAccessException | NoSuchFieldException ex) {
-            logger.error("Time with negative length can't be created.", ex);
-        }
     }
 
 }

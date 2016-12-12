@@ -236,7 +236,6 @@ public class SeasonFacadeImplTest {
     @Test
     public void testUpdate() {
         final Season season = SeasonUtils.newSeason(1);
-        final cz.vhromada.catalog.domain.Season seasonEntity = SeasonUtils.newSeasonWithEpisodes(1);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
         when(showService.getAll()).thenReturn(CollectionUtils.newList(ShowUtils.newShowWithSeasons(1)));

@@ -33,7 +33,7 @@ public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
     }
 
     /**
-     * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null cache for datas.
+     * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null cache for data.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullCache() {

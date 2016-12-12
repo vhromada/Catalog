@@ -123,7 +123,7 @@ public class MusicRepositoryIntegrationTest {
      * Test method for update music with added song.
      */
     @Test
-    public void testUpdate_Song() {
+    public void testUpdate_AddedSong() {
         final Song song = SongUtils.newSongDomain(null);
         entityManager.persist(song);
 

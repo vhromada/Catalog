@@ -9,7 +9,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 /**
- * @author vladimir.hromada
+ * A class represents Spring configuration for tests.
+ *
+ * @author Vladimir Hromada
  */
 @Configuration
 @Import(CatalogConfiguration.class)
@@ -22,4 +24,5 @@ public class CatalogTestConfiguration {
                 .addScripts("catalog.sql", "data.sql")
                 .build();
     }
+
 }

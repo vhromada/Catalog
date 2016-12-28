@@ -22,7 +22,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * @author vladimir.hromada
+ * A class represents Spring configuration.
+ *
+ * @author Vladimir Hromada
  */
 @Configuration
 @ComponentScan("cz.vhromada.catalog")

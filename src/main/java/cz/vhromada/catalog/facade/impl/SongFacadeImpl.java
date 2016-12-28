@@ -15,7 +15,6 @@ import cz.vhromada.catalog.validator.SongValidator;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -75,8 +74,8 @@ public class SongFacadeImpl implements SongFacade {
      *                                  or validator for song is null
      */
     @Autowired
-    public SongFacadeImpl(@Qualifier("musicService") final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
-            @Qualifier("catalogDozerConverter") final Converter converter,
+    public SongFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
+            final Converter converter,
             final MusicValidator musicValidator,
             final SongValidator songValidator) {
         Assert.notNull(musicService, "Service for music mustn't be null.");

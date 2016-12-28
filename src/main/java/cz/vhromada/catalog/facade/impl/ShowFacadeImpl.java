@@ -14,7 +14,6 @@ import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -76,7 +75,7 @@ public class ShowFacadeImpl implements ShowFacade {
     @Autowired
     public ShowFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
             final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
-            @Qualifier("catalogDozerConverter") final Converter converter,
+            final Converter converter,
             final ShowValidator showValidator) {
         Assert.notNull(showService, "Service for shows mustn't be null.");
         Assert.notNull(genreService, "Service for genres mustn't be null.");

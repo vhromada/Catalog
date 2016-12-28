@@ -3,10 +3,9 @@ package cz.vhromada.catalog;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import cz.vhromada.converters.dozer.DozerConverter;
+import cz.vhromada.converters.orika.OrikaConverter;
 
 import net.sf.ehcache.CacheManager;
-import org.dozer.DozerBeanMapper;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -61,7 +60,7 @@ public class CatalogConfiguration {
 
     @Bean
     public CacheManager cacheManagerFactory() {
-        ClassPathResource classPathResource = new ClassPathResource("ehcache.xml");
+        final ClassPathResource classPathResource = new ClassPathResource("ehcache.xml");
 
         final EhCacheManagerFactoryBean cacheManagerFactoryBean = new EhCacheManagerFactoryBean();
         cacheManagerFactoryBean.setConfigLocation(classPathResource);
@@ -80,13 +79,8 @@ public class CatalogConfiguration {
     }
 
     @Bean
-    public DozerBeanMapper catalogMapper() {
-        return new DozerBeanMapper();
-    }
-
-    @Bean
-    public DozerConverter catalogDozerConverter(final DozerBeanMapper catalogMapper) {
-        return new DozerConverter(catalogMapper);
+    public OrikaConverter catalogOrikaConverter() {
+        return new OrikaConverter();
     }
 
 }

@@ -9,7 +9,6 @@ import cz.vhromada.catalog.validator.GameValidator;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -57,8 +56,8 @@ public class GameFacadeImpl implements GameFacade {
      *                                  or validator for game is null
      */
     @Autowired
-    public GameFacadeImpl(@Qualifier("gameService") final CatalogService<cz.vhromada.catalog.domain.Game> gameService,
-            @Qualifier("catalogDozerConverter") final Converter converter,
+    public GameFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Game> gameService,
+            final Converter converter,
             final GameValidator gameValidator) {
         Assert.notNull(gameService, "Service for games mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");

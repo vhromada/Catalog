@@ -13,7 +13,6 @@ import cz.vhromada.catalog.validator.MovieValidator;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -77,7 +76,7 @@ public class MovieFacadeImpl implements MovieFacade {
     @Autowired
     public MovieFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService,
             final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
-            @Qualifier("catalogDozerConverter") final Converter converter,
+            final Converter converter,
             final MovieValidator movieValidator) {
         Assert.notNull(movieService, "Service for movies mustn't be null.");
         Assert.notNull(genreService, "Service for genres mustn't be null.");

@@ -15,7 +15,6 @@ import cz.vhromada.catalog.validator.ShowValidator;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -76,7 +75,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Autowired
     public SeasonFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
-            @Qualifier("catalogDozerConverter") final Converter converter,
+            final Converter converter,
             final ShowValidator showValidator,
             final SeasonValidator seasonValidator) {
         Assert.notNull(showService, "Service for shows mustn't be null.");

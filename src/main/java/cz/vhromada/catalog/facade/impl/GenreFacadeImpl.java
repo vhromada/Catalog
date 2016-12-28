@@ -9,7 +9,6 @@ import cz.vhromada.catalog.validator.GenreValidator;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -57,8 +56,8 @@ public class GenreFacadeImpl implements GenreFacade {
      *                                  or validator for genre is null
      */
     @Autowired
-    public GenreFacadeImpl(@Qualifier("genreService") final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
-            @Qualifier("catalogDozerConverter") final Converter converter,
+    public GenreFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
+            final Converter converter,
             final GenreValidator genreValidator) {
         Assert.notNull(genreService, "Service for genres mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");

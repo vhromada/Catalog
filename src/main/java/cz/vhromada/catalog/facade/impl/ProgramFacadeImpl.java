@@ -9,7 +9,6 @@ import cz.vhromada.catalog.validator.ProgramValidator;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -57,8 +56,8 @@ public class ProgramFacadeImpl implements ProgramFacade {
      *                                  or validator for program is null
      */
     @Autowired
-    public ProgramFacadeImpl(@Qualifier("programService") final CatalogService<cz.vhromada.catalog.domain.Program> programService,
-            @Qualifier("catalogDozerConverter") final Converter converter,
+    public ProgramFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Program> programService,
+            final Converter converter,
             final ProgramValidator programValidator) {
         Assert.notNull(programService, "Service for programs mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");

@@ -70,4 +70,5 @@ public class LogMethodAspect {
 
         LoggerFactory.getLogger(proceedingJoinPoint.getTarget().getClass()).debug(message.toString());
     }
+
 }

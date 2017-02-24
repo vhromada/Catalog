@@ -21,7 +21,6 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.GameUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.catalog.validator.GameValidator;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Before;
@@ -53,7 +52,7 @@ public class GameFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link GameValidator}
+     * Instance of {@link CatalogValidator}
      */
     @Mock
     private CatalogValidator<Game> gameValidator;

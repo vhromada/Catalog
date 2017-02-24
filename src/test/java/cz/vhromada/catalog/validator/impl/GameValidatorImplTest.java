@@ -2,7 +2,6 @@ package cz.vhromada.catalog.validator.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import cz.vhromada.catalog.common.Movable;
@@ -23,21 +22,6 @@ import org.junit.Test;
  * @author Vladimir Hromada
  */
 public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhromada.catalog.domain.Game> {
-
-    /**
-     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with correct data.
-     */
-    @Test
-    public void validate_Deep() {
-        final Result<Void> result = getCatalogValidator().validate(getValidatingData(), ValidationType.DEEP);
-
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.OK, result.getStatus());
-        assertTrue(result.getEvents().isEmpty());
-
-        verifyZeroInteractions(getCatalogService());
-    }
 
     /**
      * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.

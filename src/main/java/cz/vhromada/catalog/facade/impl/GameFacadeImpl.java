@@ -145,7 +145,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveUp(final Game game) {
-        gameValidator.validate(game, ValidationType.EXISTS);
+        gameValidator.validate(game, ValidationType.EXISTS, ValidationType.UP);
         final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
         if (gameDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
@@ -163,7 +163,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveDown(final Game game) {
-        gameValidator.validate(game, ValidationType.EXISTS);
+        gameValidator.validate(game, ValidationType.EXISTS, ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
         if (gameDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);

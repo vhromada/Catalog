@@ -253,6 +253,21 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     }
 
     /**
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with correct data.
+     */
+    @Test
+    public void validate_Deep() {
+        final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.OK, result.getStatus());
+        assertTrue(result.getEvents().isEmpty());
+
+        verifyZeroInteractions(catalogService);
+    }
+
+    /**
      * Returns instance of {@link CatalogService}.
      *
      * @return instance of {@link CatalogService}

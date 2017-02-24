@@ -37,6 +37,7 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
      * Test method for {@link AbstractCatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP}.
      */
     @Test
+    @Override
     public void validate_Deep() {
         final Result<Void> result = getCatalogValidator().validate(getValidatingData(), ValidationType.DEEP);
 

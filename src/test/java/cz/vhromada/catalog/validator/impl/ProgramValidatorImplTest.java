@@ -1,10 +1,19 @@
 package cz.vhromada.catalog.validator.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
+import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.utils.ProgramUtils;
-import cz.vhromada.catalog.validator.ProgramValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -12,210 +21,179 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class ProgramValidatorImplTest {
+public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
-     * Instance of {@link ProgramValidator}
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
-    private ProgramValidator programValidator;
-
-    /**
-     * Initializes validator for program.
-     */
-    @Before
-    public void setUp() {
-        programValidator = new ProgramValidatorImpl();
-    }
-
-    /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NullArgument() {
-        programValidator.validateNewProgram(null);
-    }
-
-    /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with not null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NotNullId() {
-        programValidator.validateNewProgram(ProgramUtils.newProgram(1));
-    }
-
-    /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NullName() {
-        final Program program = ProgramUtils.newProgram(null);
+    @Test
+    public void validate_Deep_NullName() {
+        final Program program = getValidatingData();
         program.setName(null);
 
-        programValidator.validateNewProgram(program);
+        final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with empty string as name.
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_EmptyName() {
-        final Program program = ProgramUtils.newProgram(null);
+    @Test
+    public void validate_Deep_EmptyName() {
+        final Program program = getValidatingData();
         program.setName("");
 
-        programValidator.validateNewProgram(program);
+        final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null URL to english Wikipedia page about program is null.
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to english
+     * Wikipedia page about program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NullWikiEn() {
-        final Program program = ProgramUtils.newProgram(null);
+    @Test
+    public void validate_Deep_NullWikiEn() {
+        final Program program = getValidatingData();
         program.setWikiEn(null);
 
-        programValidator.validateNewProgram(program);
+        final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null."),
+                result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null URL to czech Wikipedia page about program is null.
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to czech
+     * Wikipedia page about program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NullWikiCz() {
-        final Program program = ProgramUtils.newProgram(null);
+    @Test
+    public void validate_Deep_NullWikiCz() {
+        final Program program = getValidatingData();
         program.setWikiCz(null);
 
-        programValidator.validateNewProgram(program);
+        final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL", "URL to czech Wikipedia page about program mustn't be null."),
+                result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with not positive count of media.
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
+     * count of media.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NotPositiveMediaCount() {
-        final Program program = ProgramUtils.newProgram(null);
+    @Test
+    public void validate_Deep_NotPositiveMediaCount() {
+        final Program program = getValidatingData();
         program.setMediaCount(0);
 
-        programValidator.validateNewProgram(program);
+        final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null other data.
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null other data.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NullOtherData() {
-        final Program program = ProgramUtils.newProgram(null);
+    @Test
+    public void validate_Deep_NullOtherData() {
+        final Program program = getValidatingData();
         program.setOtherData(null);
 
-        programValidator.validateNewProgram(program);
+        final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validateNewProgram(Program)} with program with null note.
+     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewProgram_NullNote() {
-        final Program program = ProgramUtils.newProgram(null);
+    @Test
+    public void validate_Deep_NullNote() {
+        final Program program = getValidatingData();
         program.setNote(null);
 
-        programValidator.validateNewProgram(program);
+        final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_NullArgument() {
-        programValidator.validateExistingProgram(null);
+    @Override
+    protected CatalogValidator<Program> getCatalogValidator() {
+        return new ProgramValidatorImpl(getCatalogService());
     }
 
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_NullId() {
-        programValidator.validateExistingProgram(ProgramUtils.newProgram(null));
+    @Override
+    protected Program getValidatingData() {
+        return ProgramUtils.newProgram(null);
     }
 
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_NullName() {
-        final Program program = ProgramUtils.newProgram(1);
-        program.setName(null);
-
-        programValidator.validateExistingProgram(program);
+    @Override
+    protected cz.vhromada.catalog.domain.Program getRepositoryData() {
+        return ProgramUtils.newProgramDomain(null);
     }
 
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with empty string as name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_EmptyName() {
-        final Program program = ProgramUtils.newProgram(1);
-        program.setName("");
-
-        programValidator.validateExistingProgram(program);
+    @Override
+    protected cz.vhromada.catalog.domain.Program getItem1() {
+        return ProgramUtils.newProgramDomain(1);
     }
 
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with null URL to Wikipedia page about program is null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_NullWiki() {
-        final Program program = ProgramUtils.newProgram(1);
-        program.setWikiCz(null);
-
-        programValidator.validateExistingProgram(program);
+    @Override
+    protected cz.vhromada.catalog.domain.Program getItem2() {
+        return ProgramUtils.newProgramDomain(2);
     }
 
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with not positive count of media.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_NotPositiveMediaCount() {
-        final Program program = ProgramUtils.newProgram(1);
-        program.setMediaCount(0);
-
-        programValidator.validateExistingProgram(program);
+    @Override
+    protected String getName() {
+        return "Program";
     }
 
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with null other data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_NullOtherData() {
-        final Program program = ProgramUtils.newProgram(1);
-        program.setOtherData(null);
-
-        programValidator.validateExistingProgram(program);
-    }
-
-    /**
-     * Test method for {@link ProgramValidator#validateExistingProgram(Program)} with program with null note.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingProgram_NullNote() {
-        final Program program = ProgramUtils.newProgram(1);
-        program.setNote(null);
-
-        programValidator.validateExistingProgram(program);
-    }
-
-    /**
-     * Test method for {@link ProgramValidator#validateProgramWithId(Program)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateProgramWithId_NullArgument() {
-        programValidator.validateProgramWithId(null);
-    }
-
-    /**
-     * Test method for {@link ProgramValidator#validateProgramWithId(Program)} with program with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateProgramWithId_NullId() {
-        programValidator.validateProgramWithId(new Program());
+    @Override
+    protected String getPrefix() {
+        return "PROGRAM";
     }
 
 }

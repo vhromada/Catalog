@@ -1,8 +1,14 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.Program;
-import cz.vhromada.catalog.validator.ProgramValidator;
+import java.util.List;
 
+import cz.vhromada.catalog.entity.Program;
+import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -13,57 +19,75 @@ import org.springframework.util.StringUtils;
  * @author Vladimir Hromada
  */
 @Component("programValidator")
-public class ProgramValidatorImpl implements ProgramValidator {
+public class ProgramValidatorImpl extends AbstractCatalogValidator<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
+     * Service for programs
      */
-    @Override
-    public void validateNewProgram(final Program program) {
-        validateProgram(program);
-        Assert.isNull(program.getId(), "ID must be null.");
-    }
+    private CatalogService<cz.vhromada.catalog.domain.Program> programService;
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateExistingProgram(final Program program) {
-        validateProgram(program);
-        Assert.notNull(program.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateProgramWithId(final Program program) {
-        Assert.notNull(program, "Program mustn't be null.");
-        Assert.notNull(program.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * Validates program.
+     * Creates a new instance of ProgramValidatorImpl.
      *
-     * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about program is null
-     *                                  or URL to czech Wikipedia page about program is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @param programService service for programs
+     * @throws IllegalArgumentException if service for programs is null
      */
-    private static void validateProgram(final Program program) {
-        Assert.notNull(program, "Program mustn't be null.");
-        Assert.notNull(program.getName(), "Name mustn't be null");
-        Assert.isTrue(!StringUtils.isEmpty(program.getName()) && !StringUtils.isEmpty(program.getName().trim()), "Name mustn't be empty string.");
-        Assert.notNull(program.getWikiEn(), "URL to english Wikipedia page about program mustn't be null.");
-        Assert.notNull(program.getWikiCz(), "URL to czech Wikipedia page about program mustn't be null.");
-        Assert.isTrue(program.getMediaCount() > 0, "Count of media must be positive number.");
-        Assert.notNull(program.getOtherData(), "Other data mustn't be null.");
-        Assert.notNull(program.getNote(), "Note mustn't be null.");
+    @Autowired
+    public ProgramValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Program> programService) {
+        super("Program");
+
+        Assert.notNull(programService, "Service for programs mustn't be null.");
+
+        this.programService = programService;
+    }
+
+    @Override
+    protected cz.vhromada.catalog.domain.Program getData(final Program data) {
+        return programService.get(data.getId());
+    }
+
+    @Override
+    protected List<cz.vhromada.catalog.domain.Program> getList(final Program data) {
+        return programService.getAll();
+    }
+
+    /**
+     * Validates program deeply.
+     * <br/>
+     * Validation errors:
+     * <ul>
+     *     <li>Name is null</li>
+     *     <li>Name is empty string</li>
+     *     <li>URL to english Wikipedia page about program is null</li>
+     *     <li>URL to czech Wikipedia page about program is null</li>
+     *     <li>Count of media isn't positive number</li>
+     *     <li>Other data is null</li>
+     *     <li>Note is null</li>
+     * </ul>
+     *
+     * @param data validating program
+     * @param result result with validation errors
+     */
+    @Override
+    protected void validateDataDeep(final Program data, final Result<Void> result) {
+        if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
+            result.addEvent(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string."));
+        }
+        if (data.getWikiEn() == null) {
+            result.addEvent(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null."));
+        }
+        if (data.getWikiCz() == null) {
+            result.addEvent(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL", "URL to czech Wikipedia page about program mustn't be null."));
+        }
+        if (data.getMediaCount() <= 0) {
+            result.addEvent(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."));
+        }
+        if (data.getOtherData() == null) {
+            result.addEvent(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null."));
+        }
+        if (data.getNote() == null) {
+            result.addEvent(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null."));
+        }
     }
 
 }

@@ -5,7 +5,8 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.ProgramValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     /**
      * Validator for program
      */
-    private ProgramValidator programValidator;
+    private CatalogValidator<Program> programValidator;
 
     /**
      * Creates a new instance of ProgramFacadeImpl.
@@ -58,7 +59,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
     @Autowired
     public ProgramFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Program> programService,
             final Converter converter,
-            final ProgramValidator programValidator) {
+            final CatalogValidator<Program> programValidator) {
         Assert.notNull(programService, "Service for programs mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(programValidator, "Validator for program mustn't be null.");
@@ -93,7 +94,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void add(final Program program) {
-        programValidator.validateNewProgram(program);
+        programValidator.validate(program, ValidationType.NEW);
 
         programService.add(converter.convert(program, cz.vhromada.catalog.domain.Program.class));
     }
@@ -103,7 +104,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void update(final Program program) {
-        programValidator.validateExistingProgram(program);
+        programValidator.validate(program, ValidationType.EXISTS);
         if (programService.get(program.getId()) == null) {
             throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
         }
@@ -116,7 +117,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void remove(final Program program) {
-        programValidator.validateProgramWithId(program);
+        programValidator.validate(program, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
         if (programDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
@@ -130,7 +131,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void duplicate(final Program program) {
-        programValidator.validateProgramWithId(program);
+        programValidator.validate(program, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
         if (programDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
@@ -144,7 +145,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void moveUp(final Program program) {
-        programValidator.validateProgramWithId(program);
+        programValidator.validate(program, ValidationType.EXISTS, ValidationType.UP);
         final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
         if (programDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);
@@ -162,7 +163,7 @@ public class ProgramFacadeImpl implements ProgramFacade {
      */
     @Override
     public void moveDown(final Program program) {
-        programValidator.validateProgramWithId(program);
+        programValidator.validate(program, ValidationType.EXISTS, ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Program programDomain = programService.get(program.getId());
         if (programDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_PROGRAM_MESSAGE);

@@ -5,7 +5,8 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.GameValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class GameFacadeImpl implements GameFacade {
     /**
      * Validator for game
      */
-    private GameValidator gameValidator;
+    private CatalogValidator<Game> gameValidator;
 
     /**
      * Creates a new instance of GameFacadeImpl.
@@ -58,7 +59,7 @@ public class GameFacadeImpl implements GameFacade {
     @Autowired
     public GameFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Game> gameService,
             final Converter converter,
-            final GameValidator gameValidator) {
+            final CatalogValidator<Game> gameValidator) {
         Assert.notNull(gameService, "Service for games mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(gameValidator, "Validator for game mustn't be null.");
@@ -93,7 +94,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void add(final Game game) {
-        gameValidator.validateNewGame(game);
+        gameValidator.validate(game, ValidationType.NEW, ValidationType.DEEP);
 
         gameService.add(converter.convert(game, cz.vhromada.catalog.domain.Game.class));
     }
@@ -103,7 +104,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void update(final Game game) {
-        gameValidator.validateExistingGame(game);
+        gameValidator.validate(game, ValidationType.EXISTS, ValidationType.DEEP);
         if (gameService.get(game.getId()) == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
         }
@@ -116,7 +117,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void remove(final Game game) {
-        gameValidator.validateGameWithId(game);
+        gameValidator.validate(game, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
         if (gameDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
@@ -130,7 +131,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void duplicate(final Game game) {
-        gameValidator.validateGameWithId(game);
+        gameValidator.validate(game, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
         if (gameDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
@@ -144,7 +145,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveUp(final Game game) {
-        gameValidator.validateGameWithId(game);
+        gameValidator.validate(game, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
         if (gameDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);
@@ -162,7 +163,7 @@ public class GameFacadeImpl implements GameFacade {
      */
     @Override
     public void moveDown(final Game game) {
-        gameValidator.validateGameWithId(game);
+        gameValidator.validate(game, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Game gameDomain = gameService.get(game.getId());
         if (gameDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GAME_MESSAGE);

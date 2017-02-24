@@ -75,12 +75,12 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
     }
 
     @Override
-    public String getName() {
+    protected String getName() {
         return "Stub";
     }
 
     @Override
-    public String getPrefix() {
+    protected String getPrefix() {
         return "STUB";
     }
 

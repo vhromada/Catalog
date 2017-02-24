@@ -1,8 +1,14 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.Game;
-import cz.vhromada.catalog.validator.GameValidator;
+import java.util.List;
 
+import cz.vhromada.catalog.entity.Game;
+import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -13,57 +19,75 @@ import org.springframework.util.StringUtils;
  * @author Vladimir Hromada
  */
 @Component("gameValidator")
-public class GameValidatorImpl implements GameValidator {
+public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromada.catalog.domain.Game> {
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
+     * Service for games
      */
-    @Override
-    public void validateNewGame(final Game game) {
-        validateGame(game);
-        Assert.isNull(game.getId(), "ID must be null.");
-    }
+    private CatalogService<cz.vhromada.catalog.domain.Game> gameService;
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateExistingGame(final Game game) {
-        validateGame(game);
-        Assert.notNull(game.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateGameWithId(final Game game) {
-        Assert.notNull(game, "Game mustn't be null.");
-        Assert.notNull(game.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * Validates game.
+     * Creates a new instance of GameValidatorImpl.
      *
-     * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about game is null
-     *                                  or URL to czech Wikipedia page about game is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @param gameService service for games
+     * @throws IllegalArgumentException if service for games is null
      */
-    private static void validateGame(final Game game) {
-        Assert.notNull(game, "Game mustn't be null.");
-        Assert.notNull(game.getName(), "Name mustn't be null");
-        Assert.isTrue(!StringUtils.isEmpty(game.getName()) && !StringUtils.isEmpty(game.getName().trim()), "Name mustn't be empty string.");
-        Assert.notNull(game.getWikiEn(), "URL to english Wikipedia page about game mustn't be null.");
-        Assert.notNull(game.getWikiCz(), "URL to czech Wikipedia page about game mustn't be null.");
-        Assert.isTrue(game.getMediaCount() > 0, "Count of media must be positive number.");
-        Assert.notNull(game.getOtherData(), "Other data mustn't be null.");
-        Assert.notNull(game.getNote(), "Note mustn't be null.");
+    @Autowired
+    public GameValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Game> gameService) {
+        super("Game");
+
+        Assert.notNull(gameService, "Service for games mustn't be null.");
+
+        this.gameService = gameService;
+    }
+
+    @Override
+    protected cz.vhromada.catalog.domain.Game getData(final Game data) {
+        return gameService.get(data.getId());
+    }
+
+    @Override
+    protected List<cz.vhromada.catalog.domain.Game> getList(final Game data) {
+        return gameService.getAll();
+    }
+
+    /**
+     * Validates game deeply.
+     * <br/>
+     * Validation errors:
+     * <ul>
+     *     <li>Name is null</li>
+     *     <li>Name is empty string</li>
+     *     <li>URL to english Wikipedia page about game is null</li>
+     *     <li>URL to czech Wikipedia page about game is null</li>
+     *     <li>Count of media isn't positive number</li>
+     *     <li>Other data is null</li>
+     *     <li>Note is null</li>
+     * </ul>
+     *
+     * @param data validating game
+     * @param result result with validation errors
+     */
+    @Override
+    protected void validateDataDeep(final Game data, final Result<Void> result) {
+        if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string."));
+        }
+        if (data.getWikiEn() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null."));
+        }
+        if (data.getWikiCz() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null."));
+        }
+        if (data.getMediaCount() <= 0) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."));
+        }
+        if (data.getOtherData() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null."));
+        }
+        if (data.getNote() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null."));
+        }
     }
 
 }

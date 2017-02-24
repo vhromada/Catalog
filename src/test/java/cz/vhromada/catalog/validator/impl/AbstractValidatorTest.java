@@ -301,13 +301,13 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      *
      * @return name of entity
      */
-    public abstract String getName();
+    protected abstract String getName();
 
     /**
      * Returns prefix for validation keys.
      *
      * @return prefix for validation keys
      */
-    public abstract String getPrefix();
+    protected abstract String getPrefix();
 
 }

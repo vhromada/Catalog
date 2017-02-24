@@ -1,10 +1,20 @@
 package cz.vhromada.catalog.validator.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
+import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.utils.GameUtils;
-import cz.vhromada.catalog.validator.GameValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -12,210 +22,192 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class GameValidatorImplTest {
+public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhromada.catalog.domain.Game> {
 
     /**
-     * Instance of {@link GameValidator}
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with correct data.
      */
-    private GameValidator gameValidator;
+    @Test
+    public void validate_Deep() {
+        final Result<Void> result = getCatalogValidator().validate(getValidatingData(), ValidationType.DEEP);
 
-    /**
-     * Initializes validator for game.
-     */
-    @Before
-    public void setUp() {
-        gameValidator = new GameValidatorImpl();
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.OK, result.getStatus());
+        assertTrue(result.getEvents().isEmpty());
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with null argument.
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NullArgument() {
-        gameValidator.validateNewGame(null);
-    }
-
-    /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with not null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NotNullId() {
-        gameValidator.validateNewGame(GameUtils.newGame(1));
-    }
-
-    /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NullName() {
-        final Game game = GameUtils.newGame(null);
+    @Test
+    public void validate_Deep_NullName() {
+        final Game game = getValidatingData();
         game.setName(null);
 
-        gameValidator.validateNewGame(game);
+        final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with empty string as name.
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_EmptyName() {
-        final Game game = GameUtils.newGame(null);
+    @Test
+    public void validate_Deep_EmptyName() {
+        final Game game = getValidatingData();
         game.setName("");
 
-        gameValidator.validateNewGame(game);
+        final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with null URL to english Wikipedia page about game is null.
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to english
+     * Wikipedia page about game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NullWikiEn() {
-        final Game game = GameUtils.newGame(null);
+    @Test
+    public void validate_Deep_NullWikiEn() {
+        final Game game = getValidatingData();
         game.setWikiEn(null);
 
-        gameValidator.validateNewGame(game);
+        final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with null URL to czech Wikipedia page about game is null.
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to czech
+     * Wikipedia page about game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NullWikiCz() {
-        final Game game = GameUtils.newGame(null);
+    @Test
+    public void validate_Deep_NullWikiCz() {
+        final Game game = getValidatingData();
         game.setWikiCz(null);
 
-        gameValidator.validateNewGame(game);
+        final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with not positive count of media.
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
+     * count of media.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NotPositiveMediaCount() {
-        final Game game = GameUtils.newGame(null);
+    @Test
+    public void validate_Deep_NotPositiveMediaCount() {
+        final Game game = getValidatingData();
         game.setMediaCount(0);
 
-        gameValidator.validateNewGame(game);
+        final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with null other data.
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null other data.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NullOtherData() {
-        final Game game = GameUtils.newGame(null);
+    @Test
+    public void validate_Deep_NullOtherData() {
+        final Game game = getValidatingData();
         game.setOtherData(null);
 
-        gameValidator.validateNewGame(game);
+        final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GameValidator#validateNewGame(Game)} with game with null note.
+     * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGame_NullNote() {
-        final Game game = GameUtils.newGame(null);
+    @Test
+    public void validate_Deep_NullNote() {
+        final Game game = getValidatingData();
         game.setNote(null);
 
-        gameValidator.validateNewGame(game);
+        final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
+
+        assertNotNull(result);
+        assertNotNull(result.getEvents());
+        assertEquals(Status.ERROR, result.getStatus());
+        assertEquals(1, result.getEvents().size());
+        assertEquals(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null."), result.getEvents().get(0));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_NullArgument() {
-        gameValidator.validateExistingGame(null);
+    @Override
+    protected CatalogValidator<Game> getCatalogValidator() {
+        return new GameValidatorImpl(getCatalogService());
     }
 
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with game with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_NullId() {
-        gameValidator.validateExistingGame(GameUtils.newGame(null));
+    @Override
+    protected Game getValidatingData() {
+        return GameUtils.newGame(null);
     }
 
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with game with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_NullName() {
-        final Game game = GameUtils.newGame(1);
-        game.setName(null);
-
-        gameValidator.validateExistingGame(game);
+    @Override
+    protected cz.vhromada.catalog.domain.Game getRepositoryData() {
+        return GameUtils.newGameDomain(null);
     }
 
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with game with empty string as name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_EmptyName() {
-        final Game game = GameUtils.newGame(1);
-        game.setName("");
-
-        gameValidator.validateExistingGame(game);
+    @Override
+    protected cz.vhromada.catalog.domain.Game getItem1() {
+        return GameUtils.newGameDomain(1);
     }
 
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with game with null URL to Wikipedia page about game is null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_NullWiki() {
-        final Game game = GameUtils.newGame(1);
-        game.setWikiCz(null);
-
-        gameValidator.validateExistingGame(game);
+    @Override
+    protected cz.vhromada.catalog.domain.Game getItem2() {
+        return GameUtils.newGameDomain(2);
     }
 
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with game with not positive count of media.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_NotPositiveMediaCount() {
-        final Game game = GameUtils.newGame(1);
-        game.setMediaCount(0);
-
-        gameValidator.validateExistingGame(game);
+    @Override
+    protected String getName() {
+        return "Game";
     }
 
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with game with null other data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_NullOtherData() {
-        final Game game = GameUtils.newGame(1);
-        game.setOtherData(null);
-
-        gameValidator.validateExistingGame(game);
-    }
-
-    /**
-     * Test method for {@link GameValidator#validateExistingGame(Game)} with game with null note.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGame_NullNote() {
-        final Game game = GameUtils.newGame(1);
-        game.setNote(null);
-
-        gameValidator.validateExistingGame(game);
-    }
-
-    /**
-     * Test method for {@link GameValidator#validateGameWithId(Game)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateGameWithId_NullArgument() {
-        gameValidator.validateGameWithId(null);
-    }
-
-    /**
-     * Test method for {@link GameValidator#validateGameWithId(Game)} with game with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateGameWithId_NullId() {
-        gameValidator.validateGameWithId(new Game());
+    @Override
+    protected String getPrefix() {
+        return "GAME";
     }
 
 }

@@ -31,7 +31,6 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
      */
     private String prefix;
 
-
     /**
      * Creates a new instance of AbstractCatalogValidator.
      *

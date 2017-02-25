@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
@@ -28,7 +29,7 @@ public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
      * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null repository.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullMovableRepository() {
+    public void constructor_NullMovableRepository() {
         new AbstractCatalogServiceStub(null, getCache(), getCacheKey());
     }
 
@@ -36,7 +37,7 @@ public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
      * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null cache for data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullCache() {
+    public void constructor_NullCache() {
         new AbstractCatalogServiceStub(repository, null, getCacheKey());
     }
 
@@ -44,7 +45,7 @@ public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
      * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null cache key.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullCacheKey() {
+    public void constructor_NullCacheKey() {
         new AbstractCatalogServiceStub(repository, getCache(), null);
     }
 
@@ -90,9 +91,9 @@ public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
 
     @Override
     protected void assertDataDeepEquals(final Movable expected, final Movable actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getPosition(), actual.getPosition());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getId(), is(expected.getId()));
+        assertThat(actual.getPosition(), is(expected.getPosition()));
 
     }
 

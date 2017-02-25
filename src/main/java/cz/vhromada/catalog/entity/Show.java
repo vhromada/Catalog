@@ -259,7 +259,8 @@ public class Show implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof Show) || id == null) {
+
+        if (!(obj instanceof Show) || id == null) {
             return false;
         }
 

@@ -1,7 +1,9 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Season;
@@ -45,7 +47,7 @@ public class SeasonConverterTest {
      */
     @Test
     public void testConvertSeasonDomain_NullArgument() {
-        assertNull(converter.convert(null, Season.class));
+        assertThat(converter.convert(null, Season.class), is(nullValue()));
     }
 
     /**
@@ -56,7 +58,7 @@ public class SeasonConverterTest {
         final Season season = SeasonUtils.newSeason(1);
         final cz.vhromada.catalog.domain.Season seasonDomain = converter.convert(season, cz.vhromada.catalog.domain.Season.class);
 
-        assertNotNull(season);
+        assertThat(seasonDomain, is(notNullValue()));
         SeasonUtils.assertSeasonDeepEquals(season, seasonDomain);
     }
 
@@ -65,7 +67,7 @@ public class SeasonConverterTest {
      */
     @Test
     public void testConvertSeason_NullArgument() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Season.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Season.class), is(nullValue()));
     }
 
 }

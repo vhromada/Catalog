@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -79,10 +79,10 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     public void validate_New() {
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.NEW);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.OK, result.getStatus());
-        assertTrue(result.getEvents().isEmpty());
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verifyZeroInteractions(catalogService);
     }
@@ -96,11 +96,11 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.NEW);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null.")));
 
         verifyZeroInteractions(catalogService);
     }
@@ -116,10 +116,10 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.OK, result.getStatus());
-        assertTrue(result.getEvents().isEmpty());
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(catalogService).get(validatingData.getId());
         verifyNoMoreInteractions(catalogService);
@@ -132,11 +132,11 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     public void validate_Exists_NullId() {
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, getPrefix() + "_ID_NULL", "ID mustn't be null."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_ID_NULL", "ID mustn't be null.")));
 
         verifyZeroInteractions(catalogService);
     }
@@ -152,11 +152,11 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, getPrefix() + "_NOT_EXIST", getName() + " doesn't exist."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_EXIST", getName() + " doesn't exist.")));
 
         verify(catalogService).get(validatingData.getId());
         verifyNoMoreInteractions(catalogService);
@@ -174,10 +174,10 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.OK, result.getStatus());
-        assertTrue(result.getEvents().isEmpty());
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(catalogService).getAll();
         verify(catalogService).get(validatingData.getId());
@@ -196,11 +196,11 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")));
 
         verify(catalogService).getAll();
         verify(catalogService).get(validatingData.getId());
@@ -219,10 +219,10 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.OK, result.getStatus());
-        assertTrue(result.getEvents().isEmpty());
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(catalogService).getAll();
         verify(catalogService).get(validatingData.getId());
@@ -241,11 +241,11 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")));
 
         verify(catalogService).getAll();
         verify(catalogService).get(validatingData.getId());
@@ -259,10 +259,10 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     public void validate_Deep() {
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.OK, result.getStatus());
-        assertTrue(result.getEvents().isEmpty());
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verifyZeroInteractions(catalogService);
     }

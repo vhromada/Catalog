@@ -1,7 +1,9 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Program;
@@ -45,7 +47,7 @@ public class ProgramConverterTest {
      */
     @Test
     public void testConvertProgramDomain_NullArgument() {
-        assertNull(converter.convert(null, Program.class));
+        assertThat(converter.convert(null, Program.class), is(nullValue()));
     }
 
     /**
@@ -56,7 +58,7 @@ public class ProgramConverterTest {
         final Program program = ProgramUtils.newProgram(1);
         final cz.vhromada.catalog.domain.Program programDomain = converter.convert(program, cz.vhromada.catalog.domain.Program.class);
 
-        assertNotNull(program);
+        assertThat(programDomain, is(notNullValue()));
         ProgramUtils.assertProgramDeepEquals(program, programDomain);
     }
 
@@ -65,7 +67,7 @@ public class ProgramConverterTest {
      */
     @Test
     public void testConvertProgram_NullArgument() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Program.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Program.class), is(nullValue()));
     }
 
 }

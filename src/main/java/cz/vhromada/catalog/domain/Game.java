@@ -373,7 +373,7 @@ public class Game implements Movable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Game) || id == null) {
+        if (!(obj instanceof Game) || id == null) {
             return false;
         }
 

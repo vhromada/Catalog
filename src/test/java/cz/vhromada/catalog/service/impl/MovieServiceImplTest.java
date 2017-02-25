@@ -31,7 +31,7 @@ public class MovieServiceImplTest extends AbstractServiceTest<Movie> {
      * Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieRepository, Cache)} with null repository for movies.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullMovieRepository() {
+    public void constructor_NullMovieRepository() {
         new MovieServiceImpl(null, getCache());
     }
 
@@ -39,7 +39,7 @@ public class MovieServiceImplTest extends AbstractServiceTest<Movie> {
      * Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieRepository, Cache)} with null cache.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullCache() {
+    public void constructor_NullCache() {
         new MovieServiceImpl(movieRepository, null);
     }
 

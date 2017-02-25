@@ -255,7 +255,7 @@ public class Program implements Movable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Program) || id == null) {
+        if (!(obj instanceof Program) || id == null) {
             return false;
         }
 

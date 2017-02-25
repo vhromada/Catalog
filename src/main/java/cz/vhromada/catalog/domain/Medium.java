@@ -105,7 +105,7 @@ public class Medium implements Serializable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Medium) || id == null) {
+        if (!(obj instanceof Medium) || id == null) {
             return false;
         }
 

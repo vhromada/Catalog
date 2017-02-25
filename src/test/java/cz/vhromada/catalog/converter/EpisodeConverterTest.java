@@ -1,7 +1,9 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Episode;
@@ -45,7 +47,7 @@ public class EpisodeConverterTest {
      */
     @Test
     public void testConvertEpisodeDomain_NullArgument() {
-        assertNull(converter.convert(null, Episode.class));
+        assertThat(converter.convert(null, Episode.class), is(nullValue()));
     }
 
     /**
@@ -56,7 +58,7 @@ public class EpisodeConverterTest {
         final Episode episode = EpisodeUtils.newEpisode(1);
         final cz.vhromada.catalog.domain.Episode episodeDomain = converter.convert(episode, cz.vhromada.catalog.domain.Episode.class);
 
-        assertNotNull(episodeDomain);
+        assertThat(episodeDomain, is(notNullValue()));
         EpisodeUtils.assertEpisodeDeepEquals(episode, episodeDomain);
     }
 
@@ -65,7 +67,7 @@ public class EpisodeConverterTest {
      */
     @Test
     public void testConvertEpisode_NullArgument() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Episode.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Episode.class), is(nullValue()));
     }
 
 }

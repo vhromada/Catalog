@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,8 +192,8 @@ public final class ProgramUtils {
      */
     public static void assertProgramsDeepEquals(final List<cz.vhromada.catalog.domain.Program> expected,
             final List<cz.vhromada.catalog.domain.Program> actual) {
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.size(), is(expected.size()));
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertProgramDeepEquals(expected.get(i), actual.get(i));
@@ -207,16 +208,16 @@ public final class ProgramUtils {
      * @param actual   actual program
      */
     public static void assertProgramDeepEquals(final cz.vhromada.catalog.domain.Program expected, final cz.vhromada.catalog.domain.Program actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getWikiEn(), actual.getWikiEn());
-        assertEquals(expected.getWikiCz(), actual.getWikiCz());
-        assertEquals(expected.getCrack(), actual.getCrack());
-        assertEquals(expected.getSerialKey(), actual.getSerialKey());
-        assertEquals(expected.getOtherData(), actual.getOtherData());
-        assertEquals(expected.getNote(), actual.getNote());
-        assertEquals(expected.getPosition(), actual.getPosition());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getId(), is(expected.getId()));
+        assertThat(actual.getName(), is(expected.getName()));
+        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
+        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
+        assertThat(actual.getCrack(), is(expected.getCrack()));
+        assertThat(actual.getSerialKey(), is(expected.getSerialKey()));
+        assertThat(actual.getOtherData(), is(expected.getOtherData()));
+        assertThat(actual.getNote(), is(expected.getNote()));
+        assertThat(actual.getPosition(), is(expected.getPosition()));
     }
 
     /**
@@ -226,8 +227,8 @@ public final class ProgramUtils {
      * @param actual   actual programs
      */
     public static void assertProgramListDeepEquals(final List<Program> expected, final List<cz.vhromada.catalog.domain.Program> actual) {
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.size(), is(expected.size()));
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertProgramDeepEquals(expected.get(i), actual.get(i));
@@ -242,17 +243,17 @@ public final class ProgramUtils {
      * @param actual   actual program
      */
     public static void assertProgramDeepEquals(final Program expected, final cz.vhromada.catalog.domain.Program actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getWikiEn(), actual.getWikiEn());
-        assertEquals(expected.getWikiCz(), actual.getWikiCz());
-        assertEquals(expected.getMediaCount(), actual.getMediaCount());
-        assertEquals(expected.getCrack(), actual.getCrack());
-        assertEquals(expected.getSerialKey(), actual.getSerialKey());
-        assertEquals(expected.getOtherData(), actual.getOtherData());
-        assertEquals(expected.getNote(), actual.getNote());
-        assertEquals(expected.getPosition(), actual.getPosition());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getId(), is(expected.getId()));
+        assertThat(actual.getName(), is(expected.getName()));
+        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
+        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
+        assertThat(actual.getMediaCount(), is(expected.getMediaCount()));
+        assertThat(actual.getCrack(), is(expected.getCrack()));
+        assertThat(actual.getSerialKey(), is(expected.getSerialKey()));
+        assertThat(actual.getOtherData(), is(expected.getOtherData()));
+        assertThat(actual.getNote(), is(expected.getNote()));
+        assertThat(actual.getPosition(), is(expected.getPosition()));
     }
 
 }

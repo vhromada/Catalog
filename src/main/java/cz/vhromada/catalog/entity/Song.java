@@ -120,7 +120,8 @@ public class Song implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof Song) || id == null) {
+
+        if (!(obj instanceof Song) || id == null) {
             return false;
         }
 

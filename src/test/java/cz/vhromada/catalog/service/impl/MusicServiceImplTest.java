@@ -33,7 +33,7 @@ public class MusicServiceImplTest extends AbstractServiceTest<Music> {
      * Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicRepository, Cache)} with null repository for music.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullMusicRepository() {
+    public void constructor_NullMusicRepository() {
         new MusicServiceImpl(null, getCache());
     }
 
@@ -41,7 +41,7 @@ public class MusicServiceImplTest extends AbstractServiceTest<Music> {
      * Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicRepository, Cache)} with null cache.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullCache() {
+    public void constructor_NullCache() {
         new MusicServiceImpl(musicRepository, null);
     }
 

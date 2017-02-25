@@ -1,7 +1,9 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Game;
@@ -45,7 +47,7 @@ public class GameConverterTest {
      */
     @Test
     public void testConvertGameDomain_NullArgument() {
-        assertNull(converter.convert(null, Game.class));
+        assertThat(converter.convert(null, Game.class), is(nullValue()));
     }
 
     /**
@@ -56,7 +58,7 @@ public class GameConverterTest {
         final Game game = GameUtils.newGame(1);
         final cz.vhromada.catalog.domain.Game gameDomain = converter.convert(game, cz.vhromada.catalog.domain.Game.class);
 
-        assertNotNull(gameDomain);
+        assertThat(gameDomain, is(notNullValue()));
         GameUtils.assertGameDeepEquals(game, gameDomain);
     }
 
@@ -65,7 +67,7 @@ public class GameConverterTest {
      */
     @Test
     public void testConvertGame_NullArgument() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Game.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class), is(nullValue()));
     }
 
 }

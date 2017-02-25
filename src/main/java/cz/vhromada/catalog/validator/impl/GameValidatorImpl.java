@@ -56,21 +56,23 @@ public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromad
      * <br/>
      * Validation errors:
      * <ul>
-     *     <li>Name is null</li>
-     *     <li>Name is empty string</li>
-     *     <li>URL to english Wikipedia page about game is null</li>
-     *     <li>URL to czech Wikipedia page about game is null</li>
-     *     <li>Count of media isn't positive number</li>
-     *     <li>Other data is null</li>
-     *     <li>Note is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about game is null</li>
+     * <li>URL to czech Wikipedia page about game is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
      * </ul>
      *
-     * @param data validating game
+     * @param data   validating game
      * @param result result with validation errors
      */
     @Override
     protected void validateDataDeep(final Game data, final Result<Void> result) {
-        if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
+        if (data.getName() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null."));
+        } else if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
             result.addEvent(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string."));
         }
         if (data.getWikiEn() == null) {

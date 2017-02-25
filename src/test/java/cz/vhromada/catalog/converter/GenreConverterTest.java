@@ -1,7 +1,9 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
@@ -45,7 +47,7 @@ public class GenreConverterTest {
      */
     @Test
     public void testConvertGenreDomain_NullArgument() {
-        assertNull(converter.convert(null, Genre.class));
+        assertThat(converter.convert(null, Genre.class), is(nullValue()));
     }
 
     /**
@@ -56,7 +58,7 @@ public class GenreConverterTest {
         final Genre genre = GenreUtils.newGenre(1);
         final cz.vhromada.catalog.domain.Genre genreDomain = converter.convert(genre, cz.vhromada.catalog.domain.Genre.class);
 
-        assertNotNull(genre);
+        assertThat(genreDomain, is(notNullValue()));
         GenreUtils.assertGenreDeepEquals(genre, genreDomain);
     }
 
@@ -65,7 +67,7 @@ public class GenreConverterTest {
      */
     @Test
     public void testConvertGenre_NullArgument() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Genre.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Genre.class), is(nullValue()));
     }
 
 }

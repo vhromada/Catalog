@@ -143,7 +143,8 @@ public class Episode implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof Episode) || id == null) {
+
+        if (!(obj instanceof Episode) || id == null) {
             return false;
         }
 

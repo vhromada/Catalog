@@ -89,7 +89,7 @@ public class Genre implements Movable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Genre) || id == null) {
+        if (!(obj instanceof Genre) || id == null) {
             return false;
         }
 

@@ -399,7 +399,7 @@ public class Movie implements Movable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Movie) || id == null) {
+        if (!(obj instanceof Movie) || id == null) {
             return false;
         }
 

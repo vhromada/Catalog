@@ -3,6 +3,7 @@ package cz.vhromada.catalog.common;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.util.Assert;
 
@@ -119,19 +120,17 @@ public final class Time implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
+
         if (!(obj instanceof Time)) {
             return false;
         }
-        final Time time = (Time) obj;
-        return length == time.length;
+
+        return length == ((Time) obj).length;
     }
 
     @Override
     public int hashCode() {
-        return length;
+        return Objects.hashCode(length);
     }
 
     @Override
@@ -141,6 +140,7 @@ public final class Time implements Serializable {
         if (days > 0) {
             return String.format("%d:%02d:%02d:%02d", days, hours, data.get(TimeData.MINUTE), data.get(TimeData.SECOND));
         }
+
         return String.format("%d:%02d:%02d", hours, data.get(TimeData.MINUTE), data.get(TimeData.SECOND));
     }
 

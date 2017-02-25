@@ -166,7 +166,8 @@ public class Music implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof Music) || id == null) {
+
+        if (!(obj instanceof Music) || id == null) {
             return false;
         }
 

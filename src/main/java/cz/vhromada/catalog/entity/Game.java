@@ -350,7 +350,8 @@ public class Game implements Movable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof Game) || id == null) {
+
+        if (!(obj instanceof Game) || id == null) {
             return false;
         }
 

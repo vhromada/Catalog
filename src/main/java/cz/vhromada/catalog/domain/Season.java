@@ -254,7 +254,7 @@ public class Season implements Movable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Season) || id == null) {
+        if (!(obj instanceof Season) || id == null) {
             return false;
         }
 

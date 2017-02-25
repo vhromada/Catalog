@@ -127,8 +127,7 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
     private void validateExistingData(final T data, final Result<Void> result) {
         if (data.getId() == null) {
             result.addEvent(new Event(Severity.ERROR, prefix + "_ID_NULL", "ID mustn't be null."));
-        }
-        if (data.getId() != null && getData(data) == null) {
+        } else if (getData(data) == null) {
             result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_EXIST", name + " doesn't exist."));
         }
     }
@@ -152,10 +151,8 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
             if (index <= 0) {
                 result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_MOVABLE", name + " can't be moved up."));
             }
-        } else {
-            if (index < 0 || index >= list.size() - 1) {
-                result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_MOVABLE", name + " can't be moved down."));
-            }
+        } else if (index < 0 || index >= list.size() - 1) {
+            result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_MOVABLE", name + " can't be moved down."));
         }
     }
 

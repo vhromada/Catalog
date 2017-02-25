@@ -1,8 +1,9 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -50,55 +51,55 @@ public class ProgramRepositoryIntegrationTest {
      * Test method for get programs.
      */
     @Test
-    public void testGetPrograms() {
+    public void getPrograms() {
         final List<Program> programs = programRepository.findAll(new Sort("position", "id"));
 
         ProgramUtils.assertProgramsDeepEquals(ProgramUtils.getPrograms(), programs);
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for get program.
      */
     @Test
-    public void testGetProgram() {
+    public void getProgram() {
         for (int i = 1; i <= ProgramUtils.PROGRAMS_COUNT; i++) {
             final Program program = programRepository.findOne(i);
 
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), program);
         }
 
-        assertNull(programRepository.findOne(Integer.MAX_VALUE));
+        assertThat(programRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for add program.
      */
     @Test
-    public void testAdd() {
+    public void add() {
         final Program program = ProgramUtils.newProgramDomain(null);
 
         programRepository.saveAndFlush(program);
 
-        assertNotNull(program.getId());
-        assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, program.getId().intValue());
+        assertThat(program.getId(), is(notNullValue()));
+        assertThat(program.getId(), is(ProgramUtils.PROGRAMS_COUNT + 1));
 
         final Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
         final Program expectedAddProgram = ProgramUtils.newProgramDomain(null);
         expectedAddProgram.setId(ProgramUtils.PROGRAMS_COUNT + 1);
         ProgramUtils.assertProgramDeepEquals(expectedAddProgram, addedProgram);
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT + 1));
     }
 
     /**
      * Test method for update program.
      */
     @Test
-    public void testUpdate() {
+    public void update() {
         final Program program = ProgramUtils.updateProgram(entityManager, 1);
 
         programRepository.saveAndFlush(program);
@@ -109,29 +110,29 @@ public class ProgramRepositoryIntegrationTest {
         expectedUpdatedProgram.setPosition(ProgramUtils.POSITION);
         ProgramUtils.assertProgramDeepEquals(expectedUpdatedProgram, updatedProgram);
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for remove program.
      */
     @Test
-    public void testRemove() {
+    public void remove() {
         programRepository.delete(ProgramUtils.getProgram(entityManager, 1));
 
-        assertNull(ProgramUtils.getProgram(entityManager, 1));
+        assertThat(ProgramUtils.getProgram(entityManager, 1), is(nullValue()));
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT - 1, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT - 1));
     }
 
     /**
      * Test method for remove all programs.
      */
     @Test
-    public void testRemoveAll() {
+    public void removeAll() {
         programRepository.deleteAll();
 
-        assertEquals(0, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(0));
     }
 
 }

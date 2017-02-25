@@ -1,8 +1,9 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -50,55 +51,55 @@ public class GenreRepositoryIntegrationTest {
      * Test method for get genres.
      */
     @Test
-    public void testGetGenres() {
+    public void getGenres() {
         final List<Genre> genres = genreRepository.findAll(new Sort("position", "id"));
 
         GenreUtils.assertGenresDeepEquals(GenreUtils.getGenres(), genres);
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for get genre.
      */
     @Test
-    public void testGetGenre() {
+    public void getGenre() {
         for (int i = 1; i <= GenreUtils.GENRES_COUNT; i++) {
             final Genre genre = genreRepository.findOne(i);
 
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenreDomain(i), genre);
         }
 
-        assertNull(genreRepository.findOne(Integer.MAX_VALUE));
+        assertThat(genreRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for add genre.
      */
     @Test
-    public void testAdd() {
+    public void add() {
         final Genre genre = GenreUtils.newGenreDomain(null);
 
         genreRepository.saveAndFlush(genre);
 
-        assertNotNull(genre.getId());
-        assertEquals(GenreUtils.GENRES_COUNT + 1, genre.getId().intValue());
+        assertThat(genre.getId(), is(notNullValue()));
+        assertThat(genre.getId(), is(GenreUtils.GENRES_COUNT + 1));
 
         final Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         final Genre expectedAddGenre = GenreUtils.newGenreDomain(null);
         expectedAddGenre.setId(GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(expectedAddGenre, addedGenre);
 
-        assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT + 1));
     }
 
     /**
      * Test method for update genre.
      */
     @Test
-    public void testUpdate() {
+    public void update() {
         final Genre genre = GenreUtils.updateGenre(entityManager, 1);
 
         genreRepository.saveAndFlush(genre);
@@ -109,36 +110,36 @@ public class GenreRepositoryIntegrationTest {
         expectedUpdatedGenre.setPosition(GenreUtils.POSITION);
         GenreUtils.assertGenreDeepEquals(expectedUpdatedGenre, updatedGenre);
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for remove genre.
      */
     @Test
-    public void testRemove() {
+    public void remove() {
         final Genre genre = GenreUtils.newGenreDomain(null);
         entityManager.persist(genre);
-        assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT + 1));
 
         genreRepository.delete(genre);
 
-        assertNull(GenreUtils.getGenre(entityManager, genre.getId()));
+        assertThat(GenreUtils.getGenre(entityManager, genre.getId()), is(nullValue()));
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for remove all genres.
      */
     @Test
-    public void testRemoveAll() {
+    public void removeAll() {
         entityManager.createNativeQuery("DELETE FROM movie_genres").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM tv_show_genres").executeUpdate();
 
         genreRepository.deleteAll();
 
-        assertEquals(0, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(0));
     }
 
 }

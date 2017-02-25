@@ -31,7 +31,7 @@ public class ShowServiceImplTest extends AbstractServiceTest<Show> {
      * Test method for {@link ShowServiceImpl#ShowServiceImpl(ShowRepository, Cache)} with null repository for shows.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullShowRepository() {
+    public void constructor_NullShowRepository() {
         new ShowServiceImpl(null, getCache());
     }
 
@@ -39,7 +39,7 @@ public class ShowServiceImplTest extends AbstractServiceTest<Show> {
      * Test method for {@link ShowServiceImpl#ShowServiceImpl(ShowRepository, Cache)} with null cache.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullCache() {
+    public void constructor_NullCache() {
         new ShowServiceImpl(showRepository, null);
     }
 

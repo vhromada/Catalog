@@ -1,11 +1,7 @@
 package cz.vhromada.catalog.common;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +72,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad length.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_BadLength() {
+    public void constructor_BadLength() {
         new Time(-1);
     }
 
@@ -84,7 +80,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad hours.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_BadHours() {
+    public void constructor_BadHours() {
         new Time(-1, MINUTES, SECONDS);
     }
 
@@ -92,7 +88,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with negative minutes.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NegativeMinutes() {
+    public void constructor_NegativeMinutes() {
         new Time(HOURS, -1, SECONDS);
     }
 
@@ -100,7 +96,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad minutes.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_BadMinutes() {
+    public void constructor_BadMinutes() {
         new Time(HOURS, BAD_MAX_TIME, SECONDS);
     }
 
@@ -108,7 +104,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with negative seconds.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NegativeSeconds() {
+    public void constructor_NegativeSeconds() {
         new Time(HOURS, MINUTES, -1);
     }
 
@@ -116,7 +112,7 @@ public class TimeTest {
      * Test method for {@link Time#Time(int)} with bad seconds.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_BadSeconds() {
+    public void constructor_BadSeconds() {
         new Time(HOURS, MINUTES, BAD_MAX_TIME);
     }
 
@@ -124,59 +120,30 @@ public class TimeTest {
      * Test method for {@link Time#getLength()}.
      */
     @Test
-    public void testGetLength() {
-        assertEquals(LENGTH, timeLength.getLength());
-        assertEquals(LENGTH, timeHMS.getLength());
+    public void getLength() {
+        assertThat(timeLength.getLength(), is(LENGTH));
+        assertThat(timeHMS.getLength(), is(LENGTH));
     }
 
     /**
      * Test method for {@link Time#getData(Time.TimeData)}.
      */
     @Test
-    public void testGetData() {
-        assertEquals(HOURS, timeLength.getData(Time.TimeData.HOUR));
-        assertEquals(MINUTES, timeLength.getData(Time.TimeData.MINUTE));
-        assertEquals(SECONDS, timeLength.getData(Time.TimeData.SECOND));
-        assertEquals(HOURS, timeHMS.getData(Time.TimeData.HOUR));
-        assertEquals(MINUTES, timeHMS.getData(Time.TimeData.MINUTE));
-        assertEquals(SECONDS, timeHMS.getData(Time.TimeData.SECOND));
+    public void getData() {
+        assertThat(timeLength.getData(Time.TimeData.HOUR), is(HOURS));
+        assertThat(timeLength.getData(Time.TimeData.MINUTE), is(MINUTES));
+        assertThat(timeLength.getData(Time.TimeData.SECOND), is(SECONDS));
+        assertThat(timeHMS.getData(Time.TimeData.HOUR), is(HOURS));
+        assertThat(timeHMS.getData(Time.TimeData.MINUTE), is(MINUTES));
+        assertThat(timeHMS.getData(Time.TimeData.SECOND), is(SECONDS));
     }
 
     /**
      * Test method for {@link Time#getData(Time.TimeData)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testGetData_NegativeArgument() {
+    public void getData_NegativeArgument() {
         timeLength.getData(null);
-    }
-
-    /**
-     * Test method for {@link Time#equals(Object)} and {@link Time#hashCode()}.
-     */
-    @Test
-    public void testEqualsHashCode() {
-        final int count = 10;
-        final Time[] times = new Time[count];
-        times[0] = timeLength;
-        for (int i = 1; i < count; i++) {
-            times[i] = new Time(i);
-        }
-
-        for (int i = 0; i < count; i++) {
-            final Time time1 = times[i];
-            for (int j = 0; j < count; j++) {
-                final Time time2 = times[j];
-                if (i == j) {
-                    assertTrue(time1.equals(time2));
-                    assertThat(time1.hashCode(), is(time2.hashCode()));
-                } else {
-                    assertFalse(time1.equals(time2));
-                    assertThat(time1.hashCode(), not(time2.hashCode()));
-                    assertFalse(time2.equals(time1));
-                    assertThat(time2.hashCode(), not(time1.hashCode()));
-                }
-            }
-        }
     }
 
     /**
@@ -184,11 +151,11 @@ public class TimeTest {
      */
     @Test
     public void testToString() {
-        assertEquals("2:35:26", timeLength.toString());
-        assertEquals("2:35:26", timeHMS.toString());
-        assertTrue(TIME_LENGTHS.length == TIME_STRINGS.length);
+        assertThat(timeLength.toString(), is("2:35:26"));
+        assertThat(timeHMS.toString(), is("2:35:26"));
+        assert TIME_LENGTHS.length == TIME_STRINGS.length;
         for (int i = 0; i < TIME_LENGTHS.length; i++) {
-            assertEquals(TIME_STRINGS[i], new Time(TIME_LENGTHS[i]).toString());
+            assertThat(new Time(TIME_LENGTHS[i]).toString(), is(TIME_STRINGS[i]));
         }
     }
 

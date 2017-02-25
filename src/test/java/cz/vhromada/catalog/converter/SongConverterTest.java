@@ -1,7 +1,9 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Song;
@@ -45,7 +47,7 @@ public class SongConverterTest {
      */
     @Test
     public void testConvertSongDomain_NullArgument() {
-        assertNull(converter.convert(null, Song.class));
+        assertThat(converter.convert(null, Song.class), is(nullValue()));
     }
 
     /**
@@ -56,7 +58,7 @@ public class SongConverterTest {
         final Song song = SongUtils.newSong(1);
         final cz.vhromada.catalog.domain.Song songDomain = converter.convert(song, cz.vhromada.catalog.domain.Song.class);
 
-        assertNotNull(song);
+        assertThat(songDomain, is(notNullValue()));
         SongUtils.assertSongDeepEquals(song, songDomain);
     }
 
@@ -65,7 +67,7 @@ public class SongConverterTest {
      */
     @Test
     public void testConvertSong_NullArgument() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Song.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Song.class), is(nullValue()));
     }
 
 }

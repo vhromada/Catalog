@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,8 +179,8 @@ public final class SongUtils {
      * @param actual   actual songs
      */
     public static void assertSongsDeepEquals(final List<cz.vhromada.catalog.domain.Song> expected, final List<cz.vhromada.catalog.domain.Song> actual) {
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.size(), is(expected.size()));
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertSongDeepEquals(expected.get(i), actual.get(i));
@@ -194,12 +195,12 @@ public final class SongUtils {
      * @param actual   actual song
      */
     public static void assertSongDeepEquals(final cz.vhromada.catalog.domain.Song expected, final cz.vhromada.catalog.domain.Song actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getLength(), actual.getLength());
-        assertEquals(expected.getNote(), actual.getNote());
-        assertEquals(expected.getPosition(), actual.getPosition());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getId(), is(expected.getId()));
+        assertThat(actual.getName(), is(expected.getName()));
+        assertThat(actual.getLength(), is(expected.getLength()));
+        assertThat(actual.getNote(), is(expected.getNote()));
+        assertThat(actual.getPosition(), is(expected.getPosition()));
     }
 
     /**
@@ -209,8 +210,8 @@ public final class SongUtils {
      * @param actual   actual songs
      */
     public static void assertSongListDeepEquals(final List<Song> expected, final List<cz.vhromada.catalog.domain.Song> actual) {
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.size(), is(expected.size()));
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertSongDeepEquals(expected.get(i), actual.get(i));
@@ -225,12 +226,12 @@ public final class SongUtils {
      * @param actual   actual song
      */
     public static void assertSongDeepEquals(final Song expected, final cz.vhromada.catalog.domain.Song actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getLength(), actual.getLength());
-        assertEquals(expected.getNote(), actual.getNote());
-        assertEquals(expected.getPosition(), actual.getPosition());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getId(), is(expected.getId()));
+        assertThat(actual.getName(), is(expected.getName()));
+        assertThat(actual.getLength(), is(expected.getLength()));
+        assertThat(actual.getNote(), is(expected.getNote()));
+        assertThat(actual.getPosition(), is(expected.getPosition()));
     }
 
 }

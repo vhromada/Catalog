@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import cz.vhromada.catalog.common.Movable;
@@ -33,11 +34,11 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")));
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -52,11 +53,11 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")));
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -72,11 +73,11 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")));
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -92,11 +93,11 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null.")));
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -112,11 +113,11 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -131,11 +132,11 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")));
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -150,11 +151,11 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.ERROR, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null."), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")));
 
         verifyZeroInteractions(getCatalogService());
     }

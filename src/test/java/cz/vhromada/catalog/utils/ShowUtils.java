@@ -1,8 +1,9 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,8 +217,8 @@ public final class ShowUtils {
      * @param actual   actual shows
      */
     public static void assertShowsDeepEquals(final List<cz.vhromada.catalog.domain.Show> expected, final List<cz.vhromada.catalog.domain.Show> actual) {
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.size(), is(expected.size()));
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertShowDeepEquals(expected.get(i), actual.get(i));
@@ -232,17 +233,17 @@ public final class ShowUtils {
      * @param actual   actual show
      */
     public static void assertShowDeepEquals(final cz.vhromada.catalog.domain.Show expected, final cz.vhromada.catalog.domain.Show actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getCzechName(), actual.getCzechName());
-        assertEquals(expected.getOriginalName(), actual.getOriginalName());
-        assertEquals(expected.getCsfd(), actual.getCsfd());
-        assertEquals(expected.getImdbCode(), actual.getImdbCode());
-        assertEquals(expected.getWikiEn(), actual.getWikiEn());
-        assertEquals(expected.getWikiCz(), actual.getWikiCz());
-        assertEquals(expected.getPicture(), actual.getPicture());
-        assertEquals(expected.getNote(), actual.getNote());
-        assertEquals(expected.getPosition(), actual.getPosition());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getId(), is(expected.getId()));
+        assertThat(actual.getCzechName(), is(expected.getCzechName()));
+        assertThat(actual.getOriginalName(), is(expected.getOriginalName()));
+        assertThat(actual.getCsfd(), is(expected.getCsfd()));
+        assertThat(actual.getImdbCode(), is(expected.getImdbCode()));
+        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
+        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
+        assertThat(actual.getPicture(), is(expected.getPicture()));
+        assertThat(actual.getNote(), is(expected.getNote()));
+        assertThat(actual.getPosition(), is(expected.getPosition()));
         GenreUtils.assertGenresDeepEquals(expected.getGenres(), actual.getGenres());
         if (expected.getSeasons() == null) {
             assertNull(actual.getSeasons());
@@ -258,8 +259,8 @@ public final class ShowUtils {
      * @param actual   actual shows
      */
     public static void assertShowListDeepEquals(final List<Show> expected, final List<cz.vhromada.catalog.domain.Show> actual) {
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.size(), is(expected.size()));
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertShowDeepEquals(expected.get(i), actual.get(i));
@@ -274,17 +275,17 @@ public final class ShowUtils {
      * @param actual   actual show
      */
     public static void assertShowDeepEquals(final Show expected, final cz.vhromada.catalog.domain.Show actual) {
-        assertNotNull(actual);
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getCzechName(), actual.getCzechName());
-        assertEquals(expected.getOriginalName(), actual.getOriginalName());
-        assertEquals(expected.getCsfd(), actual.getCsfd());
-        assertEquals(expected.getImdbCode(), actual.getImdbCode());
-        assertEquals(expected.getWikiEn(), actual.getWikiEn());
-        assertEquals(expected.getWikiCz(), actual.getWikiCz());
-        assertEquals(expected.getPicture(), actual.getPicture());
-        assertEquals(expected.getNote(), actual.getNote());
-        assertEquals(expected.getPosition(), actual.getPosition());
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getId(), is(expected.getId()));
+        assertThat(actual.getCzechName(), is(expected.getCzechName()));
+        assertThat(actual.getOriginalName(), is(expected.getOriginalName()));
+        assertThat(actual.getCsfd(), is(expected.getCsfd()));
+        assertThat(actual.getImdbCode(), is(expected.getImdbCode()));
+        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
+        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
+        assertThat(actual.getPicture(), is(expected.getPicture()));
+        assertThat(actual.getNote(), is(expected.getNote()));
+        assertThat(actual.getPosition(), is(expected.getPosition()));
         GenreUtils.assertGenreListDeepEquals(expected.getGenres(), actual.getGenres());
     }
 

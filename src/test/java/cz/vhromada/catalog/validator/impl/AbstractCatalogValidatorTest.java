@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.List;
@@ -41,11 +42,11 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
     public void validate_Deep() {
         final Result<Void> result = getCatalogValidator().validate(getValidatingData(), ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertNotNull(result.getEvents());
-        assertEquals(Status.WARN, result.getStatus());
-        assertEquals(1, result.getEvents().size());
-        assertEquals(new Event(Severity.WARN, KEY, VALUE), result.getEvents().get(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.WARN));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.WARN, KEY, VALUE)));
 
         verifyZeroInteractions(getCatalogService());
     }

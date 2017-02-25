@@ -1,12 +1,11 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -72,6 +71,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
         repository = getRepository();
         catalogService = getCatalogService();
         dataList = CollectionUtils.newList(getItem1(), getItem2());
+
         when(repository.findAll()).thenReturn(dataList);
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#newData()}.
      */
     @Test
-    public void testNewData_CachedData() {
+    public void newData_CachedData() {
         catalogService.newData();
 
         verify(repository).deleteAll();
@@ -91,13 +91,13 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#getAll()} with cached data.
      */
     @Test
-    public void testGetAll_CachedData() {
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+    public void getAll_CachedData() {
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         final List<T> data = catalogService.getAll();
 
-        assertNotNull(data);
-        assertEquals(dataList, data);
+        assertThat(data, is(notNullValue()));
+        assertThat(data, is(dataList));
 
         verify(cache).get(getCacheKey());
         verifyNoMoreInteractions(cache);
@@ -108,13 +108,13 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#getAll()} with not cached data.
      */
     @Test
-    public void testGets_NotCachedData() {
-        when(cache.get(anyString())).thenReturn(null);
+    public void getAll_NotCachedData() {
+        when(cache.get(any(String.class))).thenReturn(null);
 
         final List<T> data = catalogService.getAll();
 
-        assertNotNull(data);
-        assertEquals(dataList, data);
+        assertThat(data, is(notNullValue()));
+        assertThat(data, is(dataList));
 
         verify(repository).findAll();
         verify(cache).get(getCacheKey());
@@ -126,13 +126,13 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with cached existing data.
      */
     @Test
-    public void testGet_CachedExistingData() {
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+    public void get_CachedExistingData() {
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         final T data = catalogService.get(dataList.get(0).getId());
 
-        assertNotNull(data);
-        assertEquals(dataList.get(0), data);
+        assertThat(data, is(notNullValue()));
+        assertThat(data, is(dataList.get(0)));
 
         verify(cache).get(getCacheKey());
         verifyNoMoreInteractions(cache);
@@ -143,12 +143,12 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with cached not existing data.
      */
     @Test
-    public void testGet_CachedNotExistingData() {
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+    public void get_CachedNotExistingData() {
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         final T data = catalogService.get(Integer.MAX_VALUE);
 
-        assertNull(data);
+        assertThat(data, is(nullValue()));
 
         verify(cache).get(getCacheKey());
         verifyNoMoreInteractions(cache);
@@ -159,13 +159,13 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with not cached existing data.
      */
     @Test
-    public void testGet_NotCachedExistingData() {
-        when(cache.get(anyString())).thenReturn(null);
+    public void get_NotCachedExistingData() {
+        when(cache.get(any(String.class))).thenReturn(null);
 
         final T data = catalogService.get(dataList.get(0).getId());
 
-        assertNotNull(data);
-        assertEquals(dataList.get(0), data);
+        assertThat(data, is(notNullValue()));
+        assertThat(data, is(dataList.get(0)));
 
         verify(repository).findAll();
         verify(cache).get(getCacheKey());
@@ -177,12 +177,12 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with not cached not existing data.
      */
     @Test
-    public void testGet_NotCachedNotExistingData() {
-        when(cache.get(anyString())).thenReturn(null);
+    public void get_NotCachedNotExistingData() {
+        when(cache.get(any(String.class))).thenReturn(null);
 
         final T data = catalogService.get(Integer.MAX_VALUE);
 
-        assertNull(data);
+        assertThat(data, is(nullValue()));
 
         verify(repository).findAll();
         verify(cache).get(getCacheKey());
@@ -194,7 +194,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testGet_NullArgument() {
+    public void get_NullArgument() {
         catalogService.get(null);
     }
 
@@ -202,18 +202,18 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#add(T)} with cached data.
      */
     @Test
-    public void testAdd_CachedData() {
+    public void add_CachedData() {
         final T data = getAddItem();
 
-        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID, getItemClass()));
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.add(data);
 
-        assertEquals(ID, data.getId());
-        assertEquals(ID - 1, data.getPosition());
-        assertEquals(3, dataList.size());
-        assertEquals(data, dataList.get(2));
+        assertThat(data.getId(), is(ID));
+        assertThat(data.getPosition(), is(ID - 1));
+        assertThat(dataList.size(), is(3));
+        assertThat(dataList.get(2), is(data));
 
         verify(repository, times(2)).save(data);
         verify(cache).get(getCacheKey());
@@ -225,18 +225,18 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#add(T)} with not cached data.
      */
     @Test
-    public void testAdd_NotCachedData() {
+    public void add_NotCachedData() {
         final T data = getAddItem();
 
-        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
-        when(cache.get(anyString())).thenReturn(null);
+        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID, getItemClass()));
+        when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.add(data);
 
-        assertEquals(ID, data.getId());
-        assertEquals(ID - 1, data.getPosition());
-        assertEquals(3, dataList.size());
-        assertEquals(data, dataList.get(2));
+        assertThat(data.getId(), is(ID));
+        assertThat(data.getPosition(), is(ID - 1));
+        assertThat(dataList.size(), is(3));
+        assertThat(dataList.get(2), is(data));
 
         verify(repository).findAll();
         verify(repository, times(2)).save(data);
@@ -249,7 +249,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#add(T)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullArgument() {
+    public void add_NullArgument() {
         catalogService.add(null);
     }
 
@@ -257,17 +257,17 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#update(T)} with cached data.
      */
     @Test
-    public void testUpdate_CachedData() {
+    public void update_CachedData() {
         final T data = dataList.get(0);
         data.setPosition(10);
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.update(data);
 
-        assertEquals(2, dataList.size());
-        assertEquals(data, dataList.get(0));
+        assertThat(dataList.size(), is(2));
+        assertThat(dataList.get(0), is(data));
 
         verify(repository).save(data);
         verify(cache).get(getCacheKey());
@@ -279,17 +279,17 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#update(T)} with not cached data.
      */
     @Test
-    public void testUpdate_NotCachedData() {
+    public void update_NotCachedData() {
         final T data = dataList.get(0);
         data.setPosition(10);
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(null);
+        when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.update(data);
 
-        assertEquals(2, dataList.size());
-        assertEquals(data, dataList.get(0));
+        assertThat(dataList.size(), is(2));
+        assertThat(dataList.get(0), is(data));
 
         verify(repository).findAll();
         verify(repository).save(data);
@@ -302,7 +302,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#update(T)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullArgument() {
+    public void update_NullArgument() {
         catalogService.update(null);
     }
 
@@ -310,15 +310,15 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#remove(T)} with cached data.
      */
     @Test
-    public void testRemove_CachedData() {
+    public void remove_CachedData() {
         final T data = dataList.get(0);
 
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.remove(data);
 
-        assertEquals(1, dataList.size());
-        assertFalse(dataList.contains(data));
+        assertThat(dataList.size(), is(1));
+        assertThat(dataList.contains(data), is(false));
 
         verify(repository).delete(data);
         verify(cache).get(getCacheKey());
@@ -330,15 +330,15 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#remove(T)} with not cached data.
      */
     @Test
-    public void testRemove_NotCachedData() {
+    public void remove_NotCachedData() {
         final T data = dataList.get(0);
 
-        when(cache.get(anyString())).thenReturn(null);
+        when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.remove(data);
 
-        assertEquals(1, dataList.size());
-        assertFalse(dataList.contains(data));
+        assertThat(dataList.size(), is(1));
+        assertThat(dataList.contains(data), is(false));
 
         verify(repository).findAll();
         verify(repository).delete(data);
@@ -351,7 +351,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#remove(T)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullArgument() {
+    public void remove_NullArgument() {
         catalogService.remove(null);
     }
 
@@ -359,16 +359,16 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#duplicate(T)} with cached data.
      */
     @Test
-    public void testDuplicate_CachedData() {
+    public void duplicate_CachedData() {
         final T copy = getCopyItem();
         final ArgumentCaptor<T> copyArgumentCaptor = ArgumentCaptor.forClass(getItemClass());
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.duplicate(dataList.get(0));
 
-        assertEquals(3, dataList.size());
+        assertThat(dataList.size(), is(3));
         assertDataDeepEquals(copy, dataList.get(2));
 
         verify(repository).save(copyArgumentCaptor.capture());
@@ -384,16 +384,16 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#duplicate(T)} with not cached data.
      */
     @Test
-    public void testDuplicate_NotCachedData() {
+    public void duplicate_NotCachedData() {
         final T copy = getCopyItem();
         final ArgumentCaptor<T> copyArgumentCaptor = ArgumentCaptor.forClass(getItemClass());
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(null);
+        when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.duplicate(dataList.get(0));
 
-        assertEquals(3, dataList.size());
+        assertThat(dataList.size(), is(3));
         assertDataDeepEquals(copy, dataList.get(2));
 
         verify(repository).findAll();
@@ -410,7 +410,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#duplicate(T)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullArgument() {
+    public void duplicate_NullArgument() {
         catalogService.duplicate(null);
     }
 
@@ -418,19 +418,19 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveUp(T)} with cached data.
      */
     @Test
-    public void testMoveUp_CachedData() {
+    public void moveUp_CachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.moveUp(data2);
 
-        assertEquals(position2, data1.getPosition());
-        assertEquals(position1, data2.getPosition());
+        assertThat(data1.getPosition(), is(position2));
+        assertThat(data2.getPosition(), is(position1));
 
         verify(repository).save(data1);
         verify(repository).save(data2);
@@ -443,19 +443,19 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveUp(T)} with not cached data.
      */
     @Test
-    public void testMoveUp_NotCachedData() {
+    public void moveUp_NotCachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(null);
+        when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.moveUp(data2);
 
-        assertEquals(position2, data1.getPosition());
-        assertEquals(position1, data2.getPosition());
+        assertThat(data1.getPosition(), is(position2));
+        assertThat(data2.getPosition(), is(position1));
 
         verify(repository).findAll();
         verify(repository).save(data1);
@@ -469,7 +469,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveUp(T)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullArgument() {
+    public void moveUp_NullArgument() {
         catalogService.moveUp(null);
     }
 
@@ -477,19 +477,19 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveDown(T)} with cached data.
      */
     @Test
-    public void testMoveDown_CachedData() {
+    public void moveDown_CachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.moveDown(data1);
 
-        assertEquals(position2, data1.getPosition());
-        assertEquals(position1, data2.getPosition());
+        assertThat(data1.getPosition(), is(position2));
+        assertThat(data2.getPosition(), is(position1));
 
         verify(repository).save(data1);
         verify(repository).save(data2);
@@ -502,19 +502,19 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveDown(T)} with not cached data.
      */
     @Test
-    public void testMoveDown_NotCachedData() {
+    public void moveDown_NotCachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
         final T data2 = dataList.get(1);
         final int position2 = data2.getPosition();
 
         when(repository.save(any(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(null);
+        when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.moveDown(data1);
 
-        assertEquals(position2, data1.getPosition());
-        assertEquals(position1, data2.getPosition());
+        assertThat(data1.getPosition(), is(position2));
+        assertThat(data2.getPosition(), is(position1));
 
         verify(repository).findAll();
         verify(repository).save(data1);
@@ -528,7 +528,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveDown(T)} with null argument.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullArgument() {
+    public void moveDown_NullArgument() {
         catalogService.moveDown(null);
     }
 
@@ -536,15 +536,15 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#updatePositions()} with cached data.
      */
     @Test
-    public void testUpdatePositions_CachedData() {
+    public void updatePositions_CachedData() {
         when(repository.save(anyListOf(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(new SimpleValueWrapper(dataList));
+        when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.updatePositions();
 
         for (int i = 0; i < dataList.size(); i++) {
             final T data = dataList.get(i);
-            assertEquals(i, data.getPosition());
+            assertThat(data.getPosition(), is(i));
         }
 
         verify(repository).save(dataList);
@@ -557,15 +557,15 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#updatePositions()} with not cached data.
      */
     @Test
-    public void testUpdatePositions_NotCachedData() {
+    public void updatePositions_NotCachedData() {
         when(repository.save(anyListOf(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
-        when(cache.get(anyString())).thenReturn(null);
+        when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.updatePositions();
 
         for (int i = 0; i < dataList.size(); i++) {
             final T data = dataList.get(i);
-            assertEquals(i, data.getPosition());
+            assertThat(data.getPosition(), is(i));
         }
 
         verify(repository).findAll();
@@ -646,18 +646,18 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * @param expected expected data
      * @param actual   actual data
      */
-    protected abstract void assertDataDeepEquals(final T expected, final T actual);
+    protected abstract void assertDataDeepEquals(T expected, T actual);
 
     /**
      * Sets ID.
      *
-     * @param id ID
+     * @param id    ID
+     * @param clazz class of mocked answer
      * @return mocked answer
      */
-    private Answer<T> setId(final Integer id) {
+    private Answer<T> setId(final Integer id, final Class<T> clazz) {
         return invocation -> {
-            @SuppressWarnings("unchecked")
-            final T movable = (T) invocation.getArguments()[0];
+            final T movable = invocation.getArgumentAt(0, clazz);
             movable.setId(id);
 
             return movable;
@@ -665,4 +665,3 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
 }
-

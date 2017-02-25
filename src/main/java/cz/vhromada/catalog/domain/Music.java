@@ -220,7 +220,7 @@ public class Music implements Movable {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Music) || id == null) {
+        if (!(obj instanceof Music) || id == null) {
             return false;
         }
 

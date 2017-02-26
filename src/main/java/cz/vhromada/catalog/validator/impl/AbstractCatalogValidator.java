@@ -168,14 +168,17 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
      * @param up     true if data is moving up
      */
     private void validateMovingData(final T data, final Result<Void> result, final boolean up) {
-        final List<? extends Movable> list = getList(data);
-        final int index = list.indexOf(getData(data));
-        if (up) {
-            if (index <= 0) {
-                result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_MOVABLE", name + " can't be moved up."));
+        if (data.getId() != null) {
+            final Movable domainData = getData(data);
+            if (domainData != null) {
+                final List<? extends Movable> list = getList(data);
+                final int index = list.indexOf(domainData);
+                if (up && index <= 0) {
+                    result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_MOVABLE", name + " can't be moved up."));
+                } else if (!up && (index < 0 || index >= list.size() - 1)) {
+                    result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_MOVABLE", name + " can't be moved down."));
+                }
             }
-        } else if (index < 0 || index >= list.size() - 1) {
-            result.addEvent(new Event(Severity.ERROR, prefix + "_NOT_MOVABLE", name + " can't be moved down."));
         }
     }
 

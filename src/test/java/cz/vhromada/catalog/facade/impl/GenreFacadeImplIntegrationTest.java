@@ -1,7 +1,11 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -9,8 +13,11 @@ import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.utils.GenreUtils;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +36,23 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@Ignore
+@DirtiesContext
 public class GenreFacadeImplIntegrationTest {
+
+    /**
+     * Event for null genre
+     */
+    private static final Event NULL_GENRE_EVENT = new Event(Severity.ERROR, "GENRE_NULL", "Genre mustn't be null.");
+
+    /**
+     * Event for genre with null ID
+     */
+    private static final Event NULL_GENRE_ID_EVENT = new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.");
+
+    /**
+     * Event for not exiting genre
+     */
+    private static final Event NOT_EXIST_GENRE_EVENT = new Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.");
 
     /**
      * Instance of {@link EntityManager}
@@ -57,44 +78,76 @@ public class GenreFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testNewData() {
+    public void newData() {
         clearReferencedData();
 
-        genreFacade.newData();
+        final Result<Void> result = genreFacade.newData();
 
-        assertEquals(0, GenreUtils.getGenresCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(0));
     }
 
     /**
-     * Test method for {@link GenreFacade#getGenres()}.
+     * Test method for {@link GenreFacade#getAll()}.
      */
     @Test
-    public void testGetGenres() {
-        GenreUtils.assertGenreListDeepEquals(genreFacade.getGenres(), GenreUtils.getGenres());
+    public void getAll() {
+        final Result<List<Genre>> result = genreFacade.getAll();
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+        GenreUtils.assertGenreListDeepEquals(result.getData(), GenreUtils.getGenres());
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link GenreFacade#getGenre(Integer)}.
+     * Test method for {@link GenreFacade#get(Integer)}.
      */
     @Test
-    public void testGetGenre() {
+    public void get() {
         for (int i = 1; i <= GenreUtils.GENRES_COUNT; i++) {
-            GenreUtils.assertGenreDeepEquals(genreFacade.getGenre(i), GenreUtils.getGenreDomain(i));
+            final Result<Genre> result = genreFacade.get(i);
+
+            assertThat(result, is(notNullValue()));
+            assertThat(result.getEvents(), is(notNullValue()));
+            assertThat(result.getStatus(), is(Status.OK));
+            assertThat(result.getEvents().isEmpty(), is(true));
+            GenreUtils.assertGenreDeepEquals(result.getData(), GenreUtils.getGenreDomain(i));
         }
 
-        assertNull(genreFacade.getGenre(Integer.MAX_VALUE));
+        final Result<Genre> result = genreFacade.get(Integer.MAX_VALUE);
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link GenreFacade#getGenre(Integer)} with null argument.
+     * Test method for {@link GenreFacade#get(Integer)} with null genre.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetGenre_NullArgument() {
-        genreFacade.getGenre(null);
+    @Test
+    public void get_NullGenre() {
+        final Result<Genre> result = genreFacade.get(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -102,51 +155,88 @@ public class GenreFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testAdd() {
-        genreFacade.add(GenreUtils.newGenre(null));
+    public void add() {
+        final Result<Void> result = genreFacade.add(GenreUtils.newGenre(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(GenreUtils.newGenreDomain(GenreUtils.GENRES_COUNT + 1), addedGenre);
-
-        assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT + 1));
     }
 
     /**
-     * Test method for {@link GenreFacade#add(Genre)} with null argument.
+     * Test method for {@link GenreFacade#add(Genre)} with null genre.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullArgument() {
-        genreFacade.add(null);
+    @Test
+    public void add_NullGenre() {
+        final Result<Void> result = genreFacade.add(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#add(Genre)} with genre with not null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NotNullId() {
-        genreFacade.add(GenreUtils.newGenre(Integer.MAX_VALUE));
+    @Test
+    public void add_NotNullId() {
+        final Result<Void> result = genreFacade.add(GenreUtils.newGenre(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_ID_NOT_NULL", "ID must be null.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#add(Genre)} with genre with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullName() {
+    @Test
+    public void add_NullName() {
         final Genre genre = GenreUtils.newGenre(null);
         genre.setName(null);
 
-        genreFacade.add(genre);
+        final Result<Void> result = genreFacade.add(genre);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#add(Genre)} with genre with empty string as name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_EmptyName() {
+    @Test
+    public void add_EmptyName() {
         final Genre genre = GenreUtils.newGenre(null);
         genre.setName("");
 
-        genreFacade.add(genre);
+        final Result<Void> result = genreFacade.add(genre);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -154,61 +244,106 @@ public class GenreFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testUpdate() {
+    public void update() {
         final Genre genre = GenreUtils.newGenre(1);
 
-        genreFacade.update(genre);
+        final Result<Void> result = genreFacade.update(genre);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Genre updatedGenre = GenreUtils.getGenre(entityManager, 1);
         GenreUtils.assertGenreDeepEquals(genre, updatedGenre);
-
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link GenreFacade#update(Genre)} with null argument.
+     * Test method for {@link GenreFacade#update(Genre)} with null genre.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullArgument() {
-        genreFacade.update(null);
+    @Test
+    public void update_NullGenre() {
+        final Result<Void> result = genreFacade.update(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullId() {
-        genreFacade.update(GenreUtils.newGenre(null));
+    @Test
+    public void update_NullId() {
+        final Result<Void> result = genreFacade.update(GenreUtils.newGenre(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullName() {
+    @Test
+    public void update_NullName() {
         final Genre genre = GenreUtils.newGenre(1);
         genre.setName(null);
 
-        genreFacade.update(genre);
+        final Result<Void> result = genreFacade.update(genre);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with empty string as name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_EmptyName() {
+    @Test
+    public void update_EmptyName() {
         final Genre genre = GenreUtils.newGenre(1);
         genre.setName("");
 
-        genreFacade.update(genre);
+        final Result<Void> result = genreFacade.update(genre);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#update(Genre)} with genre with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadId() {
-        genreFacade.update(GenreUtils.newGenre(Integer.MAX_VALUE));
+    @Test
+    public void update_BadId() {
+        final Result<Void> result = genreFacade.update(GenreUtils.newGenre(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -216,38 +351,66 @@ public class GenreFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testRemove() {
+    public void remove() {
         clearReferencedData();
 
-        genreFacade.remove(GenreUtils.newGenre(1));
+        final Result<Void> result = genreFacade.remove(GenreUtils.newGenre(1));
 
-        assertNull(GenreUtils.getGenre(entityManager, 1));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertEquals(GenreUtils.GENRES_COUNT - 1, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenre(entityManager, 1), is(nullValue()));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT - 1));
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(Genre)} with null argument.
+     * Test method for {@link GenreFacade#remove(Genre)} with null genre.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullArgument() {
-        genreFacade.remove(null);
+    @Test
+    public void remove_NullGenre() {
+        final Result<Void> result = genreFacade.remove(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#remove(Genre)} with genre with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullId() {
-        genreFacade.remove(GenreUtils.newGenre(null));
+    @Test
+    public void remove_NullId() {
+        final Result<Void> result = genreFacade.remove(GenreUtils.newGenre(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#remove(Genre)} with genre with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_BadId() {
-        genreFacade.remove(GenreUtils.newGenre(Integer.MAX_VALUE));
+    @Test
+    public void remove_BadId() {
+        final Result<Void> result = genreFacade.remove(GenreUtils.newGenre(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -255,40 +418,269 @@ public class GenreFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testDuplicate() {
+    public void duplicate() {
         final cz.vhromada.catalog.domain.Genre genre = GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT);
         genre.setId(GenreUtils.GENRES_COUNT + 1);
 
-        genreFacade.duplicate(GenreUtils.newGenre(GenreUtils.GENRES_COUNT));
+        final Result<Void> result = genreFacade.duplicate(GenreUtils.newGenre(GenreUtils.GENRES_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Genre duplicatedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(genre, duplicatedGenre);
-
-        assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT + 1));
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(Genre)} with null argument.
+     * Test method for {@link GenreFacade#duplicate(Genre)} with null genre.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullArgument() {
-        genreFacade.duplicate(null);
+    @Test
+    public void duplicate_NullGenre() {
+        final Result<Void> result = genreFacade.duplicate(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#duplicate(Genre)} with genre with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullId() {
-        genreFacade.duplicate(GenreUtils.newGenre(null));
+    @Test
+    public void duplicate_NullId() {
+        final Result<Void> result = genreFacade.duplicate(GenreUtils.newGenre(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link GenreFacade#duplicate(Genre)} with genre with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_BadId() {
-        genreFacade.duplicate(GenreUtils.newGenre(Integer.MAX_VALUE));
+    @Test
+    public void duplicate_BadId() {
+        final Result<Void> result = genreFacade.duplicate(GenreUtils.newGenre(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveUp(Genre)}.
+     */
+    @Test
+    @DirtiesContext
+    public void moveUp() {
+        final cz.vhromada.catalog.domain.Genre genre1 = GenreUtils.getGenreDomain(1);
+        genre1.setPosition(1);
+        final cz.vhromada.catalog.domain.Genre genre2 = GenreUtils.getGenreDomain(2);
+        genre2.setPosition(0);
+
+        final Result<Void> result = genreFacade.moveUp(GenreUtils.newGenre(2));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        GenreUtils.assertGenreDeepEquals(genre1, GenreUtils.getGenre(entityManager, 1));
+        GenreUtils.assertGenreDeepEquals(genre2, GenreUtils.getGenre(entityManager, 2));
+        for (int i = 3; i <= GenreUtils.GENRES_COUNT; i++) {
+            GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), GenreUtils.getGenre(entityManager, i));
+        }
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveUp(Genre)} with null genre.
+     */
+    @Test
+    public void moveUp_NullGenre() {
+        final Result<Void> result = genreFacade.moveUp(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveUp(Genre)} with genre with null ID.
+     */
+    @Test
+    public void moveUp_NullId() {
+        final Result<Void> result = genreFacade.moveUp(GenreUtils.newGenre(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveUp(Genre)} with not movable genre.
+     */
+    @Test
+    public void moveUp_NotMovableGenre() {
+        final Result<Void> result = genreFacade.moveUp(GenreUtils.newGenre(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NOT_MOVABLE", "Genre can't be moved up.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveUp(Genre)} with genre with bad ID.
+     */
+    @Test
+    public void moveUp_BadId() {
+        final Result<Void> result = genreFacade.moveUp(GenreUtils.newGenre(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveDown(Genre)}.
+     */
+    @Test
+    @DirtiesContext
+    public void moveDown() {
+        final cz.vhromada.catalog.domain.Genre genre1 = GenreUtils.getGenreDomain(1);
+        genre1.setPosition(1);
+        final cz.vhromada.catalog.domain.Genre genre2 = GenreUtils.getGenreDomain(2);
+        genre2.setPosition(0);
+
+        final Result<Void> result = genreFacade.moveDown(GenreUtils.newGenre(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        GenreUtils.assertGenreDeepEquals(genre1, GenreUtils.getGenre(entityManager, 1));
+        GenreUtils.assertGenreDeepEquals(genre2, GenreUtils.getGenre(entityManager, 2));
+        for (int i = 3; i <= GenreUtils.GENRES_COUNT; i++) {
+            GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), GenreUtils.getGenre(entityManager, i));
+        }
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveDown(Genre)} with null genre.
+     */
+    @Test
+    public void moveDown_NullGenre() {
+        final Result<Void> result = genreFacade.moveDown(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveDown(Genre)} with genre with null ID.
+     */
+    @Test
+    public void moveDown_NullId() {
+        final Result<Void> result = genreFacade.moveDown(GenreUtils.newGenre(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveDown(Genre)} with not movable genre.
+     */
+    @Test
+    public void moveDown_NotMovableGenre() {
+        final Result<Void> result = genreFacade.moveDown(GenreUtils.newGenre(GenreUtils.GENRES_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NOT_MOVABLE", "Genre can't be moved down.")));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#moveDown(Genre)} with genre with bad ID.
+     */
+    @Test
+    public void moveDown_BadId() {
+        final Result<Void> result = genreFacade.moveDown(GenreUtils.newGenre(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
+
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link GenreFacade#updatePositions()}.
+     */
+    @Test
+    @DirtiesContext
+    public void updatePositions() {
+        clearReferencedData();
+
+        final Result<Void> result = genreFacade.updatePositions();
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        for (int i = 1; i <= GenreUtils.GENRES_COUNT; i++) {
+            GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), GenreUtils.getGenre(entityManager, i));
+        }
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**

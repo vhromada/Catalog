@@ -1,17 +1,13 @@
 package cz.vhromada.catalog.facade.impl;
 
-import java.util.List;
-
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 /**
  * A class represents implementation of facade for genres.
@@ -19,32 +15,7 @@ import org.springframework.util.Assert;
  * @author Vladimir Hromada
  */
 @Component("genreFacade")
-public class GenreFacadeImpl implements GenreFacade {
-
-    /**
-     * Message for not existing genre
-     */
-    private static final String NOT_EXISTING_GENRE_MESSAGE = "Genre doesn't exist.";
-
-    /**
-     * Message for not movable genre
-     */
-    private static final String NOT_MOVABLE_GENRE_MESSAGE = "ID isn't valid - genre can't be moved.";
-
-    /**
-     * Service for genres
-     */
-    private CatalogService<cz.vhromada.catalog.domain.Genre> genreService;
-
-    /**
-     * Converter
-     */
-    private Converter converter;
-
-    /**
-     * Validator for genre
-     */
-    private CatalogValidator<Genre> genreValidator;
+public class GenreFacadeImpl extends AbstractParentCatalogFacade<Genre, cz.vhromada.catalog.domain.Genre> implements GenreFacade {
 
     /**
      * Creates a new instance of GenreFacadeImpl.
@@ -60,125 +31,17 @@ public class GenreFacadeImpl implements GenreFacade {
     public GenreFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             final Converter converter,
             final CatalogValidator<Genre> genreValidator) {
-        Assert.notNull(genreService, "Service for genres mustn't be null.");
-        Assert.notNull(converter, "Converter mustn't be null.");
-        Assert.notNull(genreValidator, "Validator for genre mustn't be null.");
-
-        this.genreService = genreService;
-        this.converter = converter;
-        this.genreValidator = genreValidator;
+        super(genreService, converter, genreValidator);
     }
 
     @Override
-    public void newData() {
-        genreService.newData();
+    protected Class<Genre> getEntityClass() {
+        return Genre.class;
     }
 
     @Override
-    public List<Genre> getGenres() {
-        return converter.convertCollection(genreService.getAll(), Genre.class);
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public Genre getGenre(final Integer id) {
-        Assert.notNull(id, "ID mustn't be null.");
-
-        return converter.convert(genreService.get(id), Genre.class);
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void add(final Genre genre) {
-        genreValidator.validate(genre, ValidationType.NEW, ValidationType.DEEP);
-
-        genreService.add(converter.convert(genre, cz.vhromada.catalog.domain.Genre.class));
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void update(final Genre genre) {
-        genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        if (genreService.get(genre.getId()) == null) {
-            throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
-        }
-
-        genreService.update(converter.convert(genre, cz.vhromada.catalog.domain.Genre.class));
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void remove(final Genre genre) {
-        genreValidator.validate(genre, ValidationType.EXISTS);
-        final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
-        if (genreDomain == null) {
-            throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
-        }
-
-        genreService.remove(genreDomain);
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void duplicate(final Genre genre) {
-        genreValidator.validate(genre, ValidationType.EXISTS);
-        final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
-        if (genreDomain == null) {
-            throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
-        }
-
-        genreService.duplicate(genreDomain);
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void moveUp(final Genre genre) {
-        genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.UP);
-        final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
-        if (genreDomain == null) {
-            throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
-        }
-        final List<cz.vhromada.catalog.domain.Genre> genres = genreService.getAll();
-        if (genres.indexOf(genreDomain) <= 0) {
-            throw new IllegalArgumentException(NOT_MOVABLE_GENRE_MESSAGE);
-        }
-
-        genreService.moveUp(genreDomain);
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void moveDown(final Genre genre) {
-        genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DOWN);
-        final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
-        if (genreDomain == null) {
-            throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
-        }
-        final List<cz.vhromada.catalog.domain.Genre> genres = genreService.getAll();
-        if (genres.indexOf(genreDomain) >= genres.size() - 1) {
-            throw new IllegalArgumentException(NOT_MOVABLE_GENRE_MESSAGE);
-        }
-
-        genreService.moveDown(genreDomain);
-    }
-
-    @Override
-    public void updatePositions() {
-        genreService.updatePositions();
+    protected Class<cz.vhromada.catalog.domain.Genre> getDomainClass() {
+        return cz.vhromada.catalog.domain.Genre.class;
     }
 
 }

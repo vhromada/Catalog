@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for genres.
@@ -13,97 +14,131 @@ public interface GenreFacade {
 
     /**
      * Creates new data.
-     */
-    void newData();
-
-    /**
-     * Returns genres.
      *
-     * @return genres
+     * @return result
      */
-    List<Genre> getGenres();
+    Result<Void> newData();
 
     /**
-     * Returns genre with ID or null if there isn't such genre.
+     * Returns list of data.
+     *
+     * @return result with list of data
+     */
+    Result<List<Genre>> getAll();
+
+    /**
+     * Returns data with ID or null if there aren't such data.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return genre with ID or null if there isn't such genre
-     * @throws IllegalArgumentException if ID is null
+     * @return result with data or validation errors
      */
-    Genre getGenre(Integer id);
+    Result<Genre> get(Integer id);
 
     /**
-     * Adds genre. Sets new ID and position.
+     * Adds data. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * </ul>
      *
      * @param genre genre
-     * @throws IllegalArgumentException if genre is null
-     *                                  or ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about genre is null
-     *                                  or URL to czech Wikipedia page about genre is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @return result with validation errors
      */
-    void add(Genre genre);
+    Result<Void> add(Genre genre);
 
     /**
      * Updates genre.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
-     * @param genre new value of genre
-     * @throws IllegalArgumentException if genre is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or genre doesn't exist in data storage
+     * @param genre genre
+     * @return result with validation errors
      */
-    void update(Genre genre);
+    Result<Void> update(Genre genre);
 
     /**
      * Removes genre.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @throws IllegalArgumentException if genre is null
-     *                                  or ID is null
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Genre genre);
+    Result<Void> remove(Genre genre);
 
     /**
      * Duplicates genre.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @throws IllegalArgumentException if genre is null
-     *                                  or ID is null
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Genre genre);
+    Result<Void> duplicate(Genre genre);
 
     /**
      * Moves genre in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre can't be moved up</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @throws IllegalArgumentException if genre is null
-     *                                  or ID is null
-     *                                  or genre can't be moved up
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Genre genre);
+    Result<Void> moveUp(Genre genre);
 
     /**
      * Moves genre in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Genre is null</li>
+     * <li>ID is null</li>
+     * <li>Genre can't be moved up</li>
+     * <li>Genre doesn't exist in data storage</li>
+     * </ul>
      *
      * @param genre genre
-     * @throws IllegalArgumentException if genre is null
-     *                                  or ID is null
-     *                                  or genre can't be moved down
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Genre genre);
+    Result<Void> moveDown(Genre genre);
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
-    void updatePositions();
+    Result<Void> updatePositions();
+
 }

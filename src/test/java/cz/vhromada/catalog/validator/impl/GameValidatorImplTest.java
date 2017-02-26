@@ -24,7 +24,6 @@ import org.junit.Test;
  */
 public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhromada.catalog.domain.Game> {
 
-
     /**
      * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */

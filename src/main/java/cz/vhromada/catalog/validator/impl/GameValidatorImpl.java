@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.validator.impl;
 
-import java.util.List;
-
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.result.Event;
@@ -10,7 +8,6 @@ import cz.vhromada.result.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -22,11 +19,6 @@ import org.springframework.util.StringUtils;
 public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromada.catalog.domain.Game> {
 
     /**
-     * Service for games
-     */
-    private CatalogService<cz.vhromada.catalog.domain.Game> gameService;
-
-    /**
      * Creates a new instance of GameValidatorImpl.
      *
      * @param gameService service for games
@@ -34,21 +26,7 @@ public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromad
      */
     @Autowired
     public GameValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Game> gameService) {
-        super("Game");
-
-        Assert.notNull(gameService, "Service for games mustn't be null.");
-
-        this.gameService = gameService;
-    }
-
-    @Override
-    protected cz.vhromada.catalog.domain.Game getData(final Game data) {
-        return gameService.get(data.getId());
-    }
-
-    @Override
-    protected List<cz.vhromada.catalog.domain.Game> getList(final Game data) {
-        return gameService.getAll();
+        super("Game", gameService);
     }
 
     /**

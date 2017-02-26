@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.result.Event;
@@ -53,7 +54,7 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
 
     @Override
     protected CatalogValidator<Movable> getCatalogValidator() {
-        return new AbstractCatalogValidatorStub(getName());
+        return new AbstractCatalogValidatorStub(getName(), getCatalogService());
     }
 
     @Override
@@ -95,9 +96,10 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
          * Creates a new instance of AbstractCatalogValidatorStub.
          *
          * @param name name of entity
+         * @param catalogService service for catalog
          */
-        AbstractCatalogValidatorStub(final String name) {
-            super(name);
+        AbstractCatalogValidatorStub(final String name, final CatalogService<Movable> catalogService) {
+            super(name, catalogService);
         }
 
         @Override

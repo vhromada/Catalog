@@ -3,6 +3,7 @@ package cz.vhromada.catalog.validator.impl;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
@@ -24,24 +25,33 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
     /**
      * Name of entity
      */
-    private String name;
+    private final String name;
 
     /**
      * Prefix for validation keys
      */
-    private String prefix;
+    private final String prefix;
+
+    /**
+     * Service for catalog
+     */
+    private final CatalogService<U> catalogService;
 
     /**
      * Creates a new instance of AbstractCatalogValidator.
      *
-     * @param name name of entity
+     * @param name           name of entity
+     * @param catalogService service for catalog
      * @throws IllegalArgumentException if name of entity is null
+     *                                  or service for catalog is null
      */
-    public AbstractCatalogValidator(final String name) {
+    public AbstractCatalogValidator(final String name, final CatalogService<U> catalogService) {
         Assert.notNull(name, "Name of entity mustn't be null.");
+        Assert.notNull(catalogService, "Service for catalog mustn't be null.");
 
         this.name = name;
         this.prefix = name.toUpperCase();
+        this.catalogService = catalogService;
     }
 
     @Override
@@ -77,7 +87,9 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
      * @param data data
      * @return data from repository
      */
-    protected abstract U getData(T data);
+    protected U getData(final T data) {
+        return catalogService.get(data.getId());
+    }
 
     /**
      * Returns list of data from repository.
@@ -85,7 +97,9 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
      * @param data data
      * @return list of data from repository
      */
-    protected abstract List<U> getList(T data);
+    protected List<U> getList(final T data) {
+        return catalogService.getAll();
+    }
 
     /**
      * Validates data deeply.

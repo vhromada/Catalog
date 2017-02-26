@@ -1,10 +1,13 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.entity.Music;
-import cz.vhromada.catalog.validator.MusicValidator;
+import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -13,55 +16,54 @@ import org.springframework.util.StringUtils;
  * @author Vladimir Hromada
  */
 @Component("musicValidator")
-public class MusicValidatorImpl implements MusicValidator {
+public class MusicValidatorImpl extends AbstractCatalogValidator<Music, cz.vhromada.catalog.domain.Music> {
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateNewMusic(final Music music) {
-        validateMusic(music);
-        Assert.isNull(music.getId(), "ID must be null.");
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateExistingMusic(final Music music) {
-        validateMusic(music);
-        Assert.notNull(music.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateMusicWithId(final Music music) {
-        Assert.notNull(music, "Music mustn't be null.");
-        Assert.notNull(music.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * Validates music.
+     * Creates a new instance of MusicValidatorImpl.
      *
-     * @param music validating music
-     * @throws IllegalArgumentException if music is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about music is null
-     *                                  or URL to czech Wikipedia page about music is null
-     *                                  or count of media isn't positive number
-     *                                  or note is null
+     * @param musicService service for music
+     * @throws IllegalArgumentException if service for music is null
      */
-    private static void validateMusic(final Music music) {
-        Assert.notNull(music, "Music mustn't be null.");
-        Assert.notNull(music.getName(), "Name mustn't be null");
-        Assert.isTrue(!StringUtils.isEmpty(music.getName()) && !StringUtils.isEmpty(music.getName().trim()), "Name mustn't be empty string.");
-        Assert.notNull(music.getWikiEn(), "URL to english Wikipedia page about music mustn't be null.");
-        Assert.notNull(music.getWikiCz(), "URL to czech Wikipedia page about music mustn't be null.");
-        Assert.isTrue(music.getMediaCount() > 0, "Count of media must be positive number.");
-        Assert.notNull(music.getNote(), "Note mustn't be null.");
+    @Autowired
+    public MusicValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService) {
+        super("Music", musicService);
+    }
+
+    /**
+     * Validates music deeply.
+     * <br/>
+     * Validation errors:
+     * <ul>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about music is null</li>
+     * <li>URL to czech Wikipedia page about music is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Note is null</li>
+     * </ul>
+     *
+     * @param data   validating music
+     * @param result result with validation errors
+     */
+    @Override
+    protected void validateDataDeep(final Music data, final Result<Void> result) {
+        if (data.getName() == null) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null."));
+        } else if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string."));
+        }
+        if (data.getWikiEn() == null) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null."));
+        }
+        if (data.getWikiCz() == null) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null."));
+        }
+        if (data.getMediaCount() <= 0) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."));
+        }
+        if (data.getNote() == null) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null."));
+        }
     }
 
 }

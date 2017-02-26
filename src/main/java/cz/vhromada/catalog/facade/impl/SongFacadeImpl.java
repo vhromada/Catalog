@@ -10,8 +10,9 @@ import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
 import cz.vhromada.catalog.utils.CollectionUtils;
-import cz.vhromada.catalog.validator.MusicValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.SongValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * Validator for music
      */
-    private MusicValidator musicValidator;
+    private CatalogValidator<Music> musicValidator;
 
     /**
      * Validator for song
@@ -76,7 +77,7 @@ public class SongFacadeImpl implements SongFacade {
     @Autowired
     public SongFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
             final Converter converter,
-            final MusicValidator musicValidator,
+            final CatalogValidator<Music> musicValidator,
             final SongValidator songValidator) {
         Assert.notNull(musicService, "Service for music mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
@@ -104,7 +105,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void add(final Music music, final Song song) {
-        musicValidator.validateMusicWithId(music);
+        musicValidator.validate(music, ValidationType.EXISTS);
         songValidator.validateNewSong(song);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
@@ -193,7 +194,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public List<Song> findSongsByMusic(final Music music) {
-        musicValidator.validateMusicWithId(music);
+        musicValidator.validate(music, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);

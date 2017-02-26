@@ -1,10 +1,20 @@
 package cz.vhromada.catalog.validator.impl;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
+import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.utils.MusicUtils;
-import cz.vhromada.catalog.validator.MusicValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -12,199 +22,159 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class MusicValidatorImplTest {
+public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhromada.catalog.domain.Music> {
 
     /**
-     * Instance of {@link MusicValidator}
+     * Test method for {@link MusicValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
-    private MusicValidator musicValidator;
-
-    /**
-     * Initializes validator for music.
-     */
-    @Before
-    public void setUp() {
-        musicValidator = new MusicValidatorImpl();
-    }
-
-    /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_NullArgument() {
-        musicValidator.validateNewMusic(null);
-    }
-
-    /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with music with not null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_NotNullId() {
-        musicValidator.validateNewMusic(MusicUtils.newMusic(1));
-    }
-
-    /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with music with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_NullName() {
-        final Music music = MusicUtils.newMusic(null);
+    @Test
+    public void validate_Deep_NullName() {
+        final Music music = getValidatingData();
         music.setName(null);
 
-        musicValidator.validateNewMusic(music);
+        final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with music with empty string as name.
+     * Test method for {@link MusicValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_EmptyName() {
-        final Music music = MusicUtils.newMusic(null);
+    @Test
+    public void validate_Deep_EmptyName() {
+        final Music music = getValidatingData();
         music.setName("");
 
-        musicValidator.validateNewMusic(music);
+        final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with music with null URL to english Wikipedia page about music is null.
+     * Test method for {@link MusicValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to english
+     * Wikipedia page about music.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_NullWikiEn() {
-        final Music music = MusicUtils.newMusic(null);
+    @Test
+    public void validate_Deep_NullWikiEn() {
+        final Music music = getValidatingData();
         music.setWikiEn(null);
 
-        musicValidator.validateNewMusic(music);
+        final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
+                "URL to english Wikipedia page about music mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with music with null URL to czech Wikipedia page about music is null.
+     * Test method for {@link MusicValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to czech
+     * Wikipedia page about music.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_NullWikiCz() {
-        final Music music = MusicUtils.newMusic(null);
+    @Test
+    public void validate_Deep_NullWikiCz() {
+        final Music music = getValidatingData();
         music.setWikiCz(null);
 
-        musicValidator.validateNewMusic(music);
+        final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with music with not positive count of media.
+     * Test method for {@link MusicValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
+     * count of media.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_NotPositiveMediaCount() {
-        final Music music = MusicUtils.newMusic(null);
+    @Test
+    public void validate_Deep_NotPositiveMediaCount() {
+        final Music music = getValidatingData();
         music.setMediaCount(0);
 
-        musicValidator.validateNewMusic(music);
+        final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validateNewMusic(Music)} with music with null note.
+     * Test method for {@link MusicValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewMusic_NullNote() {
-        final Music music = MusicUtils.newMusic(null);
+    @Test
+    public void validate_Deep_NullNote() {
+        final Music music = getValidatingData();
         music.setNote(null);
 
-        musicValidator.validateNewMusic(music);
+        final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_NullArgument() {
-        musicValidator.validateExistingMusic(null);
+    @Override
+    protected CatalogValidator<Music> getCatalogValidator() {
+        return new MusicValidatorImpl(getCatalogService());
     }
 
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with music with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_NullId() {
-        musicValidator.validateExistingMusic(MusicUtils.newMusic(null));
+    @Override
+    protected Music getValidatingData() {
+        return MusicUtils.newMusic(null);
     }
 
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with music with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_NullName() {
-        final Music music = MusicUtils.newMusic(1);
-        music.setName(null);
-
-        musicValidator.validateExistingMusic(music);
+    @Override
+    protected cz.vhromada.catalog.domain.Music getRepositoryData() {
+        return MusicUtils.newMusicDomain(null);
     }
 
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with music with empty string as name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_EmptyName() {
-        final Music music = MusicUtils.newMusic(1);
-        music.setName("");
-
-        musicValidator.validateExistingMusic(music);
+    @Override
+    protected cz.vhromada.catalog.domain.Music getItem1() {
+        return MusicUtils.newMusicDomain(1);
     }
 
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with music with null URL to english Wikipedia page about music is null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_NullWikiEn() {
-        final Music music = MusicUtils.newMusic(1);
-        music.setWikiEn(null);
-
-        musicValidator.validateExistingMusic(music);
+    @Override
+    protected cz.vhromada.catalog.domain.Music getItem2() {
+        return MusicUtils.newMusicDomain(2);
     }
 
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with music with null URL to czech Wikipedia page about music is null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_NullWikiCz() {
-        final Music music = MusicUtils.newMusic(1);
-        music.setWikiCz(null);
-
-        musicValidator.validateExistingMusic(music);
+    @Override
+    protected String getName() {
+        return "Music";
     }
 
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with music with not positive count of media.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_NotPositiveMediaCount() {
-        final Music music = MusicUtils.newMusic(1);
-        music.setMediaCount(0);
-
-        musicValidator.validateExistingMusic(music);
-    }
-
-    /**
-     * Test method for {@link MusicValidator#validateExistingMusic(Music)} with music with null note.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingMusic_NullNote() {
-        final Music music = MusicUtils.newMusic(1);
-        music.setNote(null);
-
-        musicValidator.validateExistingMusic(music);
-    }
-
-    /**
-     * Test method for {@link MusicValidator#validateMusicWithId(Music)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateMusicWithId_NullArgument() {
-        musicValidator.validateMusicWithId(null);
-    }
-
-    /**
-     * Test method for {@link MusicValidator#validateMusicWithId(Music)} with music with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateMusicWithId_NullId() {
-        musicValidator.validateMusicWithId(MusicUtils.newMusic(null));
+    @Override
+    protected String getPrefix() {
+        return "MUSIC";
     }
 
 }

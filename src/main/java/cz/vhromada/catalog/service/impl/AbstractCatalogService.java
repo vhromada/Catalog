@@ -28,17 +28,17 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
     /**
      * Repository for data
      */
-    private JpaRepository<T, Integer> repository;
+    private final JpaRepository<T, Integer> repository;
 
     /**
      * Cache for data
      */
-    private Cache cache;
+    private final Cache cache;
 
     /**
      * Cache key
      */
-    private String key;
+    private final String key;
 
     /**
      * Creates a new instance of AbstractCatalogService.

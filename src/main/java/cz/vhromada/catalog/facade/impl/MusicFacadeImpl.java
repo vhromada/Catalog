@@ -8,7 +8,8 @@ import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.MusicValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class MusicFacadeImpl implements MusicFacade {
     /**
      * Validator for music
      */
-    private MusicValidator musicValidator;
+    private CatalogValidator<Music> musicValidator;
 
     /**
      * Creates a new instance of MusicFacadeImpl.
@@ -61,7 +62,7 @@ public class MusicFacadeImpl implements MusicFacade {
     @Autowired
     public MusicFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
             final Converter converter,
-            final MusicValidator musicValidator) {
+            final CatalogValidator<Music> musicValidator) {
         Assert.notNull(musicService, "Service for music mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(musicValidator, "Validator for music mustn't be null.");
@@ -96,7 +97,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void add(final Music music) {
-        musicValidator.validateNewMusic(music);
+        musicValidator.validate(music, ValidationType.NEW, ValidationType.DEEP);
 
         final cz.vhromada.catalog.domain.Music musicDomain = converter.convert(music, cz.vhromada.catalog.domain.Music.class);
         musicDomain.setSongs(new ArrayList<>());
@@ -109,7 +110,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void update(final Music music) {
-        musicValidator.validateExistingMusic(music);
+        musicValidator.validate(music, ValidationType.EXISTS, ValidationType.DEEP);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
@@ -130,7 +131,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void remove(final Music music) {
-        musicValidator.validateMusicWithId(music);
+        musicValidator.validate(music, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
@@ -144,7 +145,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void duplicate(final Music music) {
-        musicValidator.validateMusicWithId(music);
+        musicValidator.validate(music, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
@@ -158,7 +159,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void moveUp(final Music music) {
-        musicValidator.validateMusicWithId(music);
+        musicValidator.validate(music, ValidationType.EXISTS, ValidationType.UP);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
@@ -176,7 +177,7 @@ public class MusicFacadeImpl implements MusicFacade {
      */
     @Override
     public void moveDown(final Music music) {
-        musicValidator.validateMusicWithId(music);
+        musicValidator.validate(music, ValidationType.EXISTS, ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);

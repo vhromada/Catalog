@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.validator.impl;
 
-import java.util.List;
-
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.result.Event;
@@ -10,7 +8,6 @@ import cz.vhromada.result.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -22,11 +19,6 @@ import org.springframework.util.StringUtils;
 public class ProgramValidatorImpl extends AbstractCatalogValidator<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
-     * Service for programs
-     */
-    private CatalogService<cz.vhromada.catalog.domain.Program> programService;
-
-    /**
      * Creates a new instance of ProgramValidatorImpl.
      *
      * @param programService service for programs
@@ -34,21 +26,7 @@ public class ProgramValidatorImpl extends AbstractCatalogValidator<Program, cz.v
      */
     @Autowired
     public ProgramValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Program> programService) {
-        super("Program");
-
-        Assert.notNull(programService, "Service for programs mustn't be null.");
-
-        this.programService = programService;
-    }
-
-    @Override
-    protected cz.vhromada.catalog.domain.Program getData(final Program data) {
-        return programService.get(data.getId());
-    }
-
-    @Override
-    protected List<cz.vhromada.catalog.domain.Program> getList(final Program data) {
-        return programService.getAll();
+        super("Program", programService);
     }
 
     /**

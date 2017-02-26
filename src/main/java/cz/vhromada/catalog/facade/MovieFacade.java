@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Movie;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for movies.
@@ -14,149 +15,183 @@ public interface MovieFacade {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
-    void newData();
+    Result<Void> newData();
 
     /**
      * Returns movies.
      *
-     * @return movies
+     * @return result with list of movies
      */
-    List<Movie> getMovies();
+    Result<List<Movie>> getAll();
 
     /**
      * Returns movie with ID or null if there isn't such movie.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return movie with ID or null if there isn't such movie
-     * @throws IllegalArgumentException if ID is null
+     * @return result with movie or validation errors
      */
-    Movie getMovie(Integer id);
+    Result<Movie> get(Integer id);
 
     /**
      * Adds movie. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Movie is null</li>
+     * <li>ID isn't null</li>
+     * <li>Czech name is null</li>
+     * <li>Czech name is empty string</li>
+     * <li>Original name is null</li>
+     * <li>Original name is empty string</li>
+     * <li>Year isn't between 1940 and current year</li>
+     * <li>Language is null</li>
+     * <li>Subtitles are null</li>
+     * <li>Subtitles contain null value</li>
+     * <li>Media are null</li>
+     * <li>Media contain null value</li>
+     * <li>Length of medium is negative value</li>
+     * <li>URL to ČSFD page about movie is null</li>
+     * <li>IMDB code isn't -1 or between 1 and 9999999</li>
+     * <li>URL to english Wikipedia page about movie is null</li>
+     * <li>URL to czech Wikipedia page about movie is null</li>
+     * <li>Path to file with movie's picture is null</li>
+     * <li>Note is null</li>
+     * <li>Genres are null</li>
+     * <li>Genres contain null value</li>
+     * <li>Genre ID is null</li>
+     * <li>Genre name is null</li>
+     * <li>Genre name is empty string</li>
+     * <li>Genre doesn't exist</li>
+     * </ul>
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     *                                  or ID isn't null
-     *                                  or czech name is null
-     *                                  or czech name is empty string
-     *                                  or original name is null
-     *                                  or original name is empty string
-     *                                  or year isn't between 1940 and current year
-     *                                  or language is null
-     *                                  or subtitles are null
-     *                                  or subtitles contain null value
-     *                                  or media are null
-     *                                  or media contain null value
-     *                                  or length of medium is negative value
-     *                                  or URL to ČSFD page about movie is null
-     *                                  or IMDB code isn't -1 or between 1 and 9999999
-     *                                  or URL to english Wikipedia page about movie is null
-     *                                  or URL to czech Wikipedia page about movie is null
-     *                                  or path to file with movie's picture is null
-     *                                  or note is null
-     *                                  or genres are null
-     *                                  or genres contain null value
-     *                                  or genre ID is null
-     *                                  or genre name is null
-     *                                  or genre name is empty string
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void add(Movie movie);
+    Result<Void> add(Movie movie);
 
     /**
      * Updates movie.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Movie is null</li>
+     * <li>ID is null</li>
+     * <li>Czech name is null</li>
+     * <li>Czech name is empty string</li>
+     * <li>Original name is null</li>
+     * <li>Original name is empty string</li>
+     * <li>Year isn't between 1940 and current year</li>
+     * <li>Language is null</li>
+     * <li>Subtitles are null</li>
+     * <li>Subtitles contain null value</li>
+     * <li>Media are null</li>
+     * <li>Media contain null value</li>
+     * <li>Length of medium is negative value</li>
+     * <li>URL to ČSFD page about movie is null</li>
+     * <li>IMDB code isn't -1 or between 1 and 9999999</li>
+     * <li>URL to english Wikipedia page about movie is null</li>
+     * <li>URL to czech Wikipedia page about movie is null</li>
+     * <li>Path to file with movie's picture is null</li>
+     * <li>Note is null</li>
+     * <li>Genres are null</li>
+     * <li>Genres contain null value</li>
+     * <li>Genre ID is null</li>
+     * <li>Genre name is null</li>
+     * <li>Genre name is empty string</li>
+     * <li>Genre doesn't exist</li>
+     * <li>Movie doesn't exist in data storage</li>
+     * </ul>
      *
      * @param movie new value of movie
-     * @throws IllegalArgumentException if movie is null
-     *                                  or ID is null
-     *                                  or czech name is null
-     *                                  or czech name is empty string
-     *                                  or original name is null
-     *                                  or original name is empty string
-     *                                  or year isn't between 1940 and current year
-     *                                  or language is null
-     *                                  or subtitles are null
-     *                                  or subtitles contain null value
-     *                                  or media are null
-     *                                  or media contain null value
-     *                                  or length of medium is negative value
-     *                                  or URL to ČSFD page about movie is null
-     *                                  or IMDB code isn't -1 or between 1 and 9999999
-     *                                  or URL to english Wikipedia page about movie is null
-     *                                  or URL to czech Wikipedia page about movie is null
-     *                                  or path to file with movie's picture is null
-     *                                  or note is null
-     *                                  or genres are null
-     *                                  or genres contain null value
-     *                                  or genre ID is null
-     *                                  or genre name is null
-     *                                  or genre name is empty string
-     *                                  or movie doesn't exist in data storage
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void update(Movie movie);
+    Result<Void> update(Movie movie);
 
     /**
      * Removes movie.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Movie is null</li>
+     * <li>ID is null</li>
+     * <li>Movie doesn't exist in data storage</li>
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     *                                  or ID is null
-     *                                  or movie doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Movie movie);
+    Result<Void> remove(Movie movie);
 
     /**
      * Duplicates movie.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Movie is null</li>
+     * <li>ID is null</li>
+     * <li>Movie doesn't exist in data storage</li>
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     *                                  or ID is null
-     *                                  or movie doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Movie movie);
+    Result<Void> duplicate(Movie movie);
 
     /**
      * Moves movie in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Movie is null</li>
+     * <li>ID is null</li>
+     * <li>Movie can't be moved up</li>
+     * <li>Movie doesn't exist in data storage</li>
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     *                                  or ID is null
-     *                                  or movie can't be moved up
-     *                                  or movie doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Movie movie);
+    Result<Void> moveUp(Movie movie);
 
     /**
      * Moves movie in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Movie is null</li>
+     * <li>ID is null</li>
+     * <li>Movie can't be moved down</li>
+     * <li>Movie doesn't exist in data storage</li>
      *
      * @param movie movie
-     * @throws IllegalArgumentException if movie is null
-     *                                  or ID is null
-     *                                  or movie can't be moved down
-     *                                  or movie doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Movie movie);
+    Result<Void> moveDown(Movie movie);
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
-    void updatePositions();
+    Result<Void> updatePositions();
 
     /**
      * Returns total count of media.
      *
-     * @return total count of media
+     * @return result with total count of media
      */
-    int getTotalMediaCount();
+    Result<Integer> getTotalMediaCount();
 
     /**
      * Returns total length of all movies.
      *
-     * @return total length of all movies
+     * @return result with total length of all movies
      */
-    Time getTotalLength();
+    Result<Time> getTotalLength();
 
 }

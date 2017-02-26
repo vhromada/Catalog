@@ -234,8 +234,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         final T entity = newEntity(1);
         final U domain = newDomain(1);
 
-        when(converter.convert(any(getEntityClass()), eq(getDomainClass()))).thenReturn(domain);
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+        initUpdateMock(domain);
 
         final Result<Void> result = parentCatalogFacade.update(entity);
 
@@ -244,9 +243,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         assertThat(result.getStatus(), is(Status.OK));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        verify(catalogService).update(domain);
-        verify(converter).convert(entity, getDomainClass());
-        verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.DEEP);
+        verifyUpdateMock(entity, domain);
         verifyNoMoreInteractions(catalogService, converter, catalogValidator);
     }
 
@@ -467,7 +464,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      *
      * @return service for catalog
      */
-    public CatalogService<U> getCatalogService() {
+    protected CatalogService<U> getCatalogService() {
         return catalogService;
     }
 
@@ -476,7 +473,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      *
      * @return converter
      */
-    public Converter getConverter() {
+    protected Converter getConverter() {
         return converter;
     }
 
@@ -485,8 +482,30 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      *
      * @return validator for catalog
      */
-    public CatalogValidator<T> getCatalogValidator() {
+    protected CatalogValidator<T> getCatalogValidator() {
         return catalogValidator;
+    }
+
+    /**
+     * Initializes mock for update.
+     *
+     * @param domain domain
+     */
+    protected void initUpdateMock(final U domain) {
+        when(converter.convert(any(getEntityClass()), eq(getDomainClass()))).thenReturn(domain);
+        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+    }
+
+    /**
+     * Verifies mock for update.
+     *
+     * @param entity entity
+     * @param domain domain
+     */
+    protected void verifyUpdateMock(final T entity, final U domain) {
+        verify(catalogService).update(domain);
+        verify(converter).convert(entity, getDomainClass());
+        verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.DEEP);
     }
 
     /**

@@ -467,8 +467,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         assertThat(result.getEvents(), is(notNullValue()));
         assertThat(result.getStatus(), is(Status.ERROR));
         assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0),
-                is(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL", "URL to english Wikipedia page about movie mustn't be null.")));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+                "URL to english Wikipedia page about movie mustn't be null.")));
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);

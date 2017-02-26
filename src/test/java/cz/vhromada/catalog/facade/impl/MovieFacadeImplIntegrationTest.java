@@ -1,7 +1,11 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -13,12 +17,16 @@ import cz.vhromada.catalog.entity.Medium;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.MediumUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
 import cz.vhromada.catalog.utils.TestConstants;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +42,40 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@Ignore
+@DirtiesContext
 public class MovieFacadeImplIntegrationTest {
+
+    /**
+     * Event for null movie
+     */
+    private static final Event NULL_MOVIE_EVENT = new Event(Severity.ERROR, "MOVIE_NULL", "Movie mustn't be null.");
+
+    /**
+     * Event for movie with null ID
+     */
+    private static final Event NULL_MOVIE_ID_EVENT = new Event(Severity.ERROR, "MOVIE_ID_NULL", "ID mustn't be null.");
+
+    /**
+     * Event for not existing movie
+     */
+    private static final Event NOT_EXIST_MOVIE_EVENT = new Event(Severity.ERROR, "MOVIE_NOT_EXIST", "Movie doesn't exist.");
+
+    /**
+     * Event for invalid year
+     */
+    private static final Event INVALID_YEAR_EVENT = new Event(Severity.ERROR, "MOVIE_YEAR_NOT_VALID", "Year must be between " + Constants.MIN_YEAR + " and "
+            + Constants.CURRENT_YEAR + '.');
+
+    /**
+     * Event for invalid IMDB code
+     */
+    private static final Event INVALID_IMDB_CODE_EVENT = new Event(Severity.ERROR, "MOVIE_IMDB_CODE_NOT_VALID",
+            "IMDB code must be between 1 and 9999999 or -1.");
+
+    /**
+     * Event for genre with null ID
+     */
+    private static final Event NULL_GENRE_ID_EVENT = new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.");
 
     /**
      * Instance of {@link EntityManager}
@@ -56,42 +95,74 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testNewData() {
-        movieFacade.newData();
+    public void newData() {
+        final Result<Void> result = movieFacade.newData();
 
-        assertEquals(0, MovieUtils.getMoviesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(0));
     }
 
     /**
-     * Test method for {@link MovieFacade#getMovies()}.
+     * Test method for {@link MovieFacade#getAll()}.
      */
     @Test
-    public void testGetMovies() {
-        MovieUtils.assertMovieListDeepEquals(movieFacade.getMovies(), MovieUtils.getMovies());
+    public void getAll() {
+        final Result<List<Movie>> result = movieFacade.getAll();
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+        MovieUtils.assertMovieListDeepEquals(result.getData(), MovieUtils.getMovies());
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#getMovie(Integer)}.
+     * Test method for {@link MovieFacade#get(Integer)}.
      */
     @Test
-    public void testGetMovie() {
+    public void get() {
         for (int i = 1; i <= MovieUtils.MOVIES_COUNT; i++) {
-            MovieUtils.assertMovieDeepEquals(movieFacade.getMovie(i), MovieUtils.getMovie(i));
+            final Result<Movie> result = movieFacade.get(i);
+
+            assertThat(result, is(notNullValue()));
+            assertThat(result.getEvents(), is(notNullValue()));
+            assertThat(result.getStatus(), is(Status.OK));
+            assertThat(result.getEvents().isEmpty(), is(true));
+            MovieUtils.assertMovieDeepEquals(result.getData(), MovieUtils.getMovie(i));
         }
 
-        assertNull(movieFacade.getMovie(Integer.MAX_VALUE));
+        final Result<Movie> result = movieFacade.get(Integer.MAX_VALUE);
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#getMovie(Integer)} with null argument.
+     * Test method for {@link MovieFacade#get(Integer)} with null movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetMovie_NullArgument() {
-        movieFacade.getMovie(null);
+    @Test
+    public void get_NullMovie() {
+        final Result<Movie> result = movieFacade.get(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -99,305 +170,560 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testAdd() {
+    public void add() {
         final Movie movie = MovieUtils.newMovie(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         final cz.vhromada.catalog.domain.Movie expectedMovie = MovieUtils.newMovieDomain(MovieUtils.MOVIES_COUNT + 1);
         expectedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
         expectedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
         MovieUtils.assertMovieDeepEquals(expectedMovie, addedMovie);
-
-        assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT + 1));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT + 1));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#add(Movie)} with null argument.
+     * Test method for {@link MovieFacade#add(Movie)} with null movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullArgument() {
-        movieFacade.add(null);
+    @Test
+    public void add_NullMovie() {
+        final Result<Void> result = movieFacade.add(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with not null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NotNullId() {
-        movieFacade.add(MovieUtils.newMovie(Integer.MAX_VALUE));
+    @Test
+    public void add_NotNullId() {
+        final Result<Void> result = movieFacade.add(MovieUtils.newMovie(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ID_NOT_NULL", "ID must be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullCzechName() {
+    @Test
+    public void add_NullCzechName() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setCzechName(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with empty string as czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_EmptyCzechName() {
+    @Test
+    public void add_EmptyCzechName() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setCzechName("");
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullOriginalName() {
+    @Test
+    public void add_NullOriginalName() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setOriginalName(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with empty string as original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_EmptyOriginalName() {
+    @Test
+    public void add_EmptyOriginalName() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setOriginalName("");
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with bad minimum year.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMinimumYear() {
+    @Test
+    public void add_BadMinimumYear() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setYear(TestConstants.BAD_MIN_YEAR);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with bad maximum year.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMaximumYear() {
+    @Test
+    public void add_BadMaximumYear() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setYear(TestConstants.BAD_MAX_YEAR);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null language.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullLanguage() {
+    @Test
+    public void add_NullLanguage() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setLanguage(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null subtitles.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullSubtitles() {
+    @Test
+    public void add_NullSubtitles() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setSubtitles(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with subtitles with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadSubtitles() {
+    @Test
+    public void add_BadSubtitles() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null media.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullMedia() {
+    @Test
+    public void add_NullMedia() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setMedia(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with media with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMedia() {
+    @Test
+    public void add_BadMedia() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), null));
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with media with negative value as medium.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMedium() {
+    @Test
+    public void add_BadMedium() {
         final Medium badMedium = MediumUtils.newMedium(Integer.MAX_VALUE);
         badMedium.setLength(-1);
         final Movie movie = MovieUtils.newMovie(null);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), badMedium));
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null URL to ČSFD page about movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullCsfd() {
+    @Test
+    public void add_NullCsfd() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setCsfd(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with bad minimal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMinimalImdb() {
+    @Test
+    public void add_BadMinimalImdb() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with bad divider IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadDividerImdb() {
+    @Test
+    public void add_BadDividerImdb() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setImdbCode(0);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with bad maximal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMaximalImdb() {
+    @Test
+    public void add_BadMaximalImdb() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null URL to english Wikipedia page about movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullWikiEn() {
+    @Test
+    public void add_NullWikiEn() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setWikiEn(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+                "URL to english Wikipedia page about movie mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null URL to czech Wikipedia page about movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullWikiCz() {
+    @Test
+    public void add_NullWikiCz() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setWikiCz(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL", "URL to czech Wikipedia page about movie mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null path to file with movie's picture.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullPicture() {
+    @Test
+    public void add_NullPicture() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setPicture(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullNote() {
+    @Test
+    public void add_NullNote() {
         final Movie movie = MovieUtils.newMovie(null);
+        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         movie.setNote(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null genres.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullGenres() {
+    @Test
+    public void add_NullGenres() {
         final Movie movie = MovieUtils.newMovie(null);
         movie.setGenres(null);
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with genres with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadGenres() {
+    @Test
+    public void add_BadGenres() {
         final Movie movie = MovieUtils.newMovie(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with genres with genre with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullGenreId() {
+    @Test
+    public void add_NullGenreId() {
         final Movie movie = MovieUtils.newMovie(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with genres with genre with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullGenreName() {
+    @Test
+    public void add_NullGenreName() {
         final Movie movie = MovieUtils.newMovie(null);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
 
-        movieFacade.add(movie);
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#add(Movie)} with movie with genres with genre with empty string as name.
+     */
+    @Test
+    public void add_EmptyGenreName() {
+        final Movie movie = MovieUtils.newMovie(null);
+        final Genre badGenre = GenreUtils.newGenre(1);
+        badGenre.setName("");
+        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -405,310 +731,559 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testUpdate() {
+    public void update() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         MovieUtils.assertMovieDeepEquals(movie, updatedMovie);
-
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#update(Movie)} with null argument.
+     * Test method for {@link MovieFacade#update(Movie)} with null movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullArgument() {
-        movieFacade.update(null);
+    @Test
+    public void update_NullMovie() {
+        final Result<Void> result = movieFacade.update(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullId() {
-        movieFacade.update(MovieUtils.newMovie(null));
+    @Test
+    public void update_NullId() {
+        final Movie movie = MovieUtils.newMovie(1);
+        movie.setId(null);
+
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullCzechName() {
+    @Test
+    public void update_NullCzechName() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setCzechName(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with empty string as czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_EmptyCzechName() {
+    @Test
+    public void update_EmptyCzechName() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setCzechName("");
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullOriginalName() {
+    @Test
+    public void update_NullOriginalName() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setOriginalName(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with empty string as original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_EmptyOriginalName() {
+    @Test
+    public void update_EmptyOriginalName() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setOriginalName("");
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with bad minimum year.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMinimumYear() {
+    @Test
+    public void update_BadMinimumYear() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setYear(TestConstants.BAD_MIN_YEAR);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with bad maximum year.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMaximumYear() {
+    @Test
+    public void update_BadMaximumYear() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setYear(TestConstants.BAD_MAX_YEAR);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null language.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullLanguage() {
+    @Test
+    public void update_NullLanguage() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setLanguage(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null subtitles.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullSubtitles() {
+    @Test
+    public void update_NullSubtitles() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setSubtitles(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with subtitles with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadSubtitles() {
+    @Test
+    public void update_BadSubtitles() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null media.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullMedia() {
+    @Test
+    public void update_NullMedia() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setMedia(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with media with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMedia() {
+    @Test
+    public void update_BadMedia() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), null));
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with media with negative value as medium.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMedium() {
+    @Test
+    public void update_BadMedium() {
         final Medium badMedium = MediumUtils.newMedium(Integer.MAX_VALUE);
         badMedium.setLength(-1);
         final Movie movie = MovieUtils.newMovie(1);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), badMedium));
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null URL to ČSFD page about movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullCsfd() {
+    @Test
+    public void update_NullCsfd() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setCsfd(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with bad minimal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMinimalImdb() {
+    @Test
+    public void update_BadMinimalImdb() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with bad divider IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadDividerImdb() {
+    @Test
+    public void update_BadDividerImdb() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setImdbCode(0);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with bad maximal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMaximalImdb() {
+    @Test
+    public void update_BadMaximalImdb() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null URL to english Wikipedia page about movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullWikiEn() {
+    @Test
+    public void update_NullWikiEn() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setWikiEn(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+                "URL to english Wikipedia page about movie mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null URL to czech Wikipedia page about movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullWikiCz() {
+    @Test
+    public void update_NullWikiCz() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setWikiCz(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL", "URL to czech Wikipedia page about movie mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null path to file with movie's picture.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullPicture() {
+    @Test
+    public void update_NullPicture() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setPicture(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullNote() {
+    @Test
+    public void update_NullNote() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setNote(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null genres.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullGenres() {
+    @Test
+    public void update_NullGenres() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setGenres(null);
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with genres with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadGenres() {
+    @Test
+    public void update_BadGenres() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with genres with genre with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullGenreId() {
+    @Test
+    public void update_NullGenreId() {
         final Movie movie = MovieUtils.newMovie(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with genres with genre with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullGenreName() {
+    @Test
+    public void update_NullGenreName() {
         final Movie movie = MovieUtils.newMovie(1);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
 
-        movieFacade.update(movie);
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+    }
+
+    /**
+     * Test method for {@link MovieFacade#update(Movie)} with movie with genres with genre with empty string as name.
+     */
+    @Test
+    public void update_EmptyGenreName() {
+        final Movie movie = MovieUtils.newMovie(1);
+        final Genre badGenre = GenreUtils.newGenre(1);
+        badGenre.setName("");
+        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadId() {
-        movieFacade.update(MovieUtils.newMovie(Integer.MAX_VALUE));
+    @Test
+    public void update_BadId() {
+        final Movie movie = MovieUtils.newMovie(1);
+        movie.setId(Integer.MAX_VALUE);
+
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -716,36 +1291,64 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testRemove() {
-        movieFacade.remove(MovieUtils.newMovie(1));
+    public void remove() {
+        final Result<Void> result = movieFacade.remove(MovieUtils.newMovie(1));
 
-        assertNull(MovieUtils.getMovie(entityManager, 1));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertEquals(MovieUtils.MOVIES_COUNT - 1, MovieUtils.getMoviesCount(entityManager));
+        assertThat(MovieUtils.getMovie(entityManager, 1), is(nullValue()));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT - 1));
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(Movie)} with null argument.
+     * Test method for {@link MovieFacade#remove(Movie)} with null movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullArgument() {
-        movieFacade.remove(null);
+    @Test
+    public void remove_NullMovie() {
+        final Result<Void> result = movieFacade.remove(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#remove(Movie)} with movie with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullId() {
-        movieFacade.remove(MovieUtils.newMovie(null));
+    @Test
+    public void remove_NullId() {
+        final Result<Void> result = movieFacade.remove(MovieUtils.newMovie(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#remove(Movie)} with movie with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_BadId() {
-        movieFacade.remove(MovieUtils.newMovie(Integer.MAX_VALUE));
+    @Test
+    public void remove_BadId() {
+        final Result<Void> result = movieFacade.remove(MovieUtils.newMovie(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -753,7 +1356,7 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testDuplicate() {
+    public void duplicate() {
         final cz.vhromada.catalog.domain.Medium medium1 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT - 1);
         medium1.setId(MediumUtils.MEDIA_COUNT + 1);
         final cz.vhromada.catalog.domain.Medium medium2 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT);
@@ -763,38 +1366,66 @@ public class MovieFacadeImplIntegrationTest {
         movie.setMedia(CollectionUtils.newList(medium1, medium2));
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT - 1), GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT)));
 
-        movieFacade.duplicate(MovieUtils.newMovie(MovieUtils.MOVIES_COUNT));
+        final Result<Void> result = movieFacade.duplicate(MovieUtils.newMovie(MovieUtils.MOVIES_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Movie duplicatedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
         MovieUtils.assertMovieDeepEquals(movie, duplicatedMovie);
-
-        assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT + 2, MediumUtils.getMediaCount(entityManager));
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT + 1));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT + 2));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(Movie)} with null argument.
+     * Test method for {@link MovieFacade#duplicate(Movie)} with null movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullArgument() {
-        movieFacade.duplicate(null);
+    @Test
+    public void duplicate_NullMovie() {
+        final Result<Void> result = movieFacade.duplicate(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#duplicate(Movie)} with movie with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullId() {
-        movieFacade.duplicate(MovieUtils.newMovie(null));
+    @Test
+    public void duplicate_NullId() {
+        final Result<Void> result = movieFacade.duplicate(MovieUtils.newMovie(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#duplicate(Movie)} with movie with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_BadId() {
-        movieFacade.duplicate(MovieUtils.newMovie(Integer.MAX_VALUE));
+    @Test
+    public void duplicate_BadId() {
+        final Result<Void> result = movieFacade.duplicate(MovieUtils.newMovie(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -802,52 +1433,89 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testMoveUp() {
+    public void moveUp() {
         final cz.vhromada.catalog.domain.Movie movie1 = MovieUtils.getMovie(1);
         movie1.setPosition(1);
         final cz.vhromada.catalog.domain.Movie movie2 = MovieUtils.getMovie(2);
         movie2.setPosition(0);
 
-        movieFacade.moveUp(MovieUtils.newMovie(2));
+        final Result<Void> result = movieFacade.moveUp(MovieUtils.newMovie(2));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
         MovieUtils.assertMovieDeepEquals(movie1, MovieUtils.getMovie(entityManager, 1));
         MovieUtils.assertMovieDeepEquals(movie2, MovieUtils.getMovie(entityManager, 2));
         for (int i = 3; i <= MovieUtils.MOVIES_COUNT; i++) {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), MovieUtils.getMovie(entityManager, i));
         }
-
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)} with null argument.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with null movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullArgument() {
-        movieFacade.moveUp(null);
+    @Test
+    public void moveUp_NullMovie() {
+        final Result<Void> result = movieFacade.moveUp(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#moveUp(Movie)} with movie with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullId() {
-        movieFacade.moveUp(MovieUtils.newMovie(null));
+    @Test
+    public void moveUp_NullId() {
+        final Result<Void> result = movieFacade.moveUp(MovieUtils.newMovie(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)} with not movable argument.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with not movable movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NotMovableArgument() {
-        movieFacade.moveUp(MovieUtils.newMovie(1));
+    @Test
+    public void moveUp_NotMovableMovie() {
+        final Result<Void> result = movieFacade.moveUp(MovieUtils.newMovie(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOT_MOVABLE", "Movie can't be moved up.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)} with bad ID.
+     * Test method for {@link MovieFacade#moveUp(Movie)} with movie with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_BadId() {
-        movieFacade.moveUp(MovieUtils.newMovie(Integer.MAX_VALUE));
+    @Test
+    public void moveUp_BadId() {
+        final Result<Void> result = movieFacade.moveUp(MovieUtils.newMovie(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -855,52 +1523,89 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testMoveDown() {
+    public void moveDown() {
         final cz.vhromada.catalog.domain.Movie movie1 = MovieUtils.getMovie(1);
         movie1.setPosition(1);
         final cz.vhromada.catalog.domain.Movie movie2 = MovieUtils.getMovie(2);
         movie2.setPosition(0);
 
-        movieFacade.moveDown(MovieUtils.newMovie(1));
+        final Result<Void> result = movieFacade.moveDown(MovieUtils.newMovie(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
         MovieUtils.assertMovieDeepEquals(movie1, MovieUtils.getMovie(entityManager, 1));
         MovieUtils.assertMovieDeepEquals(movie2, MovieUtils.getMovie(entityManager, 2));
         for (int i = 3; i <= MovieUtils.MOVIES_COUNT; i++) {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), MovieUtils.getMovie(entityManager, i));
         }
-
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)} with null argument.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with null movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullArgument() {
-        movieFacade.moveDown(null);
+    @Test
+    public void moveDown_NullMovie() {
+        final Result<Void> result = movieFacade.moveDown(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
      * Test method for {@link MovieFacade#moveDown(Movie)} with movie with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullId() {
-        movieFacade.moveDown(MovieUtils.newMovie(null));
+    @Test
+    public void moveDown_NullId() {
+        final Result<Void> result = movieFacade.moveDown(MovieUtils.newMovie(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)} with not movable argument.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with not movable movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NotMovableArgument() {
-        movieFacade.moveDown(MovieUtils.newMovie(MovieUtils.MOVIES_COUNT));
+    @Test
+    public void moveDown_NotMovableMovie() {
+        final Result<Void> result = movieFacade.moveDown(MovieUtils.newMovie(MovieUtils.MOVIES_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOT_MOVABLE", "Movie can't be moved down.")));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)} with bad ID.
+     * Test method for {@link MovieFacade#moveDown(Movie)} with movie with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_BadId() {
-        movieFacade.moveDown(MovieUtils.newMovie(Integer.MAX_VALUE));
+    @Test
+    public void moveDown_BadId() {
+        final Result<Void> result = movieFacade.moveDown(MovieUtils.newMovie(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -908,14 +1613,18 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testUpdatePositions() {
-        movieFacade.updatePositions();
+    public void updatePositions() {
+        final Result<Void> result = movieFacade.updatePositions();
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         for (int i = 1; i <= MovieUtils.MOVIES_COUNT; i++) {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), MovieUtils.getMovie(entityManager, i));
         }
-
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -923,9 +1632,15 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     public void testGetTotalMediaCount() {
-        assertEquals(MediumUtils.MEDIA_COUNT, movieFacade.getTotalMediaCount());
+        final Result<Integer> result = movieFacade.getTotalMediaCount();
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(MediumUtils.MEDIA_COUNT));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
     /**
@@ -933,9 +1648,15 @@ public class MovieFacadeImplIntegrationTest {
      */
     @Test
     public void testGetTotalLength() {
-        assertEquals(new Time(1000), movieFacade.getTotalLength());
+        final Result<Time> result = movieFacade.getTotalLength();
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(new Time(1000)));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
     }
 
 }

@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -117,6 +118,7 @@ public class GenreRepositoryIntegrationTest {
      * Test method for remove genre.
      */
     @Test
+    @DirtiesContext
     public void remove() {
         final Genre genre = GenreUtils.newGenreDomain(null);
         entityManager.persist(genre);

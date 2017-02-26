@@ -10,22 +10,46 @@ import static org.mockito.Mockito.when;
 
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.GameUtils;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.converters.Converter;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * A class represents test for class {@link GameFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-@RunWith(MockitoJUnitRunner.class)
 public class GameFacadeImplTest extends AbstractParentFacadeTest<Game, cz.vhromada.catalog.domain.Game> {
+
+    /**
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for games.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullGameService() {
+        new GameFacadeImpl(null, getConverter(), getCatalogValidator());
+    }
+
+    /**
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullConverter() {
+        new GameFacadeImpl(getCatalogService(), null, getCatalogValidator());
+    }
+
+    /**
+     * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for game.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullGameValidator() {
+        new GameFacadeImpl(getCatalogService(), getConverter(), null);
+    }
 
     /**
      * Test method for {@link GameFacade#getTotalMediaCount()}.

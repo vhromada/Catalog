@@ -59,22 +59,22 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
 
     @Override
     protected Movable getValidatingData(final Integer id) {
-        return new MovableStub();
+        return new MovableStub(id);
     }
 
     @Override
-    protected Movable getRepositoryData() {
-        return new MovableStub();
+    protected Movable getRepositoryData(final Movable validatingData) {
+        return new MovableStub(validatingData.getId());
     }
 
     @Override
     protected Movable getItem1() {
-        return new MovableStub();
+        return new MovableStub(1);
     }
 
     @Override
     protected Movable getItem2() {
-        return new MovableStub();
+        return new MovableStub(2);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
     /**
      * A class represents abstract catalog validator stub.
      */
-    private final class AbstractCatalogValidatorStub extends AbstractCatalogValidator<Movable, Movable> {
+    private static final class AbstractCatalogValidatorStub extends AbstractCatalogValidator<Movable, Movable> {
 
         /**
          * Creates a new instance of AbstractCatalogValidatorStub.
@@ -138,6 +138,15 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
          * Position
          */
         private int position;
+
+        /**
+         * Creates a new instance of MovableStub.
+         *
+         * @param id ID
+         */
+        MovableStub(final Integer id) {
+            this.id = id;
+        }
 
         @Override
         public Integer getId() {

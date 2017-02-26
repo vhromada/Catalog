@@ -36,6 +36,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 public abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
     /**
+     * ID
+     */
+    private static final Integer ID = 5;
+
+    /**
      * Instance of {@link CatalogService}
      */
     @Mock
@@ -47,29 +52,11 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     private CatalogValidator<T> catalogValidator;
 
     /**
-     * Instance of {@link T}
-     */
-    private T validatingData;
-
-    /**
-     * Instance of {@link U}
-     */
-    private U repositoryData;
-
-    /**
-     * Data list
-     */
-    private List<U> dataList;
-
-    /**
-     * Initializes validatingData.
+     * Initializes validator.
      */
     @Before
     public void setUp() {
         catalogValidator = getCatalogValidator();
-        validatingData = getValidatingData(null);
-        repositoryData = getRepositoryData();
-        dataList = CollectionUtils.newList(getItem1(), getItem2());
     }
 
     /**
@@ -77,7 +64,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_New() {
-        final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.NEW);
+        final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.NEW);
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -92,9 +79,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_New_NotNullId() {
-        validatingData.setId(Integer.MAX_VALUE);
-
-        final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.NEW);
+        final Result<Void> result = catalogValidator.validate(getValidatingData(Integer.MAX_VALUE), ValidationType.NEW);
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -110,9 +95,9 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Exists() {
-        validatingData.setId(Integer.MAX_VALUE);
+        final T validatingData = getValidatingData(ID);
 
-        when(catalogService.get(any(Integer.class))).thenReturn(repositoryData);
+        initExistsMock(validatingData, true);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
@@ -121,8 +106,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
         assertThat(result.getStatus(), is(Status.OK));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        verify(catalogService).get(validatingData.getId());
-        verifyNoMoreInteractions(catalogService);
+        verifyExistsMock(validatingData);
     }
 
     /**
@@ -130,7 +114,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Exists_NullId() {
-        final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
+        final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.EXISTS);
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -146,9 +130,9 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Exists_NotExistingData() {
-        validatingData.setId(Integer.MAX_VALUE);
+        final T validatingData = getValidatingData(ID);
 
-        when(catalogService.get(any(Integer.class))).thenReturn(null);
+        initExistsMock(validatingData, false);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
@@ -158,8 +142,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_EXIST", getName() + " doesn't exist.")));
 
-        verify(catalogService).get(validatingData.getId());
-        verifyNoMoreInteractions(catalogService);
+        verifyExistsMock(validatingData);
     }
 
     /**
@@ -167,10 +150,9 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Up() {
-        dataList.add(repositoryData);
+        final T validatingData = getValidatingData(ID);
 
-        when(catalogService.getAll()).thenReturn(dataList);
-        when(catalogService.get(any(Integer.class))).thenReturn(repositoryData);
+        initMovingMock(validatingData, true, true);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
@@ -179,9 +161,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
         assertThat(result.getStatus(), is(Status.OK));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        verify(catalogService).getAll();
-        verify(catalogService).get(validatingData.getId());
-        verifyNoMoreInteractions(catalogService);
+        verifyMovingMock(validatingData);
     }
 
     /**
@@ -189,10 +169,9 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Up_Invalid() {
-        dataList.add(0, repositoryData);
+        final T validatingData = getValidatingData(Integer.MAX_VALUE);
 
-        when(catalogService.getAll()).thenReturn(dataList);
-        when(catalogService.get(any(Integer.class))).thenReturn(repositoryData);
+        initMovingMock(validatingData, true, false);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
@@ -202,9 +181,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")));
 
-        verify(catalogService).getAll();
-        verify(catalogService).get(validatingData.getId());
-        verifyNoMoreInteractions(catalogService);
+        verifyMovingMock(validatingData);
     }
 
     /**
@@ -212,10 +189,9 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Down() {
-        dataList.add(0, repositoryData);
+        final T validatingData = getValidatingData(ID);
 
-        when(catalogService.getAll()).thenReturn(dataList);
-        when(catalogService.get(any(Integer.class))).thenReturn(repositoryData);
+        initMovingMock(validatingData, false, true);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
@@ -224,9 +200,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
         assertThat(result.getStatus(), is(Status.OK));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        verify(catalogService).getAll();
-        verify(catalogService).get(validatingData.getId());
-        verifyNoMoreInteractions(catalogService);
+        verifyMovingMock(validatingData);
     }
 
     /**
@@ -234,10 +208,9 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Down_Invalid() {
-        dataList.add(repositoryData);
+        final T validatingData = getValidatingData(Integer.MAX_VALUE);
 
-        when(catalogService.getAll()).thenReturn(dataList);
-        when(catalogService.get(any(Integer.class))).thenReturn(repositoryData);
+        initMovingMock(validatingData, false, false);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
@@ -247,9 +220,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")));
 
-        verify(catalogService).getAll();
-        verify(catalogService).get(validatingData.getId());
-        verifyNoMoreInteractions(catalogService);
+        verifyMovingMock(validatingData);
     }
 
     /**
@@ -257,7 +228,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      */
     @Test
     public void validate_Deep() {
-        final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DEEP);
+        final Result<Void> result = catalogValidator.validate(getValidatingData(ID), ValidationType.DEEP);
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -272,8 +243,61 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      *
      * @return instance of {@link CatalogService}
      */
-    public CatalogService<U> getCatalogService() {
+    protected CatalogService<U> getCatalogService() {
         return catalogService;
+    }
+
+    /**
+     * Initializes mock for exists.
+     *
+     * @param validatingData validating data
+     * @param exists         true if data exists
+     */
+    protected void initExistsMock(final T validatingData, final boolean exists) {
+        final U result = exists ? getRepositoryData(validatingData) : null;
+
+        when(catalogService.get(any(Integer.class))).thenReturn(result);
+    }
+
+    /**
+     * Verifies mock for exists.
+     *
+     * @param validatingData validating data
+     */
+    protected void verifyExistsMock(final T validatingData) {
+        verify(catalogService).get(validatingData.getId());
+        verifyNoMoreInteractions(catalogService);
+    }
+
+    /**
+     * Initializes mock for moving.
+     *
+     * @param validatingData validating data
+     * @param up             true if moving up
+     * @param valid          true if data should be valid
+     */
+    protected void initMovingMock(final T validatingData, final boolean up, final boolean valid) {
+        final List<U> dataList = CollectionUtils.newList(getItem1(), getItem2());
+        final U repositoryData = getRepositoryData(validatingData);
+        if (up && valid || !up && !valid) {
+            dataList.add(repositoryData);
+        } else {
+            dataList.add(0, repositoryData);
+        }
+
+        when(catalogService.getAll()).thenReturn(dataList);
+        when(catalogService.get(any(Integer.class))).thenReturn(repositoryData);
+    }
+
+    /**
+     * Verifies mock for moving.
+     *
+     * @param validatingData validating data
+     */
+    protected void verifyMovingMock(final T validatingData) {
+        verify(catalogService).getAll();
+        verify(catalogService).get(validatingData.getId());
+        verifyNoMoreInteractions(catalogService);
     }
 
     /**
@@ -294,9 +318,10 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     /**
      * Returns instance of {@link U}.
      *
+     * @param validatingData validating data
      * @return instance of {@link U}
      */
-    protected abstract U getRepositoryData();
+    protected abstract U getRepositoryData(T validatingData);
 
     /**
      * Returns 1st item in data list.

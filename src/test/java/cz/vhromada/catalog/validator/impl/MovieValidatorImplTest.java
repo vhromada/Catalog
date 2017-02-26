@@ -627,8 +627,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
     }
 
     @Override
-    protected cz.vhromada.catalog.domain.Movie getRepositoryData() {
-        return MovieUtils.newMovieDomain(null);
+    protected cz.vhromada.catalog.domain.Movie getRepositoryData(final Movie validatingData) {
+        return MovieUtils.newMovieDomain(validatingData.getId());
     }
 
     @Override

@@ -172,8 +172,8 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
     }
 
     @Override
-    protected cz.vhromada.catalog.domain.Game getRepositoryData() {
-        return GameUtils.newGameDomain(null);
+    protected cz.vhromada.catalog.domain.Game getRepositoryData(final Game validatingData) {
+        return GameUtils.newGameDomain(validatingData.getId());
     }
 
     @Override

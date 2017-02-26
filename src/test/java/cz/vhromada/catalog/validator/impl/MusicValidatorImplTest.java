@@ -153,8 +153,8 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
     }
 
     @Override
-    protected cz.vhromada.catalog.domain.Music getRepositoryData() {
-        return MusicUtils.newMusicDomain(null);
+    protected cz.vhromada.catalog.domain.Music getRepositoryData(final Music validatingData) {
+        return MusicUtils.newMusicDomain(validatingData.getId());
     }
 
     @Override

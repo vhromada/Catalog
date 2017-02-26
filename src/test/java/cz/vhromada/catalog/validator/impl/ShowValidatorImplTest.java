@@ -428,8 +428,8 @@ public class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhroma
     }
 
     @Override
-    protected cz.vhromada.catalog.domain.Show getRepositoryData() {
-        return ShowUtils.newShowDomain(null);
+    protected cz.vhromada.catalog.domain.Show getRepositoryData(final Show validatingData) {
+        return ShowUtils.newShowDomain(validatingData.getId());
     }
 
     @Override

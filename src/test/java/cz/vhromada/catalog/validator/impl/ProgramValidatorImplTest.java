@@ -173,8 +173,8 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
     }
 
     @Override
-    protected cz.vhromada.catalog.domain.Program getRepositoryData() {
-        return ProgramUtils.newProgramDomain(null);
+    protected cz.vhromada.catalog.domain.Program getRepositoryData(final Program validatingData) {
+        return ProgramUtils.newProgramDomain(validatingData.getId());
     }
 
     @Override

@@ -73,8 +73,8 @@ public class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhro
     }
 
     @Override
-    protected cz.vhromada.catalog.domain.Genre getRepositoryData() {
-        return GenreUtils.newGenreDomain(null);
+    protected cz.vhromada.catalog.domain.Genre getRepositoryData(final Genre validatingData) {
+        return GenreUtils.newGenreDomain(validatingData.getId());
     }
 
     @Override

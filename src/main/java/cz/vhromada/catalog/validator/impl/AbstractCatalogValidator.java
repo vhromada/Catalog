@@ -82,12 +82,21 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
     }
 
     /**
+     * Returns catalog for service.
+     *
+     * @return catalog for service
+     */
+    protected CatalogService<U> getCatalogService() {
+        return catalogService;
+    }
+
+    /**
      * Returns data from repository.
      *
      * @param data data
      * @return data from repository
      */
-    protected U getData(final T data) {
+    protected Movable getData(final T data) {
         return catalogService.get(data.getId());
     }
 
@@ -97,7 +106,7 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
      * @param data data
      * @return list of data from repository
      */
-    protected List<U> getList(final T data) {
+    protected List<? extends Movable> getList(final T data) {
         return catalogService.getAll();
     }
 
@@ -159,7 +168,7 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
      * @param up     true if data is moving up
      */
     private void validateMovingData(final T data, final Result<Void> result, final boolean up) {
-        final List<U> list = getList(data);
+        final List<? extends Movable> list = getList(data);
         final int index = list.indexOf(getData(data));
         if (up) {
             if (index <= 0) {

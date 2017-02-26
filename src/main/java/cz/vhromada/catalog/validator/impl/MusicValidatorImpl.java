@@ -31,7 +31,7 @@ public class MusicValidatorImpl extends AbstractCatalogValidator<Music, cz.vhrom
 
     /**
      * Validates music deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Name is null</li>
@@ -64,7 +64,7 @@ public class MusicValidatorImpl extends AbstractCatalogValidator<Music, cz.vhrom
 
     /**
      * Validates URLs.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>URL to english Wikipedia page about music is null</li>

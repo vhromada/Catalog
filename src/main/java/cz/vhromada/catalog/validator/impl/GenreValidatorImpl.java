@@ -31,7 +31,7 @@ public class GenreValidatorImpl extends AbstractCatalogValidator<Genre, cz.vhrom
 
     /**
      * Validates genre deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Name is null</li>

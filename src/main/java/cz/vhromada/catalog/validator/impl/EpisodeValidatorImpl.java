@@ -67,7 +67,7 @@ public class EpisodeValidatorImpl extends AbstractCatalogValidator<Episode, Show
 
     /**
      * Validates episode deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Number of episode isn't positive number</li>

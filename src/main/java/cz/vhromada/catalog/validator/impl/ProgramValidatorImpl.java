@@ -31,7 +31,7 @@ public class ProgramValidatorImpl extends AbstractCatalogValidator<Program, cz.v
 
     /**
      * Validates program deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Name is null</li>
@@ -67,7 +67,7 @@ public class ProgramValidatorImpl extends AbstractCatalogValidator<Program, cz.v
 
     /**
      * Validates URLs.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>URL to english Wikipedia page about program is null</li>

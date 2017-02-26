@@ -49,7 +49,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
 
     /**
      * Validates movie deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Czech name is null</li>
@@ -101,7 +101,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
 
     /**
      * Validates names.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Language is null</li>
@@ -127,7 +127,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
 
     /**
      * Validates languages.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Language is null</li>
@@ -151,7 +151,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
 
     /**
      * Validates media.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Media are null</li>
@@ -179,7 +179,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
 
     /**
      * Validates URLs.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>URL to ČSFD page about movie is null</li>
@@ -208,7 +208,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
 
     /**
      * Validates genres.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Genres are null</li>

@@ -48,7 +48,7 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
 
     /**
      * Validates show deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Czech name is null</li>
@@ -87,7 +87,7 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
 
     /**
      * Validates names.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Language is null</li>
@@ -113,7 +113,7 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
 
     /**
      * Validates URLs.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>URL to ČSFD page about show is null</li>
@@ -142,7 +142,7 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
 
     /**
      * Validates genres.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Genres are null</li>

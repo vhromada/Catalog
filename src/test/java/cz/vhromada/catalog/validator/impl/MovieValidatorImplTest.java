@@ -96,8 +96,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -120,8 +120,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -143,8 +143,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -167,8 +167,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -190,8 +190,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -213,8 +213,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -236,8 +236,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -259,8 +259,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -283,8 +283,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -306,8 +306,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -329,8 +329,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -355,8 +355,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -379,8 +379,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -402,8 +402,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -425,8 +425,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -448,8 +448,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -473,8 +473,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -497,8 +497,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -521,8 +521,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -544,8 +544,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -564,8 +564,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
 
+        verifyNoMoreInteractions(genreValidator);
         verifyZeroInteractions(getCatalogService());
-        verifyZeroInteractions(genreValidator);
     }
 
     /**
@@ -585,8 +585,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
 
         verify(genreValidator).validate(movie.getGenres().get(0), ValidationType.EXISTS, ValidationType.DEEP);
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
@@ -612,8 +612,8 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyZeroInteractions(getCatalogService());
         verifyNoMoreInteractions(genreValidator);
+        verifyZeroInteractions(getCatalogService());
     }
 
     @Override

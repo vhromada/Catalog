@@ -62,7 +62,7 @@ public class SeasonValidatorImpl extends AbstractCatalogValidator<Season, Show> 
 
     /**
      * Validates season deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Number of season isn't positive number</li>
@@ -92,7 +92,7 @@ public class SeasonValidatorImpl extends AbstractCatalogValidator<Season, Show> 
 
     /**
      * Validates season deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Starting year isn't between 1940 and current year</li>
@@ -119,7 +119,7 @@ public class SeasonValidatorImpl extends AbstractCatalogValidator<Season, Show> 
 
     /**
      * Validates languages.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Language is null</li>

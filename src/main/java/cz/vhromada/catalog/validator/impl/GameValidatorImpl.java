@@ -31,7 +31,7 @@ public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromad
 
     /**
      * Validates game deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Name is null</li>
@@ -67,7 +67,7 @@ public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromad
 
     /**
      * Validates URLs.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>URL to english Wikipedia page about game is null</li>

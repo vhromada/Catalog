@@ -120,7 +120,7 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
 
     /**
      * Validates new data.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>ID isn't null</li>
@@ -137,11 +137,11 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
 
     /**
      * Validates existing data.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>ID is null</li>
-     * <li>Data doesn't exist</li>
+     * <li>Data doesn't exist in data storage</li>
      * </ul>
      *
      * @param data   validating data
@@ -157,7 +157,7 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
 
     /**
      * Validates moving data.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Not movable</li>

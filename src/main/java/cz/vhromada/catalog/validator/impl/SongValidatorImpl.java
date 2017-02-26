@@ -62,7 +62,7 @@ public class SongValidatorImpl extends AbstractCatalogValidator<Song, Music> {
 
     /**
      * Validates song deeply.
-     * <br/>
+     * <br>
      * Validation errors:
      * <ul>
      * <li>Name is null</li>

@@ -2,7 +2,7 @@ package cz.vhromada.catalog.utils;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -226,7 +226,7 @@ public final class MusicUtils {
         assertThat(actual.getNote(), is(expected.getNote()));
         assertThat(actual.getPosition(), is(expected.getPosition()));
         if (expected.getSongs() == null) {
-            assertNull(actual.getSongs());
+            assertThat(actual.getSongs(), is(nullValue()));
         } else {
             SongUtils.assertSongsDeepEquals(expected.getSongs(), actual.getSongs());
         }

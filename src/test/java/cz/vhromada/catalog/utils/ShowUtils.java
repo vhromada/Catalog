@@ -2,7 +2,7 @@ package cz.vhromada.catalog.utils;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -246,7 +246,7 @@ public final class ShowUtils {
         assertThat(actual.getPosition(), is(expected.getPosition()));
         GenreUtils.assertGenresDeepEquals(expected.getGenres(), actual.getGenres());
         if (expected.getSeasons() == null) {
-            assertNull(actual.getSeasons());
+            assertThat(actual.getSeasons(), is(nullValue()));
         } else {
             SeasonUtils.assertSeasonsDeepEquals(expected.getSeasons(), actual.getSeasons());
         }

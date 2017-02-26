@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -156,7 +155,7 @@ public class ShowFacadeImplTest {
         final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(1);
         final Show expectedShow = ShowUtils.newShow(1);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(any(Integer.class))).thenReturn(showEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Show.class), eq(Show.class))).thenReturn(expectedShow);
 
         final Show show = showFacade.getShow(1);
@@ -175,7 +174,7 @@ public class ShowFacadeImplTest {
      */
     @Test
     public void testGetShow_NotExistingShow() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
         when(converter.convert(any(cz.vhromada.catalog.domain.Show.class), eq(Show.class))).thenReturn(null);
 
         assertNull(showFacade.getShow(Integer.MAX_VALUE));
@@ -202,7 +201,7 @@ public class ShowFacadeImplTest {
         final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(null);
         final Show show = ShowUtils.newShow(null);
 
-        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenreDomain(1));
+        when(genreService.get(any(Integer.class))).thenReturn(GenreUtils.newGenreDomain(1));
         when(converter.convert(any(Show.class), eq(cz.vhromada.catalog.domain.Show.class))).thenReturn(showEntity);
 
         showFacade.add(show);
@@ -241,7 +240,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingGenre() {
-        when(genreService.get(anyInt())).thenReturn(null);
+        when(genreService.get(any(Integer.class))).thenReturn(null);
 
         showFacade.add(ShowUtils.newShow(Integer.MAX_VALUE));
     }
@@ -254,8 +253,8 @@ public class ShowFacadeImplTest {
         final Show show = ShowUtils.newShow(1);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
-        when(showService.get(anyInt())).thenReturn(ShowUtils.newShowDomain(1));
-        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenreDomain(1));
+        when(showService.get(any(Integer.class))).thenReturn(ShowUtils.newShowDomain(1));
+        when(genreService.get(any(Integer.class))).thenReturn(GenreUtils.newGenreDomain(1));
 
         showFacade.update(show);
 
@@ -296,7 +295,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingShow() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
 
         showFacade.update(ShowUtils.newShow(Integer.MAX_VALUE));
     }
@@ -306,8 +305,8 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingGenre() {
-        when(showService.get(anyInt())).thenReturn(ShowUtils.newShowDomain(1));
-        when(genreService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(ShowUtils.newShowDomain(1));
+        when(genreService.get(any(Integer.class))).thenReturn(null);
 
         showFacade.update(ShowUtils.newShow(Integer.MAX_VALUE));
     }
@@ -320,7 +319,7 @@ public class ShowFacadeImplTest {
         final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(1);
         final Show show = ShowUtils.newShow(1);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(any(Integer.class))).thenReturn(showEntity);
 
         showFacade.remove(show);
 
@@ -356,7 +355,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
 
         showFacade.remove(ShowUtils.newShow(Integer.MAX_VALUE));
     }
@@ -369,7 +368,7 @@ public class ShowFacadeImplTest {
         final cz.vhromada.catalog.domain.Show showEntity = ShowUtils.newShowDomain(1);
         final Show show = ShowUtils.newShow(1);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(any(Integer.class))).thenReturn(showEntity);
 
         showFacade.duplicate(show);
 
@@ -405,7 +404,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
 
         showFacade.duplicate(ShowUtils.newShow(Integer.MAX_VALUE));
     }
@@ -419,7 +418,7 @@ public class ShowFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShowDomain(1), showEntity);
         final Show show = ShowUtils.newShow(2);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(any(Integer.class))).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
 
         showFacade.moveUp(show);
@@ -457,7 +456,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
 
         showFacade.moveUp(ShowUtils.newShow(Integer.MAX_VALUE));
     }
@@ -471,7 +470,7 @@ public class ShowFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShowDomain(1));
         final Show show = ShowUtils.newShow(Integer.MAX_VALUE);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(any(Integer.class))).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
 
         showFacade.moveUp(show);
@@ -486,7 +485,7 @@ public class ShowFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(showEntity, ShowUtils.newShowDomain(2));
         final Show show = ShowUtils.newShow(1);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(any(Integer.class))).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
 
         showFacade.moveDown(show);
@@ -524,7 +523,7 @@ public class ShowFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
 
         showFacade.moveDown(ShowUtils.newShow(Integer.MAX_VALUE));
     }
@@ -538,7 +537,7 @@ public class ShowFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Show> shows = CollectionUtils.newList(ShowUtils.newShowDomain(1), showEntity);
         final Show show = ShowUtils.newShow(Integer.MAX_VALUE);
 
-        when(showService.get(anyInt())).thenReturn(showEntity);
+        when(showService.get(any(Integer.class))).thenReturn(showEntity);
         when(showService.getAll()).thenReturn(shows);
 
         showFacade.moveDown(show);

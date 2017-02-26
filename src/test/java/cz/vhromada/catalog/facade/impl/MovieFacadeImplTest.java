@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -154,7 +153,7 @@ public class MovieFacadeImplTest {
         final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovieDomain(1);
         final Movie expectedMovie = MovieUtils.newMovie(1);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Movie.class), eq(Movie.class))).thenReturn(expectedMovie);
 
         final Movie movie = movieFacade.getMovie(1);
@@ -173,7 +172,7 @@ public class MovieFacadeImplTest {
      */
     @Test
     public void testGetMovie_NotExistingMovie() {
-        when(movieService.get(anyInt())).thenReturn(null);
+        when(movieService.get(any(Integer.class))).thenReturn(null);
         when(converter.convert(any(cz.vhromada.catalog.domain.Movie.class), eq(Movie.class))).thenReturn(null);
 
         assertNull(movieFacade.getMovie(Integer.MAX_VALUE));
@@ -200,7 +199,7 @@ public class MovieFacadeImplTest {
         final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovieDomain(null);
         final Movie movie = MovieUtils.newMovie(null);
 
-        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenreDomain(1));
+        when(genreService.get(any(Integer.class))).thenReturn(GenreUtils.newGenreDomain(1));
         when(converter.convert(any(Movie.class), eq(cz.vhromada.catalog.domain.Movie.class))).thenReturn(movieEntity);
 
         movieFacade.add(movie);
@@ -239,7 +238,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingGenre() {
-        when(genreService.get(anyInt())).thenReturn(null);
+        when(genreService.get(any(Integer.class))).thenReturn(null);
 
         movieFacade.add(MovieUtils.newMovie(Integer.MAX_VALUE));
     }
@@ -252,8 +251,8 @@ public class MovieFacadeImplTest {
         final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovieDomain(null);
         final Movie movie = MovieUtils.newMovie(null);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
-        when(genreService.get(anyInt())).thenReturn(GenreUtils.newGenreDomain(1));
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
+        when(genreService.get(any(Integer.class))).thenReturn(GenreUtils.newGenreDomain(1));
         when(converter.convert(any(Movie.class), eq(cz.vhromada.catalog.domain.Movie.class))).thenReturn(movieEntity);
 
         movieFacade.update(movie);
@@ -293,7 +292,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingMovie() {
-        when(movieService.get(anyInt())).thenReturn(null);
+        when(movieService.get(any(Integer.class))).thenReturn(null);
 
         movieFacade.update(MovieUtils.newMovie(Integer.MAX_VALUE));
     }
@@ -303,8 +302,8 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingGenre() {
-        when(movieService.get(anyInt())).thenReturn(MovieUtils.newMovieDomain(1));
-        when(genreService.get(anyInt())).thenReturn(null);
+        when(movieService.get(any(Integer.class))).thenReturn(MovieUtils.newMovieDomain(1));
+        when(genreService.get(any(Integer.class))).thenReturn(null);
 
         movieFacade.update(MovieUtils.newMovie(Integer.MAX_VALUE));
     }
@@ -317,7 +316,7 @@ public class MovieFacadeImplTest {
         final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovieDomain(1);
         final Movie movie = MovieUtils.newMovie(1);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
 
         movieFacade.remove(movie);
 
@@ -353,7 +352,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
-        when(movieService.get(anyInt())).thenReturn(null);
+        when(movieService.get(any(Integer.class))).thenReturn(null);
 
         movieFacade.remove(MovieUtils.newMovie(Integer.MAX_VALUE));
     }
@@ -366,7 +365,7 @@ public class MovieFacadeImplTest {
         final cz.vhromada.catalog.domain.Movie movieEntity = MovieUtils.newMovieDomain(1);
         final Movie movie = MovieUtils.newMovie(1);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
 
         movieFacade.duplicate(movie);
 
@@ -402,7 +401,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
-        when(movieService.get(anyInt())).thenReturn(null);
+        when(movieService.get(any(Integer.class))).thenReturn(null);
 
         movieFacade.duplicate(MovieUtils.newMovie(Integer.MAX_VALUE));
     }
@@ -416,7 +415,7 @@ public class MovieFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(MovieUtils.newMovieDomain(1), movieEntity);
         final Movie movie = MovieUtils.newMovie(2);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
 
         movieFacade.moveUp(movie);
@@ -454,7 +453,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
-        when(movieService.get(anyInt())).thenReturn(null);
+        when(movieService.get(any(Integer.class))).thenReturn(null);
 
         movieFacade.moveUp(MovieUtils.newMovie(Integer.MAX_VALUE));
     }
@@ -468,7 +467,7 @@ public class MovieFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovieDomain(1));
         final Movie movie = MovieUtils.newMovie(Integer.MAX_VALUE);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
 
         movieFacade.moveUp(movie);
@@ -483,7 +482,7 @@ public class MovieFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(movieEntity, MovieUtils.newMovieDomain(2));
         final Movie movie = MovieUtils.newMovie(1);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
 
         movieFacade.moveDown(movie);
@@ -521,7 +520,7 @@ public class MovieFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
-        when(movieService.get(anyInt())).thenReturn(null);
+        when(movieService.get(any(Integer.class))).thenReturn(null);
 
         movieFacade.moveDown(MovieUtils.newMovie(Integer.MAX_VALUE));
     }
@@ -535,7 +534,7 @@ public class MovieFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(MovieUtils.newMovieDomain(1), movieEntity);
         final Movie movie = MovieUtils.newMovie(Integer.MAX_VALUE);
 
-        when(movieService.get(anyInt())).thenReturn(movieEntity);
+        when(movieService.get(any(Integer.class))).thenReturn(movieEntity);
         when(movieService.getAll()).thenReturn(movies);
 
         movieFacade.moveDown(movie);

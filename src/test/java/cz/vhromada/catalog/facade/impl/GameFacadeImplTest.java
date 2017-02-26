@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -136,7 +135,7 @@ public class GameFacadeImplTest {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
         final Game expectedGame = GameUtils.newGame(1);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(expectedGame);
 
         final Game game = gameFacade.getGame(1);
@@ -155,7 +154,7 @@ public class GameFacadeImplTest {
      */
     @Test
     public void testGetGame_NotExistingGame() {
-        when(gameService.get(anyInt())).thenReturn(null);
+        when(gameService.get(any(Integer.class))).thenReturn(null);
         when(converter.convert(any(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(null);
 
         assertNull(gameFacade.getGame(Integer.MAX_VALUE));
@@ -220,7 +219,7 @@ public class GameFacadeImplTest {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
         final Game game = GameUtils.newGame(1);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
         when(converter.convert(any(Game.class), eq(cz.vhromada.catalog.domain.Game.class))).thenReturn(gameEntity);
 
         gameFacade.update(game);
@@ -257,7 +256,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingArgument() {
-        when(gameService.get(anyInt())).thenReturn(null);
+        when(gameService.get(any(Integer.class))).thenReturn(null);
 
         gameFacade.update(GameUtils.newGame(Integer.MAX_VALUE));
     }
@@ -270,7 +269,7 @@ public class GameFacadeImplTest {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
         final Game game = GameUtils.newGame(1);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
 
         gameFacade.remove(game);
 
@@ -306,7 +305,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
-        when(gameService.get(anyInt())).thenReturn(null);
+        when(gameService.get(any(Integer.class))).thenReturn(null);
 
         gameFacade.remove(GameUtils.newGame(Integer.MAX_VALUE));
     }
@@ -319,7 +318,7 @@ public class GameFacadeImplTest {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
         final Game game = GameUtils.newGame(1);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
 
         gameFacade.duplicate(game);
 
@@ -355,7 +354,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
-        when(gameService.get(anyInt())).thenReturn(null);
+        when(gameService.get(any(Integer.class))).thenReturn(null);
 
         gameFacade.duplicate(GameUtils.newGame(Integer.MAX_VALUE));
     }
@@ -369,7 +368,7 @@ public class GameFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(GameUtils.newGameDomain(1), gameEntity);
         final Game game = GameUtils.newGame(2);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveUp(game);
@@ -407,7 +406,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
-        when(gameService.get(anyInt())).thenReturn(null);
+        when(gameService.get(any(Integer.class))).thenReturn(null);
 
         gameFacade.moveUp(GameUtils.newGame(Integer.MAX_VALUE));
     }
@@ -421,7 +420,7 @@ public class GameFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGameDomain(1));
         final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveUp(game);
@@ -436,7 +435,7 @@ public class GameFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGameDomain(2));
         final Game game = GameUtils.newGame(1);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveDown(game);
@@ -474,7 +473,7 @@ public class GameFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
-        when(gameService.get(anyInt())).thenReturn(null);
+        when(gameService.get(any(Integer.class))).thenReturn(null);
 
         gameFacade.moveDown(GameUtils.newGame(Integer.MAX_VALUE));
     }
@@ -488,7 +487,7 @@ public class GameFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(GameUtils.newGameDomain(1), gameEntity);
         final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        when(gameService.get(anyInt())).thenReturn(gameEntity);
+        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
         when(gameService.getAll()).thenReturn(games);
 
         gameFacade.moveDown(game);

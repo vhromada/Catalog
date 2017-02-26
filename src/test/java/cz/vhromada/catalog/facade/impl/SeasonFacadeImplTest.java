@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -166,7 +165,7 @@ public class SeasonFacadeImplTest {
         final cz.vhromada.catalog.domain.Season seasonEntity = SeasonUtils.newSeasonDomain(null);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Show> showArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Show.class);
 
-        when(showService.get(anyInt())).thenReturn(ShowUtils.newShowWithSeasons(1));
+        when(showService.get(any(Integer.class))).thenReturn(ShowUtils.newShowWithSeasons(1));
         when(converter.convert(any(Season.class), eq(cz.vhromada.catalog.domain.Season.class))).thenReturn(seasonEntity);
 
         seasonFacade.add(show, season);
@@ -226,7 +225,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingArgument() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
 
         seasonFacade.add(ShowUtils.newShow(Integer.MAX_VALUE), SeasonUtils.newSeason(null));
     }
@@ -525,7 +524,7 @@ public class SeasonFacadeImplTest {
         final Show show = ShowUtils.newShow(1);
         final List<Season> expectedSeasons = CollectionUtils.newList(SeasonUtils.newSeason(1));
 
-        when(showService.get(anyInt())).thenReturn(ShowUtils.newShowWithSeasons(1));
+        when(showService.get(any(Integer.class))).thenReturn(ShowUtils.newShowWithSeasons(1));
         when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Season.class), eq(Season.class))).thenReturn(expectedSeasons);
 
         final List<Season> seasons = seasonFacade.findSeasonsByShow(show);
@@ -565,7 +564,7 @@ public class SeasonFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSeasonsByShow_NotExistingArgument() {
-        when(showService.get(anyInt())).thenReturn(null);
+        when(showService.get(any(Integer.class))).thenReturn(null);
 
         seasonFacade.findSeasonsByShow(ShowUtils.newShow(Integer.MAX_VALUE));
     }

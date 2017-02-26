@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -138,7 +137,7 @@ public class MusicFacadeImplTest {
         final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusicDomain(1);
         final Music expectedMusic = MusicUtils.newMusic(1);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(musicService.get(any(Integer.class))).thenReturn(musicEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Music.class), eq(Music.class))).thenReturn(expectedMusic);
 
         final Music music = musicFacade.getMusic(expectedMusic.getId());
@@ -157,7 +156,7 @@ public class MusicFacadeImplTest {
      */
     @Test
     public void testGetMusicById_NotExistingMusic() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
         when(converter.convert(any(cz.vhromada.catalog.domain.Music.class), eq(Music.class))).thenReturn(null);
 
         assertNull(musicFacade.getMusic(Integer.MAX_VALUE));
@@ -222,7 +221,7 @@ public class MusicFacadeImplTest {
         final Music music = MusicUtils.newMusic(1);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Music> musicArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Music.class);
 
-        when(musicService.get(anyInt())).thenReturn(MusicUtils.newMusicDomain(1));
+        when(musicService.get(any(Integer.class))).thenReturn(MusicUtils.newMusicDomain(1));
 
         musicFacade.update(music);
 
@@ -260,7 +259,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingArgument() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
 
         musicFacade.update(MusicUtils.newMusic(Integer.MAX_VALUE));
     }
@@ -273,7 +272,7 @@ public class MusicFacadeImplTest {
         final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusicDomain(1);
         final Music music = MusicUtils.newMusic(1);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(musicService.get(any(Integer.class))).thenReturn(musicEntity);
 
         musicFacade.remove(music);
 
@@ -309,7 +308,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
 
         musicFacade.remove(MusicUtils.newMusic(Integer.MAX_VALUE));
     }
@@ -322,7 +321,7 @@ public class MusicFacadeImplTest {
         final cz.vhromada.catalog.domain.Music musicEntity = MusicUtils.newMusicDomain(1);
         final Music music = MusicUtils.newMusic(1);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(musicService.get(any(Integer.class))).thenReturn(musicEntity);
 
         musicFacade.duplicate(music);
 
@@ -358,7 +357,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
 
         musicFacade.duplicate(MusicUtils.newMusic(Integer.MAX_VALUE));
     }
@@ -372,7 +371,7 @@ public class MusicFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusicDomain(1), musicEntity);
         final Music music = MusicUtils.newMusic(2);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(musicService.get(any(Integer.class))).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveUp(music);
@@ -410,7 +409,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
 
         musicFacade.moveUp(MusicUtils.newMusic(Integer.MAX_VALUE));
     }
@@ -424,7 +423,7 @@ public class MusicFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(musicEntity, MusicUtils.newMusicDomain(1));
         final Music music = MusicUtils.newMusic(Integer.MAX_VALUE);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(musicService.get(any(Integer.class))).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveUp(music);
@@ -439,7 +438,7 @@ public class MusicFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(musicEntity, MusicUtils.newMusicDomain(2));
         final Music music = MusicUtils.newMusic(1);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(musicService.get(any(Integer.class))).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveDown(music);
@@ -477,7 +476,7 @@ public class MusicFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
 
         musicFacade.moveDown(MusicUtils.newMusic(Integer.MAX_VALUE));
     }
@@ -491,7 +490,7 @@ public class MusicFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusicDomain(1), musicEntity);
         final Music music = MusicUtils.newMusic(Integer.MAX_VALUE);
 
-        when(musicService.get(anyInt())).thenReturn(musicEntity);
+        when(musicService.get(any(Integer.class))).thenReturn(musicEntity);
         when(musicService.getAll()).thenReturn(musicList);
 
         musicFacade.moveDown(music);

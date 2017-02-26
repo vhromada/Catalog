@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -137,7 +136,7 @@ public class ProgramFacadeImplTest {
         final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
         final Program expectedProgram = ProgramUtils.newProgram(1);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Program.class), eq(Program.class))).thenReturn(expectedProgram);
 
         final Program program = programFacade.getProgram(1);
@@ -156,7 +155,7 @@ public class ProgramFacadeImplTest {
      */
     @Test
     public void testGetProgram_NotExistingProgram() {
-        when(programService.get(anyInt())).thenReturn(null);
+        when(programService.get(any(Integer.class))).thenReturn(null);
         when(converter.convert(any(cz.vhromada.catalog.domain.Program.class), eq(Program.class))).thenReturn(null);
 
         assertNull(programFacade.getProgram(Integer.MAX_VALUE));
@@ -221,7 +220,7 @@ public class ProgramFacadeImplTest {
         final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
         final Program program = ProgramUtils.newProgram(1);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
         when(converter.convert(any(Program.class), eq(cz.vhromada.catalog.domain.Program.class))).thenReturn(programEntity);
 
         programFacade.update(program);
@@ -258,7 +257,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NotExistingArgument() {
-        when(programService.get(anyInt())).thenReturn(null);
+        when(programService.get(any(Integer.class))).thenReturn(null);
 
         programFacade.update(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
@@ -271,7 +270,7 @@ public class ProgramFacadeImplTest {
         final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
         final Program program = ProgramUtils.newProgram(1);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
 
         programFacade.remove(program);
 
@@ -307,7 +306,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NotExistingArgument() {
-        when(programService.get(anyInt())).thenReturn(null);
+        when(programService.get(any(Integer.class))).thenReturn(null);
 
         programFacade.remove(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
@@ -320,7 +319,7 @@ public class ProgramFacadeImplTest {
         final cz.vhromada.catalog.domain.Program programEntity = ProgramUtils.newProgramDomain(1);
         final Program program = ProgramUtils.newProgram(1);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
 
         programFacade.duplicate(program);
 
@@ -356,7 +355,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NotExistingArgument() {
-        when(programService.get(anyInt())).thenReturn(null);
+        when(programService.get(any(Integer.class))).thenReturn(null);
 
         programFacade.duplicate(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
@@ -370,7 +369,7 @@ public class ProgramFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(ProgramUtils.newProgramDomain(1), programEntity);
         final Program program = ProgramUtils.newProgram(2);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveUp(program);
@@ -408,7 +407,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NotExistingArgument() {
-        when(programService.get(anyInt())).thenReturn(null);
+        when(programService.get(any(Integer.class))).thenReturn(null);
 
         programFacade.moveUp(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
@@ -422,7 +421,7 @@ public class ProgramFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgramDomain(1));
         final Program program = ProgramUtils.newProgram(Integer.MAX_VALUE);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveUp(program);
@@ -437,7 +436,7 @@ public class ProgramFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(programEntity, ProgramUtils.newProgramDomain(2));
         final Program program = ProgramUtils.newProgram(1);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveDown(program);
@@ -475,7 +474,7 @@ public class ProgramFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NotExistingArgument() {
-        when(programService.get(anyInt())).thenReturn(null);
+        when(programService.get(any(Integer.class))).thenReturn(null);
 
         programFacade.moveDown(ProgramUtils.newProgram(Integer.MAX_VALUE));
     }
@@ -489,7 +488,7 @@ public class ProgramFacadeImplTest {
         final List<cz.vhromada.catalog.domain.Program> programs = CollectionUtils.newList(ProgramUtils.newProgramDomain(1), programEntity);
         final Program program = ProgramUtils.newProgram(Integer.MAX_VALUE);
 
-        when(programService.get(anyInt())).thenReturn(programEntity);
+        when(programService.get(any(Integer.class))).thenReturn(programEntity);
         when(programService.getAll()).thenReturn(programs);
 
         programFacade.moveDown(program);

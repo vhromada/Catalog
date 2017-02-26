@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -165,7 +164,7 @@ public class SongFacadeImplTest {
         final cz.vhromada.catalog.domain.Song songEntity = SongUtils.newSongDomain(null);
         final ArgumentCaptor<cz.vhromada.catalog.domain.Music> musicArgumentCaptor = ArgumentCaptor.forClass(cz.vhromada.catalog.domain.Music.class);
 
-        when(musicService.get(anyInt())).thenReturn(MusicUtils.newMusicDomain(1));
+        when(musicService.get(any(Integer.class))).thenReturn(MusicUtils.newMusicDomain(1));
         when(converter.convert(any(Song.class), eq(cz.vhromada.catalog.domain.Song.class))).thenReturn(songEntity);
 
         songFacade.add(music, song);
@@ -225,7 +224,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NotExistingArgument() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
 
         songFacade.add(MusicUtils.newMusic(Integer.MAX_VALUE), SongUtils.newSong(null));
     }
@@ -527,7 +526,7 @@ public class SongFacadeImplTest {
         final Music music = MusicUtils.newMusic(1);
         final List<Song> expectedSongs = CollectionUtils.newList(SongUtils.newSong(1));
 
-        when(musicService.get(anyInt())).thenReturn(MusicUtils.newMusicWithSongs(1));
+        when(musicService.get(any(Integer.class))).thenReturn(MusicUtils.newMusicWithSongs(1));
         when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Song.class), eq(Song.class))).thenReturn(expectedSongs);
 
         final List<Song> songs = songFacade.findSongsByMusic(music);
@@ -567,7 +566,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindSongsByMusic_NotExistingArgument() {
-        when(musicService.get(anyInt())).thenReturn(null);
+        when(musicService.get(any(Integer.class))).thenReturn(null);
 
         songFacade.findSongsByMusic(MusicUtils.newMusic(Integer.MAX_VALUE));
     }

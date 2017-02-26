@@ -1,10 +1,20 @@
 package cz.vhromada.catalog.validator.impl;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
+import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.utils.GenreUtils;
-import cz.vhromada.catalog.validator.GenreValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -12,111 +22,79 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class GenreValidatorImplTest {
+public class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhromada.catalog.domain.Genre> {
 
     /**
-     * Instance of {@link GenreValidator}
+     * Test method for {@link GenreValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
-    private GenreValidator genreValidator;
-
-    /**
-     * Initializes validator for genre.
-     */
-    @Before
-    public void setUp() {
-        genreValidator = new GenreValidatorImpl();
-    }
-
-    /**
-     * Test method for {@link GenreValidator#validateNewGenre(Genre)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGenre_NullArgument() {
-        genreValidator.validateNewGenre(null);
-    }
-
-    /**
-     * Test method for {@link GenreValidator#validateNewGenre(Genre)} with genre with not null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGenre_NotNullId() {
-        genreValidator.validateNewGenre(GenreUtils.newGenre(1));
-    }
-
-    /**
-     * Test method for {@link GenreValidator#validateNewGenre(Genre)} with genre with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGenre_NullName() {
-        final Genre genre = GenreUtils.newGenre(null);
+    @Test
+    public void validate_Deep_NullName() {
+        final Genre genre = getValidatingData();
         genre.setName(null);
 
-        genreValidator.validateNewGenre(genre);
+        final Result<Void> result = getCatalogValidator().validate(genre, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link GenreValidator#validateNewGenre(Genre)} with genre with empty string as name.
+     * Test method for {@link GenreValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewGenre_EmptyName() {
-        final Genre genre = GenreUtils.newGenre(null);
+    @Test
+    public void validate_Deep_EmptyName() {
+        final Genre genre = getValidatingData();
         genre.setName("");
 
-        genreValidator.validateNewGenre(genre);
+        final Result<Void> result = getCatalogValidator().validate(genre, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
-    /**
-     * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGenre_NullArgument() {
-        genreValidator.validateExistingGenre(null);
+    @Override
+    protected CatalogValidator<Genre> getCatalogValidator() {
+        return new GenreValidatorImpl(getCatalogService());
     }
 
-    /**
-     * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with genre with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGenre_NullId() {
-        genreValidator.validateExistingGenre(GenreUtils.newGenre(null));
+    @Override
+    protected Genre getValidatingData() {
+        return GenreUtils.newGenre(null);
     }
 
-    /**
-     * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with genre with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGenre_NullName() {
-        final Genre genre = GenreUtils.newGenre(1);
-        genre.setName(null);
-
-        genreValidator.validateExistingGenre(genre);
+    @Override
+    protected cz.vhromada.catalog.domain.Genre getRepositoryData() {
+        return GenreUtils.newGenreDomain(null);
     }
 
-    /**
-     * Test method for {@link GenreValidator#validateExistingGenre(Genre)} with genre with empty string as name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingGenre_EmptyName() {
-        final Genre genre = GenreUtils.newGenre(1);
-        genre.setName("");
-
-        genreValidator.validateExistingGenre(genre);
+    @Override
+    protected cz.vhromada.catalog.domain.Genre getItem1() {
+        return GenreUtils.newGenreDomain(1);
     }
 
-    /**
-     * Test method for {@link GenreValidator#validateGenreWithId(Genre)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateGenreWithId_NullArgument() {
-        genreValidator.validateGenreWithId(null);
+    @Override
+    protected cz.vhromada.catalog.domain.Genre getItem2() {
+        return GenreUtils.newGenreDomain(2);
     }
 
-    /**
-     * Test method for {@link GenreValidator#validateGenreWithId(Genre)} with genre with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateGenreWithId_NullId() {
-        genreValidator.validateGenreWithId(new Genre());
+    @Override
+    protected String getName() {
+        return "Genre";
+    }
+
+    @Override
+    protected String getPrefix() {
+        return "GENRE";
     }
 
 }

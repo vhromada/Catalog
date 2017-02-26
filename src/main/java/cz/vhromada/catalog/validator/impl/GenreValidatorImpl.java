@@ -1,10 +1,13 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.entity.Genre;
-import cz.vhromada.catalog.validator.GenreValidator;
+import cz.vhromada.catalog.service.CatalogService;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -13,47 +16,38 @@ import org.springframework.util.StringUtils;
  * @author Vladimir Hromada
  */
 @Component("genreValidator")
-public class GenreValidatorImpl implements GenreValidator {
+public class GenreValidatorImpl extends AbstractCatalogValidator<Genre, cz.vhromada.catalog.domain.Genre> {
 
     /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateNewGenre(final Genre genre) {
-        validateGenre(genre);
-        Assert.isNull(genre.getId(), "ID must be null.");
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateExistingGenre(final Genre genre) {
-        validateGenre(genre);
-        Assert.notNull(genre.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * @throws IllegalArgumentException {@inheritDoc}
-     */
-    @Override
-    public void validateGenreWithId(final Genre genre) {
-        Assert.notNull(genre, "Genre mustn't be null.");
-        Assert.notNull(genre.getId(), "ID mustn't be null.");
-    }
-
-    /**
-     * Validates genre.
+     * Creates a new instance of GenreValidatorImpl.
      *
-     * @param genre validating genre
-     * @throws IllegalArgumentException if genre is null
-     *                                  or name is null
-     *                                  or name is empty string
+     * @param genreService service for genres
+     * @throws IllegalArgumentException if service for genres is null
      */
-    private static void validateGenre(final Genre genre) {
-        Assert.notNull(genre, "Genre mustn't be null.");
-        Assert.notNull(genre.getName(), "Name mustn't be null");
-        Assert.isTrue(!StringUtils.isEmpty(genre.getName()) && !StringUtils.isEmpty(genre.getName().trim()), "Name mustn't be empty string.");
+    @Autowired
+    public GenreValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Genre> genreService) {
+        super("Genre", genreService);
+    }
+
+    /**
+     * Validates genre deeply.
+     * <br/>
+     * Validation errors:
+     * <ul>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * </ul>
+     *
+     * @param data   validating genre
+     * @param result result with validation errors
+     */
+    @Override
+    protected void validateDataDeep(final Genre data, final Result<Void> result) {
+        if (data.getName() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null."));
+        } else if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
+            result.addEvent(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string."));
+        }
     }
 
 }

@@ -3,8 +3,9 @@ package cz.vhromada.catalog.validator.impl;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.utils.Constants;
-import cz.vhromada.catalog.validator.GenreValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.ShowValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class ShowValidatorImpl implements ShowValidator {
     /**
      * Validator for genre
      */
-    private GenreValidator genreValidator;
+    private final CatalogValidator<Genre> genreValidator;
 
     /**
      * Creates a new instance of ShowValidatorImpl.
@@ -31,7 +32,7 @@ public class ShowValidatorImpl implements ShowValidator {
      * @throws IllegalArgumentException if validator for genre is null
      */
     @Autowired
-    public ShowValidatorImpl(final GenreValidator genreValidator) {
+    public ShowValidatorImpl(final CatalogValidator<Genre> genreValidator) {
         Assert.notNull(genreValidator, "Validator for genre mustn't be null.");
 
         this.genreValidator = genreValidator;
@@ -68,22 +69,22 @@ public class ShowValidatorImpl implements ShowValidator {
      * Validates show.
      *
      * @param show validating show
-     * @throws IllegalArgumentException                              if show is null
-     * @throws cz.vhromada.validators.exceptions.ValidationException if czech name is null
-     *                                                               or czech name is empty string
-     *                                                               or original name is null
-     *                                                               or original name is empty string
-     *                                                               or URL to ČSFD page about show is null
-     *                                                               or IMDB code isn't -1 or between 1 and 9999999
-     *                                                               or URL to english Wikipedia page about show is null
-     *                                                               or URL to czech Wikipedia page about show is null
-     *                                                               or path to file with show picture is null
-     *                                                               or note is null
-     *                                                               or genres are null
-     *                                                               or genres contain null value
-     *                                                               or genre ID is null
-     *                                                               or genre name is null
-     *                                                               or genre name is empty string
+     * @throws IllegalArgumentException if show is null
+     * @throws IllegalArgumentException if czech name is null
+     *                                  or czech name is empty string
+     *                                  or original name is null
+     *                                  or original name is empty string
+     *                                  or URL to ČSFD page about show is null
+     *                                  or IMDB code isn't -1 or between 1 and 9999999
+     *                                  or URL to english Wikipedia page about show is null
+     *                                  or URL to czech Wikipedia page about show is null
+     *                                  or path to file with show picture is null
+     *                                  or note is null
+     *                                  or genres are null
+     *                                  or genres contain null value
+     *                                  or genre ID is null
+     *                                  or genre name is null
+     *                                  or genre name is empty string
      */
     private void validateShow(final Show show) {
         Assert.notNull(show, "Movie mustn't be null.");
@@ -93,7 +94,7 @@ public class ShowValidatorImpl implements ShowValidator {
         Assert.isTrue(!StringUtils.isEmpty(show.getOriginalName()) && !StringUtils.isEmpty(show.getOriginalName().trim()),
                 "Original name mustn't be empty string.");
         Assert.notNull(show.getCsfd(), "URL to ČSFD page about show mustn't be null.");
-        Assert.isTrue(show.getImdbCode() == -1 || (show.getImdbCode() >= 1 && show.getImdbCode() <= Constants.MAX_IMDB_CODE),
+        Assert.isTrue(show.getImdbCode() == -1 || show.getImdbCode() >= 1 && show.getImdbCode() <= Constants.MAX_IMDB_CODE,
                 "IMDB code must be between 1 and 9999999 or -1.");
         Assert.notNull(show.getWikiEn(), "URL to english Wikipedia page about show mustn't be null.");
         Assert.notNull(show.getWikiCz(), "URL to czech Wikipedia page about show mustn't be null.");
@@ -102,7 +103,7 @@ public class ShowValidatorImpl implements ShowValidator {
         Assert.notNull(show.getGenres(), "Genres mustn't be null.");
         Assert.isTrue(!show.getGenres().contains(null), "Genres mustn't contain null value.");
         for (final Genre genre : show.getGenres()) {
-            genreValidator.validateExistingGenre(genre);
+            genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
     }
 

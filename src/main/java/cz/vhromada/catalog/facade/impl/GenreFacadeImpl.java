@@ -5,7 +5,8 @@ import java.util.List;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.GenreValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class GenreFacadeImpl implements GenreFacade {
     /**
      * Validator for genre
      */
-    private GenreValidator genreValidator;
+    private CatalogValidator<Genre> genreValidator;
 
     /**
      * Creates a new instance of GenreFacadeImpl.
@@ -58,7 +59,7 @@ public class GenreFacadeImpl implements GenreFacade {
     @Autowired
     public GenreFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             final Converter converter,
-            final GenreValidator genreValidator) {
+            final CatalogValidator<Genre> genreValidator) {
         Assert.notNull(genreService, "Service for genres mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(genreValidator, "Validator for genre mustn't be null.");
@@ -93,7 +94,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void add(final Genre genre) {
-        genreValidator.validateNewGenre(genre);
+        genreValidator.validate(genre, ValidationType.NEW, ValidationType.DEEP);
 
         genreService.add(converter.convert(genre, cz.vhromada.catalog.domain.Genre.class));
     }
@@ -103,7 +104,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void update(final Genre genre) {
-        genreValidator.validateExistingGenre(genre);
+        genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         if (genreService.get(genre.getId()) == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
         }
@@ -116,7 +117,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void remove(final Genre genre) {
-        genreValidator.validateGenreWithId(genre);
+        genreValidator.validate(genre, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
         if (genreDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
@@ -130,7 +131,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void duplicate(final Genre genre) {
-        genreValidator.validateGenreWithId(genre);
+        genreValidator.validate(genre, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
         if (genreDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
@@ -144,7 +145,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void moveUp(final Genre genre) {
-        genreValidator.validateGenreWithId(genre);
+        genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.UP);
         final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
         if (genreDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
@@ -162,7 +163,7 @@ public class GenreFacadeImpl implements GenreFacade {
      */
     @Override
     public void moveDown(final Genre genre) {
-        genreValidator.validateGenreWithId(genre);
+        genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Genre genreDomain = genreService.get(genre.getId());
         if (genreDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);

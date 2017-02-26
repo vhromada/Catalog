@@ -10,6 +10,7 @@ import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.utils.GenreUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Ignore
 public class GenreFacadeImplIntegrationTest {
 
     /**

@@ -1,7 +1,9 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -11,8 +13,11 @@ import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.utils.ProgramUtils;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +33,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@Ignore
+@DirtiesContext
 public class ProgramFacadeImplIntegrationTest {
+
+    /**
+     * Event for null program
+     */
+    private static final Event NULL_PROGRAM_EVENT = new Event(Severity.ERROR, "PROGRAM_NULL", "Program mustn't be null.");
+
+    /**
+     * Event for program with null ID
+     */
+    private static final Event NULL_PROGRAM_ID_EVENT = new Event(Severity.ERROR, "PROGRAM_ID_NULL", "ID mustn't be null.");
+
+    /**
+     * Event for not existing program
+     */
+    private static final Event NOT_EXIST_PROGRAM_EVENT = new Event(Severity.ERROR, "PROGRAM_NOT_EXIST", "Program doesn't exist.");
 
     /**
      * Instance of {@link EntityManager}
@@ -50,44 +69,74 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testNewData() {
-        programFacade.newData();
+    public void newData() {
+        final Result<Void> result = programFacade.newData();
 
-        assertEquals(0, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(0));
     }
 
     /**
-     * Test method for {@link ProgramFacade#getPrograms()}.
+     * Test method for {@link ProgramFacade#getAll()}.
      */
     @Test
-    public void testGetPrograms() {
-        final List<Program> programs = programFacade.getPrograms();
+    public void getAll() {
+        final Result<List<Program>> result = programFacade.getAll();
 
-        ProgramUtils.assertProgramListDeepEquals(programs, ProgramUtils.getPrograms());
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+        ProgramUtils.assertProgramListDeepEquals(result.getData(), ProgramUtils.getPrograms());
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#getProgram(Integer)}.
+     * Test method for {@link ProgramFacade#get(Integer)}.
      */
     @Test
-    public void testGetProgram() {
+    public void get() {
         for (int i = 1; i <= ProgramUtils.PROGRAMS_COUNT; i++) {
-            ProgramUtils.assertProgramDeepEquals(programFacade.getProgram(i), ProgramUtils.getProgram(i));
+            final Result<Program> result = programFacade.get(i);
+
+            assertThat(result, is(notNullValue()));
+            assertThat(result.getEvents(), is(notNullValue()));
+            assertThat(result.getStatus(), is(Status.OK));
+            assertThat(result.getEvents().isEmpty(), is(true));
+            ProgramUtils.assertProgramDeepEquals(result.getData(), ProgramUtils.getProgram(i));
         }
 
-        assertNull(programFacade.getProgram(Integer.MAX_VALUE));
+        final Result<Program> result = programFacade.get(Integer.MAX_VALUE);
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#getProgram(Integer)} with null argument.
+     * Test method for {@link ProgramFacade#get(Integer)} with null program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetProgram_NullArgument() {
-        programFacade.getProgram(null);
+    @Test
+    public void get_NullProgram() {
+        final Result<Program> result = programFacade.get(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
@@ -95,106 +144,185 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testAdd() {
-        programFacade.add(ProgramUtils.newProgram(null));
+    public void add() {
+        final Result<Void> result = programFacade.add(ProgramUtils.newProgram(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
         ProgramUtils.assertProgramDeepEquals(ProgramUtils.newProgramDomain(ProgramUtils.PROGRAMS_COUNT + 1), addedProgram);
-
-        assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT + 1));
     }
 
     /**
-     * Test method for {@link ProgramFacade#add(Program)} with null argument.
+     * Test method for {@link ProgramFacade#add(Program)} with null program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullArgument() {
-        programFacade.add(null);
+    @Test
+    public void add_NullProgram() {
+        final Result<Void> result = programFacade.add(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with not null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NotNullId() {
-        programFacade.add(ProgramUtils.newProgram(1));
+    @Test
+    public void add_NotNullId() {
+        final Result<Void> result = programFacade.add(ProgramUtils.newProgram(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_ID_NOT_NULL", "ID must be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullName() {
+    @Test
+    public void add_NullName() {
         final Program program = ProgramUtils.newProgram(null);
         program.setName(null);
 
-        programFacade.add(program);
+        final Result<Void> result = programFacade.add(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with empty string as name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_EmptyName() {
+    @Test
+    public void add_EmptyName() {
         final Program program = ProgramUtils.newProgram(null);
         program.setName("");
 
-        programFacade.add(program);
+        final Result<Void> result = programFacade.add(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null URL to english Wikipedia about program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullWikiEn() {
+    @Test
+    public void add_NullWikiEn() {
         final Program program = ProgramUtils.newProgram(null);
         program.setWikiEn(null);
 
-        programFacade.add(program);
+        final Result<Void> result = programFacade.add(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null URL to czech Wikipedia about program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullWikiCz() {
+    @Test
+    public void add_NullWikiCz() {
         final Program program = ProgramUtils.newProgram(null);
         program.setWikiCz(null);
 
-        programFacade.add(program);
+        final Result<Void> result = programFacade.add(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with not positive count of media.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NotPositiveMediaCount() {
+    @Test
+    public void add_NotPositiveMediaCount() {
         final Program program = ProgramUtils.newProgram(null);
         program.setMediaCount(0);
 
-        programFacade.add(program);
+        final Result<Void> result = programFacade.add(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null other data.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullOtherData() {
+    @Test
+    public void add_NullOtherData() {
         final Program program = ProgramUtils.newProgram(null);
         program.setOtherData(null);
 
-        programFacade.add(program);
+        final Result<Void> result = programFacade.add(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullNote() {
+    @Test
+    public void add_NullNote() {
         final Program program = ProgramUtils.newProgram(null);
         program.setNote(null);
 
-        programFacade.add(program);
+        final Result<Void> result = programFacade.add(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
@@ -202,116 +330,203 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testUpdate() {
+    public void update() {
         final Program program = ProgramUtils.newProgram(1);
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Program updatedProgram = ProgramUtils.getProgram(entityManager, 1);
         ProgramUtils.assertProgramDeepEquals(program, updatedProgram);
-
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#update(Program)} with null argument.
+     * Test method for {@link ProgramFacade#update(Program)} with null program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullArgument() {
-        programFacade.update(null);
+    @Test
+    public void update_NullProgram() {
+        final Result<Void> result = programFacade.update(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullId() {
-        programFacade.update(ProgramUtils.newProgram(null));
+    @Test
+    public void update_NullId() {
+        final Result<Void> result = programFacade.update(ProgramUtils.newProgram(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_ID_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullName() {
+    @Test
+    public void update_NullName() {
         final Program program = ProgramUtils.newProgram(1);
         program.setName(null);
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with empty string as name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_EmptyName() {
+    @Test
+    public void update_EmptyName() {
         final Program program = ProgramUtils.newProgram(1);
-        program.setName(null);
+        program.setName("");
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null URL to english Wikipedia about program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullWikiEn() {
+    @Test
+    public void update_NullWikiEn() {
         final Program program = ProgramUtils.newProgram(1);
         program.setWikiEn(null);
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null URL to czech Wikipedia about program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullWikiCz() {
+    @Test
+    public void update_NullWikiCz() {
         final Program program = ProgramUtils.newProgram(1);
         program.setWikiCz(null);
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with not positive count of media.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NotPositiveMediaCount() {
+    @Test
+    public void update_NotPositiveMediaCount() {
         final Program program = ProgramUtils.newProgram(1);
         program.setMediaCount(0);
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null other data.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullOtherData() {
+    @Test
+    public void update_NullOtherData() {
         final Program program = ProgramUtils.newProgram(1);
         program.setOtherData(null);
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullNote() {
+    @Test
+    public void update_NullNote() {
         final Program program = ProgramUtils.newProgram(1);
         program.setNote(null);
 
-        programFacade.update(program);
+        final Result<Void> result = programFacade.update(program);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#update(Program)} with program with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadId() {
-        programFacade.update(ProgramUtils.newProgram(Integer.MAX_VALUE));
+    @Test
+    public void update_BadId() {
+        final Result<Void> result = programFacade.update(ProgramUtils.newProgram(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
@@ -319,36 +534,64 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testRemove() {
-        programFacade.remove(ProgramUtils.newProgram(1));
+    public void remove() {
+        final Result<Void> result = programFacade.remove(ProgramUtils.newProgram(1));
 
-        assertNull(ProgramUtils.getProgram(entityManager, 1));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT - 1, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgram(entityManager, 1), is(nullValue()));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT - 1));
     }
 
     /**
-     * Test method for {@link ProgramFacade#remove(Program)} with null argument.
+     * Test method for {@link ProgramFacade#remove(Program)} with null program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullArgument() {
-        programFacade.remove(null);
+    @Test
+    public void remove_NullProgram() {
+        final Result<Void> result = programFacade.remove(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#remove(Program)} with program with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullId() {
-        programFacade.remove(ProgramUtils.newProgram(null));
+    @Test
+    public void remove_NullId() {
+        final Result<Void> result = programFacade.remove(ProgramUtils.newProgram(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_ID_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#remove(Program)} with program with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_BadId() {
-        programFacade.remove(ProgramUtils.newProgram(Integer.MAX_VALUE));
+    @Test
+    public void remove_BadId() {
+        final Result<Void> result = programFacade.remove(ProgramUtils.newProgram(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
@@ -356,40 +599,68 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testDuplicate() {
+    public void duplicate() {
         final cz.vhromada.catalog.domain.Program program = ProgramUtils.getProgram(ProgramUtils.PROGRAMS_COUNT);
         program.setId(ProgramUtils.PROGRAMS_COUNT + 1);
 
-        programFacade.duplicate(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT));
+        final Result<Void> result = programFacade.duplicate(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Program duplicatedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
         ProgramUtils.assertProgramDeepEquals(program, duplicatedProgram);
-
-        assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT + 1));
     }
 
     /**
-     * Test method for {@link ProgramFacade#duplicate(Program)} with null argument.
+     * Test method for {@link ProgramFacade#duplicate(Program)} with null program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullArgument() {
-        programFacade.duplicate(null);
+    @Test
+    public void duplicate_NullProgram() {
+        final Result<Void> result = programFacade.duplicate(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#duplicate(Program)} with program with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullId() {
-        programFacade.duplicate(ProgramUtils.newProgram(null));
+    @Test
+    public void duplicate_NullId() {
+        final Result<Void> result = programFacade.duplicate(ProgramUtils.newProgram(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_ID_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#duplicate(Program)} with program with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_BadId() {
-        programFacade.duplicate(ProgramUtils.newProgram(Integer.MAX_VALUE));
+    @Test
+    public void duplicate_BadId() {
+        final Result<Void> result = programFacade.duplicate(ProgramUtils.newProgram(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
@@ -397,53 +668,89 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testMoveUp() {
+    public void moveUp() {
         final cz.vhromada.catalog.domain.Program program1 = ProgramUtils.getProgram(1);
         program1.setPosition(1);
         final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.getProgram(2);
         program2.setPosition(0);
 
-        programFacade.moveUp(ProgramUtils.newProgram(2));
+        final Result<Void> result = programFacade.moveUp(ProgramUtils.newProgram(2));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         ProgramUtils.assertProgramDeepEquals(program1, ProgramUtils.getProgram(entityManager, 1));
         ProgramUtils.assertProgramDeepEquals(program2, ProgramUtils.getProgram(entityManager, 2));
         for (int i = 3; i <= ProgramUtils.PROGRAMS_COUNT; i++) {
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), ProgramUtils.getProgram(entityManager, i));
         }
-
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)} with null argument.
+     * Test method for {@link ProgramFacade#moveUp(Program)} with null program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullArgument() {
-        programFacade.moveUp(null);
+    @Test
+    public void moveUp_NullProgram() {
+        final Result<Void> result = programFacade.moveUp(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveUp(Program)} with program with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullId() {
-        programFacade.moveUp(ProgramUtils.newProgram(null));
+    @Test
+    public void moveUp_NullId() {
+        final Result<Void> result = programFacade.moveUp(ProgramUtils.newProgram(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_ID_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)} with not movable argument.
+     * Test method for {@link ProgramFacade#moveUp(Program)} with not movable program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NotMovableArgument() {
-        programFacade.moveUp(ProgramUtils.newProgram(1));
+    @Test
+    public void moveUp_NotMovableProgram() {
+        final Result<Void> result = programFacade.moveUp(ProgramUtils.newProgram(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NOT_MOVABLE", "Program can't be moved up.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)} with bad ID.
+     * Test method for {@link ProgramFacade#moveUp(Program)} with program with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_BadId() {
-        programFacade.moveUp(ProgramUtils.newProgram(Integer.MAX_VALUE));
+    @Test
+    public void moveUp_BadId() {
+        final Result<Void> result = programFacade.moveUp(ProgramUtils.newProgram(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
@@ -451,53 +758,89 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testMoveDown() {
+    public void moveDown() {
         final cz.vhromada.catalog.domain.Program program1 = ProgramUtils.getProgram(1);
         program1.setPosition(1);
         final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.getProgram(2);
         program2.setPosition(0);
 
-        programFacade.moveDown(ProgramUtils.newProgram(1));
+        final Result<Void> result = programFacade.moveDown(ProgramUtils.newProgram(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         ProgramUtils.assertProgramDeepEquals(program1, ProgramUtils.getProgram(entityManager, 1));
         ProgramUtils.assertProgramDeepEquals(program2, ProgramUtils.getProgram(entityManager, 2));
         for (int i = 3; i <= ProgramUtils.PROGRAMS_COUNT; i++) {
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), ProgramUtils.getProgram(entityManager, i));
         }
-
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)} with null argument.
+     * Test method for {@link ProgramFacade#moveDown(Program)} with null program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullArgument() {
-        programFacade.moveDown(null);
+    @Test
+    public void moveDown_NullProgram() {
+        final Result<Void> result = programFacade.moveDown(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#moveDown(Program)} with program with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullId() {
-        programFacade.moveDown(ProgramUtils.newProgram(null));
+    @Test
+    public void moveDown_NullId() {
+        final Result<Void> result = programFacade.moveDown(ProgramUtils.newProgram(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_PROGRAM_ID_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)} with not movable argument.
+     * Test method for {@link ProgramFacade#moveDown(Program)} with not movable program.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NotMovableArgument() {
-        programFacade.moveDown(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT));
+    @Test
+    public void moveDown_NotMovableProgram() {
+        final Result<Void> result = programFacade.moveDown(ProgramUtils.newProgram(ProgramUtils.PROGRAMS_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NOT_MOVABLE", "Program can't be moved down.")));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)} with bad ID.
+     * Test method for {@link ProgramFacade#moveDown(Program)} with program with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_BadId() {
-        programFacade.moveDown(ProgramUtils.newProgram(Integer.MAX_VALUE));
+    @Test
+    public void moveDown_BadId() {
+        final Result<Void> result = programFacade.moveDown(ProgramUtils.newProgram(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_PROGRAM_EVENT));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
@@ -505,26 +848,36 @@ public class ProgramFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testUpdatePositions() {
-        programFacade.updatePositions();
+    public void updatePositions() {
+        final Result<Void> result = programFacade.updatePositions();
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         for (int i = 1; i <= ProgramUtils.PROGRAMS_COUNT; i++) {
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), ProgramUtils.getProgram(entityManager, i));
         }
-
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
     /**
      * Test method for {@link ProgramFacade#getTotalMediaCount()}.
      */
     @Test
-    public void testGetTotalMediaCount() {
+    public void getTotalMediaCount() {
         final int count = 600;
 
-        assertEquals(count, programFacade.getTotalMediaCount());
+        final Result<Integer> result = programFacade.getTotalMediaCount();
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(count));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }
 
 }

@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.entity.Program;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for programs.
@@ -13,110 +14,144 @@ public interface ProgramFacade {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
-    void newData();
+    Result<Void> newData();
 
     /**
      * Returns programs.
      *
-     * @return programs
+     * @return result with list of programs
      */
-    List<Program> getPrograms();
+    Result<List<Program>> getAll();
 
     /**
      * Returns program with ID or null if there isn't such program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return program with ID or null if there isn't such program
-     * @throws IllegalArgumentException if ID is null
+     * @return result with program or validation errors
      */
-    Program getProgram(Integer id);
+    Result<Program> get(Integer id);
 
     /**
      * Adds program. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about program is null</li>
+     * <li>URL to czech Wikipedia page about program is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about program is null
-     *                                  or URL to czech Wikipedia page about program is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @return result with validation errors
      */
-    void add(Program program);
+    Result<Void> add(Program program);
 
     /**
      * Updates program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about program is null</li>
+     * <li>URL to czech Wikipedia page about program is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * <li>Program doesn't exist in data storage</li>
+     * </ul>
      *
      * @param program new value of program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about program is null
-     *                                  or URL to czech Wikipedia page about program is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
-    void update(Program program);
+    Result<Void> update(Program program);
 
     /**
      * Removes program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program doesn't exist in data storage</li>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Program program);
+    Result<Void> remove(Program program);
 
     /**
      * Duplicates program.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program doesn't exist in data storage</li>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Program program);
+    Result<Void> duplicate(Program program);
 
     /**
      * Moves program in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program can't be moved up</li>
+     * <li>Program doesn't exist in data storage</li>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program can't be moved up
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Program program);
+    Result<Void> moveUp(Program program);
 
     /**
      * Moves program in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Program is null</li>
+     * <li>ID is null</li>
+     * <li>Program can't be moved down</li>
+     * <li>Program doesn't exist in data storage</li>
      *
      * @param program program
-     * @throws IllegalArgumentException if program is null
-     *                                  or ID is null
-     *                                  or program can't be moved down
-     *                                  or program doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Program program);
+    Result<Void> moveDown(Program program);
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
-    void updatePositions();
+    Result<Void> updatePositions();
 
     /**
      * Returns total count of media.
      *
-     * @return total count of media
+     * @return result with total count of media
      */
-    int getTotalMediaCount();
+    Result<Integer> getTotalMediaCount();
 
 }

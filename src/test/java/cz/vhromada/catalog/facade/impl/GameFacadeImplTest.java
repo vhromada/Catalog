@@ -75,4 +75,5 @@ public class GameFacadeImplTest extends AbstractParentFacadeTest<Game, cz.vhroma
     protected Class<cz.vhromada.catalog.domain.Game> getDomainClass() {
         return cz.vhromada.catalog.domain.Game.class;
     }
+
 }

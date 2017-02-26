@@ -12,7 +12,7 @@ import cz.vhromada.result.Status;
 
 import org.springframework.util.Assert;
 
-/***
+/**
  * An abstract class facade for catalog for parent data.
  *
  * @param <T> type of entity data

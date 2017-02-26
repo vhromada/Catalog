@@ -47,7 +47,7 @@ public class GameFacadeImplIntegrationTest {
     private static final Event NULL_GAME_ID_EVENT = new Event(Severity.ERROR, "GAME_ID_NULL", "ID mustn't be null.");
 
     /**
-     * Event for not exiting game
+     * Event for not existing game
      */
     private static final Event NOT_EXIST_GAME_EVENT = new Event(Severity.ERROR, "GAME_NOT_EXIST", "Game doesn't exist.");
 

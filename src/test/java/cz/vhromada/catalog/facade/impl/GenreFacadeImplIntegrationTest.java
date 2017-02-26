@@ -50,7 +50,7 @@ public class GenreFacadeImplIntegrationTest {
     private static final Event NULL_GENRE_ID_EVENT = new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.");
 
     /**
-     * Event for not exiting genre
+     * Event for not existing genre
      */
     private static final Event NOT_EXIST_GENRE_EVENT = new Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.");
 

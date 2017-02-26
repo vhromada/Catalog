@@ -11,7 +11,6 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.catalog.validator.SongValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
@@ -60,7 +59,7 @@ public class SongFacadeImpl implements SongFacade {
     /**
      * Validator for song
      */
-    private SongValidator songValidator;
+    private CatalogValidator<Song> songValidator;
 
     /**
      * Creates a new instance of SongFacadeImpl.
@@ -78,7 +77,7 @@ public class SongFacadeImpl implements SongFacade {
     public SongFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
             final Converter converter,
             final CatalogValidator<Music> musicValidator,
-            final SongValidator songValidator) {
+            final CatalogValidator<Song> songValidator) {
         Assert.notNull(musicService, "Service for music mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(musicValidator, "Validator for music mustn't be null.");
@@ -106,7 +105,7 @@ public class SongFacadeImpl implements SongFacade {
     @Override
     public void add(final Music music, final Song song) {
         musicValidator.validate(music, ValidationType.EXISTS);
-        songValidator.validateNewSong(song);
+        songValidator.validate(song, ValidationType.NEW, ValidationType.DEEP);
         final cz.vhromada.catalog.domain.Music musicDomain = musicService.get(music.getId());
         if (musicDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MUSIC_MESSAGE);
@@ -124,7 +123,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void update(final Song song) {
-        songValidator.validateExistingSong(song);
+        songValidator.validate(song, ValidationType.EXISTS, ValidationType.DEEP);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
         final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
         if (songDomain == null) {
@@ -141,7 +140,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void remove(final Song song) {
-        songValidator.validateSongWithId(song);
+        songValidator.validate(song, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
         final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
         if (songDomain == null) {
@@ -160,7 +159,7 @@ public class SongFacadeImpl implements SongFacade {
      */
     @Override
     public void duplicate(final Song song) {
-        songValidator.validateSongWithId(song);
+        songValidator.validate(song, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
         final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
         if (songDomain == null) {
@@ -286,7 +285,7 @@ public class SongFacadeImpl implements SongFacade {
      * @param up   true if moving song up
      */
     private void move(final Song song, final boolean up) {
-        songValidator.validateSongWithId(song);
+        songValidator.validate(song, ValidationType.EXISTS, up ? ValidationType.UP : ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Music music = getMusic(song);
         final cz.vhromada.catalog.domain.Song songDomain = getSong(song.getId(), music);
         if (songDomain == null) {

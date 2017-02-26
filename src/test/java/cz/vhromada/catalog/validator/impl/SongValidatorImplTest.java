@@ -1,10 +1,30 @@
 package cz.vhromada.catalog.validator.impl;
 
-import cz.vhromada.catalog.entity.Song;
-import cz.vhromada.catalog.utils.SongUtils;
-import cz.vhromada.catalog.validator.SongValidator;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
-import org.junit.Before;
+import java.util.Collections;
+import java.util.List;
+
+import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.domain.Music;
+import cz.vhromada.catalog.entity.Song;
+import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.MusicUtils;
+import cz.vhromada.catalog.utils.SongUtils;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
+
 import org.junit.Test;
 
 /**
@@ -12,155 +32,150 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class SongValidatorImplTest {
+public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
 
-    /**
-     * Instance of {@link SongValidator}
-     */
-    private SongValidator songValidator;
+    @Override
+    protected CatalogValidator<Song> getCatalogValidator() {
+        return new SongValidatorImpl(getCatalogService());
+    }
 
-    /**
-     * Initializes validator for song.
-     */
-    @Before
-    public void setUp() {
-        songValidator = new SongValidatorImpl();
+    @Override
+    protected Song getValidatingData(final Integer id) {
+        return SongUtils.newSong(id);
+    }
+
+    @Override
+    protected Music getRepositoryData(final Song validatingData) {
+        return MusicUtils.newMusicWithSongs(validatingData.getId());
+    }
+
+    @Override
+    protected Music getItem1() {
+        return null;
+    }
+
+    @Override
+    protected Music getItem2() {
+        return null;
+    }
+
+    @Override
+    protected String getName() {
+        return "Song";
+    }
+
+    @Override
+    protected String getPrefix() {
+        return "SONG";
+    }
+
+    @Override
+    protected void initExistsMock(final Song validatingData, final boolean exists) {
+        final Music music = exists ? MusicUtils.newMusicWithSongs(validatingData.getId()) : MusicUtils.newMusicDomain(Integer.MAX_VALUE);
+
+        when(getCatalogService().getAll()).thenReturn(Collections.singletonList(music));
+    }
+
+    @Override
+    protected void verifyExistsMock(final Song validatingData) {
+        verify(getCatalogService()).getAll();
+        verifyNoMoreInteractions(getCatalogService());
+    }
+
+    @Override
+    protected void initMovingMock(final Song validatingData, final boolean up, final boolean valid) {
+        final List<cz.vhromada.catalog.domain.Song> songs;
+        if (up && valid || !up && !valid) {
+            songs = CollectionUtils.newList(SongUtils.newSongDomain(1), SongUtils.newSongDomain(validatingData.getId()));
+        } else {
+            songs = CollectionUtils.newList(SongUtils.newSongDomain(validatingData.getId()), SongUtils.newSongDomain(Integer.MAX_VALUE));
+        }
+        final Music music = MusicUtils.newMusicDomain(1);
+        music.setSongs(songs);
+
+        when(getCatalogService().getAll()).thenReturn(Collections.singletonList(music));
+    }
+
+    @Override
+    protected void verifyMovingMock(final Song validatingData) {
+        verify(getCatalogService(), times(2)).getAll();
+        verifyNoMoreInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSong(Song)} with null argument.
+     * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSong_NullArgument() {
-        songValidator.validateNewSong(null);
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateNewSong(Song)} with song with not null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSong_NotNullId() {
-        songValidator.validateNewSong(SongUtils.newSong(1));
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateNewSong(Song)} with song with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSong_NullName() {
-        final Song song = SongUtils.newSong(null);
+    @Test
+    public void validate_Deep_NullName() {
+        final Song song = getValidatingData(1);
         song.setName(null);
 
-        songValidator.validateNewSong(song);
+        final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSong(Song)} with song with empty string as name.
+     * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSong_EmptyName() {
-        final Song song = SongUtils.newSong(null);
+    @Test
+    public void validate_Deep_EmptyName() {
+        final Song song = getValidatingData(1);
         song.setName("");
 
-        songValidator.validateNewSong(song);
+        final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSong(Song)} with song with negative length of song.
+     * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with negative length of song.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSong_NegativeLength() {
-        final Song song = SongUtils.newSong(null);
+    @Test
+    public void validate_Deep_NegativeLeng() {
+        final Song song = getValidatingData(1);
         song.setLength(-1);
 
-        songValidator.validateNewSong(song);
+        final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SongValidator#validateNewSong(Song)} with song with null note.
+     * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSong_NullNote() {
-        final Song song = SongUtils.newSong(null);
+    @Test
+    public void validate_Deep_NullNote() {
+        final Song song = getValidatingData(1);
         song.setNote(null);
 
-        songValidator.validateNewSong(song);
-    }
+        final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
 
-    /**
-     * Test method for {@link SongValidator#validateExistingSong(Song)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSong_NullArgument() {
-        songValidator.validateExistingSong(null);
-    }
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")));
 
-    /**
-     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSong_NullId() {
-        songValidator.validateExistingSong(SongUtils.newSong(null));
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with null name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSong_NullName() {
-        final Song song = SongUtils.newSong(1);
-        song.setName(null);
-
-        songValidator.validateExistingSong(song);
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with empty string as name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSong_EmptyName() {
-        final Song song = SongUtils.newSong(1);
-        song.setName("");
-
-        songValidator.validateExistingSong(song);
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with negative length of song.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSong_NegativeLength() {
-        final Song song = SongUtils.newSong(1);
-        song.setLength(-1);
-
-        songValidator.validateExistingSong(song);
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateExistingSong(Song)} with song with null note.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSong_NullNote() {
-        final Song song = SongUtils.newSong(1);
-        song.setNote(null);
-
-        songValidator.validateExistingSong(song);
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateSongWithId(Song)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateSongWithId_NullArgument() {
-        songValidator.validateSongWithId(null);
-    }
-
-    /**
-     * Test method for {@link SongValidator#validateSongWithId(Song)} with song with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateSongWithId_NullId() {
-        songValidator.validateSongWithId(SongUtils.newSong(null));
+        verifyZeroInteractions(getCatalogService());
     }
 
 }

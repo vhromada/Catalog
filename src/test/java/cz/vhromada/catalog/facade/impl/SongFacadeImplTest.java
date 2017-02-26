@@ -23,7 +23,6 @@ import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.catalog.validator.SongValidator;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Before;
@@ -62,10 +61,10 @@ public class SongFacadeImplTest {
     private CatalogValidator<Music> musicValidator;
 
     /**
-     * Instance of {@link SongValidator}
+     * Instance of {@link CatalogValidator}
      */
     @Mock
-    private SongValidator songValidator;
+    private CatalogValidator<Song> songValidator;
 
     /**
      * Instance of (@link SongFacade}
@@ -81,7 +80,7 @@ public class SongFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, SongValidator)} with null service for music.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null service for music.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullMusicService() {
@@ -89,7 +88,7 @@ public class SongFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, SongValidator)} with null converter.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
@@ -97,7 +96,7 @@ public class SongFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, SongValidator)} with null validator for music.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for music.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullMusicEpisodeValidator() {
@@ -105,7 +104,7 @@ public class SongFacadeImplTest {
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, SongValidator)} with null validator for song.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for song.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullSongEpisodeValidator() {
@@ -174,7 +173,7 @@ public class SongFacadeImplTest {
         verify(musicService).get(music.getId());
         verify(musicService).update(musicArgumentCaptor.capture());
         verify(musicValidator).validate(music);
-        verify(songValidator).validateNewSong(song);
+        verify(songValidator).validate(song);
         verify(converter).convert(song, cz.vhromada.catalog.domain.Song.class);
         verifyNoMoreInteractions(musicService, converter, musicValidator, songValidator);
 
@@ -196,7 +195,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSongEpisode() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateNewSong(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.add(MusicUtils.newMusic(1), null);
     }
@@ -216,7 +215,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_BadSongEpisode() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateNewSong(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.add(MusicUtils.newMusic(1), SongUtils.newSong(Integer.MAX_VALUE));
     }
@@ -248,7 +247,7 @@ public class SongFacadeImplTest {
         verify(musicService).getAll();
         verify(musicService).update(musicArgumentCaptor.capture());
         verify(converter).convert(song, cz.vhromada.catalog.domain.Song.class);
-        verify(songValidator).validateExistingSong(song);
+        verify(songValidator).validate(song);
         verifyNoMoreInteractions(musicService, converter, songValidator);
         verifyZeroInteractions(musicValidator);
 
@@ -260,7 +259,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateExistingSong(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.update(null);
     }
@@ -270,7 +269,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testUpdate_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateExistingSong(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.update(SongUtils.newSong(Integer.MAX_VALUE));
     }
@@ -299,7 +298,7 @@ public class SongFacadeImplTest {
 
         verify(musicService).getAll();
         verify(musicService).update(musicArgumentCaptor.capture());
-        verify(songValidator).validateSongWithId(song);
+        verify(songValidator).validate(song);
         verifyNoMoreInteractions(musicService, songValidator);
         verifyZeroInteractions(converter, musicValidator);
 
@@ -311,7 +310,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.remove(null);
     }
@@ -321,7 +320,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRemove_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.remove(SongUtils.newSong(Integer.MAX_VALUE));
     }
@@ -353,7 +352,7 @@ public class SongFacadeImplTest {
 
         verify(musicService).getAll();
         verify(musicService).update(musicArgumentCaptor.capture());
-        verify(songValidator).validateSongWithId(song);
+        verify(songValidator).validate(song);
         verifyNoMoreInteractions(musicService, songValidator);
         verifyZeroInteractions(converter, musicValidator);
 
@@ -365,7 +364,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.duplicate(null);
     }
@@ -375,7 +374,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDuplicate_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.duplicate(SongUtils.newSong(Integer.MAX_VALUE));
     }
@@ -408,7 +407,7 @@ public class SongFacadeImplTest {
 
         verify(musicService).getAll();
         verify(musicService).update(musicArgumentCaptor.capture());
-        verify(songValidator).validateSongWithId(song);
+        verify(songValidator).validate(song);
         verifyNoMoreInteractions(musicService, songValidator);
         verifyZeroInteractions(converter, musicValidator);
 
@@ -420,7 +419,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.moveUp(null);
     }
@@ -430,7 +429,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveUp_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.moveUp(SongUtils.newSong(Integer.MAX_VALUE));
     }
@@ -473,7 +472,7 @@ public class SongFacadeImplTest {
 
         verify(musicService).getAll();
         verify(musicService).update(musicArgumentCaptor.capture());
-        verify(songValidator).validateSongWithId(song);
+        verify(songValidator).validate(song);
         verifyNoMoreInteractions(musicService, songValidator);
         verifyZeroInteractions(converter, musicValidator);
 
@@ -485,7 +484,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.moveDown(null);
     }
@@ -495,7 +494,7 @@ public class SongFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMoveDown_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(songValidator).validateSongWithId(any(Song.class));
+        doThrow(IllegalArgumentException.class).when(songValidator).validate(any(Song.class));
 
         songFacade.moveDown(SongUtils.newSong(Integer.MAX_VALUE));
     }

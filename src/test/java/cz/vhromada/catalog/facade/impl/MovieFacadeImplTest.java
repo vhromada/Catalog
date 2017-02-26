@@ -108,7 +108,7 @@ public class MovieFacadeImplTest {
      * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, CatalogService, Converter, CatalogValidator)} with null validator for movie.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullCatalogValidator() {
+    public void testConstructor_NullMovieValidator() {
         new MovieFacadeImpl(movieService, genreService, converter, null);
     }
 

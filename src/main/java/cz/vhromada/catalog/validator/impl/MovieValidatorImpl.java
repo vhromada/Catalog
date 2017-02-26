@@ -106,7 +106,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
      * <ul>
      * <li>Language is null</li>
      * <li>Subtitles are null</li>
-     * <li>Subtitles contain null valuel</li>
+     * <li>Subtitles contain null value</li>
      * </ul>
      *
      * @param data   validating movie

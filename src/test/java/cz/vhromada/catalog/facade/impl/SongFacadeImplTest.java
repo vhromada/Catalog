@@ -99,7 +99,7 @@ public class SongFacadeImplTest {
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for music.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullMusicEpisodeValidator() {
+    public void testConstructor_NullMusicValidator() {
         new SongFacadeImpl(musicService, converter, null, songValidator);
     }
 
@@ -107,7 +107,7 @@ public class SongFacadeImplTest {
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for song.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullSongEpisodeValidator() {
+    public void testConstructor_NullSongValidator() {
         new SongFacadeImpl(musicService, converter, musicValidator, null);
     }
 

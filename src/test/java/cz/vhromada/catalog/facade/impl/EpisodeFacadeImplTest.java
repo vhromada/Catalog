@@ -24,7 +24,6 @@ import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Before;
@@ -57,10 +56,10 @@ public class EpisodeFacadeImplTest {
     private Converter converter;
 
     /**
-     * Instance of {@link SeasonValidator}
+     * Instance of {@link CatalogValidator}
      */
     @Mock
-    private SeasonValidator seasonValidator;
+    private CatalogValidator<Season> seasonValidator;
 
     /**
      * Instance of {@link CatalogValidator}
@@ -82,7 +81,7 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, CatalogValidator)} with null service for shows.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null service for shows.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullShowService() {
@@ -90,7 +89,7 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, CatalogValidator)} with null converter.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructor_NullConverter() {
@@ -98,19 +97,19 @@ public class EpisodeFacadeImplTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, CatalogValidator)} with null validator for season.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for season.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullSeasonCatalogValidator() {
+    public void testConstructor_NullSeasonValidator() {
         new EpisodeFacadeImpl(showService, converter, null, episodeValidator);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, SeasonValidator, CatalogValidator)} with null validator for
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for
      * episode.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullCatalogValidator() {
+    public void testConstructor_NullEpisodeValidator() {
         new EpisodeFacadeImpl(showService, converter, seasonValidator, null);
     }
 
@@ -175,7 +174,7 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(showService).update(showArgumentCaptor.capture());
-        verify(seasonValidator).validateSeasonWithId(season);
+        verify(seasonValidator).validate(season);
         verify(episodeValidator).validate(episode);
         verify(converter).convert(episode, cz.vhromada.catalog.domain.Episode.class);
         verifyNoMoreInteractions(showService, converter, seasonValidator, episodeValidator);
@@ -188,7 +187,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_NullSeasonEpisode() {
-        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validate(any(Season.class));
 
         episodeFacade.add(null, EpisodeUtils.newEpisode(null));
     }
@@ -208,7 +207,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAdd_BadSeasonEpisode() {
-        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validate(any(Season.class));
 
         episodeFacade.add(SeasonUtils.newSeason(1), EpisodeUtils.newEpisode(null));
     }
@@ -546,7 +545,7 @@ public class EpisodeFacadeImplTest {
 
         verify(showService).getAll();
         verify(converter).convertCollection(CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(1)), Episode.class);
-        verify(seasonValidator).validateSeasonWithId(season);
+        verify(seasonValidator).validate(season);
         verifyNoMoreInteractions(showService, converter, seasonValidator);
         verifyZeroInteractions(episodeValidator);
     }
@@ -556,7 +555,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindEpisodesBySeason_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validate(any(Season.class));
 
         episodeFacade.findEpisodesBySeason(null);
     }
@@ -566,7 +565,7 @@ public class EpisodeFacadeImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFindEpisodesBySeason_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(seasonValidator).validateSeasonWithId(any(Season.class));
+        doThrow(IllegalArgumentException.class).when(seasonValidator).validate(any(Season.class));
 
         episodeFacade.findEpisodesBySeason(SeasonUtils.newSeason(Integer.MAX_VALUE));
     }

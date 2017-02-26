@@ -53,12 +53,7 @@ public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromad
         } else if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
             result.addEvent(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string."));
         }
-        if (data.getWikiEn() == null) {
-            result.addEvent(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null."));
-        }
-        if (data.getWikiCz() == null) {
-            result.addEvent(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null."));
-        }
+        validateUrls(data, result);
         if (data.getMediaCount() <= 0) {
             result.addEvent(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."));
         }
@@ -67,6 +62,27 @@ public class GameValidatorImpl extends AbstractCatalogValidator<Game, cz.vhromad
         }
         if (data.getNote() == null) {
             result.addEvent(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null."));
+        }
+    }
+
+    /**
+     * Validates URLs.
+     * <br/>
+     * Validation errors:
+     * <ul>
+     * <li>URL to english Wikipedia page about game is null</li>
+     * <li>URL to czech Wikipedia page about game is null</li>
+     * </ul>
+     *
+     * @param data   validating show
+     * @param result result with validation errors
+     */
+    private static void validateUrls(final Game data, final Result<Void> result) {
+        if (data.getWikiEn() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null."));
+        }
+        if (data.getWikiCz() == null) {
+            result.addEvent(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null."));
         }
     }
 

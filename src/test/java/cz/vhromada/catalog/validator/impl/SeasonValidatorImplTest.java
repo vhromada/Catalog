@@ -1,13 +1,32 @@
 package cz.vhromada.catalog.validator.impl;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import cz.vhromada.catalog.common.Language;
+import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.utils.SeasonUtils;
+import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.utils.TestConstants;
-import cz.vhromada.catalog.validator.SeasonValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -15,287 +34,247 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class SeasonValidatorImplTest {
+public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show> {
 
     /**
-     * Instance of {@link SeasonValidator}
+     * Event for invalid starting year
      */
-    private SeasonValidator seasonValidator;
+    private static final Event INVALID_STARTING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID", "Starting year must be between "
+            + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
 
     /**
-     * Initializes validator for season.
+     * Event for invalid ending year
      */
-    @Before
-    public void setUp() {
-        seasonValidator = new SeasonValidatorImpl();
+    private static final Event INVALID_ENDING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID", "Ending year must be between "
+            + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
+
+    @Override
+    protected CatalogValidator<Season> getCatalogValidator() {
+        return new SeasonValidatorImpl(getCatalogService());
+    }
+
+    @Override
+    protected Season getValidatingData(final Integer id) {
+        return SeasonUtils.newSeason(id);
+    }
+
+    @Override
+    protected Show getRepositoryData(final Season validatingData) {
+        return ShowUtils.newShowWithSeasons(validatingData.getId());
+    }
+
+    @Override
+    protected Show getItem1() {
+        return null;
+    }
+
+    @Override
+    protected Show getItem2() {
+        return null;
+    }
+
+    @Override
+    protected String getName() {
+        return "Season";
+    }
+
+    @Override
+    protected String getPrefix() {
+        return "SEASON";
+    }
+
+    @Override
+    protected void initExistsMock(final Season validatingData, final boolean exists) {
+        final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
+
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
+    }
+
+    @Override
+    protected void verifyExistsMock(final Season validatingData) {
+        verify(getCatalogService()).getAll();
+        verifyNoMoreInteractions(getCatalogService());
+    }
+
+    @Override
+    protected void initMovingMock(final Season validatingData, final boolean up, final boolean valid) {
+        final List<cz.vhromada.catalog.domain.Season> seasons;
+        if (up && valid || !up && !valid) {
+            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(validatingData.getId()));
+        } else {
+            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(validatingData.getId()), SeasonUtils.newSeasonDomain(Integer.MAX_VALUE));
+        }
+        final Show show = ShowUtils.newShowDomain(1);
+        show.setSeasons(seasons);
+
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
+    }
+
+    @Override
+    protected void verifyMovingMock(final Season validatingData) {
+        verify(getCatalogService(), times(2)).getAll();
+        verifyNoMoreInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with null argument.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
+     * number of season.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_NullArgument() {
-        seasonValidator.validateNewSeason(null);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with not null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_NotNullId() {
-        seasonValidator.validateNewSeason(SeasonUtils.newSeason(1));
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with not positive number of season.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_NotPositiveNumber() {
-        final Season season = SeasonUtils.newSeason(null);
+    @Test
+    public void validate_Deep_NotPositiveNumber() {
+        final Season season = getValidatingData(1);
         season.setNumber(0);
 
-        seasonValidator.validateNewSeason(season);
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with bad minimum starting year.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad minimum starting
+     * year and bad minimal year.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_BadMinimumStartYear() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setStartYear(TestConstants.BAD_MIN_YEAR);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with bad maximum starting year.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_BadMaximumStartYear() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setStartYear(TestConstants.BAD_MAX_YEAR);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with bad minimum ending year.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_BadMinimumEndYear() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setEndYear(TestConstants.BAD_MIN_YEAR);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with bad maximum ending year.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_BadMaximumEndYear() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setEndYear(TestConstants.BAD_MAX_YEAR);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with starting year greater than ending year.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_BadYear() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setStartYear(season.getEndYear() + 1);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with null language.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_NullLanguage() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setLanguage(null);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with null subtitles.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeasonWIthNullSubtitles() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setSubtitles(null);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with subtitles with null value.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeasonWIthBadSubtitles() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateNewSeason(Season)} with season with null note.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateNewSeason_NullNote() {
-        final Season season = SeasonUtils.newSeason(null);
-        season.setNote(null);
-
-        seasonValidator.validateNewSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_NullArgument() {
-        seasonValidator.validateExistingSeason(null);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_NullId() {
-        seasonValidator.validateExistingSeason(SeasonUtils.newSeason(null));
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with not positive number of season.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_NotPositiveNumber() {
-        final Season season = SeasonUtils.newSeason(1);
-        season.setNumber(0);
-
-        seasonValidator.validateExistingSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with bad minimum starting year.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_BadMinimumStartYear() {
+    @Test
+    public void validate_Deep_BadMinimumYears() {
         final Season season = SeasonUtils.newSeason(1);
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
-
-        seasonValidator.validateExistingSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with bad maximum starting year.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_BadMaximumStartYear() {
-        final Season season = SeasonUtils.newSeason(1);
-        season.setStartYear(TestConstants.BAD_MAX_YEAR);
-
-        seasonValidator.validateExistingSeason(season);
-    }
-
-    /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with bad minimum ending year.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_BadMinimumEndYear() {
-        final Season season = SeasonUtils.newSeason(1);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
-        seasonValidator.validateExistingSeason(season);
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(2));
+        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
+        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with bad maximum ending year.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad maximum starting
+     * year and bad ending year.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_BadMaximumEndYear() {
+    @Test
+    public void validate_Deep_BadMaximumYears() {
         final Season season = SeasonUtils.newSeason(1);
+        season.setStartYear(TestConstants.BAD_MAX_YEAR);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
-        seasonValidator.validateExistingSeason(season);
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(2));
+        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
+        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with starting year greater than ending year.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with starting year greater
+     * than ending year.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_BadYear() {
+    @Test
+    public void validate_Deep_BadYears() {
         final Season season = SeasonUtils.newSeason(1);
         season.setStartYear(season.getEndYear() + 1);
 
-        seasonValidator.validateExistingSeason(season);
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with null language.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null language.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_NullLanguage() {
-        final Season season = SeasonUtils.newSeason(1);
+    @Test
+    public void validate_Deep_NullLanguage() {
+        final Season season = getValidatingData(1);
         season.setLanguage(null);
 
-        seasonValidator.validateExistingSeason(season);
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with null subtitles.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null subtitles.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeasonWIthNullSubtitles() {
-        final Season season = SeasonUtils.newSeason(1);
+    @Test
+    public void validate_Deep_NullSubtitles() {
+        final Season season = getValidatingData(1);
         season.setSubtitles(null);
 
-        seasonValidator.validateExistingSeason(season);
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with subtitles with null value.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with subtitles with
+     * null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeasonWIthBadSubtitles() {
-        final Season season = SeasonUtils.newSeason(1);
+    @Test
+    public void validate_Deep_BadSubtitles() {
+        final Season season = getValidatingData(1);
         season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
-        seasonValidator.validateExistingSeason(season);
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+
+        verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validateExistingSeason(Season)} with season with null note.
+     * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateExistingSeason_NullNote() {
-        final Season season = SeasonUtils.newSeason(1);
+    @Test
+    public void validate_Deep_NullNote() {
+        final Season season = getValidatingData(1);
         season.setNote(null);
 
-        seasonValidator.validateExistingSeason(season);
-    }
+        final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-    /**
-     * Test method for {@link SeasonValidator#validateSeasonWithId(Season)} with null argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateSeasonWithId_NullArgument() {
-        seasonValidator.validateSeasonWithId(null);
-    }
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
 
-    /**
-     * Test method for {@link SeasonValidator#validateSeasonWithId(Season)} with season with null ID.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testValidateSeasonWithId_NullId() {
-        seasonValidator.validateSeasonWithId(SeasonUtils.newSeason(null));
+        verifyZeroInteractions(getCatalogService());
     }
 
 }

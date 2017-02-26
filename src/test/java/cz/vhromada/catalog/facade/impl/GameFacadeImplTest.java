@@ -90,7 +90,7 @@ public class GameFacadeImplTest {
      * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for game.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullGameEpisodeValidator() {
+    public void testConstructor_NullGameValidator() {
         new GameFacadeImpl(gameService, converter, null);
     }
 

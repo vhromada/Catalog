@@ -90,7 +90,7 @@ public class ProgramFacadeImplTest {
      * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for program.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullProgramEpisodeValidator() {
+    public void testConstructor_NullProgramValidator() {
         new ProgramFacadeImpl(programService, converter, null);
     }
 

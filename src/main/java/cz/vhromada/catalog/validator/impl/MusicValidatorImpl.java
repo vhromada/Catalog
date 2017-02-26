@@ -39,6 +39,7 @@ public class MusicValidatorImpl extends AbstractCatalogValidator<Music, cz.vhrom
      * <li>URL to english Wikipedia page about music is null</li>
      * <li>URL to czech Wikipedia page about music is null</li>
      * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
      * <li>Note is null</li>
      * </ul>
      *
@@ -52,17 +53,33 @@ public class MusicValidatorImpl extends AbstractCatalogValidator<Music, cz.vhrom
         } else if (StringUtils.isEmpty(data.getName()) || StringUtils.isEmpty(data.getName().trim())) {
             result.addEvent(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string."));
         }
-        if (data.getWikiEn() == null) {
-            result.addEvent(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null."));
-        }
-        if (data.getWikiCz() == null) {
-            result.addEvent(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null."));
-        }
+        validateUrls(data, result);
         if (data.getMediaCount() <= 0) {
             result.addEvent(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."));
         }
         if (data.getNote() == null) {
             result.addEvent(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null."));
+        }
+    }
+
+    /**
+     * Validates URLs.
+     * <br/>
+     * Validation errors:
+     * <ul>
+     * <li>URL to english Wikipedia page about music is null</li>
+     * <li>URL to czech Wikipedia page about music is null</li>
+     * </ul>
+     *
+     * @param data   validating show
+     * @param result result with validation errors
+     */
+    private static void validateUrls(final Music data, final Result<Void> result) {
+        if (data.getWikiEn() == null) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null."));
+        }
+        if (data.getWikiCz() == null) {
+            result.addEvent(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null."));
         }
     }
 

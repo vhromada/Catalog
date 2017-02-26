@@ -11,7 +11,6 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
@@ -60,7 +59,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * Validator for season
      */
-    private SeasonValidator seasonValidator;
+    private CatalogValidator<Season> seasonValidator;
 
     /**
      * Creates a new instance of SeasonFacadeImpl.
@@ -78,7 +77,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     public SeasonFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
             final Converter converter,
             final CatalogValidator<Show> showValidator,
-            final SeasonValidator seasonValidator) {
+            final CatalogValidator<Season> seasonValidator) {
         Assert.notNull(showService, "Service for shows mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(showValidator, "Validator for show mustn't be null.");
@@ -106,7 +105,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Override
     public void add(final Show show, final Season season) {
         showValidator.validate(show, ValidationType.EXISTS);
-        seasonValidator.validateNewSeason(season);
+        seasonValidator.validate(season, ValidationType.NEW, ValidationType.DEEP);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
@@ -125,7 +124,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void update(final Season season) {
-        seasonValidator.validateExistingSeason(season);
+        seasonValidator.validate(season, ValidationType.EXISTS, ValidationType.DEEP);
         final cz.vhromada.catalog.domain.Show show = getShow(season);
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(season.getId(), show);
         if (seasonDomain == null) {
@@ -150,7 +149,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void remove(final Season season) {
-        seasonValidator.validateSeasonWithId(season);
+        seasonValidator.validate(season, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Show show = getShow(season);
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(season.getId(), show);
         if (seasonDomain == null) {
@@ -169,7 +168,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void duplicate(final Season season) {
-        seasonValidator.validateSeasonWithId(season);
+        seasonValidator.validate(season, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Show show = getShow(season);
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(season.getId(), show);
         if (seasonDomain == null) {
@@ -295,7 +294,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      * @param up     true if moving season up
      */
     private void move(final Season season, final boolean up) {
-        seasonValidator.validateSeasonWithId(season);
+        seasonValidator.validate(season, ValidationType.EXISTS, up ? ValidationType.UP : ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Show show = getShow(season);
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(season.getId(), show);
         if (seasonDomain == null) {

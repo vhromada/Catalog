@@ -13,7 +13,6 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
@@ -57,7 +56,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * Validator for season
      */
-    private SeasonValidator seasonValidator;
+    private CatalogValidator<Season> seasonValidator;
 
     /**
      * Validator for episode
@@ -79,7 +78,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Autowired
     public EpisodeFacadeImpl(final CatalogService<Show> showService,
             final Converter converter,
-            final SeasonValidator seasonValidator,
+            final CatalogValidator<Season> seasonValidator,
             final CatalogValidator<Episode> episodeValidator) {
         Assert.notNull(showService, "Service for shows mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
@@ -107,7 +106,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void add(final Season season, final Episode episode) {
-        seasonValidator.validateSeasonWithId(season);
+        seasonValidator.validate(season, ValidationType.EXISTS);
         episodeValidator.validate(episode, ValidationType.NEW, ValidationType.DEEP);
         final Show show = getShow(season);
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(show, season);
@@ -200,7 +199,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public List<Episode> findEpisodesBySeason(final Season season) {
-        seasonValidator.validateSeasonWithId(season);
+        seasonValidator.validate(season, ValidationType.EXISTS);
         final List<Show> shows = showService.getAll();
         for (final Show show : shows) {
             for (final cz.vhromada.catalog.domain.Season seasonDomain : show.getSeasons()) {

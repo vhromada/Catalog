@@ -92,7 +92,7 @@ public class MusicFacadeImplTest {
      * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for music.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullMusicEpisodeValidator() {
+    public void testConstructor_NullMusicValidator() {
         new MusicFacadeImpl(musicService, converter, null);
     }
 

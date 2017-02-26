@@ -74,6 +74,31 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
      */
     @Override
     protected void validateDataDeep(final Show data, final Result<Void> result) {
+        validateNames(data, result);
+        validateUrls(data, result);
+        if (data.getPicture() == null) {
+            result.addEvent(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null."));
+        }
+        if (data.getNote() == null) {
+            result.addEvent(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null."));
+        }
+        validateGenres(data, result);
+    }
+
+    /**
+     * Validates names.
+     * <br/>
+     * Validation errors:
+     * <ul>
+     * <li>Language is null</li>
+     * <li>Subtitles are null</li>
+     * <li>Subtitles contain null value</li>
+     * </ul>
+     *
+     * @param data   validating movie
+     * @param result result with validation errors
+     */
+    private static void validateNames(final Show data, final Result<Void> result) {
         if (data.getCzechName() == null) {
             result.addEvent(new Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null."));
         } else if (StringUtils.isEmpty(data.getCzechName()) || StringUtils.isEmpty(data.getCzechName().trim())) {
@@ -84,14 +109,6 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
         } else if (StringUtils.isEmpty(data.getOriginalName()) || StringUtils.isEmpty(data.getOriginalName().trim())) {
             result.addEvent(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."));
         }
-        validateUrls(data, result);
-        if (data.getPicture() == null) {
-            result.addEvent(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null."));
-        }
-        if (data.getNote() == null) {
-            result.addEvent(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null."));
-        }
-        validateGenres(data, result);
     }
 
     /**

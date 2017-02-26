@@ -20,14 +20,14 @@ public interface GenreFacade {
     Result<Void> newData();
 
     /**
-     * Returns list of data.
+     * Returns list of genres.
      *
-     * @return result with list of data
+     * @return result with list of genres
      */
     Result<List<Genre>> getAll();
 
     /**
-     * Returns data with ID or null if there aren't such data.
+     * Returns genre with ID or null if there aren't such genre.
      * <br>
      * Validation errors:
      * <ul>
@@ -35,12 +35,12 @@ public interface GenreFacade {
      * </ul>
      *
      * @param id ID
-     * @return result with data or validation errors
+     * @return result with genre or validation errors
      */
     Result<Genre> get(Integer id);
 
     /**
-     * Adds data. Sets new ID and position.
+     * Adds genre. Sets new ID and position.
      * <br>
      * Validation errors:
      * <ul>

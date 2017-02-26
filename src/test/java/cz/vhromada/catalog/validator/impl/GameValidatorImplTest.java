@@ -24,12 +24,13 @@ import org.junit.Test;
  */
 public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhromada.catalog.domain.Game> {
 
+
     /**
      * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
     @Test
     public void validate_Deep_NullName() {
-        final Game game = getValidatingData();
+        final Game game = getValidatingData(1);
         game.setName(null);
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
@@ -48,7 +49,7 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
      */
     @Test
     public void validate_Deep_EmptyName() {
-        final Game game = getValidatingData();
+        final Game game = getValidatingData(1);
         game.setName("");
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
@@ -68,7 +69,7 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
      */
     @Test
     public void validate_Deep_NullWikiEn() {
-        final Game game = getValidatingData();
+        final Game game = getValidatingData(1);
         game.setWikiEn(null);
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
@@ -88,7 +89,7 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
      */
     @Test
     public void validate_Deep_NullWikiCz() {
-        final Game game = getValidatingData();
+        final Game game = getValidatingData(1);
         game.setWikiCz(null);
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
@@ -108,7 +109,7 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
      */
     @Test
     public void validate_Deep_NotPositiveMediaCount() {
-        final Game game = getValidatingData();
+        final Game game = getValidatingData(1);
         game.setMediaCount(0);
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
@@ -127,7 +128,7 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
      */
     @Test
     public void validate_Deep_NullOtherData() {
-        final Game game = getValidatingData();
+        final Game game = getValidatingData(1);
         game.setOtherData(null);
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
@@ -146,7 +147,7 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
      */
     @Test
     public void validate_Deep_NullNote() {
-        final Game game = getValidatingData();
+        final Game game = getValidatingData(1);
         game.setNote(null);
 
         final Result<Void> result = getCatalogValidator().validate(game, ValidationType.DEEP);
@@ -166,8 +167,8 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
     }
 
     @Override
-    protected Game getValidatingData() {
-        return GameUtils.newGame(null);
+    protected Game getValidatingData(final Integer id) {
+        return GameUtils.newGame(id);
     }
 
     @Override

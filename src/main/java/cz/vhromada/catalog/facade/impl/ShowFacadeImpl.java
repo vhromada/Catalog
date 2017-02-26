@@ -10,7 +10,8 @@ import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.ShowValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class ShowFacadeImpl implements ShowFacade {
     /**
      * Validator for show
      */
-    private ShowValidator showValidator;
+    private CatalogValidator<Show> showValidator;
 
     /**
      * Creates a new instance of ShowFacadeImpl.
@@ -76,7 +77,7 @@ public class ShowFacadeImpl implements ShowFacade {
     public ShowFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
             final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             final Converter converter,
-            final ShowValidator showValidator) {
+            final CatalogValidator<Show> showValidator) {
         Assert.notNull(showService, "Service for shows mustn't be null.");
         Assert.notNull(genreService, "Service for genres mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
@@ -113,7 +114,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void add(final Show show) {
-        showValidator.validateNewShow(show);
+        showValidator.validate(show, ValidationType.NEW, ValidationType.DEEP);
         for (final Genre genre : show.getGenres()) {
             if (genreService.get(genre.getId()) == null) {
                 throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
@@ -131,7 +132,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void update(final Show show) {
-        showValidator.validateExistingShow(show);
+        showValidator.validate(show, ValidationType.EXISTS, ValidationType.DEEP);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
@@ -163,7 +164,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void remove(final Show show) {
-        showValidator.validateShowWithId(show);
+        showValidator.validate(show, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
@@ -177,7 +178,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void duplicate(final Show show) {
-        showValidator.validateShowWithId(show);
+        showValidator.validate(show, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
@@ -191,7 +192,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void moveUp(final Show show) {
-        showValidator.validateShowWithId(show);
+        showValidator.validate(show, ValidationType.EXISTS, ValidationType.UP);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);
@@ -209,7 +210,7 @@ public class ShowFacadeImpl implements ShowFacade {
      */
     @Override
     public void moveDown(final Show show) {
-        showValidator.validateShowWithId(show);
+        showValidator.validate(show, ValidationType.EXISTS, ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);

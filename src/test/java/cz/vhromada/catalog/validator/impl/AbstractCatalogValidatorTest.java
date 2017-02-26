@@ -41,7 +41,7 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
     @Test
     @Override
     public void validate_Deep() {
-        final Result<Void> result = getCatalogValidator().validate(getValidatingData(), ValidationType.DEEP);
+        final Result<Void> result = getCatalogValidator().validate(getValidatingData(1), ValidationType.DEEP);
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -58,7 +58,7 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
     }
 
     @Override
-    protected Movable getValidatingData() {
+    protected Movable getValidatingData(final Integer id) {
         return new MovableStub();
     }
 
@@ -95,7 +95,7 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
         /**
          * Creates a new instance of AbstractCatalogValidatorStub.
          *
-         * @param name name of entity
+         * @param name           name of entity
          * @param catalogService service for catalog
          */
         AbstractCatalogValidatorStub(final String name, final CatalogService<Movable> catalogService) {

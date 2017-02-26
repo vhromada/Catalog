@@ -29,7 +29,7 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
      */
     @Test
     public void validate_Deep_NullName() {
-        final Music music = getValidatingData();
+        final Music music = getValidatingData(1);
         music.setName(null);
 
         final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
@@ -48,7 +48,7 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
      */
     @Test
     public void validate_Deep_EmptyName() {
-        final Music music = getValidatingData();
+        final Music music = getValidatingData(1);
         music.setName("");
 
         final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
@@ -68,7 +68,7 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
      */
     @Test
     public void validate_Deep_NullWikiEn() {
-        final Music music = getValidatingData();
+        final Music music = getValidatingData(1);
         music.setWikiEn(null);
 
         final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
@@ -89,7 +89,7 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
      */
     @Test
     public void validate_Deep_NullWikiCz() {
-        final Music music = getValidatingData();
+        final Music music = getValidatingData(1);
         music.setWikiCz(null);
 
         final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
@@ -109,7 +109,7 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
      */
     @Test
     public void validate_Deep_NotPositiveMediaCount() {
-        final Music music = getValidatingData();
+        final Music music = getValidatingData(1);
         music.setMediaCount(0);
 
         final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
@@ -128,7 +128,7 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
      */
     @Test
     public void validate_Deep_NullNote() {
-        final Music music = getValidatingData();
+        final Music music = getValidatingData(1);
         music.setNote(null);
 
         final Result<Void> result = getCatalogValidator().validate(music, ValidationType.DEEP);
@@ -148,8 +148,8 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
     }
 
     @Override
-    protected Music getValidatingData() {
-        return MusicUtils.newMusic(null);
+    protected Music getValidatingData(final Integer id) {
+        return MusicUtils.newMusic(id);
     }
 
     @Override

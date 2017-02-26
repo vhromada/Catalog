@@ -29,7 +29,7 @@ public class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhro
      */
     @Test
     public void validate_Deep_NullName() {
-        final Genre genre = getValidatingData();
+        final Genre genre = getValidatingData(1);
         genre.setName(null);
 
         final Result<Void> result = getCatalogValidator().validate(genre, ValidationType.DEEP);
@@ -48,7 +48,7 @@ public class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhro
      */
     @Test
     public void validate_Deep_EmptyName() {
-        final Genre genre = getValidatingData();
+        final Genre genre = getValidatingData(1);
         genre.setName("");
 
         final Result<Void> result = getCatalogValidator().validate(genre, ValidationType.DEEP);
@@ -68,8 +68,8 @@ public class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhro
     }
 
     @Override
-    protected Genre getValidatingData() {
-        return GenreUtils.newGenre(null);
+    protected Genre getValidatingData(final Integer id) {
+        return GenreUtils.newGenre(id);
     }
 
     @Override

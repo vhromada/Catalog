@@ -67,7 +67,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     @Before
     public void setUp() {
         catalogValidator = getCatalogValidator();
-        validatingData = getValidatingData();
+        validatingData = getValidatingData(null);
         repositoryData = getRepositoryData();
         dataList = CollectionUtils.newList(getItem1(), getItem2());
     }
@@ -286,9 +286,10 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     /**
      * Returns instance of {@link T}.
      *
+     * @param id ID
      * @return instance of {@link T}
      */
-    protected abstract T getValidatingData();
+    protected abstract T getValidatingData(Integer id);
 
     /**
      * Returns instance of {@link U}.

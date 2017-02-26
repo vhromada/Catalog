@@ -10,8 +10,9 @@ import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
 import cz.vhromada.catalog.utils.CollectionUtils;
+import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.SeasonValidator;
-import cz.vhromada.catalog.validator.ShowValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     /**
      * Validator for show
      */
-    private ShowValidator showValidator;
+    private CatalogValidator<Show> showValidator;
 
     /**
      * Validator for season
@@ -76,7 +77,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
     @Autowired
     public SeasonFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
             final Converter converter,
-            final ShowValidator showValidator,
+            final CatalogValidator<Show> showValidator,
             final SeasonValidator seasonValidator) {
         Assert.notNull(showService, "Service for shows mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
@@ -104,7 +105,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public void add(final Show show, final Season season) {
-        showValidator.validateShowWithId(show);
+        showValidator.validate(show, ValidationType.EXISTS);
         seasonValidator.validateNewSeason(season);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
@@ -202,7 +203,7 @@ public class SeasonFacadeImpl implements SeasonFacade {
      */
     @Override
     public List<Season> findSeasonsByShow(final Show show) {
-        showValidator.validateShowWithId(show);
+        showValidator.validate(show, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Show showDomain = showService.get(show.getId());
         if (showDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_SHOW_MESSAGE);

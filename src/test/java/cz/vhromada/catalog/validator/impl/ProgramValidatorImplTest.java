@@ -29,7 +29,7 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      */
     @Test
     public void validate_Deep_NullName() {
-        final Program program = getValidatingData();
+        final Program program = getValidatingData(1);
         program.setName(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
@@ -48,7 +48,7 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      */
     @Test
     public void validate_Deep_EmptyName() {
-        final Program program = getValidatingData();
+        final Program program = getValidatingData(1);
         program.setName("");
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
@@ -68,7 +68,7 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      */
     @Test
     public void validate_Deep_NullWikiEn() {
-        final Program program = getValidatingData();
+        final Program program = getValidatingData(1);
         program.setWikiEn(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
@@ -89,7 +89,7 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      */
     @Test
     public void validate_Deep_NullWikiCz() {
-        final Program program = getValidatingData();
+        final Program program = getValidatingData(1);
         program.setWikiCz(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
@@ -110,7 +110,7 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      */
     @Test
     public void validate_Deep_NotPositiveMediaCount() {
-        final Program program = getValidatingData();
+        final Program program = getValidatingData(1);
         program.setMediaCount(0);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
@@ -129,7 +129,7 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      */
     @Test
     public void validate_Deep_NullOtherData() {
-        final Program program = getValidatingData();
+        final Program program = getValidatingData(1);
         program.setOtherData(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
@@ -148,7 +148,7 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      */
     @Test
     public void validate_Deep_NullNote() {
-        final Program program = getValidatingData();
+        final Program program = getValidatingData(1);
         program.setNote(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
@@ -168,8 +168,8 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
     }
 
     @Override
-    protected Program getValidatingData() {
-        return ProgramUtils.newProgram(null);
+    protected Program getValidatingData(final Integer id) {
+        return ProgramUtils.newProgram(id);
     }
 
     @Override

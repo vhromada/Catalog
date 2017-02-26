@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -73,7 +72,7 @@ public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
     protected void initExistsMock(final Song validatingData, final boolean exists) {
         final Music music = exists ? MusicUtils.newMusicWithSongs(validatingData.getId()) : MusicUtils.newMusicDomain(Integer.MAX_VALUE);
 
-        when(getCatalogService().getAll()).thenReturn(Collections.singletonList(music));
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(music));
     }
 
     @Override
@@ -93,7 +92,7 @@ public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
         final Music music = MusicUtils.newMusicDomain(1);
         music.setSongs(songs);
 
-        when(getCatalogService().getAll()).thenReturn(Collections.singletonList(music));
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(music));
     }
 
     @Override

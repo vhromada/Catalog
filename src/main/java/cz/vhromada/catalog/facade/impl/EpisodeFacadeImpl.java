@@ -12,8 +12,9 @@ import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
 import cz.vhromada.catalog.utils.CollectionUtils;
-import cz.vhromada.catalog.validator.EpisodeValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.SeasonValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     /**
      * Validator for episode
      */
-    private EpisodeValidator episodeValidator;
+    private CatalogValidator<Episode> episodeValidator;
 
     /**
      * Creates a new instance of EpisodeFacadeImpl.
@@ -79,7 +80,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     public EpisodeFacadeImpl(final CatalogService<Show> showService,
             final Converter converter,
             final SeasonValidator seasonValidator,
-            final EpisodeValidator episodeValidator) {
+            final CatalogValidator<Episode> episodeValidator) {
         Assert.notNull(showService, "Service for shows mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(seasonValidator, "Validator for season mustn't be null.");
@@ -107,7 +108,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
     @Override
     public void add(final Season season, final Episode episode) {
         seasonValidator.validateSeasonWithId(season);
-        episodeValidator.validateNewEpisode(episode);
+        episodeValidator.validate(episode, ValidationType.NEW, ValidationType.DEEP);
         final Show show = getShow(season);
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(show, season);
         if (seasonDomain == null) {
@@ -126,7 +127,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void update(final Episode episode) {
-        episodeValidator.validateExistingEpisode(episode);
+        episodeValidator.validate(episode, ValidationType.EXISTS, ValidationType.DEEP);
         final Show show = getShow(episode);
         final cz.vhromada.catalog.domain.Episode episodeDomain = getEpisode(episode.getId(), show);
         if (episodeDomain == null) {
@@ -143,7 +144,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void remove(final Episode episode) {
-        episodeValidator.validateEpisodeWithId(episode);
+        episodeValidator.validate(episode, ValidationType.EXISTS);
         final Show show = getShow(episode);
         final cz.vhromada.catalog.domain.Episode episodeDomain = getEpisode(episode.getId(), show);
         if (episodeDomain == null) {
@@ -164,7 +165,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      */
     @Override
     public void duplicate(final Episode episode) {
-        episodeValidator.validateEpisodeWithId(episode);
+        episodeValidator.validate(episode, ValidationType.EXISTS);
         final Show show = getShow(episode);
         final cz.vhromada.catalog.domain.Episode episodeDomain = getEpisode(episode.getId(), show);
         if (episodeDomain == null) {
@@ -360,7 +361,7 @@ public class EpisodeFacadeImpl implements EpisodeFacade {
      * @param up      true if moving episode up
      */
     private void move(final Episode episode, final boolean up) {
-        episodeValidator.validateEpisodeWithId(episode);
+        episodeValidator.validate(episode, ValidationType.EXISTS, up ? ValidationType.UP : ValidationType.DOWN);
         final Show show = getShow(episode);
         final cz.vhromada.catalog.domain.Episode episodeDomain = getEpisode(episode.getId(), show);
         if (episodeDomain == null) {

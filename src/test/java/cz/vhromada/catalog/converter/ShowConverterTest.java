@@ -35,7 +35,7 @@ public class ShowConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertShowDomain() {
+    public void convertShowDomain() {
         final cz.vhromada.catalog.domain.Show showDomain = ShowUtils.newShowDomain(1);
         final Show show = converter.convert(showDomain, Show.class);
 
@@ -46,7 +46,7 @@ public class ShowConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertShowDomain_NullArgument() {
+    public void convertShowDomain_NullArgument() {
         assertThat(converter.convert(null, Show.class), is(nullValue()));
     }
 
@@ -54,7 +54,7 @@ public class ShowConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertShow() {
+    public void convertShow() {
         final Show show = ShowUtils.newShow(1);
         final cz.vhromada.catalog.domain.Show showDomain = converter.convert(show, cz.vhromada.catalog.domain.Show.class);
 
@@ -66,7 +66,7 @@ public class ShowConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertShow_NullArgument() {
+    public void convertShow_NullArgument() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Show.class), is(nullValue()));
     }
 

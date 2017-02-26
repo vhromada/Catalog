@@ -35,7 +35,7 @@ public class ProgramConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertProgramDomain() {
+    public void convertProgramDomain() {
         final cz.vhromada.catalog.domain.Program programDomain = ProgramUtils.newProgramDomain(1);
         final Program program = converter.convert(programDomain, Program.class);
 
@@ -46,7 +46,7 @@ public class ProgramConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertProgramDomain_NullArgument() {
+    public void convertProgramDomain_NullArgument() {
         assertThat(converter.convert(null, Program.class), is(nullValue()));
     }
 
@@ -54,7 +54,7 @@ public class ProgramConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertProgram() {
+    public void convertProgram() {
         final Program program = ProgramUtils.newProgram(1);
         final cz.vhromada.catalog.domain.Program programDomain = converter.convert(program, cz.vhromada.catalog.domain.Program.class);
 
@@ -66,7 +66,7 @@ public class ProgramConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertProgram_NullArgument() {
+    public void convertProgram_NullArgument() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Program.class), is(nullValue()));
     }
 

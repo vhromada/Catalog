@@ -35,7 +35,7 @@ public class MusicConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertMusicDomain() {
+    public void convertMusicDomain() {
         final cz.vhromada.catalog.domain.Music musicDomain = MusicUtils.newMusicDomain(1);
         final Music music = converter.convert(musicDomain, Music.class);
 
@@ -46,7 +46,7 @@ public class MusicConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertMusicDomain_NullArgument() {
+    public void convertMusicDomain_NullArgument() {
         assertThat(converter.convert(null, Music.class), is(nullValue()));
     }
 
@@ -54,7 +54,7 @@ public class MusicConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertMusic() {
+    public void convertMusic() {
         final Music music = MusicUtils.newMusic(1);
         final cz.vhromada.catalog.domain.Music musicDomain = converter.convert(music, cz.vhromada.catalog.domain.Music.class);
 
@@ -66,7 +66,7 @@ public class MusicConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertMusic_NullArgument() {
+    public void convertMusic_NullArgument() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Music.class), is(nullValue()));
     }
 

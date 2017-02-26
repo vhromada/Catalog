@@ -35,7 +35,7 @@ public class GenreConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertGenreDomain() {
+    public void convertGenreDomain() {
         final cz.vhromada.catalog.domain.Genre genreDomain = GenreUtils.newGenreDomain(1);
         final Genre genre = converter.convert(genreDomain, Genre.class);
 
@@ -46,7 +46,7 @@ public class GenreConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertGenreDomain_NullArgument() {
+    public void convertGenreDomain_NullArgument() {
         assertThat(converter.convert(null, Genre.class), is(nullValue()));
     }
 
@@ -54,7 +54,7 @@ public class GenreConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertGenre() {
+    public void convertGenre() {
         final Genre genre = GenreUtils.newGenre(1);
         final cz.vhromada.catalog.domain.Genre genreDomain = converter.convert(genre, cz.vhromada.catalog.domain.Genre.class);
 
@@ -66,7 +66,7 @@ public class GenreConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertGenre_NullArgument() {
+    public void convertGenre_NullArgument() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Genre.class), is(nullValue()));
     }
 

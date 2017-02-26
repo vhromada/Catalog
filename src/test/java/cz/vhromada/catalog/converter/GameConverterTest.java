@@ -35,7 +35,7 @@ public class GameConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertGameDomain() {
+    public void convertGameDomain() {
         final cz.vhromada.catalog.domain.Game gameDomain = GameUtils.newGameDomain(1);
         final Game game = converter.convert(gameDomain, Game.class);
 
@@ -46,7 +46,7 @@ public class GameConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertGameDomain_NullArgument() {
+    public void convertGameDomain_NullArgument() {
         assertThat(converter.convert(null, Game.class), is(nullValue()));
     }
 
@@ -54,7 +54,7 @@ public class GameConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertGame() {
+    public void convertGame() {
         final Game game = GameUtils.newGame(1);
         final cz.vhromada.catalog.domain.Game gameDomain = converter.convert(game, cz.vhromada.catalog.domain.Game.class);
 
@@ -66,7 +66,7 @@ public class GameConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertGame_NullArgument() {
+    public void convertGame_NullArgument() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class), is(nullValue()));
     }
 

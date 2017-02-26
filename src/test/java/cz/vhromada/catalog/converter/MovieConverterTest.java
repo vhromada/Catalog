@@ -35,7 +35,7 @@ public class MovieConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void testConvertMovieDomain() {
+    public void convertMovieDomain() {
         final cz.vhromada.catalog.domain.Movie movieDomain = MovieUtils.newMovieDomain(1);
         final Movie movie = converter.convert(movieDomain, Movie.class);
 
@@ -46,7 +46,7 @@ public class MovieConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
      */
     @Test
-    public void testConvertMovieDomain_NullArgument() {
+    public void convertMovieDomain_NullArgument() {
         assertThat(converter.convert(null, Movie.class), is(nullValue()));
     }
 
@@ -54,7 +54,7 @@ public class MovieConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void testConvertMovie() {
+    public void convertMovie() {
         final Movie movie = MovieUtils.newMovie(1);
         final cz.vhromada.catalog.domain.Movie movieDomain = converter.convert(movie, cz.vhromada.catalog.domain.Movie.class);
 
@@ -66,7 +66,7 @@ public class MovieConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
      */
     @Test
-    public void testConvertMovie_NullArgument() {
+    public void convertMovie_NullArgument() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Movie.class), is(nullValue()));
     }
 

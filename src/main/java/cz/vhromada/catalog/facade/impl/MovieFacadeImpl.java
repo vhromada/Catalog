@@ -9,7 +9,8 @@ import cz.vhromada.catalog.entity.Medium;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.MovieValidator;
+import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class MovieFacadeImpl implements MovieFacade {
     /**
      * Validator for movie
      */
-    private MovieValidator movieValidator;
+    private CatalogValidator<Movie> movieValidator;
 
     /**
      * Creates a new instance of MovieFacadeImpl.
@@ -77,7 +78,7 @@ public class MovieFacadeImpl implements MovieFacade {
     public MovieFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService,
             final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
             final Converter converter,
-            final MovieValidator movieValidator) {
+            final CatalogValidator<Movie> movieValidator) {
         Assert.notNull(movieService, "Service for movies mustn't be null.");
         Assert.notNull(genreService, "Service for genres mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
@@ -114,7 +115,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void add(final Movie movie) {
-        movieValidator.validateNewMovie(movie);
+        movieValidator.validate(movie, ValidationType.NEW, ValidationType.DEEP);
         for (final Genre genre : movie.getGenres()) {
             if (genreService.get(genre.getId()) == null) {
                 throw new IllegalArgumentException(NOT_EXISTING_GENRE_MESSAGE);
@@ -129,7 +130,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void update(final Movie movie) {
-        movieValidator.validateExistingMovie(movie);
+        movieValidator.validate(movie, ValidationType.EXISTS, ValidationType.DEEP);
         final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
         if (movieDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
@@ -151,7 +152,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void remove(final Movie movie) {
-        movieValidator.validateMovieWithId(movie);
+        movieValidator.validate(movie, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
         if (movieDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
@@ -165,7 +166,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void duplicate(final Movie movie) {
-        movieValidator.validateMovieWithId(movie);
+        movieValidator.validate(movie, ValidationType.EXISTS);
         final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
         if (movieDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
@@ -179,7 +180,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void moveUp(final Movie movie) {
-        movieValidator.validateMovieWithId(movie);
+        movieValidator.validate(movie, ValidationType.EXISTS, ValidationType.UP);
         final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
         if (movieDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);
@@ -197,7 +198,7 @@ public class MovieFacadeImpl implements MovieFacade {
      */
     @Override
     public void moveDown(final Movie movie) {
-        movieValidator.validateMovieWithId(movie);
+        movieValidator.validate(movie, ValidationType.EXISTS, ValidationType.DOWN);
         final cz.vhromada.catalog.domain.Movie movieDomain = movieService.get(movie.getId());
         if (movieDomain == null) {
             throw new IllegalArgumentException(NOT_EXISTING_MOVIE_MESSAGE);

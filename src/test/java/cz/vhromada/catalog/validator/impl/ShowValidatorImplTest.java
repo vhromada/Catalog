@@ -385,8 +385,9 @@ public class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhroma
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
 
+        verify(genreValidator).validate(show.getGenres().get(0), ValidationType.EXISTS, ValidationType.DEEP);
         verifyZeroInteractions(getCatalogService());
-        verifyZeroInteractions(genreValidator);
+        verifyNoMoreInteractions(genreValidator);
     }
 
     /**

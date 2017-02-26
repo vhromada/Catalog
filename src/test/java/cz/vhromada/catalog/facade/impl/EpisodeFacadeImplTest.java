@@ -28,6 +28,7 @@ import cz.vhromada.catalog.validator.SeasonValidator;
 import cz.vhromada.converters.Converter;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -40,6 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class EpisodeFacadeImplTest {
 
     /**

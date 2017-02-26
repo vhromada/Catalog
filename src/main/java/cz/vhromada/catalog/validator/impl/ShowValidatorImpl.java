@@ -142,12 +142,15 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
     private void validateGenres(final Show data, final Result<Void> result) {
         if (data.getGenres() == null) {
             result.addEvent(new Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null."));
-        } else if (data.getGenres().contains(null)) {
-            result.addEvent(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value."));
         } else {
+            if (data.getGenres().contains(null)) {
+                result.addEvent(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value."));
+            }
             for (final Genre genre : data.getGenres()) {
-                final Result<Void> validationResult = genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-                result.addEvents(validationResult.getEvents());
+                if (genre != null) {
+                    final Result<Void> validationResult = genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
+                    result.addEvents(validationResult.getEvents());
+                }
             }
         }
     }

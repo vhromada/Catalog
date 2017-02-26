@@ -1,12 +1,13 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -20,10 +21,14 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.GameUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.catalog.validator.common.ValidationType;
 import cz.vhromada.converters.Converter;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,8 +40,12 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class GameFacadeImplTest {
+
+    /**
+     * Result for invalid game
+     */
+    private static final Result<Void> INVALID_GAME_RESULT = Result.error("GAME_INVALID", "Game must be valid.");
 
     /**
      * Instance of {@link CatalogService}
@@ -73,7 +82,7 @@ public class GameFacadeImplTest {
      * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for games.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullGameService() {
+    public void constructor_NullGameService() {
         new GameFacadeImpl(null, converter, gameValidator);
     }
 
@@ -81,7 +90,7 @@ public class GameFacadeImplTest {
      * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullConverter() {
+    public void constructor_NullConverter() {
         new GameFacadeImpl(gameService, null, gameValidator);
     }
 
@@ -89,7 +98,7 @@ public class GameFacadeImplTest {
      * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for game.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructor_NullGameValidator() {
+    public void constructor_NullGameValidator() {
         new GameFacadeImpl(gameService, converter, null);
     }
 
@@ -97,8 +106,13 @@ public class GameFacadeImplTest {
      * Test method for {@link GameFacade#newData()}.
      */
     @Test
-    public void testNewData() {
-        gameFacade.newData();
+    public void newData() {
+        final Result<Void> result = gameFacade.newData();
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).newData();
         verifyNoMoreInteractions(gameService);
@@ -106,20 +120,23 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#getGames()}.
+     * Test method for {@link GameFacade#getAll()}.
      */
     @Test
-    public void testGetGames() {
+    public void getAll() {
         final List<cz.vhromada.catalog.domain.Game> gameList = CollectionUtils.newList(GameUtils.newGameDomain(1), GameUtils.newGameDomain(2));
         final List<Game> expectedGames = CollectionUtils.newList(GameUtils.newGame(1), GameUtils.newGame(2));
 
         when(gameService.getAll()).thenReturn(gameList);
         when(converter.convertCollection(anyListOf(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(expectedGames);
 
-        final List<Game> games = gameFacade.getGames();
+        final Result<List<Game>> result = gameFacade.getAll();
 
-        assertNotNull(games);
-        assertEquals(expectedGames, games);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(expectedGames));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).getAll();
         verify(converter).convertCollection(gameList, Game.class);
@@ -128,20 +145,23 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#getGame(Integer)} with existing game.
+     * Test method for {@link GameFacade#get(Integer)} with existing game.
      */
     @Test
-    public void testGetGame_ExistingGame() {
+    public void get_ExistingGame() {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
         final Game expectedGame = GameUtils.newGame(1);
 
         when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
         when(converter.convert(any(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(expectedGame);
 
-        final Game game = gameFacade.getGame(1);
+        final Result<Game> result = gameFacade.get(1);
 
-        assertNotNull(game);
-        assertEquals(expectedGame, game);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(expectedGame));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).get(1);
         verify(converter).convert(gameEntity, Game.class);
@@ -150,14 +170,20 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#getGame(Integer)} with not existing game.
+     * Test method for {@link GameFacade#get(Integer)} with not existing game.
      */
     @Test
-    public void testGetGame_NotExistingGame() {
+    public void get_NotExistingGame() {
         when(gameService.get(any(Integer.class))).thenReturn(null);
         when(converter.convert(any(cz.vhromada.catalog.domain.Game.class), eq(Game.class))).thenReturn(null);
 
-        assertNull(gameFacade.getGame(Integer.MAX_VALUE));
+        final Result<Game> result = gameFacade.get(Integer.MAX_VALUE);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, Game.class);
@@ -166,339 +192,295 @@ public class GameFacadeImplTest {
     }
 
     /**
-     * Test method for {@link GameFacade#getGame(Integer)} with null argument.
+     * Test method for {@link GameFacade#get(Integer)} with null argument.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetGame_NullArgument() {
-        gameFacade.getGame(null);
+    @Test
+    public void get_NullArgument() {
+        final Result<Game> result = gameFacade.get(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+
+        verifyZeroInteractions(gameService, converter, gameValidator);
     }
 
     /**
      * Test method for {@link GameFacade#add(Game)}.
      */
     @Test
-    public void testAdd() {
-        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(null);
+    public void add() {
         final Game game = GameUtils.newGame(null);
+        final cz.vhromada.catalog.domain.Game gameDomain = GameUtils.newGameDomain(null);
 
-        when(converter.convert(any(Game.class), eq(cz.vhromada.catalog.domain.Game.class))).thenReturn(gameEntity);
+        when(converter.convert(any(Game.class), eq(cz.vhromada.catalog.domain.Game.class))).thenReturn(gameDomain);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(new Result<>());
 
-        gameFacade.add(game);
+        final Result<Void> result = gameFacade.add(game);
 
-        verify(gameService).add(gameEntity);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        verify(gameService).add(gameDomain);
         verify(converter).convert(game, cz.vhromada.catalog.domain.Game.class);
-        verify(gameValidator).validate(game);
+        verify(gameValidator).validate(game, ValidationType.NEW, ValidationType.DEEP);
         verifyNoMoreInteractions(gameService, converter, gameValidator);
     }
 
     /**
-     * Test method for {@link GameFacade#add(Game)} with null argument.
+     * Test method for {@link GameFacade#add(Game)} with invalid game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+    @Test
+    public void add_InvalidGame() {
+        final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        gameFacade.add(null);
-    }
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(INVALID_GAME_RESULT);
 
-    /**
-     * Test method for {@link GameFacade#add(Game)} with argument with bad data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+        final Result<Void> result = gameFacade.add(game);
 
-        gameFacade.add(GameUtils.newGame(Integer.MAX_VALUE));
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(INVALID_GAME_RESULT));
+
+        verify(gameValidator).validate(game, ValidationType.NEW, ValidationType.DEEP);
+        verifyNoMoreInteractions(gameValidator);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /**
      * Test method for {@link GameFacade#update(Game)}.
      */
     @Test
-    public void testUpdate() {
-        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
+    public void update() {
         final Game game = GameUtils.newGame(1);
+        final cz.vhromada.catalog.domain.Game gameDomain = GameUtils.newGameDomain(1);
 
-        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
-        when(converter.convert(any(Game.class), eq(cz.vhromada.catalog.domain.Game.class))).thenReturn(gameEntity);
+        when(converter.convert(any(Game.class), eq(cz.vhromada.catalog.domain.Game.class))).thenReturn(gameDomain);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(new Result<>());
 
-        gameFacade.update(game);
+        final Result<Void> result = gameFacade.update(game);
 
-        verify(gameService).get(1);
-        verify(gameService).update(gameEntity);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        verify(gameService).update(gameDomain);
         verify(converter).convert(game, cz.vhromada.catalog.domain.Game.class);
-        verify(gameValidator).validate(game);
+        verify(gameValidator).validate(game, ValidationType.EXISTS, ValidationType.DEEP);
         verifyNoMoreInteractions(gameService, converter, gameValidator);
     }
 
     /**
-     * Test method for {@link GameFacade#update(Game)} with null argument.
+     * Test method for {@link GameFacade#update(Game)} with invalid game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+    @Test
+    public void update_InvalidGame() {
+        final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        gameFacade.update(null);
-    }
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(INVALID_GAME_RESULT);
 
-    /**
-     * Test method for {@link GameFacade#update(Game)} with argument with bad data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+        final Result<Void> result = gameFacade.update(game);
 
-        gameFacade.update(GameUtils.newGame(null));
-    }
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(INVALID_GAME_RESULT));
 
-    /**
-     * Test method for {@link GameFacade#update(Game)} with not existing argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NotExistingArgument() {
-        when(gameService.get(any(Integer.class))).thenReturn(null);
-
-        gameFacade.update(GameUtils.newGame(Integer.MAX_VALUE));
+        verify(gameValidator).validate(game, ValidationType.EXISTS, ValidationType.DEEP);
+        verifyNoMoreInteractions(gameValidator);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /**
      * Test method for {@link GameFacade#remove(Game)}.
      */
     @Test
-    public void testRemove() {
+    public void remove() {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
         final Game game = GameUtils.newGame(1);
 
         when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(new Result<>());
 
-        gameFacade.remove(game);
+        final Result<Void> result = gameFacade.remove(game);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).get(1);
         verify(gameService).remove(gameEntity);
-        verify(gameValidator).validate(game);
+        verify(gameValidator).validate(game, ValidationType.EXISTS);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#remove(Game)} with null argument.
+     * Test method for {@link GameFacade#remove(Game)} with invalid game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+    @Test
+    public void remove_InvalidGame() {
+        final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        gameFacade.remove(null);
-    }
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(INVALID_GAME_RESULT);
 
-    /**
-     * Test method for {@link GameFacade#remove(Game)} with argument with bad data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+        final Result<Void> result = gameFacade.remove(game);
 
-        gameFacade.remove(GameUtils.newGame(null));
-    }
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(INVALID_GAME_RESULT));
 
-    /**
-     * Test method for {@link GameFacade#remove(Game)} with not existing argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NotExistingArgument() {
-        when(gameService.get(any(Integer.class))).thenReturn(null);
-
-        gameFacade.remove(GameUtils.newGame(Integer.MAX_VALUE));
+        verify(gameValidator).validate(game, ValidationType.EXISTS);
+        verifyNoMoreInteractions(gameValidator);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /**
      * Test method for {@link GameFacade#duplicate(Game)}.
      */
     @Test
-    public void testDuplicate() {
+    public void duplicate() {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
         final Game game = GameUtils.newGame(1);
 
         when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(new Result<>());
 
-        gameFacade.duplicate(game);
+        final Result<Void> result = gameFacade.duplicate(game);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).get(1);
         verify(gameService).duplicate(gameEntity);
-        verify(gameValidator).validate(game);
+        verify(gameValidator).validate(game, ValidationType.EXISTS);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(Game)} with null argument.
+     * Test method for {@link GameFacade#duplicate(Game)} with invalid game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+    @Test
+    public void duplicate_InvalidGame() {
+        final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        gameFacade.duplicate(null);
-    }
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(INVALID_GAME_RESULT);
 
-    /**
-     * Test method for {@link GameFacade#duplicate(Game)} with argument with bad data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
+        final Result<Void> result = gameFacade.duplicate(game);
 
-        gameFacade.duplicate(GameUtils.newGame(null));
-    }
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(INVALID_GAME_RESULT));
 
-    /**
-     * Test method for {@link GameFacade#duplicate(Game)} with not existing argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NotExistingArgument() {
-        when(gameService.get(any(Integer.class))).thenReturn(null);
-
-        gameFacade.duplicate(GameUtils.newGame(Integer.MAX_VALUE));
+        verify(gameValidator).validate(game, ValidationType.EXISTS);
+        verifyNoMoreInteractions(gameValidator);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /**
      * Test method for {@link GameFacade#moveUp(Game)}.
      */
     @Test
-    public void testMoveUp() {
-        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(2);
-        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(GameUtils.newGameDomain(1), gameEntity);
-        final Game game = GameUtils.newGame(2);
+    public void moveUp() {
+        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
+        final Game game = GameUtils.newGame(1);
 
         when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
-        when(gameService.getAll()).thenReturn(games);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(new Result<>());
 
-        gameFacade.moveUp(game);
+        final Result<Void> result = gameFacade.moveUp(game);
 
-        verify(gameService).get(2);
-        verify(gameService).getAll();
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        verify(gameService).get(1);
         verify(gameService).moveUp(gameEntity);
-        verify(gameValidator).validate(game);
+        verify(gameValidator).validate(game, ValidationType.EXISTS, ValidationType.UP);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(Game)} with null argument.
+     * Test method for {@link GameFacade#moveUp(Game)} with invalid game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
-
-        gameFacade.moveUp(null);
-    }
-
-    /**
-     * Test method for {@link GameFacade#moveUp(Game)} with argument with bad data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
-
-        gameFacade.moveUp(GameUtils.newGame(null));
-    }
-
-    /**
-     * Test method for {@link GameFacade#moveUp(Game)} with not existing argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NotExistingArgument() {
-        when(gameService.get(any(Integer.class))).thenReturn(null);
-
-        gameFacade.moveUp(GameUtils.newGame(Integer.MAX_VALUE));
-    }
-
-    /**
-     * Test method for {@link GameFacade#moveUp(Game)} with not movable argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NotMovableArgument() {
-        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGameDomain(1));
+    @Test
+    public void moveUp_InvalidGame() {
         final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
-        when(gameService.getAll()).thenReturn(games);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(INVALID_GAME_RESULT);
 
-        gameFacade.moveUp(game);
+        final Result<Void> result = gameFacade.moveUp(game);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(INVALID_GAME_RESULT));
+
+        verify(gameValidator).validate(game, ValidationType.EXISTS, ValidationType.UP);
+        verifyNoMoreInteractions(gameValidator);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /**
      * Test method for {@link GameFacade#moveDown(Game)}.
      */
     @Test
-    public void testMoveDown() {
+    public void moveDown() {
         final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(1);
-        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(gameEntity, GameUtils.newGameDomain(2));
         final Game game = GameUtils.newGame(1);
 
         when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
-        when(gameService.getAll()).thenReturn(games);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(new Result<>());
 
-        gameFacade.moveDown(game);
+        final Result<Void> result = gameFacade.moveDown(game);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).get(1);
-        verify(gameService).getAll();
         verify(gameService).moveDown(gameEntity);
-        verify(gameValidator).validate(game);
+        verify(gameValidator).validate(game, ValidationType.EXISTS, ValidationType.DOWN);
         verifyNoMoreInteractions(gameService, gameValidator);
         verifyZeroInteractions(converter);
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(Game)} with null argument.
+     * Test method for {@link GameFacade#moveDown(Game)} with invalid game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
-
-        gameFacade.moveDown(null);
-    }
-
-    /**
-     * Test method for {@link GameFacade#moveDown(Game)} with argument with bad data.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_BadArgument() {
-        doThrow(IllegalArgumentException.class).when(gameValidator).validate(any(Game.class));
-
-        gameFacade.moveDown(GameUtils.newGame(null));
-    }
-
-    /**
-     * Test method for {@link GameFacade#moveDown(Game)} with not existing argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NotExistingArgument() {
-        when(gameService.get(any(Integer.class))).thenReturn(null);
-
-        gameFacade.moveDown(GameUtils.newGame(Integer.MAX_VALUE));
-    }
-
-    /**
-     * Test method for {@link GameFacade#moveDown(Game)} with not movable argument.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NotMovableArgument() {
-        final cz.vhromada.catalog.domain.Game gameEntity = GameUtils.newGameDomain(Integer.MAX_VALUE);
-        final List<cz.vhromada.catalog.domain.Game> games = CollectionUtils.newList(GameUtils.newGameDomain(1), gameEntity);
+    @Test
+    public void moveDown_InvalidGame() {
         final Game game = GameUtils.newGame(Integer.MAX_VALUE);
 
-        when(gameService.get(any(Integer.class))).thenReturn(gameEntity);
-        when(gameService.getAll()).thenReturn(games);
+        when(gameValidator.validate(any(Game.class), anyVararg())).thenReturn(INVALID_GAME_RESULT);
 
-        gameFacade.moveDown(game);
+        final Result<Void> result = gameFacade.moveDown(game);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(INVALID_GAME_RESULT));
+
+        verify(gameValidator).validate(game, ValidationType.EXISTS, ValidationType.DOWN);
+        verifyNoMoreInteractions(gameValidator);
+        verifyZeroInteractions(gameService, converter);
     }
 
     /**
      * Test method for {@link GameFacade#updatePositions()}.
      */
     @Test
-    public void testUpdatePositions() {
-        gameFacade.updatePositions();
+    public void updatePositions() {
+        final Result<Void> result = gameFacade.updatePositions();
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).updatePositions();
         verifyNoMoreInteractions(gameService);
@@ -509,14 +491,20 @@ public class GameFacadeImplTest {
      * Test method for {@link GameFacade#getTotalMediaCount()}.
      */
     @Test
-    public void testGetTotalMediaCount() {
+    public void getTotalMediaCount() {
         final cz.vhromada.catalog.domain.Game game1 = GameUtils.newGameDomain(1);
         final cz.vhromada.catalog.domain.Game game2 = GameUtils.newGameDomain(2);
         final int expectedCount = game1.getMediaCount() + game2.getMediaCount();
 
         when(gameService.getAll()).thenReturn(CollectionUtils.newList(game1, game2));
 
-        assertEquals(expectedCount, gameFacade.getTotalMediaCount());
+        final Result<Integer> result = gameFacade.getTotalMediaCount();
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(expectedCount));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         verify(gameService).getAll();
         verifyNoMoreInteractions(gameService);

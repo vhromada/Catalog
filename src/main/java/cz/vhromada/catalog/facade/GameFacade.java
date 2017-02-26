@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade;
 import java.util.List;
 
 import cz.vhromada.catalog.entity.Game;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for games.
@@ -13,110 +14,144 @@ public interface GameFacade {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
-    void newData();
+    Result<Void> newData();
 
     /**
      * Returns games.
      *
-     * @return games
+     * @return result with list of games
      */
-    List<Game> getGames();
+    Result<List<Game>> getAll();
 
     /**
      * Returns game with ID or null if there isn't such game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return game with ID or null if there isn't such game
-     * @throws IllegalArgumentException if ID is null
+     * @return result with game or validation errors
      */
-    Game getGame(Integer id);
+    Result<Game> get(Integer id);
 
     /**
      * Adds game. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about game is null</li>
+     * <li>URL to czech Wikipedia page about game is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about game is null
-     *                                  or URL to czech Wikipedia page about game is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
+     * @return result with validation errors
      */
-    void add(Game game);
+    Result<Void> add(Game game);
 
     /**
      * Updates game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about game is null</li>
+     * <li>URL to czech Wikipedia page about game is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * <li>Game doesn't exist in data storage</li>
+     * </ul>
      *
      * @param game new value of game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about game is null
-     *                                  or URL to czech Wikipedia page about game is null
-     *                                  or count of media isn't positive number
-     *                                  or other data is null
-     *                                  or note is null
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
-    void update(Game game);
+    Result<Void> update(Game game);
 
     /**
      * Removes game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game doesn't exist in data storage</li>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Game game);
+    Result<Void> remove(Game game);
 
     /**
      * Duplicates game.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game doesn't exist in data storage</li>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Game game);
+    Result<Void> duplicate(Game game);
 
     /**
      * Moves game in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game can't be moved up</li>
+     * <li>Game doesn't exist in data storage</li>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game can't be moved up
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Game game);
+    Result<Void> moveUp(Game game);
 
     /**
      * Moves game in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Game is null</li>
+     * <li>ID is null</li>
+     * <li>Game can't be moved down</li>
+     * <li>Game doesn't exist in data storage</li>
      *
      * @param game game
-     * @throws IllegalArgumentException if game is null
-     *                                  or ID is null
-     *                                  or game can't be moved down
-     *                                  or game doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Game game);
+    Result<Void> moveDown(Game game);
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
-    void updatePositions();
+    Result<Void> updatePositions();
 
     /**
      * Returns total count of media.
      *
-     * @return total count of media
+     * @return result with total count of media
      */
-    int getTotalMediaCount();
+    Result<Integer> getTotalMediaCount();
 
 }

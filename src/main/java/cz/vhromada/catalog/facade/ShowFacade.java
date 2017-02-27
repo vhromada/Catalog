@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Show;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for shows.
@@ -14,142 +15,176 @@ public interface ShowFacade {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
-    void newData();
+    Result<Void> newData();
 
     /**
      * Returns shows.
      *
-     * @return shows
+     * @return result with list of shows
      */
-    List<Show> getShows();
+    Result<List<Show>> getAll();
 
     /**
      * Returns show with ID or null if there isn't such show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return show with ID or null if there isn't such show
-     * @throws IllegalArgumentException if ID is null
+     * @return result with show or validation errors
      */
-    Show getShow(Integer id);
+    Result<Show> get(Integer id);
 
     /**
      * Adds show. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID isn't null</li>
+     * <li>Czech name is null</li>
+     * <li>Czech name is empty string</li>
+     * <li>Original name is null</li>
+     * <li>Original name is empty string</li>
+     * <li>URL to ČSFD page about show is null</li>
+     * <li>IMDB code isn't -1 or between 1 and 9999999</li>
+     * <li>URL to english Wikipedia page about show is null</li>
+     * <li>URL to czech Wikipedia page about show is null</li>
+     * <li>Path to file with show's picture is null</li>
+     * <li>Note is null</li>
+     * <li>Genres are null</li>
+     * <li>Genres contain null value</li>
+     * <li>Genre ID is null</li>
+     * <li>Genre name is null</li>
+     * <li>Genre name is empty string</li>
+     * <li>Genre doesn't exist</li>
+     * </ul>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID isn't null
-     *                                  or czech name is null
-     *                                  or czech name is empty string
-     *                                  or original name is null
-     *                                  or original name is empty string
-     *                                  or URL to ČSFD page about show is null
-     *                                  or IMDB code isn't -1 or between 1 and 9999999
-     *                                  or URL to english Wikipedia page about show is null
-     *                                  or URL to czech Wikipedia page about show is null
-     *                                  or path to file with show picture is null
-     *                                  or note is null
-     *                                  or genres are null
-     *                                  or genres contain null value
-     *                                  or genre ID is null
-     *                                  or genre name is null
-     *                                  or genre name is empty string
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void add(Show show);
+    Result<Void> add(Show show);
 
     /**
      * Updates show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Czech name is null</li>
+     * <li>Czech name is empty string</li>
+     * <li>Original name is null</li>
+     * <li>Original name is empty string</li>
+     * <li>URL to ČSFD page about show is null</li>
+     * <li>IMDB code isn't -1 or between 1 and 9999999</li>
+     * <li>URL to english Wikipedia page about show is null</li>
+     * <li>URL to czech Wikipedia page about show is null</li>
+     * <li>Path to file with show's picture is null</li>
+     * <li>Note is null</li>
+     * <li>Genres are null</li>
+     * <li>Genres contain null value</li>
+     * <li>Genre ID is null</li>
+     * <li>Genre name is null</li>
+     * <li>Genre name is empty string</li>
+     * <li>Genre doesn't exist</li>
+     * <li>Show doesn't exist in data storage</li>
+     * </ul>
      *
      * @param show new value of show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or czech name is null
-     *                                  or czech name is empty string
-     *                                  or original name is null
-     *                                  or original name is empty string
-     *                                  or URL to ČSFD page about show is null
-     *                                  or IMDB code isn't -1 or between 1 and 9999999
-     *                                  or URL to english Wikipedia page about show is null
-     *                                  or URL to czech Wikipedia page about show is null
-     *                                  or path to file with show picture is null
-     *                                  or note is null
-     *                                  or genres are null
-     *                                  or genres contain null value
-     *                                  or genre ID is null
-     *                                  or genre name is null
-     *                                  or genre name is empty string
-     *                                  or show doesn't exist in data storage
-     *                                  or genre doesn't exist in data storage
+     * @return result with validation errors
      */
-    void update(Show show);
+    Result<Void> update(Show show);
 
     /**
      * Removes show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show doesn't exist in data storage</li>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Show show);
+    Result<Void> remove(Show show);
 
     /**
      * Duplicates show.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show doesn't exist in data storage</li>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Show show);
+    Result<Void> duplicate(Show show);
 
     /**
      * Moves show in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show can't be moved up</li>
+     * <li>Show doesn't exist in data storage</li>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show can't be moved up
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Show show);
+    Result<Void> moveUp(Show show);
 
     /**
      * Moves show in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Show is null</li>
+     * <li>ID is null</li>
+     * <li>Show can't be moved down</li>
+     * <li>Show doesn't exist in data storage</li>
      *
      * @param show show
-     * @throws IllegalArgumentException if show is null
-     *                                  or ID is null
-     *                                  or show can't be moved down
-     *                                  or show doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Show show);
+    Result<Void> moveDown(Show show);
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
-    void updatePositions();
+    Result<Void> updatePositions();
 
     /**
      * Returns total length of all shows.
      *
-     * @return total length of all shows
+     * @return result with total length of all shows
      */
-    Time getTotalLength();
+    Result<Time> getTotalLength();
 
     /**
      * Returns count of seasons from all shows.
      *
-     * @return count of seasons from all shows
+     * @return result with count of seasons from all shows
      */
-    int getSeasonsCount();
+    Result<Integer> getSeasonsCount();
 
     /**
      * Returns count of episodes from all shows.
      *
-     * @return count of episodes from all shows
+     * @return result with count of episodes from all shows
      */
-    int getEpisodesCount();
+    Result<Integer> getEpisodesCount();
 
 }

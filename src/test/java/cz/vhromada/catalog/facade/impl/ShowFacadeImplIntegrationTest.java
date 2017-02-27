@@ -1,7 +1,11 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -18,8 +22,11 @@ import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.utils.TestConstants;
+import cz.vhromada.result.Event;
+import cz.vhromada.result.Result;
+import cz.vhromada.result.Severity;
+import cz.vhromada.result.Status;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +42,34 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@Ignore
+@DirtiesContext
 public class ShowFacadeImplIntegrationTest {
+
+    /**
+     * Event for null show
+     */
+    private static final Event NULL_SHOW_EVENT = new Event(Severity.ERROR, "SHOW_NULL", "Show mustn't be null.");
+
+    /**
+     * Event for show with null ID
+     */
+    private static final Event NULL_SHOW_ID_EVENT = new Event(Severity.ERROR, "SHOW_ID_NULL", "ID mustn't be null.");
+
+    /**
+     * Event for not existing show
+     */
+    private static final Event NOT_EXIST_SHOW_EVENT = new Event(Severity.ERROR, "SHOW_NOT_EXIST", "Show doesn't exist.");
+
+    /**
+     * Event for invalid IMDB code
+     */
+    private static final Event INVALID_IMDB_CODE_EVENT = new Event(Severity.ERROR, "SHOW_IMDB_CODE_NOT_VALID",
+            "IMDB code must be between 1 and 9999999 or -1.");
+
+    /**
+     * Event for genre with null ID
+     */
+    private static final Event NULL_GENRE_ID_EVENT = new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.");
 
     /**
      * Instance of {@link EntityManager}
@@ -57,46 +89,86 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testNewData() {
-        showFacade.newData();
+    public void newData() {
+        final Result<Void> result = showFacade.newData();
 
-        assertEquals(0, ShowUtils.getShowsCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(0));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(0));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(0));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#getShows()}.
+     * Test method for {@link ShowFacade#getAll()}.
      */
     @Test
-    public void testGetShows() {
-        ShowUtils.assertShowListDeepEquals(showFacade.getShows(), ShowUtils.getShows());
+    public void getAll() {
+        final Result<List<Show>> result = showFacade.getAll();
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
+        ShowUtils.assertShowListDeepEquals(result.getData(), ShowUtils.getShows());
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#getShow(Integer)}.
+     * Test method for {@link ShowFacade#get(Integer)}.
      */
     @Test
-    public void testGetShow() {
+    public void get() {
         for (int i = 1; i <= ShowUtils.SHOWS_COUNT; i++) {
-            ShowUtils.assertShowDeepEquals(showFacade.getShow(i), ShowUtils.getShow(i));
+            final Result<Show> result = showFacade.get(i);
+
+            assertThat(result, is(notNullValue()));
+            assertThat(result.getEvents(), is(notNullValue()));
+            assertThat(result.getStatus(), is(Status.OK));
+            assertThat(result.getEvents().isEmpty(), is(true));
+            ShowUtils.assertShowDeepEquals(result.getData(), ShowUtils.getShow(i));
         }
 
-        assertNull(showFacade.getShow(Integer.MAX_VALUE));
+        final Result<Show> result = showFacade.get(Integer.MAX_VALUE);
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#getShow(Integer)} with null argument.
+     * Test method for {@link ShowFacade#get(Integer)} with null show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetShow_NullArgument() {
-        showFacade.getShow(null);
+    @Test
+    public void get_NullShow() {
+        final Result<Show> result = showFacade.get(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -104,214 +176,454 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testAdd() {
+    public void add() {
         final Show show = ShowUtils.newShow(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         final cz.vhromada.catalog.domain.Show expectedShow = ShowUtils.newShowDomain(ShowUtils.SHOWS_COUNT + 1);
         expectedShow.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Show addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
         ShowUtils.assertShowDeepEquals(expectedShow, addedShow);
-
-        assertEquals(ShowUtils.SHOWS_COUNT + 1, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT + 1));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#add(Show)} with null argument.
+     * Test method for {@link ShowFacade#add(Show)} with null show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullArgument() {
-        showFacade.add(null);
+    @Test
+    public void add_NullShow() {
+        final Result<Void> result = showFacade.add(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with not null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NotNullId() {
-        showFacade.add(ShowUtils.newShow(Integer.MAX_VALUE));
+    @Test
+    public void add_NotNullId() {
+        final Result<Void> result = showFacade.add(ShowUtils.newShow(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_ID_NOT_NULL", "ID must be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullCzechName() {
+    @Test
+    public void add_NullCzechName() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setCzechName(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with empty string as czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_EmptyCzechName() {
+    @Test
+    public void add_EmptyCzechName() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setCzechName("");
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullOriginalName() {
+    @Test
+    public void add_NullOriginalName() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setOriginalName(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with empty string as original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_EmptyOriginalName() {
+    @Test
+    public void add_EmptyOriginalName() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setOriginalName("");
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null URL to ČSFD page about show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullCsfd() {
+    @Test
+    public void add_NullCsfd() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setCsfd(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with bad minimal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMinimalImdb() {
+    @Test
+    public void add_BadMinimalImdb() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with bad divider IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadDividerImdb() {
+    @Test
+    public void add_BadDividerImdb() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setImdbCode(0);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with bad maximal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadMaximalImdb() {
+    @Test
+    public void add_BadMaximalImdb() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null URL to english Wikipedia page about show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullWikiEn() {
+    @Test
+    public void add_NullWikiEn() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setWikiEn(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_WIKI_EN_NULL", "URL to english Wikipedia page about show mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null URL to czech Wikipedia page about show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullWikiCz() {
+    @Test
+    public void add_NullWikiCz() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setWikiCz(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_WIKI_CZ_NULL", "URL to czech Wikipedia page about show mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#add(Show)} with show with null path to file with show picture.
+     * Test method for {@link ShowFacade#add(Show)} with show with null path to file with show's picture.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullPicture() {
+    @Test
+    public void add_NullPicture() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setPicture(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullNote() {
+    @Test
+    public void add_NullNote() {
         final Show show = ShowUtils.newShow(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
         show.setNote(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null genres.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_NullGenres() {
+    @Test
+    public void add_NullGenres() {
         final Show show = ShowUtils.newShow(null);
         show.setGenres(null);
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with genres with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_BadGenres() {
+    @Test
+    public void add_BadGenres() {
         final Show show = ShowUtils.newShow(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with genres with genre with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_Genres_Genre_NullId() {
+    @Test
+    public void add_NullGenreId() {
         final Show show = ShowUtils.newShow(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with genres with genre with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdd_Genres_Genre_NullName() {
+    @Test
+    public void add_NullGenreName() {
         final Show show = ShowUtils.newShow(null);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
 
-        showFacade.add(show);
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link ShowFacade#add(Show)} with show with genres with genre with empty string as name.
+     */
+    @Test
+    public void add_EmptyGenreName() {
+        final Show show = ShowUtils.newShow(null);
+        final Genre badGenre = GenreUtils.newGenre(1);
+        badGenre.setName("");
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+
+        final Result<Void> result = showFacade.add(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -319,220 +631,465 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testUpdate() {
+    public void update() {
         final Show show = ShowUtils.newShow(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(4)));
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Show updatedShow = ShowUtils.getShow(entityManager, 1);
         ShowUtils.assertShowDeepEquals(show, updatedShow);
-
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#update(Show)} with null argument.
+     * Test method for {@link ShowFacade#update(Show)} with null show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullArgument() {
-        showFacade.update(null);
+    @Test
+    public void update_NullShow() {
+        final Result<Void> result = showFacade.update(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getData(), is(nullValue()));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullId() {
-        showFacade.update(ShowUtils.newShow(null));
+    @Test
+    public void update_NullId() {
+        final Show show = ShowUtils.newShow(1);
+        show.setId(null);
+
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_ID_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullCzechName() {
+    @Test
+    public void update_NullCzechName() {
         final Show show = ShowUtils.newShow(1);
         show.setCzechName(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with empty string as czech name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_EmptyCzechName() {
+    @Test
+    public void update_EmptyCzechName() {
         final Show show = ShowUtils.newShow(1);
         show.setCzechName("");
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullOriginalName() {
+    @Test
+    public void update_NullOriginalName() {
         final Show show = ShowUtils.newShow(1);
         show.setOriginalName(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with empty string as original name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_EmptyOriginalName() {
+    @Test
+    public void update_EmptyOriginalName() {
         final Show show = ShowUtils.newShow(1);
         show.setOriginalName("");
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null URL to ČSFD page about show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullCsfd() {
+    @Test
+    public void update_NullCsfd() {
         final Show show = ShowUtils.newShow(1);
         show.setCsfd(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with bad minimal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMinimalImdb() {
+    @Test
+    public void update_BadMinimalImdb() {
         final Show show = ShowUtils.newShow(1);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with bad divider IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadDividerImdb() {
+    @Test
+    public void update_BadDividerImdb() {
         final Show show = ShowUtils.newShow(1);
         show.setImdbCode(0);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with bad maximal IMDB code.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadMaximalImdb() {
+    @Test
+    public void update_BadMaximalImdb() {
         final Show show = ShowUtils.newShow(1);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null URL to english Wikipedia page about show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullWikiEn() {
+    @Test
+    public void update_NullWikiEn() {
         final Show show = ShowUtils.newShow(1);
         show.setWikiEn(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_WIKI_EN_NULL", "URL to english Wikipedia page about show mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null URL to czech Wikipedia page about show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullWikiCz() {
+    @Test
+    public void update_NullWikiCz() {
         final Show show = ShowUtils.newShow(1);
         show.setWikiCz(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_WIKI_CZ_NULL", "URL to czech Wikipedia page about show mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#update(Show)} with show with null path to file with show picture.
+     * Test method for {@link ShowFacade#update(Show)} with show with null path to file with show's picture.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullPicture() {
+    @Test
+    public void update_NullPicture() {
         final Show show = ShowUtils.newShow(1);
         show.setPicture(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null note.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullNote() {
+    @Test
+    public void update_NullNote() {
         final Show show = ShowUtils.newShow(1);
         show.setNote(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with null genres.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_NullGenres() {
+    @Test
+    public void update_NullGenres() {
         final Show show = ShowUtils.newShow(1);
         show.setGenres(null);
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with genres with null value.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadGenres() {
+    @Test
+    public void update_BadGenres() {
         final Show show = ShowUtils.newShow(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with genres with genre with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_Genres_Genre_NullId() {
+    @Test
+    public void update_NullGenreId() {
         final Show show = ShowUtils.newShow(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with genres with genre with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_Genres_Genre_NullName() {
+    @Test
+    public void update_NullGenreName() {
         final Show show = ShowUtils.newShow(1);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
 
-        showFacade.update(show);
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+    }
+
+    /**
+     * Test method for {@link ShowFacade#update(Show)} with show with genres with genre with empty string as name.
+     */
+    @Test
+    public void update_EmptyGenreName() {
+        final Show show = ShowUtils.newShow(1);
+        final Genre badGenre = GenreUtils.newGenre(1);
+        badGenre.setName("");
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#update(Show)} with show with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdate_BadId() {
-        showFacade.update(ShowUtils.newShow(Integer.MAX_VALUE));
+    @Test
+    public void update_BadId() {
+        final Show show = ShowUtils.newShow(1);
+        show.setId(Integer.MAX_VALUE);
+
+        final Result<Void> result = showFacade.update(show);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -540,38 +1097,76 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testRemove() {
-        showFacade.remove(ShowUtils.newShow(1));
+    public void remove() {
+        final Result<Void> result = showFacade.remove(ShowUtils.newShow(1));
 
-        assertNull(ShowUtils.getShow(entityManager, 1));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertEquals(ShowUtils.SHOWS_COUNT - 1, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT - SeasonUtils.SEASONS_PER_SHOW_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SHOW_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(ShowUtils.getShow(entityManager, 1), is(nullValue()));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT - 1));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT - SeasonUtils.SEASONS_PER_SHOW_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SHOW_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(Show)} with null argument.
+     * Test method for {@link ShowFacade#remove(Show)} with null show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullArgument() {
-        showFacade.remove(null);
+    @Test
+    public void remove_NullShow() {
+        final Result<Void> result = showFacade.remove(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#remove(Show)} with show with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_NullId() {
-        showFacade.remove(ShowUtils.newShow(null));
+    @Test
+    public void remove_NullId() {
+        final Result<Void> result = showFacade.remove(ShowUtils.newShow(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_ID_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#remove(Show)} with show with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemove_BadId() {
-        showFacade.remove(ShowUtils.newShow(Integer.MAX_VALUE));
+    @Test
+    public void remove_BadId() {
+        final Result<Void> result = showFacade.remove(ShowUtils.newShow(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -579,7 +1174,7 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testDuplicate() {
+    public void duplicate() {
         final cz.vhromada.catalog.domain.Show show = ShowUtils.getShow(ShowUtils.SHOWS_COUNT);
         show.setId(ShowUtils.SHOWS_COUNT + 1);
         for (final Season season : show.getSeasons()) {
@@ -590,38 +1185,76 @@ public class ShowFacadeImplIntegrationTest {
             }
         }
 
-        showFacade.duplicate(ShowUtils.newShow(ShowUtils.SHOWS_COUNT));
+        final Result<Void> result = showFacade.duplicate(ShowUtils.newShow(ShowUtils.SHOWS_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         final cz.vhromada.catalog.domain.Show duplicatedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
         ShowUtils.assertShowDeepEquals(show, duplicatedShow);
-
-        assertEquals(ShowUtils.SHOWS_COUNT + 1, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT + SeasonUtils.SEASONS_PER_SHOW_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SHOW_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT + 1));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT + SeasonUtils.SEASONS_PER_SHOW_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SHOW_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(Show)} with null argument.
+     * Test method for {@link ShowFacade#duplicate(Show)} with null show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullArgument() {
-        showFacade.duplicate(null);
+    @Test
+    public void duplicate_NullShow() {
+        final Result<Void> result = showFacade.duplicate(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#duplicate(Show)} with show with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_NullId() {
-        showFacade.duplicate(ShowUtils.newShow(null));
+    @Test
+    public void duplicate_NullId() {
+        final Result<Void> result = showFacade.duplicate(ShowUtils.newShow(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_ID_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#duplicate(Show)} with show with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDuplicate_BadId() {
-        showFacade.duplicate(ShowUtils.newShow(Integer.MAX_VALUE));
+    @Test
+    public void duplicate_BadId() {
+        final Result<Void> result = showFacade.duplicate(ShowUtils.newShow(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -629,55 +1262,104 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testMoveUp() {
+    public void moveUp() {
         final cz.vhromada.catalog.domain.Show show1 = ShowUtils.getShow(1);
         show1.setPosition(1);
         final cz.vhromada.catalog.domain.Show show2 = ShowUtils.getShow(2);
         show2.setPosition(0);
 
-        showFacade.moveUp(ShowUtils.newShow(2));
+        final Result<Void> result = showFacade.moveUp(ShowUtils.newShow(2));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         ShowUtils.assertShowDeepEquals(show1, ShowUtils.getShow(entityManager, 1));
         ShowUtils.assertShowDeepEquals(show2, ShowUtils.getShow(entityManager, 2));
         for (int i = 3; i <= ShowUtils.SHOWS_COUNT; i++) {
             ShowUtils.assertShowDeepEquals(ShowUtils.getShow(i), ShowUtils.getShow(entityManager, i));
         }
-
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)} with null argument.
+     * Test method for {@link ShowFacade#moveUp(Show)} with null show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullArgument() {
-        showFacade.moveUp(null);
+    @Test
+    public void moveUp_NullShow() {
+        final Result<Void> result = showFacade.moveUp(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#moveUp(Show)} with show with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NullId() {
-        showFacade.moveUp(ShowUtils.newShow(null));
+    @Test
+    public void moveUp_NullId() {
+        final Result<Void> result = showFacade.moveUp(ShowUtils.newShow(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_ID_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)} with not movable argument.
+     * Test method for {@link ShowFacade#moveUp(Show)} with not movable show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_NotMovableArgument() {
-        showFacade.moveUp(ShowUtils.newShow(1));
+    @Test
+    public void moveUp_NotMovableShow() {
+        final Result<Void> result = showFacade.moveUp(ShowUtils.newShow(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_NOT_MOVABLE", "Show can't be moved up.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)} with bad ID.
+     * Test method for {@link ShowFacade#moveUp(Show)} with show with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveUp_BadId() {
-        showFacade.moveUp(ShowUtils.newShow(Integer.MAX_VALUE));
+    @Test
+    public void moveUp_BadId() {
+        final Result<Void> result = showFacade.moveUp(ShowUtils.newShow(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -685,55 +1367,104 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testMoveDown() {
+    public void moveDown() {
         final cz.vhromada.catalog.domain.Show show1 = ShowUtils.getShow(1);
         show1.setPosition(1);
         final cz.vhromada.catalog.domain.Show show2 = ShowUtils.getShow(2);
         show2.setPosition(0);
 
-        showFacade.moveDown(ShowUtils.newShow(1));
+        final Result<Void> result = showFacade.moveDown(ShowUtils.newShow(1));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         ShowUtils.assertShowDeepEquals(show1, ShowUtils.getShow(entityManager, 1));
         ShowUtils.assertShowDeepEquals(show2, ShowUtils.getShow(entityManager, 2));
         for (int i = 3; i <= ShowUtils.SHOWS_COUNT; i++) {
             ShowUtils.assertShowDeepEquals(ShowUtils.getShow(i), ShowUtils.getShow(entityManager, i));
         }
-
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)} with null argument.
+     * Test method for {@link ShowFacade#moveDown(Show)} with null show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullArgument() {
-        showFacade.moveDown(null);
+    @Test
+    public void moveDown_NullShow() {
+        final Result<Void> result = showFacade.moveDown(null);
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#moveDown(Show)} with show with null ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NullId() {
-        showFacade.moveDown(ShowUtils.newShow(null));
+    @Test
+    public void moveDown_NullId() {
+        final Result<Void> result = showFacade.moveDown(ShowUtils.newShow(null));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NULL_SHOW_ID_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)} with not movable argument.
+     * Test method for {@link ShowFacade#moveDown(Show)} with not movable show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_NotMovableArgument() {
-        showFacade.moveDown(ShowUtils.newShow(ShowUtils.SHOWS_COUNT));
+    @Test
+    public void moveDown_NotMovableShow() {
+        final Result<Void> result = showFacade.moveDown(ShowUtils.newShow(ShowUtils.SHOWS_COUNT));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SHOW_NOT_MOVABLE", "Show can't be moved down.")));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)} with bad ID.
+     * Test method for {@link ShowFacade#moveDown(Show)} with show with bad ID.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testMoveDown_BadId() {
-        showFacade.moveDown(ShowUtils.newShow(Integer.MAX_VALUE));
+    @Test
+    public void moveDown_BadId() {
+        final Result<Void> result = showFacade.moveDown(ShowUtils.newShow(Integer.MAX_VALUE));
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.ERROR));
+        assertThat(result.getEvents().size(), is(1));
+        assertThat(result.getEvents().get(0), is(NOT_EXIST_SHOW_EVENT));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -741,54 +1472,80 @@ public class ShowFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testUpdatePositions() {
-        showFacade.updatePositions();
+    public void updatePositions() {
+        final Result<Void> result = showFacade.updatePositions();
+
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getEvents().isEmpty(), is(true));
 
         for (int i = 1; i <= ShowUtils.SHOWS_COUNT; i++) {
             ShowUtils.assertShowDeepEquals(ShowUtils.getShow(i), ShowUtils.getShow(entityManager, i));
         }
-
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#getTotalLength()}.
      */
     @Test
-    public void testGetTotalLength() {
+    public void getTotalLength() {
         final Time length = new Time(1998);
 
-        assertEquals(length, showFacade.getTotalLength());
+        final Result<Time> result = showFacade.getTotalLength();
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(length));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#getSeasonsCount()}.
      */
     @Test
-    public void testGetSeasonsCount() {
-        assertEquals(SeasonUtils.SEASONS_COUNT, showFacade.getSeasonsCount());
+    public void getSeasonsCount() {
+        final Result<Integer> result = showFacade.getSeasonsCount();
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
      * Test method for {@link ShowFacade#getEpisodesCount()}.
      */
     @Test
-    public void testGetEpisodesCount() {
-        assertEquals(EpisodeUtils.EPISODES_COUNT, showFacade.getEpisodesCount());
+    public void getEpisodesCount() {
+        final Result<Integer> result = showFacade.getEpisodesCount();
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getEvents(), is(notNullValue()));
+        assertThat(result.getStatus(), is(Status.OK));
+        assertThat(result.getData(), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(result.getEvents().isEmpty(), is(true));
+
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));
+        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
 }

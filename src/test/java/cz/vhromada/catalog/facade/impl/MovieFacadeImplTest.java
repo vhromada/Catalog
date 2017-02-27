@@ -84,7 +84,7 @@ public class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhro
      * Test method for {@link MovieFacade#getTotalLength()}.
      */
     @Test
-    public void testGetTotalLength() {
+    public void getTotalLength() {
         final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(MovieUtils.newMovieDomain(1), MovieUtils.newMovieDomain(2));
         int expectedTotalLength = 0;
         for (final cz.vhromada.catalog.domain.Movie movie : movies) {

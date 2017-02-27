@@ -1631,7 +1631,7 @@ public class MovieFacadeImplIntegrationTest {
      * Test method for {@link MovieFacade#getTotalMediaCount()}.
      */
     @Test
-    public void testGetTotalMediaCount() {
+    public void getTotalMediaCount() {
         final Result<Integer> result = movieFacade.getTotalMediaCount();
 
         assertThat(result, is(notNullValue()));
@@ -1647,7 +1647,7 @@ public class MovieFacadeImplIntegrationTest {
      * Test method for {@link MovieFacade#getTotalLength()}.
      */
     @Test
-    public void testGetTotalLength() {
+    public void getTotalLength() {
         final Result<Time> result = movieFacade.getTotalLength();
 
         assertThat(result, is(notNullValue()));

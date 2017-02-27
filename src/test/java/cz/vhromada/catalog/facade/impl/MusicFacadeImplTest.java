@@ -84,7 +84,7 @@ public class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhro
      * Test method for {@link MusicFacade#getTotalLength()}.
      */
     @Test
-    public void testGetTotalLength() {
+    public void getTotalLength() {
         final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusicWithSongs(1), MusicUtils.newMusicWithSongs(2));
         int expectedTotalLength = 0;
         for (final cz.vhromada.catalog.domain.Music music : musicList) {
@@ -112,7 +112,7 @@ public class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhro
      * Test method for {@link MusicFacade#getSongsCount()}.
      */
     @Test
-    public void testGetSongsCount() {
+    public void getSongsCount() {
         final cz.vhromada.catalog.domain.Music music1 = MusicUtils.newMusicWithSongs(1);
         final cz.vhromada.catalog.domain.Music music2 = MusicUtils.newMusicWithSongs(2);
         final int expectedSongs = music1.getSongs().size() + music2.getSongs().size();

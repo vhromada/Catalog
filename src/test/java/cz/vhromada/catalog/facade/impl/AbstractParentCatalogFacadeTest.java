@@ -115,4 +115,5 @@ public class AbstractParentCatalogFacadeTest extends AbstractParentFacadeTest<Mo
             this.position = position;
         }
     }
+
 }

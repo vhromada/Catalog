@@ -9,10 +9,11 @@ import org.junit.runners.Suite;
  * @author Vladimir Hromada
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ AbstractParentCatalogFacadeTest.class, MovieFacadeImplTest.class, ShowFacadeImplTest.class, SeasonFacadeImplTest.class,
-        EpisodeFacadeImplTest.class, GameFacadeImplTest.class, MusicFacadeImplTest.class, SongFacadeImplTest.class, ProgramFacadeImplTest.class,
-        GenreFacadeImplTest.class, MovieFacadeImplIntegrationTest.class, ShowFacadeImplIntegrationTest.class, SeasonFacadeImplIntegrationTest.class,
-        EpisodeFacadeImplIntegrationTest.class, GameFacadeImplIntegrationTest.class, MusicFacadeImplIntegrationTest.class, SongFacadeImplIntegrationTest.class,
-        ProgramFacadeImplIntegrationTest.class, GenreFacadeImplIntegrationTest.class })
+@Suite.SuiteClasses({ AbstractParentCatalogFacadeTest.class, AbstractChildCatalogFacadeTest.class, MovieFacadeImplTest.class, ShowFacadeImplTest.class,
+        SeasonFacadeImplTest.class, EpisodeFacadeImplTest.class, GameFacadeImplTest.class, MusicFacadeImplTest.class, SongFacadeImplTest.class,
+        ProgramFacadeImplTest.class, GenreFacadeImplTest.class, MovieFacadeImplIntegrationTest.class, ShowFacadeImplIntegrationTest.class,
+        SeasonFacadeImplIntegrationTest.class, EpisodeFacadeImplIntegrationTest.class, GameFacadeImplIntegrationTest.class,
+        MusicFacadeImplIntegrationTest.class, SongFacadeImplIntegrationTest.class, ProgramFacadeImplIntegrationTest.class,
+        GenreFacadeImplIntegrationTest.class })
 public class FacadeSuite {
 }

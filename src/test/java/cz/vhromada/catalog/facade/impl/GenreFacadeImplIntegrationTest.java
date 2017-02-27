@@ -13,6 +13,8 @@ import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.utils.GenreUtils;
+import cz.vhromada.catalog.utils.MovieUtils;
+import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -89,6 +91,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(0));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -105,6 +109,8 @@ public class GenreFacadeImplIntegrationTest {
         GenreUtils.assertGenreListDeepEquals(result.getData(), GenreUtils.getGenres());
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -131,6 +137,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -148,6 +156,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -166,6 +176,8 @@ public class GenreFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(GenreUtils.newGenreDomain(GenreUtils.GENRES_COUNT + 1), addedGenre);
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT + 1));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -183,6 +195,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -199,6 +213,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_ID_NOT_NULL", "ID must be null.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -218,6 +234,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -237,6 +255,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -257,6 +277,8 @@ public class GenreFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Genre updatedGenre = GenreUtils.getGenre(entityManager, 1);
         GenreUtils.assertGenreDeepEquals(genre, updatedGenre);
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -274,6 +296,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -290,6 +314,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -309,6 +335,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -328,6 +356,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -344,6 +374,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -363,6 +395,8 @@ public class GenreFacadeImplIntegrationTest {
 
         assertThat(GenreUtils.getGenre(entityManager, 1), is(nullValue()));
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT - 1));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -379,6 +413,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -395,6 +431,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -411,6 +449,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -432,6 +472,8 @@ public class GenreFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Genre duplicatedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(genre, duplicatedGenre);
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT + 1));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -448,6 +490,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -464,6 +508,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -480,6 +526,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -506,6 +554,8 @@ public class GenreFacadeImplIntegrationTest {
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), GenreUtils.getGenre(entityManager, i));
         }
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -522,6 +572,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -538,6 +590,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -554,6 +608,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NOT_MOVABLE", "Genre can't be moved up.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -570,6 +626,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -596,6 +654,8 @@ public class GenreFacadeImplIntegrationTest {
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), GenreUtils.getGenre(entityManager, i));
         }
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -612,6 +672,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -628,6 +690,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -644,6 +708,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NOT_MOVABLE", "Genre can't be moved down.")));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -660,6 +726,8 @@ public class GenreFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_GENRE_EVENT));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**
@@ -681,6 +749,8 @@ public class GenreFacadeImplIntegrationTest {
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenre(i), GenreUtils.getGenre(entityManager, i));
         }
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
     }
 
     /**

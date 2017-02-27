@@ -14,7 +14,6 @@ import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A class represents implementation of facade for movies.
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Vladimir Hromada
  */
 @Component("movieFacade")
-@Transactional
 public class MovieFacadeImpl extends AbstractParentCatalogFacade<Movie, cz.vhromada.catalog.domain.Movie> implements MovieFacade {
 
     /**

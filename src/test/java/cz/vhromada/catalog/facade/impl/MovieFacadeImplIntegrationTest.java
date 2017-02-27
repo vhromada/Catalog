@@ -104,6 +104,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(0));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(0));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -120,6 +122,8 @@ public class MovieFacadeImplIntegrationTest {
         MovieUtils.assertMovieListDeepEquals(result.getData(), MovieUtils.getMovies());
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -146,6 +150,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -163,6 +169,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -206,6 +214,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -222,6 +232,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ID_NOT_NULL", "ID must be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -242,6 +254,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -262,6 +276,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -282,6 +298,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -302,6 +320,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -322,6 +342,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -342,6 +364,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -362,6 +386,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -382,6 +408,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -402,6 +430,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -422,6 +452,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -442,6 +474,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -464,6 +498,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -484,6 +520,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -504,6 +542,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -524,6 +564,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -544,6 +586,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -565,6 +609,8 @@ public class MovieFacadeImplIntegrationTest {
                 "URL to english Wikipedia page about movie mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -585,6 +631,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL", "URL to czech Wikipedia page about movie mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -605,6 +653,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -625,6 +675,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -644,6 +696,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -663,6 +717,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -682,6 +738,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -703,6 +761,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -724,6 +784,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -764,6 +826,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -783,6 +847,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -802,6 +868,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -821,6 +889,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -840,6 +910,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -859,6 +931,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -878,6 +952,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -897,6 +973,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_YEAR_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -916,6 +994,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -935,6 +1015,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -954,6 +1036,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -973,6 +1057,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -992,6 +1078,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1013,6 +1101,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1032,6 +1122,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1051,6 +1143,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1070,6 +1164,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1089,6 +1185,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(INVALID_IMDB_CODE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1109,6 +1207,8 @@ public class MovieFacadeImplIntegrationTest {
                 "URL to english Wikipedia page about movie mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1128,6 +1228,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL", "URL to czech Wikipedia page about movie mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1147,6 +1249,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1166,6 +1270,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1185,6 +1291,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1204,6 +1312,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1223,6 +1333,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_GENRE_ID_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1244,6 +1356,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1265,6 +1379,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1284,6 +1400,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1301,6 +1419,8 @@ public class MovieFacadeImplIntegrationTest {
 
         assertThat(MovieUtils.getMovie(entityManager, 1), is(nullValue()));
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT - 1));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT - MovieUtils.getMovie(1).getMedia().size()));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1317,6 +1437,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1333,6 +1455,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1349,6 +1473,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1394,6 +1520,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1410,6 +1538,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1426,6 +1556,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1452,6 +1584,8 @@ public class MovieFacadeImplIntegrationTest {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), MovieUtils.getMovie(entityManager, i));
         }
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1468,6 +1602,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1484,6 +1620,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1500,6 +1638,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOT_MOVABLE", "Movie can't be moved up.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1516,6 +1656,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1542,6 +1684,8 @@ public class MovieFacadeImplIntegrationTest {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), MovieUtils.getMovie(entityManager, i));
         }
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1558,6 +1702,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1574,6 +1720,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MOVIE_ID_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1590,6 +1738,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MOVIE_NOT_MOVABLE", "Movie can't be moved down.")));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1606,6 +1756,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MOVIE_EVENT));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1625,6 +1777,8 @@ public class MovieFacadeImplIntegrationTest {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), MovieUtils.getMovie(entityManager, i));
         }
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1641,6 +1795,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
     /**
@@ -1657,6 +1813,8 @@ public class MovieFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
+        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }
 
 }

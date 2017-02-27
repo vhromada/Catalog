@@ -81,6 +81,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(0));
+        assertThat(SongUtils.getSongsCount(entityManager), is(0));
     }
 
     /**
@@ -97,6 +98,7 @@ public class MusicFacadeImplIntegrationTest {
         MusicUtils.assertMusicListDeepEquals(result.getData(), MusicUtils.getMusic());
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -123,6 +125,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -140,6 +143,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -158,6 +162,7 @@ public class MusicFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Music addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
         MusicUtils.assertMusicDeepEquals(MusicUtils.newMusicDomain(MusicUtils.MUSIC_COUNT + 1), addedMusic);
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT + 1));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -175,6 +180,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -191,6 +197,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_ID_NOT_NULL", "ID must be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -210,6 +217,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -229,6 +237,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -245,10 +254,11 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents(), is(notNullValue()));
         assertThat(result.getStatus(), is(Status.ERROR));
         assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0),
-                is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null.")));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
+                "URL to english Wikipedia page about music mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -268,6 +278,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -287,6 +298,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -306,6 +318,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -326,6 +339,7 @@ public class MusicFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Music updatedMusic = MusicUtils.getMusic(entityManager, 1);
         MusicUtils.assertMusicDeepEquals(music, updatedMusic);
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -343,6 +357,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -359,6 +374,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -378,6 +394,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -397,6 +414,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -413,10 +431,11 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents(), is(notNullValue()));
         assertThat(result.getStatus(), is(Status.ERROR));
         assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0),
-                is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null.")));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
+                "URL to english Wikipedia page about music mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -436,6 +455,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -455,6 +475,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -474,6 +495,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -490,6 +512,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -507,6 +530,7 @@ public class MusicFacadeImplIntegrationTest {
 
         assertThat(MusicUtils.getMusic(entityManager, 1), is(nullValue()));
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT - 1));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT - SongUtils.SONGS_PER_MUSIC_COUNT));
     }
 
     /**
@@ -523,6 +547,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -539,6 +564,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -555,6 +581,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -579,6 +606,7 @@ public class MusicFacadeImplIntegrationTest {
         final cz.vhromada.catalog.domain.Music duplicatedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
         MusicUtils.assertMusicDeepEquals(music, duplicatedMusic);
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT + 1));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT + SongUtils.SONGS_PER_MUSIC_COUNT));
     }
 
     /**
@@ -595,6 +623,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -611,6 +640,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -627,6 +657,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -653,6 +684,7 @@ public class MusicFacadeImplIntegrationTest {
             MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), MusicUtils.getMusic(entityManager, i));
         }
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -669,6 +701,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -685,6 +718,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -701,6 +735,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOT_MOVABLE", "Music can't be moved up.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -717,6 +752,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -743,6 +779,7 @@ public class MusicFacadeImplIntegrationTest {
             MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), MusicUtils.getMusic(entityManager, i));
         }
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -759,6 +796,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -775,6 +813,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -791,6 +830,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOT_MOVABLE", "Music can't be moved down.")));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -807,6 +847,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -826,6 +867,7 @@ public class MusicFacadeImplIntegrationTest {
             MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), MusicUtils.getMusic(entityManager, i));
         }
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**
@@ -844,6 +886,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().isEmpty(), is(true));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 
     /**

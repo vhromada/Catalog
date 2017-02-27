@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Music;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for music.
@@ -14,122 +15,157 @@ public interface MusicFacade {
 
     /**
      * Creates new data.
+     *
+     * @return result
      */
-    void newData();
+    Result<Void> newData();
 
     /**
      * Returns music.
      *
-     * @return music
+     * @return result with list of music
      */
-    List<Music> getMusic();
+    Result<List<Music>> getAll();
 
     /**
      * Returns music with ID or null if there isn't such music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return music with ID or null if there isn't such music
-     * @throws IllegalArgumentException if ID is null
+     * @return result with music or validation errors
      */
-    Music getMusic(Integer id);
+    Result<Music> get(Integer id);
 
     /**
      * Adds music. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about music is null</li>
+     * <li>URL to czech Wikipedia page about music is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Other data is null</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about music is null
-     *                                  or URL to czech Wikipedia page about music is null
-     *                                  or count of media isn't positive number
-     *                                  or note is null
+     * @return result with validation errors
      */
-    void add(Music music);
+    Result<Void> add(Music music);
 
     /**
      * Updates music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>URL to english Wikipedia page about music is null</li>
+     * <li>URL to czech Wikipedia page about music is null</li>
+     * <li>Count of media isn't positive number</li>
+     * <li>Note is null</li>
+     * <li>Music doesn't exist in data storage</li>
+     * </ul>
      *
      * @param music new value of music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or URL to english Wikipedia page about music is null
-     *                                  or URL to czech Wikipedia page about music is null
-     *                                  or count of media isn't positive number
-     *                                  or note is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
-    void update(Music music);
+    Result<Void> update(Music music);
 
     /**
      * Removes music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Music music);
+    Result<Void> remove(Music music);
 
     /**
      * Duplicates music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Music music);
+    Result<Void> duplicate(Music music);
 
     /**
      * Moves music in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music can't be moved up</li>
+     * <li>Music doesn't exist in data storage</li>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music can't be moved up
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Music music);
+    Result<Void> moveUp(Music music);
 
     /**
      * Moves music in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music can't be moved down</li>
+     * <li>Music doesn't exist in data storage</li>
      *
      * @param music music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music can't be moved down
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Music music);
+    Result<Void> moveDown(Music music);
 
     /**
      * Updates positions.
+     *
+     * @return result
      */
-    void updatePositions();
+    Result<Void> updatePositions();
 
     /**
      * Returns total count of media.
      *
-     * @return total count of media
+     * @return result with total count of media
      */
-    int getTotalMediaCount();
+    Result<Integer> getTotalMediaCount();
 
     /**
      * Returns total length of all songs.
      *
-     * @return total length of all songs
+     * @return result with total length of all songs
      */
-    Time getTotalLength();
+    Result<Time> getTotalLength();
 
     /**
      * Returns count of songs from all music.
      *
-     * @return count of songs from all music
+     * @return result with count of songs from all music
      */
-    int getSongsCount();
+    Result<Integer> getSongsCount();
 
 }

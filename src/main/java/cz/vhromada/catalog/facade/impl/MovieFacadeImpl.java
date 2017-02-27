@@ -66,10 +66,10 @@ public class MovieFacadeImpl extends AbstractParentCatalogFacade<Movie, cz.vhrom
 
     @Override
     protected cz.vhromada.catalog.domain.Movie getDataForUpdate(final Movie data) {
-        final cz.vhromada.catalog.domain.Movie updatedMovie = super.getDataForUpdate(data);
-        updatedMovie.setMedia(getUpdatedMedia(getCatalogService().get(data.getId()).getMedia(), data.getMedia()));
+        final cz.vhromada.catalog.domain.Movie movie = super.getDataForUpdate(data);
+        movie.setMedia(getUpdatedMedia(getCatalogService().get(data.getId()).getMedia(), data.getMedia()));
 
-        return updatedMovie;
+        return movie;
     }
 
     @Override

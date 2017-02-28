@@ -107,16 +107,16 @@ public class SongFacadeImpl extends AbstractChildCatalogFacade<Song, cz.vhromada
     @Override
     protected cz.vhromada.catalog.domain.Music getForMove(final Song data, final boolean up) {
         final cz.vhromada.catalog.domain.Music music = getMusic(data);
-        final cz.vhromada.catalog.domain.Song songDomain = getSong(data.getId(), music);
+        final cz.vhromada.catalog.domain.Song song = getSong(data.getId(), music);
         final List<cz.vhromada.catalog.domain.Song> songs = CollectionUtils.getSortedData(music.getSongs());
 
-        final int index = songs.indexOf(songDomain);
+        final int index = songs.indexOf(song);
         final cz.vhromada.catalog.domain.Song other = songs.get(up ? index - 1 : index + 1);
-        final int position = songDomain.getPosition();
-        songDomain.setPosition(other.getPosition());
+        final int position = song.getPosition();
+        song.setPosition(other.getPosition());
         other.setPosition(position);
 
-        updateSong(music, songDomain);
+        updateSong(music, song);
         updateSong(music, other);
 
         return music;

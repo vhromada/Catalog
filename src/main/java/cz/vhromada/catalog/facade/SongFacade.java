@@ -35,7 +35,7 @@ public interface SongFacade {
      * <li>Music ID is null</li>
      * <li>Music doesn't exist in data storage</li>
      * <li>Song is null</li>
-     * <li>ID isn't null</li>
+     * <li>Song ID isn't null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>Length of song is negative value</li>

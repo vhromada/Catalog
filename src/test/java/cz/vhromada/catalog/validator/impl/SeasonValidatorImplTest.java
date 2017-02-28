@@ -138,7 +138,7 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
 
     /**
      * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad minimum starting
-     * year and bad minimal year.
+     * year and bad minimum ending year.
      */
     @Test
     public void validate_Deep_BadMinimumYears() {
@@ -160,7 +160,7 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
 
     /**
      * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad maximum starting
-     * year and bad ending year.
+     * year and bad maximum ending year.
      */
     @Test
     public void validate_Deep_BadMaximumYears() {

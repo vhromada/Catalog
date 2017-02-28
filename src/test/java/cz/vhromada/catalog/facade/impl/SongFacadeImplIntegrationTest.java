@@ -39,17 +39,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SongFacadeImplIntegrationTest {
 
     /**
-     * Event for null song
+     * Event for null music
      */
     private static final Event NULL_MUSIC_EVENT = new Event(Severity.ERROR, "MUSIC_NULL", "Music mustn't be null.");
 
     /**
-     * Event for song with null ID
+     * Event for music with null ID
      */
     private static final Event NULL_MUSIC_ID_EVENT = new Event(Severity.ERROR, "MUSIC_ID_NULL", "ID mustn't be null.");
 
     /**
-     * Event for not existing song
+     * Event for not existing music
      */
     private static final Event NOT_EXIST_MUSIC_EVENT = new Event(Severity.ERROR, "MUSIC_NOT_EXIST", "Music doesn't exist.");
 
@@ -451,7 +451,7 @@ public class SongFacadeImplIntegrationTest {
      * Test method for {@link SongFacade#update(Song)} with bad ID.
      */
     @Test
-    public void testUpdate_BadId() {
+    public void update_BadId() {
         final Result<Void> result = songFacade.update(SongUtils.newSong(Integer.MAX_VALUE));
 
         assertThat(result, is(notNullValue()));
@@ -538,7 +538,7 @@ public class SongFacadeImplIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void testDuplicate() {
+    public void duplicate() {
         final cz.vhromada.catalog.domain.Song song = SongUtils.getSong(1);
         song.setId(SongUtils.SONGS_COUNT + 1);
 

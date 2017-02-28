@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for episodes.
@@ -14,97 +15,130 @@ public interface EpisodeFacade {
 
     /**
      * Returns episode with ID or null if there isn't such episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return episode with ID or null if there isn't such episode
-     * @throws IllegalArgumentException if ID is null
+     * @return result with episode or validation errors
      */
-    Episode getEpisode(Integer id);
+    Result<Episode> get(Integer id);
 
     /**
      * Adds episode. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>Season ID is null</li>
+     * <li>Season doesn't exist in data storage</li>
+     * <li>Episode is null</li>
+     * <li>Episode ID isn't null</li>
+     * <li>Number of episode isn't positive number</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of episode is negative value</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param season  season
      * @param episode episode
-     * @throws IllegalArgumentException if season is null
-     *                                  or episode is null
-     *                                  or season ID is null
-     *                                  or episode ID isn't null
-     *                                  or number of episode isn't positive number
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of episode is negative value
-     *                                  or note is null
-     *                                  or season doesn't exist in data storage
+     * @return result with validation errors
      */
-    void add(Season season, Episode episode);
+    Result<Void> add(Season season, Episode episode);
 
     /**
      * Updates episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Number of episode isn't positive number</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of episode is negative value</li>
+     * <li>Note is null</li>
+     * <li>Season doesn't exist in data storage</li>
+     * </ul>
      *
      * @param episode new value of episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or number of episode isn't positive number
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of episode is negative value
-     *                                  or note is null
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
-    void update(Episode episode);
+    Result<Void> update(Episode episode);
 
     /**
      * Removes episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Episode doesn't exist in data storage</li>
      *
      * @param episode episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Episode episode);
+    Result<Void> remove(Episode episode);
 
     /**
      * Duplicates episode.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Episode doesn't exist in data storage</li>
      *
      * @param episode episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Episode episode);
+    Result<Void> duplicate(Episode episode);
 
     /**
      * Moves episode in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Episode can't be moved up</li>
+     * <li>Episode doesn't exist in data storage</li>
      *
      * @param episode episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode can't be moved up
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Episode episode);
+    Result<Void> moveUp(Episode episode);
 
     /**
      * Moves episode in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Episode is null</li>
+     * <li>ID is null</li>
+     * <li>Episode can't be moved down</li>
+     * <li>Episode doesn't exist in data storage</li>
      *
      * @param episode episode
-     * @throws IllegalArgumentException if episode is null
-     *                                  or ID is null
-     *                                  or episode can't be moved down
-     *                                  or episode doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Episode episode);
+    Result<Void> moveDown(Episode episode);
 
     /**
      * Returns episodes for specified season.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Season is null</li>
+     * <li>ID is null</li>
+     * <li>Season doesn't exist in data storage</li>
      *
      * @param season season
-     * @return episodes for specified season
-     * @throws IllegalArgumentException if season is null
-     *                                  or ID is null
-     *                                  or season doesn't exist in data storage
+     * @return result with seasons or validation errors
      */
-    List<Episode> findEpisodesBySeason(Season season);
+    Result<List<Episode>> find(Season season);
 
 }

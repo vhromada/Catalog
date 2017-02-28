@@ -156,7 +156,11 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         final T childDomain = newChildDomain(null);
         final ArgumentCaptor<V> argumentCaptor = ArgumentCaptor.forClass(getParentDomainClass());
 
-        when(catalogService.get(any(Integer.class))).thenReturn(newParentDomain(1));
+        if (isFirstChild()) {
+            when(catalogService.get(any(Integer.class))).thenReturn(newParentDomain(1));
+        } else {
+            when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomain(1)));
+        }
         when(converter.convert(any(getChildEntityClass()), eq(getChildDomainClass()))).thenReturn(childDomain);
         when(parentValidator.validate(any(getParentEntityClass()), anyVararg())).thenReturn(new Result<>());
         when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(new Result<>());
@@ -168,7 +172,11 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         assertThat(result.getStatus(), is(Status.OK));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        verify(catalogService).get(parentEntity.getId());
+        if (isFirstChild()) {
+            verify(catalogService).get(parentEntity.getId());
+        } else {
+            verify(catalogService).getAll();
+        }
         verify(catalogService).update(argumentCaptor.capture());
         verify(parentValidator).validate(parentEntity, ValidationType.EXISTS);
         verify(childValidator).validate(childEntity, ValidationType.NEW, ValidationType.DEEP);
@@ -446,7 +454,11 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         final U parentEntity = newParentEntity(1);
         final List<S> expectedData = CollectionUtils.newList(newChildEntity(1));
 
-        when(catalogService.get(any(Integer.class))).thenReturn(newParentDomain(1));
+        if (isFirstChild()) {
+            when(catalogService.get(any(Integer.class))).thenReturn(newParentDomain(1));
+        } else {
+            when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomain(1)));
+        }
         when(converter.convertCollection(anyListOf(getChildDomainClass()), eq(getChildEntityClass()))).thenReturn(expectedData);
         when(parentValidator.validate(any(getParentEntityClass()), anyVararg())).thenReturn(new Result<>());
 
@@ -458,7 +470,11 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         assertThat(result.getData(), is(expectedData));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        verify(catalogService).get(parentEntity.getId());
+        if (isFirstChild()) {
+            verify(catalogService).get(parentEntity.getId());
+        } else {
+            verify(catalogService).getAll();
+        }
         verify(converter).convertCollection(CollectionUtils.newList(newChildDomain(1)), getChildEntityClass());
         verify(parentValidator).validate(parentEntity, ValidationType.EXISTS);
         verifyNoMoreInteractions(catalogService, converter, parentValidator);
@@ -520,6 +536,15 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      */
     protected CatalogValidator<S> getChildCatalogValidator() {
         return childValidator;
+    }
+
+    /**
+     * Returns true if child if 1st parent child.
+     *
+     * @return true if child if 1st parent child
+     */
+    protected boolean isFirstChild() {
+        return true;
     }
 
     /**

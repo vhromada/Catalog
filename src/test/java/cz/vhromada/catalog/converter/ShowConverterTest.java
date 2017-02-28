@@ -43,10 +43,10 @@ public class ShowConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null show.
      */
     @Test
-    public void convertShowDomain_NullArgument() {
+    public void convertShowDomain_NullShow() {
         assertThat(converter.convert(null, Show.class), is(nullValue()));
     }
 
@@ -63,10 +63,10 @@ public class ShowConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null show.
      */
     @Test
-    public void convertShow_NullArgument() {
+    public void convertShow_NullShow() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Show.class), is(nullValue()));
     }
 

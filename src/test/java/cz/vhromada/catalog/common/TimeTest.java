@@ -139,10 +139,10 @@ public class TimeTest {
     }
 
     /**
-     * Test method for {@link Time#getData(Time.TimeData)} with null argument.
+     * Test method for {@link Time#getData(Time.TimeData)} with null data type.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void getData_NegativeArgument() {
+    public void getData_NegativeDataType() {
         timeLength.getData(null);
     }
 

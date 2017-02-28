@@ -43,10 +43,10 @@ public class SongConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null song.
      */
     @Test
-    public void convertSongDomain_NullArgument() {
+    public void convertSongDomain_NullSong() {
         assertThat(converter.convert(null, Song.class), is(nullValue()));
     }
 
@@ -63,10 +63,10 @@ public class SongConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null song.
      */
     @Test
-    public void convertSong_NullArgument() {
+    public void convertSong_NullSong() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Song.class), is(nullValue()));
     }
 

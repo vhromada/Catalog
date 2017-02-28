@@ -43,10 +43,10 @@ public class GenreConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null genre.
      */
     @Test
-    public void convertGenreDomain_NullArgument() {
+    public void convertGenreDomain_NullGenre() {
         assertThat(converter.convert(null, Genre.class), is(nullValue()));
     }
 
@@ -63,10 +63,10 @@ public class GenreConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null genre.
      */
     @Test
-    public void convertGenre_NullArgument() {
+    public void convertGenre_NullGenre() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Genre.class), is(nullValue()));
     }
 

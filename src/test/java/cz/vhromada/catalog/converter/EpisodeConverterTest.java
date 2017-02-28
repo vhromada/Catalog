@@ -43,10 +43,10 @@ public class EpisodeConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null episode.
      */
     @Test
-    public void convertEpisodeDomain_NullArgument() {
+    public void convertEpisodeDomain_NullEpisode() {
         assertThat(converter.convert(null, Episode.class), is(nullValue()));
     }
 
@@ -63,10 +63,10 @@ public class EpisodeConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null episode.
      */
     @Test
-    public void convertEpisode_NullArgument() {
+    public void convertEpisode_NullEpisode() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Episode.class), is(nullValue()));
     }
 

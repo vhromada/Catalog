@@ -43,10 +43,10 @@ public class GameConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null game.
      */
     @Test
-    public void convertGameDomain_NullArgument() {
+    public void convertGameDomain_NullGame() {
         assertThat(converter.convert(null, Game.class), is(nullValue()));
     }
 
@@ -63,10 +63,10 @@ public class GameConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null game.
      */
     @Test
-    public void convertGame_NullArgument() {
+    public void convertGame_NullGame() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class), is(nullValue()));
     }
 

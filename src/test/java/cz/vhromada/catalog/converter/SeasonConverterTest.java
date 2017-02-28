@@ -43,10 +43,10 @@ public class SeasonConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null season.
      */
     @Test
-    public void convertSeasonDomain_NullArgument() {
+    public void convertSeasonDomain_NullSeason() {
         assertThat(converter.convert(null, Season.class), is(nullValue()));
     }
 
@@ -63,10 +63,10 @@ public class SeasonConverterTest {
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null argument.
+     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null season.
      */
     @Test
-    public void convertSeason_NullArgument() {
+    public void convertSeason_NullSeason() {
         assertThat(converter.convert(null, cz.vhromada.catalog.domain.Season.class), is(nullValue()));
     }
 

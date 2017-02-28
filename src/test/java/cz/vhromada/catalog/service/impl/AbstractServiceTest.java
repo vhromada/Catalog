@@ -191,10 +191,10 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
     /**
-     * Test method for {@link CatalogService#get(Integer)} with null argument.
+     * Test method for {@link CatalogService#get(Integer)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void get_NullArgument() {
+    public void get_NullData() {
         catalogService.get(null);
     }
 
@@ -246,10 +246,10 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
     /**
-     * Test method for {@link CatalogService#add(T)} with null argument.
+     * Test method for {@link CatalogService#add(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void add_NullArgument() {
+    public void add_NullData() {
         catalogService.add(null);
     }
 
@@ -299,10 +299,10 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
     /**
-     * Test method for {@link CatalogService#update(T)} with null argument.
+     * Test method for {@link CatalogService#update(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void update_NullArgument() {
+    public void update_NullData() {
         catalogService.update(null);
     }
 
@@ -348,10 +348,10 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
     /**
-     * Test method for {@link CatalogService#remove(T)} with null argument.
+     * Test method for {@link CatalogService#remove(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void remove_NullArgument() {
+    public void remove_NullData() {
         catalogService.remove(null);
     }
 
@@ -407,10 +407,10 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
     /**
-     * Test method for {@link CatalogService#duplicate(T)} with null argument.
+     * Test method for {@link CatalogService#duplicate(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void duplicate_NullArgument() {
+    public void duplicate_NullData() {
         catalogService.duplicate(null);
     }
 
@@ -466,10 +466,10 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
     /**
-     * Test method for {@link CatalogService#moveUp(T)} with null argument.
+     * Test method for {@link CatalogService#moveUp(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void moveUp_NullArgument() {
+    public void moveUp_NullData() {
         catalogService.moveUp(null);
     }
 
@@ -525,10 +525,10 @@ public abstract class AbstractServiceTest<T extends Movable> {
     }
 
     /**
-     * Test method for {@link CatalogService#moveDown(T)} with null argument.
+     * Test method for {@link CatalogService#moveDown(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void moveDown_NullArgument() {
+    public void moveDown_NullData() {
         catalogService.moveDown(null);
     }
 

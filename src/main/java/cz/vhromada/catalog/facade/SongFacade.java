@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
+import cz.vhromada.result.Result;
 
 /**
  * An interface represents facade for songs.
@@ -14,95 +15,128 @@ public interface SongFacade {
 
     /**
      * Returns song with ID or null if there isn't such song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>ID is null</li>
+     * </ul>
      *
      * @param id ID
-     * @return song with ID or null if there isn't such song
-     * @throws IllegalArgumentException if ID is null
+     * @return result with song or validation errors
      */
-    Song getSong(Integer id);
+    Result<Song> get(Integer id);
 
     /**
      * Adds song. Sets new ID and position.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>Music ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
+     * <li>Song is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of song is negative value</li>
+     * <li>Note is null</li>
+     * </ul>
      *
      * @param music music
      * @param song  song
-     * @throws IllegalArgumentException if music is null
-     *                                  or song is null
-     *                                  or music ID is null
-     *                                  or song ID isn't null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of song is negative value
-     *                                  or note is null
-     *                                  or music doesn't exist in data storage
+     * @return result with validation errors
      */
-    void add(Music music, Song song);
+    Result<Void> add(Music music, Song song);
 
     /**
      * Updates song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID isn't null</li>
+     * <li>Name is null</li>
+     * <li>Name is empty string</li>
+     * <li>Length of song is negative value</li>
+     * <li>Note is null</li>
+     * <li>Song doesn't exist in data storage</li>
+     * </ul>
      *
      * @param song new value of song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or name is null
-     *                                  or name is empty string
-     *                                  or length of song is negative value
-     *                                  or note is null
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    void update(Song song);
+    Result<Void> update(Song song);
 
     /**
      * Removes song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song doesn't exist in data storage</li>
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    void remove(Song song);
+    Result<Void> remove(Song song);
 
     /**
      * Duplicates song.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song doesn't exist in data storage</li>
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    void duplicate(Song song);
+    Result<Void> duplicate(Song song);
 
     /**
      * Moves song in list one position up.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song can't be moved up</li>
+     * <li>Song doesn't exist in data storage</li>
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song can't be moved up
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveUp(Song song);
+    Result<Void> moveUp(Song song);
 
     /**
      * Moves song in list one position down.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Song is null</li>
+     * <li>ID is null</li>
+     * <li>Song can't be moved down</li>
+     * <li>Song doesn't exist in data storage</li>
      *
      * @param song song
-     * @throws IllegalArgumentException if song is null
-     *                                  or ID is null
-     *                                  or song can't be moved down
-     *                                  or song doesn't exist in data storage
+     * @return result with validation errors
      */
-    void moveDown(Song song);
+    Result<Void> moveDown(Song song);
 
     /**
      * Returns songs for specified music.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Music is null</li>
+     * <li>ID is null</li>
+     * <li>Music doesn't exist in data storage</li>
      *
      * @param music music
-     * @return songs for specified music
-     * @throws IllegalArgumentException if music is null
-     *                                  or ID is null
-     *                                  or music doesn't exist in data storage
+     * @return result with songs or validation errors
      */
-    List<Song> findSongsByMusic(Music music);
+    Result<List<Song>> find(Music music);
 
 }

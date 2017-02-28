@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade;
 
-import java.util.List;
-
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.result.Result;
 
@@ -10,34 +8,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface GenreFacade {
-
-    /**
-     * Creates new data.
-     *
-     * @return result
-     */
-    Result<Void> newData();
-
-    /**
-     * Returns list of genres.
-     *
-     * @return result with list of genres
-     */
-    Result<List<Genre>> getAll();
-
-    /**
-     * Returns genre with ID or null if there aren't such genre.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with genre or validation errors
-     */
-    Result<Genre> get(Integer id);
+public interface GenreFacade extends CatalogParentFacade<Genre> {
 
     /**
      * Adds genre. Sets new ID and position.
@@ -71,74 +42,5 @@ public interface GenreFacade {
      * @return result with validation errors
      */
     Result<Void> update(Genre genre);
-
-    /**
-     * Removes genre.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Genre is null</li>
-     * <li>ID is null</li>
-     * <li>Genre doesn't exist in data storage</li>
-     * </ul>
-     *
-     * @param genre genre
-     * @return result with validation errors
-     */
-    Result<Void> remove(Genre genre);
-
-    /**
-     * Duplicates genre.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Genre is null</li>
-     * <li>ID is null</li>
-     * <li>Genre doesn't exist in data storage</li>
-     * </ul>
-     *
-     * @param genre genre
-     * @return result with validation errors
-     */
-    Result<Void> duplicate(Genre genre);
-
-    /**
-     * Moves genre in list one position up.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Genre is null</li>
-     * <li>ID is null</li>
-     * <li>Genre can't be moved up</li>
-     * <li>Genre doesn't exist in data storage</li>
-     * </ul>
-     *
-     * @param genre genre
-     * @return result with validation errors
-     */
-    Result<Void> moveUp(Genre genre);
-
-    /**
-     * Moves genre in list one position down.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Genre is null</li>
-     * <li>ID is null</li>
-     * <li>Genre can't be moved up</li>
-     * <li>Genre doesn't exist in data storage</li>
-     * </ul>
-     *
-     * @param genre genre
-     * @return result with validation errors
-     */
-    Result<Void> moveDown(Genre genre);
-
-    /**
-     * Updates positions.
-     *
-     * @return result
-     */
-    Result<Void> updatePositions();
 
 }

@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade.impl;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.facade.CatalogChildFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
@@ -16,13 +17,14 @@ import org.springframework.util.Assert;
 /**
  * An abstract class facade for catalog for child data.
  *
- * @param <S> type of entity data
- * @param <T> type of domain data
+ * @param <S> type of child entity data
+ * @param <T> type of child domain data
  * @param <U> type of parent entity data
  * @param <V> type of domain repository data
  * @author Vladimir Hromada
  */
-public abstract class AbstractChildCatalogFacade<S extends Movable, T extends Movable, U extends Movable, V extends Movable> {
+public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Movable, U extends Movable, V extends Movable>
+        implements CatalogChildFacade<S, U> {
 
     /**
      * Service for catalog
@@ -45,7 +47,7 @@ public abstract class AbstractChildCatalogFacade<S extends Movable, T extends Mo
     private CatalogValidator<S> childCatalogValidator;
 
     /**
-     * Creates a new instance of AbstractParentCatalogFacade.
+     * Creates a new instance of AbstractCatalogChildFacade.
      *
      * @param catalogService         service for catalog
      * @param converter              converter
@@ -56,7 +58,7 @@ public abstract class AbstractChildCatalogFacade<S extends Movable, T extends Mo
      *                                  or validator for catalog for parent data is null
      *                                  or validator for catalog for child data is null
      */
-    public AbstractChildCatalogFacade(final CatalogService<V> catalogService, final Converter converter, final CatalogValidator<U> parentCatalogValidator,
+    public AbstractCatalogChildFacade(final CatalogService<V> catalogService, final Converter converter, final CatalogValidator<U> parentCatalogValidator,
             final CatalogValidator<S> childCatalogValidator) {
         Assert.notNull(catalogService, "Service for catalog mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");

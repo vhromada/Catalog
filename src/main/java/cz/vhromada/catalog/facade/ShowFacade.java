@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade;
 
-import java.util.List;
-
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.result.Result;
@@ -11,34 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface ShowFacade {
-
-    /**
-     * Creates new data.
-     *
-     * @return result
-     */
-    Result<Void> newData();
-
-    /**
-     * Returns shows.
-     *
-     * @return result with list of shows
-     */
-    Result<List<Show>> getAll();
-
-    /**
-     * Returns show with ID or null if there isn't such show.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with show or validation errors
-     */
-    Result<Show> get(Integer id);
+public interface ShowFacade extends CatalogParentFacade<Show> {
 
     /**
      * Adds show. Sets new ID and position.
@@ -100,71 +71,6 @@ public interface ShowFacade {
      * @return result with validation errors
      */
     Result<Void> update(Show show);
-
-    /**
-     * Removes show.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Show is null</li>
-     * <li>ID is null</li>
-     * <li>Show doesn't exist in data storage</li>
-     *
-     * @param show show
-     * @return result with validation errors
-     */
-    Result<Void> remove(Show show);
-
-    /**
-     * Duplicates show.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Show is null</li>
-     * <li>ID is null</li>
-     * <li>Show doesn't exist in data storage</li>
-     *
-     * @param show show
-     * @return result with validation errors
-     */
-    Result<Void> duplicate(Show show);
-
-    /**
-     * Moves show in list one position up.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Show is null</li>
-     * <li>ID is null</li>
-     * <li>Show can't be moved up</li>
-     * <li>Show doesn't exist in data storage</li>
-     *
-     * @param show show
-     * @return result with validation errors
-     */
-    Result<Void> moveUp(Show show);
-
-    /**
-     * Moves show in list one position down.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Show is null</li>
-     * <li>ID is null</li>
-     * <li>Show can't be moved down</li>
-     * <li>Show doesn't exist in data storage</li>
-     *
-     * @param show show
-     * @return result with validation errors
-     */
-    Result<Void> moveDown(Show show);
-
-    /**
-     * Updates positions.
-     *
-     * @return result
-     */
-    Result<Void> updatePositions();
 
     /**
      * Returns total length of all shows.

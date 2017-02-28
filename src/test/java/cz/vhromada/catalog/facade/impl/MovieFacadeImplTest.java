@@ -14,6 +14,7 @@ import java.util.List;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.entity.Movie;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.MovieFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
@@ -67,7 +68,7 @@ public class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhro
 
         when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(movie1, movie2));
 
-        final Result<Integer> result = ((MovieFacade) getParentCatalogFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((MovieFacade) getCatalogParentFacade()).getTotalMediaCount();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -95,7 +96,7 @@ public class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhro
 
         when(getCatalogService().getAll()).thenReturn(movies);
 
-        final Result<Time> result = ((MovieFacade) getParentCatalogFacade()).getTotalLength();
+        final Result<Time> result = ((MovieFacade) getCatalogParentFacade()).getTotalLength();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -123,7 +124,7 @@ public class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhro
     }
 
     @Override
-    protected AbstractParentCatalogFacade<Movie, cz.vhromada.catalog.domain.Movie> getParentCatalogFacade() {
+    protected CatalogParentFacade<Movie> getCatalogParentFacade() {
         return new MovieFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
     }
 

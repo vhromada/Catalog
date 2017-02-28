@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
+import cz.vhromada.catalog.facade.CatalogChildFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
@@ -52,7 +53,7 @@ public class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromad
     }
 
     @Override
-    protected AbstractChildCatalogFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music> getChildCatalogFacade() {
+    protected CatalogChildFacade<Song, Music> getCatalogChildFacade() {
         return new SongFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
     }
 

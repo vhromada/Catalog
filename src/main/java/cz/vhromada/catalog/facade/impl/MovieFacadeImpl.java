@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("movieFacade")
-public class MovieFacadeImpl extends AbstractParentCatalogFacade<Movie, cz.vhromada.catalog.domain.Movie> implements MovieFacade {
+public class MovieFacadeImpl extends AbstractCatalogParentFacade<Movie, cz.vhromada.catalog.domain.Movie> implements MovieFacade {
 
     /**
      * Creates a new instance of MovieFacadeImpl.

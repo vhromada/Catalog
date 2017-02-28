@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade;
 
-import java.util.List;
-
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.result.Result;
@@ -11,20 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface EpisodeFacade {
-
-    /**
-     * Returns episode with ID or null if there isn't such episode.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with episode or validation errors
-     */
-    Result<Episode> get(Integer id);
+public interface EpisodeFacade extends CatalogChildFacade<Episode, Season> {
 
     /**
      * Adds episode. Sets new ID and position.
@@ -68,77 +53,5 @@ public interface EpisodeFacade {
      * @return result with validation errors
      */
     Result<Void> update(Episode episode);
-
-    /**
-     * Removes episode.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Episode is null</li>
-     * <li>ID is null</li>
-     * <li>Episode doesn't exist in data storage</li>
-     *
-     * @param episode episode
-     * @return result with validation errors
-     */
-    Result<Void> remove(Episode episode);
-
-    /**
-     * Duplicates episode.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Episode is null</li>
-     * <li>ID is null</li>
-     * <li>Episode doesn't exist in data storage</li>
-     *
-     * @param episode episode
-     * @return result with validation errors
-     */
-    Result<Void> duplicate(Episode episode);
-
-    /**
-     * Moves episode in list one position up.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Episode is null</li>
-     * <li>ID is null</li>
-     * <li>Episode can't be moved up</li>
-     * <li>Episode doesn't exist in data storage</li>
-     *
-     * @param episode episode
-     * @return result with validation errors
-     */
-    Result<Void> moveUp(Episode episode);
-
-    /**
-     * Moves episode in list one position down.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Episode is null</li>
-     * <li>ID is null</li>
-     * <li>Episode can't be moved down</li>
-     * <li>Episode doesn't exist in data storage</li>
-     *
-     * @param episode episode
-     * @return result with validation errors
-     */
-    Result<Void> moveDown(Episode episode);
-
-    /**
-     * Returns episodes for specified season.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Season is null</li>
-     * <li>ID is null</li>
-     * <li>Season doesn't exist in data storage</li>
-     *
-     * @param season season
-     * @return result with seasons or validation errors
-     */
-    Result<List<Episode>> find(Season season);
 
 }

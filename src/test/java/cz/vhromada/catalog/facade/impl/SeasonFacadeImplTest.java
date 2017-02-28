@@ -4,6 +4,7 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
+import cz.vhromada.catalog.facade.CatalogChildFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
@@ -53,7 +54,7 @@ public class SeasonFacadeImplTest extends AbstractChildFacadeTest<Season, cz.vhr
     }
 
     @Override
-    protected AbstractChildCatalogFacade<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show> getChildCatalogFacade() {
+    protected CatalogChildFacade<Season, Show> getCatalogChildFacade() {
         return new SeasonFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
     }
 

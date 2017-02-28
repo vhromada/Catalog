@@ -14,6 +14,7 @@ import java.util.List;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
@@ -67,7 +68,7 @@ public class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhro
 
         when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(music1, music2));
 
-        final Result<Integer> result = ((MusicFacade) getParentCatalogFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((MusicFacade) getCatalogParentFacade()).getTotalMediaCount();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -95,7 +96,7 @@ public class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhro
 
         when(getCatalogService().getAll()).thenReturn(musicList);
 
-        final Result<Time> result = ((MusicFacade) getParentCatalogFacade()).getTotalLength();
+        final Result<Time> result = ((MusicFacade) getCatalogParentFacade()).getTotalLength();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -119,7 +120,7 @@ public class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhro
 
         when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(music1, music2));
 
-        final Result<Integer> result = ((MusicFacade) getParentCatalogFacade()).getSongsCount();
+        final Result<Integer> result = ((MusicFacade) getCatalogParentFacade()).getSongsCount();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -147,7 +148,7 @@ public class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhro
     }
 
     @Override
-    protected AbstractParentCatalogFacade<Music, cz.vhromada.catalog.domain.Music> getParentCatalogFacade() {
+    protected CatalogParentFacade<Music> getCatalogParentFacade() {
         return new MusicFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
     }
 

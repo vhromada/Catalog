@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("episodeFacade")
-public class EpisodeFacadeImpl extends AbstractChildCatalogFacade<Episode, cz.vhromada.catalog.domain.Episode, cz.vhromada.catalog.entity.Season, Show>
+public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vhromada.catalog.domain.Episode, Season, Show>
         implements EpisodeFacade {
 
     /**

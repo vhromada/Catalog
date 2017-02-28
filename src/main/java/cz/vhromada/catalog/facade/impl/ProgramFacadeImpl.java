@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("programFacade")
-public class ProgramFacadeImpl extends AbstractParentCatalogFacade<Program, cz.vhromada.catalog.domain.Program> implements ProgramFacade {
+public class ProgramFacadeImpl extends AbstractCatalogParentFacade<Program, cz.vhromada.catalog.domain.Program> implements ProgramFacade {
 
     /**
      * Creates a new instance of ProgramFacadeImpl.
      *
      * @param programService   service for programs
-     * @param converter     converter
+     * @param converter        converter
      * @param programValidator validator for program
      * @throws IllegalArgumentException if service for programs is null
      *                                  or converter is null

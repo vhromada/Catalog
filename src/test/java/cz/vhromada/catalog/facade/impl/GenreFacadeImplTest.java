@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
@@ -40,7 +41,7 @@ public class GenreFacadeImplTest extends AbstractParentFacadeTest<Genre, cz.vhro
     }
 
     @Override
-    protected AbstractParentCatalogFacade<Genre, cz.vhromada.catalog.domain.Genre> getParentCatalogFacade() {
+    protected CatalogParentFacade<Genre> getCatalogParentFacade() {
         return new GenreFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
     }
 

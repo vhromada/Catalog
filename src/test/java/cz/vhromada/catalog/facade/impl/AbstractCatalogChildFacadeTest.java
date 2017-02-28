@@ -3,23 +3,24 @@ package cz.vhromada.catalog.facade.impl;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.facade.CatalogChildFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converters.Converter;
 
 /**
- * A class represents test for class {@link AbstractChildCatalogFacade}.
+ * A class represents test for class {@link AbstractCatalogChildFacade}.
  *
  * @author Vladimir Hromada
  */
-public class AbstractChildCatalogFacadeTest extends AbstractChildFacadeTest<Movable, Movable, Movable, Movable> {
+public class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Movable, Movable, Movable> {
 
     private Movable movable;
 
     @Override
-    protected AbstractChildCatalogFacade<Movable, Movable, Movable, Movable> getChildCatalogFacade() {
-        return new AbstractChildCatalogFacadeStub(getCatalogService(), getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
+    protected CatalogChildFacade<Movable, Movable> getCatalogChildFacade() {
+        return new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
     }
 
     @Override
@@ -90,17 +91,17 @@ public class AbstractChildCatalogFacadeTest extends AbstractChildFacadeTest<Mova
     /**
      * A class represents abstract facade for catalog for child data stub.
      */
-    private static final class AbstractChildCatalogFacadeStub extends AbstractChildCatalogFacade<Movable, Movable, Movable, Movable> {
+    private static final class AbstractCatalogChildFacadeStub extends AbstractCatalogChildFacade<Movable, Movable, Movable, Movable> {
 
         /**
-         * Creates a new instance of AbstractChildCatalogFacadeStub.
+         * Creates a new instance of AbstractCatalogChildFacadeStub.
          *
          * @param catalogService         service for catalog
          * @param converter              converter
          * @param parentCatalogValidator validator for catalog for parent data
          * @param childCatalogValidator  validator for catalog for child data
          */
-        AbstractChildCatalogFacadeStub(final CatalogService<Movable> catalogService, final Converter converter,
+        AbstractCatalogChildFacadeStub(final CatalogService<Movable> catalogService, final Converter converter,
                 final CatalogValidator<Movable> parentCatalogValidator, final CatalogValidator<Movable> childCatalogValidator) {
             super(catalogService, converter, parentCatalogValidator, childCatalogValidator);
         }

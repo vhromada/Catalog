@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("seasonFacade")
-public class SeasonFacadeImpl extends AbstractChildCatalogFacade<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show>
+public class SeasonFacadeImpl extends AbstractCatalogChildFacade<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show>
         implements SeasonFacade {
 
     /**

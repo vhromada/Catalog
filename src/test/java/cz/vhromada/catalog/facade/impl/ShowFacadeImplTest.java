@@ -15,6 +15,7 @@ import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.entity.Show;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
@@ -74,7 +75,7 @@ public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhroma
 
         when(getCatalogService().getAll()).thenReturn(showList);
 
-        final Result<Time> result = ((ShowFacade) getParentCatalogFacade()).getTotalLength();
+        final Result<Time> result = ((ShowFacade) getCatalogParentFacade()).getTotalLength();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -98,7 +99,7 @@ public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhroma
 
         when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show1, show2));
 
-        final Result<Integer> result = ((ShowFacade) getParentCatalogFacade()).getSeasonsCount();
+        final Result<Integer> result = ((ShowFacade) getCatalogParentFacade()).getSeasonsCount();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -126,7 +127,7 @@ public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhroma
 
         when(getCatalogService().getAll()).thenReturn(showList);
 
-        final Result<Integer> result = ((ShowFacade) getParentCatalogFacade()).getEpisodesCount();
+        final Result<Integer> result = ((ShowFacade) getCatalogParentFacade()).getEpisodesCount();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -154,7 +155,7 @@ public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhroma
     }
 
     @Override
-    protected AbstractParentCatalogFacade<Show, cz.vhromada.catalog.domain.Show> getParentCatalogFacade() {
+    protected CatalogParentFacade<Show> getCatalogParentFacade() {
         return new ShowFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
     }
 

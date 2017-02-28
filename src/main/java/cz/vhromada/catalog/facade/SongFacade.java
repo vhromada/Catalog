@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade;
 
-import java.util.List;
-
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.result.Result;
@@ -11,20 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface SongFacade {
-
-    /**
-     * Returns song with ID or null if there isn't such song.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with song or validation errors
-     */
-    Result<Song> get(Integer id);
+public interface SongFacade extends CatalogChildFacade<Song, Music> {
 
     /**
      * Adds song. Sets new ID and position.
@@ -66,77 +51,5 @@ public interface SongFacade {
      * @return result with validation errors
      */
     Result<Void> update(Song song);
-
-    /**
-     * Removes song.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Song is null</li>
-     * <li>ID is null</li>
-     * <li>Song doesn't exist in data storage</li>
-     *
-     * @param song song
-     * @return result with validation errors
-     */
-    Result<Void> remove(Song song);
-
-    /**
-     * Duplicates song.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Song is null</li>
-     * <li>ID is null</li>
-     * <li>Song doesn't exist in data storage</li>
-     *
-     * @param song song
-     * @return result with validation errors
-     */
-    Result<Void> duplicate(Song song);
-
-    /**
-     * Moves song in list one position up.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Song is null</li>
-     * <li>ID is null</li>
-     * <li>Song can't be moved up</li>
-     * <li>Song doesn't exist in data storage</li>
-     *
-     * @param song song
-     * @return result with validation errors
-     */
-    Result<Void> moveUp(Song song);
-
-    /**
-     * Moves song in list one position down.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Song is null</li>
-     * <li>ID is null</li>
-     * <li>Song can't be moved down</li>
-     * <li>Song doesn't exist in data storage</li>
-     *
-     * @param song song
-     * @return result with validation errors
-     */
-    Result<Void> moveDown(Song song);
-
-    /**
-     * Returns songs for specified music.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Music is null</li>
-     * <li>ID is null</li>
-     * <li>Music doesn't exist in data storage</li>
-     *
-     * @param music music
-     * @return result with songs or validation errors
-     */
-    Result<List<Song>> find(Music music);
 
 }

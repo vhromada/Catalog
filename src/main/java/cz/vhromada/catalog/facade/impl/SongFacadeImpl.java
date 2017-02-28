@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("songFacade")
-public class SongFacadeImpl extends AbstractChildCatalogFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>
+public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>
         implements SongFacade {
 
     /**

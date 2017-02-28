@@ -1,20 +1,21 @@
 package cz.vhromada.catalog.facade.impl;
 
 import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converters.Converter;
 
 /**
- * A class represents test for class {@link AbstractParentCatalogFacade}.
+ * A class represents test for class {@link AbstractCatalogParentFacade}.
  *
  * @author Vladimir Hromada
  */
-public class AbstractParentCatalogFacadeTest extends AbstractParentFacadeTest<Movable, Movable> {
+public class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Movable, Movable> {
 
     @Override
-    protected AbstractParentCatalogFacade<Movable, Movable> getParentCatalogFacade() {
-        return new AbstractParentCatalogFacadeStub(getCatalogService(), getConverter(), getCatalogValidator());
+    protected CatalogParentFacade<Movable> getCatalogParentFacade() {
+        return new AbstractCatalogParentFacadeStub(getCatalogService(), getConverter(), getCatalogValidator());
     }
 
     @Override
@@ -40,16 +41,16 @@ public class AbstractParentCatalogFacadeTest extends AbstractParentFacadeTest<Mo
     /**
      * A class represents abstract facade for catalog for parent data stub.
      */
-    private static final class AbstractParentCatalogFacadeStub extends AbstractParentCatalogFacade<Movable, Movable> {
+    private static final class AbstractCatalogParentFacadeStub extends AbstractCatalogParentFacade<Movable, Movable> {
 
         /**
-         * Creates a new instance of AbstractParentCatalogFacadeStub.
+         * Creates a new instance of AbstractCatalogParentFacadeStub.
          *
          * @param catalogService   service for catalog
          * @param converter        converter
          * @param catalogValidator validator for catalog
          */
-        AbstractParentCatalogFacadeStub(final CatalogService<Movable> catalogService, final Converter converter,
+        AbstractCatalogParentFacadeStub(final CatalogService<Movable> catalogService, final Converter converter,
                 final CatalogValidator<Movable> catalogValidator) {
             super(catalogService, converter, catalogValidator);
         }

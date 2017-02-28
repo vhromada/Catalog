@@ -5,6 +5,7 @@ import java.util.List;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.catalog.facade.CatalogChildFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.EpisodeUtils;
@@ -39,7 +40,8 @@ public class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.v
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for season.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for
+     * season.
      */
     @Test(expected = IllegalArgumentException.class)
     public void constructor_NullSeasonValidator() {
@@ -61,7 +63,7 @@ public class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.v
     }
 
     @Override
-    protected AbstractChildCatalogFacade<Episode, cz.vhromada.catalog.domain.Episode, Season, Show> getChildCatalogFacade() {
+    protected CatalogChildFacade<Episode, Season> getCatalogChildFacade() {
         return new EpisodeFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
     }
 

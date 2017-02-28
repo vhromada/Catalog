@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import cz.vhromada.catalog.entity.Program;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.ProgramUtils;
@@ -38,7 +39,7 @@ public class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.
 
         when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(program1, program2));
 
-        final Result<Integer> result = ((ProgramFacade) getParentCatalogFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((ProgramFacade) getCatalogParentFacade()).getTotalMediaCount();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -52,7 +53,7 @@ public class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.
     }
 
     @Override
-    protected AbstractParentCatalogFacade<Program, cz.vhromada.catalog.domain.Program> getParentCatalogFacade() {
+    protected CatalogParentFacade<Program> getCatalogParentFacade() {
         return new ProgramFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
     }
 

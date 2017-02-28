@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("gameFacade")
-public class GameFacadeImpl extends AbstractParentCatalogFacade<Game, cz.vhromada.catalog.domain.Game> implements GameFacade {
+public class GameFacadeImpl extends AbstractCatalogParentFacade<Game, cz.vhromada.catalog.domain.Game> implements GameFacade {
 
     /**
      * Creates a new instance of GameFacadeImpl.

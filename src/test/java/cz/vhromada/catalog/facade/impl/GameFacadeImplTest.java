@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import cz.vhromada.catalog.entity.Game;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
@@ -62,7 +63,7 @@ public class GameFacadeImplTest extends AbstractParentFacadeTest<Game, cz.vhroma
 
         when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(game1, game2));
 
-        final Result<Integer> result = ((GameFacade) getParentCatalogFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((GameFacade) getCatalogParentFacade()).getTotalMediaCount();
 
         assertThat(result, is(notNullValue()));
         assertThat(result.getEvents(), is(notNullValue()));
@@ -76,7 +77,7 @@ public class GameFacadeImplTest extends AbstractParentFacadeTest<Game, cz.vhroma
     }
 
     @Override
-    protected AbstractParentCatalogFacade<Game, cz.vhromada.catalog.domain.Game> getParentCatalogFacade() {
+    protected CatalogParentFacade<Game> getCatalogParentFacade() {
         return new GameFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
     }
 

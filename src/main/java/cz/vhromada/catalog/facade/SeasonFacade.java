@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade;
 
-import java.util.List;
-
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.result.Result;
@@ -11,20 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface SeasonFacade {
-
-    /**
-     * Returns season with ID or null if there isn't such season.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with season or validation errors
-     */
-    Result<Season> get(Integer id);
+public interface SeasonFacade extends CatalogChildFacade<Season, Show> {
 
     /**
      * Adds season. Sets new ID and position.
@@ -74,77 +59,5 @@ public interface SeasonFacade {
      * @return result with validation errors
      */
     Result<Void> update(Season season);
-
-    /**
-     * Removes season.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Season is null</li>
-     * <li>ID is null</li>
-     * <li>Season doesn't exist in data storage</li>
-     *
-     * @param season season
-     * @return result with validation errors
-     */
-    Result<Void> remove(Season season);
-
-    /**
-     * Duplicates season.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Season is null</li>
-     * <li>ID is null</li>
-     * <li>Season doesn't exist in data storage</li>
-     *
-     * @param season season
-     * @return result with validation errors
-     */
-    Result<Void> duplicate(Season season);
-
-    /**
-     * Moves season in list one position up.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Season is null</li>
-     * <li>ID is null</li>
-     * <li>Season can't be moved up</li>
-     * <li>Season doesn't exist in data storage</li>
-     *
-     * @param season season
-     * @return result with validation errors
-     */
-    Result<Void> moveUp(Season season);
-
-    /**
-     * Moves season in list one position down.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Season is null</li>
-     * <li>ID is null</li>
-     * <li>Season can't be moved down</li>
-     * <li>Season doesn't exist in data storage</li>
-     *
-     * @param season season
-     * @return result with validation errors
-     */
-    Result<Void> moveDown(Season season);
-
-    /**
-     * Returns seasons for specified show.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Show is null</li>
-     * <li>ID is null</li>
-     * <li>Show doesn't exist in data storage</li>
-     *
-     * @param show show
-     * @return result with seasons or validation errors
-     */
-    Result<List<Season>> find(Show show);
 
 }

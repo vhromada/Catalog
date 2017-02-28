@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("showFacade")
-public class ShowFacadeImpl extends AbstractParentCatalogFacade<Show, cz.vhromada.catalog.domain.Show> implements ShowFacade {
+public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromada.catalog.domain.Show> implements ShowFacade {
 
     /**
      * Creates a new instance of ShowFacadeImpl.

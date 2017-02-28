@@ -3,6 +3,7 @@ package cz.vhromada.catalog.facade.impl;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
@@ -19,7 +20,7 @@ import org.springframework.util.Assert;
  * @param <U> type of domain data
  * @author Vladimir Hromada
  */
-public abstract class AbstractParentCatalogFacade<T extends Movable, U extends Movable> {
+public abstract class AbstractCatalogParentFacade<T extends Movable, U extends Movable> implements CatalogParentFacade<T> {
 
     /**
      * Service for catalog
@@ -37,7 +38,7 @@ public abstract class AbstractParentCatalogFacade<T extends Movable, U extends M
     private final CatalogValidator<T> catalogValidator;
 
     /**
-     * Creates a new instance of AbstractParentCatalogFacade.
+     * Creates a new instance of AbstractCatalogParentFacade.
      *
      * @param catalogService   service for catalog
      * @param converter        converter
@@ -46,7 +47,7 @@ public abstract class AbstractParentCatalogFacade<T extends Movable, U extends M
      *                                  or converter is null
      *                                  or validator for catalog is null
      */
-    public AbstractParentCatalogFacade(final CatalogService<U> catalogService, final Converter converter, final CatalogValidator<T> catalogValidator) {
+    public AbstractCatalogParentFacade(final CatalogService<U> catalogService, final Converter converter, final CatalogValidator<T> catalogValidator) {
         Assert.notNull(catalogService, "Service for catalog mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(catalogValidator, "Validator for catalog mustn't be null.");

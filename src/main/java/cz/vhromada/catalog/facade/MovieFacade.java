@@ -1,7 +1,5 @@
 package cz.vhromada.catalog.facade;
 
-import java.util.List;
-
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.result.Result;
@@ -11,34 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface MovieFacade {
-
-    /**
-     * Creates new data.
-     *
-     * @return result
-     */
-    Result<Void> newData();
-
-    /**
-     * Returns movies.
-     *
-     * @return result with list of movies
-     */
-    Result<List<Movie>> getAll();
-
-    /**
-     * Returns movie with ID or null if there isn't such movie.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>ID is null</li>
-     * </ul>
-     *
-     * @param id ID
-     * @return result with movie or validation errors
-     */
-    Result<Movie> get(Integer id);
+public interface MovieFacade extends CatalogParentFacade<Movie> {
 
     /**
      * Adds movie. Sets new ID and position.
@@ -114,71 +85,6 @@ public interface MovieFacade {
      * @return result with validation errors
      */
     Result<Void> update(Movie movie);
-
-    /**
-     * Removes movie.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Movie is null</li>
-     * <li>ID is null</li>
-     * <li>Movie doesn't exist in data storage</li>
-     *
-     * @param movie movie
-     * @return result with validation errors
-     */
-    Result<Void> remove(Movie movie);
-
-    /**
-     * Duplicates movie.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Movie is null</li>
-     * <li>ID is null</li>
-     * <li>Movie doesn't exist in data storage</li>
-     *
-     * @param movie movie
-     * @return result with validation errors
-     */
-    Result<Void> duplicate(Movie movie);
-
-    /**
-     * Moves movie in list one position up.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Movie is null</li>
-     * <li>ID is null</li>
-     * <li>Movie can't be moved up</li>
-     * <li>Movie doesn't exist in data storage</li>
-     *
-     * @param movie movie
-     * @return result with validation errors
-     */
-    Result<Void> moveUp(Movie movie);
-
-    /**
-     * Moves movie in list one position down.
-     * <br>
-     * Validation errors:
-     * <ul>
-     * <li>Movie is null</li>
-     * <li>ID is null</li>
-     * <li>Movie can't be moved down</li>
-     * <li>Movie doesn't exist in data storage</li>
-     *
-     * @param movie movie
-     * @return result with validation errors
-     */
-    Result<Void> moveDown(Movie movie);
-
-    /**
-     * Updates positions.
-     *
-     * @return result
-     */
-    Result<Void> updatePositions();
 
     /**
      * Returns total count of media.

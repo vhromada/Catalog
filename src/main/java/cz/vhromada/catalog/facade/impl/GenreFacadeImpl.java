@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("genreFacade")
-public class GenreFacadeImpl extends AbstractParentCatalogFacade<Genre, cz.vhromada.catalog.domain.Genre> implements GenreFacade {
+public class GenreFacadeImpl extends AbstractCatalogParentFacade<Genre, cz.vhromada.catalog.domain.Genre> implements GenreFacade {
 
     /**
      * Creates a new instance of GenreFacadeImpl.

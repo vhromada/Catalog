@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
@@ -64,20 +65,20 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     private CatalogValidator<T> catalogValidator;
 
     /**
-     * Instance of {@link AbstractParentCatalogFacade}
+     * Instance of {@link CatalogParentFacade}
      */
-    private AbstractParentCatalogFacade<T, U> parentCatalogFacade;
+    private CatalogParentFacade<T> parentCatalogFacade;
 
     /**
      * Initializes facade for catalog.
      */
     @Before
     public void setUp() {
-        parentCatalogFacade = getParentCatalogFacade();
+        parentCatalogFacade = getCatalogParentFacade();
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#newData()}.
+     * Test method for {@link CatalogParentFacade#newData()}.
      */
     @Test
     public void newData() {
@@ -94,7 +95,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#getAll()}.
+     * Test method for {@link CatalogParentFacade#getAll()}.
      */
     @Test
     public void getAll() {
@@ -120,7 +121,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#get(Integer)} with existing data.
+     * Test method for {@link CatalogParentFacade#get(Integer)} with existing data.
      */
     @Test
     public void get_ExistingData() {
@@ -145,7 +146,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#get(Integer)} with not existing data.
+     * Test method for {@link CatalogParentFacade#get(Integer)} with not existing data.
      */
     @Test
     public void get_NotExistingData() {
@@ -167,7 +168,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#get(Integer)} with null data.
+     * Test method for {@link CatalogParentFacade#get(Integer)} with null data.
      */
     @Test
     public void get_NullData() {
@@ -184,7 +185,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#add(Movable)}.
+     * Test method for {@link CatalogParentFacade#add(Movable)}.
      */
     @Test
     public void add() {
@@ -208,7 +209,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#add(Movable)} with invalid data.
+     * Test method for {@link CatalogParentFacade#add(Movable)} with invalid data.
      */
     @Test
     public void add_InvalidData() {
@@ -227,7 +228,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#update(Movable)}.
+     * Test method for {@link CatalogParentFacade#update(Movable)}.
      */
     @Test
     public void update() {
@@ -248,7 +249,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#update(Movable)} with invalid data.
+     * Test method for {@link CatalogParentFacade#update(Movable)} with invalid data.
      */
     @Test
     public void update_InvalidData() {
@@ -267,7 +268,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#remove(Movable)}.
+     * Test method for {@link CatalogParentFacade#remove(Movable)}.
      */
     @Test
     public void remove() {
@@ -292,7 +293,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#remove(Movable)} with invalid data.
+     * Test method for {@link CatalogParentFacade#remove(Movable)} with invalid data.
      */
     @Test
     public void remove_InvalidData() {
@@ -311,7 +312,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#duplicate(Movable)}.
+     * Test method for {@link CatalogParentFacade#duplicate(Movable)}.
      */
     @Test
     public void duplicate() {
@@ -336,7 +337,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#duplicate(Movable)} with invalid data.
+     * Test method for {@link CatalogParentFacade#duplicate(Movable)} with invalid data.
      */
     @Test
     public void duplicate_InvalidData() {
@@ -355,7 +356,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#moveUp(Movable)}.
+     * Test method for {@link CatalogParentFacade#moveUp(Movable)}.
      */
     @Test
     public void moveUp() {
@@ -380,7 +381,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#moveUp(Movable)} with invalid data.
+     * Test method for {@link CatalogParentFacade#moveUp(Movable)} with invalid data.
      */
     @Test
     public void moveUp_InvalidData() {
@@ -399,7 +400,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#moveDown(Movable)}.
+     * Test method for {@link CatalogParentFacade#moveDown(Movable)}.
      */
     @Test
     public void moveDown() {
@@ -424,7 +425,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#moveDown(Movable)} with invalid data.
+     * Test method for {@link CatalogParentFacade#moveDown(Movable)} with invalid data.
      */
     @Test
     public void moveDown_InvalidData() {
@@ -443,7 +444,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Test method for {@link AbstractParentCatalogFacade#updatePositions()}.
+     * Test method for {@link CatalogParentFacade#updatePositions()}.
      */
     @Test
     public void updatePositions() {
@@ -509,11 +510,11 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     }
 
     /**
-     * Returns facade for catalog.
+     * Returns facade for catalog for parent data.
      *
-     * @return facade for catalog
+     * @return facade for catalog for parent data
      */
-    protected abstract AbstractParentCatalogFacade<T, U> getParentCatalogFacade();
+    protected abstract CatalogParentFacade<T> getCatalogParentFacade();
 
     /**
      * Returns entity.

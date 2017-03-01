@@ -36,10 +36,11 @@ public interface ShowFacade extends CatalogParentFacade<Show> {
      * <li>Genre doesn't exist</li>
      * </ul>
      *
-     * @param show show
+     * @param data show
      * @return result with validation errors
      */
-    Result<Void> add(Show show);
+    @Override
+    Result<Void> add(Show data);
 
     /**
      * Updates show.
@@ -70,7 +71,8 @@ public interface ShowFacade extends CatalogParentFacade<Show> {
      * @param show new value of show
      * @return result with validation errors
      */
-    Result<Void> update(Show show);
+    @Override
+    Result<Void> update(Show data);
 
     /**
      * Returns total length of all shows.

@@ -526,7 +526,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#remove(Game)}.
+     * Test method for {@link GameFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -543,7 +543,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#remove(Game)} with null game.
+     * Test method for {@link GameFacade#remove(cz.vhromada.catalog.common.Movable)} with null game.
      */
     @Test
     public void remove_NullGame() {
@@ -559,7 +559,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#remove(Game)} with game with null ID.
+     * Test method for {@link GameFacade#remove(cz.vhromada.catalog.common.Movable)} with game with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -575,7 +575,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#remove(Game)} with game with bad ID.
+     * Test method for {@link GameFacade#remove(cz.vhromada.catalog.common.Movable)} with game with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -591,7 +591,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(Game)}.
+     * Test method for {@link GameFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -612,7 +612,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(Game)} with null game.
+     * Test method for {@link GameFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null game.
      */
     @Test
     public void duplicate_NullGame() {
@@ -628,7 +628,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(Game)} with game with null ID.
+     * Test method for {@link GameFacade#duplicate(cz.vhromada.catalog.common.Movable)} with game with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -644,7 +644,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#duplicate(Game)} with game with bad ID.
+     * Test method for {@link GameFacade#duplicate(cz.vhromada.catalog.common.Movable)} with game with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -660,7 +660,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(Game)}.
+     * Test method for {@link GameFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -686,7 +686,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(Game)} with null game.
+     * Test method for {@link GameFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null game.
      */
     @Test
     public void moveUp_NullGame() {
@@ -702,7 +702,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(Game)} with game with null ID.
+     * Test method for {@link GameFacade#moveUp(cz.vhromada.catalog.common.Movable)} with game with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -718,7 +718,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(Game)} with not movable game.
+     * Test method for {@link GameFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable game.
      */
     @Test
     public void moveUp_NotMovableGame() {
@@ -734,7 +734,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveUp(Game)} with game with bad ID.
+     * Test method for {@link GameFacade#moveUp(cz.vhromada.catalog.common.Movable)} with game with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -750,7 +750,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(Game)}.
+     * Test method for {@link GameFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -776,7 +776,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(Game)} with null game.
+     * Test method for {@link GameFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null game.
      */
     @Test
     public void moveDown_NullGame() {
@@ -792,7 +792,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(Game)} with game with null ID.
+     * Test method for {@link GameFacade#moveDown(cz.vhromada.catalog.common.Movable)} with game with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -808,7 +808,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(Game)} with not movable game.
+     * Test method for {@link GameFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable game.
      */
     @Test
     public void moveDown_NotMovableGame() {
@@ -824,7 +824,7 @@ public class GameFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GameFacade#moveDown(Game)} with game with bad ID.
+     * Test method for {@link GameFacade#moveDown(cz.vhromada.catalog.common.Movable)} with game with bad ID.
      */
     @Test
     public void moveDown_BadId() {

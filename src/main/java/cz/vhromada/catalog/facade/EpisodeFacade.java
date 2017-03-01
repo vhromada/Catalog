@@ -28,11 +28,12 @@ public interface EpisodeFacade extends CatalogChildFacade<Episode, Season> {
      * <li>Note is null</li>
      * </ul>
      *
-     * @param season  season
-     * @param episode episode
+     * @param parent season
+     * @param data   episode
      * @return result with validation errors
      */
-    Result<Void> add(Season season, Episode episode);
+    @Override
+    Result<Void> add(Season parent, Episode data);
 
     /**
      * Updates episode.
@@ -49,9 +50,10 @@ public interface EpisodeFacade extends CatalogChildFacade<Episode, Season> {
      * <li>Season doesn't exist in data storage</li>
      * </ul>
      *
-     * @param episode new value of episode
+     * @param data new value of episode
      * @return result with validation errors
      */
-    Result<Void> update(Episode episode);
+    @Override
+    Result<Void> update(Episode data);
 
 }

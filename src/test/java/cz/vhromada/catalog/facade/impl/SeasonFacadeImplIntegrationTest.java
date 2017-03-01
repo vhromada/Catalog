@@ -708,7 +708,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(Season)}.
+     * Test method for {@link SeasonFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -728,7 +728,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(Season)} with null season.
+     * Test method for {@link SeasonFacade#remove(cz.vhromada.catalog.common.Movable)} with null season.
      */
     @Test
     public void remove_NullSeason() {
@@ -747,7 +747,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(Season)} with season with null ID.
+     * Test method for {@link SeasonFacade#remove(cz.vhromada.catalog.common.Movable)} with season with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -766,7 +766,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#remove(Season)} with season with bad ID.
+     * Test method for {@link SeasonFacade#remove(cz.vhromada.catalog.common.Movable)} with season with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -785,7 +785,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(Season)}.
+     * Test method for {@link SeasonFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -812,7 +812,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(Season)} with null season.
+     * Test method for {@link SeasonFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null season.
      */
     @Test
     public void duplicate_NullSeason() {
@@ -831,7 +831,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(Season)} with season with null ID.
+     * Test method for {@link SeasonFacade#duplicate(cz.vhromada.catalog.common.Movable)} with season with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -850,7 +850,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#duplicate(Season)} with season with bad ID.
+     * Test method for {@link SeasonFacade#duplicate(cz.vhromada.catalog.common.Movable)} with season with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -869,7 +869,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(Season)}.
+     * Test method for {@link SeasonFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -898,7 +898,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(Season)} with null season.
+     * Test method for {@link SeasonFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null season.
      */
     @Test
     public void moveUp_NullSeason() {
@@ -917,7 +917,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(Season)} with season with null ID.
+     * Test method for {@link SeasonFacade#moveUp(cz.vhromada.catalog.common.Movable)} with season with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -936,7 +936,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(Season)} with not movable season.
+     * Test method for {@link SeasonFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable season.
      */
     @Test
     public void moveUp_NotMovableSeason() {
@@ -955,7 +955,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveUp(Season)} with season with bad ID.
+     * Test method for {@link SeasonFacade#moveUp(cz.vhromada.catalog.common.Movable)} with season with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -974,7 +974,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(Season)}.
+     * Test method for {@link SeasonFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1003,7 +1003,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(Season)} with null season.
+     * Test method for {@link SeasonFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null season.
      */
     @Test
     public void moveDown_NullSeason() {
@@ -1022,7 +1022,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(Season)} with season with null ID.
+     * Test method for {@link SeasonFacade#moveDown(cz.vhromada.catalog.common.Movable)} with season with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -1041,7 +1041,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(Season)} with not movable season.
+     * Test method for {@link SeasonFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable season.
      */
     @Test
     public void moveDown_NotMovableSeason() {
@@ -1060,7 +1060,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#moveDown(Season)} with season with bad ID.
+     * Test method for {@link SeasonFacade#moveDown(cz.vhromada.catalog.common.Movable)} with season with bad ID.
      */
     @Test
     public void moveDown_BadId() {
@@ -1079,7 +1079,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#find(Show)}.
+     * Test method for {@link SeasonFacade#find(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     public void find() {
@@ -1100,7 +1100,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#find(Show)} with null show.
+     * Test method for {@link SeasonFacade#find(cz.vhromada.catalog.common.Movable)} with null show.
      */
     @Test
     public void find_NullShow() {
@@ -1119,7 +1119,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#find(Show)} with show with null ID.
+     * Test method for {@link SeasonFacade#find(cz.vhromada.catalog.common.Movable)} with show with null ID.
      */
     @Test
     public void find_NullId() {
@@ -1138,7 +1138,7 @@ public class SeasonFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SeasonFacade#find(Show)} with bad ID.
+     * Test method for {@link SeasonFacade#find(cz.vhromada.catalog.common.Movable)} with bad ID.
      */
     @Test
     public void find_BadId() {

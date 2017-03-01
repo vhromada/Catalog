@@ -1405,7 +1405,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(Movie)}.
+     * Test method for {@link MovieFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1424,7 +1424,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(Movie)} with null movie.
+     * Test method for {@link MovieFacade#remove(cz.vhromada.catalog.common.Movable)} with null movie.
      */
     @Test
     public void remove_NullMovie() {
@@ -1442,7 +1442,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(Movie)} with movie with null ID.
+     * Test method for {@link MovieFacade#remove(cz.vhromada.catalog.common.Movable)} with movie with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -1460,7 +1460,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#remove(Movie)} with movie with bad ID.
+     * Test method for {@link MovieFacade#remove(cz.vhromada.catalog.common.Movable)} with movie with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -1478,7 +1478,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(Movie)}.
+     * Test method for {@link MovieFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1507,7 +1507,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(Movie)} with null movie.
+     * Test method for {@link MovieFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null movie.
      */
     @Test
     public void duplicate_NullMovie() {
@@ -1525,7 +1525,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(Movie)} with movie with null ID.
+     * Test method for {@link MovieFacade#duplicate(cz.vhromada.catalog.common.Movable)} with movie with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -1543,7 +1543,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#duplicate(Movie)} with movie with bad ID.
+     * Test method for {@link MovieFacade#duplicate(cz.vhromada.catalog.common.Movable)} with movie with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -1561,7 +1561,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)}.
+     * Test method for {@link MovieFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1589,7 +1589,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)} with null movie.
+     * Test method for {@link MovieFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null movie.
      */
     @Test
     public void moveUp_NullMovie() {
@@ -1607,7 +1607,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)} with movie with null ID.
+     * Test method for {@link MovieFacade#moveUp(cz.vhromada.catalog.common.Movable)} with movie with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -1625,7 +1625,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)} with not movable movie.
+     * Test method for {@link MovieFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable movie.
      */
     @Test
     public void moveUp_NotMovableMovie() {
@@ -1643,7 +1643,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveUp(Movie)} with movie with bad ID.
+     * Test method for {@link MovieFacade#moveUp(cz.vhromada.catalog.common.Movable)} with movie with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -1661,7 +1661,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)}.
+     * Test method for {@link MovieFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1689,7 +1689,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)} with null movie.
+     * Test method for {@link MovieFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null movie.
      */
     @Test
     public void moveDown_NullMovie() {
@@ -1707,7 +1707,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)} with movie with null ID.
+     * Test method for {@link MovieFacade#moveDown(cz.vhromada.catalog.common.Movable)} with movie with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -1725,7 +1725,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)} with not movable movie.
+     * Test method for {@link MovieFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable movie.
      */
     @Test
     public void moveDown_NotMovableMovie() {
@@ -1743,7 +1743,7 @@ public class MovieFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link MovieFacade#moveDown(Movie)} with movie with bad ID.
+     * Test method for {@link MovieFacade#moveDown(cz.vhromada.catalog.common.Movable)} with movie with bad ID.
      */
     @Test
     public void moveDown_BadId() {

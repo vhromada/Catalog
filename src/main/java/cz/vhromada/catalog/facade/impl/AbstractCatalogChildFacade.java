@@ -82,6 +82,7 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param id ID
      * @return result with data or validation errors
      */
+    @Override
     public Result<S> get(final Integer id) {
         if (id == null) {
             return Result.error("ID_NULL", "ID mustn't be null.");
@@ -107,11 +108,12 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param data   data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> add(final U parent, final S data) {
         final Result<Void> result = parentCatalogValidator.validate(parent, ValidationType.EXISTS);
         result.addEvents(childCatalogValidator.validate(data, ValidationType.NEW, ValidationType.DEEP).getEvents());
 
-        if (Status.OK.equals(result.getStatus())) {
+        if (Status.OK == result.getStatus()) {
             catalogService.update(getForAdd(parent, getDataForAdd(data)));
         }
 
@@ -132,10 +134,11 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param data new value of data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> update(final S data) {
         final Result<Void> result = childCatalogValidator.validate(data, ValidationType.EXISTS, ValidationType.DEEP);
 
-        if (Status.OK.equals(result.getStatus())) {
+        if (Status.OK == result.getStatus()) {
             catalogService.update(getForUpdate(data));
         }
 
@@ -155,10 +158,11 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> remove(final S data) {
         final Result<Void> result = childCatalogValidator.validate(data, ValidationType.EXISTS);
 
-        if (Status.OK.equals(result.getStatus())) {
+        if (Status.OK == result.getStatus()) {
             catalogService.update(getForRemove(data));
         }
 
@@ -178,10 +182,11 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> duplicate(final S data) {
         final Result<Void> result = childCatalogValidator.validate(data, ValidationType.EXISTS);
 
-        if (Status.OK.equals(result.getStatus())) {
+        if (Status.OK == result.getStatus()) {
             catalogService.update(getForDuplicate(data));
         }
 
@@ -202,10 +207,11 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> moveUp(final S data) {
         final Result<Void> result = childCatalogValidator.validate(data, ValidationType.EXISTS, ValidationType.UP);
 
-        if (Status.OK.equals(result.getStatus())) {
+        if (Status.OK == result.getStatus()) {
             catalogService.update(getForMove(data, true));
         }
 
@@ -226,10 +232,11 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> moveDown(final S data) {
         final Result<Void> result = childCatalogValidator.validate(data, ValidationType.EXISTS, ValidationType.DOWN);
 
-        if (Status.OK.equals(result.getStatus())) {
+        if (Status.OK == result.getStatus()) {
             catalogService.update(getForMove(data, false));
         }
 
@@ -249,13 +256,13 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      * @param parent parent
      * @return result with list of data
      */
+    @Override
     public Result<List<S>> find(final U parent) {
         final Result<Void> validationResult = parentCatalogValidator.validate(parent, ValidationType.EXISTS);
 
-        if (Status.OK.equals(validationResult.getStatus())) {
+        if (Status.OK == validationResult.getStatus()) {
             return Result.of(CollectionUtils.getSortedData(converter.convertCollection(getDomainList(parent), getEntityClass())));
         }
-
 
         final Result<List<S>> result = new Result<>();
         result.addEvents(validationResult.getEvents());

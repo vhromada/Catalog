@@ -26,10 +26,11 @@ public interface ProgramFacade extends CatalogParentFacade<Program> {
      * <li>Note is null</li>
      * </ul>
      *
-     * @param program program
+     * @param data program
      * @return result with validation errors
      */
-    Result<Void> add(Program program);
+    @Override
+    Result<Void> add(Program data);
 
     /**
      * Updates program.
@@ -48,10 +49,11 @@ public interface ProgramFacade extends CatalogParentFacade<Program> {
      * <li>Program doesn't exist in data storage</li>
      * </ul>
      *
-     * @param program new value of program
+     * @param data new value of program
      * @return result with validation errors
      */
-    Result<Void> update(Program program);
+    @Override
+    Result<Void> update(Program data);
 
     /**
      * Returns total count of media.

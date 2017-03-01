@@ -26,10 +26,11 @@ public interface GameFacade extends CatalogParentFacade<Game> {
      * <li>Note is null</li>
      * </ul>
      *
-     * @param game game
+     * @param data game
      * @return result with validation errors
      */
-    Result<Void> add(Game game);
+    @Override
+    Result<Void> add(Game data);
 
     /**
      * Updates game.
@@ -48,10 +49,11 @@ public interface GameFacade extends CatalogParentFacade<Game> {
      * <li>Game doesn't exist in data storage</li>
      * </ul>
      *
-     * @param game new value of game
+     * @param data new value of game
      * @return result with validation errors
      */
-    Result<Void> update(Game game);
+    @Override
+    Result<Void> update(Game data);
 
     /**
      * Returns total count of media.

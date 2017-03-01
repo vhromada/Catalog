@@ -21,7 +21,7 @@ import org.junit.Test;
  *
  * @author Vladimir Hromada
  */
-public class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada.catalog.domain.Episode, cz.vhromada.catalog.entity.Season, Show> {
+public class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada.catalog.domain.Episode, Season, Show> {
 
     /**
      * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null service for shows.

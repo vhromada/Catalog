@@ -43,10 +43,11 @@ public interface MovieFacade extends CatalogParentFacade<Movie> {
      * <li>Genre doesn't exist</li>
      * </ul>
      *
-     * @param movie movie
+     * @param data movie
      * @return result with validation errors
      */
-    Result<Void> add(Movie movie);
+    @Override
+    Result<Void> add(Movie data);
 
     /**
      * Updates movie.
@@ -81,10 +82,11 @@ public interface MovieFacade extends CatalogParentFacade<Movie> {
      * <li>Movie doesn't exist in data storage</li>
      * </ul>
      *
-     * @param movie new value of movie
+     * @param data new value of movie
      * @return result with validation errors
      */
-    Result<Void> update(Movie movie);
+    @Override
+    Result<Void> update(Movie data);
 
     /**
      * Returns total count of media.

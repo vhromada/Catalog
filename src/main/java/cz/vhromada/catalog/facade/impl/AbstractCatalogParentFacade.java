@@ -62,6 +62,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      *
      * @return result
      */
+    @Override
     public Result<Void> newData() {
         catalogService.newData();
 
@@ -73,6 +74,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      *
      * @return result with list of data
      */
+    @Override
     public Result<List<T>> getAll() {
         return Result.of(converter.convertCollection(catalogService.getAll(), getEntityClass()));
     }
@@ -88,6 +90,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      * @param id ID
      * @return result with data or validation errors
      */
+    @Override
     public Result<T> get(final Integer id) {
         if (id == null) {
             return Result.error("ID_NULL", "ID mustn't be null.");
@@ -109,6 +112,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> add(final T data) {
         final Result<Void> result = catalogValidator.validate(data, ValidationType.NEW, ValidationType.DEEP);
 
@@ -133,6 +137,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      * @param data new value of data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> update(final T data) {
         final Result<Void> result = catalogValidator.validate(data, ValidationType.EXISTS, ValidationType.DEEP);
 
@@ -156,6 +161,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> remove(final T data) {
         final Result<Void> result = catalogValidator.validate(data, ValidationType.EXISTS);
 
@@ -179,6 +185,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> duplicate(final T data) {
         final Result<Void> result = catalogValidator.validate(data, ValidationType.EXISTS);
 
@@ -203,6 +210,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> moveUp(final T data) {
         final Result<Void> result = catalogValidator.validate(data, ValidationType.EXISTS, ValidationType.UP);
 
@@ -227,6 +235,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      * @param data data
      * @return result with validation errors
      */
+    @Override
     public Result<Void> moveDown(final T data) {
         final Result<Void> result = catalogValidator.validate(data, ValidationType.EXISTS, ValidationType.DOWN);
 
@@ -242,6 +251,7 @@ public abstract class AbstractCatalogParentFacade<T extends Movable, U extends M
      *
      * @return result
      */
+    @Override
     public Result<Void> updatePositions() {
         catalogService.updatePositions();
 

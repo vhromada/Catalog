@@ -1093,7 +1093,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(Show)}.
+     * Test method for {@link ShowFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1113,7 +1113,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(Show)} with null show.
+     * Test method for {@link ShowFacade#remove(cz.vhromada.catalog.common.Movable)} with null show.
      */
     @Test
     public void remove_NullShow() {
@@ -1132,7 +1132,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(Show)} with show with null ID.
+     * Test method for {@link ShowFacade#remove(cz.vhromada.catalog.common.Movable)} with show with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -1151,7 +1151,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#remove(Show)} with show with bad ID.
+     * Test method for {@link ShowFacade#remove(cz.vhromada.catalog.common.Movable)} with show with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -1170,7 +1170,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(Show)}.
+     * Test method for {@link ShowFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1201,7 +1201,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(Show)} with null show.
+     * Test method for {@link ShowFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null show.
      */
     @Test
     public void duplicate_NullShow() {
@@ -1220,7 +1220,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(Show)} with show with null ID.
+     * Test method for {@link ShowFacade#duplicate(cz.vhromada.catalog.common.Movable)} with show with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -1239,7 +1239,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#duplicate(Show)} with show with bad ID.
+     * Test method for {@link ShowFacade#duplicate(cz.vhromada.catalog.common.Movable)} with show with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -1258,7 +1258,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)}.
+     * Test method for {@link ShowFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1287,7 +1287,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)} with null show.
+     * Test method for {@link ShowFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null show.
      */
     @Test
     public void moveUp_NullShow() {
@@ -1306,7 +1306,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)} with show with null ID.
+     * Test method for {@link ShowFacade#moveUp(cz.vhromada.catalog.common.Movable)} with show with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -1325,7 +1325,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)} with not movable show.
+     * Test method for {@link ShowFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable show.
      */
     @Test
     public void moveUp_NotMovableShow() {
@@ -1344,7 +1344,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveUp(Show)} with show with bad ID.
+     * Test method for {@link ShowFacade#moveUp(cz.vhromada.catalog.common.Movable)} with show with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -1363,7 +1363,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)}.
+     * Test method for {@link ShowFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -1392,7 +1392,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)} with null show.
+     * Test method for {@link ShowFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null show.
      */
     @Test
     public void moveDown_NullShow() {
@@ -1411,7 +1411,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)} with show with null ID.
+     * Test method for {@link ShowFacade#moveDown(cz.vhromada.catalog.common.Movable)} with show with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -1430,7 +1430,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)} with not movable show.
+     * Test method for {@link ShowFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable show.
      */
     @Test
     public void moveDown_NotMovableShow() {
@@ -1449,7 +1449,7 @@ public class ShowFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ShowFacade#moveDown(Show)} with show with bad ID.
+     * Test method for {@link ShowFacade#moveDown(cz.vhromada.catalog.common.Movable)} with show with bad ID.
      */
     @Test
     public void moveDown_BadId() {

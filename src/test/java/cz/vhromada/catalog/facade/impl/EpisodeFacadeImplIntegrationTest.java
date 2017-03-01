@@ -551,7 +551,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(Episode)}.
+     * Test method for {@link EpisodeFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -571,7 +571,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(Episode)} with null episode.
+     * Test method for {@link EpisodeFacade#remove(cz.vhromada.catalog.common.Movable)} with null episode.
      */
     @Test
     public void remove_NullEpisode() {
@@ -590,7 +590,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(Episode)} with episode with null ID.
+     * Test method for {@link EpisodeFacade#remove(cz.vhromada.catalog.common.Movable)} with episode with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -609,7 +609,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#remove(Episode)} with episode with bad ID.
+     * Test method for {@link EpisodeFacade#remove(cz.vhromada.catalog.common.Movable)} with episode with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -628,7 +628,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(Episode)}.
+     * Test method for {@link EpisodeFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -652,7 +652,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(Episode)} with null episode.
+     * Test method for {@link EpisodeFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null episode.
      */
     @Test
     public void duplicate_NullEpisode() {
@@ -671,7 +671,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(Episode)} with episode with null ID.
+     * Test method for {@link EpisodeFacade#duplicate(cz.vhromada.catalog.common.Movable)} with episode with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -690,7 +690,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#duplicate(Episode)} with episode with bad ID.
+     * Test method for {@link EpisodeFacade#duplicate(cz.vhromada.catalog.common.Movable)} with episode with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -709,7 +709,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(Episode)}.
+     * Test method for {@link EpisodeFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -738,7 +738,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(Episode)} with null episode.
+     * Test method for {@link EpisodeFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null episode.
      */
     @Test
     public void moveUp_NullEpisode() {
@@ -757,7 +757,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(Episode)} with episode with null ID.
+     * Test method for {@link EpisodeFacade#moveUp(cz.vhromada.catalog.common.Movable)} with episode with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -776,7 +776,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(Episode)} with not movable episode.
+     * Test method for {@link EpisodeFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable episode.
      */
     @Test
     public void moveUp_NotMovableEpisode() {
@@ -795,7 +795,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveUp(Episode)} with episode with bad ID.
+     * Test method for {@link EpisodeFacade#moveUp(cz.vhromada.catalog.common.Movable)} with episode with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -814,7 +814,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(Episode)}.
+     * Test method for {@link EpisodeFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -843,7 +843,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(Episode)} with null episode.
+     * Test method for {@link EpisodeFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null episode.
      */
     @Test
     public void moveDown_NullEpisode() {
@@ -862,7 +862,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(Episode)} with episode with null ID.
+     * Test method for {@link EpisodeFacade#moveDown(cz.vhromada.catalog.common.Movable)} with episode with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -881,7 +881,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(Episode)} with not movable episode.
+     * Test method for {@link EpisodeFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable episode.
      */
     @Test
     public void moveDown_NotMovableEpisode() {
@@ -900,7 +900,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#moveDown(Episode)} with episode with bad ID.
+     * Test method for {@link EpisodeFacade#moveDown(cz.vhromada.catalog.common.Movable)} with episode with bad ID.
      */
     @Test
     public void moveDown_BadId() {
@@ -919,7 +919,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#find(Season)}.
+     * Test method for {@link EpisodeFacade#find(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     public void find() {
@@ -943,7 +943,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#find(Season)} with null season.
+     * Test method for {@link EpisodeFacade#find(cz.vhromada.catalog.common.Movable)} with null season.
      */
     @Test
     public void find_NullSeason() {
@@ -962,7 +962,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#find(Season)} with season with null ID.
+     * Test method for {@link EpisodeFacade#find(cz.vhromada.catalog.common.Movable)} with season with null ID.
      */
     @Test
     public void find_NullId() {
@@ -981,7 +981,7 @@ public class EpisodeFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link EpisodeFacade#find(Season)} with bad ID.
+     * Test method for {@link EpisodeFacade#find(cz.vhromada.catalog.common.Movable)} with bad ID.
      */
     @Test
     public void find_BadId() {

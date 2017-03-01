@@ -379,7 +379,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(Genre)}.
+     * Test method for {@link GenreFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -400,7 +400,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(Genre)} with null genre.
+     * Test method for {@link GenreFacade#remove(cz.vhromada.catalog.common.Movable)} with null genre.
      */
     @Test
     public void remove_NullGenre() {
@@ -418,7 +418,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(Genre)} with genre with null ID.
+     * Test method for {@link GenreFacade#remove(cz.vhromada.catalog.common.Movable)} with genre with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -436,7 +436,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#remove(Genre)} with genre with bad ID.
+     * Test method for {@link GenreFacade#remove(cz.vhromada.catalog.common.Movable)} with genre with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -454,7 +454,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(Genre)}.
+     * Test method for {@link GenreFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -477,7 +477,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(Genre)} with null genre.
+     * Test method for {@link GenreFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null genre.
      */
     @Test
     public void duplicate_NullGenre() {
@@ -495,7 +495,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(Genre)} with genre with null ID.
+     * Test method for {@link GenreFacade#duplicate(cz.vhromada.catalog.common.Movable)} with genre with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -513,7 +513,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#duplicate(Genre)} with genre with bad ID.
+     * Test method for {@link GenreFacade#duplicate(cz.vhromada.catalog.common.Movable)} with genre with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -531,7 +531,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(Genre)}.
+     * Test method for {@link GenreFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -559,7 +559,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(Genre)} with null genre.
+     * Test method for {@link GenreFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null genre.
      */
     @Test
     public void moveUp_NullGenre() {
@@ -577,7 +577,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(Genre)} with genre with null ID.
+     * Test method for {@link GenreFacade#moveUp(cz.vhromada.catalog.common.Movable)} with genre with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -595,7 +595,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(Genre)} with not movable genre.
+     * Test method for {@link GenreFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable genre.
      */
     @Test
     public void moveUp_NotMovableGenre() {
@@ -613,7 +613,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveUp(Genre)} with genre with bad ID.
+     * Test method for {@link GenreFacade#moveUp(cz.vhromada.catalog.common.Movable)} with genre with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -631,7 +631,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(Genre)}.
+     * Test method for {@link GenreFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -659,7 +659,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(Genre)} with null genre.
+     * Test method for {@link GenreFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null genre.
      */
     @Test
     public void moveDown_NullGenre() {
@@ -677,7 +677,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(Genre)} with genre with null ID.
+     * Test method for {@link GenreFacade#moveDown(cz.vhromada.catalog.common.Movable)} with genre with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -695,7 +695,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(Genre)} with not movable genre.
+     * Test method for {@link GenreFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable genre.
      */
     @Test
     public void moveDown_NotMovableGenre() {
@@ -713,7 +713,7 @@ public class GenreFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link GenreFacade#moveDown(Genre)} with genre with bad ID.
+     * Test method for {@link GenreFacade#moveDown(cz.vhromada.catalog.common.Movable)} with genre with bad ID.
      */
     @Test
     public void moveDown_BadId() {

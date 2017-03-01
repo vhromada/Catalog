@@ -27,11 +27,12 @@ public interface SongFacade extends CatalogChildFacade<Song, Music> {
      * <li>Note is null</li>
      * </ul>
      *
-     * @param music music
-     * @param song  song
+     * @param parent music
+     * @param data  song
      * @return result with validation errors
      */
-    Result<Void> add(Music music, Song song);
+    @Override
+    Result<Void> add(Music parent, Song data);
 
     /**
      * Updates song.
@@ -47,9 +48,10 @@ public interface SongFacade extends CatalogChildFacade<Song, Music> {
      * <li>Song doesn't exist in data storage</li>
      * </ul>
      *
-     * @param song new value of song
+     * @param data new value of song
      * @return result with validation errors
      */
-    Result<Void> update(Song song);
+    @Override
+    Result<Void> update(Song data);
 
 }

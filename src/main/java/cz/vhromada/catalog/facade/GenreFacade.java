@@ -21,10 +21,11 @@ public interface GenreFacade extends CatalogParentFacade<Genre> {
      * <li>Name is empty string</li>
      * </ul>
      *
-     * @param genre genre
+     * @param data genre
      * @return result with validation errors
      */
-    Result<Void> add(Genre genre);
+    @Override
+    Result<Void> add(Genre data);
 
     /**
      * Updates genre.
@@ -38,9 +39,10 @@ public interface GenreFacade extends CatalogParentFacade<Genre> {
      * <li>Genre doesn't exist in data storage</li>
      * </ul>
      *
-     * @param genre genre
+     * @param data genre
      * @return result with validation errors
      */
-    Result<Void> update(Genre genre);
+    @Override
+    Result<Void> update(Genre data);
 
 }

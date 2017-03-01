@@ -530,7 +530,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#remove(Program)}.
+     * Test method for {@link ProgramFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -547,7 +547,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#remove(Program)} with null program.
+     * Test method for {@link ProgramFacade#remove(cz.vhromada.catalog.common.Movable)} with null program.
      */
     @Test
     public void remove_NullProgram() {
@@ -563,7 +563,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#remove(Program)} with program with null ID.
+     * Test method for {@link ProgramFacade#remove(cz.vhromada.catalog.common.Movable)} with program with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -579,7 +579,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#remove(Program)} with program with bad ID.
+     * Test method for {@link ProgramFacade#remove(cz.vhromada.catalog.common.Movable)} with program with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -595,7 +595,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#duplicate(Program)}.
+     * Test method for {@link ProgramFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -616,7 +616,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#duplicate(Program)} with null program.
+     * Test method for {@link ProgramFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null program.
      */
     @Test
     public void duplicate_NullProgram() {
@@ -632,7 +632,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#duplicate(Program)} with program with null ID.
+     * Test method for {@link ProgramFacade#duplicate(cz.vhromada.catalog.common.Movable)} with program with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -648,7 +648,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#duplicate(Program)} with program with bad ID.
+     * Test method for {@link ProgramFacade#duplicate(cz.vhromada.catalog.common.Movable)} with program with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -664,7 +664,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)}.
+     * Test method for {@link ProgramFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -690,7 +690,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)} with null program.
+     * Test method for {@link ProgramFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null program.
      */
     @Test
     public void moveUp_NullProgram() {
@@ -706,7 +706,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)} with program with null ID.
+     * Test method for {@link ProgramFacade#moveUp(cz.vhromada.catalog.common.Movable)} with program with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -722,7 +722,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)} with not movable program.
+     * Test method for {@link ProgramFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable program.
      */
     @Test
     public void moveUp_NotMovableProgram() {
@@ -738,7 +738,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveUp(Program)} with program with bad ID.
+     * Test method for {@link ProgramFacade#moveUp(cz.vhromada.catalog.common.Movable)} with program with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -754,7 +754,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)}.
+     * Test method for {@link ProgramFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -780,7 +780,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)} with null program.
+     * Test method for {@link ProgramFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null program.
      */
     @Test
     public void moveDown_NullProgram() {
@@ -796,7 +796,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)} with program with null ID.
+     * Test method for {@link ProgramFacade#moveDown(cz.vhromada.catalog.common.Movable)} with program with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -812,7 +812,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)} with not movable program.
+     * Test method for {@link ProgramFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable program.
      */
     @Test
     public void moveDown_NotMovableProgram() {
@@ -828,7 +828,7 @@ public class ProgramFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link ProgramFacade#moveDown(Program)} with program with bad ID.
+     * Test method for {@link ProgramFacade#moveDown(cz.vhromada.catalog.common.Movable)} with program with bad ID.
      */
     @Test
     public void moveDown_BadId() {

@@ -465,7 +465,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#remove(Song)}.
+     * Test method for {@link SongFacade#remove(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -483,7 +483,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#remove(Song)} with null song.
+     * Test method for {@link SongFacade#remove(cz.vhromada.catalog.common.Movable)} with null song.
      */
     @Test
     public void remove_NullSong() {
@@ -500,7 +500,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#remove(Song)} with song with null ID.
+     * Test method for {@link SongFacade#remove(cz.vhromada.catalog.common.Movable)} with song with null ID.
      */
     @Test
     public void remove_NullId() {
@@ -517,7 +517,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#remove(Song)} with song with bad ID.
+     * Test method for {@link SongFacade#remove(cz.vhromada.catalog.common.Movable)} with song with bad ID.
      */
     @Test
     public void remove_BadId() {
@@ -534,7 +534,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#duplicate(Song)}.
+     * Test method for {@link SongFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -556,7 +556,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#duplicate(Song)} with null song.
+     * Test method for {@link SongFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null song.
      */
     @Test
     public void duplicate_NullSong() {
@@ -573,7 +573,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#duplicate(Song)} with song with null ID.
+     * Test method for {@link SongFacade#duplicate(cz.vhromada.catalog.common.Movable)} with song with null ID.
      */
     @Test
     public void duplicate_NullId() {
@@ -590,7 +590,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#duplicate(Song)} with song with bad ID.
+     * Test method for {@link SongFacade#duplicate(cz.vhromada.catalog.common.Movable)} with song with bad ID.
      */
     @Test
     public void duplicate_BadId() {
@@ -607,7 +607,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveUp(Song)}.
+     * Test method for {@link SongFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -634,7 +634,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveUp(Song)} with null song.
+     * Test method for {@link SongFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null song.
      */
     @Test
     public void moveUp_NullSong() {
@@ -651,7 +651,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveUp(Song)} with song with null ID.
+     * Test method for {@link SongFacade#moveUp(cz.vhromada.catalog.common.Movable)} with song with null ID.
      */
     @Test
     public void moveUp_NullId() {
@@ -668,7 +668,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveUp(Song)} with not movable song.
+     * Test method for {@link SongFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable song.
      */
     @Test
     public void moveUp_NotMovableSong() {
@@ -685,7 +685,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveUp(Song)} with song with bad ID.
+     * Test method for {@link SongFacade#moveUp(cz.vhromada.catalog.common.Movable)} with song with bad ID.
      */
     @Test
     public void moveUp_BadId() {
@@ -702,7 +702,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveDown(Song)}.
+     * Test method for {@link SongFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     @DirtiesContext
@@ -729,7 +729,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveDown(Song)} with null song.
+     * Test method for {@link SongFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null song.
      */
     @Test
     public void moveDown_NullSong() {
@@ -746,7 +746,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveDown(Song)} with song with null ID.
+     * Test method for {@link SongFacade#moveDown(cz.vhromada.catalog.common.Movable)} with song with null ID.
      */
     @Test
     public void moveDown_NullId() {
@@ -763,7 +763,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveDown(Song)} with not movable song.
+     * Test method for {@link SongFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable song.
      */
     @Test
     public void moveDown_NotMovableSong() {
@@ -780,7 +780,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#moveDown(Song)} with song with bad ID.
+     * Test method for {@link SongFacade#moveDown(cz.vhromada.catalog.common.Movable)} with song with bad ID.
      */
     @Test
     public void moveDown_BadId() {
@@ -797,7 +797,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#find(Music)}.
+     * Test method for {@link SongFacade#find(cz.vhromada.catalog.common.Movable)}.
      */
     @Test
     public void find() {
@@ -816,7 +816,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#find(Music)} with null music.
+     * Test method for {@link SongFacade#find(cz.vhromada.catalog.common.Movable)} with null music.
      */
     @Test
     public void find_NullMusic() {
@@ -833,7 +833,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#find(Music)} with music with null ID.
+     * Test method for {@link SongFacade#find(cz.vhromada.catalog.common.Movable)} with music with null ID.
      */
     @Test
     public void find_NullId() {
@@ -850,7 +850,7 @@ public class SongFacadeImplIntegrationTest {
     }
 
     /**
-     * Test method for {@link SongFacade#find(Music)} with bad ID.
+     * Test method for {@link SongFacade#find(cz.vhromada.catalog.common.Movable)} with bad ID.
      */
     @Test
     public void find_BadId() {

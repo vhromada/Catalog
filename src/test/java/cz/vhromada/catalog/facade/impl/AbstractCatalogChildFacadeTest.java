@@ -108,7 +108,7 @@ public class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Mova
 
         @Override
         protected Movable getDomainData(final Integer id) {
-            for (Movable movable : getCatalogService().getAll()) {
+            for (final Movable movable : getCatalogService().getAll()) {
                 if (id.equals(movable.getId())) {
                     return movable;
                 }

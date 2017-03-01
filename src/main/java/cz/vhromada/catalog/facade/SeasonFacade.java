@@ -31,11 +31,12 @@ public interface SeasonFacade extends CatalogChildFacade<Season, Show> {
      * <li>Note is null</li>
      * </ul>
      *
-     * @param show   show
-     * @param season season
+     * @param parent   show
+     * @param data season
      * @return result with validation errors
      */
-    Result<Void> add(Show show, Season season);
+    @Override
+    Result<Void> add(Show parent, Season data);
 
     /**
      * Updates season.
@@ -55,9 +56,10 @@ public interface SeasonFacade extends CatalogChildFacade<Season, Show> {
      * <li>Season doesn't exist in data storage</li>
      * </ul>
      *
-     * @param season new value of season
+     * @param data new value of season
      * @return result with validation errors
      */
-    Result<Void> update(Season season);
+    @Override
+    Result<Void> update(Season data);
 
 }

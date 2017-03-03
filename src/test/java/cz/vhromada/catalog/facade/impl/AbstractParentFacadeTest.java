@@ -36,6 +36,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * An abstract class represents test for parent facade.
  *
+ * @param <T> type of entity data
+ * @param <U> type of domain data
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)

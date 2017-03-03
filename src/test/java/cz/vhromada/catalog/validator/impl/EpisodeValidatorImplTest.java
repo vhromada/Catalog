@@ -66,11 +66,6 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
     }
 
     @Override
-    protected String getPrefix() {
-        return "EPISODE";
-    }
-
-    @Override
     protected void initExistsMock(final Episode validatingData, final boolean exists) {
         final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
 

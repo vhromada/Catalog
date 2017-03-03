@@ -32,6 +32,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * An abstract class represents test for service.
  *
+ * @param <T> type of data
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)

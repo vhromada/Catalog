@@ -48,74 +48,6 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
     private static final Event INVALID_ENDING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID", "Ending year must be between "
             + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
 
-    @Override
-    protected CatalogValidator<Season> getCatalogValidator() {
-        return new SeasonValidatorImpl(getCatalogService());
-    }
-
-    @Override
-    protected Season getValidatingData(final Integer id) {
-        return SeasonUtils.newSeason(id);
-    }
-
-    @Override
-    protected Show getRepositoryData(final Season validatingData) {
-        return ShowUtils.newShowWithSeasons(validatingData.getId());
-    }
-
-    @Override
-    protected Show getItem1() {
-        return null;
-    }
-
-    @Override
-    protected Show getItem2() {
-        return null;
-    }
-
-    @Override
-    protected String getName() {
-        return "Season";
-    }
-
-    @Override
-    protected String getPrefix() {
-        return "SEASON";
-    }
-
-    @Override
-    protected void initExistsMock(final Season validatingData, final boolean exists) {
-        final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
-
-        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
-    }
-
-    @Override
-    protected void verifyExistsMock(final Season validatingData) {
-        verify(getCatalogService()).getAll();
-        verifyNoMoreInteractions(getCatalogService());
-    }
-
-    @Override
-    protected void initMovingMock(final Season validatingData, final boolean up, final boolean valid) {
-        final List<cz.vhromada.catalog.domain.Season> seasons;
-        if (up && valid || !up && !valid) {
-            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(validatingData.getId()));
-        } else {
-            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(validatingData.getId()), SeasonUtils.newSeasonDomain(Integer.MAX_VALUE));
-        }
-        final Show show = ShowUtils.newShowDomain(1);
-        show.setSeasons(seasons);
-
-        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
-    }
-
-    @Override
-    protected void verifyMovingMock(final Season validatingData) {
-        verify(getCatalogService(), times(2)).getAll();
-        verifyNoMoreInteractions(getCatalogService());
-    }
-
     /**
      * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
      * number of season.
@@ -275,6 +207,69 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
 
         verifyZeroInteractions(getCatalogService());
+    }
+
+    @Override
+    protected CatalogValidator<Season> getCatalogValidator() {
+        return new SeasonValidatorImpl(getCatalogService());
+    }
+
+    @Override
+    protected Season getValidatingData(final Integer id) {
+        return SeasonUtils.newSeason(id);
+    }
+
+    @Override
+    protected Show getRepositoryData(final Season validatingData) {
+        return ShowUtils.newShowWithSeasons(validatingData.getId());
+    }
+
+    @Override
+    protected Show getItem1() {
+        return null;
+    }
+
+    @Override
+    protected Show getItem2() {
+        return null;
+    }
+
+    @Override
+    protected String getName() {
+        return "Season";
+    }
+
+    @Override
+    protected void initExistsMock(final Season validatingData, final boolean exists) {
+        final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
+
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
+    }
+
+    @Override
+    protected void verifyExistsMock(final Season validatingData) {
+        verify(getCatalogService()).getAll();
+        verifyNoMoreInteractions(getCatalogService());
+    }
+
+    @Override
+    protected void initMovingMock(final Season validatingData, final boolean up, final boolean valid) {
+        final List<cz.vhromada.catalog.domain.Season> seasons;
+        if (up && valid || !up && !valid) {
+            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(validatingData.getId()));
+        } else {
+            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(validatingData.getId()), SeasonUtils.newSeasonDomain(Integer.MAX_VALUE));
+        }
+        final Show show = ShowUtils.newShowDomain(1);
+        show.setSeasons(seasons);
+
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
+    }
+
+    @Override
+    protected void verifyMovingMock(final Season validatingData) {
+        verify(getCatalogService(), times(2)).getAll();
+        verifyNoMoreInteractions(getCatalogService());
     }
 
 }

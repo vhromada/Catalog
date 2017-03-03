@@ -82,11 +82,6 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
         return "Stub";
     }
 
-    @Override
-    protected String getPrefix() {
-        return "STUB";
-    }
-
     /**
      * A class represents abstract catalog validator stub.
      */

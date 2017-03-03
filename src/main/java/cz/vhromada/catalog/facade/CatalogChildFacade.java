@@ -41,6 +41,7 @@ public interface CatalogChildFacade<T extends Movable, U extends Movable> extend
      * <li>Parent is null</li>
      * <li>Parent ID is null</li>
      * <li>Parent doesn't exist in data storage</li>
+     * </ul>
      *
      * @param parent parent
      * @return result with list of data or validation errors

@@ -48,6 +48,7 @@ public interface CatalogFacade<T extends Movable> {
      * <li>Data is null</li>
      * <li>ID is null</li>
      * <li>Data doesn't exist in data storage</li>
+     * </ul>
      *
      * @param data data
      * @return result with validation errors
@@ -62,6 +63,7 @@ public interface CatalogFacade<T extends Movable> {
      * <li>Data is null</li>
      * <li>ID is null</li>
      * <li>Data doesn't exist in data storage</li>
+     * </ul>
      *
      * @param data data
      * @return result with validation errors
@@ -77,6 +79,7 @@ public interface CatalogFacade<T extends Movable> {
      * <li>ID is null</li>
      * <li>Data can't be moved up</li>
      * <li>Data doesn't exist in data storage</li>
+     * </ul>
      *
      * @param data data
      * @return result with validation errors
@@ -92,6 +95,7 @@ public interface CatalogFacade<T extends Movable> {
      * <li>ID is null</li>
      * <li>Data can't be moved down</li>
      * <li>Data doesn't exist in data storage</li>
+     * </ul>
      *
      * @param data data
      * @return result with validation errors

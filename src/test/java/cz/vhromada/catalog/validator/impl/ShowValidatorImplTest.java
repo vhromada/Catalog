@@ -447,9 +447,4 @@ public class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhroma
         return "Show";
     }
 
-    @Override
-    protected String getPrefix() {
-        return "SHOW";
-    }
-
 }

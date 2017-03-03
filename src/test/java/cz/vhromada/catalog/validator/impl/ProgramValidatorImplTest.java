@@ -192,9 +192,4 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
         return "Program";
     }
 
-    @Override
-    protected String getPrefix() {
-        return "PROGRAM";
-    }
-
 }

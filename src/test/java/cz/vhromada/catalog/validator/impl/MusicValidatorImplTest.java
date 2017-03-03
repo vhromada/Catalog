@@ -172,9 +172,4 @@ public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhro
         return "Music";
     }
 
-    @Override
-    protected String getPrefix() {
-        return "MUSIC";
-    }
-
 }

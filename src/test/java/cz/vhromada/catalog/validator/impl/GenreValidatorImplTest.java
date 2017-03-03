@@ -92,9 +92,4 @@ public class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhro
         return "Genre";
     }
 
-    @Override
-    protected String getPrefix() {
-        return "GENRE";
-    }
-
 }

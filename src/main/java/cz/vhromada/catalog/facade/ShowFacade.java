@@ -68,7 +68,7 @@ public interface ShowFacade extends CatalogParentFacade<Show> {
      * <li>Show doesn't exist in data storage</li>
      * </ul>
      *
-     * @param show new value of show
+     * @param data new value of show
      * @return result with validation errors
      */
     @Override

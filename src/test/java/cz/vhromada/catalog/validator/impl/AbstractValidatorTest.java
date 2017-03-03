@@ -30,6 +30,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * An abstract class represents test for validator.
  *
+ * @param <T> type of entity data
+ * @param <U> type of domain data
  * @author Vladimir Hromada
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -349,6 +351,8 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      *
      * @return prefix for validation keys
      */
-    protected abstract String getPrefix();
+    private String getPrefix() {
+        return getName().toUpperCase();
+    }
 
 }

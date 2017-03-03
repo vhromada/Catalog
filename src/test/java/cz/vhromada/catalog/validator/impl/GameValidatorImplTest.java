@@ -190,9 +190,4 @@ public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhroma
         return "Game";
     }
 
-    @Override
-    protected String getPrefix() {
-        return "GAME";
-    }
-
 }

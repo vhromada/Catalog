@@ -646,9 +646,4 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
         return "Movie";
     }
 
-    @Override
-    protected String getPrefix() {
-        return "MOVIE";
-    }
-
 }

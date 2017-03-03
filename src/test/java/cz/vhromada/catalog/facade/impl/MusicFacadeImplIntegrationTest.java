@@ -2,17 +2,16 @@ package cz.vhromada.catalog.facade.impl;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
+import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
@@ -22,37 +21,15 @@ import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * A class represents integration test for class {@link MusicFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CatalogTestConfiguration.class)
-@DirtiesContext
-public class MusicFacadeImplIntegrationTest {
-
-    /**
-     * Event for null music
-     */
-    private static final Event NULL_MUSIC_EVENT = new Event(Severity.ERROR, "MUSIC_NULL", "Music mustn't be null.");
-
-    /**
-     * Event for music with null ID
-     */
-    private static final Event NULL_MUSIC_ID_EVENT = new Event(Severity.ERROR, "MUSIC_ID_NULL", "ID mustn't be null.");
-
-    /**
-     * Event for not existing music
-     */
-    private static final Event NOT_EXIST_MUSIC_EVENT = new Event(Severity.ERROR, "MUSIC_NOT_EXIST", "Music doesn't exist.");
+public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Music, cz.vhromada.catalog.domain.Music> {
 
     /**
      * Instance of {@link EntityManager}
@@ -68,144 +45,11 @@ public class MusicFacadeImplIntegrationTest {
     private MusicFacade musicFacade;
 
     /**
-     * Test method for {@link MusicFacade#newData()}.
-     */
-    @Test
-    @DirtiesContext
-    public void newData() {
-        final Result<Void> result = musicFacade.newData();
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(0));
-        assertThat(SongUtils.getSongsCount(entityManager), is(0));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#getAll()}.
-     */
-    @Test
-    public void getAll() {
-        final Result<List<Music>> result = musicFacade.getAll();
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-        MusicUtils.assertMusicListDeepEquals(result.getData(), MusicUtils.getMusic());
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#get(Integer)}.
-     */
-    @Test
-    public void get() {
-        for (int i = 1; i <= MusicUtils.MUSIC_COUNT; i++) {
-            final Result<Music> result = musicFacade.get(i);
-
-            assertThat(result, is(notNullValue()));
-            assertThat(result.getEvents(), is(notNullValue()));
-            assertThat(result.getStatus(), is(Status.OK));
-            assertThat(result.getEvents().isEmpty(), is(true));
-            MusicUtils.assertMusicDeepEquals(result.getData(), MusicUtils.getMusic(i));
-        }
-
-        final Result<Music> result = musicFacade.get(Integer.MAX_VALUE);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#get(Integer)} with null music.
-     */
-    @Test
-    public void get_NullMusic() {
-        final Result<Music> result = musicFacade.get(null);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#add(Music)}.
-     */
-    @Test
-    @DirtiesContext
-    public void add() {
-        final Result<Void> result = musicFacade.add(MusicUtils.newMusic(null));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        final cz.vhromada.catalog.domain.Music addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
-        MusicUtils.assertMusicDeepEquals(MusicUtils.newMusicDomain(MusicUtils.MUSIC_COUNT + 1), addedMusic);
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT + 1));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#add(Music)} with null music.
-     */
-    @Test
-    public void add_NullMusic() {
-        final Result<Void> result = musicFacade.add(null);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#add(Music)} with music with not null ID.
-     */
-    @Test
-    public void add_NotNullId() {
-        final Result<Void> result = musicFacade.add(MusicUtils.newMusic(1));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_ID_NOT_NULL", "ID must be null.")));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
      * Test method for {@link MusicFacade#add(Music)} with music with null name.
      */
     @Test
     public void add_NullName() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = newData(null);
         music.setName(null);
 
         final Result<Void> result = musicFacade.add(music);
@@ -216,8 +60,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -225,7 +68,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void add_EmptyName() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = newData(null);
         music.setName("");
 
         final Result<Void> result = musicFacade.add(music);
@@ -236,8 +79,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -245,7 +87,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void add_NullWikiEn() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = newData(null);
         music.setWikiEn(null);
 
         final Result<Void> result = musicFacade.add(music);
@@ -257,8 +99,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
                 "URL to english Wikipedia page about music mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -266,7 +107,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void add_NullWikiCz() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = newData(null);
         music.setWikiCz(null);
 
         final Result<Void> result = musicFacade.add(music);
@@ -277,8 +118,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -286,7 +126,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void add_NotPositiveMediaCount() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = newData(null);
         music.setMediaCount(0);
 
         final Result<Void> result = musicFacade.add(music);
@@ -297,8 +137,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -306,7 +145,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void add_NullNote() {
-        final Music music = MusicUtils.newMusic(null);
+        final Music music = newData(null);
         music.setNote(null);
 
         final Result<Void> result = musicFacade.add(music);
@@ -317,64 +156,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#update(Music)}.
-     */
-    @Test
-    @DirtiesContext
-    public void update() {
-        final Music music = MusicUtils.newMusic(1);
-
-        final Result<Void> result = musicFacade.update(music);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        final cz.vhromada.catalog.domain.Music updatedMusic = MusicUtils.getMusic(entityManager, 1);
-        MusicUtils.assertMusicDeepEquals(music, updatedMusic);
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#update(Music)} with null music.
-     */
-    @Test
-    public void update_NullMusic() {
-        final Result<Void> result = musicFacade.update(null);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#update(Music)} with music with null ID.
-     */
-    @Test
-    public void update_NullId() {
-        final Result<Void> result = musicFacade.update(MusicUtils.newMusic(null));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -382,7 +164,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void update_NullName() {
-        final Music music = MusicUtils.newMusic(1);
+        final Music music = newData(1);
         music.setName(null);
 
         final Result<Void> result = musicFacade.update(music);
@@ -393,8 +175,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -402,7 +183,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void update_EmptyName() {
-        final Music music = MusicUtils.newMusic(1);
+        final Music music = newData(1);
         music.setName("");
 
         final Result<Void> result = musicFacade.update(music);
@@ -413,8 +194,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -422,7 +202,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void update_NullWikiEn() {
-        final Music music = MusicUtils.newMusic(1);
+        final Music music = newData(1);
         music.setWikiEn(null);
 
         final Result<Void> result = musicFacade.update(music);
@@ -434,8 +214,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
                 "URL to english Wikipedia page about music mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -443,7 +222,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void update_NullWikiCz() {
-        final Music music = MusicUtils.newMusic(1);
+        final Music music = newData(1);
         music.setWikiCz(null);
 
         final Result<Void> result = musicFacade.update(music);
@@ -454,8 +233,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -463,7 +241,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void update_NotPositiveMediaCount() {
-        final Music music = MusicUtils.newMusic(1);
+        final Music music = newData(1);
         music.setMediaCount(0);
 
         final Result<Void> result = musicFacade.update(music);
@@ -474,8 +252,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -483,7 +260,7 @@ public class MusicFacadeImplIntegrationTest {
      */
     @Test
     public void update_NullNote() {
-        final Music music = MusicUtils.newMusic(1);
+        final Music music = newData(1);
         music.setNote(null);
 
         final Result<Void> result = musicFacade.update(music);
@@ -494,380 +271,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getEvents().size(), is(1));
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#update(Music)} with music with bad ID.
-     */
-    @Test
-    public void update_BadId() {
-        final Result<Void> result = musicFacade.update(MusicUtils.newMusic(Integer.MAX_VALUE));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#remove(cz.vhromada.catalog.common.Movable)}.
-     */
-    @Test
-    @DirtiesContext
-    public void remove() {
-        final Result<Void> result = musicFacade.remove(MusicUtils.newMusic(1));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        assertThat(MusicUtils.getMusic(entityManager, 1), is(nullValue()));
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT - 1));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT - SongUtils.SONGS_PER_MUSIC_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#remove(cz.vhromada.catalog.common.Movable)} with null music.
-     */
-    @Test
-    public void remove_NullMusic() {
-        final Result<Void> result = musicFacade.remove(null);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#remove(cz.vhromada.catalog.common.Movable)} with music with null ID.
-     */
-    @Test
-    public void remove_NullId() {
-        final Result<Void> result = musicFacade.remove(MusicUtils.newMusic(null));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#remove(cz.vhromada.catalog.common.Movable)} with music with bad ID.
-     */
-    @Test
-    public void remove_BadId() {
-        final Result<Void> result = musicFacade.remove(MusicUtils.newMusic(Integer.MAX_VALUE));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#duplicate(cz.vhromada.catalog.common.Movable)}.
-     */
-    @Test
-    @DirtiesContext
-    public void duplicate() {
-        final cz.vhromada.catalog.domain.Music music = MusicUtils.getMusic(MusicUtils.MUSIC_COUNT);
-        music.setId(MusicUtils.MUSIC_COUNT + 1);
-        for (final Song song : music.getSongs()) {
-            song.setId(SongUtils.SONGS_COUNT + music.getSongs().indexOf(song) + 1);
-        }
-
-        final Result<Void> result = musicFacade.duplicate(MusicUtils.newMusic(MusicUtils.MUSIC_COUNT));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        final cz.vhromada.catalog.domain.Music duplicatedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
-        MusicUtils.assertMusicDeepEquals(music, duplicatedMusic);
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT + 1));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT + SongUtils.SONGS_PER_MUSIC_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#duplicate(cz.vhromada.catalog.common.Movable)} with null music.
-     */
-    @Test
-    public void duplicate_NullMusic() {
-        final Result<Void> result = musicFacade.duplicate(null);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#duplicate(cz.vhromada.catalog.common.Movable)} with music with null ID.
-     */
-    @Test
-    public void duplicate_NullId() {
-        final Result<Void> result = musicFacade.duplicate(MusicUtils.newMusic(null));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#duplicate(cz.vhromada.catalog.common.Movable)} with music with bad ID.
-     */
-    @Test
-    public void duplicate_BadId() {
-        final Result<Void> result = musicFacade.duplicate(MusicUtils.newMusic(Integer.MAX_VALUE));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveUp(cz.vhromada.catalog.common.Movable)}.
-     */
-    @Test
-    @DirtiesContext
-    public void moveUp() {
-        final cz.vhromada.catalog.domain.Music music1 = MusicUtils.getMusic(1);
-        music1.setPosition(1);
-        final cz.vhromada.catalog.domain.Music music2 = MusicUtils.getMusic(2);
-        music2.setPosition(0);
-
-        final Result<Void> result = musicFacade.moveUp(MusicUtils.newMusic(2));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        MusicUtils.assertMusicDeepEquals(music1, MusicUtils.getMusic(entityManager, 1));
-        MusicUtils.assertMusicDeepEquals(music2, MusicUtils.getMusic(entityManager, 2));
-        for (int i = 3; i <= MusicUtils.MUSIC_COUNT; i++) {
-            MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), MusicUtils.getMusic(entityManager, i));
-        }
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveUp(cz.vhromada.catalog.common.Movable)} with null music.
-     */
-    @Test
-    public void moveUp_NullMusic() {
-        final Result<Void> result = musicFacade.moveUp(null);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveUp(cz.vhromada.catalog.common.Movable)} with music with null ID.
-     */
-    @Test
-    public void moveUp_NullId() {
-        final Result<Void> result = musicFacade.moveUp(MusicUtils.newMusic(null));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveUp(cz.vhromada.catalog.common.Movable)} with not movable music.
-     */
-    @Test
-    public void moveUp_NotMovableMusic() {
-        final Result<Void> result = musicFacade.moveUp(MusicUtils.newMusic(1));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOT_MOVABLE", "Music can't be moved up.")));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveUp(cz.vhromada.catalog.common.Movable)} with music with bad ID.
-     */
-    @Test
-    public void moveUp_BadId() {
-        final Result<Void> result = musicFacade.moveUp(MusicUtils.newMusic(Integer.MAX_VALUE));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveDown(cz.vhromada.catalog.common.Movable)}.
-     */
-    @Test
-    @DirtiesContext
-    public void moveDown() {
-        final cz.vhromada.catalog.domain.Music music1 = MusicUtils.getMusic(1);
-        music1.setPosition(1);
-        final cz.vhromada.catalog.domain.Music music2 = MusicUtils.getMusic(2);
-        music2.setPosition(0);
-
-        final Result<Void> result = musicFacade.moveDown(MusicUtils.newMusic(1));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        MusicUtils.assertMusicDeepEquals(music1, MusicUtils.getMusic(entityManager, 1));
-        MusicUtils.assertMusicDeepEquals(music2, MusicUtils.getMusic(entityManager, 2));
-        for (int i = 3; i <= MusicUtils.MUSIC_COUNT; i++) {
-            MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), MusicUtils.getMusic(entityManager, i));
-        }
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveDown(cz.vhromada.catalog.common.Movable)} with null music.
-     */
-    @Test
-    public void moveDown_NullMusic() {
-        final Result<Void> result = musicFacade.moveDown(null);
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveDown(cz.vhromada.catalog.common.Movable)} with music with null ID.
-     */
-    @Test
-    public void moveDown_NullId() {
-        final Result<Void> result = musicFacade.moveDown(MusicUtils.newMusic(null));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NULL_MUSIC_ID_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveDown(cz.vhromada.catalog.common.Movable)} with not movable music.
-     */
-    @Test
-    public void moveDown_NotMovableMusic() {
-        final Result<Void> result = musicFacade.moveDown(MusicUtils.newMusic(MusicUtils.MUSIC_COUNT));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOT_MOVABLE", "Music can't be moved down.")));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#moveDown(cz.vhromada.catalog.common.Movable)} with music with bad ID.
-     */
-    @Test
-    public void moveDown_BadId() {
-        final Result<Void> result = musicFacade.moveDown(MusicUtils.newMusic(Integer.MAX_VALUE));
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(NOT_EXIST_MUSIC_EVENT));
-
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
-    }
-
-    /**
-     * Test method for {@link MusicFacade#updatePositions()}.
-     */
-    @Test
-    @DirtiesContext
-    public void updatePositions() {
-        final Result<Void> result = musicFacade.updatePositions();
-
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
-        for (int i = 1; i <= MusicUtils.MUSIC_COUNT; i++) {
-            MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), MusicUtils.getMusic(entityManager, i));
-        }
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -885,8 +289,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getData(), is(count));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -904,8 +307,7 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getData(), is(length));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -921,7 +323,129 @@ public class MusicFacadeImplIntegrationTest {
         assertThat(result.getData(), is(SongUtils.SONGS_COUNT));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
+        assertDefaultRepositoryData();
+    }
+
+    @Override
+    protected CatalogParentFacade<Music> getCatalogParentFacade() {
+        return musicFacade;
+    }
+
+    @Override
+    protected Integer getDefaultDataCount() {
+        return MusicUtils.MUSIC_COUNT;
+    }
+
+    @Override
+    protected Integer getRepositoryDataCount() {
+        return MusicUtils.getMusicCount(entityManager);
+    }
+
+    @Override
+    protected List<cz.vhromada.catalog.domain.Music> getDataList() {
+        return MusicUtils.getMusic();
+    }
+
+    @Override
+    protected cz.vhromada.catalog.domain.Music getDomainData(final Integer index) {
+        return MusicUtils.getMusic(index);
+    }
+
+    @Override
+    protected Music newData(final Integer id) {
+        return MusicUtils.newMusic(id);
+    }
+
+    @Override
+    protected cz.vhromada.catalog.domain.Music newDomainData(final Integer id) {
+        return MusicUtils.newMusicDomain(id);
+    }
+
+    @Override
+    protected cz.vhromada.catalog.domain.Music getRepositoryData(final Integer id) {
+        return MusicUtils.getMusic(entityManager, id);
+    }
+
+    @Override
+    protected String getName() {
+        return "Music";
+    }
+
+    @Override
+    protected void clearReferencedData() {
+    }
+
+    @Override
+    protected void assertDataListDeepEquals(final List<Music> expected, final List<cz.vhromada.catalog.domain.Music> actual) {
+        MusicUtils.assertMusicListDeepEquals(expected, actual);
+    }
+
+    @Override
+    protected void assertDataDeepEquals(final Music expected, final cz.vhromada.catalog.domain.Music actual) {
+        MusicUtils.assertMusicDeepEquals(expected, actual);
+    }
+
+    @Override
+    protected void assertDataDomainDeepEquals(final cz.vhromada.catalog.domain.Music expected, final cz.vhromada.catalog.domain.Music actual) {
+        MusicUtils.assertMusicDeepEquals(expected, actual);
+    }
+
+    @Override
+    protected void assertDefaultRepositoryData() {
+        super.assertDefaultRepositoryData();
+
+        assertReferences();
+    }
+
+    @Override
+    protected void assertNewRepositoryData() {
+        super.assertNewRepositoryData();
+
+        assertThat(SongUtils.getSongsCount(entityManager), is(0));
+    }
+
+    @Override
+    protected void assertAddRepositoryData() {
+        super.assertAddRepositoryData();
+
+        assertReferences();
+    }
+
+    @Override
+    protected void assertUpdateRepositoryData() {
+        super.assertUpdateRepositoryData();
+
+        assertReferences();
+    }
+
+    @Override
+    protected void assertRemoveRepositoryData() {
+        super.assertRemoveRepositoryData();
+
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT - SongUtils.SONGS_PER_MUSIC_COUNT));
+    }
+
+    @Override
+    protected void assertDuplicateRepositoryData() {
+        super.assertDuplicateRepositoryData();
+
+        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT + SongUtils.SONGS_PER_MUSIC_COUNT));
+    }
+
+    @Override
+    protected cz.vhromada.catalog.domain.Music getExpectedDuplicatedData() {
+        final cz.vhromada.catalog.domain.Music music = super.getExpectedDuplicatedData();
+        for (final Song song : music.getSongs()) {
+            song.setId(SongUtils.SONGS_COUNT + music.getSongs().indexOf(song) + 1);
+        }
+
+        return music;
+    }
+
+    /**
+     * Asserts references.
+     */
+    private void assertReferences() {
         assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
     }
 

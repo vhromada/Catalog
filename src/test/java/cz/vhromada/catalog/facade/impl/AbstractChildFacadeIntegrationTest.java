@@ -35,6 +35,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends Movable, V extends Movable> {
 
     /**
+     * Null ID message
+     */
+    private static final String NULL_ID_MESSAGE = "ID mustn't be null.";
+
+    /**
      * Test method for {@link CatalogChildFacade#get(Integer)}.
      */
     @Test
@@ -71,7 +76,7 @@ public abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U ex
         assertThat(result.getStatus(), is(Status.ERROR));
         assertThat(result.getData(), is(nullValue()));
         assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", NULL_ID_MESSAGE)));
 
         assertDefaultRepositoryData();
     }
@@ -82,6 +87,9 @@ public abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U ex
     @Test
     @DirtiesContext
     public void add() {
+        final U expectedData = newDomainData(getDefaultChildDataCount() + 1);
+        expectedData.setPosition(Integer.MAX_VALUE);
+
         final Result<Void> result = getCatalogChildFacade().add(newParentData(1), newChildData(null));
 
         assertThat(result, is(notNullValue()));
@@ -89,7 +97,7 @@ public abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U ex
         assertThat(result.getStatus(), is(Status.OK));
         assertThat(result.getEvents().isEmpty(), is(true));
 
-        assertDataDomainDeepEquals(getExpectedAddData(), getRepositoryData(getDefaultChildDataCount() + 1));
+        assertDataDomainDeepEquals(expectedData, getRepositoryData(getDefaultChildDataCount() + 1));
         assertAddRepositoryData();
     }
 
@@ -736,19 +744,6 @@ public abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U ex
     protected abstract void assertDataDomainDeepEquals(U expected, U actual);
 
     /**
-     * Returns expected add data.
-     *
-     * @return expected add data
-     */
-    protected U getExpectedAddData() {
-        //TODO vladimir.hromada 03.03.2017: overridden?
-        final U data = newDomainData(getDefaultChildDataCount() + 1);
-        data.setPosition(Integer.MAX_VALUE);
-
-        return data;
-    }
-
-    /**
      * Returns expected duplicated data.
      *
      * @return expected duplicated data
@@ -822,7 +817,7 @@ public abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U ex
      * @return event for parent data with null ID
      */
     private Event getNullParentDataIdEvent() {
-        return new Event(Severity.ERROR, getParentPrefix() + "_ID_NULL", "ID mustn't be null.");
+        return new Event(Severity.ERROR, getParentPrefix() + "_ID_NULL", NULL_ID_MESSAGE);
     }
 
     /**
@@ -849,7 +844,7 @@ public abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U ex
      * @return event for child data with null ID
      */
     private Event getNullChildDataIdEvent() {
-        return new Event(Severity.ERROR, getChildPrefix() + "_ID_NULL", "ID mustn't be null.");
+        return new Event(Severity.ERROR, getChildPrefix() + "_ID_NULL", NULL_ID_MESSAGE);
     }
 
     /**

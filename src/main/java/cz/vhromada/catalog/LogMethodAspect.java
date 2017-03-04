@@ -24,6 +24,7 @@ public class LogMethodAspect {
      * @throws Throwable if calling method fails
      */
     @Around("facadePointcut() || servicePointcut()")
+    //CHECKSTYLE.OFF: IllegalThrows
     public Object log(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         final Object result;
 
@@ -43,6 +44,7 @@ public class LogMethodAspect {
 
         return result;
     }
+    //CHECKSTYLE.ON: IllegalThrows
 
     /**
      * Pointcut for facade layer

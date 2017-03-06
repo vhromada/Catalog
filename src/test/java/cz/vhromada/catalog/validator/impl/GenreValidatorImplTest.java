@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
@@ -23,6 +24,14 @@ import org.junit.Test;
  * @author Vladimir Hromada
  */
 public class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhromada.catalog.domain.Genre> {
+
+    /**
+     * Test method for {@link GenreValidatorImpl#GenreValidatorImpl(CatalogService)} with null service for genres.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullGenreService() {
+        new GenreValidatorImpl(null);
+    }
 
     /**
      * Test method for {@link GenreValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.

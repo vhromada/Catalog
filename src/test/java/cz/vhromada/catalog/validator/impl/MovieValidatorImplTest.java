@@ -70,6 +70,14 @@ public class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhro
     }
 
     /**
+     * Test method for {@link MovieValidatorImpl#MovieValidatorImpl(CatalogService, CatalogValidator)} with null service for movies.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullMovieService() {
+        new MovieValidatorImpl(null, genreValidator);
+    }
+
+    /**
      * Test method for {@link MovieValidatorImpl#MovieValidatorImpl(CatalogService, CatalogValidator)} with null validator for genre.
      */
     @Test(expected = IllegalArgumentException.class)

@@ -160,7 +160,7 @@ public abstract class AbstractCatalogValidator<T extends Movable, U extends Mova
      * <br>
      * Validation errors:
      * <ul>
-     * <li>Not movable</li>
+     * <li>Not movable data</li>
      * </ul>
      *
      * @param data   validating data

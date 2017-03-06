@@ -15,6 +15,7 @@ import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.utils.SeasonUtils;
@@ -47,6 +48,14 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      */
     private static final Event INVALID_ENDING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID", "Ending year must be between "
             + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
+
+    /**
+     * Test method for {@link SeasonValidatorImpl#SeasonValidatorImpl(CatalogService)} with null service for shows.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullShowService() {
+        new SeasonValidatorImpl(null);
+    }
 
     /**
      * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive

@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import cz.vhromada.catalog.entity.Medium;
 
 /**
- * A class represents utility class for mediums.
+ * A class represents utility class for media.
  *
  * @author Vladimir Hromada
  */

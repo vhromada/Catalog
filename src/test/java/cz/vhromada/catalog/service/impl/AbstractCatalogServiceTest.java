@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladimir Hromada
  */
+@SuppressFBWarnings("CD_CIRCULAR_DEPENDENCY")
 public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
 
     /**

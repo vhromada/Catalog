@@ -19,12 +19,12 @@ public class TimeTest {
     private static final int LENGTH = 9326;
 
     /**
-     * Array of Time in length
+     * Array of {@link Time} in length
      */
     private static final int[] TIME_LENGTHS = { 106261, 88261, 104401, 106260, 45061, 19861, 18000, 211, 12, 0 };
 
     /**
-     * Array of Time in strings
+     * Array of {@link Time} in strings
      */
     //CHECKSTYLE.OFF: Indentation
     private static final String[] TIME_STRINGS = { "1:05:31:01", "1:00:31:01", "1:05:00:01", "1:05:31:00", "12:31:01", "5:31:01", "5:00:00", "0:03:31",

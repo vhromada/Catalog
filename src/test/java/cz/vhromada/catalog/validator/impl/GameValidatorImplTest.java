@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Game;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.GameUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
@@ -23,6 +24,14 @@ import org.junit.Test;
  * @author Vladimir Hromada
  */
 public class GameValidatorImplTest extends AbstractValidatorTest<Game, cz.vhromada.catalog.domain.Game> {
+
+    /**
+     * Test method for {@link GameValidatorImpl#GameValidatorImpl(CatalogService)} with null service for games.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullGameService() {
+        new GameValidatorImpl(null);
+    }
 
     /**
      * Test method for {@link GameValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.

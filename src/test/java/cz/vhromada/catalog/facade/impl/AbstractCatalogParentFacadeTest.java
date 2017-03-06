@@ -6,12 +6,40 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converters.Converter;
 
+import org.junit.Test;
+
 /**
  * A class represents test for class {@link AbstractCatalogParentFacade}.
  *
  * @author Vladimir Hromada
  */
 public class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Movable, Movable> {
+
+    /**
+     * Test method for {@link AbstractCatalogParentFacade#AbstractCatalogParentFacade(CatalogService, Converter, CatalogValidator)} with null
+     * service for catalog.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullCatalogService() {
+        new AbstractCatalogParentFacadeStub(null, getConverter(), getCatalogValidator());
+    }
+
+    /**
+     * Test method for {@link AbstractCatalogParentFacade#AbstractCatalogParentFacade(CatalogService, Converter, CatalogValidator)} with null converter.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullConverter() {
+        new AbstractCatalogParentFacadeStub(getCatalogService(), null, getCatalogValidator());
+    }
+
+    /**
+     * Test method for {@link AbstractCatalogParentFacade#AbstractCatalogParentFacade(CatalogService, Converter, CatalogValidator)} with null
+     * validator for catalog.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullCatalogValidator() {
+        new AbstractCatalogParentFacadeStub(getCatalogService(), getConverter(), null);
+    }
 
     @Override
     protected CatalogParentFacade<Movable> getCatalogParentFacade() {

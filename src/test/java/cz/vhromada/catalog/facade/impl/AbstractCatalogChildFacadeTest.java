@@ -9,6 +9,8 @@ import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converters.Converter;
 
+import org.junit.Test;
+
 /**
  * A class represents test for class {@link AbstractCatalogChildFacade}.
  *
@@ -17,6 +19,42 @@ import cz.vhromada.converters.Converter;
 public class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Movable, Movable, Movable> {
 
     private Movable movable;
+
+    /**
+     * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
+     * service for catalog.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullCatalogService() {
+        new AbstractCatalogChildFacadeStub(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
+    }
+
+    /**
+     * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
+     * converter.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullConverter() {
+        new AbstractCatalogChildFacadeStub(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator());
+    }
+
+    /**
+     * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
+     * parent catalog validator.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullParentCatalogValidator() {
+        new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), null, getChildCatalogValidator());
+    }
+
+    /**
+     * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
+     * child catalog validator.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullChildCatalogValidator() {
+        new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), getParentCatalogValidator(), null);
+    }
 
     @Override
     protected CatalogChildFacade<Movable, Movable> getCatalogChildFacade() {

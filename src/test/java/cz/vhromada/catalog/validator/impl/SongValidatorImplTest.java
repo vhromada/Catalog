@@ -14,6 +14,7 @@ import java.util.List;
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.entity.Song;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
@@ -32,6 +33,14 @@ import org.junit.Test;
  * @author Vladimir Hromada
  */
 public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
+
+    /**
+     * Test method for {@link SongValidatorImpl#SongValidatorImpl(CatalogService)} with null service for music.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullMusicService() {
+        new SongValidatorImpl(null);
+    }
 
     /**
      * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.

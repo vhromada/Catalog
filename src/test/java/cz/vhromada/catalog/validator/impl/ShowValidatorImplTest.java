@@ -60,6 +60,14 @@ public class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhroma
     }
 
     /**
+     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(CatalogService, CatalogValidator)} with null service for shows.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullShowService() {
+        new ShowValidatorImpl(null, genreValidator);
+    }
+
+    /**
      * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(CatalogService, CatalogValidator)} with null validator for genre.
      */
     @Test(expected = IllegalArgumentException.class)

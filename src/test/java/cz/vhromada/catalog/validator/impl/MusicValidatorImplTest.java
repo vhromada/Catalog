@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Music;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
@@ -23,6 +24,14 @@ import org.junit.Test;
  * @author Vladimir Hromada
  */
 public class MusicValidatorImplTest extends AbstractValidatorTest<Music, cz.vhromada.catalog.domain.Music> {
+
+    /**
+     * Test method for {@link MusicValidatorImpl#MusicValidatorImpl(CatalogService)} with null service for music.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullMusicService() {
+        new MusicValidatorImpl(null);
+    }
 
     /**
      * Test method for {@link MusicValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Program;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.ProgramUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.catalog.validator.common.ValidationType;
@@ -23,6 +24,14 @@ import org.junit.Test;
  * @author Vladimir Hromada
  */
 public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromada.catalog.domain.Program> {
+
+    /**
+     * Test method for {@link ProgramValidatorImpl#ProgramValidatorImpl(CatalogService)} with null service for programs.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullProgramService() {
+        new ProgramValidatorImpl(null);
+    }
 
     /**
      * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.

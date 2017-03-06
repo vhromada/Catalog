@@ -36,6 +36,22 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
     private static final String VALUE = "value";
 
     /**
+     * Test method for {@link AbstractCatalogValidator#AbstractCatalogValidator(String, CatalogService)} with null name.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullName() {
+        new AbstractCatalogValidatorStub(null, getCatalogService());
+    }
+
+    /**
+     * Test method for {@link AbstractCatalogValidator#AbstractCatalogValidator(String, CatalogService)} with null service for catalog.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullCatalogService() {
+        new AbstractCatalogValidatorStub(getName(), null);
+    }
+
+    /**
      * Test method for {@link AbstractCatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP}.
      */
     @Test

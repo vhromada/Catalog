@@ -15,6 +15,7 @@ import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.entity.Episode;
+import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
@@ -35,69 +36,12 @@ import org.junit.Test;
  */
 public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Show> {
 
-    @Override
-    protected CatalogValidator<Episode> getCatalogValidator() {
-        return new EpisodeValidatorImpl(getCatalogService());
-    }
-
-    @Override
-    protected Episode getValidatingData(final Integer id) {
-        return EpisodeUtils.newEpisode(id);
-    }
-
-    @Override
-    protected Show getRepositoryData(final Episode validatingData) {
-        return ShowUtils.newShowWithSeasons(validatingData.getId());
-    }
-
-    @Override
-    protected Show getItem1() {
-        return null;
-    }
-
-    @Override
-    protected Show getItem2() {
-        return null;
-    }
-
-    @Override
-    protected String getName() {
-        return "Episode";
-    }
-
-    @Override
-    protected void initExistsMock(final Episode validatingData, final boolean exists) {
-        final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
-
-        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
-    }
-
-    @Override
-    protected void verifyExistsMock(final Episode validatingData) {
-        verify(getCatalogService()).getAll();
-        verifyNoMoreInteractions(getCatalogService());
-    }
-
-    @Override
-    protected void initMovingMock(final Episode validatingData, final boolean up, final boolean valid) {
-        final List<cz.vhromada.catalog.domain.Episode> episodes;
-        if (up && valid || !up && !valid) {
-            episodes = CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(1), EpisodeUtils.newEpisodeDomain(validatingData.getId()));
-        } else {
-            episodes = CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(validatingData.getId()), EpisodeUtils.newEpisodeDomain(Integer.MAX_VALUE));
-        }
-        final Season season = SeasonUtils.newSeasonDomain(1);
-        season.setEpisodes(episodes);
-        final Show show = ShowUtils.newShowDomain(1);
-        show.setSeasons(CollectionUtils.newList(season));
-
-        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
-    }
-
-    @Override
-    protected void verifyMovingMock(final Episode validatingData) {
-        verify(getCatalogService(), times(2)).getAll();
-        verifyNoMoreInteractions(getCatalogService());
+    /**
+     * Test method for {@link EpisodeValidatorImpl#EpisodeValidatorImpl(CatalogService)} with null service for shows.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_NullShowService() {
+        new EpisodeValidatorImpl(null);
     }
 
     /**
@@ -195,6 +139,71 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
         assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")));
 
         verifyZeroInteractions(getCatalogService());
+    }
+
+    @Override
+    protected CatalogValidator<Episode> getCatalogValidator() {
+        return new EpisodeValidatorImpl(getCatalogService());
+    }
+
+    @Override
+    protected Episode getValidatingData(final Integer id) {
+        return EpisodeUtils.newEpisode(id);
+    }
+
+    @Override
+    protected Show getRepositoryData(final Episode validatingData) {
+        return ShowUtils.newShowWithSeasons(validatingData.getId());
+    }
+
+    @Override
+    protected Show getItem1() {
+        return null;
+    }
+
+    @Override
+    protected Show getItem2() {
+        return null;
+    }
+
+    @Override
+    protected String getName() {
+        return "Episode";
+    }
+
+    @Override
+    protected void initExistsMock(final Episode validatingData, final boolean exists) {
+        final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
+
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
+    }
+
+    @Override
+    protected void verifyExistsMock(final Episode validatingData) {
+        verify(getCatalogService()).getAll();
+        verifyNoMoreInteractions(getCatalogService());
+    }
+
+    @Override
+    protected void initMovingMock(final Episode validatingData, final boolean up, final boolean valid) {
+        final List<cz.vhromada.catalog.domain.Episode> episodes;
+        if (up && valid || !up && !valid) {
+            episodes = CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(1), EpisodeUtils.newEpisodeDomain(validatingData.getId()));
+        } else {
+            episodes = CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(validatingData.getId()), EpisodeUtils.newEpisodeDomain(Integer.MAX_VALUE));
+        }
+        final Season season = SeasonUtils.newSeasonDomain(1);
+        season.setEpisodes(episodes);
+        final Show show = ShowUtils.newShowDomain(1);
+        show.setSeasons(CollectionUtils.newList(season));
+
+        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(show));
+    }
+
+    @Override
+    protected void verifyMovingMock(final Episode validatingData) {
+        verify(getCatalogService(), times(2)).getAll();
+        verifyNoMoreInteractions(getCatalogService());
     }
 
 }

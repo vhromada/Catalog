@@ -12,7 +12,7 @@ import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.converters.Converter;
+import cz.vhromada.converter.Converter;
 
 import org.junit.Test;
 

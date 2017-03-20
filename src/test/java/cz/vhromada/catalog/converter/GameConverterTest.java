@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.utils.GameUtils;
-import cz.vhromada.converters.Converter;
+import cz.vhromada.converter.Converter;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

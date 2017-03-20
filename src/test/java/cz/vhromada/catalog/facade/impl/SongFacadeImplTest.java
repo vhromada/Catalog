@@ -9,7 +9,7 @@ import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
-import cz.vhromada.converters.Converter;
+import cz.vhromada.converter.Converter;
 
 import org.junit.Test;
 

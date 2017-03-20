@@ -3,7 +3,7 @@ package cz.vhromada.catalog;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import cz.vhromada.converters.orika.OrikaConfiguration;
+import cz.vhromada.converter.orika.OrikaConfiguration;
 
 import net.sf.ehcache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

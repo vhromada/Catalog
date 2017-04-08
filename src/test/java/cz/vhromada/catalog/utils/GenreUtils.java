@@ -153,6 +153,7 @@ public final class GenreUtils {
      * @param id            genre ID
      * @return genre with updated fields
      */
+    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Genre updateGenre(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Genre genre = getGenre(entityManager, id);
         updateGenre(genre);

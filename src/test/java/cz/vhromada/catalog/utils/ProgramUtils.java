@@ -66,6 +66,7 @@ public final class ProgramUtils {
      *
      * @param program program
      */
+    @SuppressWarnings("Duplicates")
     public static void updateProgram(final cz.vhromada.catalog.domain.Program program) {
         program.setName("Name");
         program.setWikiEn("enWiki");
@@ -99,6 +100,7 @@ public final class ProgramUtils {
      *
      * @param program program
      */
+    @SuppressWarnings("Duplicates")
     public static void updateProgram(final Program program) {
         program.setName("Name");
         program.setWikiEn("enWiki");
@@ -166,6 +168,7 @@ public final class ProgramUtils {
      * @param entityManager entity manager
      * @return program with updated fields
      */
+    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Program updateProgram(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Program program = getProgram(entityManager, id);
         updateProgram(program);

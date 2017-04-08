@@ -107,7 +107,7 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
      * episode.
      */
     @Test
-    public void validate_Deep_NegativeLeng() {
+    public void validate_Deep_NegativeLength() {
         final Episode episode = getValidatingData(1);
         episode.setLength(-1);
 

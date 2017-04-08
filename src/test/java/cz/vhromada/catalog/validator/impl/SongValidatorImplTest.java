@@ -84,7 +84,7 @@ public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
      * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with negative length of song.
      */
     @Test
-    public void validate_Deep_NegativeLeng() {
+    public void validate_Deep_NegativeLength() {
         final Song song = getValidatingData(1);
         song.setLength(-1);
 

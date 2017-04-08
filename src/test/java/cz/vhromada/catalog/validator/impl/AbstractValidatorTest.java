@@ -65,6 +65,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#NEW} with correct data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_New() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.NEW);
 
@@ -80,6 +81,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#NEW} with data with not null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_New_NotNullId() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(Integer.MAX_VALUE), ValidationType.NEW);
 
@@ -96,6 +98,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#EXISTS} with correct data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Exists() {
         final T validatingData = getValidatingData(ID);
 
@@ -115,6 +118,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#EXISTS} with data with null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Exists_NullId() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.EXISTS);
 
@@ -131,6 +135,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#EXISTS} with not existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Exists_NotExistingData() {
         final T validatingData = getValidatingData(ID);
 
@@ -151,6 +156,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#UP} with correct data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Up() {
         final T validatingData = getValidatingData(ID);
 
@@ -170,6 +176,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#UP} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Up_Invalid() {
         final T validatingData = getValidatingData(Integer.MAX_VALUE);
 
@@ -190,6 +197,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DOWN} with correct data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Down() {
         final T validatingData = getValidatingData(ID);
 
@@ -209,6 +217,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DOWN} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Down_Invalid() {
         final T validatingData = getValidatingData(Integer.MAX_VALUE);
 
@@ -229,6 +238,7 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with correct data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void validate_Deep() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(ID), ValidationType.DEEP);
 

@@ -77,6 +77,7 @@ public final class MovieUtils {
      *
      * @param movie movie
      */
+    @SuppressWarnings("Duplicates")
     public static void updateMovie(final cz.vhromada.catalog.domain.Movie movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
@@ -115,6 +116,7 @@ public final class MovieUtils {
      *
      * @param movie movie
      */
+    @SuppressWarnings("Duplicates")
     public static void updateMovie(final Movie movie) {
         movie.setCzechName("czName");
         movie.setOriginalName("origName");
@@ -239,6 +241,7 @@ public final class MovieUtils {
      * @param entityManager entity manager
      * @return movie with updated fields
      */
+    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Movie updateMovie(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Movie movie = getMovie(entityManager, id);
         updateMovie(movie);

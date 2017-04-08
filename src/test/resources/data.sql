@@ -91,13 +91,23 @@ INSERT INTO programs (id, program_name, wiki_en, wiki_cz, media_count, crack, se
 INSERT INTO programs (id, program_name, wiki_en, wiki_cz, media_count, crack, serial_key, other_data, note, position) VALUES (2, 'Program 2 name', 'Program 2 English Wikipedia', 'Program 2 Czech Wikipedia', 200, false, true, '', '', 1);
 INSERT INTO programs (id, program_name, wiki_en, wiki_cz, media_count, crack, serial_key, other_data, note, position) VALUES (3, 'Program 3 name', 'Program 3 English Wikipedia', 'Program 3 Czech Wikipedia', 300, true, true, 'Program 3 other data', 'Program 3 note', 2);
 
+-- noinspection SqlResolve
 ALTER SEQUENCE movies_sq RESTART WITH 4;
+-- noinspection SqlResolve
 ALTER SEQUENCE media_sq RESTART WITH 5;
+-- noinspection SqlResolve
 ALTER SEQUENCE tv_shows_sq RESTART WITH 4;
+-- noinspection SqlResolve
 ALTER SEQUENCE seasons_sq RESTART WITH 10;
+-- noinspection SqlResolve
 ALTER SEQUENCE episodes_sq RESTART WITH 28;
+-- noinspection SqlResolve
 ALTER SEQUENCE games_sq RESTART WITH 4;
+-- noinspection SqlResolve
 ALTER SEQUENCE music_sq RESTART WITH 4;
+-- noinspection SqlResolve
 ALTER SEQUENCE songs_sq RESTART WITH 10;
+-- noinspection SqlResolve
 ALTER SEQUENCE programs_sq RESTART WITH 4;
+-- noinspection SqlResolve
 ALTER SEQUENCE genres_sq RESTART WITH 5;

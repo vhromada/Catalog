@@ -80,6 +80,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#newData()}.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void newData_CachedData() {
         catalogService.newData();
 
@@ -92,6 +93,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#getAll()} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void getAll_CachedData() {
         when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -109,6 +111,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#getAll()} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void getAll_NotCachedData() {
         when(cache.get(any(String.class))).thenReturn(null);
 
@@ -127,6 +130,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with cached existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_CachedExistingData() {
         when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -144,6 +148,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with cached not existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_CachedNotExistingData() {
         when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
@@ -160,6 +165,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with not cached existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NotCachedExistingData() {
         when(cache.get(any(String.class))).thenReturn(null);
 
@@ -178,6 +184,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with not cached not existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NotCachedNotExistingData() {
         when(cache.get(any(String.class))).thenReturn(null);
 
@@ -195,6 +202,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#get(Integer)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NullData() {
         catalogService.get(null);
     }
@@ -203,6 +211,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#add(T)} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void add_CachedData() {
         final T data = getAddItem();
 
@@ -226,6 +235,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#add(T)} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void add_NotCachedData() {
         final T data = getAddItem();
 
@@ -250,6 +260,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#add(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void add_NullData() {
         catalogService.add(null);
     }
@@ -258,6 +269,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#update(T)} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_CachedData() {
         final T data = dataList.get(0);
         data.setPosition(10);
@@ -280,6 +292,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#update(T)} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_NotCachedData() {
         final T data = dataList.get(0);
         data.setPosition(10);
@@ -303,6 +316,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#update(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_NullData() {
         catalogService.update(null);
     }
@@ -311,6 +325,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#remove(T)} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_CachedData() {
         final T data = dataList.get(0);
 
@@ -331,6 +346,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#remove(T)} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_NotCachedData() {
         final T data = dataList.get(0);
 
@@ -352,6 +368,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#remove(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_NullData() {
         catalogService.remove(null);
     }
@@ -360,6 +377,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#duplicate(T)} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_CachedData() {
         final T copy = getCopyItem();
         final ArgumentCaptor<T> copyArgumentCaptor = ArgumentCaptor.forClass(getItemClass());
@@ -385,6 +403,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#duplicate(T)} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_NotCachedData() {
         final T copy = getCopyItem();
         final ArgumentCaptor<T> copyArgumentCaptor = ArgumentCaptor.forClass(getItemClass());
@@ -411,6 +430,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#duplicate(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_NullData() {
         catalogService.duplicate(null);
     }
@@ -419,6 +439,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveUp(T)} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_CachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
@@ -444,6 +465,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveUp(T)} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_NotCachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
@@ -470,6 +492,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveUp(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_NullData() {
         catalogService.moveUp(null);
     }
@@ -478,6 +501,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveDown(T)} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_CachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
@@ -503,6 +527,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveDown(T)} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_NotCachedData() {
         final T data1 = dataList.get(0);
         final int position1 = data1.getPosition();
@@ -529,6 +554,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#moveDown(T)} with null data.
      */
     @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_NullData() {
         catalogService.moveDown(null);
     }
@@ -537,6 +563,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#updatePositions()} with cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void updatePositions_CachedData() {
         when(repository.save(anyListOf(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
@@ -558,6 +585,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
      * Test method for {@link CatalogService#updatePositions()} with not cached data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void updatePositions_NotCachedData() {
         when(repository.save(anyListOf(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(any(String.class))).thenReturn(null);

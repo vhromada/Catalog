@@ -66,6 +66,7 @@ public final class GameUtils {
      *
      * @param game game
      */
+    @SuppressWarnings("Duplicates")
     public static void updateGame(final cz.vhromada.catalog.domain.Game game) {
         game.setName("Name");
         game.setWikiEn("enWiki");
@@ -104,6 +105,7 @@ public final class GameUtils {
      *
      * @param game game
      */
+    @SuppressWarnings("Duplicates")
     public static void updateGame(final Game game) {
         game.setName("Name");
         game.setWikiEn("enWiki");
@@ -179,6 +181,7 @@ public final class GameUtils {
      * @param id            game ID
      * @return game with updated fields
      */
+    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Game updateGame(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Game game = getGame(entityManager, id);
         updateGame(game);

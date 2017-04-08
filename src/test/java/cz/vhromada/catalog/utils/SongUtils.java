@@ -194,6 +194,7 @@ public final class SongUtils {
      * @param expected expected song
      * @param actual   actual song
      */
+    @SuppressWarnings("Duplicates")
     public static void assertSongDeepEquals(final cz.vhromada.catalog.domain.Song expected, final cz.vhromada.catalog.domain.Song actual) {
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getId(), is(expected.getId()));
@@ -225,6 +226,7 @@ public final class SongUtils {
      * @param expected expected song
      * @param actual   actual song
      */
+    @SuppressWarnings("Duplicates")
     public static void assertSongDeepEquals(final Song expected, final cz.vhromada.catalog.domain.Song actual) {
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getId(), is(expected.getId()));

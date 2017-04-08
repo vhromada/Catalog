@@ -206,6 +206,7 @@ public final class EpisodeUtils {
      * @param expected expected episode
      * @param actual   actual episode
      */
+    @SuppressWarnings("Duplicates")
     public static void assertEpisodeDeepEquals(final cz.vhromada.catalog.domain.Episode expected, final cz.vhromada.catalog.domain.Episode actual) {
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getId(), is(expected.getId()));
@@ -238,6 +239,7 @@ public final class EpisodeUtils {
      * @param expected expected episode
      * @param actual   actual episode
      */
+    @SuppressWarnings("Duplicates")
     public static void assertEpisodeDeepEquals(final Episode expected, final cz.vhromada.catalog.domain.Episode actual) {
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getId(), is(expected.getId()));

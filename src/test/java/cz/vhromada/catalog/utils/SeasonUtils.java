@@ -88,11 +88,12 @@ public final class SeasonUtils {
      *
      * @param season season
      */
+    @SuppressWarnings("Duplicates")
     public static void updateSeason(final cz.vhromada.catalog.domain.Season season) {
         season.setNumber(2);
         season.setStartYear(START_YEAR);
         season.setEndYear(START_YEAR + 1);
-        season.setLanguage(Language.EN);
+        season.setLanguage(Language.SK);
         season.setSubtitles(CollectionUtils.newList(Language.CZ));
         season.setNote("Note");
     }
@@ -119,11 +120,12 @@ public final class SeasonUtils {
      *
      * @param season season
      */
+    @SuppressWarnings("Duplicates")
     public static void updateSeason(final Season season) {
         season.setNumber(2);
         season.setStartYear(START_YEAR);
         season.setEndYear(START_YEAR + 1);
-        season.setLanguage(Language.EN);
+        season.setLanguage(Language.SK);
         season.setSubtitles(CollectionUtils.newList(Language.CZ));
         season.setNote("Note");
     }

@@ -92,6 +92,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#get(Integer)} with existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_ExistingData() {
         final S childEntity = newChildEntity(1);
 
@@ -116,6 +117,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#get(Integer)} with not existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NotExistingData() {
         when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomain(1)));
         when(converter.convert(any(getChildDomainClass()), eq(getChildEntityClass()))).thenReturn(null);
@@ -138,6 +140,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#get(Integer)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NullData() {
         final Result<S> result = childCatalogFacade.get(null);
 
@@ -195,6 +198,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#add(Movable, Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void add_InvalidData() {
         final U parentEntity = newParentEntity(Integer.MAX_VALUE);
         final S childEntity = newChildEntity(null);
@@ -254,6 +258,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#update(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
@@ -301,6 +306,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#remove(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
@@ -344,6 +350,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#duplicate(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
@@ -390,6 +397,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#moveUp(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
@@ -436,6 +444,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#moveDown(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
@@ -490,6 +499,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * Test method for {@link CatalogChildFacade#find(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void find_InvalidData() {
         final U parentEntity = newParentEntity(1);
 
@@ -582,6 +592,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
      * @param children children
      * @return parent domain with children
      */
+    @SuppressWarnings("SameParameterValue")
     protected abstract V newParentDomainWithChildren(Integer id, List<T> children);
 
     /**

@@ -83,6 +83,7 @@ public final class ShowUtils {
      *
      * @param show show
      */
+    @SuppressWarnings("Duplicates")
     public static void updateShow(final cz.vhromada.catalog.domain.Show show) {
         show.setCzechName("czName");
         show.setOriginalName("origName");
@@ -117,6 +118,7 @@ public final class ShowUtils {
      *
      * @param show show
      */
+    @SuppressWarnings("Duplicates")
     public static void updateShow(final Show show) {
         show.setCzechName("czName");
         show.setOriginalName("origName");
@@ -191,6 +193,7 @@ public final class ShowUtils {
      * @param entityManager entity manager
      * @return show with updated fields
      */
+    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Show updateShow(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Show show = getShow(entityManager, id);
         updateShow(show);
@@ -255,7 +258,7 @@ public final class ShowUtils {
     /**
      * Asserts shows deep equals.
      *
-     * @param expected expectedlList of show
+     * @param expected expected shows
      * @param actual   actual shows
      */
     public static void assertShowListDeepEquals(final List<Show> expected, final List<cz.vhromada.catalog.domain.Show> actual) {

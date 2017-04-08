@@ -87,6 +87,7 @@ public final class MusicUtils {
      *
      * @param music music
      */
+    @SuppressWarnings("Duplicates")
     public static void updateMusic(final cz.vhromada.catalog.domain.Music music) {
         music.setName("Name");
         music.setWikiEn("enWiki");
@@ -117,6 +118,7 @@ public final class MusicUtils {
      *
      * @param music music
      */
+    @SuppressWarnings("Duplicates")
     public static void updateMusic(final Music music) {
         music.setName("Name");
         music.setWikiEn("enWiki");
@@ -177,6 +179,7 @@ public final class MusicUtils {
      * @param entityManager entity manager
      * @return music with updated fields
      */
+    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Music updateMusic(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Music music = getMusic(entityManager, id);
         updateMusic(music);

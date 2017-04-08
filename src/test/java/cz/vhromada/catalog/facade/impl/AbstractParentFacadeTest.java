@@ -126,6 +126,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#get(Integer)} with existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_ExistingData() {
         final U domain = newDomain(1);
         final T entity = newEntity(1);
@@ -151,6 +152,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#get(Integer)} with not existing data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NotExistingData() {
         when(catalogService.get(any(Integer.class))).thenReturn(null);
         when(converter.convert(any(getDomainClass()), eq(getEntityClass()))).thenReturn(null);
@@ -173,6 +175,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#get(Integer)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NullData() {
         final Result<T> result = parentCatalogFacade.get(null);
 
@@ -214,6 +217,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#add(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void add_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
@@ -254,6 +258,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#update(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
@@ -298,6 +303,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#remove(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
@@ -342,6 +348,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
@@ -386,6 +393,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
@@ -430,6 +438,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with invalid data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 

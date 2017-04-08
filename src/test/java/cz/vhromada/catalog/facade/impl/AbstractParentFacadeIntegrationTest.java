@@ -97,6 +97,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#get(Integer)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NullData() {
         final Result<T> result = getCatalogParentFacade().get(null);
 
@@ -131,6 +132,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#add(Movable)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void add_NullData() {
         final Result<Void> result = getCatalogParentFacade().add(null);
 
@@ -148,6 +150,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#add(Movable)} with data with not null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void add_NotNullId() {
         final Result<Void> result = getCatalogParentFacade().add(newData(1));
 
@@ -183,6 +186,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#update(Movable)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_NullData() {
         final Result<Void> result = getCatalogParentFacade().update(null);
 
@@ -200,6 +204,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#update(Movable)} with data with null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_NullId() {
         final Result<Void> result = getCatalogParentFacade().update(newData(null));
 
@@ -216,6 +221,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#update(Movable)} with data with bad ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void update_BadId() {
         final Result<Void> result = getCatalogParentFacade().update(newData(Integer.MAX_VALUE));
 
@@ -251,6 +257,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#remove(Movable)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_NullData() {
         final Result<Void> result = getCatalogParentFacade().remove(null);
 
@@ -267,6 +274,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#remove(Movable)} with data with null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_NullId() {
         final Result<Void> result = getCatalogParentFacade().remove(newData(null));
 
@@ -283,6 +291,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#remove(Movable)} with data with bad ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void remove_BadId() {
         final Result<Void> result = getCatalogParentFacade().remove(newData(Integer.MAX_VALUE));
 
@@ -316,6 +325,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_NullData() {
         final Result<Void> result = getCatalogParentFacade().duplicate(null);
 
@@ -332,6 +342,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with data with null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_NullId() {
         final Result<Void> result = getCatalogParentFacade().duplicate(newData(null));
 
@@ -348,6 +359,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with data with bad ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void duplicate_BadId() {
         final Result<Void> result = getCatalogParentFacade().duplicate(newData(Integer.MAX_VALUE));
 
@@ -389,6 +401,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_NullData() {
         final Result<Void> result = getCatalogParentFacade().moveUp(null);
 
@@ -405,6 +418,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with data with null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_NullId() {
         final Result<Void> result = getCatalogParentFacade().moveUp(newData(null));
 
@@ -421,6 +435,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with not movable data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_NotMovableData() {
         final Result<Void> result = getCatalogParentFacade().moveUp(newData(1));
 
@@ -437,6 +452,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with data with bad ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveUp_BadId() {
         final Result<Void> result = getCatalogParentFacade().moveUp(newData(Integer.MAX_VALUE));
 
@@ -478,6 +494,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with null data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_NullData() {
         final Result<Void> result = getCatalogParentFacade().moveDown(null);
 
@@ -494,6 +511,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with data with null ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_NullId() {
         final Result<Void> result = getCatalogParentFacade().moveDown(newData(null));
 
@@ -510,6 +528,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with not movable data.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_NotMovableData() {
         final Result<Void> result = getCatalogParentFacade().moveDown(newData(getDefaultDataCount()));
 
@@ -526,6 +545,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with data with bad ID.
      */
     @Test
+    @SuppressWarnings("InstanceMethodNamingConvention")
     public void moveDown_BadId() {
         final Result<Void> result = getCatalogParentFacade().moveDown(newData(Integer.MAX_VALUE));
 

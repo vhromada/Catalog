@@ -14,6 +14,7 @@ import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 /**
  * A class represents implementation of facade for shows.
@@ -44,9 +45,13 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
     public Result<Time> getTotalLength() {
         int totalLength = 0;
         for (final cz.vhromada.catalog.domain.Show show : getCatalogService().getAll()) {
-            for (final Season season : show.getSeasons()) {
-                for (final Episode episode : season.getEpisodes()) {
-                    totalLength += episode.getLength();
+            if (!CollectionUtils.isEmpty(show.getSeasons())) {
+                for (final Season season : show.getSeasons()) {
+                    if (!CollectionUtils.isEmpty(season.getEpisodes())) {
+                        for (final Episode episode : season.getEpisodes()) {
+                            totalLength += episode.getLength();
+                        }
+                    }
                 }
             }
         }
@@ -58,7 +63,9 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
     public Result<Integer> getSeasonsCount() {
         int seasonsCount = 0;
         for (final cz.vhromada.catalog.domain.Show show : getCatalogService().getAll()) {
-            seasonsCount += show.getSeasons().size();
+            if (!CollectionUtils.isEmpty(show.getSeasons())) {
+                seasonsCount += show.getSeasons().size();
+            }
         }
 
         return Result.of(seasonsCount);
@@ -68,8 +75,12 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
     public Result<Integer> getEpisodesCount() {
         int episodesCount = 0;
         for (final cz.vhromada.catalog.domain.Show show : getCatalogService().getAll()) {
-            for (final Season season : show.getSeasons()) {
-                episodesCount += season.getEpisodes().size();
+            if (!CollectionUtils.isEmpty(show.getSeasons())) {
+                for (final Season season : show.getSeasons()) {
+                    if (!CollectionUtils.isEmpty(season.getEpisodes())) {
+                        episodesCount += season.getEpisodes().size();
+                    }
+                }
             }
         }
 
@@ -86,7 +97,7 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
 
     @Override
     protected cz.vhromada.catalog.domain.Show getDataForUpdate(final Show data) {
-        final cz.vhromada.catalog.domain.Show show = super.getDataForAdd(data);
+        final cz.vhromada.catalog.domain.Show show = super.getDataForUpdate(data);
         show.setSeasons(getCatalogService().get(data.getId()).getSeasons());
 
         return show;

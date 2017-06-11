@@ -13,6 +13,7 @@ import cz.vhromada.result.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 /**
  * A class represents implementation of service for music.
@@ -53,8 +54,10 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
     public Result<Time> getTotalLength() {
         int totalLength = 0;
         for (final cz.vhromada.catalog.domain.Music music : getCatalogService().getAll()) {
-            for (final Song song : music.getSongs()) {
-                totalLength += song.getLength();
+            if (!CollectionUtils.isEmpty(music.getSongs())) {
+                for (final Song song : music.getSongs()) {
+                    totalLength += song.getLength();
+                }
             }
         }
 
@@ -65,7 +68,9 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
     public Result<Integer> getSongsCount() {
         int songs = 0;
         for (final cz.vhromada.catalog.domain.Music music : getCatalogService().getAll()) {
-            songs += music.getSongs().size();
+            if (!CollectionUtils.isEmpty(music.getSongs())) {
+                songs += music.getSongs().size();
+            }
         }
 
         return Result.of(songs);
@@ -81,7 +86,7 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
 
     @Override
     protected cz.vhromada.catalog.domain.Music getDataForUpdate(final Music data) {
-        final cz.vhromada.catalog.domain.Music music = super.getDataForAdd(data);
+        final cz.vhromada.catalog.domain.Music music = super.getDataForUpdate(data);
         music.setSongs(getCatalogService().get(data.getId()).getSongs());
 
         return music;

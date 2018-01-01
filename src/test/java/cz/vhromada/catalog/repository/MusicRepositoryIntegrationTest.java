@@ -54,7 +54,7 @@ public class MusicRepositoryIntegrationTest {
      */
     @Test
     public void getMusic_All() {
-        final List<Music> music = musicRepository.findAll(new Sort("position", "id"));
+        final List<Music> music = musicRepository.findAll(Sort.by("position", "id"));
 
         MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(), music);
 
@@ -68,12 +68,12 @@ public class MusicRepositoryIntegrationTest {
     @Test
     public void getMusic_One() {
         for (int i = 1; i <= MusicUtils.MUSIC_COUNT; i++) {
-            final Music music = musicRepository.findOne(i);
+            final Music music = musicRepository.findById(i).orElse(null);
 
             MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), music);
         }
 
-        assertThat(musicRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
+        assertThat(musicRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
 
         assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
         assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));

@@ -53,7 +53,7 @@ public class GenreRepositoryIntegrationTest {
      */
     @Test
     public void getGenres() {
-        final List<Genre> genres = genreRepository.findAll(new Sort("position", "id"));
+        final List<Genre> genres = genreRepository.findAll(Sort.by("position", "id"));
 
         GenreUtils.assertGenresDeepEquals(GenreUtils.getGenres(), genres);
 
@@ -66,12 +66,12 @@ public class GenreRepositoryIntegrationTest {
     @Test
     public void getGenre() {
         for (int i = 1; i <= GenreUtils.GENRES_COUNT; i++) {
-            final Genre genre = genreRepository.findOne(i);
+            final Genre genre = genreRepository.findById(i).orElse(null);
 
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenreDomain(i), genre);
         }
 
-        assertThat(genreRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
+        assertThat(genreRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
 
         assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
     }

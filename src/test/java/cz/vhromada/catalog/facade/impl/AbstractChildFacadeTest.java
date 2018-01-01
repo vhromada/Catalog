@@ -4,10 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyVararg;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -32,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * An abstract class represents test for child facade.
@@ -170,8 +169,8 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
             when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomain(1)));
         }
         when(converter.convert(any(getChildEntityClass()), eq(getChildDomainClass()))).thenReturn(childDomain);
-        when(parentValidator.validate(any(getParentEntityClass()), anyVararg())).thenReturn(new Result<>());
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(parentValidator.validate(any(getParentEntityClass()), any())).thenReturn(new Result<>());
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = childCatalogFacade.add(parentEntity, childEntity);
 
@@ -205,8 +204,8 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         final Result<Void> invalidParentResult = Result.error("PARENT_INVALID", "Parent must be valid.");
         final Result<Void> invalidChildResult = Result.error("CHILD_INVALID", "Child must be valid.");
 
-        when(parentValidator.validate(any(getParentEntityClass()), anyVararg())).thenReturn(invalidParentResult);
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(invalidChildResult);
+        when(parentValidator.validate(any(getParentEntityClass()), any())).thenReturn(invalidParentResult);
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(invalidChildResult);
 
         final Result<Void> result = childCatalogFacade.add(parentEntity, childEntity);
 
@@ -235,7 +234,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
 
         when(catalogService.getAll()).thenReturn(CollectionUtils.newList(parentDomain));
         when(converter.convert(any(getChildEntityClass()), eq(getChildDomainClass()))).thenReturn(childDomain);
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = childCatalogFacade.update(childEntity);
 
@@ -262,7 +261,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
     public void update_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = childCatalogFacade.update(childEntity);
 
@@ -284,7 +283,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         final ArgumentCaptor<V> argumentCaptor = ArgumentCaptor.forClass(getParentDomainClass());
 
         when(catalogService.getAll()).thenReturn(CollectionUtils.newList(parentDomain));
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = childCatalogFacade.remove(childEntity);
 
@@ -310,7 +309,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
     public void remove_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = childCatalogFacade.remove(childEntity);
 
@@ -333,7 +332,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         final ArgumentCaptor<V> argumentCaptor = ArgumentCaptor.forClass(getParentDomainClass());
 
         when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomain(1)));
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(new Result<>());
 
         childCatalogFacade.duplicate(childEntity);
 
@@ -354,7 +353,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
     public void duplicate_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = childCatalogFacade.duplicate(childEntity);
 
@@ -380,7 +379,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
 
         when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomainWithChildren(1, CollectionUtils.newList(newChildDomain(1),
                 newChildDomain(2)))));
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(new Result<>());
 
         childCatalogFacade.moveUp(childEntity);
 
@@ -401,7 +400,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
     public void moveUp_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = childCatalogFacade.moveUp(childEntity);
 
@@ -427,7 +426,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
 
         when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomainWithChildren(1, CollectionUtils.newList(newChildDomain(1),
                 newChildDomain(2)))));
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(new Result<>());
 
         childCatalogFacade.moveDown(childEntity);
 
@@ -448,7 +447,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
     public void moveDown_InvalidData() {
         final S childEntity = newChildEntity(Integer.MAX_VALUE);
 
-        when(childValidator.validate(any(getChildEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(childValidator.validate(any(getChildEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = childCatalogFacade.moveDown(childEntity);
 
@@ -473,8 +472,8 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
         } else {
             when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomain(1)));
         }
-        when(converter.convertCollection(anyListOf(getChildDomainClass()), eq(getChildEntityClass()))).thenReturn(expectedData);
-        when(parentValidator.validate(any(getParentEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(converter.convertCollection(anyList(), eq(getChildEntityClass()))).thenReturn(expectedData);
+        when(parentValidator.validate(any(getParentEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<List<S>> result = childCatalogFacade.find(parentEntity);
 
@@ -503,7 +502,7 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
     public void find_InvalidData() {
         final U parentEntity = newParentEntity(1);
 
-        when(parentValidator.validate(any(getParentEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(parentValidator.validate(any(getParentEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<List<S>> result = childCatalogFacade.find(parentEntity);
 

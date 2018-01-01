@@ -4,8 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
@@ -215,7 +215,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     public void add_CachedData() {
         final T data = getAddItem();
 
-        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID, getItemClass()));
+        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
         when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.add(data);
@@ -239,7 +239,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     public void add_NotCachedData() {
         final T data = getAddItem();
 
-        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID, getItemClass()));
+        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
         when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.add(data);
@@ -565,7 +565,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     @Test
     @SuppressWarnings("InstanceMethodNamingConvention")
     public void updatePositions_CachedData() {
-        when(repository.save(anyListOf(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(repository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.updatePositions();
@@ -575,7 +575,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
             assertThat(data.getPosition(), is(i));
         }
 
-        verify(repository).save(dataList);
+        verify(repository).saveAll(dataList);
         verify(cache).get(getCacheKey());
         verify(cache).put(getCacheKey(), dataList);
         verifyNoMoreInteractions(repository, cache);
@@ -587,7 +587,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
     @Test
     @SuppressWarnings("InstanceMethodNamingConvention")
     public void updatePositions_NotCachedData() {
-        when(repository.save(anyListOf(getItemClass()))).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(repository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArguments()[0]);
         when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.updatePositions();
@@ -598,7 +598,7 @@ public abstract class AbstractServiceTest<T extends Movable> {
         }
 
         verify(repository).findAll();
-        verify(repository).save(dataList);
+        verify(repository).saveAll(dataList);
         verify(cache).get(getCacheKey());
         verify(cache).put(getCacheKey(), dataList);
         verifyNoMoreInteractions(repository, cache);
@@ -680,13 +680,12 @@ public abstract class AbstractServiceTest<T extends Movable> {
     /**
      * Sets ID.
      *
-     * @param id    ID
-     * @param clazz class of mocked answer
+     * @param id ID
      * @return mocked answer
      */
-    private Answer<T> setId(final Integer id, final Class<T> clazz) {
+    private Answer<T> setId(final Integer id) {
         return invocation -> {
-            final T movable = invocation.getArgumentAt(0, clazz);
+            final T movable = invocation.getArgument(0);
             movable.setId(id);
 
             return movable;

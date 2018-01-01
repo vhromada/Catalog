@@ -57,7 +57,7 @@ public class MovieRepositoryIntegrationTest {
      */
     @Test
     public void getMovies() {
-        final List<Movie> movies = movieRepository.findAll(new Sort("position", "id"));
+        final List<Movie> movies = movieRepository.findAll(Sort.by("position", "id"));
 
         MovieUtils.assertMoviesDeepEquals(MovieUtils.getMovies(), movies);
 
@@ -71,12 +71,12 @@ public class MovieRepositoryIntegrationTest {
     @Test
     public void getMovie() {
         for (int i = 1; i <= MovieUtils.MOVIES_COUNT; i++) {
-            final Movie movie = movieRepository.findOne(i);
+            final Movie movie = movieRepository.findById(i).orElse(null);
 
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), movie);
         }
 
-        assertThat(movieRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
+        assertThat(movieRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
 
         assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
         assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));

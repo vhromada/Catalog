@@ -64,12 +64,12 @@ public class GameRepositoryIntegrationTest {
     @Test
     public void getGame() {
         for (int i = 1; i <= GameUtils.GAMES_COUNT; i++) {
-            final Game game = gameRepository.findOne(i);
+            final Game game = gameRepository.findById(i).orElse(null);
 
             GameUtils.assertGameDeepEquals(GameUtils.getGame(i), game);
         }
 
-        assertThat(gameRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
+        assertThat(gameRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
 
         assertThat(GameUtils.getGamesCount(entityManager), is(GameUtils.GAMES_COUNT));
     }

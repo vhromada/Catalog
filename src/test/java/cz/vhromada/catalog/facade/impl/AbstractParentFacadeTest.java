@@ -4,10 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyVararg;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -31,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * An abstract class represents test for parent facade.
@@ -105,7 +104,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         final List<T> entityList = CollectionUtils.newList(newEntity(1), newEntity(2));
 
         when(catalogService.getAll()).thenReturn(domainList);
-        when(converter.convertCollection(anyListOf(getDomainClass()), eq(getEntityClass()))).thenReturn(entityList);
+        when(converter.convertCollection(anyList(), eq(getEntityClass()))).thenReturn(entityList);
 
         final Result<List<T>> result = parentCatalogFacade.getAll();
 
@@ -155,7 +154,6 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NotExistingData() {
         when(catalogService.get(any(Integer.class))).thenReturn(null);
-        when(converter.convert(any(getDomainClass()), eq(getEntityClass()))).thenReturn(null);
 
         final Result<T> result = parentCatalogFacade.get(Integer.MAX_VALUE);
 
@@ -198,7 +196,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         final U domain = newDomain(null);
 
         when(converter.convert(any(getEntityClass()), eq(getDomainClass()))).thenReturn(domain);
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = parentCatalogFacade.add(entity);
 
@@ -221,7 +219,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     public void add_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.add(entity);
 
@@ -262,7 +260,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     public void update_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.update(entity);
 
@@ -283,7 +281,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         final U domain = newDomain(1);
 
         when(catalogService.get(any(Integer.class))).thenReturn(domain);
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = parentCatalogFacade.remove(entity);
 
@@ -307,7 +305,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     public void remove_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.remove(entity);
 
@@ -328,7 +326,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         final U domain = newDomain(1);
 
         when(catalogService.get(any(Integer.class))).thenReturn(domain);
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = parentCatalogFacade.duplicate(entity);
 
@@ -352,7 +350,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     public void duplicate_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.duplicate(entity);
 
@@ -373,7 +371,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         final U domain = newDomain(1);
 
         when(catalogService.get(any(Integer.class))).thenReturn(domain);
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = parentCatalogFacade.moveUp(entity);
 
@@ -397,7 +395,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     public void moveUp_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.moveUp(entity);
 
@@ -418,7 +416,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
         final U domain = newDomain(1);
 
         when(catalogService.get(any(Integer.class))).thenReturn(domain);
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(new Result<>());
 
         final Result<Void> result = parentCatalogFacade.moveDown(entity);
 
@@ -442,7 +440,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     public void moveDown_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(INVALID_DATA_RESULT);
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.moveDown(entity);
 
@@ -505,7 +503,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      */
     protected void initUpdateMock(final U domain) {
         when(converter.convert(any(getEntityClass()), eq(getDomainClass()))).thenReturn(domain);
-        when(catalogValidator.validate(any(getEntityClass()), anyVararg())).thenReturn(new Result<>());
+        when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(new Result<>());
     }
 
     /**

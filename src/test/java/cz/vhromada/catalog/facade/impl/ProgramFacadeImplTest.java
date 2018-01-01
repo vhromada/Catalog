@@ -21,7 +21,7 @@ import cz.vhromada.result.Status;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * A class represents test for class {@link ProgramFacadeImpl}.

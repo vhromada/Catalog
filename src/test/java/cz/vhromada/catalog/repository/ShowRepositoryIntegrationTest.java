@@ -57,7 +57,7 @@ public class ShowRepositoryIntegrationTest {
      */
     @Test
     public void getShows() {
-        final List<Show> shows = showRepository.findAll(new Sort("position", "id"));
+        final List<Show> shows = showRepository.findAll(Sort.by("position", "id"));
 
         ShowUtils.assertShowsDeepEquals(ShowUtils.getShows(), shows);
 
@@ -72,12 +72,12 @@ public class ShowRepositoryIntegrationTest {
     @Test
     public void getShow() {
         for (int i = 1; i <= ShowUtils.SHOWS_COUNT; i++) {
-            final Show show = showRepository.findOne(i);
+            final Show show = showRepository.findById(i).orElse(null);
 
             ShowUtils.assertShowDeepEquals(ShowUtils.getShow(i), show);
         }
 
-        assertThat(showRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
+        assertThat(showRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
 
         assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
         assertThat(SeasonUtils.getSeasonsCount(entityManager), is(SeasonUtils.SEASONS_COUNT));

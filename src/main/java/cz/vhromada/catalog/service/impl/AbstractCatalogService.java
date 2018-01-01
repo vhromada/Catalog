@@ -170,7 +170,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
         final List<T> data = CollectionUtils.getSortedData(getCachedData(false));
         updatePositions(data);
 
-        final List<T> savedData = repository.save(data);
+        final List<T> savedData = repository.saveAll(data);
 
         cache.put(key, savedData);
     }

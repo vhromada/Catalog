@@ -52,7 +52,7 @@ public class ProgramRepositoryIntegrationTest {
      */
     @Test
     public void getPrograms() {
-        final List<Program> programs = programRepository.findAll(new Sort("position", "id"));
+        final List<Program> programs = programRepository.findAll(Sort.by("position", "id"));
 
         ProgramUtils.assertProgramsDeepEquals(ProgramUtils.getPrograms(), programs);
 
@@ -65,12 +65,12 @@ public class ProgramRepositoryIntegrationTest {
     @Test
     public void getProgram() {
         for (int i = 1; i <= ProgramUtils.PROGRAMS_COUNT; i++) {
-            final Program program = programRepository.findOne(i);
+            final Program program = programRepository.findById(i).orElse(null);
 
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), program);
         }
 
-        assertThat(programRepository.findOne(Integer.MAX_VALUE), is(nullValue()));
+        assertThat(programRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
 
         assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
     }

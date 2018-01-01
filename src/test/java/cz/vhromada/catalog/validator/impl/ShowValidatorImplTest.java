@@ -3,8 +3,7 @@ package cz.vhromada.catalog.validator.impl;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyVararg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -56,7 +55,7 @@ public class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhroma
     public void setUp() {
         super.setUp();
 
-        when(genreValidator.validate(any(Genre.class), anyVararg())).thenReturn(new Result<>());
+        when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
     }
 
     /**
@@ -408,7 +407,7 @@ public class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhroma
         final Show show = getValidatingData(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(null)));
 
-        when(genreValidator.validate(any(Genre.class), anyVararg())).thenReturn(Result.error(event.getKey(), event.getMessage()));
+        when(genreValidator.validate(any(Genre.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 

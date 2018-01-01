@@ -119,7 +119,6 @@ public abstract class AbstractChildFacadeTest<S extends Movable, T extends Movab
     @SuppressWarnings("InstanceMethodNamingConvention")
     public void get_NotExistingData() {
         when(catalogService.getAll()).thenReturn(CollectionUtils.newList(newParentDomain(1)));
-        when(converter.convert(any(getChildDomainClass()), eq(getChildEntityClass()))).thenReturn(null);
 
         final Result<S> result = childCatalogFacade.get(Integer.MAX_VALUE);
 

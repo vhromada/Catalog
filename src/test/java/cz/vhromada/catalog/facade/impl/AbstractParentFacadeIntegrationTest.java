@@ -1,10 +1,12 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
@@ -15,11 +17,11 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * An abstract class represents integration test for parent facade.
@@ -28,26 +30,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @param <U> type of domain data
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
 @DirtiesContext
-public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U extends Movable> {
+abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U extends Movable> {
 
     /**
      * Test method for {@link CatalogParentFacade#newData()}.
      */
     @Test
     @DirtiesContext
-    public void newData() {
+    void newData() {
         clearReferencedData();
 
         final Result<Void> result = getCatalogParentFacade().newData();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
+        
         assertNewRepositoryData();
     }
 
@@ -55,15 +58,16 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#getAll()}.
      */
     @Test
-    public void getAll() {
+    void getAll() {
         final Result<List<T>> result = getCatalogParentFacade().getAll();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
-        assertDataListDeepEquals(result.getData(), getDataList());
-
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertDataListDeepEquals(result.getData(), getDataList()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
+        
         assertDefaultRepositoryData();
     }
 
@@ -71,24 +75,27 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#get(Integer)}.
      */
     @Test
-    public void get() {
+    void get() {
         for (int i = 1; i <= getDefaultDataCount(); i++) {
             final Result<T> result = getCatalogParentFacade().get(i);
+            final int index = i;
 
-            assertThat(result, is(notNullValue()));
-            assertThat(result.getEvents(), is(notNullValue()));
-            assertThat(result.getStatus(), is(Status.OK));
-            assertThat(result.getEvents().isEmpty(), is(true));
-            assertDataDeepEquals(result.getData(), getDomainData(i));
+            assertNotNull(result);
+            assertAll(
+                () -> assertEquals(Status.OK, result.getStatus()),
+                () -> assertDataDeepEquals(result.getData(), getDomainData(index)),
+                () -> assertTrue(result.getEvents().isEmpty())
+            );
         }
 
         final Result<T> result = getCatalogParentFacade().get(Integer.MAX_VALUE);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertNull(result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -97,16 +104,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#get(Integer)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void get_NullData() {
+    void get_NullData() {
         final Result<T> result = getCatalogParentFacade().get(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -116,13 +121,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      */
     @Test
     @DirtiesContext
-    public void add() {
+    void add() {
         final Result<Void> result = getCatalogParentFacade().add(newData(null));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDataDomainDeepEquals(getExpectedAddData(), getRepositoryData(getDefaultDataCount() + 1));
         assertAddRepositoryData();
@@ -132,16 +138,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#add(Movable)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void add_NullData() {
+    void add_NullData() {
         final Result<Void> result = getCatalogParentFacade().add(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -150,15 +154,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#add(Movable)} with data with not null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void add_NotNullId() {
+    void add_NotNullId() {
         final Result<Void> result = getCatalogParentFacade().add(newData(1));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -168,15 +171,16 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      */
     @Test
     @DirtiesContext
-    public void update() {
+    void update() {
         final T data = getUpdateData(1);
 
         final Result<Void> result = getCatalogParentFacade().update(data);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDataDeepEquals(data, getRepositoryData(1));
         assertUpdateRepositoryData();
@@ -186,16 +190,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#update(Movable)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void update_NullData() {
+    void update_NullData() {
         final Result<Void> result = getCatalogParentFacade().update(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -204,15 +206,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#update(Movable)} with data with null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void update_NullId() {
+    void update_NullId() {
         final Result<Void> result = getCatalogParentFacade().update(newData(null));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataIdEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataIdEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -221,15 +222,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#update(Movable)} with data with bad ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void update_BadId() {
+    void update_BadId() {
         final Result<Void> result = getCatalogParentFacade().update(newData(Integer.MAX_VALUE));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNotExistingDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNotExistingDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -239,17 +239,18 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      */
     @Test
     @DirtiesContext
-    public void remove() {
+    void remove() {
         clearReferencedData();
 
         final Result<Void> result = getCatalogParentFacade().remove(newData(1));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
-        assertThat(getRepositoryData(1), is(nullValue()));
+        assertNull(getRepositoryData(1));
         assertRemoveRepositoryData();
     }
 
@@ -257,15 +258,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#remove(Movable)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void remove_NullData() {
+    void remove_NullData() {
         final Result<Void> result = getCatalogParentFacade().remove(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -274,15 +274,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#remove(Movable)} with data with null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void remove_NullId() {
+    void remove_NullId() {
         final Result<Void> result = getCatalogParentFacade().remove(newData(null));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataIdEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataIdEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -291,15 +290,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#remove(Movable)} with data with bad ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void remove_BadId() {
+    void remove_BadId() {
         final Result<Void> result = getCatalogParentFacade().remove(newData(Integer.MAX_VALUE));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNotExistingDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNotExistingDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -309,13 +307,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      */
     @Test
     @DirtiesContext
-    public void duplicate() {
+    void duplicate() {
         final Result<Void> result = getCatalogParentFacade().duplicate(newData(getDefaultDataCount()));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDataDomainDeepEquals(getExpectedDuplicatedData(), getRepositoryData(getDefaultDataCount() + 1));
         assertDuplicateRepositoryData();
@@ -325,15 +324,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void duplicate_NullData() {
+    void duplicate_NullData() {
         final Result<Void> result = getCatalogParentFacade().duplicate(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -342,15 +340,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with data with null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void duplicate_NullId() {
+    void duplicate_NullId() {
         final Result<Void> result = getCatalogParentFacade().duplicate(newData(null));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataIdEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataIdEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -359,15 +356,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with data with bad ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void duplicate_BadId() {
+    void duplicate_BadId() {
         final Result<Void> result = getCatalogParentFacade().duplicate(newData(Integer.MAX_VALUE));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNotExistingDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNotExistingDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -377,13 +373,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      */
     @Test
     @DirtiesContext
-    public void moveUp() {
+    void moveUp() {
         final Result<Void> result = getCatalogParentFacade().moveUp(newData(2));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         final U data1 = getDomainData(1);
         data1.setPosition(1);
@@ -401,15 +398,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveUp_NullData() {
+    void moveUp_NullData() {
         final Result<Void> result = getCatalogParentFacade().moveUp(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -418,15 +414,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with data with null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveUp_NullId() {
+    void moveUp_NullId() {
         final Result<Void> result = getCatalogParentFacade().moveUp(newData(null));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataIdEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataIdEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -435,15 +430,15 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with not movable data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveUp_NotMovableData() {
+    void moveUp_NotMovableData() {
         final Result<Void> result = getCatalogParentFacade().moveUp(newData(1));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -452,15 +447,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with data with bad ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveUp_BadId() {
+    void moveUp_BadId() {
         final Result<Void> result = getCatalogParentFacade().moveUp(newData(Integer.MAX_VALUE));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNotExistingDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNotExistingDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -470,13 +464,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      */
     @Test
     @DirtiesContext
-    public void moveDown() {
+    void moveDown() {
         final Result<Void> result = getCatalogParentFacade().moveDown(newData(1));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         final U data1 = getDomainData(1);
         data1.setPosition(1);
@@ -494,15 +489,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveDown_NullData() {
+    void moveDown_NullData() {
         final Result<Void> result = getCatalogParentFacade().moveDown(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -511,15 +505,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with data with null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveDown_NullId() {
+    void moveDown_NullId() {
         final Result<Void> result = getCatalogParentFacade().moveDown(newData(null));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNullDataIdEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNullDataIdEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -528,15 +521,15 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with not movable data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveDown_NotMovableData() {
+    void moveDown_NotMovableData() {
         final Result<Void> result = getCatalogParentFacade().moveDown(newData(getDefaultDataCount()));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -545,15 +538,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with data with bad ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveDown_BadId() {
+    void moveDown_BadId() {
         final Result<Void> result = getCatalogParentFacade().moveDown(newData(Integer.MAX_VALUE));
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(getNotExistingDataEvent()));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(getNotExistingDataEvent()), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -563,13 +555,14 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      */
     @Test
     @DirtiesContext
-    public void updatePositions() {
+    void updatePositions() {
         final Result<Void> result = getCatalogParentFacade().updatePositions();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         for (int i = 1; i <= getDefaultDataCount(); i++) {
             assertDataDomainDeepEquals(getDomainData(i), getRepositoryData(i));
@@ -679,6 +672,7 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * @param id ID
      * @return update data
      */
+    //TODO vhromada 17.01.2018:
     protected T getUpdateData(final Integer id) {
         return newData(id);
     }
@@ -708,42 +702,42 @@ public abstract class AbstractParentFacadeIntegrationTest<T extends Movable, U e
      * Asserts default repository data.
      */
     protected void assertDefaultRepositoryData() {
-        assertThat(getRepositoryDataCount(), is(getDefaultDataCount()));
+        assertEquals(getDefaultDataCount(), getRepositoryDataCount());
     }
 
     /**
      * Asserts repository data for {@link CatalogParentFacade#newData()}.
      */
     protected void assertNewRepositoryData() {
-        assertThat(getRepositoryDataCount(), is(0));
+        assertEquals(Integer.valueOf(0), getRepositoryDataCount());
     }
 
     /**
      * Asserts repository data for {@link CatalogParentFacade#add(Movable)}.
      */
     protected void assertAddRepositoryData() {
-        assertThat(getRepositoryDataCount(), is(getDefaultDataCount() + 1));
+        assertEquals(Integer.valueOf(getDefaultDataCount() + 1), getRepositoryDataCount());
     }
 
     /**
      * Asserts repository data for {@link CatalogParentFacade#update(Movable)}.
      */
     protected void assertUpdateRepositoryData() {
-        assertThat(getRepositoryDataCount(), is(getDefaultDataCount()));
+        assertEquals(getDefaultDataCount(), getRepositoryDataCount());
     }
 
     /**
      * Asserts repository data for {@link CatalogParentFacade#remove(Movable)}.
      */
     protected void assertRemoveRepositoryData() {
-        assertThat(getRepositoryDataCount(), is(getDefaultDataCount() - 1));
+        assertEquals(Integer.valueOf(getDefaultDataCount() - 1), getRepositoryDataCount());
     }
 
     /**
      * Asserts repository data for {@link CatalogParentFacade#duplicate(Movable)}.
      */
     protected void assertDuplicateRepositoryData() {
-        assertThat(getRepositoryDataCount(), is(getDefaultDataCount() + 1));
+        assertEquals(Integer.valueOf(getDefaultDataCount() + 1), getRepositoryDataCount());
     }
 
     /**

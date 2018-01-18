@@ -1,14 +1,14 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,8 +18,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladimir Hromada
  */
-@SuppressFBWarnings("CD_CIRCULAR_DEPENDENCY")
-public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
+class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
 
     /**
      * Instance of {@link JpaRepository}
@@ -30,25 +29,25 @@ public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
     /**
      * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null repository.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMovableRepository() {
-        new AbstractCatalogServiceStub(null, getCache(), getCacheKey());
+    @Test
+    void constructor_NullMovableRepository() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogServiceStub(null, getCache(), getCacheKey()));
     }
 
     /**
      * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null cache for data.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCache() {
-        new AbstractCatalogServiceStub(repository, null, getCacheKey());
+    @Test
+    void constructor_NullCache() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogServiceStub(repository, null, getCacheKey()));
     }
 
     /**
      * Test method for {@link AbstractCatalogService#AbstractCatalogService(JpaRepository, Cache, String)} with null cache key.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCacheKey() {
-        new AbstractCatalogServiceStub(repository, getCache(), null);
+    @Test
+    void constructor_NullCacheKey() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogServiceStub(repository, getCache(), null));
     }
 
     @Override
@@ -93,10 +92,14 @@ public class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
 
     @Override
     protected void assertDataDeepEquals(final Movable expected, final Movable actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
-
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
     /**

@@ -1,9 +1,10 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -19,7 +20,7 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -31,7 +32,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  *
  * @author Vladimir Hromada
  */
-public class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Genre, cz.vhromada.catalog.domain.Genre> {
+class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Genre, cz.vhromada.catalog.domain.Genre> {
 
     /**
      * Instance of {@link EntityManager}
@@ -56,17 +57,17 @@ public class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link GenreFacade#add(Genre)} with genre with null name.
      */
     @Test
-    public void add_NullName() {
+    void add_NullName() {
         final Genre genre = newData(null);
         genre.setName(null);
 
         final Result<Void> result = genreFacade.add(genre);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -75,17 +76,17 @@ public class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link GenreFacade#add(Genre)} with genre with empty string as name.
      */
     @Test
-    public void add_EmptyName() {
+    void add_EmptyName() {
         final Genre genre = newData(null);
         genre.setName("");
 
         final Result<Void> result = genreFacade.add(genre);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -94,17 +95,17 @@ public class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link GenreFacade#update(Genre)} with genre with null name.
      */
     @Test
-    public void update_NullName() {
+    void update_NullName() {
         final Genre genre = newData(1);
         genre.setName(null);
 
         final Result<Void> result = genreFacade.update(genre);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -113,17 +114,17 @@ public class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link GenreFacade#update(Genre)} with genre with empty string as name.
      */
     @Test
-    public void update_EmptyName() {
+    void update_EmptyName() {
         final Genre genre = newData(1);
         genre.setName("");
 
         final Result<Void> result = genreFacade.update(genre);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -242,8 +243,8 @@ public class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Asserts references.
      */
     private void assertReferences() {
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
-        assertThat(ShowUtils.getShowsCount(entityManager), is(ShowUtils.SHOWS_COUNT));
+        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
     }
 
 }

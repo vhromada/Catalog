@@ -1,14 +1,16 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -25,38 +27,38 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link SongValidatorImpl}.
  *
  * @author Vladimir Hromada
  */
-public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
+class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
 
     /**
-     * Test method for {@link SongValidatorImpl#SongValidatorImpl(CatalogService)} with null service for music.
+     * Test method for {@link SongValidatorImpl#SongValidatorImpl(CatalogService)} with null service for shows.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMusicService() {
-        new SongValidatorImpl(null);
+    @Test
+    void constructor_NullShowService() {
+        assertThrows(IllegalArgumentException.class, () -> new SongValidatorImpl(null));
     }
 
     /**
      * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
     @Test
-    public void validate_Deep_NullName() {
+    void validate_Deep_NullName() {
         final Song song = getValidatingData(1);
         song.setName(null);
 
         final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -65,36 +67,38 @@ public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
      * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
     @Test
-    public void validate_Deep_EmptyName() {
+    void validate_Deep_EmptyName() {
         final Song song = getValidatingData(1);
         song.setName("");
 
         final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
 
     /**
-     * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with negative length of song.
+     * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with negative length of
+     * song.
      */
     @Test
-    public void validate_Deep_NegativeLength() {
+    void validate_Deep_NegativeLength() {
         final Song song = getValidatingData(1);
         song.setLength(-1);
 
         final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")),
+                result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -103,17 +107,17 @@ public class SongValidatorImplTest extends AbstractValidatorTest<Song, Music> {
      * Test method for {@link SongValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
-    public void validate_Deep_NullNote() {
+    void validate_Deep_NullNote() {
         final Song song = getValidatingData(1);
         song.setNote(null);
 
         final Result<Void> result = getCatalogValidator().validate(song, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }

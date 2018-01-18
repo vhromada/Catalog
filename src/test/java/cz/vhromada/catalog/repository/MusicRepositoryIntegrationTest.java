@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.repository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
@@ -15,14 +14,14 @@ import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -30,11 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
 @Transactional
 @Rollback
-public class MusicRepositoryIntegrationTest {
+class MusicRepositoryIntegrationTest {
 
     /**
      * Instance of {@link EntityManager}
@@ -53,61 +52,60 @@ public class MusicRepositoryIntegrationTest {
      * Test method for get all music.
      */
     @Test
-    public void getMusic_All() {
+    void getMusic_All() {
         final List<Music> music = musicRepository.findAll(Sort.by("position", "id"));
 
         MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(), music);
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
+        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
     }
 
     /**
      * Test method for get one music.
      */
     @Test
-    public void getMusic_One() {
+    void getMusic_One() {
         for (int i = 1; i <= MusicUtils.MUSIC_COUNT; i++) {
             final Music music = musicRepository.findById(i).orElse(null);
 
             MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), music);
         }
 
-        assertThat(musicRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
+        assertFalse(musicRepository.findById(Integer.MAX_VALUE).isPresent());
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
+        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
     }
 
     /**
      * Test method for add music.
      */
     @Test
-    public void add() {
+    void add() {
         final Music music = MusicUtils.newMusicDomain(null);
 
-        musicRepository.saveAndFlush(music);
+        musicRepository.save(music);
 
-        assertThat(music.getId(), is(notNullValue()));
-        assertThat(music.getId(), is(MusicUtils.MUSIC_COUNT + 1));
+        assertEquals(Integer.valueOf(MusicUtils.MUSIC_COUNT + 1), music.getId());
 
         final Music addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
         final Music expectedAddMusic = MusicUtils.newMusicDomain(null);
         expectedAddMusic.setId(MusicUtils.MUSIC_COUNT + 1);
         MusicUtils.assertMusicDeepEquals(expectedAddMusic, addedMusic);
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT + 1));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertEquals(MusicUtils.MUSIC_COUNT + 1, MusicUtils.getMusicCount(entityManager));
+        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
     }
 
     /**
      * Test method for update music with updated data.
      */
     @Test
-    public void update_Data() {
+    void update_Data() {
         final Music music = MusicUtils.updateMusic(entityManager, 1);
 
-        musicRepository.saveAndFlush(music);
+        musicRepository.save(music);
 
         final Music updatedMusic = MusicUtils.getMusic(entityManager, 1);
         final Music expectedUpdatedMusic = MusicUtils.getMusic(1);
@@ -115,22 +113,22 @@ public class MusicRepositoryIntegrationTest {
         expectedUpdatedMusic.setPosition(MusicUtils.POSITION);
         MusicUtils.assertMusicDeepEquals(expectedUpdatedMusic, updatedMusic);
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
+        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
     }
 
     /**
      * Test method for update music with added song.
      */
     @Test
-    public void update_AddedSong() {
+    void update_AddedSong() {
         final Song song = SongUtils.newSongDomain(null);
         entityManager.persist(song);
 
         final Music music = MusicUtils.getMusic(entityManager, 1);
         music.getSongs().add(song);
 
-        musicRepository.saveAndFlush(music);
+        musicRepository.save(music);
 
         final Music updatedMusic = MusicUtils.getMusic(entityManager, 1);
         final Song expectedSong = SongUtils.newSongDomain(null);
@@ -139,34 +137,34 @@ public class MusicRepositoryIntegrationTest {
         expectedUpdatedMusic.getSongs().add(expectedSong);
         MusicUtils.assertMusicDeepEquals(expectedUpdatedMusic, updatedMusic);
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT + 1));
+        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
+        assertEquals(SongUtils.SONGS_COUNT + 1, SongUtils.getSongsCount(entityManager));
     }
 
     /**
      * Test method for remove music.
      */
     @Test
-    public void remove() {
+    void remove() {
         final int songsCount = MusicUtils.getMusic(1).getSongs().size();
 
         musicRepository.delete(MusicUtils.getMusic(entityManager, 1));
 
-        assertThat(MusicUtils.getMusic(entityManager, 1), is(nullValue()));
+        assertNull(MusicUtils.getMusic(entityManager, 1));
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(MusicUtils.MUSIC_COUNT - 1));
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT - songsCount));
+        assertEquals(MusicUtils.MUSIC_COUNT - 1, MusicUtils.getMusicCount(entityManager));
+        assertEquals(SongUtils.SONGS_COUNT - songsCount, SongUtils.getSongsCount(entityManager));
     }
 
     /**
      * Test method for remove all music.
      */
     @Test
-    public void removeAll() {
+    void removeAll() {
         musicRepository.deleteAll();
 
-        assertThat(MusicUtils.getMusicCount(entityManager), is(0));
-        assertThat(SongUtils.getSongsCount(entityManager), is(0));
+        assertEquals(0, MusicUtils.getMusicCount(entityManager));
+        assertEquals(0, SongUtils.getSongsCount(entityManager));
     }
 
 }

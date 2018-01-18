@@ -1,9 +1,11 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,7 +19,7 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -26,7 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *
  * @author Vladimir Hromada
  */
-public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Program, cz.vhromada.catalog.domain.Program> {
+class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
      * Instance of {@link EntityManager}
@@ -45,17 +47,17 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#add(Program)} with program with null name.
      */
     @Test
-    public void add_NullName() {
+    void add_NullName() {
         final Program program = newData(null);
         program.setName(null);
 
         final Result<Void> result = programFacade.add(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -64,17 +66,17 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#add(Program)} with program with empty string as name.
      */
     @Test
-    public void add_EmptyName() {
+    void add_EmptyName() {
         final Program program = newData(null);
         program.setName("");
 
         final Result<Void> result = programFacade.add(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -83,18 +85,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#add(Program)} with program with null URL to english Wikipedia about program.
      */
     @Test
-    public void add_NullWikiEn() {
+    void add_NullWikiEn() {
         final Program program = newData(null);
         program.setWikiEn(null);
 
         final Result<Void> result = programFacade.add(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0),
-                is(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -103,18 +105,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#add(Program)} with program with null URL to czech Wikipedia about program.
      */
     @Test
-    public void add_NullWikiCz() {
+    void add_NullWikiCz() {
         final Program program = newData(null);
         program.setWikiCz(null);
 
         final Result<Void> result = programFacade.add(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0),
-                is(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL", "URL to czech Wikipedia page about program mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -123,17 +125,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#add(Program)} with program with not positive count of media.
      */
     @Test
-    public void add_NotPositiveMediaCount() {
+    void add_NotPositiveMediaCount() {
         final Program program = newData(null);
         program.setMediaCount(0);
 
         final Result<Void> result = programFacade.add(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE",
+                "Count of media must be positive number.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -142,17 +145,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#add(Program)} with program with null other data.
      */
     @Test
-    public void add_NullOtherData() {
+    void add_NullOtherData() {
         final Program program = newData(null);
         program.setOtherData(null);
 
         final Result<Void> result = programFacade.add(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -161,17 +165,17 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#add(Program)} with program with null note.
      */
     @Test
-    public void add_NullNote() {
+    void add_NullNote() {
         final Program program = newData(null);
         program.setNote(null);
 
         final Result<Void> result = programFacade.add(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -180,17 +184,17 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#update(Program)} with program with null name.
      */
     @Test
-    public void update_NullName() {
+    void update_NullName() {
         final Program program = newData(1);
         program.setName(null);
 
         final Result<Void> result = programFacade.update(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -199,17 +203,17 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#update(Program)} with program with empty string as name.
      */
     @Test
-    public void update_EmptyName() {
+    void update_EmptyName() {
         final Program program = newData(1);
         program.setName("");
 
         final Result<Void> result = programFacade.update(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -218,18 +222,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#update(Program)} with program with null URL to english Wikipedia about program.
      */
     @Test
-    public void update_NullWikiEn() {
+    void update_NullWikiEn() {
         final Program program = newData(1);
         program.setWikiEn(null);
 
         final Result<Void> result = programFacade.update(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0),
-                is(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -238,18 +242,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#update(Program)} with program with null URL to czech Wikipedia about program.
      */
     @Test
-    public void update_NullWikiCz() {
+    void update_NullWikiCz() {
         final Program program = newData(1);
         program.setWikiCz(null);
 
         final Result<Void> result = programFacade.update(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0),
-                is(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL", "URL to czech Wikipedia page about program mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -258,17 +262,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#update(Program)} with program with not positive count of media.
      */
     @Test
-    public void update_NotPositiveMediaCount() {
+    void update_NotPositiveMediaCount() {
         final Program program = newData(1);
         program.setMediaCount(0);
 
         final Result<Void> result = programFacade.update(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE",
+                "Count of media must be positive number.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -277,17 +282,18 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#update(Program)} with program with null other data.
      */
     @Test
-    public void update_NullOtherData() {
+    void update_NullOtherData() {
         final Program program = newData(1);
         program.setOtherData(null);
 
         final Result<Void> result = programFacade.update(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -296,17 +302,17 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#update(Program)} with program with null note.
      */
     @Test
-    public void update_NullNote() {
+    void update_NullNote() {
         final Program program = newData(1);
         program.setNote(null);
 
         final Result<Void> result = programFacade.update(program);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -315,16 +321,17 @@ public class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegr
      * Test method for {@link ProgramFacade#getTotalMediaCount()}.
      */
     @Test
-    public void getTotalMediaCount() {
-        final int count = 600;
+    void getTotalMediaCount() {
+        final Integer count = 600;
 
         final Result<Integer> result = programFacade.getTotalMediaCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(count));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(count, result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDefaultRepositoryData();
     }

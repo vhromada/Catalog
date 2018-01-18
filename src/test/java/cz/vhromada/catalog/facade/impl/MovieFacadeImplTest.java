@@ -1,8 +1,10 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -24,44 +26,44 @@ import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link MovieFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-public class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhromada.catalog.domain.Movie> {
+class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhromada.catalog.domain.Movie> {
 
     /**
      * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for movies.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMovieService() {
-        new MovieFacadeImpl(null, getConverter(), getCatalogValidator());
+    @Test
+    void constructor_NullMovieService() {
+        assertThrows(IllegalArgumentException.class, () -> new MovieFacadeImpl(null, getConverter(), getCatalogValidator()));
     }
 
     /**
      * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new MovieFacadeImpl(getCatalogService(), null, getCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new MovieFacadeImpl(getCatalogService(), null, getCatalogValidator()));
     }
 
     /**
      * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for movie.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMovieValidator() {
-        new MovieFacadeImpl(getCatalogService(), getConverter(), null);
+    @Test
+    void constructor_NullMovieValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new MovieFacadeImpl(getCatalogService(), getConverter(), null));
     }
 
     /**
      * Test method for {@link MovieFacade#getTotalMediaCount()}.
      */
     @Test
-    public void getTotalMediaCount() {
+    void getTotalMediaCount() {
         final cz.vhromada.catalog.domain.Movie movie1 = MovieUtils.newMovieDomain(1);
         final cz.vhromada.catalog.domain.Movie movie2 = MovieUtils.newMovieDomain(2);
         final int expectedCount = movie1.getMedia().size() + movie2.getMedia().size();
@@ -70,11 +72,12 @@ public class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhro
 
         final Result<Integer> result = ((MovieFacade) getCatalogParentFacade()).getTotalMediaCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(expectedCount));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(Integer.valueOf(expectedCount), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());
@@ -85,24 +88,26 @@ public class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhro
      * Test method for {@link MovieFacade#getTotalLength()}.
      */
     @Test
-    public void getTotalLength() {
+    void getTotalLength() {
         final List<cz.vhromada.catalog.domain.Movie> movies = CollectionUtils.newList(MovieUtils.newMovieDomain(1), MovieUtils.newMovieDomain(2));
-        int expectedTotalLength = 0;
+        int totalLength = 0;
         for (final cz.vhromada.catalog.domain.Movie movie : movies) {
             for (final Medium medium : movie.getMedia()) {
-                expectedTotalLength += medium.getLength();
+                totalLength += medium.getLength();
             }
         }
+        final int expectedTotalLength = totalLength;
 
         when(getCatalogService().getAll()).thenReturn(movies);
 
         final Result<Time> result = ((MovieFacade) getCatalogParentFacade()).getTotalLength();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(new Time(expectedTotalLength)));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(new Time(expectedTotalLength), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());

@@ -1,5 +1,7 @@
 package cz.vhromada.catalog.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
@@ -8,10 +10,8 @@ import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -20,8 +20,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladimir Hromada
  */
-@RunWith(MockitoJUnitRunner.class)
-public class MusicServiceImplTest extends AbstractServiceTest<Music> {
+class MusicServiceImplTest extends AbstractServiceTest<Music> {
 
     /**
      * Instance of {@link MusicRepository}
@@ -32,17 +31,17 @@ public class MusicServiceImplTest extends AbstractServiceTest<Music> {
     /**
      * Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicRepository, Cache)} with null repository for music.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMusicRepository() {
-        new MusicServiceImpl(null, getCache());
+    @Test
+    void constructor_NullMusicRepository() {
+        assertThrows(IllegalArgumentException.class, () -> new MusicServiceImpl(null, getCache()));
     }
 
     /**
      * Test method for {@link MusicServiceImpl#MusicServiceImpl(MusicRepository, Cache)} with null cache.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCache() {
-        new MusicServiceImpl(musicRepository, null);
+    @Test
+    void constructor_NullCache() {
+        assertThrows(IllegalArgumentException.class, () -> new MusicServiceImpl(musicRepository, null));
     }
 
     @Override

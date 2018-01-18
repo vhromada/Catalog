@@ -1,14 +1,17 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Language;
@@ -28,33 +31,33 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link SeasonValidatorImpl}.
  *
  * @author Vladimir Hromada
  */
-public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show> {
+class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show> {
 
     /**
      * Event for invalid starting year
      */
     private static final Event INVALID_STARTING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID", "Starting year must be between "
-            + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
+        + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
 
     /**
      * Event for invalid ending year
      */
     private static final Event INVALID_ENDING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID", "Ending year must be between "
-            + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
+        + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
 
     /**
      * Test method for {@link SeasonValidatorImpl#SeasonValidatorImpl(CatalogService)} with null service for shows.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullShowService() {
-        new SeasonValidatorImpl(null);
+    @Test
+    void constructor_NullShowService() {
+        assertThrows(IllegalArgumentException.class, () -> new SeasonValidatorImpl(null));
     }
 
     /**
@@ -62,17 +65,18 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * number of season.
      */
     @Test
-    public void validate_Deep_NotPositiveNumber() {
+    void validate_Deep_NotPositiveNumber() {
         final Season season = getValidatingData(1);
         season.setNumber(0);
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")),
+                result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -82,19 +86,18 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * year and bad minimum ending year.
      */
     @Test
-    public void validate_Deep_BadMinimumYears() {
+    void validate_Deep_BadMinimumYears() {
         final Season season = SeasonUtils.newSeason(1);
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(2));
-        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
-        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -104,19 +107,18 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * year and bad maximum ending year.
      */
     @Test
-    public void validate_Deep_BadMaximumYears() {
+    void validate_Deep_BadMaximumYears() {
         final Season season = SeasonUtils.newSeason(1);
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(2));
-        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
-        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -126,17 +128,18 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * than ending year.
      */
     @Test
-    public void validate_Deep_BadYears() {
+    void validate_Deep_BadYears() {
         final Season season = SeasonUtils.newSeason(1);
         season.setStartYear(season.getEndYear() + 1);
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID",
+                "Starting year mustn't be greater than ending year.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -145,17 +148,17 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null language.
      */
     @Test
-    public void validate_Deep_NullLanguage() {
+    void validate_Deep_NullLanguage() {
         final Season season = getValidatingData(1);
         season.setLanguage(null);
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -164,17 +167,17 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null subtitles.
      */
     @Test
-    public void validate_Deep_NullSubtitles() {
+    void validate_Deep_NullSubtitles() {
         final Season season = getValidatingData(1);
         season.setSubtitles(null);
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -184,17 +187,18 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * null value.
      */
     @Test
-    public void validate_Deep_BadSubtitles() {
+    void validate_Deep_BadSubtitles() {
         final Season season = getValidatingData(1);
         season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
+                result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -203,17 +207,17 @@ public class SeasonValidatorImplTest extends AbstractValidatorTest<Season, Show>
      * Test method for {@link SeasonValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
-    public void validate_Deep_NullNote() {
+    void validate_Deep_NullNote() {
         final Season season = getValidatingData(1);
         season.setNote(null);
 
         final Result<Void> result = getCatalogValidator().validate(season, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }

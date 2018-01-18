@@ -1,5 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.List;
 
 import cz.vhromada.catalog.entity.Music;
@@ -11,45 +13,46 @@ import cz.vhromada.catalog.utils.SongUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converter.Converter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link SongFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-public class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music> {
+class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music> {
 
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null service for music.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMusicService() {
-        new SongFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
+    @Test
+    void constructor_NullMusicService() {
+        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new SongFacadeImpl(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(getCatalogService(), null, getParentCatalogValidator(),
+            getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for music.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMusicValidator() {
-        new SongFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator());
+    @Test
+    void constructor_NullMusicValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for song.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullSongValidator() {
-        new SongFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null);
+    @Test
+    void constructor_NullSongValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -9,14 +11,14 @@ import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converter.Converter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link AbstractCatalogChildFacade}.
  *
  * @author Vladimir Hromada
  */
-public class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Movable, Movable, Movable> {
+class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Movable, Movable, Movable> {
 
     private Movable movable;
 
@@ -24,36 +26,40 @@ public class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Mova
      * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
      * service for catalog.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCatalogService() {
-        new AbstractCatalogChildFacadeStub(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
+    @Test
+    void constructor_NullCatalogService() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(null, getConverter(), getParentCatalogValidator(),
+            getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
      * converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new AbstractCatalogChildFacadeStub(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(getCatalogService(), null, getParentCatalogValidator(),
+            getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
      * parent catalog validator.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullParentCatalogValidator() {
-        new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), null, getChildCatalogValidator());
+    @Test
+    void constructor_NullParentCatalogValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), null,
+            getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link AbstractCatalogChildFacade#AbstractCatalogChildFacade(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null
      * child catalog validator.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullChildCatalogValidator() {
-        new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), getParentCatalogValidator(), null);
+    @Test
+    void constructor_NullChildCatalogValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), getParentCatalogValidator(),
+            null));
     }
 
     @Override
@@ -140,7 +146,7 @@ public class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Mova
          * @param childCatalogValidator  validator for catalog for child data
          */
         AbstractCatalogChildFacadeStub(final CatalogService<Movable> catalogService, final Converter converter,
-                final CatalogValidator<Movable> parentCatalogValidator, final CatalogValidator<Movable> childCatalogValidator) {
+            final CatalogValidator<Movable> parentCatalogValidator, final CatalogValidator<Movable> childCatalogValidator) {
             super(catalogService, converter, parentCatalogValidator, childCatalogValidator);
         }
 

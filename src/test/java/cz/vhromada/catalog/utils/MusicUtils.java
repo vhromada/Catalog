@@ -1,9 +1,9 @@
 package cz.vhromada.catalog.utils;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,7 +179,6 @@ public final class MusicUtils {
      * @param entityManager entity manager
      * @return music with updated fields
      */
-    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Music updateMusic(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Music music = getMusic(entityManager, id);
         updateMusic(music);
@@ -205,8 +204,11 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicDeepEquals(final List<cz.vhromada.catalog.domain.Music> expected, final List<cz.vhromada.catalog.domain.Music> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMusicDeepEquals(expected.get(i), actual.get(i));
@@ -221,18 +223,26 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicDeepEquals(final cz.vhromada.catalog.domain.Music expected, final cz.vhromada.catalog.domain.Music actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
-        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
-        assertThat(actual.getNote(), is(expected.getNote()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
-        if (expected.getSongs() == null) {
-            assertThat(actual.getSongs(), is(nullValue()));
-        } else {
-            SongUtils.assertSongsDeepEquals(expected.getSongs(), actual.getSongs());
-        }
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
+            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
+            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
+            () -> assertEquals(expected.getNote(), actual.getNote()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition()),
+            () -> {
+                if (expected.getSongs() == null) {
+                    assertNull(actual.getSongs());
+                } else {
+                    SongUtils.assertSongsDeepEquals(expected.getSongs(), actual.getSongs());
+                }
+            }
+        );
     }
 
     /**
@@ -242,8 +252,11 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicListDeepEquals(final List<Music> expected, final List<cz.vhromada.catalog.domain.Music> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMusicDeepEquals(expected.get(i), actual.get(i));
@@ -258,14 +271,19 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicDeepEquals(final Music expected, final cz.vhromada.catalog.domain.Music actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
-        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
-        assertThat(actual.getMediaCount(), is(expected.getMediaCount()));
-        assertThat(actual.getNote(), is(expected.getNote()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
+            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
+            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
+            () -> assertEquals(expected.getNote(), actual.getNote()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
 }

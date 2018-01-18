@@ -1,10 +1,12 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -16,14 +18,14 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link AbstractCatalogValidator}.
  *
  * @author Vladimir Hromada
  */
-public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable, Movable> {
+class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable, Movable> {
 
     /**
      * Event key
@@ -38,17 +40,17 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
     /**
      * Test method for {@link AbstractCatalogValidator#AbstractCatalogValidator(String, CatalogService)} with null name.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullName() {
-        new AbstractCatalogValidatorStub(null, getCatalogService());
+    @Test
+    void constructor_NullName() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogValidatorStub(null, getCatalogService()));
     }
 
     /**
      * Test method for {@link AbstractCatalogValidator#AbstractCatalogValidator(String, CatalogService)} with null service for catalog.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCatalogService() {
-        new AbstractCatalogValidatorStub(getName(), null);
+    @Test
+    void constructor_NullCatalogService() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogValidatorStub(getName(), null));
     }
 
     /**
@@ -56,14 +58,14 @@ public class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable,
      */
     @Test
     @Override
-    public void validate_Deep() {
+    void validate_Deep() {
         final Result<Void> result = getCatalogValidator().validate(getValidatingData(1), ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.WARN));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.WARN, KEY, VALUE)));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.WARN, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.WARN, KEY, VALUE)), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }

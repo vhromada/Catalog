@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.utils;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,7 +153,6 @@ public final class GenreUtils {
      * @param id            genre ID
      * @return genre with updated fields
      */
-    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Genre updateGenre(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Genre genre = getGenre(entityManager, id);
         updateGenre(genre);
@@ -179,8 +178,11 @@ public final class GenreUtils {
      * @param actual   actual genres
      */
     public static void assertGenresDeepEquals(final List<cz.vhromada.catalog.domain.Genre> expected, final List<cz.vhromada.catalog.domain.Genre> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGenreDeepEquals(expected.get(i), actual.get(i));
@@ -195,10 +197,15 @@ public final class GenreUtils {
      * @param actual   actual genre
      */
     public static void assertGenreDeepEquals(final cz.vhromada.catalog.domain.Genre expected, final cz.vhromada.catalog.domain.Genre actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
     /**
@@ -208,8 +215,11 @@ public final class GenreUtils {
      * @param actual   actual genres
      */
     public static void assertGenreListDeepEquals(final List<Genre> expected, final List<cz.vhromada.catalog.domain.Genre> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGenreDeepEquals(expected.get(i), actual.get(i));
@@ -224,10 +234,15 @@ public final class GenreUtils {
      * @param actual   actual genre
      */
     public static void assertGenreDeepEquals(final Genre expected, final cz.vhromada.catalog.domain.Genre actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
 }

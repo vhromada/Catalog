@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.utils;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,8 +179,11 @@ public final class SongUtils {
      * @param actual   actual songs
      */
     public static void assertSongsDeepEquals(final List<cz.vhromada.catalog.domain.Song> expected, final List<cz.vhromada.catalog.domain.Song> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertSongDeepEquals(expected.get(i), actual.get(i));
@@ -194,14 +197,18 @@ public final class SongUtils {
      * @param expected expected song
      * @param actual   actual song
      */
-    @SuppressWarnings("Duplicates")
     public static void assertSongDeepEquals(final cz.vhromada.catalog.domain.Song expected, final cz.vhromada.catalog.domain.Song actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getLength(), is(expected.getLength()));
-        assertThat(actual.getNote(), is(expected.getNote()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getLength(), actual.getLength()),
+            () -> assertEquals(expected.getNote(), actual.getNote()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
     /**
@@ -211,8 +218,11 @@ public final class SongUtils {
      * @param actual   actual songs
      */
     public static void assertSongListDeepEquals(final List<Song> expected, final List<cz.vhromada.catalog.domain.Song> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertSongDeepEquals(expected.get(i), actual.get(i));
@@ -226,14 +236,18 @@ public final class SongUtils {
      * @param expected expected song
      * @param actual   actual song
      */
-    @SuppressWarnings("Duplicates")
     public static void assertSongDeepEquals(final Song expected, final cz.vhromada.catalog.domain.Song actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getLength(), is(expected.getLength()));
-        assertThat(actual.getNote(), is(expected.getNote()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getLength(), actual.getLength()),
+            () -> assertEquals(expected.getNote(), actual.getNote()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
 }

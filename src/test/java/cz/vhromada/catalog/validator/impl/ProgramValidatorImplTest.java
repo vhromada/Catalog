@@ -1,9 +1,12 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verifyZeroInteractions;
+
+import java.util.Collections;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Program;
@@ -16,38 +19,38 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link ProgramValidatorImpl}.
  *
  * @author Vladimir Hromada
  */
-public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromada.catalog.domain.Program> {
+class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
      * Test method for {@link ProgramValidatorImpl#ProgramValidatorImpl(CatalogService)} with null service for programs.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullProgramService() {
-        new ProgramValidatorImpl(null);
+    @Test
+    void constructor_NullProgramService() {
+        assertThrows(IllegalArgumentException.class, () -> new ProgramValidatorImpl(null));
     }
 
     /**
      * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
     @Test
-    public void validate_Deep_NullName() {
+    void validate_Deep_NullName() {
         final Program program = getValidatingData(1);
         program.setName(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -56,17 +59,17 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
     @Test
-    public void validate_Deep_EmptyName() {
+    void validate_Deep_EmptyName() {
         final Program program = getValidatingData(1);
         program.setName("");
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -76,18 +79,18 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      * Wikipedia page about program.
      */
     @Test
-    public void validate_Deep_NullWikiEn() {
+    void validate_Deep_NullWikiEn() {
         final Program program = getValidatingData(1);
         program.setWikiEn(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
-                "URL to english Wikipedia page about program mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -97,18 +100,18 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      * Wikipedia page about program.
      */
     @Test
-    public void validate_Deep_NullWikiCz() {
+    void validate_Deep_NullWikiCz() {
         final Program program = getValidatingData(1);
         program.setWikiCz(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about program mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -118,17 +121,18 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      * count of media.
      */
     @Test
-    public void validate_Deep_NotPositiveMediaCount() {
+    void validate_Deep_NotPositiveMediaCount() {
         final Program program = getValidatingData(1);
         program.setMediaCount(0);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE",
+                "Count of media must be positive number.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -137,17 +141,18 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null other data.
      */
     @Test
-    public void validate_Deep_NullOtherData() {
+    void validate_Deep_NullOtherData() {
         final Program program = getValidatingData(1);
         program.setOtherData(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")),
+                result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -156,17 +161,17 @@ public class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.
      * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
-    public void validate_Deep_NullNote() {
+    void validate_Deep_NullNote() {
         final Program program = getValidatingData(1);
         program.setNote(null);
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }

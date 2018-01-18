@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.repository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
@@ -13,13 +12,13 @@ import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.domain.Game;
 import cz.vhromada.catalog.utils.GameUtils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -27,11 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
 @Transactional
 @Rollback
-public class GameRepositoryIntegrationTest {
+class GameRepositoryIntegrationTest {
 
     /**
      * Instance of {@link EntityManager}
@@ -50,55 +49,54 @@ public class GameRepositoryIntegrationTest {
      * Test method for get games.
      */
     @Test
-    public void getGames() {
+    void getGames() {
         final List<Game> games = gameRepository.findAll();
 
         GameUtils.assertGamesDeepEquals(GameUtils.getGames(), games);
 
-        assertThat(GameUtils.getGamesCount(entityManager), is(GameUtils.GAMES_COUNT));
+        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
     }
 
     /**
      * Test method for get game.
      */
     @Test
-    public void getGame() {
+    void getGame() {
         for (int i = 1; i <= GameUtils.GAMES_COUNT; i++) {
             final Game game = gameRepository.findById(i).orElse(null);
 
             GameUtils.assertGameDeepEquals(GameUtils.getGame(i), game);
         }
 
-        assertThat(gameRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
+        assertFalse(gameRepository.findById(Integer.MAX_VALUE).isPresent());
 
-        assertThat(GameUtils.getGamesCount(entityManager), is(GameUtils.GAMES_COUNT));
+        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
     }
 
     /**
      * Test method for add game.
      */
     @Test
-    public void add() {
+    void add() {
         final Game game = GameUtils.newGameDomain(null);
 
         gameRepository.save(game);
 
-        assertThat(game.getId(), is(notNullValue()));
-        assertThat(game.getId(), is(GameUtils.GAMES_COUNT + 1));
+        assertEquals(Integer.valueOf(GameUtils.GAMES_COUNT + 1), game.getId());
 
         final Game addedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1);
         final Game expectedAddGame = GameUtils.newGameDomain(null);
         expectedAddGame.setId(GameUtils.GAMES_COUNT + 1);
         GameUtils.assertGameDeepEquals(expectedAddGame, addedGame);
 
-        assertThat(GameUtils.getGamesCount(entityManager), is(GameUtils.GAMES_COUNT + 1));
+        assertEquals(GameUtils.GAMES_COUNT + 1, GameUtils.getGamesCount(entityManager));
     }
 
     /**
      * Test method for update game.
      */
     @Test
-    public void update() {
+    void update() {
         final Game game = GameUtils.updateGame(entityManager, 1);
 
         gameRepository.save(game);
@@ -109,29 +107,29 @@ public class GameRepositoryIntegrationTest {
         expectedUpdatedGame.setPosition(GameUtils.POSITION);
         GameUtils.assertGameDeepEquals(expectedUpdatedGame, updatedGame);
 
-        assertThat(GameUtils.getGamesCount(entityManager), is(GameUtils.GAMES_COUNT));
+        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
     }
 
     /**
      * Test method for remove game.
      */
     @Test
-    public void remove() {
+    void remove() {
         gameRepository.delete(GameUtils.getGame(entityManager, 1));
 
-        assertThat(GameUtils.getGame(entityManager, 1), is(nullValue()));
+        assertNull(GameUtils.getGame(entityManager, 1));
 
-        assertThat(GameUtils.getGamesCount(entityManager), is(GameUtils.GAMES_COUNT - 1));
+        assertEquals(GameUtils.GAMES_COUNT - 1, GameUtils.getGamesCount(entityManager));
     }
 
     /**
      * Test method for remove all games.
      */
     @Test
-    public void removeAll() {
+    void removeAll() {
         gameRepository.deleteAll();
 
-        assertThat(GameUtils.getGamesCount(entityManager), is(0));
+        assertEquals(0, GameUtils.getGamesCount(entityManager));
     }
 
 }

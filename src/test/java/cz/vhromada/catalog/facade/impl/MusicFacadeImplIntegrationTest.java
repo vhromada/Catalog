@@ -1,9 +1,11 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -20,7 +22,7 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -29,7 +31,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *
  * @author Vladimir Hromada
  */
-public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Music, cz.vhromada.catalog.domain.Music> {
+class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Music, cz.vhromada.catalog.domain.Music> {
 
     /**
      * Instance of {@link EntityManager}
@@ -48,17 +50,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#add(Music)} with music with null name.
      */
     @Test
-    public void add_NullName() {
+    void add_NullName() {
         final Music music = newData(null);
         music.setName(null);
 
         final Result<Void> result = musicFacade.add(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -67,17 +69,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#add(Music)} with music with empty string as name.
      */
     @Test
-    public void add_EmptyName() {
+    void add_EmptyName() {
         final Music music = newData(null);
         music.setName("");
 
         final Result<Void> result = musicFacade.add(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -86,18 +88,18 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#add(Music)} with music with null URL to english Wikipedia about music.
      */
     @Test
-    public void add_NullWikiEn() {
+    void add_NullWikiEn() {
         final Music music = newData(null);
         music.setWikiEn(null);
 
         final Result<Void> result = musicFacade.add(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
-                "URL to english Wikipedia page about music mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
+                "URL to english Wikipedia page about music mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -106,17 +108,18 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#add(Music)} with music with null URL to czech Wikipedia about music.
      */
     @Test
-    public void add_NullWikiCz() {
+    void add_NullWikiCz() {
         final Music music = newData(null);
         music.setWikiCz(null);
 
         final Result<Void> result = musicFacade.add(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about music mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -125,17 +128,18 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#add(Music)} with music with not positive count of media.
      */
     @Test
-    public void add_NotPositiveMediaCount() {
+    void add_NotPositiveMediaCount() {
         final Music music = newData(null);
         music.setMediaCount(0);
 
         final Result<Void> result = musicFacade.add(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE",
+                "Count of media must be positive number.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -144,17 +148,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#add(Music)} with music with null note.
      */
     @Test
-    public void add_NullNote() {
+    void add_NullNote() {
         final Music music = newData(null);
         music.setNote(null);
 
         final Result<Void> result = musicFacade.add(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -163,17 +167,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#update(Music)} with music with null name.
      */
     @Test
-    public void update_NullName() {
+    void update_NullName() {
         final Music music = newData(1);
         music.setName(null);
 
         final Result<Void> result = musicFacade.update(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -182,17 +186,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#update(Music)} with music with empty string as name.
      */
     @Test
-    public void update_EmptyName() {
+    void update_EmptyName() {
         final Music music = newData(1);
         music.setName("");
 
         final Result<Void> result = musicFacade.update(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -201,18 +205,18 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#update(Music)} with music with null URL to english Wikipedia about music.
      */
     @Test
-    public void update_NullWikiEn() {
+    void update_NullWikiEn() {
         final Music music = newData(1);
         music.setWikiEn(null);
 
         final Result<Void> result = musicFacade.update(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
-                "URL to english Wikipedia page about music mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
+                "URL to english Wikipedia page about music mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -221,17 +225,18 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#update(Music)} with music with null URL to czech Wikipedia about music.
      */
     @Test
-    public void update_NullWikiCz() {
+    void update_NullWikiCz() {
         final Music music = newData(1);
         music.setWikiCz(null);
 
         final Result<Void> result = musicFacade.update(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about music mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -240,17 +245,18 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#update(Music)} with music with not positive count of media.
      */
     @Test
-    public void update_NotPositiveMediaCount() {
+    void update_NotPositiveMediaCount() {
         final Music music = newData(1);
         music.setMediaCount(0);
 
         final Result<Void> result = musicFacade.update(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE",
+                "Count of media must be positive number.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -259,17 +265,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#update(Music)} with music with null note.
      */
     @Test
-    public void update_NullNote() {
+    void update_NullNote() {
         final Music music = newData(1);
         music.setNote(null);
 
         final Result<Void> result = musicFacade.update(music);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -278,16 +284,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#getTotalMediaCount()}.
      */
     @Test
-    public void getTotalMediaCount() {
-        final int count = 60;
+    void getTotalMediaCount() {
+        final Integer count = 60;
 
         final Result<Integer> result = musicFacade.getTotalMediaCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(count));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(count, result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -296,16 +303,17 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#getTotalLength()}.
      */
     @Test
-    public void getTotalLength() {
+    void getTotalLength() {
         final Time length = new Time(666);
 
         final Result<Time> result = musicFacade.getTotalLength();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(length));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(length, result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -314,14 +322,15 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Test method for {@link MusicFacade#getSongsCount()}.
      */
     @Test
-    public void getSongsCount() {
+    void getSongsCount() {
         final Result<Integer> result = musicFacade.getSongsCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(SongUtils.SONGS_COUNT));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(Integer.valueOf(SongUtils.SONGS_COUNT), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -401,7 +410,7 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
     protected void assertNewRepositoryData() {
         super.assertNewRepositoryData();
 
-        assertThat(SongUtils.getSongsCount(entityManager), is(0));
+        assertEquals(0, SongUtils.getSongsCount(entityManager));
     }
 
     @Override
@@ -422,14 +431,14 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
     protected void assertRemoveRepositoryData() {
         super.assertRemoveRepositoryData();
 
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT - SongUtils.SONGS_PER_MUSIC_COUNT));
+        assertEquals(SongUtils.SONGS_COUNT - SongUtils.SONGS_PER_MUSIC_COUNT, SongUtils.getSongsCount(entityManager));
     }
 
     @Override
     protected void assertDuplicateRepositoryData() {
         super.assertDuplicateRepositoryData();
 
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT + SongUtils.SONGS_PER_MUSIC_COUNT));
+        assertEquals(SongUtils.SONGS_COUNT + SongUtils.SONGS_PER_MUSIC_COUNT, SongUtils.getSongsCount(entityManager));
     }
 
     @Override
@@ -446,7 +455,7 @@ public class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrat
      * Asserts references.
      */
     private void assertReferences() {
-        assertThat(SongUtils.getSongsCount(entityManager), is(SongUtils.SONGS_COUNT));
+        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
     }
 
 }

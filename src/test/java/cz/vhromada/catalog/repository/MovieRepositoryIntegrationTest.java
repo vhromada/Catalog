@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.repository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,15 @@ import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.MediumUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -33,11 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
 @Transactional
 @Rollback
-public class MovieRepositoryIntegrationTest {
+class MovieRepositoryIntegrationTest {
 
     /**
      * Instance of {@link EntityManager}
@@ -56,45 +55,44 @@ public class MovieRepositoryIntegrationTest {
      * Test method for get movies.
      */
     @Test
-    public void getMovies() {
+    void getMovies() {
         final List<Movie> movies = movieRepository.findAll(Sort.by("position", "id"));
 
         MovieUtils.assertMoviesDeepEquals(MovieUtils.getMovies(), movies);
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
      * Test method for get movie.
      */
     @Test
-    public void getMovie() {
+    void getMovie() {
         for (int i = 1; i <= MovieUtils.MOVIES_COUNT; i++) {
             final Movie movie = movieRepository.findById(i).orElse(null);
 
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), movie);
         }
 
-        assertThat(movieRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
+        assertFalse(movieRepository.findById(Integer.MAX_VALUE).isPresent());
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
      * Test method for add movie.
      */
     @Test
-    public void add() {
+    void add() {
         final Movie movie = MovieUtils.newMovieDomain(null);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(null)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
 
-        movieRepository.saveAndFlush(movie);
+        movieRepository.save(movie);
 
-        assertThat(movie.getId(), is(notNullValue()));
-        assertThat(movie.getId(), is(MovieUtils.MOVIES_COUNT + 1));
+        assertEquals(Integer.valueOf(MovieUtils.MOVIES_COUNT + 1), movie.getId());
 
         final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
         final Movie expectedAddedMovie = MovieUtils.newMovieDomain(null);
@@ -103,18 +101,18 @@ public class MovieRepositoryIntegrationTest {
         expectedAddedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         MovieUtils.assertMovieDeepEquals(expectedAddedMovie, addedMovie);
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT + 1));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT + 1));
+        assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
      * Test method for update movie with no media change.
      */
     @Test
-    public void update_NoMediaChange() {
+    void update_NoMediaChange() {
         final Movie movie = MovieUtils.updateMovie(entityManager, 1);
 
-        movieRepository.saveAndFlush(movie);
+        movieRepository.save(movie);
 
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
@@ -122,8 +120,8 @@ public class MovieRepositoryIntegrationTest {
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT));
+        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
@@ -131,11 +129,11 @@ public class MovieRepositoryIntegrationTest {
      */
     @Test
     @DirtiesContext
-    public void update_AddedMedium() {
+    void update_AddedMedium() {
         final Movie movie = MovieUtils.updateMovie(entityManager, 1);
         movie.getMedia().add(MediumUtils.newMediumDomain(null));
 
-        movieRepository.saveAndFlush(movie);
+        movieRepository.save(movie);
 
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
@@ -144,20 +142,20 @@ public class MovieRepositoryIntegrationTest {
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT + 1));
+        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
      * Test method for update movie with removed medium.
      */
     @Test
-    public void update_RemovedMedium() {
+    void update_RemovedMedium() {
         final int mediaCount = MovieUtils.getMovie(1).getMedia().size();
         final Movie movie = MovieUtils.updateMovie(entityManager, 1);
         movie.getMedia().clear();
 
-        movieRepository.saveAndFlush(movie);
+        movieRepository.save(movie);
 
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
@@ -166,34 +164,34 @@ public class MovieRepositoryIntegrationTest {
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT - mediaCount));
+        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT - mediaCount, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
      * Test method for remove movie.
      */
     @Test
-    public void remove() {
+    void remove() {
         final int mediaCount = MovieUtils.getMovie(1).getMedia().size();
 
         movieRepository.delete(MovieUtils.getMovie(entityManager, 1));
 
-        assertThat(MovieUtils.getMovie(entityManager, 1), is(nullValue()));
+        assertNull(MovieUtils.getMovie(entityManager, 1));
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(MovieUtils.MOVIES_COUNT - 1));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(MediumUtils.MEDIA_COUNT - mediaCount));
+        assertEquals(MovieUtils.MOVIES_COUNT - 1, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(MediumUtils.MEDIA_COUNT - mediaCount, MediumUtils.getMediaCount(entityManager));
     }
 
     /**
      * Test method for remove all movies.
      */
     @Test
-    public void removeAll() {
+    void removeAll() {
         movieRepository.deleteAll();
 
-        assertThat(MovieUtils.getMoviesCount(entityManager), is(0));
-        assertThat(MediumUtils.getMediaCount(entityManager), is(0));
+        assertEquals(0, MovieUtils.getMoviesCount(entityManager));
+        assertEquals(0, MediumUtils.getMediaCount(entityManager));
     }
 
 }

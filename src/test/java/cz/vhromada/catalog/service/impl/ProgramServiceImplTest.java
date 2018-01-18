@@ -1,11 +1,13 @@
 package cz.vhromada.catalog.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import cz.vhromada.catalog.domain.Program;
 import cz.vhromada.catalog.repository.ProgramRepository;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.ProgramUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +17,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladimir Hromada
  */
-public class ProgramServiceImplTest extends AbstractServiceTest<Program> {
+class ProgramServiceImplTest extends AbstractServiceTest<Program> {
 
     /**
      * Instance of {@link ProgramRepository}
@@ -26,17 +28,17 @@ public class ProgramServiceImplTest extends AbstractServiceTest<Program> {
     /**
      * Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramRepository, Cache)} with null repository for programs.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullProgramRepository() {
-        new ProgramServiceImpl(null, getCache());
+    @Test
+    void constructor_NullProgramRepository() {
+        assertThrows(IllegalArgumentException.class, () -> new ProgramServiceImpl(null, getCache()));
     }
 
     /**
      * Test method for {@link ProgramServiceImpl#ProgramServiceImpl(ProgramRepository, Cache)} with null cache.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCache() {
-        new ProgramServiceImpl(programRepository, null);
+    @Test
+    void constructor_NullCache() {
+        assertThrows(IllegalArgumentException.class, () -> new ProgramServiceImpl(programRepository, null));
     }
 
     @Override

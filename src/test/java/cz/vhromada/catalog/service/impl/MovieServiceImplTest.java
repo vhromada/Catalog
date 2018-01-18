@@ -1,15 +1,15 @@
 package cz.vhromada.catalog.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.domain.Movie;
 import cz.vhromada.catalog.repository.MovieRepository;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.MovieUtils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,8 +18,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladimir Hromada
  */
-@RunWith(MockitoJUnitRunner.class)
-public class MovieServiceImplTest extends AbstractServiceTest<Movie> {
+class MovieServiceImplTest extends AbstractServiceTest<Movie> {
 
     /**
      * Instance of {@link MovieRepository}
@@ -30,17 +29,17 @@ public class MovieServiceImplTest extends AbstractServiceTest<Movie> {
     /**
      * Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieRepository, Cache)} with null repository for movies.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullMovieRepository() {
-        new MovieServiceImpl(null, getCache());
+    @Test
+    void constructor_NullMovieRepository() {
+        assertThrows(IllegalArgumentException.class, () -> new MovieServiceImpl(null, getCache()));
     }
 
     /**
      * Test method for {@link MovieServiceImpl#MovieServiceImpl(MovieRepository, Cache)} with null cache.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCache() {
-        new MovieServiceImpl(movieRepository, null);
+    @Test
+    void constructor_NullCache() {
+        assertThrows(IllegalArgumentException.class, () -> new MovieServiceImpl(movieRepository, null));
     }
 
     @Override

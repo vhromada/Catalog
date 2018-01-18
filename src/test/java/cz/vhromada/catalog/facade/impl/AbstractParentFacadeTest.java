@@ -1,9 +1,10 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -25,12 +27,12 @@ import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
+import cz.vhromada.test.MockitoExtension;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * An abstract class represents test for parent facade.
@@ -39,8 +41,8 @@ import org.mockito.junit.MockitoJUnitRunner;
  * @param <U> type of domain data
  * @author Vladimir Hromada
  */
-@RunWith(MockitoJUnitRunner.class)
-public abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
+@ExtendWith(MockitoExtension.class)
+abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
     /**
      * Result for invalid data
@@ -73,8 +75,8 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
     /**
      * Initializes facade for catalog.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         parentCatalogFacade = getCatalogParentFacade();
     }
 
@@ -82,13 +84,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#newData()}.
      */
     @Test
-    public void newData() {
+    void newData() {
         final Result<Void> result = parentCatalogFacade.newData();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).newData();
         verifyNoMoreInteractions(catalogService);
@@ -99,7 +102,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#getAll()}.
      */
     @Test
-    public void getAll() {
+    void getAll() {
         final List<U> domainList = CollectionUtils.newList(newDomain(1), newDomain(2));
         final List<T> entityList = CollectionUtils.newList(newEntity(1), newEntity(2));
 
@@ -108,11 +111,12 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<List<T>> result = parentCatalogFacade.getAll();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(entityList));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(entityList, result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).getAll();
         verify(converter).convertCollection(domainList, getEntityClass());
@@ -125,8 +129,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#get(Integer)} with existing data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void get_ExistingData() {
+    void get_ExistingData() {
         final U domain = newDomain(1);
         final T entity = newEntity(1);
 
@@ -135,11 +138,12 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<T> result = parentCatalogFacade.get(1);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(entity));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(entity, result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).get(1);
         verify(converter).convert(domain, getEntityClass());
@@ -151,17 +155,17 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#get(Integer)} with not existing data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void get_NotExistingData() {
+    void get_NotExistingData() {
         when(catalogService.get(any(Integer.class))).thenReturn(null);
 
         final Result<T> result = parentCatalogFacade.get(Integer.MAX_VALUE);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertNull(result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, getEntityClass());
@@ -173,16 +177,15 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#get(Integer)} with null data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void get_NullData() {
+    void get_NullData() {
         final Result<T> result = parentCatalogFacade.get(null);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getData(), is(nullValue()));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertNull(result.getData()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(catalogService, converter, catalogValidator);
     }
@@ -191,7 +194,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#add(Movable)}.
      */
     @Test
-    public void add() {
+    void add() {
         final T entity = newEntity(null);
         final U domain = newDomain(null);
 
@@ -200,10 +203,11 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<Void> result = parentCatalogFacade.add(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).add(domain);
         verify(converter).convert(entity, getDomainClass());
@@ -215,16 +219,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#add(Movable)} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void add_InvalidData() {
+    void add_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
         when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.add(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is(INVALID_DATA_RESULT));
+        assertEquals(INVALID_DATA_RESULT, result);
 
         verify(catalogValidator).validate(entity, ValidationType.NEW, ValidationType.DEEP);
         verifyNoMoreInteractions(catalogValidator);
@@ -235,7 +237,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#update(Movable)}.
      */
     @Test
-    public void update() {
+    void update() {
         final T entity = newEntity(1);
         final U domain = newDomain(1);
 
@@ -243,10 +245,11 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<Void> result = parentCatalogFacade.update(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verifyUpdateMock(entity, domain);
         verifyNoMoreInteractions(catalogService, converter, catalogValidator);
@@ -256,16 +259,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#update(Movable)} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void update_InvalidData() {
+    void update_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
         when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.update(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is(INVALID_DATA_RESULT));
+        assertEquals(INVALID_DATA_RESULT, result);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.DEEP);
         verifyNoMoreInteractions(catalogValidator);
@@ -276,7 +277,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#remove(Movable)}.
      */
     @Test
-    public void remove() {
+    void remove() {
         final T entity = newEntity(1);
         final U domain = newDomain(1);
 
@@ -285,10 +286,11 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<Void> result = parentCatalogFacade.remove(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).get(1);
         verify(catalogService).remove(domain);
@@ -301,16 +303,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#remove(Movable)} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void remove_InvalidData() {
+    void remove_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
         when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.remove(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is(INVALID_DATA_RESULT));
+        assertEquals(INVALID_DATA_RESULT, result);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS);
         verifyNoMoreInteractions(catalogValidator);
@@ -321,7 +321,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#duplicate(Movable)}.
      */
     @Test
-    public void duplicate() {
+    void duplicate() {
         final T entity = newEntity(1);
         final U domain = newDomain(1);
 
@@ -330,10 +330,11 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<Void> result = parentCatalogFacade.duplicate(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).get(1);
         verify(catalogService).duplicate(domain);
@@ -346,16 +347,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#duplicate(Movable)} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void duplicate_InvalidData() {
+    void duplicate_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
         when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.duplicate(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is(INVALID_DATA_RESULT));
+        assertEquals(INVALID_DATA_RESULT, result);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS);
         verifyNoMoreInteractions(catalogValidator);
@@ -366,7 +365,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#moveUp(Movable)}.
      */
     @Test
-    public void moveUp() {
+    void moveUp() {
         final T entity = newEntity(1);
         final U domain = newDomain(1);
 
@@ -375,10 +374,11 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<Void> result = parentCatalogFacade.moveUp(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).get(1);
         verify(catalogService).moveUp(domain);
@@ -391,16 +391,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#moveUp(Movable)} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveUp_InvalidData() {
+    void moveUp_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
         when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.moveUp(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is(INVALID_DATA_RESULT));
+        assertEquals(INVALID_DATA_RESULT, result);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.UP);
         verifyNoMoreInteractions(catalogValidator);
@@ -411,7 +409,7 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#moveDown(Movable)}.
      */
     @Test
-    public void moveDown() {
+    void moveDown() {
         final T entity = newEntity(1);
         final U domain = newDomain(1);
 
@@ -420,10 +418,11 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
 
         final Result<Void> result = parentCatalogFacade.moveDown(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).get(1);
         verify(catalogService).moveDown(domain);
@@ -436,16 +435,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#moveDown(Movable)} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void moveDown_InvalidData() {
+    void moveDown_InvalidData() {
         final T entity = newEntity(Integer.MAX_VALUE);
 
         when(catalogValidator.validate(any(getEntityClass()), any())).thenReturn(INVALID_DATA_RESULT);
 
         final Result<Void> result = parentCatalogFacade.moveDown(entity);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is(INVALID_DATA_RESULT));
+        assertEquals(INVALID_DATA_RESULT, result);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.DOWN);
         verifyNoMoreInteractions(catalogValidator);
@@ -456,13 +453,14 @@ public abstract class AbstractParentFacadeTest<T extends Movable, U extends Mova
      * Test method for {@link CatalogParentFacade#updatePositions()}.
      */
     @Test
-    public void updatePositions() {
+    void updatePositions() {
         final Result<Void> result = parentCatalogFacade.updatePositions();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(catalogService).updatePositions();
         verifyNoMoreInteractions(catalogService);

@@ -1,14 +1,16 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -20,12 +22,12 @@ import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
+import cz.vhromada.test.MockitoExtension;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * An abstract class represents test for validator.
@@ -34,8 +36,8 @@ import org.mockito.junit.MockitoJUnitRunner;
  * @param <U> type of domain data
  * @author Vladimir Hromada
  */
-@RunWith(MockitoJUnitRunner.class)
-public abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
+@ExtendWith(MockitoExtension.class)
+abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
     /**
      * ID
@@ -56,8 +58,8 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
     /**
      * Initializes validator.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         catalogValidator = getCatalogValidator();
     }
 
@@ -65,14 +67,14 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#NEW} with correct data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_New() {
+    void validate_New() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.NEW);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verifyZeroInteractions(catalogService);
     }
@@ -81,15 +83,14 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#NEW} with data with not null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_New_NotNullId() {
+    void validate_New_NotNullId() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(Integer.MAX_VALUE), ValidationType.NEW);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(catalogService);
     }
@@ -98,18 +99,18 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#EXISTS} with correct data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Exists() {
+    void validate_Exists() {
         final T validatingData = getValidatingData(ID);
 
         initExistsMock(validatingData, true);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verifyExistsMock(validatingData);
     }
@@ -118,15 +119,14 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#EXISTS} with data with null ID.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Exists_NullId() {
+    void validate_Exists_NullId() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.EXISTS);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_ID_NULL", "ID mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_ID_NULL", "ID mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(catalogService);
     }
@@ -135,19 +135,19 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#EXISTS} with not existing data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Exists_NotExistingData() {
+    void validate_Exists_NotExistingData() {
         final T validatingData = getValidatingData(ID);
 
         initExistsMock(validatingData, false);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_EXIST", getName() + " doesn't exist.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_EXIST", getName() + " doesn't exist.")),
+                result.getEvents())
+        );
 
         verifyExistsMock(validatingData);
     }
@@ -156,18 +156,18 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#UP} with correct data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Up() {
+    void validate_Up() {
         final T validatingData = getValidatingData(ID);
 
         initMovingMock(validatingData, true, true);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verifyMovingMock(validatingData);
     }
@@ -176,19 +176,19 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#UP} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Up_Invalid() {
+    void validate_Up_Invalid() {
         final T validatingData = getValidatingData(Integer.MAX_VALUE);
 
         initMovingMock(validatingData, true, false);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")),
+                result.getEvents())
+        );
 
         verifyMovingMock(validatingData);
     }
@@ -197,18 +197,18 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DOWN} with correct data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Down() {
+    void validate_Down() {
         final T validatingData = getValidatingData(ID);
 
         initMovingMock(validatingData, false, true);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verifyMovingMock(validatingData);
     }
@@ -217,19 +217,19 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DOWN} with invalid data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Down_Invalid() {
+    void validate_Down_Invalid() {
         final T validatingData = getValidatingData(Integer.MAX_VALUE);
 
         initMovingMock(validatingData, false, false);
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")),
+                result.getEvents())
+        );
 
         verifyMovingMock(validatingData);
     }
@@ -238,14 +238,14 @@ public abstract class AbstractValidatorTest<T extends Movable, U extends Movable
      * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with correct data.
      */
     @Test
-    @SuppressWarnings("InstanceMethodNamingConvention")
-    public void validate_Deep() {
+    void validate_Deep() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(ID), ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verifyZeroInteractions(catalogService);
     }

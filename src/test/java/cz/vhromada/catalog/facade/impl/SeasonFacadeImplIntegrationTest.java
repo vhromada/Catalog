@@ -1,9 +1,11 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -26,7 +28,7 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.annotation.DirtiesContext;
@@ -37,19 +39,19 @@ import org.springframework.test.annotation.DirtiesContext;
  * @author Vladimir Hromada
  */
 @DirtiesContext
-public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<Season, cz.vhromada.catalog.domain.Season, Show> {
+class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<Season, cz.vhromada.catalog.domain.Season, Show> {
 
     /**
      * Event for invalid starting year
      */
     private static final Event INVALID_STARTING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID", "Starting year must be between "
-            + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
+        + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
 
     /**
      * Event for invalid ending year
      */
     private static final Event INVALID_ENDING_YEAR_EVENT = new Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID", "Ending year must be between "
-            + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
+        + Constants.MIN_YEAR + " and " + Constants.CURRENT_YEAR + '.');
 
     /**
      * Instance of {@link EntityManager}
@@ -68,17 +70,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with not positive number of season.
      */
     @Test
-    public void add_NotPositiveNumber() {
+    void add_NotPositiveNumber() {
         final Season season = newChildData(null);
         season.setNumber(0);
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -87,19 +90,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with bad minimum starting year and bad minimum ending year.
      */
     @Test
-    public void add_BadMinimumYears() {
+    void add_BadMinimumYears() {
         final Season season = newChildData(null);
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(2));
-        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
-        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -108,19 +110,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with bad maximum starting year and bad maximum ending year.
      */
     @Test
-    public void add_BadMaximumYears() {
+    void add_BadMaximumYears() {
         final Season season = newChildData(null);
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(2));
-        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
-        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -129,17 +130,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with starting year greater than ending year.
      */
     @Test
-    public void add_BadYears() {
+    void add_BadYears() {
         final Season season = newChildData(null);
         season.setStartYear(season.getEndYear() + 1);
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID",
+                "Starting year mustn't be greater than ending year.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -148,17 +150,17 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with null language.
      */
     @Test
-    public void add_NullLanguage() {
+    void add_NullLanguage() {
         final Season season = newChildData(null);
         season.setLanguage(null);
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -167,17 +169,17 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with null subtitles.
      */
     @Test
-    public void add_NullSubtitles() {
+    void add_NullSubtitles() {
         final Season season = newChildData(null);
         season.setSubtitles(null);
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -186,17 +188,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with subtitles with null value.
      */
     @Test
-    public void add_BadSubtitles() {
+    void add_BadSubtitles() {
         final Season season = newChildData(null);
         season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -205,17 +208,17 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with null note.
      */
     @Test
-    public void add_NullNote() {
+    void add_NullNote() {
         final Season season = newChildData(null);
         season.setNote(null);
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -224,17 +227,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with not positive number of season.
      */
     @Test
-    public void update_NotPositiveNumber() {
+    void update_NotPositiveNumber() {
         final Season season = newChildData(1);
         season.setNumber(0);
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -243,19 +247,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with bad minimum starting year and bad minimum ending year.
      */
     @Test
-    public void update_BadMinimumYears() {
+    void update_BadMinimumYears() {
         final Season season = newChildData(1);
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(2));
-        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
-        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -264,19 +267,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with bad maximum starting year and bad maximum ending year.
      */
     @Test
-    public void update_BadMaximumYears() {
+    void update_BadMaximumYears() {
         final Season season = newChildData(1);
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(2));
-        assertThat(result.getEvents().get(0), is(INVALID_STARTING_YEAR_EVENT));
-        assertThat(result.getEvents().get(1), is(INVALID_ENDING_YEAR_EVENT));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -285,17 +287,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with starting year greater than ending year.
      */
     @Test
-    public void update_BadYears() {
+    void update_BadYears() {
         final Season season = newChildData(1);
         season.setStartYear(season.getEndYear() + 1);
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID",
+                "Starting year mustn't be greater than ending year.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -304,17 +307,17 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with null language.
      */
     @Test
-    public void update_NullLanguage() {
+    void update_NullLanguage() {
         final Season season = newChildData(1);
         season.setLanguage(null);
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -323,17 +326,17 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with null subtitles.
      */
     @Test
-    public void update_NullSubtitles() {
+    void update_NullSubtitles() {
         final Season season = newChildData(1);
         season.setSubtitles(null);
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -342,17 +345,18 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with subtitles with null value.
      */
     @Test
-    public void update_BadSubtitles() {
+    void update_BadSubtitles() {
         final Season season = newChildData(1);
         season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
+                result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -361,17 +365,17 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
      * Test method for {@link SeasonFacade#update(Season)} with season with null note.
      */
     @Test
-    public void update_NullNote() {
+    void update_NullNote() {
         final Season season = newChildData(1);
         season.setNote(null);
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         assertDefaultRepositoryData();
     }
@@ -469,27 +473,32 @@ public class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrat
 
     @Override
     protected void assertRemoveRepositoryData() {
-        assertThat(getRepositoryChildDataCount(), is(getDefaultChildDataCount() - 1));
-        assertThat(getRepositoryParentDataCount(), is(getDefaultParentDataCount()));
-        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SEASON_COUNT));
-        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
-
+        assertAll(
+            () -> assertEquals(Integer.valueOf(getDefaultChildDataCount() - 1), getRepositoryChildDataCount()),
+            () -> assertEquals(getDefaultParentDataCount(), getRepositoryParentDataCount()),
+            () -> assertEquals(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SEASON_COUNT, EpisodeUtils.getEpisodesCount(entityManager)),
+            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
+        );
     }
 
     @Override
     protected void assertDuplicateRepositoryData() {
-        assertThat(getRepositoryChildDataCount(), is(getDefaultChildDataCount() + 1));
-        assertThat(getRepositoryParentDataCount(), is(getDefaultParentDataCount()));
-        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SEASON_COUNT));
-        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertAll(
+            () -> assertEquals(Integer.valueOf(getDefaultChildDataCount() + 1), getRepositoryChildDataCount()),
+            () -> assertEquals(getDefaultParentDataCount(), getRepositoryParentDataCount()),
+            () -> assertEquals(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SEASON_COUNT, EpisodeUtils.getEpisodesCount(entityManager)),
+            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
+        );
     }
 
     @Override
     protected void assertReferences() {
         super.assertReferences();
 
-        assertThat(EpisodeUtils.getEpisodesCount(entityManager), is(EpisodeUtils.EPISODES_COUNT));
-        assertThat(GenreUtils.getGenresCount(entityManager), is(GenreUtils.GENRES_COUNT));
+        assertAll(
+            () -> assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager)),
+            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
+        );
     }
 
 }

@@ -1,5 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.List;
 
 import cz.vhromada.catalog.entity.Season;
@@ -11,46 +13,47 @@ import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converter.Converter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link SeasonFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-public class SeasonFacadeImplTest extends AbstractChildFacadeTest<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show> {
+class SeasonFacadeImplTest extends AbstractChildFacadeTest<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show> {
 
     /**
      * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null service for
      * shows.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullShowService() {
-        new SeasonFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
+    @Test
+    void constructor_NullShowService() {
+        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new SeasonFacadeImpl(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(getCatalogService(), null, getParentCatalogValidator(),
+            getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullShowValidator() {
-        new SeasonFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator());
+    @Test
+    void constructor_NullShowValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()));
     }
 
     /**
      * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for season.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullSeasonValidator() {
-        new SeasonFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null);
+    @Test
+    void constructor_NullSeasonValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null));
     }
 
     @Override

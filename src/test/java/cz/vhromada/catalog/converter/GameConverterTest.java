@@ -1,29 +1,26 @@
 package cz.vhromada.catalog.converter;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.utils.GameUtils;
 import cz.vhromada.converter.Converter;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * A class represents test for converter between {@link cz.vhromada.catalog.domain.Game} and {@link Game}.
  *
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
-public class GameConverterTest {
+class GameConverterTest {
 
     /**
      * Instance of {@link Converter}
@@ -35,7 +32,7 @@ public class GameConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void convertGameDomain() {
+    void convertGameDomain() {
         final cz.vhromada.catalog.domain.Game gameDomain = GameUtils.newGameDomain(1);
         final Game game = converter.convert(gameDomain, Game.class);
 
@@ -46,19 +43,18 @@ public class GameConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null game.
      */
     @Test
-    public void convertGameDomain_NullGame() {
-        assertThat(converter.convert(null, Game.class), is(nullValue()));
+    void convertGameDomain_NullGame() {
+        assertNull(converter.convert(null, Game.class));
     }
 
     /**
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void convertGame() {
+    void convertGame() {
         final Game game = GameUtils.newGame(1);
         final cz.vhromada.catalog.domain.Game gameDomain = converter.convert(game, cz.vhromada.catalog.domain.Game.class);
 
-        assertThat(gameDomain, is(notNullValue()));
         GameUtils.assertGameDeepEquals(game, gameDomain);
     }
 
@@ -66,8 +62,8 @@ public class GameConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null game.
      */
     @Test
-    public void convertGame_NullGame() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class), is(nullValue()));
+    void convertGame_NullGame() {
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Game.class));
     }
 
 }

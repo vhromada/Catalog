@@ -1,8 +1,10 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -19,44 +21,44 @@ import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link GameFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-public class GameFacadeImplTest extends AbstractParentFacadeTest<Game, cz.vhromada.catalog.domain.Game> {
+class GameFacadeImplTest extends AbstractParentFacadeTest<Game, cz.vhromada.catalog.domain.Game> {
 
     /**
      * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for games.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullGameService() {
-        new GameFacadeImpl(null, getConverter(), getCatalogValidator());
+    @Test
+    void constructor_NullGameService() {
+        assertThrows(IllegalArgumentException.class, () -> new GameFacadeImpl(null, getConverter(), getCatalogValidator()));
     }
 
     /**
      * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new GameFacadeImpl(getCatalogService(), null, getCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new GameFacadeImpl(getCatalogService(), null, getCatalogValidator()));
     }
 
     /**
      * Test method for {@link GameFacadeImpl#GameFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullGameValidator() {
-        new GameFacadeImpl(getCatalogService(), getConverter(), null);
+    @Test
+    void constructor_NullGameValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new GameFacadeImpl(getCatalogService(), getConverter(), null));
     }
 
     /**
      * Test method for {@link GameFacade#getTotalMediaCount()}.
      */
     @Test
-    public void getTotalMediaCount() {
+    void getTotalMediaCount() {
         final cz.vhromada.catalog.domain.Game game1 = GameUtils.newGameDomain(1);
         final cz.vhromada.catalog.domain.Game game2 = GameUtils.newGameDomain(2);
         final int expectedCount = game1.getMediaCount() + game2.getMediaCount();
@@ -65,11 +67,12 @@ public class GameFacadeImplTest extends AbstractParentFacadeTest<Game, cz.vhroma
 
         final Result<Integer> result = ((GameFacade) getCatalogParentFacade()).getTotalMediaCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(expectedCount));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(Integer.valueOf(expectedCount), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());

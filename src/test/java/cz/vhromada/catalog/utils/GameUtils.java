@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.utils;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +181,6 @@ public final class GameUtils {
      * @param id            game ID
      * @return game with updated fields
      */
-    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Game updateGame(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Game game = getGame(entityManager, id);
         updateGame(game);
@@ -207,8 +206,11 @@ public final class GameUtils {
      * @param actual   actual games
      */
     public static void assertGamesDeepEquals(final List<cz.vhromada.catalog.domain.Game> expected, final List<cz.vhromada.catalog.domain.Game> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGameDeepEquals(expected.get(i), actual.get(i));
@@ -223,21 +225,27 @@ public final class GameUtils {
      * @param actual   actual game
      */
     public static void assertGameDeepEquals(final cz.vhromada.catalog.domain.Game expected, final cz.vhromada.catalog.domain.Game actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
-        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
-        assertThat(actual.getCrack(), is(expected.getCrack()));
-        assertThat(actual.getSerialKey(), is(expected.getSerialKey()));
-        assertThat(actual.getPatch(), is(expected.getPatch()));
-        assertThat(actual.getTrainer(), is(expected.getTrainer()));
-        assertThat(actual.getTrainerData(), is(expected.getTrainerData()));
-        assertThat(actual.getEditor(), is(expected.getEditor()));
-        assertThat(actual.getSaves(), is(expected.getSaves()));
-        assertThat(actual.getOtherData(), is(expected.getOtherData()));
-        assertThat(actual.getNote(), is(expected.getNote()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
+            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
+            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
+            () -> assertEquals(expected.getCrack(), actual.getCrack()),
+            () -> assertEquals(expected.getSerialKey(), actual.getSerialKey()),
+            () -> assertEquals(expected.getPatch(), actual.getPatch()),
+            () -> assertEquals(expected.getTrainer(), actual.getTrainer()),
+            () -> assertEquals(expected.getTrainerData(), actual.getTrainerData()),
+            () -> assertEquals(expected.getEditor(), actual.getEditor()),
+            () -> assertEquals(expected.getSaves(), actual.getSaves()),
+            () -> assertEquals(expected.getOtherData(), actual.getOtherData()),
+            () -> assertEquals(expected.getNote(), actual.getNote()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
     /**
@@ -247,8 +255,11 @@ public final class GameUtils {
      * @param actual   actual games
      */
     public static void assertGameListDeepEquals(final List<Game> expected, final List<cz.vhromada.catalog.domain.Game> actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.size(), is(expected.size()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertEquals(expected.size(), actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGameDeepEquals(expected.get(i), actual.get(i));
@@ -263,22 +274,27 @@ public final class GameUtils {
      * @param actual   actual game
      */
     public static void assertGameDeepEquals(final Game expected, final cz.vhromada.catalog.domain.Game actual) {
-        assertThat(actual, is(notNullValue()));
-        assertThat(actual.getId(), is(expected.getId()));
-        assertThat(actual.getName(), is(expected.getName()));
-        assertThat(actual.getWikiEn(), is(expected.getWikiEn()));
-        assertThat(actual.getWikiCz(), is(expected.getWikiCz()));
-        assertThat(actual.getMediaCount(), is(expected.getMediaCount()));
-        assertThat(actual.getCrack(), is(expected.getCrack()));
-        assertThat(actual.getSerialKey(), is(expected.getSerialKey()));
-        assertThat(actual.getPatch(), is(expected.getPatch()));
-        assertThat(actual.getTrainer(), is(expected.getTrainer()));
-        assertThat(actual.getTrainerData(), is(expected.getTrainerData()));
-        assertThat(actual.getEditor(), is(expected.getEditor()));
-        assertThat(actual.getSaves(), is(expected.getSaves()));
-        assertThat(actual.getOtherData(), is(expected.getOtherData()));
-        assertThat(actual.getNote(), is(expected.getNote()));
-        assertThat(actual.getPosition(), is(expected.getPosition()));
+        assertAll(
+            () -> assertNotNull(expected),
+            () -> assertNotNull(actual)
+        );
+        assertAll(
+            () -> assertEquals(expected.getId(), actual.getId()),
+            () -> assertEquals(expected.getName(), actual.getName()),
+            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
+            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
+            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
+            () -> assertEquals(expected.getCrack(), actual.getCrack()),
+            () -> assertEquals(expected.getSerialKey(), actual.getSerialKey()),
+            () -> assertEquals(expected.getPatch(), actual.getPatch()),
+            () -> assertEquals(expected.getTrainer(), actual.getTrainer()),
+            () -> assertEquals(expected.getTrainerData(), actual.getTrainerData()),
+            () -> assertEquals(expected.getEditor(), actual.getEditor()),
+            () -> assertEquals(expected.getSaves(), actual.getSaves()),
+            () -> assertEquals(expected.getOtherData(), actual.getOtherData()),
+            () -> assertEquals(expected.getNote(), actual.getNote()),
+            () -> assertEquals(expected.getPosition(), actual.getPosition())
+        );
     }
 
 }

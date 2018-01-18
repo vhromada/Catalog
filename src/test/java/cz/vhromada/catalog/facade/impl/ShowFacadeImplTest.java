@@ -1,8 +1,10 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -25,63 +27,65 @@ import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link ShowFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.catalog.domain.Show> {
+class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.catalog.domain.Show> {
 
     /**
      * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for shows.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullShowService() {
-        new ShowFacadeImpl(null, getConverter(), getCatalogValidator());
+    @Test
+    void constructor_NullShowService() {
+        assertThrows(IllegalArgumentException.class, () -> new ShowFacadeImpl(null, getConverter(), getCatalogValidator()));
     }
 
     /**
      * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new ShowFacadeImpl(getCatalogService(), null, getCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new ShowFacadeImpl(getCatalogService(), null, getCatalogValidator()));
     }
 
     /**
      * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for show.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullShowValidator() {
-        new ShowFacadeImpl(getCatalogService(), getConverter(), null);
+    @Test
+    void constructor_NullShowValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new ShowFacadeImpl(getCatalogService(), getConverter(), null));
     }
 
     /**
      * Test method for {@link ShowFacade#getTotalLength()}.
      */
     @Test
-    public void getTotalLength() {
+    void getTotalLength() {
         final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
-        int expectedTotalLength = 0;
+        int totalLength = 0;
         for (final cz.vhromada.catalog.domain.Show show : showList) {
             for (final Season season : show.getSeasons()) {
                 for (final Episode episode : season.getEpisodes()) {
-                    expectedTotalLength += episode.getLength();
+                    totalLength += episode.getLength();
                 }
             }
         }
+        final int expectedTotalLength = totalLength;
 
         when(getCatalogService().getAll()).thenReturn(showList);
 
         final Result<Time> result = ((ShowFacade) getCatalogParentFacade()).getTotalLength();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(new Time(expectedTotalLength)));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(new Time(expectedTotalLength), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());
@@ -92,7 +96,7 @@ public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhroma
      * Test method for {@link ShowFacade#getSeasonsCount()}.
      */
     @Test
-    public void getSeasonsCount() {
+    void getSeasonsCount() {
         final cz.vhromada.catalog.domain.Show show1 = ShowUtils.newShowWithSeasons(1);
         final cz.vhromada.catalog.domain.Show show2 = ShowUtils.newShowWithSeasons(2);
         final int expectedSeasons = show1.getSeasons().size() + show2.getSeasons().size();
@@ -101,11 +105,12 @@ public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhroma
 
         final Result<Integer> result = ((ShowFacade) getCatalogParentFacade()).getSeasonsCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(expectedSeasons));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(Integer.valueOf(expectedSeasons), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());
@@ -116,24 +121,26 @@ public class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhroma
      * Test method for {@link ShowFacade#getEpisodesCount()}.
      */
     @Test
-    public void getEpisodesCount() {
+    void getEpisodesCount() {
         final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
-        int expectedEpisodes = 0;
+        int episodesCount = 0;
         for (final cz.vhromada.catalog.domain.Show show : showList) {
             for (final Season season : show.getSeasons()) {
-                expectedEpisodes += season.getEpisodes().size();
+                episodesCount += season.getEpisodes().size();
             }
         }
+        final int expectedEpisodes = episodesCount;
 
         when(getCatalogService().getAll()).thenReturn(showList);
 
         final Result<Integer> result = ((ShowFacade) getCatalogParentFacade()).getEpisodesCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(expectedEpisodes));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(Integer.valueOf(expectedEpisodes), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());

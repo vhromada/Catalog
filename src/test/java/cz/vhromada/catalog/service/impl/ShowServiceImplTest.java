@@ -1,15 +1,15 @@
 package cz.vhromada.catalog.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.repository.ShowRepository;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.ShowUtils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.cache.Cache;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,8 +18,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladimir Hromada
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ShowServiceImplTest extends AbstractServiceTest<Show> {
+class ShowServiceImplTest extends AbstractServiceTest<Show> {
 
     /**
      * Instance of {@link ShowRepository}
@@ -30,17 +29,17 @@ public class ShowServiceImplTest extends AbstractServiceTest<Show> {
     /**
      * Test method for {@link ShowServiceImpl#ShowServiceImpl(ShowRepository, Cache)} with null repository for shows.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullShowRepository() {
-        new ShowServiceImpl(null, getCache());
+    @Test
+    void constructor_NullShowRepository() {
+        assertThrows(IllegalArgumentException.class, () -> new ShowServiceImpl(null, getCache()));
     }
 
     /**
      * Test method for {@link ShowServiceImpl#ShowServiceImpl(ShowRepository, Cache)} with null cache.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCache() {
-        new ShowServiceImpl(showRepository, null);
+    @Test
+    void constructor_NullCache() {
+        assertThrows(IllegalArgumentException.class, () -> new ShowServiceImpl(showRepository, null));
     }
 
     @Override

@@ -1,9 +1,8 @@
 package cz.vhromada.catalog.repository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
@@ -13,14 +12,13 @@ import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.domain.Program;
 import cz.vhromada.catalog.utils.ProgramUtils;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -28,11 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
 @Transactional
 @Rollback
-public class ProgramRepositoryIntegrationTest {
+class ProgramRepositoryIntegrationTest {
 
     /**
      * Instance of {@link EntityManager}
@@ -51,58 +49,57 @@ public class ProgramRepositoryIntegrationTest {
      * Test method for get programs.
      */
     @Test
-    public void getPrograms() {
-        final List<Program> programs = programRepository.findAll(Sort.by("position", "id"));
+    void getPrograms() {
+        final List<Program> programs = programRepository.findAll();
 
         ProgramUtils.assertProgramsDeepEquals(ProgramUtils.getPrograms(), programs);
 
-        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
+        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
     }
 
     /**
      * Test method for get program.
      */
     @Test
-    public void getProgram() {
+    void getProgram() {
         for (int i = 1; i <= ProgramUtils.PROGRAMS_COUNT; i++) {
             final Program program = programRepository.findById(i).orElse(null);
 
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), program);
         }
 
-        assertThat(programRepository.findById(Integer.MAX_VALUE).isPresent(), is(false));
+        assertFalse(programRepository.findById(Integer.MAX_VALUE).isPresent());
 
-        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
+        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
     }
 
     /**
      * Test method for add program.
      */
     @Test
-    public void add() {
+    void add() {
         final Program program = ProgramUtils.newProgramDomain(null);
 
-        programRepository.saveAndFlush(program);
+        programRepository.save(program);
 
-        assertThat(program.getId(), is(notNullValue()));
-        assertThat(program.getId(), is(ProgramUtils.PROGRAMS_COUNT + 1));
+        assertEquals(Integer.valueOf(ProgramUtils.PROGRAMS_COUNT + 1), program.getId());
 
         final Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
         final Program expectedAddProgram = ProgramUtils.newProgramDomain(null);
         expectedAddProgram.setId(ProgramUtils.PROGRAMS_COUNT + 1);
         ProgramUtils.assertProgramDeepEquals(expectedAddProgram, addedProgram);
 
-        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT + 1));
+        assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, ProgramUtils.getProgramsCount(entityManager));
     }
 
     /**
      * Test method for update program.
      */
     @Test
-    public void update() {
+    void update() {
         final Program program = ProgramUtils.updateProgram(entityManager, 1);
 
-        programRepository.saveAndFlush(program);
+        programRepository.save(program);
 
         final Program updatedProgram = ProgramUtils.getProgram(entityManager, 1);
         final Program expectedUpdatedProgram = ProgramUtils.getProgram(1);
@@ -110,29 +107,29 @@ public class ProgramRepositoryIntegrationTest {
         expectedUpdatedProgram.setPosition(ProgramUtils.POSITION);
         ProgramUtils.assertProgramDeepEquals(expectedUpdatedProgram, updatedProgram);
 
-        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT));
+        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
     }
 
     /**
      * Test method for remove program.
      */
     @Test
-    public void remove() {
+    void remove() {
         programRepository.delete(ProgramUtils.getProgram(entityManager, 1));
 
-        assertThat(ProgramUtils.getProgram(entityManager, 1), is(nullValue()));
+        assertNull(ProgramUtils.getProgram(entityManager, 1));
 
-        assertThat(ProgramUtils.getProgramsCount(entityManager), is(ProgramUtils.PROGRAMS_COUNT - 1));
+        assertEquals(ProgramUtils.PROGRAMS_COUNT - 1, ProgramUtils.getProgramsCount(entityManager));
     }
 
     /**
      * Test method for remove all programs.
      */
     @Test
-    public void removeAll() {
+    void removeAll() {
         programRepository.deleteAll();
 
-        assertThat(ProgramUtils.getProgramsCount(entityManager), is(0));
+        assertEquals(0, ProgramUtils.getProgramsCount(entityManager));
     }
 
 }

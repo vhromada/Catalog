@@ -1,44 +1,46 @@
 package cz.vhromada.catalog.facade.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.validator.CatalogValidator;
 import cz.vhromada.converter.Converter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link AbstractCatalogParentFacade}.
  *
  * @author Vladimir Hromada
  */
-public class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Movable, Movable> {
+class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Movable, Movable> {
 
     /**
      * Test method for {@link AbstractCatalogParentFacade#AbstractCatalogParentFacade(CatalogService, Converter, CatalogValidator)} with null
      * service for catalog.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCatalogService() {
-        new AbstractCatalogParentFacadeStub(null, getConverter(), getCatalogValidator());
+    @Test
+    void constructor_NullCatalogService() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogParentFacadeStub(null, getConverter(), getCatalogValidator()));
     }
 
     /**
      * Test method for {@link AbstractCatalogParentFacade#AbstractCatalogParentFacade(CatalogService, Converter, CatalogValidator)} with null converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new AbstractCatalogParentFacadeStub(getCatalogService(), null, getCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogParentFacadeStub(getCatalogService(), null, getCatalogValidator()));
     }
 
     /**
      * Test method for {@link AbstractCatalogParentFacade#AbstractCatalogParentFacade(CatalogService, Converter, CatalogValidator)} with null
      * validator for catalog.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCatalogValidator() {
-        new AbstractCatalogParentFacadeStub(getCatalogService(), getConverter(), null);
+    @Test
+    void constructor_NullCatalogValidator() {
+        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogParentFacadeStub(getCatalogService(), getConverter(), null));
     }
 
     @Override
@@ -79,7 +81,7 @@ public class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Mo
          * @param catalogValidator validator for catalog
          */
         AbstractCatalogParentFacadeStub(final CatalogService<Movable> catalogService, final Converter converter,
-                final CatalogValidator<Movable> catalogValidator) {
+            final CatalogValidator<Movable> catalogValidator) {
             super(catalogService, converter, catalogValidator);
         }
 

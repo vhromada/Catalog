@@ -1,14 +1,16 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.common.Movable;
@@ -27,21 +29,21 @@ import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link EpisodeValidatorImpl}.
  *
  * @author Vladimir Hromada
  */
-public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Show> {
+class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Show> {
 
     /**
      * Test method for {@link EpisodeValidatorImpl#EpisodeValidatorImpl(CatalogService)} with null service for shows.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullShowService() {
-        new EpisodeValidatorImpl(null);
+    @Test
+    void constructor_NullShowService() {
+        assertThrows(IllegalArgumentException.class, () -> new EpisodeValidatorImpl(null));
     }
 
     /**
@@ -49,17 +51,18 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
      * number of episode.
      */
     @Test
-    public void validate_Deep_NotPositiveNumber() {
+    void validate_Deep_NotPositiveNumber() {
         final Episode episode = getValidatingData(1);
         episode.setNumber(0);
 
         final Result<Void> result = getCatalogValidator().validate(episode, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE",
+                "Number of episode must be positive number.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -68,17 +71,17 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
      * Test method for {@link EpisodeValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
     @Test
-    public void validate_Deep_NullName() {
+    void validate_Deep_NullName() {
         final Episode episode = getValidatingData(1);
         episode.setName(null);
 
         final Result<Void> result = getCatalogValidator().validate(episode, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -87,17 +90,17 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
      * Test method for {@link EpisodeValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
     @Test
-    public void validate_Deep_EmptyName() {
+    void validate_Deep_EmptyName() {
         final Episode episode = getValidatingData(1);
         episode.setName("");
 
         final Result<Void> result = getCatalogValidator().validate(episode, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -107,17 +110,18 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
      * episode.
      */
     @Test
-    public void validate_Deep_NegativeLength() {
+    void validate_Deep_NegativeLength() {
         final Episode episode = getValidatingData(1);
         episode.setLength(-1);
 
         final Result<Void> result = getCatalogValidator().validate(episode, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")),
+                result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -126,17 +130,17 @@ public class EpisodeValidatorImplTest extends AbstractValidatorTest<Episode, Sho
      * Test method for {@link EpisodeValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
-    public void validate_Deep_NullNote() {
+    void validate_Deep_NullNote() {
         final Episode episode = getValidatingData(1);
         episode.setNote(null);
 
         final Result<Void> result = getCatalogValidator().validate(episode, ValidationType.DEEP);
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.ERROR));
-        assertThat(result.getEvents().size(), is(1));
-        assertThat(result.getEvents().get(0), is(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.ERROR, result.getStatus()),
+            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
+        );
 
         verifyZeroInteractions(getCatalogService());
     }

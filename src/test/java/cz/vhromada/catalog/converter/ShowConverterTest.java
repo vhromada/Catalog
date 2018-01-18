@@ -1,29 +1,26 @@
 package cz.vhromada.catalog.converter;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.converter.Converter;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * A class represents test for converter between {@link cz.vhromada.catalog.domain.Show} and {@link Show}.
  *
  * @author Vladimir Hromada
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
-public class ShowConverterTest {
+class ShowConverterTest {
 
     /**
      * Instance of {@link Converter}
@@ -35,7 +32,7 @@ public class ShowConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
      */
     @Test
-    public void convertShowDomain() {
+    void convertShowDomain() {
         final cz.vhromada.catalog.domain.Show showDomain = ShowUtils.newShowDomain(1);
         final Show show = converter.convert(showDomain, Show.class);
 
@@ -46,19 +43,18 @@ public class ShowConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null show.
      */
     @Test
-    public void convertShowDomain_NullShow() {
-        assertThat(converter.convert(null, Show.class), is(nullValue()));
+    void convertShowDomain_NullShow() {
+        assertNull(converter.convert(null, Show.class));
     }
 
     /**
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
      */
     @Test
-    public void convertShow() {
+    void convertShow() {
         final Show show = ShowUtils.newShow(1);
         final cz.vhromada.catalog.domain.Show showDomain = converter.convert(show, cz.vhromada.catalog.domain.Show.class);
 
-        assertThat(showDomain, is(notNullValue()));
         ShowUtils.assertShowDeepEquals(show, showDomain);
     }
 
@@ -66,8 +62,8 @@ public class ShowConverterTest {
      * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null show.
      */
     @Test
-    public void convertShow_NullShow() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Show.class), is(nullValue()));
+    void convertShow_NullShow() {
+        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Show.class));
     }
 
 }

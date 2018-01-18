@@ -1,11 +1,13 @@
 package cz.vhromada.catalog.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.repository.GenreRepository;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.GenreUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +17,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladimir Hromada
  */
-public class GenreServiceImplTest extends AbstractServiceTest<Genre> {
+class GenreServiceImplTest extends AbstractServiceTest<Genre> {
 
     /**
      * Instance of {@link GenreRepository}
@@ -26,17 +28,17 @@ public class GenreServiceImplTest extends AbstractServiceTest<Genre> {
     /**
      * Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreRepository, Cache)} with null repository for genres.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullGenreRepository() {
-        new GenreServiceImpl(null, getCache());
+    @Test
+    void constructor_NullGenreRepository() {
+        assertThrows(IllegalArgumentException.class, () -> new GenreServiceImpl(null, getCache()));
     }
 
     /**
      * Test method for {@link GenreServiceImpl#GenreServiceImpl(GenreRepository, Cache)} with null cache.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullCache() {
-        new GenreServiceImpl(genreRepository, null);
+    @Test
+    void constructor_NullCache() {
+        assertThrows(IllegalArgumentException.class, () -> new GenreServiceImpl(genreRepository, null));
     }
 
     @Override

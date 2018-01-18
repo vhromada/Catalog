@@ -1,8 +1,10 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -19,47 +21,43 @@ import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
 
 /**
  * A class represents test for class {@link ProgramFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.vhromada.catalog.domain.Program> {
+class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
      * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for games.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullProgramService() {
-        new ProgramFacadeImpl(null, getConverter(), getCatalogValidator());
+    @Test
+    void constructor_NullProgramService() {
+        assertThrows(IllegalArgumentException.class, () -> new ProgramFacadeImpl(null, getConverter(), getCatalogValidator()));
     }
 
     /**
      * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullConverter() {
-        new ProgramFacadeImpl(getCatalogService(), null, getCatalogValidator());
+    @Test
+    void constructor_NullConverter() {
+        assertThrows(IllegalArgumentException.class, () -> new ProgramFacadeImpl(getCatalogService(), null, getCatalogValidator()));
     }
 
     /**
      * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for game.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_NullProgramValidator() {
-        new ProgramFacadeImpl(getCatalogService(), getConverter(), null);
+    @Test
+    void constructor_NullProgramValidator() {
     }
 
     /**
      * Test method for {@link ProgramFacade#getTotalMediaCount()}.
      */
     @Test
-    public void getTotalMediaCount() {
+    void getTotalMediaCount() {
         final cz.vhromada.catalog.domain.Program program1 = ProgramUtils.newProgramDomain(1);
         final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.newProgramDomain(2);
         final int expectedCount = program1.getMediaCount() + program2.getMediaCount();
@@ -68,11 +66,12 @@ public class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.
 
         final Result<Integer> result = ((ProgramFacade) getCatalogParentFacade()).getTotalMediaCount();
 
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getEvents(), is(notNullValue()));
-        assertThat(result.getStatus(), is(Status.OK));
-        assertThat(result.getData(), is(expectedCount));
-        assertThat(result.getEvents().isEmpty(), is(true));
+        assertNotNull(result);
+        assertAll(
+            () -> assertEquals(Status.OK, result.getStatus()),
+            () -> assertEquals(Integer.valueOf(expectedCount), result.getData()),
+            () -> assertTrue(result.getEvents().isEmpty())
+        );
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());

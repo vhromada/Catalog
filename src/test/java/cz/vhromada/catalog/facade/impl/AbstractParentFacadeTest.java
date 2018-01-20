@@ -1,10 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -87,11 +84,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
     void newData() {
         final Result<Void> result = parentCatalogFacade.newData();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).newData();
         verifyNoMoreInteractions(catalogService);
@@ -111,12 +107,11 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<List<T>> result = parentCatalogFacade.getAll();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(entityList, result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(entityList);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).getAll();
         verify(converter).convertCollection(domainList, getEntityClass());
@@ -138,12 +133,11 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<T> result = parentCatalogFacade.get(1);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(entity, result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(entity);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).get(1);
         verify(converter).convert(domain, getEntityClass());
@@ -160,12 +154,11 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<T> result = parentCatalogFacade.get(Integer.MAX_VALUE);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertNull(result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isNull();
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).get(Integer.MAX_VALUE);
         verify(converter).convert(null, getEntityClass());
@@ -180,12 +173,11 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
     void get_NullData() {
         final Result<T> result = parentCatalogFacade.get(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertNull(result.getData()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getData()).isNull();
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "ID_NULL", "ID mustn't be null.")));
+        });
 
         verifyZeroInteractions(catalogService, converter, catalogValidator);
     }
@@ -203,11 +195,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.add(entity);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).add(domain);
         verify(converter).convert(entity, getDomainClass());
@@ -226,7 +217,7 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.add(entity);
 
-        assertEquals(INVALID_DATA_RESULT, result);
+        assertThat(result).isEqualTo(INVALID_DATA_RESULT);
 
         verify(catalogValidator).validate(entity, ValidationType.NEW, ValidationType.DEEP);
         verifyNoMoreInteractions(catalogValidator);
@@ -245,11 +236,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.update(entity);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verifyUpdateMock(entity, domain);
         verifyNoMoreInteractions(catalogService, converter, catalogValidator);
@@ -266,7 +256,7 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.update(entity);
 
-        assertEquals(INVALID_DATA_RESULT, result);
+        assertThat(result).isEqualTo(INVALID_DATA_RESULT);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.DEEP);
         verifyNoMoreInteractions(catalogValidator);
@@ -286,11 +276,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.remove(entity);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).get(1);
         verify(catalogService).remove(domain);
@@ -310,7 +299,7 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.remove(entity);
 
-        assertEquals(INVALID_DATA_RESULT, result);
+        assertThat(result).isEqualTo(INVALID_DATA_RESULT);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS);
         verifyNoMoreInteractions(catalogValidator);
@@ -330,11 +319,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.duplicate(entity);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).get(1);
         verify(catalogService).duplicate(domain);
@@ -354,7 +342,7 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.duplicate(entity);
 
-        assertEquals(INVALID_DATA_RESULT, result);
+        assertThat(result).isEqualTo(INVALID_DATA_RESULT);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS);
         verifyNoMoreInteractions(catalogValidator);
@@ -374,11 +362,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.moveUp(entity);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).get(1);
         verify(catalogService).moveUp(domain);
@@ -398,7 +385,7 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.moveUp(entity);
 
-        assertEquals(INVALID_DATA_RESULT, result);
+        assertThat(result).isEqualTo(INVALID_DATA_RESULT);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.UP);
         verifyNoMoreInteractions(catalogValidator);
@@ -418,11 +405,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.moveDown(entity);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).get(1);
         verify(catalogService).moveDown(domain);
@@ -442,7 +428,7 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = parentCatalogFacade.moveDown(entity);
 
-        assertEquals(INVALID_DATA_RESULT, result);
+        assertThat(result).isEqualTo(INVALID_DATA_RESULT);
 
         verify(catalogValidator).validate(entity, ValidationType.EXISTS, ValidationType.DOWN);
         verifyNoMoreInteractions(catalogValidator);
@@ -456,11 +442,10 @@ abstract class AbstractParentFacadeTest<T extends Movable, U extends Movable> {
     void updatePositions() {
         final Result<Void> result = parentCatalogFacade.updatePositions();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(catalogService).updatePositions();
         verifyNoMoreInteractions(catalogService);

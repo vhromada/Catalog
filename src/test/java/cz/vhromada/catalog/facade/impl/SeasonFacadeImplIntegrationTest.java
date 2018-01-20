@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,12 +74,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -97,11 +94,10 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -117,11 +113,10 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -136,12 +131,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID",
-                "Starting year mustn't be greater than ending year.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID",
+                "Starting year mustn't be greater than ending year.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -156,11 +150,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -175,11 +169,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -194,12 +188,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -214,11 +207,10 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -233,12 +225,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -254,11 +245,10 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -274,11 +264,10 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -293,12 +282,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID",
-                "Starting year mustn't be greater than ending year.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID",
+                "Starting year mustn't be greater than ending year.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -313,11 +301,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -332,11 +320,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -351,12 +339,11 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -371,11 +358,10 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
         final Result<Void> result = seasonFacade.update(season);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -473,32 +459,32 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
 
     @Override
     protected void assertRemoveRepositoryData() {
-        assertAll(
-            () -> assertEquals(Integer.valueOf(getDefaultChildDataCount() - 1), getRepositoryChildDataCount()),
-            () -> assertEquals(getDefaultParentDataCount(), getRepositoryParentDataCount()),
-            () -> assertEquals(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SEASON_COUNT, EpisodeUtils.getEpisodesCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() - 1);
+            softly.assertThat(getRepositoryParentDataCount()).isEqualTo(getDefaultParentDataCount());
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SEASON_COUNT);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
     @Override
     protected void assertDuplicateRepositoryData() {
-        assertAll(
-            () -> assertEquals(Integer.valueOf(getDefaultChildDataCount() + 1), getRepositoryChildDataCount()),
-            () -> assertEquals(getDefaultParentDataCount(), getRepositoryParentDataCount()),
-            () -> assertEquals(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SEASON_COUNT, EpisodeUtils.getEpisodesCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() + 1);
+            softly.assertThat(getRepositoryParentDataCount()).isEqualTo(getDefaultParentDataCount());
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SEASON_COUNT);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
     @Override
     protected void assertReferences() {
         super.assertReferences();
 
-        assertAll(
-            () -> assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
 }

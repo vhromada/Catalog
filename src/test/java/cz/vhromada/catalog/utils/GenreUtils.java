@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +25,12 @@ public final class GenreUtils {
     /**
      * ID
      */
-    public static final Integer ID = 1;
+    public static final int ID = 1;
 
     /**
      * Position
      */
-    public static final Integer POSITION = 10;
+    public static final int POSITION = 10;
 
     /**
      * Creates a new instance of GenreUtils.
@@ -178,11 +177,11 @@ public final class GenreUtils {
      * @param actual   actual genres
      */
     public static void assertGenresDeepEquals(final List<cz.vhromada.catalog.domain.Genre> expected, final List<cz.vhromada.catalog.domain.Genre> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGenreDeepEquals(expected.get(i), actual.get(i));
@@ -197,15 +196,15 @@ public final class GenreUtils {
      * @param actual   actual genre
      */
     public static void assertGenreDeepEquals(final cz.vhromada.catalog.domain.Genre expected, final cz.vhromada.catalog.domain.Genre actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
     /**
@@ -215,11 +214,11 @@ public final class GenreUtils {
      * @param actual   actual genres
      */
     public static void assertGenreListDeepEquals(final List<Genre> expected, final List<cz.vhromada.catalog.domain.Genre> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGenreDeepEquals(expected.get(i), actual.get(i));
@@ -234,15 +233,15 @@ public final class GenreUtils {
      * @param actual   actual genre
      */
     public static void assertGenreDeepEquals(final Genre expected, final cz.vhromada.catalog.domain.Genre actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
 }

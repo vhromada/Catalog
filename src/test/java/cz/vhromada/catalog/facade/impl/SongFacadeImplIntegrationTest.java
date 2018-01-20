@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,11 +52,10 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -73,11 +70,11 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -92,12 +89,11 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -112,11 +108,10 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -131,11 +126,10 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.update(song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -150,11 +144,11 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.update(song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -169,12 +163,11 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.update(song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -189,11 +182,10 @@ class SongFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<S
 
         final Result<Void> result = songFacade.update(song);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }

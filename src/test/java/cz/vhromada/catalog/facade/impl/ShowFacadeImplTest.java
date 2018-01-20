@@ -1,10 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -41,7 +38,7 @@ class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.cata
      */
     @Test
     void constructor_NullShowService() {
-        assertThrows(IllegalArgumentException.class, () -> new ShowFacadeImpl(null, getConverter(), getCatalogValidator()));
+        assertThatThrownBy(() -> new ShowFacadeImpl(null, getConverter(), getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -49,7 +46,7 @@ class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.cata
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new ShowFacadeImpl(getCatalogService(), null, getCatalogValidator()));
+        assertThatThrownBy(() -> new ShowFacadeImpl(getCatalogService(), null, getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -57,7 +54,7 @@ class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.cata
      */
     @Test
     void constructor_NullShowValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new ShowFacadeImpl(getCatalogService(), getConverter(), null));
+        assertThatThrownBy(() -> new ShowFacadeImpl(getCatalogService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -80,12 +77,11 @@ class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.cata
 
         final Result<Time> result = ((ShowFacade) getCatalogParentFacade()).getTotalLength();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(new Time(expectedTotalLength), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(new Time(expectedTotalLength));
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());
@@ -105,12 +101,11 @@ class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.cata
 
         final Result<Integer> result = ((ShowFacade) getCatalogParentFacade()).getSeasonsCount();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(Integer.valueOf(expectedSeasons), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(expectedSeasons);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());
@@ -135,12 +130,11 @@ class ShowFacadeImplTest extends AbstractParentFacadeTest<Show, cz.vhromada.cata
 
         final Result<Integer> result = ((ShowFacade) getCatalogParentFacade()).getEpisodesCount();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(Integer.valueOf(expectedEpisodes), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(expectedEpisodes);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());

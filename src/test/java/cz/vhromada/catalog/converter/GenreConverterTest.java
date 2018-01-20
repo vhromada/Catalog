@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
@@ -44,7 +44,7 @@ class GenreConverterTest {
      */
     @Test
     void convertGenreDomain_NullGenre() {
-        assertNull(converter.convert(null, Genre.class));
+        assertThat(converter.convert(null, Genre.class)).isNull();
     }
 
     /**
@@ -63,7 +63,7 @@ class GenreConverterTest {
      */
     @Test
     void convertGenre_NullGenre() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Genre.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Genre.class)).isNull();
     }
 
 }

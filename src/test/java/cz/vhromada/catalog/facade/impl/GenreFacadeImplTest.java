@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.CatalogParentFacade;
@@ -23,7 +23,7 @@ class GenreFacadeImplTest extends AbstractParentFacadeTest<Genre, cz.vhromada.ca
      */
     @Test
     void constructor_NullGenreService() {
-        assertThrows(IllegalArgumentException.class, () -> new GenreFacadeImpl(null, getConverter(), getCatalogValidator()));
+        assertThatThrownBy(() -> new GenreFacadeImpl(null, getConverter(), getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -31,7 +31,7 @@ class GenreFacadeImplTest extends AbstractParentFacadeTest<Genre, cz.vhromada.ca
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new GenreFacadeImpl(getCatalogService(), null, getCatalogValidator()));
+        assertThatThrownBy(() -> new GenreFacadeImpl(getCatalogService(), null, getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -39,7 +39,7 @@ class GenreFacadeImplTest extends AbstractParentFacadeTest<Genre, cz.vhromada.ca
      */
     @Test
     void constructor_NullGenreValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new GenreFacadeImpl(getCatalogService(), getConverter(), null));
+        assertThatThrownBy(() -> new GenreFacadeImpl(getCatalogService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

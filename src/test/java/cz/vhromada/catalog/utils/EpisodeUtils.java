@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +35,12 @@ public final class EpisodeUtils {
     /**
      * ID
      */
-    public static final Integer ID = 1;
+    public static final int ID = 1;
 
     /**
      * Position
      */
-    public static final Integer POSITION = 10;
+    public static final int POSITION = 10;
 
     /**
      * Multipliers for length
@@ -191,11 +190,11 @@ public final class EpisodeUtils {
      */
     public static void assertEpisodesDeepEquals(final List<cz.vhromada.catalog.domain.Episode> expected,
         final List<cz.vhromada.catalog.domain.Episode> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertEpisodeDeepEquals(expected.get(i), actual.get(i));
@@ -209,19 +208,20 @@ public final class EpisodeUtils {
      * @param expected expected episode
      * @param actual   actual episode
      */
+    @SuppressWarnings("Duplicates")
     public static void assertEpisodeDeepEquals(final cz.vhromada.catalog.domain.Episode expected, final cz.vhromada.catalog.domain.Episode actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getNumber(), actual.getNumber()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getLength(), actual.getLength()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getLength()).isEqualTo(actual.getLength());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
     /**
@@ -231,11 +231,11 @@ public final class EpisodeUtils {
      * @param actual   actual episodes
      */
     public static void assertEpisodeListDeepEquals(final List<Episode> expected, final List<cz.vhromada.catalog.domain.Episode> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertEpisodeDeepEquals(expected.get(i), actual.get(i));
@@ -249,19 +249,20 @@ public final class EpisodeUtils {
      * @param expected expected episode
      * @param actual   actual episode
      */
+    @SuppressWarnings("Duplicates")
     public static void assertEpisodeDeepEquals(final Episode expected, final cz.vhromada.catalog.domain.Episode actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getNumber(), actual.getNumber()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getLength(), actual.getLength()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getLength()).isEqualTo(actual.getLength());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
 }

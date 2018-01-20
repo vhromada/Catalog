@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,12 +54,11 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE",
-                "Number of episode must be positive number.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -76,11 +73,10 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -95,11 +91,11 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -114,12 +110,11 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -134,11 +129,10 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -153,12 +147,11 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.update(episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE",
-                "Number of episode must be positive number.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -173,11 +166,10 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.update(episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -192,11 +184,11 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.update(episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -211,12 +203,11 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.update(episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -231,11 +222,10 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
 
         final Result<Void> result = episodeFacade.update(episode);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -328,10 +318,10 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
     protected void assertReferences() {
         super.assertReferences();
 
-        assertAll(
-            () -> assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
 }

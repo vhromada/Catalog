@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.Collections;
@@ -42,7 +40,7 @@ class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable, Movabl
      */
     @Test
     void constructor_NullName() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogValidatorStub(null, getCatalogService()));
+        assertThatThrownBy(() -> new AbstractCatalogValidatorStub(null, getCatalogService())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -50,7 +48,7 @@ class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable, Movabl
      */
     @Test
     void constructor_NullCatalogService() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogValidatorStub(getName(), null));
+        assertThatThrownBy(() -> new AbstractCatalogValidatorStub(getName(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -61,11 +59,10 @@ class AbstractCatalogValidatorTest extends AbstractValidatorTest<Movable, Movabl
     void validate_Deep() {
         final Result<Void> result = getCatalogValidator().validate(getValidatingData(1), ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.WARN, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.WARN, KEY, VALUE)), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.WARN);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.WARN, KEY, VALUE)));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }

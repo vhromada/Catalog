@@ -1,9 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,11 +50,10 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.add(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -72,11 +68,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.add(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -91,12 +87,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.add(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
-                "URL to english Wikipedia page about program mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -111,12 +106,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.add(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about program mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -131,12 +125,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.add(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE",
-                "Count of media must be positive number.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -151,12 +144,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.add(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -171,11 +163,10 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.add(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -190,11 +181,10 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.update(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -209,11 +199,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.update(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -228,12 +218,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.update(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
-                "URL to english Wikipedia page about program mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -248,12 +237,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.update(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about program mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -268,12 +256,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.update(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE",
-                "Count of media must be positive number.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -288,12 +275,11 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.update(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -308,11 +294,10 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
 
         final Result<Void> result = programFacade.update(program);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -322,16 +307,15 @@ class ProgramFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
      */
     @Test
     void getTotalMediaCount() {
-        final Integer count = 600;
+        final int count = 600;
 
         final Result<Integer> result = programFacade.getTotalMediaCount();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(count, result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(count);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         assertDefaultRepositoryData();
     }

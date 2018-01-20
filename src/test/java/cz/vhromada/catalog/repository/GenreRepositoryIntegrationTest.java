@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -55,7 +53,7 @@ class GenreRepositoryIntegrationTest {
 
         GenreUtils.assertGenresDeepEquals(GenreUtils.getGenres(), genres);
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
     }
 
     /**
@@ -69,9 +67,9 @@ class GenreRepositoryIntegrationTest {
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenreDomain(i), genre);
         }
 
-        assertFalse(genreRepository.findById(Integer.MAX_VALUE).isPresent());
+        assertThat(genreRepository.findById(Integer.MAX_VALUE).isPresent()).isFalse();
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
     }
 
     /**
@@ -83,14 +81,14 @@ class GenreRepositoryIntegrationTest {
 
         genreRepository.save(genre);
 
-        assertEquals(Integer.valueOf(GenreUtils.GENRES_COUNT + 1), genre.getId());
+        assertThat(genre.getId()).isEqualTo(GenreUtils.GENRES_COUNT + 1);
 
         final Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         final Genre expectedAddGenre = GenreUtils.newGenreDomain(null);
         expectedAddGenre.setId(GenreUtils.GENRES_COUNT + 1);
         GenreUtils.assertGenreDeepEquals(expectedAddGenre, addedGenre);
 
-        assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT + 1);
     }
 
     /**
@@ -108,7 +106,7 @@ class GenreRepositoryIntegrationTest {
         expectedUpdatedGenre.setPosition(GenreUtils.POSITION);
         GenreUtils.assertGenreDeepEquals(expectedUpdatedGenre, updatedGenre);
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
     }
 
     /**
@@ -119,13 +117,13 @@ class GenreRepositoryIntegrationTest {
     void remove() {
         final Genre genre = GenreUtils.newGenreDomain(null);
         entityManager.persist(genre);
-        assertEquals(GenreUtils.GENRES_COUNT + 1, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT + 1);
 
         genreRepository.delete(genre);
 
-        assertNull(GenreUtils.getGenre(entityManager, genre.getId()));
+        assertThat(GenreUtils.getGenre(entityManager, genre.getId())).isNull();
 
-        assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
     }
 
     /**
@@ -138,7 +136,7 @@ class GenreRepositoryIntegrationTest {
 
         genreRepository.deleteAll();
 
-        assertEquals(0, GenreUtils.getGenresCount(entityManager));
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(0);
     }
 
 }

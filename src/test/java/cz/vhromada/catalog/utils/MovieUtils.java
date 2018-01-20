@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public final class MovieUtils {
     /**
      * ID
      */
-    public static final Integer ID = 1;
+    public static final int ID = 1;
 
     /**
      * Count of movies
@@ -240,7 +239,6 @@ public final class MovieUtils {
      * @param entityManager entity manager
      * @return movie with updated fields
      */
-    @SuppressWarnings("SameParameterValue")
     public static cz.vhromada.catalog.domain.Movie updateMovie(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Movie movie = getMovie(entityManager, id);
         updateMovie(movie);
@@ -267,11 +265,11 @@ public final class MovieUtils {
      * @param actual   actual movies
      */
     public static void assertMoviesDeepEquals(final List<cz.vhromada.catalog.domain.Movie> expected, final List<cz.vhromada.catalog.domain.Movie> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMovieDeepEquals(expected.get(i), actual.get(i));
@@ -286,27 +284,27 @@ public final class MovieUtils {
      * @param actual   actual movie
      */
     public static void assertMovieDeepEquals(final cz.vhromada.catalog.domain.Movie expected, final cz.vhromada.catalog.domain.Movie actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getCzechName(), actual.getCzechName()),
-            () -> assertEquals(expected.getOriginalName(), actual.getOriginalName()),
-            () -> assertEquals(expected.getYear(), actual.getYear()),
-            () -> assertEquals(expected.getLanguage(), actual.getLanguage()),
-            () -> assertEquals(expected.getSubtitles(), actual.getSubtitles()),
-            () -> MediumUtils.assertMediaDeepEquals(expected.getMedia(), actual.getMedia()),
-            () -> assertEquals(expected.getCsfd(), actual.getCsfd()),
-            () -> assertEquals(expected.getImdbCode(), actual.getImdbCode()),
-            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
-            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
-            () -> assertEquals(expected.getPicture(), actual.getPicture()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition()),
-            () -> GenreUtils.assertGenresDeepEquals(expected.getGenres(), actual.getGenres())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getCzechName()).isEqualTo(actual.getCzechName());
+            softly.assertThat(expected.getOriginalName()).isEqualTo(actual.getOriginalName());
+            softly.assertThat(expected.getYear()).isEqualTo(actual.getYear());
+            softly.assertThat(expected.getLanguage()).isEqualTo(actual.getLanguage());
+            softly.assertThat(expected.getSubtitles()).isEqualTo(actual.getSubtitles());
+            MediumUtils.assertMediaDeepEquals(expected.getMedia(), actual.getMedia());
+            softly.assertThat(expected.getCsfd()).isEqualTo(actual.getCsfd());
+            softly.assertThat(expected.getImdbCode()).isEqualTo(actual.getImdbCode());
+            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
+            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
+            softly.assertThat(expected.getPicture()).isEqualTo(actual.getPicture());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            GenreUtils.assertGenresDeepEquals(expected.getGenres(), actual.getGenres());
+        });
     }
 
     /**
@@ -316,11 +314,11 @@ public final class MovieUtils {
      * @param actual   actual movies
      */
     public static void assertMovieListDeepEquals(final List<Movie> expected, final List<cz.vhromada.catalog.domain.Movie> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMovieDeepEquals(expected.get(i), actual.get(i));
@@ -335,27 +333,27 @@ public final class MovieUtils {
      * @param actual   actual movie
      */
     public static void assertMovieDeepEquals(final Movie expected, final cz.vhromada.catalog.domain.Movie actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getCzechName(), actual.getCzechName()),
-            () -> assertEquals(expected.getOriginalName(), actual.getOriginalName()),
-            () -> assertEquals(expected.getYear(), actual.getYear()),
-            () -> assertEquals(expected.getLanguage(), actual.getLanguage()),
-            () -> assertEquals(expected.getSubtitles(), actual.getSubtitles()),
-            () -> MediumUtils.assertMediumListDeepEquals(expected.getMedia(), actual.getMedia()),
-            () -> assertEquals(expected.getCsfd(), actual.getCsfd()),
-            () -> assertEquals(expected.getImdbCode(), actual.getImdbCode()),
-            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
-            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
-            () -> assertEquals(expected.getPicture(), actual.getPicture()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition()),
-            () -> GenreUtils.assertGenreListDeepEquals(expected.getGenres(), actual.getGenres())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getCzechName()).isEqualTo(actual.getCzechName());
+            softly.assertThat(expected.getOriginalName()).isEqualTo(actual.getOriginalName());
+            softly.assertThat(expected.getYear()).isEqualTo(actual.getYear());
+            softly.assertThat(expected.getLanguage()).isEqualTo(actual.getLanguage());
+            softly.assertThat(expected.getSubtitles()).isEqualTo(actual.getSubtitles());
+            MediumUtils.assertMediumListDeepEquals(expected.getMedia(), actual.getMedia());
+            softly.assertThat(expected.getCsfd()).isEqualTo(actual.getCsfd());
+            softly.assertThat(expected.getImdbCode()).isEqualTo(actual.getImdbCode());
+            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
+            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
+            softly.assertThat(expected.getPicture()).isEqualTo(actual.getPicture());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            GenreUtils.assertGenreListDeepEquals(expected.getGenres(), actual.getGenres());
+        });
     }
 
 }

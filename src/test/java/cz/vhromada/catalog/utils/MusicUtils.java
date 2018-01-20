@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,7 @@ public final class MusicUtils {
     /**
      * ID
      */
-    public static final Integer ID = 1;
+    public static final int ID = 1;
 
     /**
      * Count of music
@@ -33,7 +31,7 @@ public final class MusicUtils {
     /**
      * Position
      */
-    public static final Integer POSITION = 10;
+    public static final int POSITION = 10;
 
     /**
      * Music name
@@ -204,11 +202,11 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicDeepEquals(final List<cz.vhromada.catalog.domain.Music> expected, final List<cz.vhromada.catalog.domain.Music> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMusicDeepEquals(expected.get(i), actual.get(i));
@@ -223,26 +221,24 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicDeepEquals(final cz.vhromada.catalog.domain.Music expected, final cz.vhromada.catalog.domain.Music actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
-            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
-            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition()),
-            () -> {
-                if (expected.getSongs() == null) {
-                    assertNull(actual.getSongs());
-                } else {
-                    SongUtils.assertSongsDeepEquals(expected.getSongs(), actual.getSongs());
-                }
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
+            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
+            softly.assertThat(expected.getMediaCount()).isEqualTo(actual.getMediaCount());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            if (expected.getSongs() == null) {
+                softly.assertThat(actual.getSongs()).isNull();
+            } else {
+                SongUtils.assertSongsDeepEquals(expected.getSongs(), actual.getSongs());
             }
-        );
+        });
     }
 
     /**
@@ -252,11 +248,11 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicListDeepEquals(final List<Music> expected, final List<cz.vhromada.catalog.domain.Music> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMusicDeepEquals(expected.get(i), actual.get(i));
@@ -271,19 +267,19 @@ public final class MusicUtils {
      * @param actual   actual music
      */
     public static void assertMusicDeepEquals(final Music expected, final cz.vhromada.catalog.domain.Music actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
-            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
-            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
+            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
+            softly.assertThat(expected.getMediaCount()).isEqualTo(actual.getMediaCount());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
 }

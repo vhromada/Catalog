@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -30,8 +30,8 @@ class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada
      */
     @Test
     void constructor_NullShowService() {
-        assertThrows(IllegalArgumentException.class, () -> new EpisodeFacadeImpl(null, getConverter(), getParentCatalogValidator(),
-            getChildCatalogValidator()));
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -39,8 +39,8 @@ class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new EpisodeFacadeImpl(getCatalogService(), null, getParentCatalogValidator(),
-            getChildCatalogValidator()));
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -49,7 +49,8 @@ class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada
      */
     @Test
     void constructor_NullSeasonValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new EpisodeFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()));
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -58,7 +59,8 @@ class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada
      */
     @Test
     void constructor_NullEpisodeValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new EpisodeFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null));
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

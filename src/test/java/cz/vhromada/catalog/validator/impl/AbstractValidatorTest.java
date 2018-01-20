@@ -1,9 +1,6 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -42,7 +39,7 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
     /**
      * ID
      */
-    private static final Integer ID = 5;
+    private static final int ID = 5;
 
     /**
      * Instance of {@link CatalogService}
@@ -70,11 +67,10 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
     void validate_New() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.NEW);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verifyZeroInteractions(catalogService);
     }
@@ -86,11 +82,11 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
     void validate_New_NotNullId() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(Integer.MAX_VALUE), ValidationType.NEW);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_ID_NOT_NULL", "ID must be null.")));
+        });
 
         verifyZeroInteractions(catalogService);
     }
@@ -106,11 +102,10 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verifyExistsMock(validatingData);
     }
@@ -122,11 +117,11 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
     void validate_Exists_NullId() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(null), ValidationType.EXISTS);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_ID_NULL", "ID mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_ID_NULL", "ID mustn't be null.")));
+        });
 
         verifyZeroInteractions(catalogService);
     }
@@ -142,12 +137,11 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.EXISTS);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_EXIST", getName() + " doesn't exist.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_EXIST", getName() + " doesn't exist.")));
+        });
 
         verifyExistsMock(validatingData);
     }
@@ -163,11 +157,10 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verifyMovingMock(validatingData);
     }
@@ -183,12 +176,11 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.UP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved up.")));
+        });
 
         verifyMovingMock(validatingData);
     }
@@ -204,11 +196,10 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verifyMovingMock(validatingData);
     }
@@ -224,12 +215,11 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
 
         final Result<Void> result = catalogValidator.validate(validatingData, ValidationType.DOWN);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getPrefix() + "_NOT_MOVABLE", getName() + " can't be moved down.")));
+        });
 
         verifyMovingMock(validatingData);
     }
@@ -241,11 +231,10 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
     void validate_Deep() {
         final Result<Void> result = catalogValidator.validate(getValidatingData(ID), ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verifyZeroInteractions(catalogService);
     }

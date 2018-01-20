@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.Collections;
@@ -33,7 +31,7 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
      */
     @Test
     void constructor_NullProgramService() {
-        assertThrows(IllegalArgumentException.class, () -> new ProgramValidatorImpl(null));
+        assertThatThrownBy(() -> new ProgramValidatorImpl(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -46,11 +44,10 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -65,11 +62,11 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -85,12 +82,11 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
-                "URL to english Wikipedia page about program mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL",
+                "URL to english Wikipedia page about program mustn't be null.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -106,12 +102,11 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about program mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about program mustn't be null.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -127,12 +122,11 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE",
-                "Count of media must be positive number.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -147,12 +141,11 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -167,11 +160,10 @@ class ProgramValidatorImplTest extends AbstractValidatorTest<Program, cz.vhromad
 
         final Result<Void> result = getCatalogValidator().validate(program, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }

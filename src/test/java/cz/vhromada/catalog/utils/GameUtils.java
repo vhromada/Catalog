@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +25,12 @@ public final class GameUtils {
     /**
      * ID
      */
-    public static final Integer ID = 1;
+    public static final int ID = 1;
 
     /**
      * Position
      */
-    public static final Integer POSITION = 10;
+    public static final int POSITION = 10;
 
     /**
      * Game name
@@ -206,11 +205,11 @@ public final class GameUtils {
      * @param actual   actual games
      */
     public static void assertGamesDeepEquals(final List<cz.vhromada.catalog.domain.Game> expected, final List<cz.vhromada.catalog.domain.Game> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGameDeepEquals(expected.get(i), actual.get(i));
@@ -224,28 +223,29 @@ public final class GameUtils {
      * @param expected expected game
      * @param actual   actual game
      */
+    @SuppressWarnings("Duplicates")
     public static void assertGameDeepEquals(final cz.vhromada.catalog.domain.Game expected, final cz.vhromada.catalog.domain.Game actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
-            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
-            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
-            () -> assertEquals(expected.getCrack(), actual.getCrack()),
-            () -> assertEquals(expected.getSerialKey(), actual.getSerialKey()),
-            () -> assertEquals(expected.getPatch(), actual.getPatch()),
-            () -> assertEquals(expected.getTrainer(), actual.getTrainer()),
-            () -> assertEquals(expected.getTrainerData(), actual.getTrainerData()),
-            () -> assertEquals(expected.getEditor(), actual.getEditor()),
-            () -> assertEquals(expected.getSaves(), actual.getSaves()),
-            () -> assertEquals(expected.getOtherData(), actual.getOtherData()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
+            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
+            softly.assertThat(expected.getMediaCount()).isEqualTo(actual.getMediaCount());
+            softly.assertThat(expected.getCrack()).isEqualTo(actual.getCrack());
+            softly.assertThat(expected.getSerialKey()).isEqualTo(actual.getSerialKey());
+            softly.assertThat(expected.getPatch()).isEqualTo(actual.getPatch());
+            softly.assertThat(expected.getTrainer()).isEqualTo(actual.getTrainer());
+            softly.assertThat(expected.getTrainerData()).isEqualTo(actual.getTrainerData());
+            softly.assertThat(expected.getEditor()).isEqualTo(actual.getEditor());
+            softly.assertThat(expected.getSaves()).isEqualTo(actual.getSaves());
+            softly.assertThat(expected.getOtherData()).isEqualTo(actual.getOtherData());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
     /**
@@ -255,11 +255,11 @@ public final class GameUtils {
      * @param actual   actual games
      */
     public static void assertGameListDeepEquals(final List<Game> expected, final List<cz.vhromada.catalog.domain.Game> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertGameDeepEquals(expected.get(i), actual.get(i));
@@ -273,28 +273,29 @@ public final class GameUtils {
      * @param expected expected game
      * @param actual   actual game
      */
+    @SuppressWarnings("Duplicates")
     public static void assertGameDeepEquals(final Game expected, final cz.vhromada.catalog.domain.Game actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getName(), actual.getName()),
-            () -> assertEquals(expected.getWikiEn(), actual.getWikiEn()),
-            () -> assertEquals(expected.getWikiCz(), actual.getWikiCz()),
-            () -> assertEquals(expected.getMediaCount(), actual.getMediaCount()),
-            () -> assertEquals(expected.getCrack(), actual.getCrack()),
-            () -> assertEquals(expected.getSerialKey(), actual.getSerialKey()),
-            () -> assertEquals(expected.getPatch(), actual.getPatch()),
-            () -> assertEquals(expected.getTrainer(), actual.getTrainer()),
-            () -> assertEquals(expected.getTrainerData(), actual.getTrainerData()),
-            () -> assertEquals(expected.getEditor(), actual.getEditor()),
-            () -> assertEquals(expected.getSaves(), actual.getSaves()),
-            () -> assertEquals(expected.getOtherData(), actual.getOtherData()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
+            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
+            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
+            softly.assertThat(expected.getMediaCount()).isEqualTo(actual.getMediaCount());
+            softly.assertThat(expected.getCrack()).isEqualTo(actual.getCrack());
+            softly.assertThat(expected.getSerialKey()).isEqualTo(actual.getSerialKey());
+            softly.assertThat(expected.getPatch()).isEqualTo(actual.getPatch());
+            softly.assertThat(expected.getTrainer()).isEqualTo(actual.getTrainer());
+            softly.assertThat(expected.getTrainerData()).isEqualTo(actual.getTrainerData());
+            softly.assertThat(expected.getEditor()).isEqualTo(actual.getEditor());
+            softly.assertThat(expected.getSaves()).isEqualTo(actual.getSaves());
+            softly.assertThat(expected.getOtherData()).isEqualTo(actual.getOtherData());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
 }

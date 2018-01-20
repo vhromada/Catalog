@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -76,7 +74,7 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
      */
     @Test
     void constructor_NullMovieService() {
-        assertThrows(IllegalArgumentException.class, () -> new MovieValidatorImpl(null, genreValidator));
+        assertThatThrownBy(() -> new MovieValidatorImpl(null, genreValidator)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -84,7 +82,7 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
      */
     @Test
     void constructor_NullGenreValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new MovieValidatorImpl(getCatalogService(), null));
+        assertThatThrownBy(() -> new MovieValidatorImpl(getCatalogService(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -97,11 +95,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -121,12 +119,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -145,12 +142,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -170,12 +166,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -194,11 +189,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -217,11 +211,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -240,11 +233,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -263,11 +256,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -287,12 +280,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -311,11 +303,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -334,12 +325,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -361,12 +351,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -386,12 +375,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -410,11 +398,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -433,11 +420,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -456,11 +442,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -480,12 +465,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
-                "URL to english Wikipedia page about movie mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+                "URL to english Wikipedia page about movie mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -505,12 +489,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about movie mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about movie mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -530,11 +513,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -553,11 +536,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -576,11 +558,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
+        });
 
         verifyNoMoreInteractions(genreValidator);
         verifyZeroInteractions(getCatalogService());
@@ -596,12 +578,11 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+        });
 
         verify(genreValidator).validate(movie.getGenres().get(0), ValidationType.EXISTS, ValidationType.DEEP);
         verifyNoMoreInteractions(genreValidator);
@@ -622,11 +603,10 @@ class MovieValidatorImplTest extends AbstractValidatorTest<Movie, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(movie, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(event), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
+        });
 
         for (final Genre genre : movie.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);

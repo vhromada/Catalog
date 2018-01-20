@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
@@ -33,7 +33,7 @@ class MusicServiceImplTest extends AbstractServiceTest<Music> {
      */
     @Test
     void constructor_NullMusicRepository() {
-        assertThrows(IllegalArgumentException.class, () -> new MusicServiceImpl(null, getCache()));
+        assertThatThrownBy(() -> new MusicServiceImpl(null, getCache())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -41,7 +41,7 @@ class MusicServiceImplTest extends AbstractServiceTest<Music> {
      */
     @Test
     void constructor_NullCache() {
-        assertThrows(IllegalArgumentException.class, () -> new MusicServiceImpl(musicRepository, null));
+        assertThatThrownBy(() -> new MusicServiceImpl(musicRepository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

@@ -1,10 +1,8 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
@@ -42,7 +40,7 @@ abstract class AbstractServiceTest<T extends Movable> {
     /**
      * ID
      */
-    private static final Integer ID = 5;
+    private static final int ID = 5;
 
     /**
      * Instance of {@link Cache}
@@ -98,7 +96,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         final List<T> data = catalogService.getAll();
 
-        assertEquals(dataList, data);
+        assertThat(data).isEqualTo(dataList);
 
         verify(cache).get(getCacheKey());
         verifyNoMoreInteractions(cache);
@@ -114,7 +112,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         final List<T> data = catalogService.getAll();
 
-        assertEquals(dataList, data);
+        assertThat(data).isEqualTo(dataList);
 
         verify(repository).findAll();
         verify(cache).get(getCacheKey());
@@ -131,7 +129,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         final T data = catalogService.get(dataList.get(0).getId());
 
-        assertEquals(dataList.get(0), data);
+        assertThat(data).isEqualTo(dataList.get(0));
 
         verify(cache).get(getCacheKey());
         verifyNoMoreInteractions(cache);
@@ -147,7 +145,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         final T data = catalogService.get(Integer.MAX_VALUE);
 
-        assertNull(data);
+        assertThat(data).isNull();
 
         verify(cache).get(getCacheKey());
         verifyNoMoreInteractions(cache);
@@ -163,7 +161,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         final T data = catalogService.get(dataList.get(0).getId());
 
-        assertEquals(dataList.get(0), data);
+        assertThat(data).isEqualTo(dataList.get(0));
 
         verify(repository).findAll();
         verify(cache).get(getCacheKey());
@@ -180,7 +178,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         final T data = catalogService.get(Integer.MAX_VALUE);
 
-        assertNull(data);
+        assertThat(data).isNull();
 
         verify(repository).findAll();
         verify(cache).get(getCacheKey());
@@ -193,7 +191,7 @@ abstract class AbstractServiceTest<T extends Movable> {
      */
     @Test
     void get_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> catalogService.get(null));
+        assertThatThrownBy(() -> catalogService.get(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -208,12 +206,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.add(data);
 
-        assertAll(
-            () -> assertEquals(ID, data.getId()),
-            () -> assertEquals(ID - 1, data.getPosition()),
-            () -> assertEquals(3, dataList.size()),
-            () -> assertEquals(data, dataList.get(2))
-        );
+        assertAddResult(data);
 
         verify(repository, times(2)).save(data);
         verify(cache).get(getCacheKey());
@@ -233,12 +226,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.add(data);
 
-        assertAll(
-            () -> assertEquals(ID, data.getId()),
-            () -> assertEquals(ID - 1, data.getPosition()),
-            () -> assertEquals(3, dataList.size()),
-            () -> assertEquals(data, dataList.get(2))
-        );
+        assertAddResult(data);
 
         verify(repository).findAll();
         verify(repository, times(2)).save(data);
@@ -252,7 +240,7 @@ abstract class AbstractServiceTest<T extends Movable> {
      */
     @Test
     void add_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> catalogService.add(null));
+        assertThatThrownBy(() -> catalogService.add(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -268,10 +256,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.update(data);
 
-        assertAll(
-            () -> assertEquals(2, dataList.size()),
-            () -> assertEquals(data, dataList.get(0))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(dataList.size()).isEqualTo(2);
+            softly.assertThat(dataList.get(0)).isEqualTo(data);
+        });
 
         verify(repository).save(data);
         verify(cache).get(getCacheKey());
@@ -292,10 +280,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.update(data);
 
-        assertAll(
-            () -> assertEquals(2, dataList.size()),
-            () -> assertEquals(data, dataList.get(0))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(dataList.size()).isEqualTo(2);
+            softly.assertThat(dataList.get(0)).isEqualTo(data);
+        });
 
         verify(repository).findAll();
         verify(repository).save(data);
@@ -309,7 +297,7 @@ abstract class AbstractServiceTest<T extends Movable> {
      */
     @Test
     void update_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> catalogService.update(null));
+        assertThatThrownBy(() -> catalogService.update(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -323,10 +311,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.remove(data);
 
-        assertAll(
-            () -> assertEquals(1, dataList.size()),
-            () -> assertFalse(dataList.contains(data))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(dataList.size()).isEqualTo(1);
+            softly.assertThat(dataList.contains(data)).isFalse();
+        });
 
         verify(repository).delete(data);
         verify(cache).get(getCacheKey());
@@ -345,10 +333,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.remove(data);
 
-        assertAll(
-            () -> assertEquals(1, dataList.size()),
-            () -> assertFalse(dataList.contains(data))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(dataList.size()).isEqualTo(1);
+            softly.assertThat(dataList.contains(data)).isFalse();
+        });
 
         verify(repository).findAll();
         verify(repository).delete(data);
@@ -362,7 +350,7 @@ abstract class AbstractServiceTest<T extends Movable> {
      */
     @Test
     void remove_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> catalogService.remove(null));
+        assertThatThrownBy(() -> catalogService.remove(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -378,10 +366,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.duplicate(dataList.get(0));
 
-        assertAll(
-            () -> assertEquals(3, dataList.size()),
-            () -> assertDataDeepEquals(copy, dataList.get(2))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(dataList.size()).isEqualTo(3);
+            assertDataDeepEquals(copy, dataList.get(2));
+        });
 
         verify(repository).save(copyArgumentCaptor.capture());
         verify(cache).get(getCacheKey());
@@ -405,10 +393,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.duplicate(dataList.get(0));
 
-        assertAll(
-            () -> assertEquals(3, dataList.size()),
-            () -> assertDataDeepEquals(copy, dataList.get(2))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(dataList.size()).isEqualTo(3);
+            assertDataDeepEquals(copy, dataList.get(2));
+        });
 
         verify(repository).findAll();
         verify(repository).save(copyArgumentCaptor.capture());
@@ -425,7 +413,7 @@ abstract class AbstractServiceTest<T extends Movable> {
      */
     @Test
     void duplicate_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> catalogService.duplicate(null));
+        assertThatThrownBy(() -> catalogService.duplicate(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -443,10 +431,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.moveUp(data2);
 
-        assertAll(
-            () -> assertEquals(position2, data1.getPosition()),
-            () -> assertEquals(position1, data2.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(data1.getPosition()).isEqualTo(position2);
+            softly.assertThat(data2.getPosition()).isEqualTo(position1);
+        });
 
         verify(repository).save(data1);
         verify(repository).save(data2);
@@ -470,10 +458,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.moveUp(data2);
 
-        assertAll(
-            () -> assertEquals(position2, data1.getPosition()),
-            () -> assertEquals(position1, data2.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(data1.getPosition()).isEqualTo(position2);
+            softly.assertThat(data2.getPosition()).isEqualTo(position1);
+        });
 
         verify(repository).findAll();
         verify(repository).save(data1);
@@ -488,7 +476,7 @@ abstract class AbstractServiceTest<T extends Movable> {
      */
     @Test
     void moveUp_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> catalogService.moveUp(null));
+        assertThatThrownBy(() -> catalogService.moveUp(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -506,10 +494,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.moveDown(data1);
 
-        assertAll(
-            () -> assertEquals(position2, data1.getPosition()),
-            () -> assertEquals(position1, data2.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(data1.getPosition()).isEqualTo(position2);
+            softly.assertThat(data2.getPosition()).isEqualTo(position1);
+        });
 
         verify(repository).save(data1);
         verify(repository).save(data2);
@@ -533,10 +521,10 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         catalogService.moveDown(data1);
 
-        assertAll(
-            () -> assertEquals(position2, data1.getPosition()),
-            () -> assertEquals(position1, data2.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(data1.getPosition()).isEqualTo(position2);
+            softly.assertThat(data2.getPosition()).isEqualTo(position1);
+        });
 
         verify(repository).findAll();
         verify(repository).save(data1);
@@ -551,7 +539,7 @@ abstract class AbstractServiceTest<T extends Movable> {
      */
     @Test
     void moveDown_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> catalogService.moveDown(null));
+        assertThatThrownBy(() -> catalogService.moveDown(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -566,7 +554,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         for (int i = 0; i < dataList.size(); i++) {
             final T data = dataList.get(i);
-            assertEquals(i, data.getPosition());
+            assertThat(data.getPosition()).isEqualTo(i);
         }
 
         verify(repository).saveAll(dataList);
@@ -587,7 +575,7 @@ abstract class AbstractServiceTest<T extends Movable> {
 
         for (int i = 0; i < dataList.size(); i++) {
             final T data = dataList.get(i);
-            assertEquals(i, data.getPosition());
+            assertThat(data.getPosition()).isEqualTo(i);
         }
 
         verify(repository).findAll();
@@ -683,6 +671,20 @@ abstract class AbstractServiceTest<T extends Movable> {
 
             return movable;
         };
+    }
+
+    /**
+     * Asserts result of {@link CatalogService#add(T)}
+     *
+     * @param data add item
+     */
+    private void assertAddResult(final T data) {
+        assertSoftly(softly -> {
+            softly.assertThat(data.getId()).isEqualTo(ID);
+            softly.assertThat(data.getPosition()).isEqualTo(ID - 1);
+            softly.assertThat(dataList.size()).isEqualTo(3);
+            softly.assertThat(dataList.get(2)).isEqualTo(data);
+        });
     }
 
 }

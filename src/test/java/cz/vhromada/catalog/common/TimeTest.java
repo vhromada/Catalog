@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.common;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Arrays;
 
@@ -79,7 +77,7 @@ class TimeTest {
      */
     @Test
     void constructor_BadLength() {
-        assertThrows(IllegalArgumentException.class, () -> new Time(-1));
+        assertThatThrownBy(() -> new Time(-1)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -87,7 +85,7 @@ class TimeTest {
      */
     @Test
     void constructor_BadHours() {
-        assertThrows(IllegalArgumentException.class, () -> new Time(-1, MINUTES, SECONDS));
+        assertThatThrownBy(() -> new Time(-1, MINUTES, SECONDS)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -95,7 +93,7 @@ class TimeTest {
      */
     @Test
     void constructor_NegativeMinutes() {
-        assertThrows(IllegalArgumentException.class, () -> new Time(HOURS, -1, SECONDS));
+        assertThatThrownBy(() -> new Time(HOURS, -1, SECONDS)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -103,7 +101,7 @@ class TimeTest {
      */
     @Test
     void constructor_BadMinutes() {
-        assertThrows(IllegalArgumentException.class, () -> new Time(HOURS, BAD_MAX_TIME, SECONDS));
+        assertThatThrownBy(() -> new Time(HOURS, BAD_MAX_TIME, SECONDS)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -111,7 +109,7 @@ class TimeTest {
      */
     @Test
     void constructor_NegativeSeconds() {
-        assertThrows(IllegalArgumentException.class, () -> new Time(HOURS, MINUTES, -1));
+        assertThatThrownBy(() -> new Time(HOURS, MINUTES, -1)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -119,7 +117,7 @@ class TimeTest {
      */
     @Test
     void constructor_BadSeconds() {
-        assertThrows(IllegalArgumentException.class, () -> new Time(HOURS, MINUTES, BAD_MAX_TIME));
+        assertThatThrownBy(() -> new Time(HOURS, MINUTES, BAD_MAX_TIME)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -127,10 +125,10 @@ class TimeTest {
      */
     @Test
     void getLength() {
-        assertAll(
-            () -> assertEquals(LENGTH, timeLength.getLength()),
-            () -> assertEquals(LENGTH, timeHMS.getLength())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(timeLength.getLength()).isEqualTo(LENGTH);
+            softly.assertThat(timeHMS.getLength()).isEqualTo(LENGTH);
+        });
     }
 
     /**
@@ -138,14 +136,14 @@ class TimeTest {
      */
     @Test
     void getData() {
-        assertAll(
-            () -> assertEquals(HOURS, timeLength.getData(Time.TimeData.HOUR)),
-            () -> assertEquals(MINUTES, timeLength.getData(Time.TimeData.MINUTE)),
-            () -> assertEquals(SECONDS, timeLength.getData(Time.TimeData.SECOND)),
-            () -> assertEquals(HOURS, timeHMS.getData(Time.TimeData.HOUR)),
-            () -> assertEquals(MINUTES, timeHMS.getData(Time.TimeData.MINUTE)),
-            () -> assertEquals(SECONDS, timeHMS.getData(Time.TimeData.SECOND))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(timeLength.getData(Time.TimeData.HOUR)).isEqualTo(HOURS);
+            softly.assertThat(timeLength.getData(Time.TimeData.MINUTE)).isEqualTo(MINUTES);
+            softly.assertThat(timeLength.getData(Time.TimeData.SECOND)).isEqualTo(SECONDS);
+            softly.assertThat(timeHMS.getData(Time.TimeData.HOUR)).isEqualTo(HOURS);
+            softly.assertThat(timeHMS.getData(Time.TimeData.MINUTE)).isEqualTo(MINUTES);
+            softly.assertThat(timeHMS.getData(Time.TimeData.SECOND)).isEqualTo(SECONDS);
+        });
     }
 
     /**
@@ -153,7 +151,7 @@ class TimeTest {
      */
     @Test
     void getData_NegativeDataType() {
-        assertThrows(IllegalArgumentException.class, () -> timeLength.getData(null));
+        assertThatThrownBy(() -> timeLength.getData(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -161,11 +159,11 @@ class TimeTest {
      */
     @Test
     void testToString() {
-        assertAll(
-            () -> assertEquals("2:35:26", timeLength.toString()),
-            () -> assertEquals("2:35:26", timeHMS.toString()),
-            () -> assertArrayEquals(TIME_STRINGS, Arrays.stream(TIME_LENGTHS).mapToObj(length -> new Time(length).toString()).toArray(String[]::new))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(timeLength.toString()).isEqualTo("2:35:26");
+            softly.assertThat(timeHMS.toString()).isEqualTo("2:35:26");
+            softly.assertThat(Arrays.stream(TIME_LENGTHS).mapToObj(length -> new Time(length).toString()).toArray(String[]::new)).isEqualTo(TIME_STRINGS);
+        });
     }
 
 }

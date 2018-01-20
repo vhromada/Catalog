@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cz.vhromada.catalog.domain.Game;
 import cz.vhromada.catalog.repository.GameRepository;
@@ -30,7 +30,7 @@ class GameServiceImplTest extends AbstractServiceTest<Game> {
      */
     @Test
     void constructor_NullGameRepository() {
-        assertThrows(IllegalArgumentException.class, () -> new GameServiceImpl(null, getCache()));
+        assertThatThrownBy(() -> new GameServiceImpl(null, getCache())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -38,7 +38,7 @@ class GameServiceImplTest extends AbstractServiceTest<Game> {
      */
     @Test
     void constructor_NullCache() {
-        assertThrows(IllegalArgumentException.class, () -> new GameServiceImpl(gameRepository, null));
+        assertThatThrownBy(() -> new GameServiceImpl(gameRepository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

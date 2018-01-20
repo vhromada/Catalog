@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +21,12 @@ public final class SeasonUtils {
     /**
      * ID
      */
-    public static final Integer ID = 1;
+    public static final int ID = 1;
 
     /**
      * Position
      */
-    public static final Integer POSITION = 10;
+    public static final int POSITION = 10;
 
     /**
      * Count of seasons
@@ -227,11 +225,11 @@ public final class SeasonUtils {
      * @param actual   actual seasons
      */
     public static void assertSeasonsDeepEquals(final List<cz.vhromada.catalog.domain.Season> expected, final List<cz.vhromada.catalog.domain.Season> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertSeasonDeepEquals(expected.get(i), actual.get(i));
@@ -246,27 +244,25 @@ public final class SeasonUtils {
      * @param actual   actual season
      */
     public static void assertSeasonDeepEquals(final cz.vhromada.catalog.domain.Season expected, final cz.vhromada.catalog.domain.Season actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getNumber(), actual.getNumber()),
-            () -> assertEquals(expected.getStartYear(), actual.getStartYear()),
-            () -> assertEquals(expected.getEndYear(), actual.getEndYear()),
-            () -> assertEquals(expected.getLanguage(), actual.getLanguage()),
-            () -> assertEquals(expected.getSubtitles(), actual.getSubtitles()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition()),
-            () -> {
-                if (expected.getEpisodes() == null) {
-                    assertNull(actual.getEpisodes());
-                } else {
-                    EpisodeUtils.assertEpisodesDeepEquals(expected.getEpisodes(), actual.getEpisodes());
-                }
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
+            softly.assertThat(expected.getStartYear()).isEqualTo(actual.getStartYear());
+            softly.assertThat(expected.getEndYear()).isEqualTo(actual.getEndYear());
+            softly.assertThat(expected.getLanguage()).isEqualTo(actual.getLanguage());
+            softly.assertThat(expected.getSubtitles()).isEqualTo(actual.getSubtitles());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            if (expected.getEpisodes() == null) {
+                softly.assertThat(actual.getEpisodes()).isNull();
+            } else {
+                EpisodeUtils.assertEpisodesDeepEquals(expected.getEpisodes(), actual.getEpisodes());
             }
-        );
+        });
     }
 
     /**
@@ -276,11 +272,11 @@ public final class SeasonUtils {
      * @param actual   actual seasons
      */
     public static void assertSeasonListDeepEquals(final List<Season> expected, final List<cz.vhromada.catalog.domain.Season> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertSeasonDeepEquals(expected.get(i), actual.get(i));
@@ -295,20 +291,20 @@ public final class SeasonUtils {
      * @param actual   actual season
      */
     public static void assertSeasonDeepEquals(final Season expected, final cz.vhromada.catalog.domain.Season actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getNumber(), actual.getNumber()),
-            () -> assertEquals(expected.getStartYear(), actual.getStartYear()),
-            () -> assertEquals(expected.getEndYear(), actual.getEndYear()),
-            () -> assertEquals(expected.getLanguage(), actual.getLanguage()),
-            () -> assertEquals(expected.getSubtitles(), actual.getSubtitles()),
-            () -> assertEquals(expected.getNote(), actual.getNote()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
+            softly.assertThat(expected.getStartYear()).isEqualTo(actual.getStartYear());
+            softly.assertThat(expected.getEndYear()).isEqualTo(actual.getEndYear());
+            softly.assertThat(expected.getLanguage()).isEqualTo(actual.getLanguage());
+            softly.assertThat(expected.getSubtitles()).isEqualTo(actual.getSubtitles());
+            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
+            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+        });
     }
 
 }

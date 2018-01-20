@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -66,7 +64,7 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
      */
     @Test
     void constructor_NullShowService() {
-        assertThrows(IllegalArgumentException.class, () -> new ShowValidatorImpl(null, genreValidator));
+        assertThatThrownBy(() -> new ShowValidatorImpl(null, genreValidator)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -74,7 +72,7 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
      */
     @Test
     void constructor_NullGenreValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new ShowValidatorImpl(getCatalogService(), null));
+        assertThatThrownBy(() -> new ShowValidatorImpl(getCatalogService(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -87,11 +85,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -111,12 +109,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -135,12 +132,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -160,12 +156,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -185,12 +180,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -209,11 +203,10 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -232,11 +225,10 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -255,11 +247,10 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -279,12 +270,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_WIKI_EN_NULL",
-                "URL to english Wikipedia page about show mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_WIKI_EN_NULL",
+                "URL to english Wikipedia page about show mustn't be null.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -304,12 +294,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about show mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about show mustn't be null.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -329,11 +318,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -352,11 +341,10 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
@@ -375,11 +363,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null.")));
+        });
 
         verifyNoMoreInteractions(genreValidator);
         verifyZeroInteractions(getCatalogService());
@@ -395,12 +383,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+        });
 
         verify(genreValidator).validate(show.getGenres().get(0), ValidationType.EXISTS, ValidationType.DEEP);
         verifyNoMoreInteractions(genreValidator);
@@ -421,11 +408,10 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
 
         final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(event), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
+        });
 
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);

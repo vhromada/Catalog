@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.List;
 
@@ -60,9 +59,11 @@ class ShowRepositoryIntegrationTest {
 
         ShowUtils.assertShowsDeepEquals(ShowUtils.getShows(), shows);
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT);
+            softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT);
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT);
+        });
     }
 
     /**
@@ -76,11 +77,13 @@ class ShowRepositoryIntegrationTest {
             ShowUtils.assertShowDeepEquals(ShowUtils.getShow(i), show);
         }
 
-        assertFalse(showRepository.findById(Integer.MAX_VALUE).isPresent());
+        assertThat(showRepository.findById(Integer.MAX_VALUE).isPresent()).isFalse();
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT);
+            softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT);
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT);
+        });
     }
 
     /**
@@ -93,7 +96,7 @@ class ShowRepositoryIntegrationTest {
 
         showRepository.save(show);
 
-        assertEquals(Integer.valueOf(ShowUtils.SHOWS_COUNT + 1), show.getId());
+        assertThat(show.getId()).isEqualTo(ShowUtils.SHOWS_COUNT + 1);
 
         final Show addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
         final Show expectedAddedShow = ShowUtils.newShowDomain(null);
@@ -101,9 +104,11 @@ class ShowRepositoryIntegrationTest {
         expectedAddedShow.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         ShowUtils.assertShowDeepEquals(expectedAddedShow, addedShow);
 
-        assertEquals(ShowUtils.SHOWS_COUNT + 1, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT + 1);
+            softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT);
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT);
+        });
     }
 
     /**
@@ -121,9 +126,11 @@ class ShowRepositoryIntegrationTest {
         expectedUpdatedShow.setPosition(ShowUtils.POSITION);
         ShowUtils.assertShowDeepEquals(expectedUpdatedShow, updatedShow);
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT);
+            softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT);
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT);
+        });
     }
 
     /**
@@ -146,9 +153,11 @@ class ShowRepositoryIntegrationTest {
         expectedUpdatedShow.getSeasons().add(expectedSeason);
         ShowUtils.assertShowDeepEquals(expectedUpdatedShow, updatedShow);
 
-        assertEquals(ShowUtils.SHOWS_COUNT, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT + 1, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT, EpisodeUtils.getEpisodesCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT);
+            softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT + 1);
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT);
+        });
     }
 
     /**
@@ -161,11 +170,13 @@ class ShowRepositoryIntegrationTest {
 
         showRepository.delete(ShowUtils.getShow(entityManager, 1));
 
-        assertNull(ShowUtils.getShow(entityManager, 1));
+        assertThat(ShowUtils.getShow(entityManager, 1)).isNull();
 
-        assertEquals(ShowUtils.SHOWS_COUNT - 1, ShowUtils.getShowsCount(entityManager));
-        assertEquals(SeasonUtils.SEASONS_COUNT - seasonsCount, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(EpisodeUtils.EPISODES_COUNT - episodesCount, EpisodeUtils.getEpisodesCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT - 1);
+            softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT - seasonsCount);
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT - episodesCount);
+        });
     }
 
     /**
@@ -175,9 +186,11 @@ class ShowRepositoryIntegrationTest {
     void removeAll() {
         showRepository.deleteAll();
 
-        assertEquals(0, ShowUtils.getShowsCount(entityManager));
-        assertEquals(0, SeasonUtils.getSeasonsCount(entityManager));
-        assertEquals(0, EpisodeUtils.getEpisodesCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(0);
+            softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(0);
+            softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(0);
+        });
     }
 
 }

@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.List;
 
@@ -57,8 +56,10 @@ class MusicRepositoryIntegrationTest {
 
         MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(), music);
 
-        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
-        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT);
+            softly.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT);
+        });
     }
 
     /**
@@ -72,10 +73,12 @@ class MusicRepositoryIntegrationTest {
             MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), music);
         }
 
-        assertFalse(musicRepository.findById(Integer.MAX_VALUE).isPresent());
+        assertThat(musicRepository.findById(Integer.MAX_VALUE).isPresent()).isFalse();
 
-        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
-        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT);
+            softly.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT);
+        });
     }
 
     /**
@@ -87,15 +90,17 @@ class MusicRepositoryIntegrationTest {
 
         musicRepository.save(music);
 
-        assertEquals(Integer.valueOf(MusicUtils.MUSIC_COUNT + 1), music.getId());
+        assertThat(music.getId()).isEqualTo(MusicUtils.MUSIC_COUNT + 1);
 
         final Music addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
         final Music expectedAddMusic = MusicUtils.newMusicDomain(null);
         expectedAddMusic.setId(MusicUtils.MUSIC_COUNT + 1);
         MusicUtils.assertMusicDeepEquals(expectedAddMusic, addedMusic);
 
-        assertEquals(MusicUtils.MUSIC_COUNT + 1, MusicUtils.getMusicCount(entityManager));
-        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT + 1);
+            softly.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT);
+        });
     }
 
     /**
@@ -113,8 +118,10 @@ class MusicRepositoryIntegrationTest {
         expectedUpdatedMusic.setPosition(MusicUtils.POSITION);
         MusicUtils.assertMusicDeepEquals(expectedUpdatedMusic, updatedMusic);
 
-        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
-        assertEquals(SongUtils.SONGS_COUNT, SongUtils.getSongsCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT);
+            softly.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT);
+        });
     }
 
     /**
@@ -137,8 +144,10 @@ class MusicRepositoryIntegrationTest {
         expectedUpdatedMusic.getSongs().add(expectedSong);
         MusicUtils.assertMusicDeepEquals(expectedUpdatedMusic, updatedMusic);
 
-        assertEquals(MusicUtils.MUSIC_COUNT, MusicUtils.getMusicCount(entityManager));
-        assertEquals(SongUtils.SONGS_COUNT + 1, SongUtils.getSongsCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT);
+            softly.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT + 1);
+        });
     }
 
     /**
@@ -150,10 +159,12 @@ class MusicRepositoryIntegrationTest {
 
         musicRepository.delete(MusicUtils.getMusic(entityManager, 1));
 
-        assertNull(MusicUtils.getMusic(entityManager, 1));
+        assertThat(MusicUtils.getMusic(entityManager, 1)).isNull();
 
-        assertEquals(MusicUtils.MUSIC_COUNT - 1, MusicUtils.getMusicCount(entityManager));
-        assertEquals(SongUtils.SONGS_COUNT - songsCount, SongUtils.getSongsCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT - 1);
+            softly.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT - songsCount);
+        });
     }
 
     /**
@@ -163,8 +174,10 @@ class MusicRepositoryIntegrationTest {
     void removeAll() {
         musicRepository.deleteAll();
 
-        assertEquals(0, MusicUtils.getMusicCount(entityManager));
-        assertEquals(0, SongUtils.getSongsCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(0);
+            softly.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(0);
+        });
     }
 
 }

@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -28,8 +28,8 @@ class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Mo
      */
     @Test
     void constructor_NullCatalogService() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(null, getConverter(), getParentCatalogValidator(),
-            getChildCatalogValidator()));
+        assertThatThrownBy(() -> new AbstractCatalogChildFacadeStub(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -38,8 +38,8 @@ class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Mo
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(getCatalogService(), null, getParentCatalogValidator(),
-            getChildCatalogValidator()));
+        assertThatThrownBy(() -> new AbstractCatalogChildFacadeStub(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -48,8 +48,8 @@ class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Mo
      */
     @Test
     void constructor_NullParentCatalogValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), null,
-            getChildCatalogValidator()));
+        assertThatThrownBy(() -> new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), null, getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -58,8 +58,8 @@ class AbstractCatalogChildFacadeTest extends AbstractChildFacadeTest<Movable, Mo
      */
     @Test
     void constructor_NullChildCatalogValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), getParentCatalogValidator(),
-            null));
+        assertThatThrownBy(() -> new AbstractCatalogChildFacadeStub(getCatalogService(), getConverter(), getParentCatalogValidator(), null))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

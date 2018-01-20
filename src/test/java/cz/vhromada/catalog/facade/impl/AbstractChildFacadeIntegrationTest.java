@@ -1,10 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,22 +47,20 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
             final Result<T> result = getCatalogChildFacade().get(i);
             final int index = i;
 
-            assertNotNull(result);
-            assertAll(
-                () -> assertEquals(Status.OK, result.getStatus()),
-                () -> assertDataDeepEquals(result.getData(), getDomainData(index)),
-                () -> assertTrue(result.getEvents().isEmpty())
-            );
+            assertSoftly(softly -> {
+                softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+                assertDataDeepEquals(result.getData(), getDomainData(index));
+                softly.assertThat(result.getEvents()).isEmpty();
+            });
         }
 
         final Result<T> result = getCatalogChildFacade().get(Integer.MAX_VALUE);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertNull(result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isNull();
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         assertDefaultRepositoryData();
     }
@@ -77,12 +72,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void get_NullData() {
         final Result<T> result = getCatalogChildFacade().get(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertNull(result.getData()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "ID_NULL", NULL_ID_MESSAGE)), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getData()).isNull();
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "ID_NULL", NULL_ID_MESSAGE)));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -98,11 +92,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
 
         final Result<Void> result = getCatalogChildFacade().add(newParentData(1), newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         assertDataDomainDeepEquals(expectedData, getRepositoryData(getDefaultChildDataCount() + 1));
         assertAddRepositoryData();
@@ -115,11 +108,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void add_NullParent() {
         final Result<Void> result = getCatalogChildFacade().add(null, newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullParentDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullParentDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -131,11 +123,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void add_NullId() {
         final Result<Void> result = getCatalogChildFacade().add(newParentData(null), newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullParentDataIdEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullParentDataIdEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -147,11 +138,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void add_NotExistingParent() {
         final Result<Void> result = getCatalogChildFacade().add(newParentData(Integer.MAX_VALUE), newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNotExistingParentDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNotExistingParentDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -163,11 +153,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void add_NullChild() {
         final Result<Void> result = getCatalogChildFacade().add(newParentData(1), null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -179,11 +168,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void add_NotNullId() {
         final Result<Void> result = getCatalogChildFacade().add(newParentData(1), newChildData(1));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getChildPrefix() + "_ID_NOT_NULL", "ID must be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getChildPrefix() + "_ID_NOT_NULL", "ID must be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -198,11 +187,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
 
         final Result<Void> result = getCatalogChildFacade().update(data);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         assertDataDeepEquals(data, getRepositoryData(1));
         assertUpdateRepositoryData();
@@ -215,11 +203,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void update_NullData() {
         final Result<Void> result = getCatalogChildFacade().update(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -231,11 +218,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void update_NullId() {
         final Result<Void> result = getCatalogChildFacade().update(newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataIdEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataIdEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -247,11 +233,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void update_BadId() {
         final Result<Void> result = getCatalogChildFacade().update(newChildData(Integer.MAX_VALUE));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNotExistingChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNotExistingChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -264,13 +249,12 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void remove() {
         final Result<Void> result = getCatalogChildFacade().remove(newChildData(1));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
-        assertNull(getRepositoryData(1));
+        assertThat(getRepositoryData(1)).isNull();
         assertRemoveRepositoryData();
     }
 
@@ -281,11 +265,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void remove_NullData() {
         final Result<Void> result = getCatalogChildFacade().remove(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -297,11 +280,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void remove_NullId() {
         final Result<Void> result = getCatalogChildFacade().remove(newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataIdEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataIdEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -313,11 +295,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void remove_BadId() {
         final Result<Void> result = getCatalogChildFacade().remove(newChildData(Integer.MAX_VALUE));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNotExistingChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNotExistingChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -330,11 +311,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void duplicate() {
         final Result<Void> result = getCatalogChildFacade().duplicate(newChildData(1));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         assertDataDomainDeepEquals(getExpectedDuplicatedData(), getRepositoryData(getDefaultChildDataCount() + 1));
         assertDuplicateRepositoryData();
@@ -347,11 +327,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void duplicate_NullData() {
         final Result<Void> result = getCatalogChildFacade().duplicate(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -363,11 +342,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void duplicate_NullId() {
         final Result<Void> result = getCatalogChildFacade().duplicate(newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataIdEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataIdEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -379,11 +357,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void duplicate_BadId() {
         final Result<Void> result = getCatalogChildFacade().duplicate(newChildData(Integer.MAX_VALUE));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNotExistingChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNotExistingChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -396,11 +373,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveUp() {
         final Result<Void> result = getCatalogChildFacade().moveUp(newChildData(2));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         final U data1 = getDomainData(1);
         data1.setPosition(1);
@@ -421,11 +397,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveUp_NullData() {
         final Result<Void> result = getCatalogChildFacade().moveUp(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -437,11 +412,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveUp_NullId() {
         final Result<Void> result = getCatalogChildFacade().moveUp(newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataIdEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataIdEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -453,12 +427,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveUp_NotMovableData() {
         final Result<Void> result = getCatalogChildFacade().moveUp(newChildData(1));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getChildPrefix() + "_NOT_MOVABLE", getChildName() + " can't be moved up.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getChildPrefix() + "_NOT_MOVABLE", getChildName() + " can't be moved up.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -470,11 +443,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveUp_BadId() {
         final Result<Void> result = getCatalogChildFacade().moveUp(newChildData(Integer.MAX_VALUE));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNotExistingChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNotExistingChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -487,11 +459,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveDown() {
         final Result<Void> result = getCatalogChildFacade().moveDown(newChildData(1));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         final U data1 = getDomainData(1);
         data1.setPosition(1);
@@ -512,11 +483,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveDown_NullData() {
         final Result<Void> result = getCatalogChildFacade().moveDown(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -528,11 +498,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveDown_NullId() {
         final Result<Void> result = getCatalogChildFacade().moveDown(newChildData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNullChildDataIdEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullChildDataIdEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -544,12 +513,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveDown_NotMovableData() {
         final Result<Void> result = getCatalogChildFacade().moveDown(newChildData(getDefaultChildDataCount()));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, getChildPrefix() + "_NOT_MOVABLE",
-                getChildName() + " can't be moved down.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, getChildPrefix() + "_NOT_MOVABLE", getChildName() + " can't be moved down.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -561,11 +529,10 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void moveDown_BadId() {
         final Result<Void> result = getCatalogChildFacade().moveDown(newChildData(Integer.MAX_VALUE));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(getNotExistingChildDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNotExistingChildDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -579,12 +546,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
             final Result<List<T>> result = getCatalogChildFacade().find(newParentData(i));
             final int index = i;
 
-            assertNotNull(result);
-            assertAll(
-                () -> assertEquals(Status.OK, result.getStatus()),
-                () -> assertDataListDeepEquals(result.getData(), getDataList(index)),
-                () -> assertTrue(result.getEvents().isEmpty())
-            );
+            assertSoftly(softly -> {
+                softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+                assertDataListDeepEquals(result.getData(), getDataList(index));
+                softly.assertThat(result.getEvents()).isEmpty();
+            });
         }
 
         assertDefaultRepositoryData();
@@ -597,12 +563,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void find_NullParent() {
         final Result<List<T>> result = getCatalogChildFacade().find(null);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertNull(result.getData()),
-            () -> assertEquals(Collections.singletonList(getNullParentDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getData()).isNull();
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullParentDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -614,12 +579,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void find_NullId() {
         final Result<List<T>> result = getCatalogChildFacade().find(newParentData(null));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertNull(result.getData()),
-            () -> assertEquals(Collections.singletonList(getNullParentDataIdEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getData()).isNull();
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNullParentDataIdEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -631,12 +595,11 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
     void find_BadId() {
         final Result<List<T>> result = getCatalogChildFacade().find(newParentData(Integer.MAX_VALUE));
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertNull(result.getData()),
-            () -> assertEquals(Collections.singletonList(getNotExistingParentDataEvent()), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getData()).isNull();
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(getNotExistingParentDataEvent()));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -778,57 +741,57 @@ abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends M
      * Asserts default repository data.
      */
     protected void assertDefaultRepositoryData() {
-        assertAll(
-            () -> assertEquals(getDefaultChildDataCount(), getRepositoryChildDataCount()),
-            this::assertReferences
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount());
+            assertReferences();
+        });
     }
 
     /**
      * Asserts repository data for {@link CatalogChildFacade#add(Movable, Movable)}.
      */
     private void assertAddRepositoryData() {
-        assertAll(
-            () -> assertEquals(Integer.valueOf(getDefaultChildDataCount() + 1), getRepositoryChildDataCount()),
-            this::assertReferences
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() + 1);
+            assertReferences();
+        });
     }
 
     /**
      * Asserts repository data for {@link CatalogChildFacade#update(Movable)}.
      */
     protected void assertUpdateRepositoryData() {
-        assertAll(
-            () -> assertEquals(getDefaultChildDataCount(), getRepositoryChildDataCount()),
-            this::assertReferences
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount());
+            assertReferences();
+        });
     }
 
     /**
      * Asserts repository data for {@link CatalogChildFacade#remove(Movable)}.
      */
     protected void assertRemoveRepositoryData() {
-        assertAll(
-            () -> assertEquals(Integer.valueOf(getDefaultChildDataCount() - 1), getRepositoryChildDataCount()),
-            this::assertReferences
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() - 1);
+            assertReferences();
+        });
     }
 
     /**
      * Asserts repository data for {@link CatalogChildFacade#duplicate(Movable)}.
      */
     protected void assertDuplicateRepositoryData() {
-        assertAll(
-            () -> assertEquals(Integer.valueOf(getDefaultChildDataCount() + 1), getRepositoryChildDataCount()),
-            this::assertReferences
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() + 1);
+            assertReferences();
+        });
     }
 
     /**
      * Asserts references.
      */
     protected void assertReferences() {
-        assertEquals(getDefaultParentDataCount(), getRepositoryParentDataCount());
+        assertThat(getRepositoryParentDataCount()).isEqualTo(getDefaultParentDataCount());
     }
 
     /**

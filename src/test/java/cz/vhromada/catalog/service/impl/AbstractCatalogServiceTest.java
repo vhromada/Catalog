@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.service.CatalogService;
@@ -31,7 +29,7 @@ class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
      */
     @Test
     void constructor_NullMovableRepository() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogServiceStub(null, getCache(), getCacheKey()));
+        assertThatThrownBy(() -> new AbstractCatalogServiceStub(null, getCache(), getCacheKey())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -39,7 +37,7 @@ class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
      */
     @Test
     void constructor_NullCache() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogServiceStub(repository, null, getCacheKey()));
+        assertThatThrownBy(() -> new AbstractCatalogServiceStub(repository, null, getCacheKey())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -47,7 +45,7 @@ class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
      */
     @Test
     void constructor_NullCacheKey() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogServiceStub(repository, getCache(), null));
+        assertThatThrownBy(() -> new AbstractCatalogServiceStub(repository, getCache(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
@@ -92,14 +90,14 @@ class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
 
     @Override
     protected void assertDataDeepEquals(final Movable expected, final Movable actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getPosition(), actual.getPosition())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getPosition());
+            softly.assertThat(expected.getId()).isEqualTo(actual.getPosition());
+        });
     }
 
     /**

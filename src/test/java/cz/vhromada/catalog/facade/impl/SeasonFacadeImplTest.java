@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -28,7 +28,8 @@ class SeasonFacadeImplTest extends AbstractChildFacadeTest<Season, cz.vhromada.c
      */
     @Test
     void constructor_NullShowService() {
-        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()));
+        assertThatThrownBy(() -> new SeasonFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -36,8 +37,8 @@ class SeasonFacadeImplTest extends AbstractChildFacadeTest<Season, cz.vhromada.c
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(getCatalogService(), null, getParentCatalogValidator(),
-            getChildCatalogValidator()));
+        assertThatThrownBy(() -> new SeasonFacadeImpl(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -45,7 +46,8 @@ class SeasonFacadeImplTest extends AbstractChildFacadeTest<Season, cz.vhromada.c
      */
     @Test
     void constructor_NullShowValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()));
+        assertThatThrownBy(() -> new SeasonFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -53,7 +55,8 @@ class SeasonFacadeImplTest extends AbstractChildFacadeTest<Season, cz.vhromada.c
      */
     @Test
     void constructor_NullSeasonValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new SeasonFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null));
+        assertThatThrownBy(() -> new SeasonFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

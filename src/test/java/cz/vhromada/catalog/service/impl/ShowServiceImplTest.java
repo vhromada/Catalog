@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Show;
@@ -31,7 +31,7 @@ class ShowServiceImplTest extends AbstractServiceTest<Show> {
      */
     @Test
     void constructor_NullShowRepository() {
-        assertThrows(IllegalArgumentException.class, () -> new ShowServiceImpl(null, getCache()));
+        assertThatThrownBy(() -> new ShowServiceImpl(null, getCache())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -39,7 +39,7 @@ class ShowServiceImplTest extends AbstractServiceTest<Show> {
      */
     @Test
     void constructor_NullCache() {
-        assertThrows(IllegalArgumentException.class, () -> new ShowServiceImpl(showRepository, null));
+        assertThatThrownBy(() -> new ShowServiceImpl(showRepository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

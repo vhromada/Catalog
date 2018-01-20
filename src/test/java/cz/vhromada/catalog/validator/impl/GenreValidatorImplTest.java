@@ -1,9 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.Collections;
@@ -33,7 +31,7 @@ class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhromada.ca
      */
     @Test
     void constructor_NullGenreService() {
-        assertThrows(IllegalArgumentException.class, () -> new GenreValidatorImpl(null));
+        assertThatThrownBy(() -> new GenreValidatorImpl(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -46,11 +44,10 @@ class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(genre, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }
@@ -65,11 +62,11 @@ class GenreValidatorImplTest extends AbstractValidatorTest<Genre, cz.vhromada.ca
 
         final Result<Void> result = getCatalogValidator().validate(genre, ValidationType.DEEP);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         verifyZeroInteractions(getCatalogService());
     }

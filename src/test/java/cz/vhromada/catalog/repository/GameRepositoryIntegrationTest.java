@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -54,7 +52,7 @@ class GameRepositoryIntegrationTest {
 
         GameUtils.assertGamesDeepEquals(GameUtils.getGames(), games);
 
-        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
+        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT);
     }
 
     /**
@@ -68,9 +66,9 @@ class GameRepositoryIntegrationTest {
             GameUtils.assertGameDeepEquals(GameUtils.getGame(i), game);
         }
 
-        assertFalse(gameRepository.findById(Integer.MAX_VALUE).isPresent());
+        assertThat(gameRepository.findById(Integer.MAX_VALUE).isPresent()).isFalse();
 
-        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
+        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT);
     }
 
     /**
@@ -82,14 +80,14 @@ class GameRepositoryIntegrationTest {
 
         gameRepository.save(game);
 
-        assertEquals(Integer.valueOf(GameUtils.GAMES_COUNT + 1), game.getId());
+        assertThat(game.getId()).isEqualTo(GameUtils.GAMES_COUNT + 1);
 
         final Game addedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1);
         final Game expectedAddGame = GameUtils.newGameDomain(null);
         expectedAddGame.setId(GameUtils.GAMES_COUNT + 1);
         GameUtils.assertGameDeepEquals(expectedAddGame, addedGame);
 
-        assertEquals(GameUtils.GAMES_COUNT + 1, GameUtils.getGamesCount(entityManager));
+        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT + 1);
     }
 
     /**
@@ -107,7 +105,7 @@ class GameRepositoryIntegrationTest {
         expectedUpdatedGame.setPosition(GameUtils.POSITION);
         GameUtils.assertGameDeepEquals(expectedUpdatedGame, updatedGame);
 
-        assertEquals(GameUtils.GAMES_COUNT, GameUtils.getGamesCount(entityManager));
+        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT);
     }
 
     /**
@@ -117,9 +115,9 @@ class GameRepositoryIntegrationTest {
     void remove() {
         gameRepository.delete(GameUtils.getGame(entityManager, 1));
 
-        assertNull(GameUtils.getGame(entityManager, 1));
+        assertThat(GameUtils.getGame(entityManager, 1)).isNull();
 
-        assertEquals(GameUtils.GAMES_COUNT - 1, GameUtils.getGamesCount(entityManager));
+        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT - 1);
     }
 
     /**
@@ -129,7 +127,7 @@ class GameRepositoryIntegrationTest {
     void removeAll() {
         gameRepository.deleteAll();
 
-        assertEquals(0, GameUtils.getGamesCount(entityManager));
+        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(0);
     }
 
 }

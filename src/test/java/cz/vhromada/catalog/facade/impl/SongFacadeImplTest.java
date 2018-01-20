@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -27,7 +27,8 @@ class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromada.catal
      */
     @Test
     void constructor_NullMusicService() {
-        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()));
+        assertThatThrownBy(() -> new SongFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -35,8 +36,8 @@ class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromada.catal
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(getCatalogService(), null, getParentCatalogValidator(),
-            getChildCatalogValidator()));
+        assertThatThrownBy(() -> new SongFacadeImpl(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -44,7 +45,8 @@ class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromada.catal
      */
     @Test
     void constructor_NullMusicValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()));
+        assertThatThrownBy(() -> new SongFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -52,7 +54,8 @@ class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromada.catal
      */
     @Test
     void constructor_NullSongValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new SongFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null));
+        assertThatThrownBy(() -> new SongFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

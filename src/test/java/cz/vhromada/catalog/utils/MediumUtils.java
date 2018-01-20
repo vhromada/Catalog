@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.utils;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ public final class MediumUtils {
     /**
      * ID
      */
-    public static final Integer ID = 1;
+    public static final int ID = 1;
 
     /**
      * Count of media
@@ -116,11 +115,11 @@ public final class MediumUtils {
      * @param actual   actual media
      */
     public static void assertMediaDeepEquals(final List<cz.vhromada.catalog.domain.Medium> expected, final List<cz.vhromada.catalog.domain.Medium> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMediumDeepEquals(expected.get(i), actual.get(i));
@@ -135,15 +134,15 @@ public final class MediumUtils {
      * @param actual   actual medium
      */
     private static void assertMediumDeepEquals(final cz.vhromada.catalog.domain.Medium expected, final cz.vhromada.catalog.domain.Medium actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getNumber(), actual.getNumber()),
-            () -> assertEquals(expected.getLength(), actual.getLength())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
+            softly.assertThat(expected.getLength()).isEqualTo(actual.getLength());
+        });
     }
 
 
@@ -154,11 +153,11 @@ public final class MediumUtils {
      * @param actual   actual media
      */
     public static void assertMediumListDeepEquals(final List<Medium> expected, final List<cz.vhromada.catalog.domain.Medium> actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertEquals(expected.size(), actual.size());
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertThat(expected.size()).isEqualTo(actual.size());
         if (!expected.isEmpty()) {
             for (int i = 0; i < expected.size(); i++) {
                 assertMediumDeepEquals(expected.get(i), actual.get(i));
@@ -173,15 +172,15 @@ public final class MediumUtils {
      * @param actual   actual medium
      */
     private static void assertMediumDeepEquals(final Medium expected, final cz.vhromada.catalog.domain.Medium actual) {
-        assertAll(
-            () -> assertNotNull(expected),
-            () -> assertNotNull(actual)
-        );
-        assertAll(
-            () -> assertEquals(expected.getId(), actual.getId()),
-            () -> assertEquals(expected.getNumber(), actual.getNumber()),
-            () -> assertEquals(expected.getLength(), actual.getLength())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(expected).isNotNull();
+            softly.assertThat(actual).isNotNull();
+        });
+        assertSoftly(softly -> {
+            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
+            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
+            softly.assertThat(expected.getLength()).isEqualTo(actual.getLength());
+        });
     }
 
 }

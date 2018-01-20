@@ -1,10 +1,7 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -40,7 +37,7 @@ class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhromada.ca
      */
     @Test
     void constructor_NullMusicService() {
-        assertThrows(IllegalArgumentException.class, () -> new MusicFacadeImpl(null, getConverter(), getCatalogValidator()));
+        assertThatThrownBy(() -> new MusicFacadeImpl(null, getConverter(), getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -48,7 +45,7 @@ class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhromada.ca
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new MusicFacadeImpl(getCatalogService(), null, getCatalogValidator()));
+        assertThatThrownBy(() -> new MusicFacadeImpl(getCatalogService(), null, getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -56,7 +53,7 @@ class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhromada.ca
      */
     @Test
     void constructor_NullMusicValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new MusicFacadeImpl(getCatalogService(), getConverter(), null));
+        assertThatThrownBy(() -> new MusicFacadeImpl(getCatalogService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -72,12 +69,11 @@ class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhromada.ca
 
         final Result<Integer> result = ((MusicFacade) getCatalogParentFacade()).getTotalMediaCount();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(Integer.valueOf(expectedCount), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(expectedCount);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());
@@ -102,12 +98,11 @@ class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhromada.ca
 
         final Result<Time> result = ((MusicFacade) getCatalogParentFacade()).getTotalLength();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(new Time(expectedTotalLength), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(new Time(expectedTotalLength));
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());
@@ -127,12 +122,11 @@ class MusicFacadeImplTest extends AbstractParentFacadeTest<Music, cz.vhromada.ca
 
         final Result<Integer> result = ((MusicFacade) getCatalogParentFacade()).getSongsCount();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(Integer.valueOf(expectedSongs), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(expectedSongs);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         verify(getCatalogService()).getAll();
         verifyNoMoreInteractions(getCatalogService());

@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Music;
@@ -44,7 +44,7 @@ class MusicConverterTest {
      */
     @Test
     void convertMusicDomain_NullMusic() {
-        assertNull(converter.convert(null, Music.class));
+        assertThat(converter.convert(null, Music.class)).isNull();
     }
 
     /**
@@ -63,7 +63,7 @@ class MusicConverterTest {
      */
     @Test
     void convertMusic_NullMusic() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Music.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Music.class)).isNull();
     }
 
 }

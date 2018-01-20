@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.domain.Movie;
@@ -31,7 +31,7 @@ class MovieServiceImplTest extends AbstractServiceTest<Movie> {
      */
     @Test
     void constructor_NullMovieRepository() {
-        assertThrows(IllegalArgumentException.class, () -> new MovieServiceImpl(null, getCache()));
+        assertThatThrownBy(() -> new MovieServiceImpl(null, getCache())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -39,7 +39,7 @@ class MovieServiceImplTest extends AbstractServiceTest<Movie> {
      */
     @Test
     void constructor_NullCache() {
-        assertThrows(IllegalArgumentException.class, () -> new MovieServiceImpl(movieRepository, null));
+        assertThatThrownBy(() -> new MovieServiceImpl(movieRepository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

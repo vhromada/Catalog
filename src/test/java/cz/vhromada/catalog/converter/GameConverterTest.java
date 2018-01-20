@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Game;
@@ -44,7 +44,7 @@ class GameConverterTest {
      */
     @Test
     void convertGameDomain_NullGame() {
-        assertNull(converter.convert(null, Game.class));
+        assertThat(converter.convert(null, Game.class));
     }
 
     /**
@@ -63,7 +63,7 @@ class GameConverterTest {
      */
     @Test
     void convertGame_NullGame() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Game.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class));
     }
 
 }

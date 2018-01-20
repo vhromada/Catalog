@@ -1,8 +1,6 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -54,7 +52,7 @@ class ProgramRepositoryIntegrationTest {
 
         ProgramUtils.assertProgramsDeepEquals(ProgramUtils.getPrograms(), programs);
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT);
     }
 
     /**
@@ -68,9 +66,9 @@ class ProgramRepositoryIntegrationTest {
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), program);
         }
 
-        assertFalse(programRepository.findById(Integer.MAX_VALUE).isPresent());
+        assertThat(programRepository.findById(Integer.MAX_VALUE).isPresent()).isFalse();
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT);
     }
 
     /**
@@ -82,14 +80,14 @@ class ProgramRepositoryIntegrationTest {
 
         programRepository.save(program);
 
-        assertEquals(Integer.valueOf(ProgramUtils.PROGRAMS_COUNT + 1), program.getId());
+        assertThat(program.getId()).isEqualTo(ProgramUtils.PROGRAMS_COUNT + 1);
 
         final Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
         final Program expectedAddProgram = ProgramUtils.newProgramDomain(null);
         expectedAddProgram.setId(ProgramUtils.PROGRAMS_COUNT + 1);
         ProgramUtils.assertProgramDeepEquals(expectedAddProgram, addedProgram);
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT + 1, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT + 1);
     }
 
     /**
@@ -107,7 +105,7 @@ class ProgramRepositoryIntegrationTest {
         expectedUpdatedProgram.setPosition(ProgramUtils.POSITION);
         ProgramUtils.assertProgramDeepEquals(expectedUpdatedProgram, updatedProgram);
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT);
     }
 
     /**
@@ -117,9 +115,9 @@ class ProgramRepositoryIntegrationTest {
     void remove() {
         programRepository.delete(ProgramUtils.getProgram(entityManager, 1));
 
-        assertNull(ProgramUtils.getProgram(entityManager, 1));
+        assertThat(ProgramUtils.getProgram(entityManager, 1)).isNull();
 
-        assertEquals(ProgramUtils.PROGRAMS_COUNT - 1, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT - 1);
     }
 
     /**
@@ -129,7 +127,7 @@ class ProgramRepositoryIntegrationTest {
     void removeAll() {
         programRepository.deleteAll();
 
-        assertEquals(0, ProgramUtils.getProgramsCount(entityManager));
+        assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(0);
     }
 
 }

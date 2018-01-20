@@ -1,9 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Collections;
 import java.util.List;
@@ -74,11 +71,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -93,12 +90,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -113,12 +109,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -133,12 +128,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -153,11 +147,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -172,11 +165,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -191,11 +183,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -210,11 +202,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -229,12 +221,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -249,11 +240,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -268,12 +258,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -290,12 +279,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -310,12 +298,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -330,11 +317,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -349,11 +335,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -368,11 +353,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -387,12 +371,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
-                "URL to english Wikipedia page about movie mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+                "URL to english Wikipedia page about movie mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -407,12 +390,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about movie mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about movie mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -427,11 +409,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -446,11 +428,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -465,11 +446,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -484,12 +465,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -504,11 +484,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -525,11 +504,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -546,11 +524,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.add(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -565,11 +543,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -584,12 +562,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -604,12 +581,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -624,12 +600,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -644,11 +619,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -663,11 +637,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_YEAR_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -682,11 +655,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -701,11 +674,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -720,12 +693,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -740,11 +712,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -759,12 +730,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -781,12 +751,12 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
+        });
+
         assertDefaultRepositoryData();
     }
 
@@ -800,12 +770,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -820,11 +789,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -839,11 +807,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -858,11 +825,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(INVALID_IMDB_CODE_EVENT), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -877,12 +843,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
-                "URL to english Wikipedia page about movie mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+                "URL to english Wikipedia page about movie mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -897,12 +862,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about movie mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about movie mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -917,11 +881,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -936,11 +900,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -955,11 +918,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -974,12 +937,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -994,11 +956,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -1015,11 +976,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -1036,11 +996,11 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         final Result<Void> result = movieFacade.update(movie);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -1052,18 +1012,13 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     void getTotalMediaCount() {
         final Result<Integer> result = movieFacade.getTotalMediaCount();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(Integer.valueOf(MediumUtils.MEDIA_COUNT), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(MediumUtils.MEDIA_COUNT);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
-        assertAll(
-            () -> assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager)),
-            () -> assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertDefaultRepositoryData();
     }
 
     /**
@@ -1073,18 +1028,13 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     void getTotalLength() {
         final Result<Time> result = movieFacade.getTotalLength();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(new Time(1000), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(new Time(1000));
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
-        assertAll(
-            () -> assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager)),
-            () -> assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertDefaultRepositoryData();
     }
 
 
@@ -1168,20 +1118,20 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     protected void assertNewRepositoryData() {
         super.assertNewRepositoryData();
 
-        assertAll(
-            () -> assertEquals(0, MediumUtils.getMediaCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(0);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
     @Override
     protected void assertAddRepositoryData() {
         super.assertAddRepositoryData();
 
-        assertAll(
-            () -> assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
     @Override
@@ -1195,20 +1145,20 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     protected void assertRemoveRepositoryData() {
         super.assertRemoveRepositoryData();
 
-        assertAll(
-            () -> assertEquals(MediumUtils.MEDIA_COUNT - MovieUtils.getMovie(1).getMedia().size(), MediumUtils.getMediaCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - MovieUtils.getMovie(1).getMedia().size());
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
     @Override
     protected void assertDuplicateRepositoryData() {
         super.assertDuplicateRepositoryData();
 
-        assertAll(
-            () -> assertEquals(MediumUtils.MEDIA_COUNT + 2, MediumUtils.getMediaCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 2);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
     @Override
@@ -1245,10 +1195,10 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
      * Asserts references.
      */
     private void assertReferences() {
-        assertAll(
-            () -> assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager)),
-            () -> assertEquals(GenreUtils.GENRES_COUNT, GenreUtils.getGenresCount(entityManager))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT);
+            softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
+        });
     }
 
 }

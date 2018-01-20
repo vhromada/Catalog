@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.facade.CatalogParentFacade;
@@ -23,7 +23,7 @@ class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Movable, 
      */
     @Test
     void constructor_NullCatalogService() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogParentFacadeStub(null, getConverter(), getCatalogValidator()));
+        assertThatThrownBy(() -> new AbstractCatalogParentFacadeStub(null, getConverter(), getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -31,7 +31,8 @@ class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Movable, 
      */
     @Test
     void constructor_NullConverter() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogParentFacadeStub(getCatalogService(), null, getCatalogValidator()));
+        assertThatThrownBy(() -> new AbstractCatalogParentFacadeStub(getCatalogService(), null, getCatalogValidator()))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -40,7 +41,7 @@ class AbstractCatalogParentFacadeTest extends AbstractParentFacadeTest<Movable, 
      */
     @Test
     void constructor_NullCatalogValidator() {
-        assertThrows(IllegalArgumentException.class, () -> new AbstractCatalogParentFacadeStub(getCatalogService(), getConverter(), null));
+        assertThatThrownBy(() -> new AbstractCatalogParentFacadeStub(getCatalogService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override

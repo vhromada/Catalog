@@ -1,9 +1,6 @@
 package cz.vhromada.catalog.facade.impl;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,11 +50,10 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.add(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -72,11 +68,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.add(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -91,12 +87,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.add(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL",
-                "URL to english Wikipedia page about game mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL",
+                "URL to english Wikipedia page about game mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -111,12 +106,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.add(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about game mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about game mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -131,12 +125,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.add(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -151,11 +144,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.add(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -170,11 +163,10 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.add(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -189,11 +181,10 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.update(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -208,11 +199,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.update(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -227,12 +218,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.update(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL",
-                "URL to english Wikipedia page about game mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_EN_NULL",
+                "URL to english Wikipedia page about game mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -247,12 +237,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.update(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL",
-                "URL to czech Wikipedia page about game mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_WIKI_CZ_NULL",
+                "URL to czech Wikipedia page about game mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -267,12 +256,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.update(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")),
-                result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -287,11 +275,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.update(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -306,11 +294,10 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
 
         final Result<Void> result = gameFacade.update(game);
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.ERROR, result.getStatus()),
-            () -> assertEquals(Collections.singletonList(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")), result.getEvents())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")));
+        });
 
         assertDefaultRepositoryData();
     }
@@ -322,12 +309,11 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     void getTotalMediaCount() {
         final Result<Integer> result = gameFacade.getTotalMediaCount();
 
-        assertNotNull(result);
-        assertAll(
-            () -> assertEquals(Status.OK, result.getStatus()),
-            () -> assertEquals(Integer.valueOf(6), result.getData()),
-            () -> assertTrue(result.getEvents().isEmpty())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
+            softly.assertThat(result.getData()).isEqualTo(6);
+            softly.assertThat(result.getEvents()).isEmpty();
+        });
 
         assertDefaultRepositoryData();
     }

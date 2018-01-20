@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Season;
@@ -44,7 +44,7 @@ class SeasonConverterTest {
      */
     @Test
     void convertSeasonDomain_NullSeason() {
-        assertNull(converter.convert(null, Season.class));
+        assertThat(converter.convert(null, Season.class)).isNull();
     }
 
     /**
@@ -63,7 +63,7 @@ class SeasonConverterTest {
      */
     @Test
     void convertSeason_NullSeason() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Season.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Season.class)).isNull();
     }
 
 }

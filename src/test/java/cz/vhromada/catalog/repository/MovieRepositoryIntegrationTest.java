@@ -1,8 +1,7 @@
 package cz.vhromada.catalog.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +59,10 @@ class MovieRepositoryIntegrationTest {
 
         MovieUtils.assertMoviesDeepEquals(MovieUtils.getMovies(), movies);
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT);
+        });
     }
 
     /**
@@ -75,10 +76,12 @@ class MovieRepositoryIntegrationTest {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), movie);
         }
 
-        assertFalse(movieRepository.findById(Integer.MAX_VALUE).isPresent());
+        assertThat(movieRepository.findById(Integer.MAX_VALUE).isPresent()).isFalse();
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT);
+        });
     }
 
     /**
@@ -92,7 +95,7 @@ class MovieRepositoryIntegrationTest {
 
         movieRepository.save(movie);
 
-        assertEquals(Integer.valueOf(MovieUtils.MOVIES_COUNT + 1), movie.getId());
+        assertThat(movie.getId()).isEqualTo(MovieUtils.MOVIES_COUNT + 1);
 
         final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
         final Movie expectedAddedMovie = MovieUtils.newMovieDomain(null);
@@ -101,8 +104,10 @@ class MovieRepositoryIntegrationTest {
         expectedAddedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         MovieUtils.assertMovieDeepEquals(expectedAddedMovie, addedMovie);
 
-        assertEquals(MovieUtils.MOVIES_COUNT + 1, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT + 1);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1);
+        });
     }
 
     /**
@@ -120,8 +125,10 @@ class MovieRepositoryIntegrationTest {
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT);
+        });
     }
 
     /**
@@ -142,8 +149,10 @@ class MovieRepositoryIntegrationTest {
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT + 1, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1);
+        });
     }
 
     /**
@@ -164,8 +173,10 @@ class MovieRepositoryIntegrationTest {
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 
-        assertEquals(MovieUtils.MOVIES_COUNT, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT - mediaCount, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - mediaCount);
+        });
     }
 
     /**
@@ -177,10 +188,12 @@ class MovieRepositoryIntegrationTest {
 
         movieRepository.delete(MovieUtils.getMovie(entityManager, 1));
 
-        assertNull(MovieUtils.getMovie(entityManager, 1));
+        assertThat(MovieUtils.getMovie(entityManager, 1)).isNull();
 
-        assertEquals(MovieUtils.MOVIES_COUNT - 1, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(MediumUtils.MEDIA_COUNT - mediaCount, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT - 1);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - mediaCount);
+        });
     }
 
     /**
@@ -190,8 +203,10 @@ class MovieRepositoryIntegrationTest {
     void removeAll() {
         movieRepository.deleteAll();
 
-        assertEquals(0, MovieUtils.getMoviesCount(entityManager));
-        assertEquals(0, MediumUtils.getMediaCount(entityManager));
+        assertSoftly(softly -> {
+            softly.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(0);
+            softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(0);
+        });
     }
 
 }

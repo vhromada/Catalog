@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.converter;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Movie;
@@ -44,7 +44,7 @@ class MovieConverterTest {
      */
     @Test
     void convertMovieDomain_NullMovie() {
-        assertNull(converter.convert(null, Movie.class));
+        assertThat(converter.convert(null, Movie.class)).isNull();
     }
 
     /**
@@ -63,7 +63,7 @@ class MovieConverterTest {
      */
     @Test
     void convertMovie_NullMovie() {
-        assertNull(converter.convert(null, cz.vhromada.catalog.domain.Movie.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Movie.class)).isNull();
     }
 
 }

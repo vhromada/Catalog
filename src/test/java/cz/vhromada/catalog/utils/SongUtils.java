@@ -243,11 +243,11 @@ public final class SongUtils {
             softly.assertThat(actual).isNotNull();
         });
         assertSoftly(softly -> {
-            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
-            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
-            softly.assertThat(expected.getLength()).isEqualTo(actual.getLength());
-            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
-            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            softly.assertThat(actual.getId()).isEqualTo(expected.getId());
+            softly.assertThat(actual.getName()).isEqualTo(expected.getName());
+            softly.assertThat(actual.getLength()).isEqualTo(expected.getLength());
+            softly.assertThat(actual.getNote()).isEqualTo(expected.getNote());
+            softly.assertThat(actual.getPosition()).isEqualTo(expected.getPosition());
         });
     }
 

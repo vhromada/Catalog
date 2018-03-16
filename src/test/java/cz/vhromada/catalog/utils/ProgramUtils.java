@@ -263,16 +263,16 @@ public final class ProgramUtils {
             softly.assertThat(actual).isNotNull();
         });
         assertSoftly(softly -> {
-            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
-            softly.assertThat(expected.getName()).isEqualTo(actual.getName());
-            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
-            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
-            softly.assertThat(expected.getMediaCount()).isEqualTo(actual.getMediaCount());
-            softly.assertThat(expected.getCrack()).isEqualTo(actual.getCrack());
-            softly.assertThat(expected.getSerialKey()).isEqualTo(actual.getSerialKey());
-            softly.assertThat(expected.getOtherData()).isEqualTo(actual.getOtherData());
-            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
-            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            softly.assertThat(actual.getId()).isEqualTo(expected.getId());
+            softly.assertThat(actual.getName()).isEqualTo(expected.getName());
+            softly.assertThat(actual.getWikiEn()).isEqualTo(expected.getWikiEn());
+            softly.assertThat(actual.getWikiCz()).isEqualTo(expected.getWikiCz());
+            softly.assertThat(actual.getMediaCount()).isEqualTo(expected.getMediaCount());
+            softly.assertThat(actual.getCrack()).isEqualTo(expected.getCrack());
+            softly.assertThat(actual.getSerialKey()).isEqualTo(expected.getSerialKey());
+            softly.assertThat(actual.getOtherData()).isEqualTo(expected.getOtherData());
+            softly.assertThat(actual.getNote()).isEqualTo(expected.getNote());
+            softly.assertThat(actual.getPosition()).isEqualTo(expected.getPosition());
         });
     }
 

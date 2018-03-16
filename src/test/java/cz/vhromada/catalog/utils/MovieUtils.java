@@ -338,20 +338,22 @@ public final class MovieUtils {
             softly.assertThat(actual).isNotNull();
         });
         assertSoftly(softly -> {
-            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
-            softly.assertThat(expected.getCzechName()).isEqualTo(actual.getCzechName());
-            softly.assertThat(expected.getOriginalName()).isEqualTo(actual.getOriginalName());
-            softly.assertThat(expected.getYear()).isEqualTo(actual.getYear());
-            softly.assertThat(expected.getLanguage()).isEqualTo(actual.getLanguage());
-            softly.assertThat(expected.getSubtitles()).isEqualTo(actual.getSubtitles());
+            softly.assertThat(actual.getId()).isEqualTo(expected.getId());
+            softly.assertThat(actual.getCzechName()).isEqualTo(expected.getCzechName());
+            softly.assertThat(actual.getOriginalName()).isEqualTo(expected.getOriginalName());
+            softly.assertThat(actual.getYear()).isEqualTo(expected.getYear());
+            softly.assertThat(actual.getLanguage()).isEqualTo(expected.getLanguage());
+            softly.assertThat(actual.getSubtitles())
+                .hasSameSizeAs(expected.getSubtitles())
+                .hasSameElementsAs(expected.getSubtitles());
             MediumUtils.assertMediumListDeepEquals(expected.getMedia(), actual.getMedia());
-            softly.assertThat(expected.getCsfd()).isEqualTo(actual.getCsfd());
-            softly.assertThat(expected.getImdbCode()).isEqualTo(actual.getImdbCode());
-            softly.assertThat(expected.getWikiEn()).isEqualTo(actual.getWikiEn());
-            softly.assertThat(expected.getWikiCz()).isEqualTo(actual.getWikiCz());
-            softly.assertThat(expected.getPicture()).isEqualTo(actual.getPicture());
-            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
-            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            softly.assertThat(actual.getCsfd()).isEqualTo(expected.getCsfd());
+            softly.assertThat(actual.getImdbCode()).isEqualTo(expected.getImdbCode());
+            softly.assertThat(actual.getWikiEn()).isEqualTo(expected.getWikiEn());
+            softly.assertThat(actual.getWikiCz()).isEqualTo(expected.getWikiCz());
+            softly.assertThat(actual.getPicture()).isEqualTo(expected.getPicture());
+            softly.assertThat(actual.getNote()).isEqualTo(expected.getNote());
+            softly.assertThat(actual.getPosition()).isEqualTo(expected.getPosition());
             GenreUtils.assertGenreListDeepEquals(expected.getGenres(), actual.getGenres());
         });
     }

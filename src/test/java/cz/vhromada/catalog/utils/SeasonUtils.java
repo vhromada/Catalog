@@ -296,14 +296,16 @@ public final class SeasonUtils {
             softly.assertThat(actual).isNotNull();
         });
         assertSoftly(softly -> {
-            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
-            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
-            softly.assertThat(expected.getStartYear()).isEqualTo(actual.getStartYear());
-            softly.assertThat(expected.getEndYear()).isEqualTo(actual.getEndYear());
-            softly.assertThat(expected.getLanguage()).isEqualTo(actual.getLanguage());
-            softly.assertThat(expected.getSubtitles()).isEqualTo(actual.getSubtitles());
-            softly.assertThat(expected.getNote()).isEqualTo(actual.getNote());
-            softly.assertThat(expected.getPosition()).isEqualTo(actual.getPosition());
+            softly.assertThat(actual.getId()).isEqualTo(expected.getId());
+            softly.assertThat(actual.getNumber()).isEqualTo(expected.getNumber());
+            softly.assertThat(actual.getStartYear()).isEqualTo(expected.getStartYear());
+            softly.assertThat(actual.getEndYear()).isEqualTo(expected.getEndYear());
+            softly.assertThat(actual.getLanguage()).isEqualTo(expected.getLanguage());
+            softly.assertThat(actual.getSubtitles())
+                .hasSameSizeAs(expected.getSubtitles())
+                .hasSameElementsAs(expected.getSubtitles());
+            softly.assertThat(actual.getNote()).isEqualTo(expected.getNote());
+            softly.assertThat(actual.getPosition()).isEqualTo(expected.getPosition());
         });
     }
 

@@ -145,7 +145,6 @@ public final class MediumUtils {
         });
     }
 
-
     /**
      * Asserts media deep equals.
      *
@@ -177,9 +176,9 @@ public final class MediumUtils {
             softly.assertThat(actual).isNotNull();
         });
         assertSoftly(softly -> {
-            softly.assertThat(expected.getId()).isEqualTo(actual.getId());
-            softly.assertThat(expected.getNumber()).isEqualTo(actual.getNumber());
-            softly.assertThat(expected.getLength()).isEqualTo(actual.getLength());
+            softly.assertThat(actual.getId()).isEqualTo(expected.getId());
+            softly.assertThat(actual.getNumber()).isEqualTo(expected.getNumber());
+            softly.assertThat(actual.getLength()).isEqualTo(expected.getLength());
         });
     }
 

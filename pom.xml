@@ -12,7 +12,7 @@
 
     <groupId>cz.vhromada.catalog</groupId>
     <artifactId>catalog</artifactId>
-    <version>5.0.0</version>
+    <version>5.0.1</version>
 
     <name>Catalog</name>
     <description>Catalog of movies, games, music and programs</description>

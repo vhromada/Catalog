@@ -95,8 +95,8 @@ class AbstractCatalogServiceTest extends AbstractServiceTest<Movable> {
             softly.assertThat(actual).isNotNull();
         });
         assertSoftly(softly -> {
-            softly.assertThat(expected.getId()).isEqualTo(actual.getPosition());
-            softly.assertThat(expected.getId()).isEqualTo(actual.getPosition());
+            softly.assertThat(actual.getId()).isEqualTo(expected.getId());
+            softly.assertThat(actual.getPosition()).isEqualTo(expected.getPosition());
         });
     }
 

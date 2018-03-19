@@ -17,6 +17,7 @@ import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.GenreUtils;
+import cz.vhromada.catalog.utils.PictureUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.catalog.utils.TestConstants;
@@ -243,25 +244,6 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     }
 
     /**
-     * Test method for {@link ShowFacade#add(Show)} with show with null path to file with show's picture.
-     */
-    @Test
-    void add_NullPicture() {
-        final Show show = newData(null);
-        show.setPicture(null);
-
-        final Result<Void> result = showFacade.add(show);
-
-        assertSoftly(softly -> {
-            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
-            softly.assertThat(result.getEvents())
-                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null.")));
-        });
-
-        assertDefaultRepositoryData();
-    }
-
-    /**
      * Test method for {@link ShowFacade#add(Show)} with show with null note.
      */
     @Test
@@ -274,6 +256,25 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")));
+        });
+
+        assertDefaultRepositoryData();
+    }
+
+    /**
+     * Test method for {@link ShowFacade#add(Show)} with show with not existing picture.
+     */
+    @Test
+    void add_NotExistingPicture() {
+        final Show show = newData(null);
+        show.setPicture(Integer.MAX_VALUE);
+
+        final Result<Void> result = showFacade.add(show);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PICTURE_NOT_EXIST", "Picture doesn't exist.")));
         });
 
         assertDefaultRepositoryData();
@@ -371,6 +372,25 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents())
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
+
+        assertDefaultRepositoryData();
+    }
+
+    /**
+     * Test method for {@link ShowFacade#add(Show)} with show with genres with not existing genre.
+     */
+    @Test
+    void add_NotExistingGenre() {
+        final Show show = newData(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+
+        final Result<Void> result = showFacade.add(show);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.")));
         });
 
         assertDefaultRepositoryData();
@@ -564,19 +584,19 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     }
 
     /**
-     * Test method for {@link ShowFacade#update(Show)} with show with null path to file with show's picture.
+     * Test method for {@link ShowFacade#update(Show)} with show with not existing picture.
      */
     @Test
-    void update_NullPicture() {
+    void update_NotExistingPicture() {
         final Show show = newData(1);
-        show.setPicture(null);
+        show.setPicture(Integer.MAX_VALUE);
 
         final Result<Void> result = showFacade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents())
-                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null.")));
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PICTURE_NOT_EXIST", "Picture doesn't exist.")));
         });
 
         assertDefaultRepositoryData();
@@ -698,6 +718,25 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     }
 
     /**
+     * Test method for {@link ShowFacade#update(Show)} with show with genres with not existing genre.
+     */
+    @Test
+    void update_NotExistingGenre() {
+        final Show show = newData(1);
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+
+        final Result<Void> result = showFacade.update(show);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.")));
+        });
+
+        assertDefaultRepositoryData();
+    }
+
+    /**
      * Test method for {@link ShowFacade#getTotalLength()}.
      */
     @Test
@@ -776,6 +815,7 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     protected Show newData(final Integer id) {
         final Show show = ShowUtils.newShow(id);
         if (id == null || Integer.MAX_VALUE == id) {
+            show.setPicture(1);
             show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1)));
         }
 
@@ -830,6 +870,7 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
         assertSoftly(softly -> {
             softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(0);
             softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(0);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }
@@ -855,6 +896,7 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
         assertSoftly(softly -> {
             softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT - SeasonUtils.SEASONS_PER_SHOW_COUNT);
             softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SHOW_COUNT);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }
@@ -866,6 +908,7 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
         assertSoftly(softly -> {
             softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT + SeasonUtils.SEASONS_PER_SHOW_COUNT);
             softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SHOW_COUNT);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }
@@ -881,6 +924,7 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     @Override
     protected cz.vhromada.catalog.domain.Show getExpectedAddData() {
         final cz.vhromada.catalog.domain.Show show = super.getExpectedAddData();
+        show.setPicture(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
 
         return show;
@@ -907,6 +951,7 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
         assertSoftly(softly -> {
             softly.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT);
             softly.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }

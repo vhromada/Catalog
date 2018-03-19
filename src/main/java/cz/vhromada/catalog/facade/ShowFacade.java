@@ -26,8 +26,8 @@ public interface ShowFacade extends CatalogParentFacade<Show> {
      * <li>IMDB code isn't -1 or between 1 and 9999999</li>
      * <li>URL to english Wikipedia page about show is null</li>
      * <li>URL to czech Wikipedia page about show is null</li>
-     * <li>Path to file with show's picture is null</li>
      * <li>Note is null</li>
+     * <li>Picture doesn't exist</li>
      * <li>Genres are null</li>
      * <li>Genres contain null value</li>
      * <li>Genre ID is null</li>
@@ -57,8 +57,8 @@ public interface ShowFacade extends CatalogParentFacade<Show> {
      * <li>IMDB code isn't -1 or between 1 and 9999999</li>
      * <li>URL to english Wikipedia page about show is null</li>
      * <li>URL to czech Wikipedia page about show is null</li>
-     * <li>Path to file with show's picture is null</li>
      * <li>Note is null</li>
+     * <li>Picture doesn't exist</li>
      * <li>Genres are null</li>
      * <li>Genres contain null value</li>
      * <li>Genre ID is null</li>

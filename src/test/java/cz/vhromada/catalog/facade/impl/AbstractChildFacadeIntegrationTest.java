@@ -30,7 +30,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CatalogTestConfiguration.class)
-@DirtiesContext
 abstract class AbstractChildFacadeIntegrationTest<T extends Movable, U extends Movable, V extends Movable> {
 
     /**

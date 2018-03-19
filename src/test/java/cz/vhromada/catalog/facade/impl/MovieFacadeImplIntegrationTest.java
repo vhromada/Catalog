@@ -19,6 +19,7 @@ import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.MediumUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
+import cz.vhromada.catalog.utils.PictureUtils;
 import cz.vhromada.catalog.utils.TestConstants;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
@@ -400,25 +401,6 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     }
 
     /**
-     * Test method for {@link MovieFacade#add(Movie)} with movie with null path to file with movie's picture.
-     */
-    @Test
-    void add_NullPicture() {
-        final Movie movie = newData(null);
-        movie.setPicture(null);
-
-        final Result<Void> result = movieFacade.add(movie);
-
-        assertSoftly(softly -> {
-            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
-            softly.assertThat(result.getEvents())
-                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
-        });
-
-        assertDefaultRepositoryData();
-    }
-
-    /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null note.
      */
     @Test
@@ -431,6 +413,25 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
+        });
+
+        assertDefaultRepositoryData();
+    }
+
+    /**
+     * Test method for {@link MovieFacade#add(Movie)} with movie with not existing picture.
+     */
+    @Test
+    void add_NotExistingPicture() {
+        final Movie movie = newData(null);
+        movie.setPicture(Integer.MAX_VALUE);
+
+        final Result<Void> result = movieFacade.add(movie);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PICTURE_NOT_EXIST", "Picture doesn't exist.")));
         });
 
         assertDefaultRepositoryData();
@@ -528,6 +529,25 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents())
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
+        });
+
+        assertDefaultRepositoryData();
+    }
+
+    /**
+     * Test method for {@link MovieFacade#add(Movie)} with show with genres with not existing genre.
+     */
+    @Test
+    void add_NotExistingGenre() {
+        final Movie show = newData(null);
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+
+        final Result<Void> result = movieFacade.add(show);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.")));
         });
 
         assertDefaultRepositoryData();
@@ -872,25 +892,6 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     }
 
     /**
-     * Test method for {@link MovieFacade#update(Movie)} with movie with null path to file with movie's picture.
-     */
-    @Test
-    void update_NullPicture() {
-        final Movie movie = newData(1);
-        movie.setPicture(null);
-
-        final Result<Void> result = movieFacade.update(movie);
-
-        assertSoftly(softly -> {
-            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
-            softly.assertThat(result.getEvents())
-                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null.")));
-        });
-
-        assertDefaultRepositoryData();
-    }
-
-    /**
      * Test method for {@link MovieFacade#update(Movie)} with movie with null note.
      */
     @Test
@@ -903,6 +904,25 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
+        });
+
+        assertDefaultRepositoryData();
+    }
+
+    /**
+     * Test method for {@link MovieFacade#update(Movie)} with movie with not existing picture.
+     */
+    @Test
+    void update_NotExistingPicture() {
+        final Movie movie = newData(1);
+        movie.setPicture(Integer.MAX_VALUE);
+
+        final Result<Void> result = movieFacade.update(movie);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PICTURE_NOT_EXIST", "Picture doesn't exist.")));
         });
 
         assertDefaultRepositoryData();
@@ -1006,6 +1026,25 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     }
 
     /**
+     * Test method for {@link MovieFacade#update(Movie)} with show with genres with not existing genre.
+     */
+    @Test
+    void update_NotExistingGenre() {
+        final Movie show = newData(1);
+        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+
+        final Result<Void> result = movieFacade.update(show);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents())
+                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.")));
+        });
+
+        assertDefaultRepositoryData();
+    }
+
+    /**
      * Test method for {@link MovieFacade#getTotalMediaCount()}.
      */
     @Test
@@ -1067,6 +1106,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     protected Movie newData(final Integer id) {
         final Movie movie = MovieUtils.newMovie(id);
         if (id == null || Integer.MAX_VALUE == id) {
+            movie.setPicture(1);
             movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1)));
         }
 
@@ -1120,6 +1160,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         assertSoftly(softly -> {
             softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(0);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }
@@ -1130,6 +1171,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         assertSoftly(softly -> {
             softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }
@@ -1147,6 +1189,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         assertSoftly(softly -> {
             softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - MovieUtils.getMovie(1).getMedia().size());
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }
@@ -1157,6 +1200,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
         assertSoftly(softly -> {
             softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 2);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }
@@ -1173,6 +1217,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     protected cz.vhromada.catalog.domain.Movie getExpectedAddData() {
         final cz.vhromada.catalog.domain.Movie movie = super.getExpectedAddData();
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
+        movie.setPicture(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
 
         return movie;
@@ -1197,6 +1242,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     private void assertReferences() {
         assertSoftly(softly -> {
             softly.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT);
+            softly.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT);
             softly.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT);
         });
     }

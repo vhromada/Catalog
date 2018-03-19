@@ -208,7 +208,7 @@ public class Season implements Movable {
     @Override
     public String toString() {
         return String.format("Season [id=%d, number=%d, startYear=%d, endYear=%d, language=%s, subtitles=%s, note=%s, position=%d]", id, number, startYear,
-                endYear, language, subtitles, note, position);
+            endYear, language, subtitles, note, position);
     }
 
 }

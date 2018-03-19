@@ -54,6 +54,7 @@ public final class ShowUtils {
         final cz.vhromada.catalog.domain.Show show = new cz.vhromada.catalog.domain.Show();
         updateShow(show);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenreDomain(id)));
+        show.setPicture(id);
         if (id != null) {
             show.setId(id);
             show.setPosition(id - 1);
@@ -89,7 +90,6 @@ public final class ShowUtils {
         show.setImdbCode(1000);
         show.setWikiEn("enWiki");
         show.setWikiCz("czWiki");
-        show.setPicture("Picture");
         show.setNote("Note");
     }
 
@@ -103,6 +103,7 @@ public final class ShowUtils {
         final Show show = new Show();
         updateShow(show);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
+        show.setPicture(id);
         if (id != null) {
             show.setId(id);
             show.setPosition(id - 1);
@@ -124,7 +125,6 @@ public final class ShowUtils {
         show.setImdbCode(1000);
         show.setWikiEn("enWiki");
         show.setWikiCz("czWiki");
-        show.setPicture("Picture");
         show.setNote("Note");
     }
 
@@ -159,7 +159,7 @@ public final class ShowUtils {
         show.setImdbCode(index * imdbMultiplier);
         show.setWikiEn(SHOW + index + " English Wikipedia");
         show.setWikiCz(SHOW + index + " Czech Wikipedia");
-        show.setPicture(SHOW + index + " pc");
+        show.setPicture(MovieUtils.MOVIES_COUNT + index);
         show.setNote(index == 2 ? SHOW + "2 note" : "");
         show.setPosition(index - 1);
         final List<Genre> genres = new ArrayList<>();

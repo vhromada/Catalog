@@ -74,9 +74,9 @@ public class Movie implements Movable {
     private String wikiCz;
 
     /**
-     * Path to file with movie's picture
+     * Picture's ID
      */
-    private String picture;
+    private Integer picture;
 
     /**
      * Note
@@ -284,20 +284,20 @@ public class Movie implements Movable {
     }
 
     /**
-     * Returns path to file with movie's picture.
+     * Returns picture's ID.
      *
-     * @return path to file with movie's picture
+     * @return picture's ID
      */
-    public String getPicture() {
+    public Integer getPicture() {
         return picture;
     }
 
     /**
-     * Sets a new value to path to file with movie's picture.
+     * Sets a picture's ID.
      *
      * @param picture new value
      */
-    public void setPicture(final String picture) {
+    public void setPicture(final Integer picture) {
         this.picture = picture;
     }
 
@@ -368,8 +368,8 @@ public class Movie implements Movable {
     @Override
     public String toString() {
         return String.format("Movie [id=%d, czechName=%s, originalName=%s, year=%d, language=%s, subtitles=%s, media=%s, csfd=%s, imdbCode=%d, wikiEn=%s, "
-                        + "wikiCz=%s, picture=%s, note=%s, position=%d, genres=%s]", id, czechName, originalName, year, language, subtitles, media, csfd,
-                imdbCode, wikiEn, wikiCz, picture, note, position, genres);
+                + "wikiCz=%s, picture=%d, note=%s, position=%d, genres=%s]", id, czechName, originalName, year, language, subtitles, media, csfd, imdbCode,
+            wikiEn, wikiCz, picture, note, position, genres);
     }
 
 }

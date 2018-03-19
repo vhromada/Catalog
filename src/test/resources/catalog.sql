@@ -4,6 +4,12 @@ CREATE TABLE genres (
   position   INTEGER      NOT NULL CONSTRAINT genres_position_ck CHECK (position >= 0)
 );
 
+CREATE TABLE pictures (
+  id       INTEGER  NOT NULL CONSTRAINT pictures_pk PRIMARY KEY,
+  content  BLOB     NOT NULL,
+  position INTEGER  NOT NULL CONSTRAINT pictures_position_ck CHECK (position >= 0)
+);
+
 CREATE TABLE media (
   id            INTEGER NOT NULL CONSTRAINT media_pk PRIMARY KEY,
   medium_number INTEGER NOT NULL CONSTRAINT media_medium_number_ck CHECK (medium_number > 0),
@@ -12,6 +18,7 @@ CREATE TABLE media (
 
 CREATE TABLE movies (
   id             INTEGER      NOT NULL CONSTRAINT movies_pk PRIMARY KEY,
+  picture        INTEGER      CONSTRAINT movies_picture_fk REFERENCES pictures (id),
   czech_name     VARCHAR(200) NOT NULL CONSTRAINT movies_czech_name_ck CHECK (LENGTH(czech_name) > 0),
   original_name  VARCHAR(100) NOT NULL CONSTRAINT movies_original_name_ck CHECK (LENGTH(original_name) > 0),
   movie_year     INTEGER      NOT NULL CONSTRAINT movies_movie_year_ck CHECK (movie_year BETWEEN 1930 AND 2100),
@@ -20,7 +27,6 @@ CREATE TABLE movies (
   imdb_code      INTEGER      NOT NULL CONSTRAINT movies_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
   wiki_en        VARCHAR(100) NOT NULL,
   wiki_cz        VARCHAR(100) NOT NULL,
-  picture        VARCHAR(20)  NOT NULL,
   note           VARCHAR(100) NOT NULL,
   position       INTEGER      NOT NULL CONSTRAINT movies_position_ck CHECK (position >= 0)
 );
@@ -42,13 +48,13 @@ CREATE TABLE movie_genres (
 
 CREATE TABLE tv_shows (
   id            INTEGER      NOT NULL CONSTRAINT tv_shows_pk PRIMARY KEY,
+  picture       INTEGER      CONSTRAINT tv_shows_picture_fk REFERENCES pictures (id),
   czech_name    VARCHAR(200) NOT NULL CONSTRAINT tv_shows_czech_name_ck CHECK (LENGTH(czech_name) > 0),
   original_name VARCHAR(100) NOT NULL CONSTRAINT tv_shows_original_name_ck CHECK (LENGTH(original_name) > 0),
   csfd          VARCHAR(100) NOT NULL,
   imdb_code     INTEGER      NOT NULL CONSTRAINT tv_shows_imdb_code_ck CHECK (imdb_code BETWEEN 1 AND 9999999 OR imdb_code = -1),
   wiki_en       VARCHAR(100) NOT NULL,
   wiki_cz       VARCHAR(100) NOT NULL,
-  picture       VARCHAR(20)  NOT NULL,
   note          VARCHAR(100) NOT NULL,
   position      INTEGER      NOT NULL CONSTRAINT tv_shows_position_ck CHECK (position >= 0)
 );
@@ -145,3 +151,4 @@ CREATE SEQUENCE music_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE songs_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE programs_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE genres_sq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE pictures_sq START WITH 1 INCREMENT BY 1;

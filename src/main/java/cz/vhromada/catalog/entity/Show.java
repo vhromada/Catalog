@@ -53,9 +53,9 @@ public class Show implements Movable {
     private String wikiCz;
 
     /**
-     * Path to file with show picture
+     * Picture's ID
      */
-    private String picture;
+    private Integer picture;
 
     /**
      * Note
@@ -191,20 +191,20 @@ public class Show implements Movable {
     }
 
     /**
-     * Returns path to file with show picture.
+     * Returns picture's ID.
      *
-     * @return path to file with show picture
+     * @return picture's ID
      */
-    public String getPicture() {
+    public Integer getPicture() {
         return picture;
     }
 
     /**
-     * Sets a new value to path to file with show picture.
+     * Sets a new value to picture's ID.
      *
      * @param picture new value
      */
-    public void setPicture(final String picture) {
+    public void setPicture(final Integer picture) {
         this.picture = picture;
     }
 
@@ -274,8 +274,8 @@ public class Show implements Movable {
 
     @Override
     public String toString() {
-        return String.format("Show [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%s, note=%s, position=%d, "
-                + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
+        return String.format("Show [id=%d, czechName=%s, originalName=%s, csfd=%s, imdbCode=%d, wikiEn=%s, wikiCz=%s, picture=%d, note=%s, position=%d, "
+            + "genres=%s]", id, czechName, originalName, csfd, imdbCode, wikiEn, wikiCz, picture, note, position, genres);
     }
 
 }

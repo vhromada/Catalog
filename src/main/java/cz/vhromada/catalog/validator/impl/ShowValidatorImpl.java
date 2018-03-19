@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.validator.impl;
 
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.Constants;
@@ -24,6 +25,11 @@ import org.springframework.util.StringUtils;
 public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromada.catalog.domain.Show> {
 
     /**
+     * Validator for picture
+     */
+    private final CatalogValidator<Picture> pictureValidator;
+
+    /**
      * Validator for genre
      */
     private final CatalogValidator<Genre> genreValidator;
@@ -31,18 +37,23 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
     /**
      * Creates a new instance of ShowValidatorImpl.
      *
-     * @param showService    service for shows
-     * @param genreValidator validator for genre
+     * @param showService      service for shows
+     * @param pictureValidator validator for picture
+     * @param genreValidator   validator for genre
      * @throws IllegalArgumentException if service for shows is null
+     *                                  or validator for picture is null
      *                                  or validator for genre is null
      */
     @Autowired
     public ShowValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
-            final CatalogValidator<Genre> genreValidator) {
+        final CatalogValidator<Picture> pictureValidator,
+        final CatalogValidator<Genre> genreValidator) {
         super("Show", showService);
 
         Assert.notNull(genreValidator, "Validator for genre mustn't be null.");
 
+        Assert.notNull(pictureValidator, "Validator for picture mustn't be null.");
+        this.pictureValidator = pictureValidator;
         this.genreValidator = genreValidator;
     }
 
@@ -59,8 +70,8 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
      * <li>IMDB code isn't -1 or between 1 and 9999999</li>
      * <li>URL to english Wikipedia page about show is null</li>
      * <li>URL to czech Wikipedia page about show is null</li>
-     * <li>Path to file with show's picture is null</li>
      * <li>Note is null</li>
+     * <li>Picture doesn't exist</li>
      * <li>Genres are null</li>
      * <li>Genres contain null value</li>
      * <li>Genre ID is null</li>
@@ -82,6 +93,7 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
         if (data.getNote() == null) {
             result.addEvent(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null."));
         }
+        validatePicture(data, result);
         validateGenres(data, result);
     }
 
@@ -137,6 +149,27 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
         }
         if (data.getWikiCz() == null) {
             result.addEvent(new Event(Severity.ERROR, "SHOW_WIKI_CZ_NULL", "URL to czech Wikipedia page about show mustn't be null."));
+        }
+    }
+
+    /**
+     * Validates picture.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Picture doesn't exist</li>
+     * </ul>
+     *
+     * @param data   validating movie
+     * @param result result with validation errors
+     */
+    @SuppressWarnings("Duplicates")
+    private void validatePicture(final Show data, final Result<Void> result) {
+        if (data.getPicture() != null) {
+            final Picture picture = new Picture();
+            picture.setId(data.getPicture());
+            final Result<Void> validationResult = pictureValidator.validate(picture, ValidationType.EXISTS);
+            result.addEvents(validationResult.getEvents());
         }
     }
 

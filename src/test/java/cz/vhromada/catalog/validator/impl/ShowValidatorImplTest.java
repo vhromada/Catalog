@@ -1,8 +1,10 @@
 package cz.vhromada.catalog.validator.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -12,6 +14,7 @@ import java.util.Collections;
 
 import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CollectionUtils;
@@ -27,6 +30,7 @@ import cz.vhromada.result.Status;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 /**
@@ -43,36 +47,57 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
         "IMDB code must be between 1 and 9999999 or -1.");
 
     /**
+     * Validator for picture
+     */
+    @Mock
+    private CatalogValidator<Picture> pictureValidator;
+
+    /**
      * Validator for genre
      */
     @Mock
     private CatalogValidator<Genre> genreValidator;
 
     /**
-     * Initializes validator for genre.
+     * Argument captor for picture
+     */
+    private ArgumentCaptor<Picture> pictureArgumentCaptor;
+
+    /**
+     * Initializes data.
      */
     @BeforeEach
     @Override
     void setUp() {
         super.setUp();
 
+        pictureArgumentCaptor = ArgumentCaptor.forClass(Picture.class);
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
         when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
     }
 
     /**
-     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(CatalogService, CatalogValidator)} with null service for shows.
+     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(CatalogService, CatalogValidator, CatalogValidator)} with null service for shows.
      */
     @Test
     void constructor_NullShowService() {
-        assertThatThrownBy(() -> new ShowValidatorImpl(null, genreValidator)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ShowValidatorImpl(null, pictureValidator, genreValidator)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(CatalogService, CatalogValidator)} with null validator for genre.
+     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(CatalogService, CatalogValidator, CatalogValidator)} with null validator for genre.
+     */
+    @Test
+    void constructor_NullPictureValidator() {
+        assertThatThrownBy(() -> new ShowValidatorImpl(getCatalogService(), null, genreValidator)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    /**
+     * Test method for {@link ShowValidatorImpl#ShowValidatorImpl(CatalogService, CatalogValidator, CatalogValidator)} with null validator for genre.
      */
     @Test
     void constructor_NullGenreValidator() {
-        assertThatThrownBy(() -> new ShowValidatorImpl(getCatalogService(), null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ShowValidatorImpl(getCatalogService(), pictureValidator, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -91,11 +116,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -115,11 +143,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -138,11 +169,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -162,11 +196,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -186,11 +223,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -208,11 +248,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -230,11 +273,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -252,11 +298,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -276,11 +325,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 "URL to english Wikipedia page about show mustn't be null.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -300,35 +352,14 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 "URL to czech Wikipedia page about show mustn't be null.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
-    }
 
-    /**
-     * Test method for {@link ShowValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null path to file with
-     * show picture.
-     */
-    @Test
-    void validate_Deep_NullPicture() {
-        final Show show = getValidatingData(1);
-        show.setPicture(null);
-
-        final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
-
-        assertSoftly(softly -> {
-            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
-            softly.assertThat(result.getEvents())
-                .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null.")));
-        });
-
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(genreValidator);
-        verifyZeroInteractions(getCatalogService());
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -346,11 +377,41 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
+    }
+
+    /**
+     * Test method for {@link ShowValidatorImpl#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad picture.
+     */
+    @Test
+    void validate_Deep_BadPicture() {
+        final Event event = new Event(Severity.ERROR, "PICTURE_INVALID", "Invalid data");
+        final Show show = getValidatingData(1);
+
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
+
+        final Result<Void> result = getCatalogValidator().validate(show, ValidationType.DEEP);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
+            softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
+        });
+
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
+        for (final Genre genre : show.getGenres()) {
+            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
+        }
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
+        verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -369,8 +430,11 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null.")));
         });
 
-        verifyNoMoreInteractions(genreValidator);
-        verifyZeroInteractions(getCatalogService());
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
+        verifyNoMoreInteractions(pictureValidator);
+        verifyZeroInteractions(getCatalogService(), genreValidator);
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -389,9 +453,12 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         verify(genreValidator).validate(show.getGenres().get(0), ValidationType.EXISTS, ValidationType.DEEP);
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     /**
@@ -413,16 +480,19 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
         });
 
+        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         for (final Genre genre : show.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
-        verifyNoMoreInteractions(genreValidator);
+        verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getCatalogService());
+
+        validatePicture(show, pictureArgumentCaptor.getValue());
     }
 
     @Override
     protected CatalogValidator<Show> getCatalogValidator() {
-        return new ShowValidatorImpl(getCatalogService(), genreValidator);
+        return new ShowValidatorImpl(getCatalogService(), pictureValidator, genreValidator);
     }
 
     @Override
@@ -448,6 +518,17 @@ class ShowValidatorImplTest extends AbstractValidatorTest<Show, cz.vhromada.cata
     @Override
     protected String getName() {
         return "Show";
+    }
+
+    /**
+     * Validates picture.
+     *
+     * @param show    show
+     * @param picture picture
+     */
+    private static void validatePicture(final Show show, final Picture picture) {
+        assertThat(picture).isNotNull();
+        assertThat(picture.getId()).isEqualTo(show.getPicture());
     }
 
 }

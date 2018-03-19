@@ -235,7 +235,7 @@ public class Music implements Movable {
     @Override
     public String toString() {
         return String.format("Music [id=%d, name=%s, wikiEn=%s, wikiCz=%s, mediaCount=%d, note=%s, position=%d, songs=%s]", id, name, wikiEn, wikiCz,
-                mediaCount, note, position, songs);
+            mediaCount, note, position, songs);
     }
 
 }

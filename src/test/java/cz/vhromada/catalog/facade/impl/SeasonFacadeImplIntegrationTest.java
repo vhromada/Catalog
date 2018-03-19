@@ -29,14 +29,12 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.annotation.DirtiesContext;
 
 /**
  * A class represents integration test for class {@link SeasonFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-@DirtiesContext
 class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<Season, cz.vhromada.catalog.domain.Season, Show> {
 
     /**

@@ -62,6 +62,7 @@ public final class MovieUtils {
         updateMovie(movie);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(id)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreDomain(id)));
+        movie.setPicture(id);
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
@@ -86,7 +87,6 @@ public final class MovieUtils {
         movie.setImdbCode(1000);
         movie.setWikiEn("enWiki");
         movie.setWikiCz("czWiki");
-        movie.setPicture("Picture");
         movie.setNote("Note");
     }
 
@@ -101,6 +101,7 @@ public final class MovieUtils {
         updateMovie(movie);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(id)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
+        movie.setPicture(id);
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
@@ -125,7 +126,6 @@ public final class MovieUtils {
         movie.setImdbCode(1000);
         movie.setWikiEn("enWiki");
         movie.setWikiCz("czWiki");
-        movie.setPicture("Picture");
         movie.setNote("Note");
     }
 
@@ -160,7 +160,7 @@ public final class MovieUtils {
         movie.setImdbCode(index);
         movie.setWikiEn(MOVIE + index + " English Wikipedia");
         movie.setWikiCz(MOVIE + index + " Czech Wikipedia");
-        movie.setPicture(MOVIE + index + " pc");
+        movie.setPicture(index);
         movie.setNote(index == 3 ? MOVIE + "3 note" : "");
         movie.setPosition(index - 1);
         final List<Language> subtitles = new ArrayList<>();

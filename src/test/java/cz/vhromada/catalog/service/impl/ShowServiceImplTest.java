@@ -79,6 +79,7 @@ class ShowServiceImplTest extends AbstractServiceTest<Show> {
             genre.setId(1);
             genre.setPosition(0);
         }
+        show.setPicture(1);
         show.setPosition(0);
 
         return show;

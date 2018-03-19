@@ -3,6 +3,7 @@ package cz.vhromada.catalog.validator.impl;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Medium;
 import cz.vhromada.catalog.entity.Movie;
+import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.validator.CatalogValidator;
@@ -25,6 +26,11 @@ import org.springframework.util.StringUtils;
 public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhromada.catalog.domain.Movie> {
 
     /**
+     * Validator for picture
+     */
+    private final CatalogValidator<Picture> pictureValidator;
+
+    /**
      * Validator for genre
      */
     private final CatalogValidator<Genre> genreValidator;
@@ -32,18 +38,23 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
     /**
      * Creates a new instance of MovieValidatorImpl.
      *
-     * @param movieService   service for movies
-     * @param genreValidator validator for genre
+     * @param movieService     service for movies
+     * @param pictureValidator validator for picture
+     * @param genreValidator   validator for genre
      * @throws IllegalArgumentException if service for movies is null
+     *                                  or validator for picture is null
      *                                  or validator for genre is null
      */
     @Autowired
     public MovieValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService,
-            final CatalogValidator<Genre> genreValidator) {
+        final CatalogValidator<Picture> pictureValidator,
+        final CatalogValidator<Genre> genreValidator) {
         super("Movie", movieService);
 
+        Assert.notNull(pictureValidator, "Validator for picture mustn't be null.");
         Assert.notNull(genreValidator, "Validator for genre mustn't be null.");
 
+        this.pictureValidator = pictureValidator;
         this.genreValidator = genreValidator;
     }
 
@@ -67,8 +78,8 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
      * <li>IMDB code isn't -1 or between 1 and 9999999</li>
      * <li>URL to english Wikipedia page about movie is null</li>
      * <li>URL to czech Wikipedia page about movie is null</li>
-     * <li>Path to file with movie's picture is null</li>
      * <li>Note is null</li>
+     * <li>Picture doesn't exist</li>
      * <li>Genres are null</li>
      * <li>Genres contain null value</li>
      * <li>Genre ID is null</li>
@@ -85,17 +96,15 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
         validateNames(data, result);
         if (data.getYear() < Constants.MIN_YEAR || data.getYear() > Constants.CURRENT_YEAR) {
             result.addEvent(new Event(Severity.ERROR, "MOVIE_YEAR_NOT_VALID", "Year must be between " + Constants.MIN_YEAR + " and "
-                    + Constants.CURRENT_YEAR + '.'));
+                + Constants.CURRENT_YEAR + '.'));
         }
         validateLanguages(data, result);
         validateMedia(data, result);
         validateUrls(data, result);
-        if (data.getPicture() == null) {
-            result.addEvent(new Event(Severity.ERROR, "MOVIE_PICTURE_NULL", "Picture mustn't be null."));
-        }
         if (data.getNote() == null) {
             result.addEvent(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null."));
         }
+        validatePicture(data, result);
         validateGenres(data, result);
     }
 
@@ -203,6 +212,27 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
         }
         if (data.getWikiCz() == null) {
             result.addEvent(new Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL", "URL to czech Wikipedia page about movie mustn't be null."));
+        }
+    }
+
+    /**
+     * Validates picture.
+     * <br>
+     * Validation errors:
+     * <ul>
+     * <li>Picture doesn't exist</li>
+     * </ul>
+     *
+     * @param data   validating movie
+     * @param result result with validation errors
+     */
+    @SuppressWarnings("Duplicates")
+    private void validatePicture(final Movie data, final Result<Void> result) {
+        if (data.getPicture() != null) {
+            final Picture picture = new Picture();
+            picture.setId(data.getPicture());
+            final Result<Void> validationResult = pictureValidator.validate(picture, ValidationType.EXISTS);
+            result.addEvents(validationResult.getEvents());
         }
     }
 

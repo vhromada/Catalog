@@ -87,9 +87,6 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
     protected void validateDataDeep(final Show data, final Result<Void> result) {
         validateNames(data, result);
         validateUrls(data, result);
-        if (data.getPicture() == null) {
-            result.addEvent(new Event(Severity.ERROR, "SHOW_PICTURE_NULL", "Picture mustn't be null."));
-        }
         if (data.getNote() == null) {
             result.addEvent(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null."));
         }

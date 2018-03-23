@@ -28,8 +28,7 @@ public class PictureFacadeImpl extends AbstractCatalogParentFacade<Picture, cz.v
      *                                  or validator for picture is null
      */
     @Autowired
-    public PictureFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Picture> pictureService,
-        final Converter converter,
+    public PictureFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Picture> pictureService, final Converter converter,
         final CatalogValidator<Picture> pictureValidator) {
         super(pictureService, converter, pictureValidator);
     }

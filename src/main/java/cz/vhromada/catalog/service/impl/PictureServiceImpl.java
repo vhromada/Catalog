@@ -25,8 +25,7 @@ public class PictureServiceImpl extends AbstractCatalogService<Picture> {
      *                                  or cache is null
      */
     @Autowired
-    public PictureServiceImpl(final PictureRepository pictureRepository,
-        @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+    public PictureServiceImpl(final PictureRepository pictureRepository, @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
         super(pictureRepository, cache, "pictures");
     }
 

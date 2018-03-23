@@ -25,8 +25,7 @@ public class GenreServiceImpl extends AbstractCatalogService<Genre> {
      *                                  or cache is null
      */
     @Autowired
-    public GenreServiceImpl(final GenreRepository genreRepository,
-            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+    public GenreServiceImpl(final GenreRepository genreRepository, @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
         super(genreRepository, cache, "genres");
     }
 

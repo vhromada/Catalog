@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
  * @author Vladimir Hromada
  */
 public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Movable, U extends Movable, V extends Movable>
-        implements CatalogChildFacade<S, U> {
+    implements CatalogChildFacade<S, U> {
 
     /**
      * Service for catalog
@@ -59,7 +59,7 @@ public abstract class AbstractCatalogChildFacade<S extends Movable, T extends Mo
      *                                  or validator for catalog for child data is null
      */
     public AbstractCatalogChildFacade(final CatalogService<V> catalogService, final Converter converter, final CatalogValidator<U> parentCatalogValidator,
-            final CatalogValidator<S> childCatalogValidator) {
+        final CatalogValidator<S> childCatalogValidator) {
         Assert.notNull(catalogService, "Service for catalog mustn't be null.");
         Assert.notNull(converter, "Converter mustn't be null.");
         Assert.notNull(parentCatalogValidator, "Validator for catalog for parent data mustn't be null.");

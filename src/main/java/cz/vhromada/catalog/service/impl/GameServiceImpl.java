@@ -25,8 +25,7 @@ public class GameServiceImpl extends AbstractCatalogService<Game> {
      *                                  or cache is null
      */
     @Autowired
-    public GameServiceImpl(final GameRepository gameRepository,
-            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+    public GameServiceImpl(final GameRepository gameRepository, @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
         super(gameRepository, cache, "games");
     }
 

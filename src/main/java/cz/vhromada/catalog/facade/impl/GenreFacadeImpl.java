@@ -28,9 +28,8 @@ public class GenreFacadeImpl extends AbstractCatalogParentFacade<Genre, cz.vhrom
      *                                  or validator for genre is null
      */
     @Autowired
-    public GenreFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Genre> genreService,
-            final Converter converter,
-            final CatalogValidator<Genre> genreValidator) {
+    public GenreFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Genre> genreService, final Converter converter,
+        final CatalogValidator<Genre> genreValidator) {
         super(genreService, converter, genreValidator);
     }
 

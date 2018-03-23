@@ -29,9 +29,8 @@ public class GameFacadeImpl extends AbstractCatalogParentFacade<Game, cz.vhromad
      *                                  or validator for game is null
      */
     @Autowired
-    public GameFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Game> gameService,
-            final Converter converter,
-            final CatalogValidator<Game> gameValidator) {
+    public GameFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Game> gameService, final Converter converter,
+        final CatalogValidator<Game> gameValidator) {
         super(gameService, converter, gameValidator);
     }
 

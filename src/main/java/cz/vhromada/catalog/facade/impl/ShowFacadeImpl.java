@@ -35,9 +35,8 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
      *                                  or validator for show is null
      */
     @Autowired
-    public ShowFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
-            final Converter converter,
-            final CatalogValidator<Show> showValidator) {
+    public ShowFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService, final Converter converter,
+        final CatalogValidator<Show> showValidator) {
         super(showService, converter, showValidator);
     }
 

@@ -201,7 +201,7 @@ abstract class AbstractServiceTest<T extends Movable> {
     void add_CachedData() {
         final T data = getAddItem();
 
-        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
+        when(repository.save(any(getItemClass()))).thenAnswer(setId());
         when(cache.get(any(String.class))).thenReturn(new SimpleValueWrapper(dataList));
 
         catalogService.add(data);
@@ -221,7 +221,7 @@ abstract class AbstractServiceTest<T extends Movable> {
     void add_NotCachedData() {
         final T data = getAddItem();
 
-        when(repository.save(any(getItemClass()))).thenAnswer(setId(ID));
+        when(repository.save(any(getItemClass()))).thenAnswer(setId());
         when(cache.get(any(String.class))).thenReturn(null);
 
         catalogService.add(data);
@@ -661,13 +661,12 @@ abstract class AbstractServiceTest<T extends Movable> {
     /**
      * Sets ID.
      *
-     * @param id ID
      * @return mocked answer
      */
-    private Answer<T> setId(final Integer id) {
+    private Answer<T> setId() {
         return invocation -> {
             final T movable = invocation.getArgument(0);
-            movable.setId(id);
+            movable.setId(ID);
 
             return movable;
         };

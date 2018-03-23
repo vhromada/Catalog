@@ -31,8 +31,7 @@ public class MusicServiceImpl extends AbstractCatalogService<Music> {
      *                                  or cache is null
      */
     @Autowired
-    public MusicServiceImpl(final MusicRepository musicRepository,
-            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+    public MusicServiceImpl(final MusicRepository musicRepository, @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
         super(musicRepository, cache, "music");
     }
 

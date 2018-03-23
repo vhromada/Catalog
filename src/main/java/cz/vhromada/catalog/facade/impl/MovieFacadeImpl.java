@@ -34,9 +34,8 @@ public class MovieFacadeImpl extends AbstractCatalogParentFacade<Movie, cz.vhrom
      *                                  or validator for movie is null
      */
     @Autowired
-    public MovieFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService,
-            final Converter converter,
-            final CatalogValidator<Movie> movieValidator) {
+    public MovieFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService, final Converter converter,
+        final CatalogValidator<Movie> movieValidator) {
         super(movieService, converter, movieValidator);
     }
 
@@ -88,7 +87,7 @@ public class MovieFacadeImpl extends AbstractCatalogParentFacade<Movie, cz.vhrom
      * @return updated media
      */
     private static List<cz.vhromada.catalog.domain.Medium> getUpdatedMedia(final List<cz.vhromada.catalog.domain.Medium> originalMedia,
-            final List<Medium> updatedMedia) {
+        final List<Medium> updatedMedia) {
         final List<cz.vhromada.catalog.domain.Medium> result = new ArrayList<>();
 
         int index = 0;

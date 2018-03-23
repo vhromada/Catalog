@@ -44,7 +44,7 @@ class PictureConverterTest {
      */
     @Test
     void convertPictureDomain_NullPicture() {
-        assertThat(converter.convert(null, Picture.class));
+        assertThat(converter.convert(null, Picture.class)).isNull();
     }
 
     /**
@@ -63,7 +63,7 @@ class PictureConverterTest {
      */
     @Test
     void convertPicture_NullPicture() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Picture.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Picture.class)).isNull();
     }
 
 }

@@ -44,7 +44,7 @@ class GameConverterTest {
      */
     @Test
     void convertGameDomain_NullGame() {
-        assertThat(converter.convert(null, Game.class));
+        assertThat(converter.convert(null, Game.class)).isNull();
     }
 
     /**
@@ -63,7 +63,7 @@ class GameConverterTest {
      */
     @Test
     void convertGame_NullGame() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class));
+        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class)).isNull();
     }
 
 }

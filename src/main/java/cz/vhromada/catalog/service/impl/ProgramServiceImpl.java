@@ -25,8 +25,7 @@ public class ProgramServiceImpl extends AbstractCatalogService<Program> {
      *                                  or cache is null
      */
     @Autowired
-    public ProgramServiceImpl(final ProgramRepository programRepository,
-            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+    public ProgramServiceImpl(final ProgramRepository programRepository, @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
         super(programRepository, cache, "programs");
     }
 

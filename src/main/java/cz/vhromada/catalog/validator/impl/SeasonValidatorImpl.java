@@ -106,11 +106,11 @@ public class SeasonValidatorImpl extends AbstractCatalogValidator<Season, Show> 
     private static void validateYears(final Season data, final Result<Void> result) {
         if (data.getStartYear() < Constants.MIN_YEAR || data.getStartYear() > Constants.CURRENT_YEAR) {
             result.addEvent(new Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID", "Starting year must be between " + Constants.MIN_YEAR
-                    + " and " + Constants.CURRENT_YEAR + '.'));
+                + " and " + Constants.CURRENT_YEAR + '.'));
         }
         if (data.getEndYear() < Constants.MIN_YEAR || data.getEndYear() > Constants.CURRENT_YEAR) {
             result.addEvent(new Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID", "Ending year must be between " + Constants.MIN_YEAR
-                    + " and " + Constants.CURRENT_YEAR + '.'));
+                + " and " + Constants.CURRENT_YEAR + '.'));
         }
         if (data.getStartYear() > data.getEndYear()) {
             result.addEvent(new Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year."));

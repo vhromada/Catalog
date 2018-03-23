@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  */
 @Component("episodeFacade")
 public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vhromada.catalog.domain.Episode, Season, Show>
-        implements EpisodeFacade {
+    implements EpisodeFacade {
 
     /**
      * Creates a new instance of EpisodeFacadeImpl.
@@ -40,10 +40,8 @@ public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vh
      *                                  or validator for episode is null
      */
     @Autowired
-    public EpisodeFacadeImpl(final CatalogService<Show> showService,
-            final Converter converter,
-            final CatalogValidator<Season> seasonValidator,
-            final CatalogValidator<Episode> episodeValidator) {
+    public EpisodeFacadeImpl(final CatalogService<Show> showService, final Converter converter, final CatalogValidator<Season> seasonValidator,
+        final CatalogValidator<Episode> episodeValidator) {
         super(showService, converter, seasonValidator, episodeValidator);
     }
 
@@ -100,8 +98,8 @@ public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vh
         final Show show = getShow(data);
         final cz.vhromada.catalog.domain.Season season = getSeason(show, data);
         final List<cz.vhromada.catalog.domain.Episode> episodes = season.getEpisodes().stream()
-                .filter(episodeValue -> !episodeValue.getId().equals(data.getId()))
-                .collect(Collectors.toList());
+            .filter(episodeValue -> !episodeValue.getId().equals(data.getId()))
+            .collect(Collectors.toList());
         season.setEpisodes(episodes);
 
         return show;

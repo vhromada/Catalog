@@ -212,8 +212,7 @@ public abstract class AbstractCatalogService<T extends Movable> implements Catal
             return data;
         }
 
-        @SuppressWarnings("unchecked")
-        final List<T> data = (List<T>) cacheValue.get();
+        @SuppressWarnings("unchecked") final List<T> data = (List<T>) cacheValue.get();
         return data;
     }
 

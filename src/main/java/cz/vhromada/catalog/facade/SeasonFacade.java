@@ -31,8 +31,8 @@ public interface SeasonFacade extends CatalogChildFacade<Season, Show> {
      * <li>Note is null</li>
      * </ul>
      *
-     * @param parent   show
-     * @param data season
+     * @param parent show
+     * @param data   season
      * @return result with validation errors
      */
     @Override

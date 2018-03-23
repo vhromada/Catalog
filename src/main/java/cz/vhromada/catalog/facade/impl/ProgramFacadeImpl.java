@@ -29,9 +29,8 @@ public class ProgramFacadeImpl extends AbstractCatalogParentFacade<Program, cz.v
      *                                  or validator for program is null
      */
     @Autowired
-    public ProgramFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Program> programService,
-            final Converter converter,
-            final CatalogValidator<Program> programValidator) {
+    public ProgramFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Program> programService, final Converter converter,
+        final CatalogValidator<Program> programValidator) {
         super(programService, converter, programValidator);
     }
 

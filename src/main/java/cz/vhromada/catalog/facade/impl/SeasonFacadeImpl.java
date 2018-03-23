@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Component("seasonFacade")
 public class SeasonFacadeImpl extends AbstractCatalogChildFacade<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show>
-        implements SeasonFacade {
+    implements SeasonFacade {
 
     /**
      * Creates a new instance of SeasonFacadeImpl.
@@ -38,10 +38,8 @@ public class SeasonFacadeImpl extends AbstractCatalogChildFacade<Season, cz.vhro
      *                                  or validator for season is null
      */
     @Autowired
-    public SeasonFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
-            final Converter converter,
-            final CatalogValidator<Show> showValidator,
-            final CatalogValidator<Season> seasonValidator) {
+    public SeasonFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService, final Converter converter,
+        final CatalogValidator<Show> showValidator, final CatalogValidator<Season> seasonValidator) {
         super(showService, converter, showValidator, seasonValidator);
     }
 
@@ -88,8 +86,8 @@ public class SeasonFacadeImpl extends AbstractCatalogChildFacade<Season, cz.vhro
         final cz.vhromada.catalog.domain.Show show = getShow(data);
 
         final List<cz.vhromada.catalog.domain.Season> seasons = show.getSeasons().stream()
-                .filter(seasonValue -> !seasonValue.getId().equals(data.getId()))
-                .collect(Collectors.toList());
+            .filter(seasonValue -> !seasonValue.getId().equals(data.getId()))
+            .collect(Collectors.toList());
         show.setSeasons(seasons);
 
         return show;

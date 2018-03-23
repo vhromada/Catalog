@@ -34,9 +34,8 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
      *                                  or validator for music is null
      */
     @Autowired
-    public MusicFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
-            final Converter converter,
-            final CatalogValidator<Music> musicValidator) {
+    public MusicFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService, final Converter converter,
+        final CatalogValidator<Music> musicValidator) {
         super(musicService, converter, musicValidator);
     }
 

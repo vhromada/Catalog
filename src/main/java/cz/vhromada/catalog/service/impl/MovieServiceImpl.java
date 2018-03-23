@@ -29,8 +29,7 @@ public class MovieServiceImpl extends AbstractCatalogService<Movie> {
      *                                  or cache is null
      */
     @Autowired
-    public MovieServiceImpl(final MovieRepository movieRepository,
-            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+    public MovieServiceImpl(final MovieRepository movieRepository, @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
         super(movieRepository, cache, "movies");
     }
 

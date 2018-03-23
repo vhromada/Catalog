@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Component("songFacade")
 public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>
-        implements SongFacade {
+    implements SongFacade {
 
     /**
      * Creates a new instance of SongFacadeImpl.
@@ -38,10 +38,8 @@ public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada
      *                                  or validator for song is null
      */
     @Autowired
-    public SongFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService,
-            final Converter converter,
-            final CatalogValidator<Music> musicValidator,
-            final CatalogValidator<Song> songValidator) {
+    public SongFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService, final Converter converter,
+        final CatalogValidator<Music> musicValidator, final CatalogValidator<Song> songValidator) {
         super(musicService, converter, musicValidator, songValidator);
     }
 
@@ -86,8 +84,8 @@ public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada
         final cz.vhromada.catalog.domain.Music music = getMusic(data);
 
         final List<cz.vhromada.catalog.domain.Song> songs = music.getSongs().stream()
-                .filter(songValue -> !songValue.getId().equals(data.getId()))
-                .collect(Collectors.toList());
+            .filter(songValue -> !songValue.getId().equals(data.getId()))
+            .collect(Collectors.toList());
         music.setSongs(songs);
 
         return music;

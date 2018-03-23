@@ -46,8 +46,7 @@ public class MovieValidatorImpl extends AbstractCatalogValidator<Movie, cz.vhrom
      *                                  or validator for genre is null
      */
     @Autowired
-    public MovieValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService,
-        final CatalogValidator<Picture> pictureValidator,
+    public MovieValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService, final CatalogValidator<Picture> pictureValidator,
         final CatalogValidator<Genre> genreValidator) {
         super("Movie", movieService);
 

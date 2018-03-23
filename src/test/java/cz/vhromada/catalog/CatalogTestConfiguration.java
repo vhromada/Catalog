@@ -30,9 +30,9 @@ public class CatalogTestConfiguration {
     @Bean
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScripts("catalog.sql", "data.sql")
-                .build();
+            .setType(EmbeddedDatabaseType.H2)
+            .addScripts("catalog.sql", "data.sql")
+            .build();
     }
 
     @Bean

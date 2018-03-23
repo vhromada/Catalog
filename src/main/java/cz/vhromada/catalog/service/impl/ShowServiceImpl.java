@@ -33,8 +33,7 @@ public class ShowServiceImpl extends AbstractCatalogService<Show> {
      *                                  or cache is null
      */
     @Autowired
-    public ShowServiceImpl(final ShowRepository showRepository,
-            @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
+    public ShowServiceImpl(final ShowRepository showRepository, @Value("#{cacheManager.getCache('catalogCache')}") final Cache cache) {
         super(showRepository, cache, "shows");
     }
 

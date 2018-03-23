@@ -45,8 +45,7 @@ public class ShowValidatorImpl extends AbstractCatalogValidator<Show, cz.vhromad
      *                                  or validator for genre is null
      */
     @Autowired
-    public ShowValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService,
-        final CatalogValidator<Picture> pictureValidator,
+    public ShowValidatorImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService, final CatalogValidator<Picture> pictureValidator,
         final CatalogValidator<Genre> genreValidator) {
         super("Show", showService);
 

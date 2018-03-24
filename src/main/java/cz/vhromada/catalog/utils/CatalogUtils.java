@@ -8,6 +8,8 @@ import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Song;
 
+import org.springframework.util.CollectionUtils;
+
 /**
  * A class represents utility class for working with data.
  *
@@ -53,8 +55,10 @@ public final class CatalogUtils {
         newSeason.setSubtitles(new ArrayList<>(season.getSubtitles()));
         newSeason.setNote(season.getNote());
         newSeason.setPosition(season.getPosition());
-        final List<Episode> newEpisodes = season.getEpisodes().stream().map(CatalogUtils::duplicateEpisode).collect(Collectors.toList());
-        newSeason.setEpisodes(newEpisodes);
+        if (!CollectionUtils.isEmpty(season.getEpisodes())) {
+            final List<Episode> newEpisodes = season.getEpisodes().stream().map(CatalogUtils::duplicateEpisode).collect(Collectors.toList());
+            newSeason.setEpisodes(newEpisodes);
+        }
 
         return newSeason;
     }

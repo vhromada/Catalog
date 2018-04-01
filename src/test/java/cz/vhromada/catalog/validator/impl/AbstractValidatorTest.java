@@ -225,7 +225,7 @@ abstract class AbstractValidatorTest<T extends Movable, U extends Movable> {
     }
 
     /**
-     * Test method for {@link ProgramValidatorImpl#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with correct data.
+     * Test method for {@link CatalogValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with correct data.
      */
     @Test
     void validate_Deep() {

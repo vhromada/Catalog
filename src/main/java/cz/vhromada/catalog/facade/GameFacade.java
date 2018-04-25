@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade;
 
 import cz.vhromada.catalog.entity.Game;
+import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -8,7 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface GameFacade extends CatalogParentFacade<Game> {
+public interface GameFacade extends MovableParentFacade<Game> {
 
     /**
      * Adds game. Sets new ID and position.

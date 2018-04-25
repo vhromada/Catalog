@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.facade;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Movie;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -9,7 +10,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface MovieFacade extends CatalogParentFacade<Movie> {
+public interface MovieFacade extends MovableParentFacade<Movie> {
 
     /**
      * Adds movie. Sets new ID and position.

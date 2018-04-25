@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.facade;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Show;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -9,7 +10,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface ShowFacade extends CatalogParentFacade<Show> {
+public interface ShowFacade extends MovableParentFacade<Show> {
 
     /**
      * Adds show. Sets new ID and position.

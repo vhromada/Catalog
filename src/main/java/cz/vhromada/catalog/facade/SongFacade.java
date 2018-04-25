@@ -2,6 +2,7 @@ package cz.vhromada.catalog.facade;
 
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
+import cz.vhromada.common.facade.MovableChildFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -9,7 +10,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface SongFacade extends CatalogChildFacade<Song, Music> {
+public interface SongFacade extends MovableChildFacade<Song, Music> {
 
     /**
      * Adds song. Sets new ID and position.

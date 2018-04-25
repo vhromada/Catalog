@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
+import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for music.
@@ -56,6 +57,8 @@ public final class MusicUtils {
         if (id != null) {
             music.setId(id);
             music.setPosition(id - 1);
+        } else {
+            music.setPosition(0);
         }
         music.setSongs(new ArrayList<>());
 
@@ -106,6 +109,8 @@ public final class MusicUtils {
         if (id != null) {
             music.setId(id);
             music.setPosition(id - 1);
+        } else {
+            music.setPosition(0);
         }
 
         return music;

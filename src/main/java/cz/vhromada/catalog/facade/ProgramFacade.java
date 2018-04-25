@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade;
 
 import cz.vhromada.catalog.entity.Program;
+import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -8,7 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface ProgramFacade extends CatalogParentFacade<Program> {
+public interface ProgramFacade extends MovableParentFacade<Program> {
 
     /**
      * Adds program. Sets new ID and position.

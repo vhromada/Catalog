@@ -10,15 +10,16 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.entity.Movie;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.MovieFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.test.facade.MovableParentFacadeTest;
+import cz.vhromada.common.utils.CollectionUtils;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
@@ -30,30 +31,30 @@ import org.junit.jupiter.api.Test;
  *
  * @author Vladimir Hromada
  */
-class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhromada.catalog.domain.Movie> {
+class MovieFacadeImplTest extends MovableParentFacadeTest<Movie, cz.vhromada.catalog.domain.Movie> {
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for movies.
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovableService, Converter, MovableValidator)} with null service for movies.
      */
     @Test
     void constructor_NullMovieService() {
-        assertThatThrownBy(() -> new MovieFacadeImpl(null, getConverter(), getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MovieFacadeImpl(null, getConverter(), getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovableService, Converter, MovableValidator)} with null converter.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new MovieFacadeImpl(getCatalogService(), null, getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MovieFacadeImpl(getMovableService(), null, getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for movie.
+     * Test method for {@link MovieFacadeImpl#MovieFacadeImpl(MovableService, Converter, MovableValidator)} with null validator for movie.
      */
     @Test
     void constructor_NullMovieValidator() {
-        assertThatThrownBy(() -> new MovieFacadeImpl(getCatalogService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MovieFacadeImpl(getMovableService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -65,9 +66,9 @@ class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhromada.ca
         final cz.vhromada.catalog.domain.Movie movie2 = MovieUtils.newMovieDomain(2);
         final int expectedCount = movie1.getMedia().size() + movie2.getMedia().size();
 
-        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(movie1, movie2));
+        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(movie1, movie2));
 
-        final Result<Integer> result = ((MovieFacade) getCatalogParentFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((MovieFacade) getMovableParentFacade()).getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -75,9 +76,9 @@ class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhromada.ca
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getCatalogService()).getAll();
-        verifyNoMoreInteractions(getCatalogService());
-        verifyZeroInteractions(getConverter(), getCatalogValidator());
+        verify(getMovableService()).getAll();
+        verifyNoMoreInteractions(getMovableService());
+        verifyZeroInteractions(getConverter(), getMovableValidator());
     }
 
     /**
@@ -94,9 +95,9 @@ class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhromada.ca
         }
         final int expectedTotalLength = totalLength;
 
-        when(getCatalogService().getAll()).thenReturn(movies);
+        when(getMovableService().getAll()).thenReturn(movies);
 
-        final Result<Time> result = ((MovieFacade) getCatalogParentFacade()).getTotalLength();
+        final Result<Time> result = ((MovieFacade) getMovableParentFacade()).getTotalLength();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -104,28 +105,28 @@ class MovieFacadeImplTest extends AbstractParentFacadeTest<Movie, cz.vhromada.ca
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getCatalogService()).getAll();
-        verifyNoMoreInteractions(getCatalogService());
-        verifyZeroInteractions(getConverter(), getCatalogValidator());
+        verify(getMovableService()).getAll();
+        verifyNoMoreInteractions(getMovableService());
+        verifyZeroInteractions(getConverter(), getMovableValidator());
     }
 
     @Override
     protected void initUpdateMock(final cz.vhromada.catalog.domain.Movie domain) {
         super.initUpdateMock(domain);
 
-        when(getCatalogService().get(any(Integer.class))).thenReturn(domain);
+        when(getMovableService().get(any(Integer.class))).thenReturn(domain);
     }
 
     @Override
     protected void verifyUpdateMock(final Movie entity, final cz.vhromada.catalog.domain.Movie domain) {
         super.verifyUpdateMock(entity, domain);
 
-        verify(getCatalogService()).get(entity.getId());
+        verify(getMovableService()).get(entity.getId());
     }
 
     @Override
-    protected CatalogParentFacade<Movie> getCatalogParentFacade() {
-        return new MovieFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
+    protected MovableParentFacade<Movie> getMovableParentFacade() {
+        return new MovieFacadeImpl(getMovableService(), getConverter(), getMovableValidator());
     }
 
     @Override

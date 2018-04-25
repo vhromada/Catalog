@@ -55,6 +55,8 @@ public final class ProgramUtils {
         if (id != null) {
             program.setId(id);
             program.setPosition(id - 1);
+        } else {
+            program.setPosition(0);
         }
 
         return program;
@@ -89,6 +91,8 @@ public final class ProgramUtils {
         if (id != null) {
             program.setId(id);
             program.setPosition(id - 1);
+        } else {
+            program.setPosition(0);
         }
 
         return program;

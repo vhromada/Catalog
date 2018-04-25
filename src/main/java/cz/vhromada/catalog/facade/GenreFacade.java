@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade;
 
 import cz.vhromada.catalog.entity.Genre;
+import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -8,7 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface GenreFacade extends CatalogParentFacade<Genre> {
+public interface GenreFacade extends MovableParentFacade<Genre> {
 
     /**
      * Adds genre. Sets new ID and position.

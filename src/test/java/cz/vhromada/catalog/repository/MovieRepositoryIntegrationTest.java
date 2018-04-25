@@ -10,10 +10,10 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.domain.Movie;
-import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.MediumUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
+import cz.vhromada.common.utils.CollectionUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -20,8 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import cz.vhromada.catalog.common.Language;
-import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.common.Language;
+import cz.vhromada.common.Movable;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -90,7 +90,7 @@ public class Season implements Movable {
     /**
      * Position
      */
-    private int position;
+    private Integer position;
 
     /**
      * Episodes
@@ -221,12 +221,12 @@ public class Season implements Movable {
     }
 
     @Override
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
     @Override
-    public void setPosition(final int position) {
+    public void setPosition(final Integer position) {
         this.position = position;
     }
 

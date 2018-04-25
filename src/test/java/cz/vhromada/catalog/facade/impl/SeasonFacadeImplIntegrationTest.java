@@ -8,19 +8,21 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.Language;
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
-import cz.vhromada.catalog.facade.CatalogChildFacade;
 import cz.vhromada.catalog.facade.SeasonFacade;
-import cz.vhromada.catalog.utils.CollectionUtils;
-import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
-import cz.vhromada.catalog.utils.TestConstants;
+import cz.vhromada.common.Language;
+import cz.vhromada.common.facade.MovableChildFacade;
+import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest;
+import cz.vhromada.common.test.utils.TestConstants;
+import cz.vhromada.common.utils.CollectionUtils;
+import cz.vhromada.common.utils.Constants;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -29,13 +31,15 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * A class represents integration test for class {@link SeasonFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<Season, cz.vhromada.catalog.domain.Season, Show> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<Season, cz.vhromada.catalog.domain.Season, Show> {
 
     /**
      * Event for invalid starting year
@@ -365,7 +369,7 @@ class SeasonFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest
     }
 
     @Override
-    protected CatalogChildFacade<Season, Show> getCatalogChildFacade() {
+    protected MovableChildFacade<Season, Show> getMovableChildFacade() {
         return seasonFacade;
     }
 

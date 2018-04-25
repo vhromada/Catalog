@@ -7,13 +7,14 @@ import java.util.List;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
-import cz.vhromada.catalog.facade.CatalogChildFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.MovableChildFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.test.facade.MovableChildFacadeTest;
+import cz.vhromada.common.utils.CollectionUtils;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
@@ -23,43 +24,43 @@ import org.junit.jupiter.api.Test;
  *
  * @author Vladimir Hromada
  */
-class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada.catalog.domain.Episode, Season, Show> {
+class EpisodeFacadeImplTest extends MovableChildFacadeTest<Episode, cz.vhromada.catalog.domain.Episode, Season, Show> {
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null service for shows.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null service for shows.
      */
     @Test
     void constructor_NullShowService() {
-        assertThatThrownBy(() -> new EpisodeFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()))
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(null, getConverter(), getParentMovableValidator(), getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null converter.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null converter.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new EpisodeFacadeImpl(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator()))
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getMovableService(), null, getParentMovableValidator(), getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for
      * season.
      */
     @Test
     void constructor_NullSeasonValidator() {
-        assertThatThrownBy(() -> new EpisodeFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()))
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getMovableService(), getConverter(), null, getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for
      * episode.
      */
     @Test
     void constructor_NullEpisodeValidator() {
-        assertThatThrownBy(() -> new EpisodeFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null))
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), null))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -69,8 +70,8 @@ class EpisodeFacadeImplTest extends AbstractChildFacadeTest<Episode, cz.vhromada
     }
 
     @Override
-    protected CatalogChildFacade<Episode, Season> getCatalogChildFacade() {
-        return new EpisodeFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
+    protected MovableChildFacade<Episode, Season> getMovableChildFacade() {
+        return new EpisodeFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), getChildMovableValidator());
     }
 
     @Override

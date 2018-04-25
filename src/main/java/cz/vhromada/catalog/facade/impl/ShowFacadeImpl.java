@@ -2,13 +2,14 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.ArrayList;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.AbstractMovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 
@@ -22,7 +23,7 @@ import org.springframework.util.CollectionUtils;
  * @author Vladimir Hromada
  */
 @Component("showFacade")
-public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromada.catalog.domain.Show> implements ShowFacade {
+public class ShowFacadeImpl extends AbstractMovableParentFacade<Show, cz.vhromada.catalog.domain.Show> implements ShowFacade {
 
     /**
      * Creates a new instance of ShowFacadeImpl.
@@ -35,15 +36,15 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
      *                                  or validator for show is null
      */
     @Autowired
-    public ShowFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Show> showService, final Converter converter,
-        final CatalogValidator<Show> showValidator) {
+    public ShowFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Show> showService, final Converter converter,
+        final MovableValidator<Show> showValidator) {
         super(showService, converter, showValidator);
     }
 
     @Override
     public Result<Time> getTotalLength() {
         int totalLength = 0;
-        for (final cz.vhromada.catalog.domain.Show show : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Show show : getMovableService().getAll()) {
             if (!CollectionUtils.isEmpty(show.getSeasons())) {
                 for (final Season season : show.getSeasons()) {
                     if (!CollectionUtils.isEmpty(season.getEpisodes())) {
@@ -61,7 +62,7 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
     @Override
     public Result<Integer> getSeasonsCount() {
         int seasonsCount = 0;
-        for (final cz.vhromada.catalog.domain.Show show : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Show show : getMovableService().getAll()) {
             if (!CollectionUtils.isEmpty(show.getSeasons())) {
                 seasonsCount += show.getSeasons().size();
             }
@@ -73,7 +74,7 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
     @Override
     public Result<Integer> getEpisodesCount() {
         int episodesCount = 0;
-        for (final cz.vhromada.catalog.domain.Show show : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Show show : getMovableService().getAll()) {
             if (!CollectionUtils.isEmpty(show.getSeasons())) {
                 for (final Season season : show.getSeasons()) {
                     if (!CollectionUtils.isEmpty(season.getEpisodes())) {
@@ -97,7 +98,7 @@ public class ShowFacadeImpl extends AbstractCatalogParentFacade<Show, cz.vhromad
     @Override
     protected cz.vhromada.catalog.domain.Show getDataForUpdate(final Show data) {
         final cz.vhromada.catalog.domain.Show show = super.getDataForUpdate(data);
-        show.setSeasons(getCatalogService().get(data.getId()).getSeasons());
+        show.setSeasons(getMovableService().get(data.getId()).getSeasons());
 
         return show;
     }

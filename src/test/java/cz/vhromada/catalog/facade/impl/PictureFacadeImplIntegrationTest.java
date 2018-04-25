@@ -7,10 +7,12 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Picture;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.PictureFacade;
 import cz.vhromada.catalog.utils.PictureUtils;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -19,6 +21,7 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -28,7 +31,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  *
  * @author Vladimir Hromada
  */
-class PictureFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Picture, cz.vhromada.catalog.domain.Picture> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class PictureFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<Picture, cz.vhromada.catalog.domain.Picture> {
 
     /**
      * Instance of {@link EntityManager}
@@ -88,7 +92,7 @@ class PictureFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTe
     }
 
     @Override
-    protected CatalogParentFacade<Picture> getCatalogParentFacade() {
+    protected MovableParentFacade<Picture> getMovableParentFacade() {
         return pictureFacade;
     }
 

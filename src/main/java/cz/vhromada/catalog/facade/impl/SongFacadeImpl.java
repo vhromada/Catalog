@@ -7,10 +7,11 @@ import java.util.stream.Collectors;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.facade.SongFacade;
-import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
-import cz.vhromada.catalog.utils.CollectionUtils;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.AbstractMovableChildFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.utils.CollectionUtils;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("songFacade")
-public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>
+public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>
     implements SongFacade {
 
     /**
@@ -38,14 +39,14 @@ public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada
      *                                  or validator for song is null
      */
     @Autowired
-    public SongFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService, final Converter converter,
-        final CatalogValidator<Music> musicValidator, final CatalogValidator<Song> songValidator) {
+    public SongFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Music> musicService, final Converter converter,
+        final MovableValidator<Music> musicValidator, final MovableValidator<Song> songValidator) {
         super(musicService, converter, musicValidator, songValidator);
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Song getDomainData(final Integer id) {
-        final List<cz.vhromada.catalog.domain.Music> musicList = getCatalogService().getAll();
+        final List<cz.vhromada.catalog.domain.Music> musicList = getMovableService().getAll();
         for (final cz.vhromada.catalog.domain.Music music : musicList) {
             for (final cz.vhromada.catalog.domain.Song song : music.getSongs()) {
                 if (id.equals(song.getId())) {
@@ -59,12 +60,12 @@ public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada
 
     @Override
     protected List<cz.vhromada.catalog.domain.Song> getDomainList(final Music parent) {
-        return getCatalogService().get(parent.getId()).getSongs();
+        return getMovableService().get(parent.getId()).getSongs();
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Music getForAdd(final Music parent, final cz.vhromada.catalog.domain.Song data) {
-        final cz.vhromada.catalog.domain.Music music = getCatalogService().get(parent.getId());
+        final cz.vhromada.catalog.domain.Music music = getMovableService().get(parent.getId());
         music.getSongs().add(data);
 
         return music;
@@ -137,7 +138,7 @@ public class SongFacadeImpl extends AbstractCatalogChildFacade<Song, cz.vhromada
      * @return music for song
      */
     private cz.vhromada.catalog.domain.Music getMusic(final Song song) {
-        for (final cz.vhromada.catalog.domain.Music music : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : getMovableService().getAll()) {
             for (final cz.vhromada.catalog.domain.Song songDomain : music.getSongs()) {
                 if (song.getId().equals(songDomain.getId())) {
                     return music;

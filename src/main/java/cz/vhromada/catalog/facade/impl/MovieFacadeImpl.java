@@ -3,12 +3,13 @@ package cz.vhromada.catalog.facade.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Medium;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.facade.MovieFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.AbstractMovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("movieFacade")
-public class MovieFacadeImpl extends AbstractCatalogParentFacade<Movie, cz.vhromada.catalog.domain.Movie> implements MovieFacade {
+public class MovieFacadeImpl extends AbstractMovableParentFacade<Movie, cz.vhromada.catalog.domain.Movie> implements MovieFacade {
 
     /**
      * Creates a new instance of MovieFacadeImpl.
@@ -34,15 +35,15 @@ public class MovieFacadeImpl extends AbstractCatalogParentFacade<Movie, cz.vhrom
      *                                  or validator for movie is null
      */
     @Autowired
-    public MovieFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Movie> movieService, final Converter converter,
-        final CatalogValidator<Movie> movieValidator) {
+    public MovieFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Movie> movieService, final Converter converter,
+        final MovableValidator<Movie> movieValidator) {
         super(movieService, converter, movieValidator);
     }
 
     @Override
     public Result<Integer> getTotalMediaCount() {
         int totalMediaCount = 0;
-        for (final cz.vhromada.catalog.domain.Movie movie : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Movie movie : getMovableService().getAll()) {
             totalMediaCount += movie.getMedia().size();
         }
 
@@ -52,7 +53,7 @@ public class MovieFacadeImpl extends AbstractCatalogParentFacade<Movie, cz.vhrom
     @Override
     public Result<Time> getTotalLength() {
         int totalLength = 0;
-        for (final cz.vhromada.catalog.domain.Movie movie : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Movie movie : getMovableService().getAll()) {
             for (final cz.vhromada.catalog.domain.Medium medium : movie.getMedia()) {
                 totalLength += medium.getLength();
             }
@@ -64,7 +65,7 @@ public class MovieFacadeImpl extends AbstractCatalogParentFacade<Movie, cz.vhrom
     @Override
     protected cz.vhromada.catalog.domain.Movie getDataForUpdate(final Movie data) {
         final cz.vhromada.catalog.domain.Movie movie = super.getDataForUpdate(data);
-        movie.setMedia(getUpdatedMedia(getCatalogService().get(data.getId()).getMedia(), data.getMedia()));
+        movie.setMedia(getUpdatedMedia(getMovableService().get(data.getId()).getMedia(), data.getMedia()));
 
         return movie;
     }

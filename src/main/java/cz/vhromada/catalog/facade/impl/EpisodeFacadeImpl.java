@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cz.vhromada.catalog.common.Movable;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
-import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.CatalogUtils;
-import cz.vhromada.catalog.utils.CollectionUtils;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.Movable;
+import cz.vhromada.common.facade.AbstractMovableChildFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.utils.CollectionUtils;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("episodeFacade")
-public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vhromada.catalog.domain.Episode, Season, Show>
-    implements EpisodeFacade {
+public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vhromada.catalog.domain.Episode, Season, Show> implements EpisodeFacade {
 
     /**
      * Creates a new instance of EpisodeFacadeImpl.
@@ -40,14 +40,14 @@ public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vh
      *                                  or validator for episode is null
      */
     @Autowired
-    public EpisodeFacadeImpl(final CatalogService<Show> showService, final Converter converter, final CatalogValidator<Season> seasonValidator,
-        final CatalogValidator<Episode> episodeValidator) {
+    public EpisodeFacadeImpl(final MovableService<Show> showService, final Converter converter, final MovableValidator<Season> seasonValidator,
+        final MovableValidator<Episode> episodeValidator) {
         super(showService, converter, seasonValidator, episodeValidator);
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Episode getDomainData(final Integer id) {
-        final List<Show> shows = getCatalogService().getAll();
+        final List<Show> shows = getMovableService().getAll();
         for (final Show show : shows) {
             for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 for (final cz.vhromada.catalog.domain.Episode episode : season.getEpisodes()) {
@@ -63,7 +63,7 @@ public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vh
 
     @Override
     protected List<cz.vhromada.catalog.domain.Episode> getDomainList(final Season parent) {
-        final List<Show> shows = getCatalogService().getAll();
+        final List<Show> shows = getMovableService().getAll();
         for (final Show show : shows) {
             for (final cz.vhromada.catalog.domain.Season seasonDomain : show.getSeasons()) {
                 if (parent.getId().equals(seasonDomain.getId())) {
@@ -152,7 +152,7 @@ public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vh
      * @return show for season
      */
     private Show getShow(final Season season) {
-        for (final Show show : getCatalogService().getAll()) {
+        for (final Show show : getMovableService().getAll()) {
             for (final cz.vhromada.catalog.domain.Season seasonDomain : show.getSeasons()) {
                 if (season.getId().equals(seasonDomain.getId())) {
                     return show;
@@ -170,7 +170,7 @@ public class EpisodeFacadeImpl extends AbstractCatalogChildFacade<Episode, cz.vh
      * @return show for episode
      */
     private Show getShow(final Episode episode) {
-        for (final Show show : getCatalogService().getAll()) {
+        for (final Show show : getMovableService().getAll()) {
             for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 for (final cz.vhromada.catalog.domain.Episode episodeDomain : season.getEpisodes()) {
                     if (episode.getId().equals(episodeDomain.getId())) {

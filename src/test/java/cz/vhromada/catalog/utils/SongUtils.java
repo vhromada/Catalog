@@ -60,6 +60,8 @@ public final class SongUtils {
         if (id != null) {
             song.setId(id);
             song.setPosition(id - 1);
+        } else {
+            song.setPosition(0);
         }
 
         return song;
@@ -88,6 +90,8 @@ public final class SongUtils {
         if (id != null) {
             song.setId(id);
             song.setPosition(id - 1);
+        } else {
+            song.setPosition(0);
         }
 
         return song;

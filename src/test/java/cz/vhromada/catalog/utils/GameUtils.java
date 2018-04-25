@@ -55,6 +55,8 @@ public final class GameUtils {
         if (id != null) {
             game.setId(id);
             game.setPosition(id - 1);
+        } else {
+            game.setPosition(0);
         }
 
         return game;
@@ -94,6 +96,8 @@ public final class GameUtils {
         if (id != null) {
             game.setId(id);
             game.setPosition(id - 1);
+        } else {
+            game.setPosition(0);
         }
 
         return game;

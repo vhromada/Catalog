@@ -8,8 +8,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.entity.Season;
+import cz.vhromada.common.Language;
+import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for seasons.
@@ -61,6 +62,8 @@ public final class SeasonUtils {
         if (id != null) {
             season.setId(id);
             season.setPosition(id - 1);
+        } else {
+            season.setPosition(0);
         }
         season.setEpisodes(new ArrayList<>());
 
@@ -107,6 +110,8 @@ public final class SeasonUtils {
         if (id != null) {
             season.setId(id);
             season.setPosition(id - 1);
+        } else {
+            season.setPosition(0);
         }
 
         return season;

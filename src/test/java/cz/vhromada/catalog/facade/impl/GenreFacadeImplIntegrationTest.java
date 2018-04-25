@@ -7,12 +7,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.GenreFacade;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -21,6 +23,7 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -30,7 +33,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  *
  * @author Vladimir Hromada
  */
-class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Genre, cz.vhromada.catalog.domain.Genre> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<Genre, cz.vhromada.catalog.domain.Genre> {
 
     /**
      * Instance of {@link EntityManager}
@@ -126,7 +130,7 @@ class GenreFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     }
 
     @Override
-    protected CatalogParentFacade<Genre> getCatalogParentFacade() {
+    protected MovableParentFacade<Genre> getMovableParentFacade() {
         return genreFacade;
     }
 

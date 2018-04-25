@@ -3,10 +3,11 @@ package cz.vhromada.catalog.facade.impl;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cz.vhromada.catalog.entity.Genre;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
-import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.GenreUtils;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.test.facade.MovableParentFacadeTest;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
@@ -16,35 +17,35 @@ import org.junit.jupiter.api.Test;
  *
  * @author Vladimir Hromada
  */
-class GenreFacadeImplTest extends AbstractParentFacadeTest<Genre, cz.vhromada.catalog.domain.Genre> {
+class GenreFacadeImplTest extends MovableParentFacadeTest<Genre, cz.vhromada.catalog.domain.Genre> {
 
     /**
-     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for genres.
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(MovableService, Converter, MovableValidator)} with null service for genres.
      */
     @Test
     void constructor_NullGenreService() {
-        assertThatThrownBy(() -> new GenreFacadeImpl(null, getConverter(), getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new GenreFacadeImpl(null, getConverter(), getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(MovableService, Converter, MovableValidator)} with null converter.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new GenreFacadeImpl(getCatalogService(), null, getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new GenreFacadeImpl(getMovableService(), null, getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for genre.
+     * Test method for {@link GenreFacadeImpl#GenreFacadeImpl(MovableService, Converter, MovableValidator)} with null validator for genre.
      */
     @Test
     void constructor_NullGenreValidator() {
-        assertThatThrownBy(() -> new GenreFacadeImpl(getCatalogService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new GenreFacadeImpl(getMovableService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected CatalogParentFacade<Genre> getCatalogParentFacade() {
-        return new GenreFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
+    protected MovableParentFacade<Genre> getMovableParentFacade() {
+        return new GenreFacadeImpl(getMovableService(), getConverter(), getMovableValidator());
     }
 
     @Override

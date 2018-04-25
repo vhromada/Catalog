@@ -2,8 +2,9 @@ package cz.vhromada.catalog.facade.impl;
 
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.facade.GameFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.AbstractMovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("gameFacade")
-public class GameFacadeImpl extends AbstractCatalogParentFacade<Game, cz.vhromada.catalog.domain.Game> implements GameFacade {
+public class GameFacadeImpl extends AbstractMovableParentFacade<Game, cz.vhromada.catalog.domain.Game> implements GameFacade {
 
     /**
      * Creates a new instance of GameFacadeImpl.
@@ -29,15 +30,15 @@ public class GameFacadeImpl extends AbstractCatalogParentFacade<Game, cz.vhromad
      *                                  or validator for game is null
      */
     @Autowired
-    public GameFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Game> gameService, final Converter converter,
-        final CatalogValidator<Game> gameValidator) {
+    public GameFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Game> gameService, final Converter converter,
+        final MovableValidator<Game> gameValidator) {
         super(gameService, converter, gameValidator);
     }
 
     @Override
     public Result<Integer> getTotalMediaCount() {
         int totalMedia = 0;
-        for (final cz.vhromada.catalog.domain.Game game : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Game game : getMovableService().getAll()) {
             totalMedia += game.getMediaCount();
         }
 

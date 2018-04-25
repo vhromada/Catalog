@@ -7,10 +7,12 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Game;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.utils.GameUtils;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -19,13 +21,15 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * A class represents integration test for class {@link GameFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Game, cz.vhromada.catalog.domain.Game> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<Game, cz.vhromada.catalog.domain.Game> {
 
     /**
      * Instance of {@link EntityManager}
@@ -319,7 +323,7 @@ class GameFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     }
 
     @Override
-    protected CatalogParentFacade<Game> getCatalogParentFacade() {
+    protected MovableParentFacade<Game> getMovableParentFacade() {
         return gameFacade;
     }
 

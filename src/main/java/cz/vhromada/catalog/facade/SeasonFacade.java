@@ -2,6 +2,7 @@ package cz.vhromada.catalog.facade;
 
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
+import cz.vhromada.common.facade.MovableChildFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -9,7 +10,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface SeasonFacade extends CatalogChildFacade<Season, Show> {
+public interface SeasonFacade extends MovableChildFacade<Season, Show> {
 
     /**
      * Adds season. Sets new ID and position.

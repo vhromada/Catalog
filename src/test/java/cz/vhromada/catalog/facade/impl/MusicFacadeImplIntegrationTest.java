@@ -8,13 +8,15 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -23,13 +25,15 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * A class represents integration test for class {@link MusicFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Music, cz.vhromada.catalog.domain.Music> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<Music, cz.vhromada.catalog.domain.Music> {
 
     /**
      * Instance of {@link EntityManager}
@@ -321,7 +325,7 @@ class MusicFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
     }
 
     @Override
-    protected CatalogParentFacade<Music> getCatalogParentFacade() {
+    protected MovableParentFacade<Music> getMovableParentFacade() {
         return musicFacade;
     }
 

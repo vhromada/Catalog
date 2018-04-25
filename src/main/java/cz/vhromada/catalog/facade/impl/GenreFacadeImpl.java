@@ -2,8 +2,9 @@ package cz.vhromada.catalog.facade.impl;
 
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.facade.GenreFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.AbstractMovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("genreFacade")
-public class GenreFacadeImpl extends AbstractCatalogParentFacade<Genre, cz.vhromada.catalog.domain.Genre> implements GenreFacade {
+public class GenreFacadeImpl extends AbstractMovableParentFacade<Genre, cz.vhromada.catalog.domain.Genre> implements GenreFacade {
 
     /**
      * Creates a new instance of GenreFacadeImpl.
@@ -28,8 +29,8 @@ public class GenreFacadeImpl extends AbstractCatalogParentFacade<Genre, cz.vhrom
      *                                  or validator for genre is null
      */
     @Autowired
-    public GenreFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Genre> genreService, final Converter converter,
-        final CatalogValidator<Genre> genreValidator) {
+    public GenreFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Genre> genreService, final Converter converter,
+        final MovableValidator<Genre> genreValidator) {
         super(genreService, converter, genreValidator);
     }
 

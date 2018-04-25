@@ -2,8 +2,9 @@ package cz.vhromada.catalog.facade.impl;
 
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.AbstractMovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("programFacade")
-public class ProgramFacadeImpl extends AbstractCatalogParentFacade<Program, cz.vhromada.catalog.domain.Program> implements ProgramFacade {
+public class ProgramFacadeImpl extends AbstractMovableParentFacade<Program, cz.vhromada.catalog.domain.Program> implements ProgramFacade {
 
     /**
      * Creates a new instance of ProgramFacadeImpl.
@@ -29,15 +30,15 @@ public class ProgramFacadeImpl extends AbstractCatalogParentFacade<Program, cz.v
      *                                  or validator for program is null
      */
     @Autowired
-    public ProgramFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Program> programService, final Converter converter,
-        final CatalogValidator<Program> programValidator) {
+    public ProgramFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Program> programService, final Converter converter,
+        final MovableValidator<Program> programValidator) {
         super(programService, converter, programValidator);
     }
 
     @Override
     public Result<Integer> getTotalMediaCount() {
         int totalMedia = 0;
-        for (final cz.vhromada.catalog.domain.Program program : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Program program : getMovableService().getAll()) {
             totalMedia += program.getMediaCount();
         }
 

@@ -6,11 +6,12 @@ import java.util.List;
 
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
-import cz.vhromada.catalog.facade.CatalogChildFacade;
-import cz.vhromada.catalog.service.CatalogService;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.MovableChildFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.test.facade.MovableChildFacadeTest;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
@@ -20,47 +21,47 @@ import org.junit.jupiter.api.Test;
  *
  * @author Vladimir Hromada
  */
-class SongFacadeImplTest extends AbstractChildFacadeTest<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music> {
+class SongFacadeImplTest extends MovableChildFacadeTest<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music> {
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null service for music.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null service for music.
      */
     @Test
     void constructor_NullMusicService() {
-        assertThatThrownBy(() -> new SongFacadeImpl(null, getConverter(), getParentCatalogValidator(), getChildCatalogValidator()))
+        assertThatThrownBy(() -> new SongFacadeImpl(null, getConverter(), getParentMovableValidator(), getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null converter.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null converter.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new SongFacadeImpl(getCatalogService(), null, getParentCatalogValidator(), getChildCatalogValidator()))
+        assertThatThrownBy(() -> new SongFacadeImpl(getMovableService(), null, getParentMovableValidator(), getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for music.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for music.
      */
     @Test
     void constructor_NullMusicValidator() {
-        assertThatThrownBy(() -> new SongFacadeImpl(getCatalogService(), getConverter(), null, getChildCatalogValidator()))
+        assertThatThrownBy(() -> new SongFacadeImpl(getMovableService(), getConverter(), null, getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link SongFacadeImpl#SongFacadeImpl(CatalogService, Converter, CatalogValidator, CatalogValidator)} with null validator for song.
+     * Test method for {@link SongFacadeImpl#SongFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for song.
      */
     @Test
     void constructor_NullSongValidator() {
-        assertThatThrownBy(() -> new SongFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), null))
+        assertThatThrownBy(() -> new SongFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), null))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected CatalogChildFacade<Song, Music> getCatalogChildFacade() {
-        return new SongFacadeImpl(getCatalogService(), getConverter(), getParentCatalogValidator(), getChildCatalogValidator());
+    protected MovableChildFacade<Song, Music> getMovableChildFacade() {
+        return new SongFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), getChildMovableValidator());
     }
 
     @Override

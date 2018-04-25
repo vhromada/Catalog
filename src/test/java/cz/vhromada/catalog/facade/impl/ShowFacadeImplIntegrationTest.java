@@ -7,20 +7,22 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Show;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.ShowFacade;
-import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.PictureUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
-import cz.vhromada.catalog.utils.TestConstants;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
+import cz.vhromada.common.test.utils.TestConstants;
+import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -29,13 +31,15 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * A class represents integration test for class {@link ShowFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Show, cz.vhromada.catalog.domain.Show> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<Show, cz.vhromada.catalog.domain.Show> {
 
     /**
      * Event for invalid IMDB code
@@ -787,7 +791,7 @@ class ShowFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<
     }
 
     @Override
-    protected CatalogParentFacade<Show> getCatalogParentFacade() {
+    protected MovableParentFacade<Show> getMovableParentFacade() {
         return showFacade;
     }
 

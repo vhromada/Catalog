@@ -1,7 +1,8 @@
 package cz.vhromada.catalog.facade;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.entity.Music;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -9,7 +10,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface MusicFacade extends CatalogParentFacade<Music> {
+public interface MusicFacade extends MovableParentFacade<Music> {
 
     /**
      * Adds music. Sets new ID and position.

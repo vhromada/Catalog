@@ -7,20 +7,22 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.Language;
-import cz.vhromada.catalog.common.Time;
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Medium;
 import cz.vhromada.catalog.entity.Movie;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.MovieFacade;
-import cz.vhromada.catalog.utils.CollectionUtils;
-import cz.vhromada.catalog.utils.Constants;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.MediumUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
 import cz.vhromada.catalog.utils.PictureUtils;
-import cz.vhromada.catalog.utils.TestConstants;
+import cz.vhromada.common.Language;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
+import cz.vhromada.common.test.utils.TestConstants;
+import cz.vhromada.common.utils.CollectionUtils;
+import cz.vhromada.common.utils.Constants;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -29,13 +31,15 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * A class represents integration test for class {@link MovieFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest<Movie, cz.vhromada.catalog.domain.Movie> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<Movie, cz.vhromada.catalog.domain.Movie> {
 
     /**
      * Event for invalid year
@@ -1078,7 +1082,7 @@ class MovieFacadeImplIntegrationTest extends AbstractParentFacadeIntegrationTest
 
 
     @Override
-    protected CatalogParentFacade<Movie> getCatalogParentFacade() {
+    protected MovableParentFacade<Movie> getMovableParentFacade() {
         return movieFacade;
     }
 

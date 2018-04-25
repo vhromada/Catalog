@@ -2,12 +2,13 @@ package cz.vhromada.catalog.facade.impl;
 
 import java.util.ArrayList;
 
-import cz.vhromada.catalog.common.Time;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.Time;
+import cz.vhromada.common.facade.AbstractMovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 
@@ -21,7 +22,7 @@ import org.springframework.util.CollectionUtils;
  * @author Vladimir Hromada
  */
 @Component("musicFacade")
-public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhromada.catalog.domain.Music> implements MusicFacade {
+public class MusicFacadeImpl extends AbstractMovableParentFacade<Music, cz.vhromada.catalog.domain.Music> implements MusicFacade {
 
     /**
      * Creates a new instance of MusicFacadeImpl.
@@ -34,15 +35,15 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
      *                                  or validator for music is null
      */
     @Autowired
-    public MusicFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Music> musicService, final Converter converter,
-        final CatalogValidator<Music> musicValidator) {
+    public MusicFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Music> musicService, final Converter converter,
+        final MovableValidator<Music> musicValidator) {
         super(musicService, converter, musicValidator);
     }
 
     @Override
     public Result<Integer> getTotalMediaCount() {
         int totalMedia = 0;
-        for (final cz.vhromada.catalog.domain.Music music : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : getMovableService().getAll()) {
             totalMedia += music.getMediaCount();
         }
 
@@ -52,7 +53,7 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
     @Override
     public Result<Time> getTotalLength() {
         int totalLength = 0;
-        for (final cz.vhromada.catalog.domain.Music music : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : getMovableService().getAll()) {
             if (!CollectionUtils.isEmpty(music.getSongs())) {
                 for (final Song song : music.getSongs()) {
                     totalLength += song.getLength();
@@ -66,7 +67,7 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
     @Override
     public Result<Integer> getSongsCount() {
         int songs = 0;
-        for (final cz.vhromada.catalog.domain.Music music : getCatalogService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : getMovableService().getAll()) {
             if (!CollectionUtils.isEmpty(music.getSongs())) {
                 songs += music.getSongs().size();
             }
@@ -86,7 +87,7 @@ public class MusicFacadeImpl extends AbstractCatalogParentFacade<Music, cz.vhrom
     @Override
     protected cz.vhromada.catalog.domain.Music getDataForUpdate(final Music data) {
         final cz.vhromada.catalog.domain.Music music = super.getDataForUpdate(data);
-        music.setSongs(getCatalogService().get(data.getId()).getSongs());
+        music.setSongs(getMovableService().get(data.getId()).getSongs());
 
         return music;
     }

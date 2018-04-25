@@ -3,8 +3,8 @@ package cz.vhromada.catalog.entity;
 import java.util.List;
 import java.util.Objects;
 
-import cz.vhromada.catalog.common.Language;
-import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.common.Language;
+import cz.vhromada.common.Movable;
 
 /**
  * A class represents movie.
@@ -86,7 +86,7 @@ public class Movie implements Movable {
     /**
      * Position
      */
-    private int position;
+    private Integer position;
 
     /**
      * Genres
@@ -320,12 +320,12 @@ public class Movie implements Movable {
     }
 
     @Override
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
     @Override
-    public void setPosition(final int position) {
+    public void setPosition(final Integer position) {
         this.position = position;
     }
 

@@ -8,10 +8,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import cz.vhromada.catalog.common.Language;
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.entity.Movie;
+import cz.vhromada.common.Language;
+import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for movies.
@@ -66,6 +67,8 @@ public final class MovieUtils {
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
+        } else {
+            movie.setPosition(0);
         }
 
         return movie;
@@ -105,6 +108,8 @@ public final class MovieUtils {
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
+        } else {
+            movie.setPosition(0);
         }
 
         return movie;

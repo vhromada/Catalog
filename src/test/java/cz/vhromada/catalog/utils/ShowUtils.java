@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.entity.Show;
+import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for shows.
@@ -58,6 +59,8 @@ public final class ShowUtils {
         if (id != null) {
             show.setId(id);
             show.setPosition(id - 1);
+        } else {
+            show.setPosition(0);
         }
         show.setSeasons(new ArrayList<>());
 
@@ -107,6 +110,8 @@ public final class ShowUtils {
         if (id != null) {
             show.setId(id);
             show.setPosition(id - 1);
+        } else {
+            show.setPosition(0);
         }
 
         return show;

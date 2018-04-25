@@ -7,14 +7,16 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.entity.Season;
-import cz.vhromada.catalog.facade.CatalogChildFacade;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
+import cz.vhromada.common.facade.MovableChildFacade;
+import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest;
 import cz.vhromada.result.Event;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Severity;
@@ -23,13 +25,15 @@ import cz.vhromada.result.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * A class represents integration test for class {@link EpisodeFacadeImpl}.
  *
  * @author Vladimir Hromada
  */
-class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTest<Episode, cz.vhromada.catalog.domain.Episode, Season> {
+@ContextConfiguration(classes = CatalogTestConfiguration.class)
+class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<Episode, cz.vhromada.catalog.domain.Episode, Season> {
 
     /**
      * Instance of {@link EntityManager}
@@ -231,7 +235,7 @@ class EpisodeFacadeImplIntegrationTest extends AbstractChildFacadeIntegrationTes
     }
 
     @Override
-    protected CatalogChildFacade<Episode, Season> getCatalogChildFacade() {
+    protected MovableChildFacade<Episode, Season> getMovableChildFacade() {
         return episodeFacade;
     }
 

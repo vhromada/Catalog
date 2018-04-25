@@ -2,8 +2,9 @@ package cz.vhromada.catalog.facade.impl;
 
 import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.catalog.facade.PictureFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.AbstractMovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @author Vladimir Hromada
  */
 @Component("pictureFacade")
-public class PictureFacadeImpl extends AbstractCatalogParentFacade<Picture, cz.vhromada.catalog.domain.Picture> implements PictureFacade {
+public class PictureFacadeImpl extends AbstractMovableParentFacade<Picture, cz.vhromada.catalog.domain.Picture> implements PictureFacade {
 
     /**
      * Creates a new instance of PictureFacadeImpl.
@@ -28,8 +29,8 @@ public class PictureFacadeImpl extends AbstractCatalogParentFacade<Picture, cz.v
      *                                  or validator for picture is null
      */
     @Autowired
-    public PictureFacadeImpl(final CatalogService<cz.vhromada.catalog.domain.Picture> pictureService, final Converter converter,
-        final CatalogValidator<Picture> pictureValidator) {
+    public PictureFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Picture> pictureService, final Converter converter,
+        final MovableValidator<Picture> pictureValidator) {
         super(pictureService, converter, pictureValidator);
     }
 

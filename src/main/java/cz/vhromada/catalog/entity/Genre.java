@@ -2,7 +2,7 @@ package cz.vhromada.catalog.entity;
 
 import java.util.Objects;
 
-import cz.vhromada.catalog.common.Movable;
+import cz.vhromada.common.Movable;
 
 /**
  * A class represents genre.
@@ -29,7 +29,7 @@ public class Genre implements Movable {
     /**
      * Position
      */
-    private int position;
+    private Integer position;
 
     @Override
     public Integer getId() {
@@ -60,12 +60,12 @@ public class Genre implements Movable {
     }
 
     @Override
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
     @Override
-    public void setPosition(final int position) {
+    public void setPosition(final Integer position) {
         this.position = position;
     }
 

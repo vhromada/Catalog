@@ -23,7 +23,7 @@ public class LogMethodAspect {
      * @return result of calling method
      * @throws Throwable if calling method fails
      */
-    @Around("facadePointcut() || servicePointcut()")
+    @Around("catalogFacadePointcut() || commonFacadePointcut()")
     @SuppressWarnings("MethodMayBeStatic")
     //CHECKSTYLE.OFF: IllegalThrows
     public Object log(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -51,14 +51,14 @@ public class LogMethodAspect {
      * Pointcut for facade layer
      */
     @Pointcut("execution(public * cz.vhromada.catalog..*FacadeImpl.*(..))")
-    public void facadePointcut() {
+    public void catalogFacadePointcut() {
     }
 
     /**
      * Pointcut for service layer
      */
-    @Pointcut("execution(public * cz.vhromada.catalog..*Service.*(..))")
-    public void servicePointcut() {
+    @Pointcut("execution(public * cz.vhromada.common..*Facade.*(..))")
+    public void commonFacadePointcut() {
     }
 
     /**

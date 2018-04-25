@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.facade;
 
 import cz.vhromada.catalog.entity.Picture;
+import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.result.Result;
 
 /**
@@ -8,7 +9,7 @@ import cz.vhromada.result.Result;
  *
  * @author Vladimir Hromada
  */
-public interface PictureFacade extends CatalogParentFacade<Picture> {
+public interface PictureFacade extends MovableParentFacade<Picture> {
 
     /**
      * Adds picture. Sets new ID and position.

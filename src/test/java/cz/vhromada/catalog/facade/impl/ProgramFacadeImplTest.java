@@ -8,12 +8,13 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import cz.vhromada.catalog.entity.Program;
-import cz.vhromada.catalog.facade.CatalogParentFacade;
 import cz.vhromada.catalog.facade.ProgramFacade;
-import cz.vhromada.catalog.service.CatalogService;
-import cz.vhromada.catalog.utils.CollectionUtils;
 import cz.vhromada.catalog.utils.ProgramUtils;
-import cz.vhromada.catalog.validator.CatalogValidator;
+import cz.vhromada.common.facade.MovableParentFacade;
+import cz.vhromada.common.service.MovableService;
+import cz.vhromada.common.test.facade.MovableParentFacadeTest;
+import cz.vhromada.common.utils.CollectionUtils;
+import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.converter.Converter;
 import cz.vhromada.result.Result;
 import cz.vhromada.result.Status;
@@ -25,26 +26,26 @@ import org.junit.jupiter.api.Test;
  *
  * @author Vladimir Hromada
  */
-class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.vhromada.catalog.domain.Program> {
+class ProgramFacadeImplTest extends MovableParentFacadeTest<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, CatalogValidator)} with null service for games.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, Converter, MovableValidator)} with null service for games.
      */
     @Test
     void constructor_NullProgramService() {
-        assertThatThrownBy(() -> new ProgramFacadeImpl(null, getConverter(), getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ProgramFacadeImpl(null, getConverter(), getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, CatalogValidator)} with null converter.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, Converter, MovableValidator)} with null converter.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new ProgramFacadeImpl(getCatalogService(), null, getCatalogValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ProgramFacadeImpl(getMovableService(), null, getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(CatalogService, Converter, CatalogValidator)} with null validator for game.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, Converter, MovableValidator)} with null validator for game.
      */
     @Test
     void constructor_NullProgramValidator() {
@@ -59,9 +60,9 @@ class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.vhromad
         final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.newProgramDomain(2);
         final int expectedCount = program1.getMediaCount() + program2.getMediaCount();
 
-        when(getCatalogService().getAll()).thenReturn(CollectionUtils.newList(program1, program2));
+        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(program1, program2));
 
-        final Result<Integer> result = ((ProgramFacade) getCatalogParentFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((ProgramFacade) getMovableParentFacade()).getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -69,14 +70,14 @@ class ProgramFacadeImplTest extends AbstractParentFacadeTest<Program, cz.vhromad
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getCatalogService()).getAll();
-        verifyNoMoreInteractions(getCatalogService());
-        verifyZeroInteractions(getConverter(), getCatalogValidator());
+        verify(getMovableService()).getAll();
+        verifyNoMoreInteractions(getMovableService());
+        verifyZeroInteractions(getConverter(), getMovableValidator());
     }
 
     @Override
-    protected CatalogParentFacade<Program> getCatalogParentFacade() {
-        return new ProgramFacadeImpl(getCatalogService(), getConverter(), getCatalogValidator());
+    protected MovableParentFacade<Program> getMovableParentFacade() {
+        return new ProgramFacadeImpl(getMovableService(), getConverter(), getMovableValidator());
     }
 
     @Override

@@ -50,8 +50,6 @@ public final class GenreUtils {
         if (id != null) {
             genre.setId(id);
             genre.setPosition(id - 1);
-        } else {
-            genre.setPosition(0);
         }
 
         return genre;
@@ -78,8 +76,6 @@ public final class GenreUtils {
         if (id != null) {
             genre.setId(id);
             genre.setPosition(id - 1);
-        } else {
-            genre.setPosition(0);
         }
 
         return genre;

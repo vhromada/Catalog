@@ -55,8 +55,6 @@ public final class PictureUtils {
         if (id != null) {
             picture.setId(id);
             picture.setPosition(id - 1);
-        } else {
-            picture.setPosition(0);
         }
 
         return picture;
@@ -83,8 +81,6 @@ public final class PictureUtils {
         if (id != null) {
             picture.setId(id);
             picture.setPosition(id - 1);
-        } else {
-            picture.setPosition(0);
         }
 
         return picture;

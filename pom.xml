@@ -12,7 +12,7 @@
 
     <groupId>cz.vhromada.catalog</groupId>
     <artifactId>catalog</artifactId>
-    <version>6.1.0</version>
+    <version>6.2.0</version>
 
     <name>Catalog</name>
     <description>Catalog of movies, games, music and programs</description>
@@ -41,7 +41,7 @@
     </scm>
 
     <properties>
-        <common.version>1.0.2</common.version>
+        <common.version>1.0.3</common.version>
     </properties>
 
     <dependencies>

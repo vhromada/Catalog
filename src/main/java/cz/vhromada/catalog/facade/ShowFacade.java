@@ -19,6 +19,7 @@ public interface ShowFacade extends MovableParentFacade<Show> {
      * <ul>
      * <li>Show is null</li>
      * <li>ID isn't null</li>
+     * <li>Position isn't null</li>
      * <li>Czech name is null</li>
      * <li>Czech name is empty string</li>
      * <li>Original name is null</li>
@@ -50,6 +51,7 @@ public interface ShowFacade extends MovableParentFacade<Show> {
      * <ul>
      * <li>Show is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Czech name is null</li>
      * <li>Czech name is empty string</li>
      * <li>Original name is null</li>

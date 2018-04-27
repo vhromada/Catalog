@@ -226,6 +226,14 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
     }
 
     @Override
+    protected Season getValidatingData(final Integer id, final Integer position) {
+        final Season season = SeasonUtils.newSeason(id);
+        season.setPosition(position);
+
+        return season;
+    }
+
+    @Override
     protected Show getRepositoryData(final Season validatingData) {
         return ShowUtils.newShowWithSeasons(validatingData.getId());
     }

@@ -78,6 +78,7 @@ class GenreRepositoryIntegrationTest {
     @Test
     void add() {
         final Genre genre = GenreUtils.newGenreDomain(null);
+        genre.setPosition(GenreUtils.GENRES_COUNT);
 
         genreRepository.save(genre);
 
@@ -86,6 +87,7 @@ class GenreRepositoryIntegrationTest {
         final Genre addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1);
         final Genre expectedAddGenre = GenreUtils.newGenreDomain(null);
         expectedAddGenre.setId(GenreUtils.GENRES_COUNT + 1);
+        expectedAddGenre.setPosition(GenreUtils.GENRES_COUNT);
         GenreUtils.assertGenreDeepEquals(expectedAddGenre, addedGenre);
 
         assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT + 1);
@@ -116,6 +118,7 @@ class GenreRepositoryIntegrationTest {
     @DirtiesContext
     void remove() {
         final Genre genre = GenreUtils.newGenreDomain(null);
+        genre.setPosition(GenreUtils.GENRES_COUNT);
         entityManager.persist(genre);
         assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT + 1);
 

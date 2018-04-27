@@ -18,6 +18,7 @@ public interface PictureFacade extends MovableParentFacade<Picture> {
      * <ul>
      * <li>Picture is null</li>
      * <li>ID isn't null</li>
+     * <li>Position isn't null</li>
      * <li>Content is null</li>
      * </ul>
      *
@@ -34,6 +35,7 @@ public interface PictureFacade extends MovableParentFacade<Picture> {
      * <ul>
      * <li>Picture is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Content is null</li>
      * <li>Picture doesn't exist in data storage</li>
      * </ul>

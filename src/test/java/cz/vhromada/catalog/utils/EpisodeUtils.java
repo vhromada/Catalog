@@ -65,8 +65,6 @@ public final class EpisodeUtils {
         if (id != null) {
             episode.setId(id);
             episode.setPosition(id - 1);
-        } else {
-            episode.setPosition(0);
         }
 
         return episode;
@@ -96,8 +94,6 @@ public final class EpisodeUtils {
         if (id != null) {
             episode.setId(id);
             episode.setPosition(id - 1);
-        } else {
-            episode.setPosition(0);
         }
 
         return episode;

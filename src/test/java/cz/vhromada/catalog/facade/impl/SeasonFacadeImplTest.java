@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
+import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.utils.SeasonUtils;
@@ -90,7 +91,12 @@ class SeasonFacadeImplTest extends MovableChildFacadeTest<Season, cz.vhromada.ca
 
     @Override
     protected cz.vhromada.catalog.domain.Season newChildDomain(final Integer id) {
-        return SeasonUtils.newSeasonWithEpisodes(id);
+        final cz.vhromada.catalog.domain.Season season = SeasonUtils.newSeasonWithEpisodes(id);
+        for (final Episode episode : season.getEpisodes()) {
+            episode.setPosition(0);
+        }
+
+        return season;
     }
 
     @Override

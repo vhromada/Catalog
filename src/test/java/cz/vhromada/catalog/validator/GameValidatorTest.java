@@ -181,6 +181,14 @@ class GameValidatorTest extends MovableValidatorTest<Game, cz.vhromada.catalog.d
     }
 
     @Override
+    protected Game getValidatingData(final Integer id, final Integer position) {
+        final Game game = GameUtils.newGame(id);
+        game.setPosition(position);
+
+        return game;
+    }
+
+    @Override
     protected cz.vhromada.catalog.domain.Game getRepositoryData(final Game validatingData) {
         return GameUtils.newGameDomain(validatingData.getId());
     }

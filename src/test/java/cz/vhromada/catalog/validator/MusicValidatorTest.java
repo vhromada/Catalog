@@ -161,6 +161,14 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
     }
 
     @Override
+    protected Music getValidatingData(final Integer id, final Integer position) {
+        final Music music = MusicUtils.newMusic(id);
+        music.setPosition(position);
+
+        return music;
+    }
+
+    @Override
     protected cz.vhromada.catalog.domain.Music getRepositoryData(final Music validatingData) {
         return MusicUtils.newMusicDomain(validatingData.getId());
     }

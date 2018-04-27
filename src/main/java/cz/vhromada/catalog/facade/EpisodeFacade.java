@@ -22,6 +22,7 @@ public interface EpisodeFacade extends MovableChildFacade<Episode, Season> {
      * <li>Season doesn't exist in data storage</li>
      * <li>Episode is null</li>
      * <li>Episode ID isn't null</li>
+     * <li>Episode position isn't null</li>
      * <li>Number of episode isn't positive number</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
@@ -43,6 +44,7 @@ public interface EpisodeFacade extends MovableChildFacade<Episode, Season> {
      * <ul>
      * <li>Episode is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Number of episode isn't positive number</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>

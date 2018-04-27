@@ -78,6 +78,7 @@ class PictureRepositoryIntegrationTest {
     @Test
     void add() {
         final Picture picture = PictureUtils.newPictureDomain(null);
+        picture.setPosition(PictureUtils.PICTURES_COUNT);
 
         pictureRepository.save(picture);
 
@@ -86,6 +87,7 @@ class PictureRepositoryIntegrationTest {
         final Picture addedPicture = PictureUtils.getPicture(entityManager, PictureUtils.PICTURES_COUNT + 1);
         final Picture expectedAddPicture = PictureUtils.newPictureDomain(null);
         expectedAddPicture.setId(PictureUtils.PICTURES_COUNT + 1);
+        expectedAddPicture.setPosition(PictureUtils.PICTURES_COUNT);
         PictureUtils.assertPictureDeepEquals(expectedAddPicture, addedPicture);
 
         assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT + 1);
@@ -116,6 +118,7 @@ class PictureRepositoryIntegrationTest {
     @DirtiesContext
     void remove() {
         final Picture picture = PictureUtils.newPictureDomain(null);
+        picture.setPosition(PictureUtils.PICTURES_COUNT);
         entityManager.persist(picture);
         assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT + 1);
 

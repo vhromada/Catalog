@@ -441,7 +441,6 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
     @Override
     protected void assertDataDeepEquals(final Season expected, final cz.vhromada.catalog.domain.Season actual) {
         SeasonUtils.assertSeasonDeepEquals(expected, actual);
-
     }
 
     @Override

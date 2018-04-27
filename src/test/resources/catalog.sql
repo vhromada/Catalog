@@ -1,3 +1,20 @@
+DROP TABLE IF EXISTS media;
+DROP TABLE IF EXISTS movie_subtitles;
+DROP TABLE IF EXISTS movie_media;
+DROP TABLE IF EXISTS movie_genres;
+DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS episodes;
+DROP TABLE IF EXISTS season_subtitles;
+DROP TABLE IF EXISTS seasons;
+DROP TABLE IF EXISTS tv_show_genres;
+DROP TABLE IF EXISTS tv_shows;
+DROP TABLE IF EXISTS genres;
+DROP TABLE IF EXISTS pictures;
+DROP TABLE IF EXISTS games;
+DROP TABLE IF EXISTS songs;
+DROP TABLE IF EXISTS music;
+DROP TABLE IF EXISTS programs;
+
 CREATE TABLE genres (
   id         INTEGER      NOT NULL CONSTRAINT genres_pk PRIMARY KEY,
   genre_name VARCHAR(200) NOT NULL CONSTRAINT genres_genre_name_ck CHECK (LENGTH(genre_name) > 0),
@@ -5,9 +22,9 @@ CREATE TABLE genres (
 );
 
 CREATE TABLE pictures (
-  id       INTEGER  NOT NULL CONSTRAINT pictures_pk PRIMARY KEY,
-  content  BLOB     NOT NULL,
-  position INTEGER  NOT NULL CONSTRAINT pictures_position_ck CHECK (position >= 0)
+  id       INTEGER NOT NULL CONSTRAINT pictures_pk PRIMARY KEY,
+  content  BLOB    NOT NULL,
+  position INTEGER NOT NULL CONSTRAINT pictures_position_ck CHECK (position >= 0)
 );
 
 CREATE TABLE media (
@@ -140,6 +157,18 @@ CREATE TABLE programs (
   note         VARCHAR(100) NOT NULL,
   position     INTEGER      NOT NULL CONSTRAINT programs_position_ck CHECK (position >= 0)
 );
+
+DROP SEQUENCE IF EXISTS movies_sq;
+DROP SEQUENCE IF EXISTS media_sq;
+DROP SEQUENCE IF EXISTS tv_shows_sq;
+DROP SEQUENCE IF EXISTS seasons_sq;
+DROP SEQUENCE IF EXISTS episodes_sq;
+DROP SEQUENCE IF EXISTS games_sq;
+DROP SEQUENCE IF EXISTS music_sq;
+DROP SEQUENCE IF EXISTS songs_sq;
+DROP SEQUENCE IF EXISTS programs_sq;
+DROP SEQUENCE IF EXISTS genres_sq;
+DROP SEQUENCE IF EXISTS pictures_sq;
 
 CREATE SEQUENCE movies_sq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE media_sq START WITH 1 INCREMENT BY 1;

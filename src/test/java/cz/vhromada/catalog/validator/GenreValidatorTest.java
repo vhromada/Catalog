@@ -83,6 +83,14 @@ class GenreValidatorTest extends MovableValidatorTest<Genre, cz.vhromada.catalog
     }
 
     @Override
+    protected Genre getValidatingData(final Integer id, final Integer position) {
+        final Genre genre = GenreUtils.newGenre(id);
+        genre.setPosition(position);
+
+        return genre;
+    }
+
+    @Override
     protected cz.vhromada.catalog.domain.Genre getRepositoryData(final Genre validatingData) {
         return GenreUtils.newGenreDomain(validatingData.getId());
     }

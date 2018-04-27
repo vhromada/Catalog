@@ -90,6 +90,7 @@ class MovieRepositoryIntegrationTest {
     @Test
     void add() {
         final Movie movie = MovieUtils.newMovieDomain(null);
+        movie.setPosition(MovieUtils.MOVIES_COUNT);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(null)));
         movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
 
@@ -100,6 +101,7 @@ class MovieRepositoryIntegrationTest {
         final Movie addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1);
         final Movie expectedAddedMovie = MovieUtils.newMovieDomain(null);
         expectedAddedMovie.setId(MovieUtils.MOVIES_COUNT + 1);
+        expectedAddedMovie.setPosition(MovieUtils.MOVIES_COUNT);
         expectedAddedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
         expectedAddedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         MovieUtils.assertMovieDeepEquals(expectedAddedMovie, addedMovie);

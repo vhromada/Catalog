@@ -77,6 +77,7 @@ class ProgramRepositoryIntegrationTest {
     @Test
     void add() {
         final Program program = ProgramUtils.newProgramDomain(null);
+        program.setPosition(ProgramUtils.PROGRAMS_COUNT);
 
         programRepository.save(program);
 
@@ -85,6 +86,7 @@ class ProgramRepositoryIntegrationTest {
         final Program addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1);
         final Program expectedAddProgram = ProgramUtils.newProgramDomain(null);
         expectedAddProgram.setId(ProgramUtils.PROGRAMS_COUNT + 1);
+        expectedAddProgram.setPosition(ProgramUtils.PROGRAMS_COUNT);
         ProgramUtils.assertProgramDeepEquals(expectedAddProgram, addedProgram);
 
         assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT + 1);

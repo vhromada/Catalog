@@ -502,6 +502,14 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
     }
 
     @Override
+    protected Show getValidatingData(final Integer id, final Integer position) {
+        final Show show = ShowUtils.newShow(id);
+        show.setPosition(position);
+
+        return show;
+    }
+
+    @Override
     protected cz.vhromada.catalog.domain.Show getRepositoryData(final Show validatingData) {
         return ShowUtils.newShowDomain(validatingData.getId());
     }

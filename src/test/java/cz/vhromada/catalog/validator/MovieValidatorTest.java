@@ -721,6 +721,14 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     @Override
+    protected Movie getValidatingData(final Integer id, final Integer position) {
+        final Movie movie = MovieUtils.newMovie(id);
+        movie.setPosition(position);
+
+        return movie;
+    }
+
+    @Override
     protected cz.vhromada.catalog.domain.Movie getRepositoryData(final Movie validatingData) {
         return MovieUtils.newMovieDomain(validatingData.getId());
     }

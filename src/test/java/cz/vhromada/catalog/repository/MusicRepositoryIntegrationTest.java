@@ -87,6 +87,7 @@ class MusicRepositoryIntegrationTest {
     @Test
     void add() {
         final Music music = MusicUtils.newMusicDomain(null);
+        music.setPosition(MusicUtils.MUSIC_COUNT);
 
         musicRepository.save(music);
 
@@ -95,6 +96,7 @@ class MusicRepositoryIntegrationTest {
         final Music addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1);
         final Music expectedAddMusic = MusicUtils.newMusicDomain(null);
         expectedAddMusic.setId(MusicUtils.MUSIC_COUNT + 1);
+        expectedAddMusic.setPosition(MusicUtils.MUSIC_COUNT);
         MusicUtils.assertMusicDeepEquals(expectedAddMusic, addedMusic);
 
         assertSoftly(softly -> {
@@ -130,6 +132,7 @@ class MusicRepositoryIntegrationTest {
     @Test
     void update_AddedSong() {
         final Song song = SongUtils.newSongDomain(null);
+        song.setPosition(SongUtils.SONGS_COUNT);
         entityManager.persist(song);
 
         final Music music = MusicUtils.getMusic(entityManager, 1);
@@ -140,6 +143,7 @@ class MusicRepositoryIntegrationTest {
         final Music updatedMusic = MusicUtils.getMusic(entityManager, 1);
         final Song expectedSong = SongUtils.newSongDomain(null);
         expectedSong.setId(SongUtils.SONGS_COUNT + 1);
+        expectedSong.setPosition(SongUtils.SONGS_COUNT);
         final Music expectedUpdatedMusic = MusicUtils.getMusic(1);
         expectedUpdatedMusic.getSongs().add(expectedSong);
         MusicUtils.assertMusicDeepEquals(expectedUpdatedMusic, updatedMusic);

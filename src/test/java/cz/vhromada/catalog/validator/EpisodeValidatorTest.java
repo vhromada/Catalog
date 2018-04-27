@@ -151,6 +151,14 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
     }
 
     @Override
+    protected Episode getValidatingData(final Integer id, final Integer position) {
+        final Episode episode = EpisodeUtils.newEpisode(id);
+        episode.setPosition(position);
+
+        return episode;
+    }
+
+    @Override
     protected Show getRepositoryData(final Episode validatingData) {
         return ShowUtils.newShowWithSeasons(validatingData.getId());
     }

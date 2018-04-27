@@ -65,6 +65,14 @@ class PictureValidatorTest extends MovableValidatorTest<Picture, cz.vhromada.cat
     }
 
     @Override
+    protected Picture getValidatingData(final Integer id, final Integer position) {
+        final Picture picture = PictureUtils.newPicture(id);
+        picture.setPosition(position);
+
+        return picture;
+    }
+
+    @Override
     protected cz.vhromada.catalog.domain.Picture getRepositoryData(final Picture validatingData) {
         return PictureUtils.newPictureDomain(validatingData.getId());
     }

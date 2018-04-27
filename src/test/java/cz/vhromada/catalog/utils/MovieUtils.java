@@ -67,8 +67,6 @@ public final class MovieUtils {
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
-        } else {
-            movie.setPosition(0);
         }
 
         return movie;
@@ -108,8 +106,6 @@ public final class MovieUtils {
         if (id != null) {
             movie.setId(id);
             movie.setPosition(id - 1);
-        } else {
-            movie.setPosition(0);
         }
 
         return movie;

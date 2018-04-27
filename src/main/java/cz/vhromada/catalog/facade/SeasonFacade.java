@@ -22,6 +22,7 @@ public interface SeasonFacade extends MovableChildFacade<Season, Show> {
      * <li>Show doesn't exist in data storage</li>
      * <li>Season is null</li>
      * <li>Season ID isn't null</li>
+     * <li>Season position isn't null</li>
      * <li>Number of season isn't positive number</li>
      * <li>Starting year isn't between 1940 and current year</li>
      * <li>Ending year isn't between 1940 and current year</li>
@@ -46,6 +47,7 @@ public interface SeasonFacade extends MovableChildFacade<Season, Show> {
      * <ul>
      * <li>Season is null</li>
      * <li>ID is null</li>
+     * <li>Position is null</li>
      * <li>Number of season isn't positive number</li>
      * <li>Starting year isn't between 1940 and current year</li>
      * <li>Ending year isn't between 1940 and current year</li>

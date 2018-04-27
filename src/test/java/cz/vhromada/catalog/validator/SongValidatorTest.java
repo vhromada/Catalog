@@ -129,6 +129,14 @@ class SongValidatorTest extends MovableValidatorTest<Song, Music> {
     }
 
     @Override
+    protected Song getValidatingData(final Integer id, final Integer position) {
+        final Song song = SongUtils.newSong(id);
+        song.setPosition(position);
+
+        return song;
+    }
+
+    @Override
     protected Music getRepositoryData(final Song validatingData) {
         return MusicUtils.newMusicWithSongs(validatingData.getId());
     }

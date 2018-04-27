@@ -2,7 +2,9 @@ package cz.vhromada.catalog.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cz.vhromada.catalog.domain.Episode;
 import cz.vhromada.catalog.domain.Genre;
+import cz.vhromada.catalog.domain.Season;
 import cz.vhromada.catalog.domain.Show;
 import cz.vhromada.catalog.repository.ShowRepository;
 import cz.vhromada.catalog.utils.ShowUtils;
@@ -79,6 +81,12 @@ class ShowServiceTest extends MovableServiceTest<Show> {
         for (final Genre genre : show.getGenres()) {
             genre.setId(1);
             genre.setPosition(0);
+        }
+        for (final Season season : show.getSeasons()) {
+            season.setPosition(0);
+            for (final Episode episode : season.getEpisodes()) {
+                episode.setPosition(0);
+            }
         }
         show.setPicture(1);
         show.setPosition(0);

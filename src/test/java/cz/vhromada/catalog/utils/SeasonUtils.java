@@ -62,8 +62,6 @@ public final class SeasonUtils {
         if (id != null) {
             season.setId(id);
             season.setPosition(id - 1);
-        } else {
-            season.setPosition(0);
         }
         season.setEpisodes(new ArrayList<>());
 
@@ -110,8 +108,6 @@ public final class SeasonUtils {
         if (id != null) {
             season.setId(id);
             season.setPosition(id - 1);
-        } else {
-            season.setPosition(0);
         }
 
         return season;

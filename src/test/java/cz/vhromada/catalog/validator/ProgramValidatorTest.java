@@ -180,6 +180,14 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
     }
 
     @Override
+    protected Program getValidatingData(final Integer id, final Integer position) {
+        final Program program = ProgramUtils.newProgram(id);
+        program.setPosition(position);
+
+        return program;
+    }
+
+    @Override
     protected cz.vhromada.catalog.domain.Program getRepositoryData(final Program validatingData) {
         return ProgramUtils.newProgramDomain(validatingData.getId());
     }

@@ -77,6 +77,7 @@ class GameRepositoryIntegrationTest {
     @Test
     void add() {
         final Game game = GameUtils.newGameDomain(null);
+        game.setPosition(GameUtils.GAMES_COUNT);
 
         gameRepository.save(game);
 
@@ -85,6 +86,7 @@ class GameRepositoryIntegrationTest {
         final Game addedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1);
         final Game expectedAddGame = GameUtils.newGameDomain(null);
         expectedAddGame.setId(GameUtils.GAMES_COUNT + 1);
+        expectedAddGame.setPosition(GameUtils.GAMES_COUNT);
         GameUtils.assertGameDeepEquals(expectedAddGame, addedGame);
 
         assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT + 1);

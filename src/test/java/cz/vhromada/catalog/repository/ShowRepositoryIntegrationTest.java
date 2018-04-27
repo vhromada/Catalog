@@ -92,6 +92,7 @@ class ShowRepositoryIntegrationTest {
     @Test
     void add() {
         final Show show = ShowUtils.newShowDomain(null);
+        show.setPosition(ShowUtils.SHOWS_COUNT);
         show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
 
         showRepository.save(show);
@@ -101,6 +102,7 @@ class ShowRepositoryIntegrationTest {
         final Show addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1);
         final Show expectedAddedShow = ShowUtils.newShowDomain(null);
         expectedAddedShow.setId(ShowUtils.SHOWS_COUNT + 1);
+        expectedAddedShow.setPosition(ShowUtils.SHOWS_COUNT);
         expectedAddedShow.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
         ShowUtils.assertShowDeepEquals(expectedAddedShow, addedShow);
 
@@ -139,6 +141,7 @@ class ShowRepositoryIntegrationTest {
     @Test
     void update_AddedSeason() {
         final Season season = SeasonUtils.newSeasonDomain(null);
+        season.setPosition(SeasonUtils.SEASONS_COUNT);
         entityManager.persist(season);
 
         final Show show = ShowUtils.getShow(entityManager, 1);
@@ -149,6 +152,7 @@ class ShowRepositoryIntegrationTest {
         final Show updatedShow = ShowUtils.getShow(entityManager, 1);
         final Season expectedSeason = SeasonUtils.newSeasonDomain(null);
         expectedSeason.setId(SeasonUtils.SEASONS_COUNT + 1);
+        expectedSeason.setPosition(SeasonUtils.SEASONS_COUNT);
         final Show expectedUpdatedShow = ShowUtils.getShow(1);
         expectedUpdatedShow.getSeasons().add(expectedSeason);
         ShowUtils.assertShowDeepEquals(expectedUpdatedShow, updatedShow);

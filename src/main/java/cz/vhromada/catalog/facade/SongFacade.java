@@ -22,6 +22,7 @@ public interface SongFacade extends MovableChildFacade<Song, Music> {
      * <li>Music doesn't exist in data storage</li>
      * <li>Song is null</li>
      * <li>Song ID isn't null</li>
+     * <li>Song position isn't null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>Length of song is negative value</li>
@@ -42,6 +43,7 @@ public interface SongFacade extends MovableChildFacade<Song, Music> {
      * <ul>
      * <li>Song is null</li>
      * <li>ID isn't null</li>
+     * <li>Position is null</li>
      * <li>Name is null</li>
      * <li>Name is empty string</li>
      * <li>Length of song is negative value</li>

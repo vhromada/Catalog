@@ -66,6 +66,9 @@ public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada
     @Override
     protected cz.vhromada.catalog.domain.Music getForAdd(final Music parent, final cz.vhromada.catalog.domain.Song data) {
         final cz.vhromada.catalog.domain.Music music = getMovableService().get(parent.getId());
+        if (music.getSongs() == null) {
+            music.setSongs(new ArrayList<>());
+        }
         music.getSongs().add(data);
 
         return music;

@@ -66,6 +66,9 @@ public class SeasonFacadeImpl extends AbstractMovableChildFacade<Season, cz.vhro
     @Override
     protected cz.vhromada.catalog.domain.Show getForAdd(final Show parent, final cz.vhromada.catalog.domain.Season data) {
         final cz.vhromada.catalog.domain.Show show = getMovableService().get(parent.getId());
+        if (show.getSeasons() == null) {
+            show.setSeasons(new ArrayList<>());
+        }
         show.getSeasons().add(data);
 
         return show;

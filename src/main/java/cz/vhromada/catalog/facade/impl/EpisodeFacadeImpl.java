@@ -78,8 +78,11 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
     @Override
     protected Show getForAdd(final Season parent, final cz.vhromada.catalog.domain.Episode data) {
         final Show show = getShow(parent);
-
-        getSeason(show, parent).getEpisodes().add(data);
+        final cz.vhromada.catalog.domain.Season season = getSeason(show, parent);
+        if (season.getEpisodes() == null) {
+            season.setEpisodes(new ArrayList<>());
+        }
+        season.getEpisodes().add(data);
 
         return show;
     }

@@ -61,10 +61,16 @@ public class ShowService extends AbstractMovableService<Show> {
         for (int i = 0; i < data.size(); i++) {
             final Show show = data.get(i);
             show.setPosition(i);
+            if (show.getSeasons() == null) {
+                show.setSeasons(new ArrayList<>());
+            }
             final List<Season> seasons = CollectionUtils.getSortedData(show.getSeasons());
             for (int j = 0; j < seasons.size(); j++) {
                 final Season season = seasons.get(j);
                 season.setPosition(j);
+                if (season.getEpisodes() == null) {
+                    season.setEpisodes(new ArrayList<>());
+                }
                 final List<Episode> episodes = CollectionUtils.getSortedData(season.getEpisodes());
                 for (int k = 0; k < episodes.size(); k++) {
                     final Episode episode = episodes.get(k);

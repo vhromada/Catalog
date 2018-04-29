@@ -1,5 +1,6 @@
 package cz.vhromada.catalog.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,9 @@ public class MusicService extends AbstractMovableService<Music> {
         for (int i = 0; i < data.size(); i++) {
             final Music music = data.get(i);
             music.setPosition(i);
+            if (music.getSongs() == null) {
+                music.setSongs(new ArrayList<>());
+            }
             final List<Song> songs = CollectionUtils.getSortedData(music.getSongs());
             for (int j = 0; j < songs.size(); j++) {
                 final Song song = songs.get(j);

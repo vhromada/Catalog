@@ -73,8 +73,6 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         super.setUp();
 
         pictureArgumentCaptor = ArgumentCaptor.forClass(Picture.class);
-        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
-        when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
     }
 
     /**
@@ -109,6 +107,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setCzechName(null);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -117,14 +117,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -136,6 +129,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setCzechName("");
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -144,14 +139,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -162,6 +150,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setOriginalName(null);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -170,14 +160,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -189,6 +172,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setOriginalName("");
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -197,14 +182,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -216,6 +194,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setCsfd(null);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -224,14 +204,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -242,6 +215,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -249,14 +224,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -267,6 +235,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setImdbCode(0);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -274,14 +244,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -292,6 +255,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -299,14 +264,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -318,6 +276,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setWikiEn(null);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -326,14 +286,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
                 "URL to english Wikipedia page about show mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -345,6 +298,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setWikiCz(null);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -353,14 +308,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
                 "URL to czech Wikipedia page about show mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -371,6 +319,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setNote(null);
 
+        initDeepMock(show);
+
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -378,14 +328,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -397,6 +340,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
 
         when(pictureValidator.validate(any(Picture.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
+        when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
 
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
@@ -405,14 +349,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        verifyDeepMock(show);
     }
 
     /**
@@ -422,6 +359,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
     void validate_Deep_NullGenres() {
         final Show show = getValidatingData(1);
         show.setGenres(null);
+
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
 
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
@@ -445,6 +384,8 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
     void validate_Deep_BadGenres() {
         final Show show = getValidatingData(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
+
+        initDeepMock(show);
 
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
 
@@ -472,6 +413,7 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
         final Show show = getValidatingData(1);
         show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(null)));
 
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
         when(genreValidator.validate(any(Genre.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
 
         final Result<Void> result = getMovableValidator().validate(show, ValidationType.DEEP);
@@ -481,14 +423,29 @@ class ShowValidatorTest extends MovableValidatorTest<Show, cz.vhromada.catalog.d
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
         });
 
+        verifyDeepMock(show);
+    }
+
+    @Override
+    protected void initDeepMock(final Show validatingData) {
+        super.initDeepMock(validatingData);
+
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
+        when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
+    }
+
+    @Override
+    protected void verifyDeepMock(final Show validatingData) {
+        super.verifyDeepMock(validatingData);
+
         verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : show.getGenres()) {
+        for (final Genre genre : validatingData.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
         verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getMovableService());
 
-        validatePicture(show, pictureArgumentCaptor.getValue());
+        validatePicture(validatingData, pictureArgumentCaptor.getValue());
     }
 
     @Override

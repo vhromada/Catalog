@@ -83,8 +83,6 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         super.setUp();
 
         pictureArgumentCaptor = ArgumentCaptor.forClass(Picture.class);
-        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
-        when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
     }
 
     /**
@@ -119,6 +117,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setCzechName(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -127,14 +127,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -146,6 +139,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setCzechName("");
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -154,14 +149,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -172,6 +160,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setOriginalName(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -180,14 +170,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -199,6 +182,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setOriginalName("");
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -207,14 +192,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -225,6 +203,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setYear(TestConstants.BAD_MIN_YEAR);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -232,14 +212,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -250,6 +223,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setYear(TestConstants.BAD_MAX_YEAR);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -257,14 +232,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_YEAR_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -275,6 +243,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setLanguage(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -283,14 +253,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -301,6 +264,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setSubtitles(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -309,14 +274,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -328,6 +286,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -336,14 +296,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -354,6 +307,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setMedia(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -361,14 +316,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -379,6 +327,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), null));
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -387,14 +337,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -408,6 +351,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), badMedium));
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -416,14 +361,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -435,6 +373,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setCsfd(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -443,14 +383,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -461,6 +394,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -468,14 +403,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -486,6 +414,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setImdbCode(0);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -493,14 +423,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -511,6 +434,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -518,14 +443,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(INVALID_IMDB_CODE_EVENT));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -537,6 +455,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setWikiEn(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -545,14 +465,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 "URL to english Wikipedia page about movie mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -564,6 +477,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setWikiCz(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -572,14 +487,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
                 "URL to czech Wikipedia page about movie mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -590,6 +498,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setNote(null);
 
+        initDeepMock(movie);
+
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
@@ -597,14 +507,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -616,6 +519,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
 
         when(pictureValidator.validate(any(Picture.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
+        when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
 
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
@@ -624,14 +528,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
         });
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
-        }
-        verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
-
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        verifyDeepMock(movie);
     }
 
     /**
@@ -641,6 +538,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     void validate_Deep_NullGenres() {
         final Movie movie = getValidatingData(1);
         movie.setGenres(null);
+
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
 
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
@@ -664,6 +563,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     void validate_Deep_BadGenres() {
         final Movie movie = getValidatingData(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
+
+        initDeepMock(movie);
 
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
 
@@ -691,6 +592,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Movie movie = getValidatingData(1);
         movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(null)));
 
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
         when(genreValidator.validate(any(Genre.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
 
         final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
@@ -700,14 +602,29 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(event));
         });
 
+        verifyDeepMock(movie);
+    }
+
+    @Override
+    protected void initDeepMock(final Movie validatingData) {
+        super.initDeepMock(validatingData);
+
+        when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
+        when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
+    }
+
+    @Override
+    protected void verifyDeepMock(final Movie validatingData) {
+        super.verifyDeepMock(validatingData);
+
         verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
-        for (final Genre genre : movie.getGenres()) {
+        for (final Genre genre : validatingData.getGenres()) {
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
         verifyNoMoreInteractions(pictureValidator, genreValidator);
         verifyZeroInteractions(getMovableService());
 
-        validatePicture(movie, pictureArgumentCaptor.getValue());
+        validatePicture(validatingData, pictureArgumentCaptor.getValue());
     }
 
     @Override

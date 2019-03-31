@@ -17,10 +17,10 @@ import cz.vhromada.catalog.utils.SongUtils;
 import cz.vhromada.common.Time;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
      * Instance of {@link MusicFacade}
      */
     @Autowired
-    private MusicFacade musicFacade;
+    private MusicFacade facade;
 
     /**
      * Test method for {@link MusicFacade#add(Music)} with music with null name.
@@ -56,7 +56,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(null);
         music.setName(null);
 
-        final Result<Void> result = musicFacade.add(music);
+        final Result<Void> result = facade.add(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -74,7 +74,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(null);
         music.setName("");
 
-        final Result<Void> result = musicFacade.add(music);
+        final Result<Void> result = facade.add(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -93,7 +93,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(null);
         music.setWikiEn(null);
 
-        final Result<Void> result = musicFacade.add(music);
+        final Result<Void> result = facade.add(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -112,7 +112,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(null);
         music.setWikiCz(null);
 
-        final Result<Void> result = musicFacade.add(music);
+        final Result<Void> result = facade.add(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -131,7 +131,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(null);
         music.setMediaCount(0);
 
-        final Result<Void> result = musicFacade.add(music);
+        final Result<Void> result = facade.add(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -150,7 +150,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(null);
         music.setNote(null);
 
-        final Result<Void> result = musicFacade.add(music);
+        final Result<Void> result = facade.add(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -168,7 +168,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(1);
         music.setName(null);
 
-        final Result<Void> result = musicFacade.update(music);
+        final Result<Void> result = facade.update(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -186,7 +186,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(1);
         music.setName("");
 
-        final Result<Void> result = musicFacade.update(music);
+        final Result<Void> result = facade.update(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -205,7 +205,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(1);
         music.setWikiEn(null);
 
-        final Result<Void> result = musicFacade.update(music);
+        final Result<Void> result = facade.update(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -224,7 +224,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(1);
         music.setWikiCz(null);
 
-        final Result<Void> result = musicFacade.update(music);
+        final Result<Void> result = facade.update(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -243,7 +243,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(1);
         music.setMediaCount(0);
 
-        final Result<Void> result = musicFacade.update(music);
+        final Result<Void> result = facade.update(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -262,7 +262,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Music music = newData(1);
         music.setNote(null);
 
-        final Result<Void> result = musicFacade.update(music);
+        final Result<Void> result = facade.update(music);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -279,7 +279,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     void getTotalMediaCount() {
         final int count = 60;
 
-        final Result<Integer> result = musicFacade.getTotalMediaCount();
+        final Result<Integer> result = facade.getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -297,7 +297,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     void getTotalLength() {
         final Time length = new Time(666);
 
-        final Result<Time> result = musicFacade.getTotalLength();
+        final Result<Time> result = facade.getTotalLength();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -313,7 +313,7 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
      */
     @Test
     void getSongsCount() {
-        final Result<Integer> result = musicFacade.getSongsCount();
+        final Result<Integer> result = facade.getSongsCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -325,8 +325,8 @@ class MusicFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     }
 
     @Override
-    protected MovableParentFacade<Music> getMovableParentFacade() {
-        return musicFacade;
+    protected MovableParentFacade<Music> getFacade() {
+        return facade;
     }
 
     @Override

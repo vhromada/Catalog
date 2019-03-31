@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.utils.ProgramUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class ProgramConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link ProgramConverter}
      */
     @Autowired
-    private Converter converter;
+    private ProgramConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link ProgramConverter#convert(Program)}.
      */
     @Test
-    void convertProgramDomain() {
-        final cz.vhromada.catalog.domain.Program programDomain = ProgramUtils.newProgramDomain(1);
-        final Program program = converter.convert(programDomain, Program.class);
-
-        ProgramUtils.assertProgramDeepEquals(program, programDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null program.
-     */
-    @Test
-    void convertProgramDomain_NullProgram() {
-        assertThat(converter.convert(null, Program.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertProgram() {
+    void convert() {
         final Program program = ProgramUtils.newProgram(1);
-        final cz.vhromada.catalog.domain.Program programDomain = converter.convert(program, cz.vhromada.catalog.domain.Program.class);
+        final cz.vhromada.catalog.domain.Program programDomain = converter.convert(program);
 
         ProgramUtils.assertProgramDeepEquals(program, programDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null program.
+     * Test method for {@link ProgramConverter#convertBack(cz.vhromada.catalog.domain.Program)}.
      */
     @Test
-    void convertProgram_NullProgram() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Program.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Program programDomain = ProgramUtils.newProgramDomain(1);
+        final Program program = converter.convertBack(programDomain);
+
+        ProgramUtils.assertProgramDeepEquals(program, programDomain);
     }
 
 }

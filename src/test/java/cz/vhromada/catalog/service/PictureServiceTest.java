@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cz.vhromada.catalog.domain.Picture;
 import cz.vhromada.catalog.repository.PictureRepository;
 import cz.vhromada.catalog.utils.PictureUtils;
+import cz.vhromada.common.repository.MovableRepository;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.service.MovableServiceTest;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * A class represents test for class {@link PictureService}.
@@ -24,7 +24,7 @@ class PictureServiceTest extends MovableServiceTest<Picture> {
      * Instance of {@link PictureRepository}
      */
     @Mock
-    private PictureRepository pictureRepository;
+    private PictureRepository repository;
 
     /**
      * Test method for {@link PictureService#PictureService(PictureRepository, Cache)} with null repository for pictures.
@@ -39,17 +39,17 @@ class PictureServiceTest extends MovableServiceTest<Picture> {
      */
     @Test
     void constructor_NullCache() {
-        assertThatThrownBy(() -> new PictureService(pictureRepository, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new PictureService(repository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected JpaRepository<Picture, Integer> getRepository() {
-        return pictureRepository;
+    protected MovableRepository<Picture> getRepository() {
+        return repository;
     }
 
     @Override
-    protected MovableService<Picture> getMovableService() {
-        return new PictureService(pictureRepository, getCache());
+    protected MovableService<Picture> getService() {
+        return new PictureService(repository, getCache());
     }
 
     @Override

@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.utils.SeasonUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class SeasonConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link SeasonConverter}
      */
     @Autowired
-    private Converter converter;
+    private SeasonConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link SeasonConverter#convert(Season)}.
      */
     @Test
-    void convertSeasonDomain() {
-        final cz.vhromada.catalog.domain.Season seasonDomain = SeasonUtils.newSeasonDomain(1);
-        final Season season = converter.convert(seasonDomain, Season.class);
-
-        SeasonUtils.assertSeasonDeepEquals(season, seasonDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null season.
-     */
-    @Test
-    void convertSeasonDomain_NullSeason() {
-        assertThat(converter.convert(null, Season.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertSeason() {
+    void convert() {
         final Season season = SeasonUtils.newSeason(1);
-        final cz.vhromada.catalog.domain.Season seasonDomain = converter.convert(season, cz.vhromada.catalog.domain.Season.class);
+        final cz.vhromada.catalog.domain.Season seasonDomain = converter.convert(season);
 
         SeasonUtils.assertSeasonDeepEquals(season, seasonDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null season.
+     * Test method for {@link SeasonConverter#convertBack(cz.vhromada.catalog.domain.Season)}.
      */
     @Test
-    void convertSeason_NullSeason() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Season.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Season seasonDomain = SeasonUtils.newSeasonDomain(1);
+        final Season season = converter.convertBack(seasonDomain);
+
+        SeasonUtils.assertSeasonDeepEquals(season, seasonDomain);
     }
 
 }

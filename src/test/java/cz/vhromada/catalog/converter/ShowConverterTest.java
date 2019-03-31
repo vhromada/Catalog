@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.utils.ShowUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class ShowConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link ShowConverter}
      */
     @Autowired
-    private Converter converter;
+    private ShowConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link ShowConverter#convert(Show)}.
      */
     @Test
-    void convertShowDomain() {
-        final cz.vhromada.catalog.domain.Show showDomain = ShowUtils.newShowDomain(1);
-        final Show show = converter.convert(showDomain, Show.class);
-
-        ShowUtils.assertShowDeepEquals(show, showDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null show.
-     */
-    @Test
-    void convertShowDomain_NullShow() {
-        assertThat(converter.convert(null, Show.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertShow() {
+    void convert() {
         final Show show = ShowUtils.newShow(1);
-        final cz.vhromada.catalog.domain.Show showDomain = converter.convert(show, cz.vhromada.catalog.domain.Show.class);
+        final cz.vhromada.catalog.domain.Show showDomain = converter.convert(show);
 
         ShowUtils.assertShowDeepEquals(show, showDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null show.
+     * Test method for {@link ShowConverter#convertBack(cz.vhromada.catalog.domain.Show)}.
      */
     @Test
-    void convertShow_NullShow() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Show.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Show showDomain = ShowUtils.newShowDomain(1);
+        final Show show = converter.convertBack(showDomain);
+
+        ShowUtils.assertShowDeepEquals(show, showDomain);
     }
 
 }

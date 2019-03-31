@@ -21,12 +21,11 @@ import cz.vhromada.common.Language;
 import cz.vhromada.common.facade.MovableChildFacade;
 import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest;
 import cz.vhromada.common.test.utils.TestConstants;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.utils.Constants;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +63,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
      * Instance of (@link SeasonFacade}
      */
     @Autowired
-    private SeasonFacade seasonFacade;
+    private SeasonFacade facade;
 
     /**
      * Test method for {@link SeasonFacade#add(Show, Season)} with season with not positive number of season.
@@ -74,7 +73,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(null);
         season.setNumber(0);
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -94,7 +93,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -113,7 +112,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -131,7 +130,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(null);
         season.setStartYear(season.getEndYear() + 1);
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -150,7 +149,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(null);
         season.setLanguage(null);
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -169,7 +168,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(null);
         season.setSubtitles(null);
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -186,9 +185,9 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
     @Test
     void add_BadSubtitles() {
         final Season season = newChildData(null);
-        season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
+        season.setSubtitles(Arrays.asList(Language.CZ, null));
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -207,7 +206,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(null);
         season.setNote(null);
 
-        final Result<Void> result = seasonFacade.add(ShowUtils.newShow(1), season);
+        final Result<Void> result = facade.add(ShowUtils.newShow(1), season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -225,7 +224,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(1);
         season.setNumber(0);
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -245,7 +244,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -264,7 +263,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -282,7 +281,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(1);
         season.setStartYear(season.getEndYear() + 1);
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -301,7 +300,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(1);
         season.setLanguage(null);
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -320,7 +319,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(1);
         season.setSubtitles(null);
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -337,9 +336,9 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
     @Test
     void update_BadSubtitles() {
         final Season season = newChildData(1);
-        season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
+        season.setSubtitles(Arrays.asList(Language.CZ, null));
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -358,7 +357,7 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
         final Season season = newChildData(1);
         season.setNote(null);
 
-        final Result<Void> result = seasonFacade.update(season);
+        final Result<Void> result = facade.update(season);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -369,8 +368,8 @@ class SeasonFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<
     }
 
     @Override
-    protected MovableChildFacade<Season, Show> getMovableChildFacade() {
-        return seasonFacade;
+    protected MovableChildFacade<Season, Show> getFacade() {
+        return facade;
     }
 
     @Override

@@ -2,6 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Collections;
 import java.util.List;
 
 import cz.vhromada.catalog.domain.Show;
@@ -10,12 +11,11 @@ import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.MovableChildFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.facade.MovableChildFacadeTest;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,8 @@ import org.junit.jupiter.api.Test;
 class EpisodeFacadeImplTest extends MovableChildFacadeTest<Episode, cz.vhromada.catalog.domain.Episode, Season, Show> {
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null service for shows.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null service for shows.
      */
     @Test
     void constructor_NullShowService() {
@@ -36,31 +37,32 @@ class EpisodeFacadeImplTest extends MovableChildFacadeTest<Episode, cz.vhromada.
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null converter.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null converter for episodes.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new EpisodeFacadeImpl(getMovableService(), null, getParentMovableValidator(), getChildMovableValidator()))
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getService(), null, getParentMovableValidator(), getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for
-     * season.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null validator for season.
      */
     @Test
     void constructor_NullSeasonValidator() {
-        assertThatThrownBy(() -> new EpisodeFacadeImpl(getMovableService(), getConverter(), null, getChildMovableValidator()))
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getService(), getConverter(), null, getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for
-     * episode.
+     * Test method for {@link EpisodeFacadeImpl#EpisodeFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null validator for episode.
      */
     @Test
     void constructor_NullEpisodeValidator() {
-        assertThatThrownBy(() -> new EpisodeFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), null))
+        assertThatThrownBy(() -> new EpisodeFacadeImpl(getService(), getConverter(), getParentMovableValidator(), null))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -70,8 +72,8 @@ class EpisodeFacadeImplTest extends MovableChildFacadeTest<Episode, cz.vhromada.
     }
 
     @Override
-    protected MovableChildFacade<Episode, Season> getMovableChildFacade() {
-        return new EpisodeFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), getChildMovableValidator());
+    protected MovableChildFacade<Episode, Season> getFacade() {
+        return new EpisodeFacadeImpl(getService(), getConverter(), getParentMovableValidator(), getChildMovableValidator());
     }
 
     @Override
@@ -90,7 +92,7 @@ class EpisodeFacadeImplTest extends MovableChildFacadeTest<Episode, cz.vhromada.
         season.setEpisodes(children);
 
         final Show show = ShowUtils.newShowDomain(id);
-        show.setSeasons(CollectionUtils.newList(season));
+        show.setSeasons(Collections.singletonList(season));
 
         return show;
     }

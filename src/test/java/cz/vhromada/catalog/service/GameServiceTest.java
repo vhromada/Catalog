@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cz.vhromada.catalog.domain.Game;
 import cz.vhromada.catalog.repository.GameRepository;
 import cz.vhromada.catalog.utils.GameUtils;
+import cz.vhromada.common.repository.MovableRepository;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.service.MovableServiceTest;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * A class represents test for class {@link GameService}.
@@ -24,7 +24,7 @@ class GameServiceTest extends MovableServiceTest<Game> {
      * Instance of {@link GameRepository}
      */
     @Mock
-    private GameRepository gameRepository;
+    private GameRepository repository;
 
     /**
      * Test method for {@link GameService#GameService(GameRepository, Cache)} with null repository for games.
@@ -39,17 +39,17 @@ class GameServiceTest extends MovableServiceTest<Game> {
      */
     @Test
     void constructor_NullCache() {
-        assertThatThrownBy(() -> new GameService(gameRepository, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new GameService(repository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected JpaRepository<Game, Integer> getRepository() {
-        return gameRepository;
+    protected MovableRepository<Game> getRepository() {
+        return repository;
     }
 
     @Override
-    protected MovableService<Game> getMovableService() {
-        return new GameService(gameRepository, getCache());
+    protected MovableService<Game> getService() {
+        return new GameService(repository, getCache());
     }
 
     @Override

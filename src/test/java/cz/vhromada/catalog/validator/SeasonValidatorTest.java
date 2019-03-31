@@ -21,14 +21,14 @@ import cz.vhromada.common.Movable;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.utils.TestConstants;
 import cz.vhromada.common.test.validator.MovableValidatorTest;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.utils.Constants;
+import cz.vhromada.common.validator.AbstractMovableValidator;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -60,7 +60,7 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
      * number of season.
      */
     @Test
@@ -68,7 +68,7 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
         final Season season = getValidatingData(1);
         season.setNumber(0);
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -76,12 +76,12 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad minimum starting
-     * year and bad minimum ending year.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad minimum
+     * starting year and bad minimum ending year.
      */
     @Test
     void validate_Deep_BadMinimumYears() {
@@ -89,19 +89,19 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
         season.setStartYear(TestConstants.BAD_MIN_YEAR);
         season.setEndYear(TestConstants.BAD_MIN_YEAR);
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad maximum starting
-     * year and bad maximum ending year.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with bad maximum
+     * starting year and bad maximum ending year.
      */
     @Test
     void validate_Deep_BadMaximumYears() {
@@ -109,26 +109,26 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
         season.setStartYear(TestConstants.BAD_MAX_YEAR);
         season.setEndYear(TestConstants.BAD_MAX_YEAR);
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Arrays.asList(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with starting year greater
-     * than ending year.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with starting year
+     * greater than ending year.
      */
     @Test
     void validate_Deep_BadYears() {
         final Season season = SeasonUtils.newSeason(1);
         season.setStartYear(season.getEndYear() + 1);
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -136,18 +136,18 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
                 "Starting year mustn't be greater than ending year.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null language.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null language.
      */
     @Test
     void validate_Deep_NullLanguage() {
         final Season season = getValidatingData(1);
         season.setLanguage(null);
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -155,18 +155,18 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null subtitles.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null subtitles.
      */
     @Test
     void validate_Deep_NullSubtitles() {
         final Season season = getValidatingData(1);
         season.setSubtitles(null);
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -174,19 +174,19 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with subtitles with
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with subtitles with
      * null value.
      */
     @Test
     void validate_Deep_BadSubtitles() {
         final Season season = getValidatingData(1);
-        season.setSubtitles(CollectionUtils.newList(Language.CZ, null));
+        season.setSubtitles(Arrays.asList(Language.CZ, null));
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -194,30 +194,30 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link SeasonValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null note.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
     void validate_Deep_NullNote() {
         final Season season = getValidatingData(1);
         season.setNote(null);
 
-        final Result<Void> result = getMovableValidator().validate(season, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(season, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     @Override
-    protected MovableValidator<Season> getMovableValidator() {
-        return new SeasonValidator(getMovableService());
+    protected MovableValidator<Season> getValidator() {
+        return new SeasonValidator(getService());
     }
 
     @Override
@@ -257,33 +257,33 @@ class SeasonValidatorTest extends MovableValidatorTest<Season, Show> {
     protected void initExistsMock(final Season validatingData, final boolean exists) {
         final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(show));
+        when(getService().getAll()).thenReturn(Collections.singletonList(show));
     }
 
     @Override
     protected void verifyExistsMock(final Season validatingData) {
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
     }
 
     @Override
     protected void initMovingMock(final Season validatingData, final boolean up, final boolean valid) {
         final List<cz.vhromada.catalog.domain.Season> seasons;
         if (up && valid || !up && !valid) {
-            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(validatingData.getId()));
+            seasons = List.of(SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(validatingData.getId()));
         } else {
-            seasons = CollectionUtils.newList(SeasonUtils.newSeasonDomain(validatingData.getId()), SeasonUtils.newSeasonDomain(Integer.MAX_VALUE));
+            seasons = List.of(SeasonUtils.newSeasonDomain(validatingData.getId()), SeasonUtils.newSeasonDomain(Integer.MAX_VALUE));
         }
         final Show show = ShowUtils.newShowDomain(1);
         show.setSeasons(seasons);
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(show));
+        when(getService().getAll()).thenReturn(Collections.singletonList(show));
     }
 
     @Override
     protected void verifyMovingMock(final Season validatingData) {
-        verify(getMovableService(), times(2)).getAll();
-        verifyNoMoreInteractions(getMovableService());
+        verify(getService(), times(2)).getAll();
+        verifyNoMoreInteractions(getService());
     }
 
 }

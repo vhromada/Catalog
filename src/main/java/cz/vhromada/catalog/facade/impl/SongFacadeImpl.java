@@ -8,11 +8,11 @@ import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.catalog.facade.SongFacade;
 import cz.vhromada.catalog.utils.CatalogUtils;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.AbstractMovableChildFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,23 +30,24 @@ public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada
      * Creates a new instance of SongFacadeImpl.
      *
      * @param musicService   service for music
-     * @param converter      converter
+     * @param converter      converter for songs
      * @param musicValidator validator for music
      * @param songValidator  validator for song
      * @throws IllegalArgumentException if service for music is null
-     *                                  or converter is null
+     *                                  or converter for songs is null
      *                                  or validator for music is null
      *                                  or validator for song is null
      */
     @Autowired
-    public SongFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Music> musicService, final Converter converter,
-        final MovableValidator<Music> musicValidator, final MovableValidator<Song> songValidator) {
+    public SongFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Music> musicService,
+        final MovableConverter<Song, cz.vhromada.catalog.domain.Song> converter, final MovableValidator<Music> musicValidator,
+        final MovableValidator<Song> songValidator) {
         super(musicService, converter, musicValidator, songValidator);
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Song getDomainData(final Integer id) {
-        final List<cz.vhromada.catalog.domain.Music> musicList = getMovableService().getAll();
+        final List<cz.vhromada.catalog.domain.Music> musicList = getService().getAll();
         for (final cz.vhromada.catalog.domain.Music music : musicList) {
             for (final cz.vhromada.catalog.domain.Song song : music.getSongs()) {
                 if (id.equals(song.getId())) {
@@ -60,16 +61,13 @@ public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada
 
     @Override
     protected List<cz.vhromada.catalog.domain.Song> getDomainList(final Music parent) {
-        return getMovableService().get(parent.getId()).getSongs();
+        return getService().get(parent.getId()).getSongs();
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Music getForAdd(final Music parent, final cz.vhromada.catalog.domain.Song data) {
-        final cz.vhromada.catalog.domain.Music music = getMovableService().get(parent.getId());
-        if (music.getSongs() == null) {
-            music.setSongs(new ArrayList<>());
-        }
-        music.getSongs().add(data);
+        final cz.vhromada.catalog.domain.Music music = getService().get(parent.getId());
+        addSongToMusic(music, data);
 
         return music;
     }
@@ -101,7 +99,7 @@ public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada
         final cz.vhromada.catalog.domain.Song songDomain = getSong(data.getId(), music);
 
         final cz.vhromada.catalog.domain.Song newSong = CatalogUtils.duplicateSong(songDomain);
-        music.getSongs().add(newSong);
+        addSongToMusic(music, newSong);
 
         return music;
     }
@@ -124,16 +122,6 @@ public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada
         return music;
     }
 
-    @Override
-    protected Class<Song> getEntityClass() {
-        return Song.class;
-    }
-
-    @Override
-    protected Class<cz.vhromada.catalog.domain.Song> getDomainClass() {
-        return cz.vhromada.catalog.domain.Song.class;
-    }
-
     /**
      * Returns music for song.
      *
@@ -141,7 +129,7 @@ public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada
      * @return music for song
      */
     private cz.vhromada.catalog.domain.Music getMusic(final Song song) {
-        for (final cz.vhromada.catalog.domain.Music music : getMovableService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Music music : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Song songDomain : music.getSongs()) {
                 if (song.getId().equals(songDomain.getId())) {
                     return music;
@@ -184,6 +172,18 @@ public class SongFacadeImpl extends AbstractMovableChildFacade<Song, cz.vhromada
                 songs.add(songDomain);
             }
         }
+        music.setSongs(songs);
+    }
+
+    /**
+     * Adds song to music.
+     *
+     * @param music music
+     * @param song  song
+     */
+    private static void addSongToMusic(final cz.vhromada.catalog.domain.Music music, final cz.vhromada.catalog.domain.Song song) {
+        final List<cz.vhromada.catalog.domain.Song> songs = music.getSongs() == null ? new ArrayList<>() : new ArrayList<>(music.getSongs());
+        songs.add(song);
         music.setSongs(songs);
     }
 

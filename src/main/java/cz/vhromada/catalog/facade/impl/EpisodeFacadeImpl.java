@@ -10,11 +10,11 @@ import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.facade.EpisodeFacade;
 import cz.vhromada.catalog.utils.CatalogUtils;
 import cz.vhromada.common.Movable;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.AbstractMovableChildFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,23 +31,23 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
      * Creates a new instance of EpisodeFacadeImpl.
      *
      * @param showService      service for shows
-     * @param converter        converter
+     * @param converter        converter for episodes
      * @param seasonValidator  validator for season
      * @param episodeValidator validator for episode
      * @throws IllegalArgumentException if service for shows is null
-     *                                  or converter is null
+     *                                  or converter for episodes is null
      *                                  or validator for season is null
      *                                  or validator for episode is null
      */
     @Autowired
-    public EpisodeFacadeImpl(final MovableService<Show> showService, final Converter converter, final MovableValidator<Season> seasonValidator,
-        final MovableValidator<Episode> episodeValidator) {
+    public EpisodeFacadeImpl(final MovableService<Show> showService, final MovableConverter<Episode, cz.vhromada.catalog.domain.Episode> converter,
+        final MovableValidator<Season> seasonValidator, final MovableValidator<Episode> episodeValidator) {
         super(showService, converter, seasonValidator, episodeValidator);
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Episode getDomainData(final Integer id) {
-        final List<Show> shows = getMovableService().getAll();
+        final List<Show> shows = getService().getAll();
         for (final Show show : shows) {
             for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 for (final cz.vhromada.catalog.domain.Episode episode : season.getEpisodes()) {
@@ -63,7 +63,7 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
 
     @Override
     protected List<cz.vhromada.catalog.domain.Episode> getDomainList(final Season parent) {
-        final List<Show> shows = getMovableService().getAll();
+        final List<Show> shows = getService().getAll();
         for (final Show show : shows) {
             for (final cz.vhromada.catalog.domain.Season seasonDomain : show.getSeasons()) {
                 if (parent.getId().equals(seasonDomain.getId())) {
@@ -79,10 +79,7 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
     protected Show getForAdd(final Season parent, final cz.vhromada.catalog.domain.Episode data) {
         final Show show = getShow(parent);
         final cz.vhromada.catalog.domain.Season season = getSeason(show, parent);
-        if (season.getEpisodes() == null) {
-            season.setEpisodes(new ArrayList<>());
-        }
-        season.getEpisodes().add(data);
+        addEpisodeToSeason(season, data);
 
         return show;
     }
@@ -115,7 +112,7 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
         final cz.vhromada.catalog.domain.Episode episodeDomain = getEpisode(data.getId(), show);
         final cz.vhromada.catalog.domain.Episode newEpisode = CatalogUtils.duplicateEpisode(episodeDomain);
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(show, data);
-        seasonDomain.getEpisodes().add(newEpisode);
+        addEpisodeToSeason(seasonDomain, newEpisode);
 
         return show;
     }
@@ -138,16 +135,6 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
         return show;
     }
 
-    @Override
-    protected Class<Episode> getEntityClass() {
-        return Episode.class;
-    }
-
-    @Override
-    protected Class<cz.vhromada.catalog.domain.Episode> getDomainClass() {
-        return cz.vhromada.catalog.domain.Episode.class;
-    }
-
     /**
      * Returns show for season.
      *
@@ -155,7 +142,7 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
      * @return show for season
      */
     private Show getShow(final Season season) {
-        for (final Show show : getMovableService().getAll()) {
+        for (final Show show : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Season seasonDomain : show.getSeasons()) {
                 if (season.getId().equals(seasonDomain.getId())) {
                     return show;
@@ -173,7 +160,7 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
      * @return show for episode
      */
     private Show getShow(final Episode episode) {
-        for (final Show show : getMovableService().getAll()) {
+        for (final Show show : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 for (final cz.vhromada.catalog.domain.Episode episodeDomain : season.getEpisodes()) {
                     if (episode.getId().equals(episodeDomain.getId())) {
@@ -259,6 +246,18 @@ public class EpisodeFacadeImpl extends AbstractMovableChildFacade<Episode, cz.vh
                 episodes.add(episodeDomain);
             }
         }
+        season.setEpisodes(episodes);
+    }
+
+    /**
+     * Adds episode to season.
+     *
+     * @param season  season
+     * @param episode episode
+     */
+    private static void addEpisodeToSeason(final cz.vhromada.catalog.domain.Season season, final cz.vhromada.catalog.domain.Episode episode) {
+        final List<cz.vhromada.catalog.domain.Episode> episodes = season.getEpisodes() == null ? new ArrayList<>() : new ArrayList<>(season.getEpisodes());
+        episodes.add(episode);
         season.setEpisodes(episodes);
     }
 

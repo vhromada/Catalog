@@ -13,10 +13,10 @@ import cz.vhromada.catalog.facade.GameFacade;
 import cz.vhromada.catalog.utils.GameUtils;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
      * Instance of {@link GameFacade}
      */
     @Autowired
-    private GameFacade gameFacade;
+    private GameFacade facade;
 
     /**
      * Test method for {@link GameFacade#add(Game)} with game with null name.
@@ -52,7 +52,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(null);
         game.setName(null);
 
-        final Result<Void> result = gameFacade.add(game);
+        final Result<Void> result = facade.add(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -70,7 +70,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(null);
         game.setName("");
 
-        final Result<Void> result = gameFacade.add(game);
+        final Result<Void> result = facade.add(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -89,7 +89,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(null);
         game.setWikiEn(null);
 
-        final Result<Void> result = gameFacade.add(game);
+        final Result<Void> result = facade.add(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -108,7 +108,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(null);
         game.setWikiCz(null);
 
-        final Result<Void> result = gameFacade.add(game);
+        final Result<Void> result = facade.add(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -127,7 +127,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(null);
         game.setMediaCount(0);
 
-        final Result<Void> result = gameFacade.add(game);
+        final Result<Void> result = facade.add(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -146,7 +146,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(null);
         game.setOtherData(null);
 
-        final Result<Void> result = gameFacade.add(game);
+        final Result<Void> result = facade.add(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -165,7 +165,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(null);
         game.setNote(null);
 
-        final Result<Void> result = gameFacade.add(game);
+        final Result<Void> result = facade.add(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -183,7 +183,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(1);
         game.setName(null);
 
-        final Result<Void> result = gameFacade.update(game);
+        final Result<Void> result = facade.update(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -201,7 +201,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(1);
         game.setName("");
 
-        final Result<Void> result = gameFacade.update(game);
+        final Result<Void> result = facade.update(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -220,7 +220,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(1);
         game.setWikiEn(null);
 
-        final Result<Void> result = gameFacade.update(game);
+        final Result<Void> result = facade.update(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -239,7 +239,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(1);
         game.setWikiCz(null);
 
-        final Result<Void> result = gameFacade.update(game);
+        final Result<Void> result = facade.update(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -258,7 +258,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(1);
         game.setMediaCount(0);
 
-        final Result<Void> result = gameFacade.update(game);
+        final Result<Void> result = facade.update(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -277,7 +277,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(1);
         game.setOtherData(null);
 
-        final Result<Void> result = gameFacade.update(game);
+        final Result<Void> result = facade.update(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -296,7 +296,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
         final Game game = newData(1);
         game.setNote(null);
 
-        final Result<Void> result = gameFacade.update(game);
+        final Result<Void> result = facade.update(game);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -311,7 +311,7 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
      */
     @Test
     void getTotalMediaCount() {
-        final Result<Integer> result = gameFacade.getTotalMediaCount();
+        final Result<Integer> result = facade.getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -323,8 +323,8 @@ class GameFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<G
     }
 
     @Override
-    protected MovableParentFacade<Game> getMovableParentFacade() {
-        return gameFacade;
+    protected MovableParentFacade<Game> getFacade() {
+        return facade;
     }
 
     @Override

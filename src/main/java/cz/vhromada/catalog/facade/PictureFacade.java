@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade;
 
 import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.common.facade.MovableParentFacade;
-import cz.vhromada.result.Result;
+import cz.vhromada.validation.result.Result;
 
 /**
  * An interface represents facade for pictures.

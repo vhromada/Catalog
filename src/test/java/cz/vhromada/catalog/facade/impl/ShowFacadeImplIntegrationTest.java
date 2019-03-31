@@ -2,6 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,11 +23,10 @@ import cz.vhromada.common.Time;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
 import cz.vhromada.common.test.utils.TestConstants;
-import cz.vhromada.common.utils.CollectionUtils;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
      * Instance of {@link ShowFacade}
      */
     @Autowired
-    private ShowFacade showFacade;
+    private ShowFacade facade;
 
     /**
      * Test method for {@link ShowFacade#add(Show)} with show with null czech name.
@@ -68,7 +68,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setCzechName(null);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -87,7 +87,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setCzechName("");
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -106,7 +106,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setOriginalName(null);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -125,7 +125,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setOriginalName("");
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -144,7 +144,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setCsfd(null);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -163,7 +163,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -181,7 +181,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setImdbCode(0);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -199,7 +199,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -217,7 +217,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setWikiEn(null);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -236,7 +236,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setWikiCz(null);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -255,7 +255,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setNote(null);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -273,7 +273,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setPicture(Integer.MAX_VALUE);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -292,7 +292,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         show.setGenres(null);
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -309,9 +309,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     @Test
     void add_BadGenres() {
         final Show show = newData(null);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
+        show.setGenres(Arrays.asList(GenreUtils.newGenre(1), null));
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -328,9 +328,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     @Test
     void add_NullGenreId() {
         final Show show = newData(null);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
+        show.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -348,9 +348,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        show.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -368,9 +368,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(null);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName("");
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        show.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -387,9 +387,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     @Test
     void add_NotExistingGenre() {
         final Show show = newData(null);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+        show.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
 
-        final Result<Void> result = showFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -408,7 +408,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setCzechName(null);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -427,7 +427,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setCzechName("");
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -446,7 +446,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setOriginalName(null);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -465,7 +465,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setOriginalName("");
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -484,7 +484,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setCsfd(null);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -503,7 +503,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -521,7 +521,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setImdbCode(0);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -539,7 +539,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -557,7 +557,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setWikiEn(null);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -576,7 +576,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setWikiCz(null);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -595,7 +595,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setPicture(Integer.MAX_VALUE);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -614,7 +614,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setNote(null);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -632,7 +632,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         show.setGenres(null);
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -649,9 +649,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     @Test
     void update_BadGenres() {
         final Show show = newData(1);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
+        show.setGenres(Arrays.asList(GenreUtils.newGenre(1), null));
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -668,9 +668,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     @Test
     void update_NullGenreId() {
         final Show show = newData(1);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
+        show.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -688,9 +688,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        show.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -708,9 +708,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = newData(1);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName("");
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        show.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -727,9 +727,9 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     @Test
     void update_NotExistingGenre() {
         final Show show = newData(1);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+        show.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
 
-        final Result<Void> result = showFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -747,7 +747,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     void getTotalLength() {
         final Time length = new Time(1998);
 
-        final Result<Time> result = showFacade.getTotalLength();
+        final Result<Time> result = facade.getTotalLength();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -763,7 +763,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
      */
     @Test
     void getSeasonsCount() {
-        final Result<Integer> result = showFacade.getSeasonsCount();
+        final Result<Integer> result = facade.getSeasonsCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -779,7 +779,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
      */
     @Test
     void getEpisodesCount() {
-        final Result<Integer> result = showFacade.getEpisodesCount();
+        final Result<Integer> result = facade.getEpisodesCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -791,8 +791,8 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     }
 
     @Override
-    protected MovableParentFacade<Show> getMovableParentFacade() {
-        return showFacade;
+    protected MovableParentFacade<Show> getFacade() {
+        return facade;
     }
 
     @Override
@@ -820,7 +820,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
         final Show show = ShowUtils.newShow(id);
         if (id == null || Integer.MAX_VALUE == id) {
             show.setPicture(1);
-            show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1)));
+            show.setGenres(Collections.singletonList(GenreUtils.newGenre(1)));
         }
 
         return show;
@@ -920,7 +920,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     @Override
     protected Show getUpdateData(final Integer id) {
         final Show show = super.getUpdateData(id);
-        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(4)));
+        show.setGenres(Collections.singletonList(GenreUtils.getGenre(4)));
 
         return show;
     }
@@ -929,7 +929,7 @@ class ShowFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<S
     protected cz.vhromada.catalog.domain.Show getExpectedAddData() {
         final cz.vhromada.catalog.domain.Show show = super.getExpectedAddData();
         show.setPicture(1);
-        show.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
+        show.setGenres(Collections.singletonList(GenreUtils.getGenreDomain(1)));
 
         return show;
     }

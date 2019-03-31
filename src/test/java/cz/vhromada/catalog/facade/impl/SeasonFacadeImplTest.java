@@ -9,11 +9,11 @@ import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.MovableChildFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.facade.MovableChildFacadeTest;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +25,8 @@ import org.junit.jupiter.api.Test;
 class SeasonFacadeImplTest extends MovableChildFacadeTest<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show> {
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null service for
-     * shows.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null service for shows.
      */
     @Test
     void constructor_NullShowService() {
@@ -35,35 +35,38 @@ class SeasonFacadeImplTest extends MovableChildFacadeTest<Season, cz.vhromada.ca
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null converter.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null converter for seasons.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new SeasonFacadeImpl(getMovableService(), null, getParentMovableValidator(), getChildMovableValidator()))
+        assertThatThrownBy(() -> new SeasonFacadeImpl(getService(), null, getParentMovableValidator(), getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for show.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null validator for show.
      */
     @Test
     void constructor_NullShowValidator() {
-        assertThatThrownBy(() -> new SeasonFacadeImpl(getMovableService(), getConverter(), null, getChildMovableValidator()))
+        assertThatThrownBy(() -> new SeasonFacadeImpl(getService(), getConverter(), null, getChildMovableValidator()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, Converter, MovableValidator, MovableValidator)} with null validator for season.
+     * Test method for {@link SeasonFacadeImpl#SeasonFacadeImpl(MovableService, MovableConverter, MovableValidator, MovableValidator)}
+     * with null validator for season.
      */
     @Test
     void constructor_NullSeasonValidator() {
-        assertThatThrownBy(() -> new SeasonFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), null))
+        assertThatThrownBy(() -> new SeasonFacadeImpl(getService(), getConverter(), getParentMovableValidator(), null))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected MovableChildFacade<Season, Show> getMovableChildFacade() {
-        return new SeasonFacadeImpl(getMovableService(), getConverter(), getParentMovableValidator(), getChildMovableValidator());
+    protected MovableChildFacade<Season, Show> getFacade() {
+        return new SeasonFacadeImpl(getService(), getConverter(), getParentMovableValidator(), getChildMovableValidator());
     }
 
     @Override

@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.entity.Music;
-import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for music.
@@ -58,7 +58,7 @@ public final class MusicUtils {
             music.setId(id);
             music.setPosition(id - 1);
         }
-        music.setSongs(new ArrayList<>());
+        music.setSongs(Collections.emptyList());
 
         return music;
     }
@@ -76,7 +76,7 @@ public final class MusicUtils {
         }
 
         final cz.vhromada.catalog.domain.Music music = newMusicDomain(id);
-        music.setSongs(CollectionUtils.newList(song));
+        music.setSongs(Collections.singletonList(song));
 
         return music;
     }

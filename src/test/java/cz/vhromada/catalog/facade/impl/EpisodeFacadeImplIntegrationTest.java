@@ -17,10 +17,10 @@ import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.common.facade.MovableChildFacade;
 import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
      * Instance of (@link EpisodeFacade}
      */
     @Autowired
-    private EpisodeFacade episodeFacade;
+    private EpisodeFacade facade;
 
     /**
      * Test method for {@link EpisodeFacade#add(Season, Episode)} with episode with not positive number of episode.
@@ -56,7 +56,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(null);
         episode.setNumber(0);
 
-        final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
+        final Result<Void> result = facade.add(SeasonUtils.newSeason(1), episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -75,7 +75,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(null);
         episode.setName(null);
 
-        final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
+        final Result<Void> result = facade.add(SeasonUtils.newSeason(1), episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -93,7 +93,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(null);
         episode.setName("");
 
-        final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
+        final Result<Void> result = facade.add(SeasonUtils.newSeason(1), episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -112,7 +112,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(null);
         episode.setLength(-1);
 
-        final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
+        final Result<Void> result = facade.add(SeasonUtils.newSeason(1), episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -131,7 +131,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(null);
         episode.setNote(null);
 
-        final Result<Void> result = episodeFacade.add(SeasonUtils.newSeason(1), episode);
+        final Result<Void> result = facade.add(SeasonUtils.newSeason(1), episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -149,7 +149,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(1);
         episode.setNumber(0);
 
-        final Result<Void> result = episodeFacade.update(episode);
+        final Result<Void> result = facade.update(episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -168,7 +168,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(1);
         episode.setName(null);
 
-        final Result<Void> result = episodeFacade.update(episode);
+        final Result<Void> result = facade.update(episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -186,7 +186,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(1);
         episode.setName("");
 
-        final Result<Void> result = episodeFacade.update(episode);
+        final Result<Void> result = facade.update(episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -205,7 +205,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(1);
         episode.setLength(-1);
 
-        final Result<Void> result = episodeFacade.update(episode);
+        final Result<Void> result = facade.update(episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -224,7 +224,7 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
         final Episode episode = newChildData(1);
         episode.setNote(null);
 
-        final Result<Void> result = episodeFacade.update(episode);
+        final Result<Void> result = facade.update(episode);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -235,8 +235,8 @@ class EpisodeFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest
     }
 
     @Override
-    protected MovableChildFacade<Episode, Season> getMovableChildFacade() {
-        return episodeFacade;
+    protected MovableChildFacade<Episode, Season> getFacade() {
+        return facade;
     }
 
     @Override

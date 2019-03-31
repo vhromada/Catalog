@@ -2,6 +2,7 @@ package cz.vhromada.catalog.facade.impl;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,12 +22,11 @@ import cz.vhromada.common.Time;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
 import cz.vhromada.common.test.utils.TestConstants;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.utils.Constants;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
      * Instance of {@link MovieFacade}
      */
     @Autowired
-    private MovieFacade movieFacade;
+    private MovieFacade facade;
 
     /**
      * Test method for {@link MovieFacade#add(Movie)} with movie with null czech name.
@@ -74,7 +74,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setCzechName(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -93,7 +93,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setCzechName("");
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -112,7 +112,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setOriginalName(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -131,7 +131,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setOriginalName("");
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -150,7 +150,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setYear(TestConstants.BAD_MIN_YEAR);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -168,7 +168,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setYear(TestConstants.BAD_MAX_YEAR);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -186,7 +186,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setLanguage(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -205,7 +205,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setSubtitles(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -222,9 +222,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void add_BadSubtitles() {
         final Movie movie = newData(null);
-        movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
+        movie.setSubtitles(Arrays.asList(Language.CZ, null));
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -243,7 +243,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setMedia(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -259,9 +259,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void add_BadMedia() {
         final Movie movie = newData(null);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), null));
+        movie.setMedia(Arrays.asList(MediumUtils.newMedium(1), null));
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -280,9 +280,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Medium badMedium = MediumUtils.newMedium(Integer.MAX_VALUE);
         badMedium.setLength(-1);
         final Movie movie = newData(null);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), badMedium));
+        movie.setMedia(List.of(MediumUtils.newMedium(1), badMedium));
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -301,7 +301,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setCsfd(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -320,7 +320,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -338,7 +338,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setImdbCode(0);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -356,7 +356,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -374,7 +374,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setWikiEn(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -393,7 +393,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setWikiCz(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -412,7 +412,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setNote(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -430,7 +430,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setPicture(Integer.MAX_VALUE);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -449,7 +449,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         movie.setGenres(null);
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -466,9 +466,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void add_BadGenres() {
         final Movie movie = newData(null);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
+        movie.setGenres(Arrays.asList(GenreUtils.newGenre(1), null));
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -485,9 +485,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void add_NullGenreId() {
         final Movie movie = newData(null);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
+        movie.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -505,9 +505,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        movie.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -525,9 +525,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(null);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName("");
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        movie.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = movieFacade.add(movie);
+        final Result<Void> result = facade.add(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -544,9 +544,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void add_NotExistingGenre() {
         final Movie show = newData(null);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+        show.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
 
-        final Result<Void> result = movieFacade.add(show);
+        final Result<Void> result = facade.add(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -565,7 +565,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setCzechName(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -584,7 +584,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setCzechName("");
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -603,7 +603,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setOriginalName(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -622,7 +622,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setOriginalName("");
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -641,7 +641,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setYear(TestConstants.BAD_MIN_YEAR);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -659,7 +659,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setYear(TestConstants.BAD_MAX_YEAR);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -677,7 +677,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setLanguage(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -696,7 +696,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setSubtitles(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -713,9 +713,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void update_BadSubtitles() {
         final Movie movie = newData(1);
-        movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
+        movie.setSubtitles(Arrays.asList(Language.CZ, null));
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -734,7 +734,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setMedia(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -750,9 +750,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void update_BadMedia() {
         final Movie movie = newData(1);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), null));
+        movie.setMedia(Arrays.asList(MediumUtils.newMedium(1), null));
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -771,9 +771,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Medium badMedium = MediumUtils.newMedium(Integer.MAX_VALUE);
         badMedium.setLength(-1);
         final Movie movie = newData(1);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), badMedium));
+        movie.setMedia(List.of(MediumUtils.newMedium(1), badMedium));
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -792,7 +792,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setCsfd(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -811,7 +811,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setImdbCode(TestConstants.BAD_MIN_IMDB_CODE);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -829,7 +829,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setImdbCode(0);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -847,7 +847,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setImdbCode(TestConstants.BAD_MAX_IMDB_CODE);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -865,7 +865,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setWikiEn(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -884,7 +884,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setWikiCz(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -903,7 +903,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setNote(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -921,7 +921,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setPicture(Integer.MAX_VALUE);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -940,7 +940,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         movie.setGenres(null);
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -957,9 +957,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void update_BadGenres() {
         final Movie movie = newData(1);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
+        movie.setGenres(Arrays.asList(GenreUtils.newGenre(1), null));
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -976,9 +976,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void update_NullGenreId() {
         final Movie movie = newData(1);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
+        movie.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(null)));
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -996,9 +996,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName(null);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        movie.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -1016,9 +1016,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = newData(1);
         final Genre badGenre = GenreUtils.newGenre(1);
         badGenre.setName("");
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), badGenre));
+        movie.setGenres(List.of(GenreUtils.newGenre(1), badGenre));
 
-        final Result<Void> result = movieFacade.update(movie);
+        final Result<Void> result = facade.update(movie);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -1035,9 +1035,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Test
     void update_NotExistingGenre() {
         final Movie show = newData(1);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
+        show.setGenres(List.of(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)));
 
-        final Result<Void> result = movieFacade.update(show);
+        final Result<Void> result = facade.update(show);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -1053,7 +1053,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
      */
     @Test
     void getTotalMediaCount() {
-        final Result<Integer> result = movieFacade.getTotalMediaCount();
+        final Result<Integer> result = facade.getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -1069,7 +1069,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
      */
     @Test
     void getTotalLength() {
-        final Result<Time> result = movieFacade.getTotalLength();
+        final Result<Time> result = facade.getTotalLength();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -1082,8 +1082,8 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
 
 
     @Override
-    protected MovableParentFacade<Movie> getMovableParentFacade() {
-        return movieFacade;
+    protected MovableParentFacade<Movie> getFacade() {
+        return facade;
     }
 
     @Override
@@ -1111,7 +1111,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Movie movie = MovieUtils.newMovie(id);
         if (id == null || Integer.MAX_VALUE == id) {
             movie.setPicture(1);
-            movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1)));
+            movie.setGenres(Collections.singletonList(GenreUtils.newGenre(1)));
         }
 
         return movie;
@@ -1212,7 +1212,7 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Override
     protected Movie getUpdateData(final Integer id) {
         final Movie movie = super.getUpdateData(id);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(1)));
+        movie.setGenres(Collections.singletonList(GenreUtils.getGenre(1)));
 
         return movie;
     }
@@ -1220,9 +1220,9 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     @Override
     protected cz.vhromada.catalog.domain.Movie getExpectedAddData() {
         final cz.vhromada.catalog.domain.Movie movie = super.getExpectedAddData();
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
+        movie.setMedia(Collections.singletonList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
         movie.setPicture(1);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
+        movie.setGenres(Collections.singletonList(GenreUtils.getGenreDomain(1)));
 
         return movie;
     }
@@ -1234,8 +1234,8 @@ class MovieFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         medium1.setId(MediumUtils.MEDIA_COUNT + 1);
         final cz.vhromada.catalog.domain.Medium medium2 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT);
         medium2.setId(MediumUtils.MEDIA_COUNT + 2);
-        movie.setMedia(CollectionUtils.newList(medium1, medium2));
-        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT - 1), GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT)));
+        movie.setMedia(List.of(medium1, medium2));
+        movie.setGenres(List.of(GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT - 1), GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT)));
 
         return movie;
     }

@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Picture;
 import cz.vhromada.catalog.utils.PictureUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class PictureConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link PictureConverter}
      */
     @Autowired
-    private Converter converter;
+    private PictureConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link PictureConverter#convert(Picture)}.
      */
     @Test
-    void convertPictureDomain() {
-        final cz.vhromada.catalog.domain.Picture pictureDomain = PictureUtils.newPictureDomain(1);
-        final Picture picture = converter.convert(pictureDomain, Picture.class);
-
-        PictureUtils.assertPictureDeepEquals(picture, pictureDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null picture.
-     */
-    @Test
-    void convertPictureDomain_NullPicture() {
-        assertThat(converter.convert(null, Picture.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertPicture() {
+    void convert() {
         final Picture picture = PictureUtils.newPicture(1);
-        final cz.vhromada.catalog.domain.Picture pictureDomain = converter.convert(picture, cz.vhromada.catalog.domain.Picture.class);
+        final cz.vhromada.catalog.domain.Picture pictureDomain = converter.convert(picture);
 
         PictureUtils.assertPictureDeepEquals(picture, pictureDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null picture.
+     * Test method for {@link PictureConverter#convertBack(cz.vhromada.catalog.domain.Picture)}.
      */
     @Test
-    void convertPicture_NullPicture() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Picture.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Picture pictureDomain = PictureUtils.newPictureDomain(1);
+        final Picture picture = converter.convertBack(pictureDomain);
+
+        PictureUtils.assertPictureDeepEquals(picture, pictureDomain);
     }
 
 }

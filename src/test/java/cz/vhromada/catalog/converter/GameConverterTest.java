@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Game;
 import cz.vhromada.catalog.utils.GameUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class GameConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link GameConverter}
      */
     @Autowired
-    private Converter converter;
+    private GameConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link GameConverter#convert(Game)}.
      */
     @Test
-    void convertGameDomain() {
-        final cz.vhromada.catalog.domain.Game gameDomain = GameUtils.newGameDomain(1);
-        final Game game = converter.convert(gameDomain, Game.class);
-
-        GameUtils.assertGameDeepEquals(game, gameDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null game.
-     */
-    @Test
-    void convertGameDomain_NullGame() {
-        assertThat(converter.convert(null, Game.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertGame() {
+    void convert() {
         final Game game = GameUtils.newGame(1);
-        final cz.vhromada.catalog.domain.Game gameDomain = converter.convert(game, cz.vhromada.catalog.domain.Game.class);
+        final cz.vhromada.catalog.domain.Game gameDomain = converter.convert(game);
 
         GameUtils.assertGameDeepEquals(game, gameDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null game.
+     * Test method for {@link GameConverter#convertBack(cz.vhromada.catalog.domain.Game)}.
      */
     @Test
-    void convertGame_NullGame() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Game.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Game gameDomain = GameUtils.newGameDomain(1);
+        final Game game = converter.convertBack(gameDomain);
+
+        GameUtils.assertGameDeepEquals(game, gameDomain);
     }
 
 }

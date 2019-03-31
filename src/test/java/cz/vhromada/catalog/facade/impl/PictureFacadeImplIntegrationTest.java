@@ -13,10 +13,10 @@ import cz.vhromada.catalog.facade.PictureFacade;
 import cz.vhromada.catalog.utils.PictureUtils;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ class PictureFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
      * Instance of {@link PictureFacade}
      */
     @Autowired
-    private PictureFacade pictureFacade;
+    private PictureFacade facade;
 
     /**
      * Test method for {@link PictureFacade#add(Picture)} with picture with null content.
@@ -61,7 +61,7 @@ class PictureFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Picture picture = newData(null);
         picture.setContent(null);
 
-        final Result<Void> result = pictureFacade.add(picture);
+        final Result<Void> result = facade.add(picture);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -80,7 +80,7 @@ class PictureFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Picture picture = newData(1);
         picture.setContent(null);
 
-        final Result<Void> result = pictureFacade.update(picture);
+        final Result<Void> result = facade.update(picture);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -92,8 +92,8 @@ class PictureFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
     }
 
     @Override
-    protected MovableParentFacade<Picture> getMovableParentFacade() {
-        return pictureFacade;
+    protected MovableParentFacade<Picture> getFacade() {
+        return facade;
     }
 
     @Override
@@ -137,6 +137,7 @@ class PictureFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
     }
 
     @Override
+    @SuppressWarnings("SqlWithoutWhere")
     protected void clearReferencedData() {
         final TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         entityManager.createNativeQuery("UPDATE movies SET picture = NULL").executeUpdate();

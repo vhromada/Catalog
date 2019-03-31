@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.utils.GenreUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class GenreConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link GenreConverter}
      */
     @Autowired
-    private Converter converter;
+    private GenreConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link GenreConverter#convert(Genre)}.
      */
     @Test
-    void convertGenreDomain() {
-        final cz.vhromada.catalog.domain.Genre genreDomain = GenreUtils.newGenreDomain(1);
-        final Genre genre = converter.convert(genreDomain, Genre.class);
-
-        GenreUtils.assertGenreDeepEquals(genre, genreDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null genre.
-     */
-    @Test
-    void convertGenreDomain_NullGenre() {
-        assertThat(converter.convert(null, Genre.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertGenre() {
+    void convert() {
         final Genre genre = GenreUtils.newGenre(1);
-        final cz.vhromada.catalog.domain.Genre genreDomain = converter.convert(genre, cz.vhromada.catalog.domain.Genre.class);
+        final cz.vhromada.catalog.domain.Genre genreDomain = converter.convert(genre);
 
         GenreUtils.assertGenreDeepEquals(genre, genreDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null genre.
+     * Test method for {@link GenreConverter#convertBack(cz.vhromada.catalog.domain.Genre)}.
      */
     @Test
-    void convertGenre_NullGenre() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Genre.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Genre genreDomain = GenreUtils.newGenreDomain(1);
+        final Genre genre = converter.convertBack(genreDomain);
+
+        GenreUtils.assertGenreDeepEquals(genre, genreDomain);
     }
 
 }

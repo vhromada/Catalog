@@ -9,9 +9,9 @@ import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.utils.Constants;
 import cz.vhromada.common.validator.AbstractMovableValidator;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class SeasonValidator extends AbstractMovableValidator<Season, Show> {
 
     @Override
     protected cz.vhromada.catalog.domain.Season getData(final Season data) {
-        for (final Show show : getMovableService().getAll()) {
+        for (final Show show : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 if (data.getId().equals(season.getId())) {
                     return season;
@@ -50,7 +50,7 @@ public class SeasonValidator extends AbstractMovableValidator<Season, Show> {
 
     @Override
     protected List<cz.vhromada.catalog.domain.Season> getList(final Season data) {
-        for (final Show show : getMovableService().getAll()) {
+        for (final Show show : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 if (data.getId().equals(season.getId())) {
                     return CollectionUtils.getSortedData(show.getSeasons());

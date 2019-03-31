@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.repository.GenreRepository;
 import cz.vhromada.catalog.utils.GenreUtils;
+import cz.vhromada.common.repository.MovableRepository;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.service.MovableServiceTest;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * A class represents test for class {@link GenreService}.
@@ -24,7 +24,7 @@ class GenreServiceTest extends MovableServiceTest<Genre> {
      * Instance of {@link GenreRepository}
      */
     @Mock
-    private GenreRepository genreRepository;
+    private GenreRepository repository;
 
     /**
      * Test method for {@link GenreService#GenreService(GenreRepository, Cache)} with null repository for genres.
@@ -39,17 +39,17 @@ class GenreServiceTest extends MovableServiceTest<Genre> {
      */
     @Test
     void constructor_NullCache() {
-        assertThatThrownBy(() -> new GenreService(genreRepository, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new GenreService(repository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected JpaRepository<Genre, Integer> getRepository() {
-        return genreRepository;
+    protected MovableRepository<Genre> getRepository() {
+        return repository;
     }
 
     @Override
-    protected MovableService<Genre> getMovableService() {
-        return new GenreService(genreRepository, getCache());
+    protected MovableService<Genre> getService() {
+        return new GenreService(repository, getCache());
     }
 
     @Override

@@ -8,9 +8,9 @@ import cz.vhromada.catalog.entity.Song;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.AbstractMovableValidator;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class SongValidator extends AbstractMovableValidator<Song, Music> {
 
     @Override
     protected cz.vhromada.catalog.domain.Song getData(final Song data) {
-        for (final Music music : getMovableService().getAll()) {
+        for (final Music music : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Song song : music.getSongs()) {
                 if (data.getId().equals(song.getId())) {
                     return song;
@@ -50,7 +50,7 @@ public class SongValidator extends AbstractMovableValidator<Song, Music> {
 
     @Override
     protected List<cz.vhromada.catalog.domain.Song> getList(final Song data) {
-        for (final Music music : getMovableService().getAll()) {
+        for (final Music music : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Song song : music.getSongs()) {
                 if (data.getId().equals(song.getId())) {
                     return CollectionUtils.getSortedData(music.getSongs());

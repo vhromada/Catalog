@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.catalog.utils.EpisodeUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class EpisodeConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link EpisodeConverter}
      */
     @Autowired
-    private Converter converter;
+    private EpisodeConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link EpisodeConverter#convert(Episode)}.
      */
     @Test
-    void convertEpisodeDomain() {
-        final cz.vhromada.catalog.domain.Episode episodeDomain = EpisodeUtils.newEpisodeDomain(1);
-        final Episode episode = converter.convert(episodeDomain, Episode.class);
-
-        EpisodeUtils.assertEpisodeDeepEquals(episode, episodeDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null episode.
-     */
-    @Test
-    void convertEpisodeDomain_NullEpisode() {
-        assertThat(converter.convert(null, Episode.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertEpisode() {
+    void convert() {
         final Episode episode = EpisodeUtils.newEpisode(1);
-        final cz.vhromada.catalog.domain.Episode episodeDomain = converter.convert(episode, cz.vhromada.catalog.domain.Episode.class);
+        final cz.vhromada.catalog.domain.Episode episodeDomain = converter.convert(episode);
 
         EpisodeUtils.assertEpisodeDeepEquals(episode, episodeDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null episode.
+     * Test method for {@link EpisodeConverter#convertBack(cz.vhromada.catalog.domain.Episode)}.
      */
     @Test
-    void convertEpisode_NullEpisode() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Episode.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Episode episodeDomain = EpisodeUtils.newEpisodeDomain(1);
+        final Episode episode = converter.convertBack(episodeDomain);
+
+        EpisodeUtils.assertEpisodeDeepEquals(episode, episodeDomain);
     }
 
 }

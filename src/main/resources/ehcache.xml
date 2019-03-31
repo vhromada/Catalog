@@ -6,7 +6,6 @@
     <diskStore path="java.io.tmpdir"/>
 
     <cache name="catalogCache"
-           eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="false"
            diskPersistent="false"

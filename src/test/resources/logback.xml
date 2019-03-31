@@ -8,7 +8,6 @@
     <logger name="org.springframework" level="warn"/>
     <logger name="org.hibernate" level="warn"/>
     <logger name="org.jboss.logging" level="warn"/>
-    <logger name="ma.glasnost.orika" level="warn"/>
     <logger name="net.sf.ehcache" level="warn"/>
     <logger name="ch.qos" level="warn"/>
     <logger name="cz.vhromada" level="all"/>

@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.entity.Show;
-import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for shows.
@@ -54,13 +54,13 @@ public final class ShowUtils {
     public static cz.vhromada.catalog.domain.Show newShowDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Show show = new cz.vhromada.catalog.domain.Show();
         updateShow(show);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenreDomain(id)));
+        show.setGenres(Collections.singletonList(GenreUtils.newGenreDomain(id)));
         show.setPicture(id);
         if (id != null) {
             show.setId(id);
             show.setPosition(id - 1);
         }
-        show.setSeasons(new ArrayList<>());
+        show.setSeasons(Collections.emptyList());
 
         return show;
     }
@@ -73,7 +73,7 @@ public final class ShowUtils {
      */
     public static cz.vhromada.catalog.domain.Show newShowWithSeasons(final Integer id) {
         final cz.vhromada.catalog.domain.Show show = newShowDomain(id);
-        show.setSeasons(CollectionUtils.newList(SeasonUtils.newSeasonWithEpisodes(id)));
+        show.setSeasons(Collections.singletonList(SeasonUtils.newSeasonWithEpisodes(id)));
 
         return show;
     }
@@ -103,7 +103,7 @@ public final class ShowUtils {
     public static Show newShow(final Integer id) {
         final Show show = new Show();
         updateShow(show);
-        show.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
+        show.setGenres(Collections.singletonList(GenreUtils.newGenre(id)));
         show.setPicture(id);
         if (id != null) {
             show.setId(id);
@@ -195,7 +195,7 @@ public final class ShowUtils {
     public static cz.vhromada.catalog.domain.Show updateShow(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Show show = getShow(entityManager, id);
         updateShow(show);
-        show.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
+        show.setGenres(new ArrayList<>(Collections.singletonList(GenreUtils.getGenreDomain(1))));
         show.setPosition(POSITION);
 
         return show;

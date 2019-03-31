@@ -15,10 +15,10 @@ import cz.vhromada.catalog.utils.MovieUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
      * Instance of {@link GenreFacade}
      */
     @Autowired
-    private GenreFacade genreFacade;
+    private GenreFacade facade;
 
     /**
      * Test method for {@link GenreFacade#add(Genre)} with genre with null name.
@@ -63,7 +63,7 @@ class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Genre genre = newData(null);
         genre.setName(null);
 
-        final Result<Void> result = genreFacade.add(genre);
+        final Result<Void> result = facade.add(genre);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -81,7 +81,7 @@ class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Genre genre = newData(null);
         genre.setName("");
 
-        final Result<Void> result = genreFacade.add(genre);
+        final Result<Void> result = facade.add(genre);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -100,7 +100,7 @@ class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Genre genre = newData(1);
         genre.setName(null);
 
-        final Result<Void> result = genreFacade.update(genre);
+        final Result<Void> result = facade.update(genre);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -118,7 +118,7 @@ class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
         final Genre genre = newData(1);
         genre.setName("");
 
-        final Result<Void> result = genreFacade.update(genre);
+        final Result<Void> result = facade.update(genre);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -130,8 +130,8 @@ class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     }
 
     @Override
-    protected MovableParentFacade<Genre> getMovableParentFacade() {
-        return genreFacade;
+    protected MovableParentFacade<Genre> getFacade() {
+        return facade;
     }
 
     @Override
@@ -175,6 +175,7 @@ class GenreFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTest<
     }
 
     @Override
+    @SuppressWarnings("SqlWithoutWhere")
     protected void clearReferencedData() {
         final TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         entityManager.createNativeQuery("DELETE FROM movie_genres").executeUpdate();

@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.catalog.utils.MovieUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class MovieConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link MovieConverter}
      */
     @Autowired
-    private Converter converter;
+    private MovieConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link MovieConverter#convert(Movie)}.
      */
     @Test
-    void convertMovieDomain() {
-        final cz.vhromada.catalog.domain.Movie movieDomain = MovieUtils.newMovieDomain(1);
-        final Movie movie = converter.convert(movieDomain, Movie.class);
-
-        MovieUtils.assertMovieDeepEquals(movie, movieDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null movie.
-     */
-    @Test
-    void convertMovieDomain_NullMovie() {
-        assertThat(converter.convert(null, Movie.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertMovie() {
+    void convert() {
         final Movie movie = MovieUtils.newMovie(1);
-        final cz.vhromada.catalog.domain.Movie movieDomain = converter.convert(movie, cz.vhromada.catalog.domain.Movie.class);
+        final cz.vhromada.catalog.domain.Movie movieDomain = converter.convert(movie);
 
         MovieUtils.assertMovieDeepEquals(movie, movieDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null movie.
+     * Test method for {@link MovieConverter#convertBack(cz.vhromada.catalog.domain.Movie)}.
      */
     @Test
-    void convertMovie_NullMovie() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Movie.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Movie movieDomain = MovieUtils.newMovieDomain(1);
+        final Movie movie = converter.convertBack(movieDomain);
+
+        MovieUtils.assertMovieDeepEquals(movie, movieDomain);
     }
 
 }

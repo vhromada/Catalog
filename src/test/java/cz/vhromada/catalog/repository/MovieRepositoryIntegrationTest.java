@@ -3,7 +3,7 @@ package cz.vhromada.catalog.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,7 +13,6 @@ import cz.vhromada.catalog.domain.Movie;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.MediumUtils;
 import cz.vhromada.catalog.utils.MovieUtils;
-import cz.vhromada.common.utils.CollectionUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,8 +90,8 @@ class MovieRepositoryIntegrationTest {
     void add() {
         final Movie movie = MovieUtils.newMovieDomain(null);
         movie.setPosition(MovieUtils.MOVIES_COUNT);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(null)));
-        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
+        movie.setMedia(Collections.singletonList(MediumUtils.newMediumDomain(null)));
+        movie.setGenres(Collections.singletonList(GenreUtils.getGenre(entityManager, 1)));
 
         movieRepository.save(movie);
 
@@ -102,8 +101,8 @@ class MovieRepositoryIntegrationTest {
         final Movie expectedAddedMovie = MovieUtils.newMovieDomain(null);
         expectedAddedMovie.setId(MovieUtils.MOVIES_COUNT + 1);
         expectedAddedMovie.setPosition(MovieUtils.MOVIES_COUNT);
-        expectedAddedMovie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
-        expectedAddedMovie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
+        expectedAddedMovie.setMedia(Collections.singletonList(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)));
+        expectedAddedMovie.setGenres(Collections.singletonList(GenreUtils.getGenreDomain(1)));
         MovieUtils.assertMovieDeepEquals(expectedAddedMovie, addedMovie);
 
         assertSoftly(softly -> {
@@ -171,7 +170,7 @@ class MovieRepositoryIntegrationTest {
         final Movie updatedMovie = MovieUtils.getMovie(entityManager, 1);
         final Movie expectedUpdatedMovie = MovieUtils.getMovie(1);
         MovieUtils.updateMovie(expectedUpdatedMovie);
-        expectedUpdatedMovie.setMedia(new ArrayList<>());
+        expectedUpdatedMovie.setMedia(Collections.emptyList());
         expectedUpdatedMovie.setPosition(MovieUtils.POSITION);
         MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie);
 

@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.common.Language;
-import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for seasons.
@@ -63,7 +63,7 @@ public final class SeasonUtils {
             season.setId(id);
             season.setPosition(id - 1);
         }
-        season.setEpisodes(new ArrayList<>());
+        season.setEpisodes(Collections.emptyList());
 
         return season;
     }
@@ -76,7 +76,7 @@ public final class SeasonUtils {
      */
     public static cz.vhromada.catalog.domain.Season newSeasonWithEpisodes(final Integer id) {
         final cz.vhromada.catalog.domain.Season season = newSeasonDomain(id);
-        season.setEpisodes(CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(id)));
+        season.setEpisodes(Collections.singletonList(EpisodeUtils.newEpisodeDomain(id)));
 
         return season;
     }
@@ -92,7 +92,7 @@ public final class SeasonUtils {
         season.setStartYear(START_YEAR);
         season.setEndYear(START_YEAR + 1);
         season.setLanguage(Language.SK);
-        season.setSubtitles(CollectionUtils.newList(Language.CZ));
+        season.setSubtitles(new ArrayList<>(Collections.singletonList(Language.CZ)));
         season.setNote("Note");
     }
 
@@ -124,7 +124,7 @@ public final class SeasonUtils {
         season.setStartYear(START_YEAR);
         season.setEndYear(START_YEAR + 1);
         season.setLanguage(Language.SK);
-        season.setSubtitles(CollectionUtils.newList(Language.CZ));
+        season.setSubtitles(Collections.singletonList(Language.CZ));
         season.setNote("Note");
     }
 

@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cz.vhromada.catalog.domain.Program;
 import cz.vhromada.catalog.repository.ProgramRepository;
 import cz.vhromada.catalog.utils.ProgramUtils;
+import cz.vhromada.common.repository.MovableRepository;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.service.MovableServiceTest;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * A class represents test for class {@link ProgramService}.
@@ -24,7 +24,7 @@ class ProgramServiceTest extends MovableServiceTest<Program> {
      * Instance of {@link ProgramRepository}
      */
     @Mock
-    private ProgramRepository programRepository;
+    private ProgramRepository repository;
 
     /**
      * Test method for {@link ProgramService#ProgramService(ProgramRepository, Cache)} with null repository for programs.
@@ -39,17 +39,17 @@ class ProgramServiceTest extends MovableServiceTest<Program> {
      */
     @Test
     void constructor_NullCache() {
-        assertThatThrownBy(() -> new ProgramService(programRepository, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ProgramService(repository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected JpaRepository<Program, Integer> getRepository() {
-        return programRepository;
+    protected MovableRepository<Program> getRepository() {
+        return repository;
     }
 
     @Override
-    protected MovableService<Program> getMovableService() {
-        return new ProgramService(programRepository, getCache());
+    protected MovableService<Program> getService() {
+        return new ProgramService(repository, getCache());
     }
 
     @Override

@@ -3,9 +3,9 @@ package cz.vhromada.catalog.validator;
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.validator.AbstractMovableValidator;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

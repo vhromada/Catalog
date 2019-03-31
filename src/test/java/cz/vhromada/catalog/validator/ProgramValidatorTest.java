@@ -11,12 +11,13 @@ import cz.vhromada.catalog.utils.ProgramUtils;
 import cz.vhromada.common.Movable;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.validator.MovableValidatorTest;
+import cz.vhromada.common.validator.AbstractMovableValidator;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,32 +37,32 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
     }
 
     /**
-     * Test method for {@link ProgramValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
     @Test
     void validate_Deep_NullName() {
         final Program program = getValidatingData(1);
         program.setName(null);
 
-        final Result<Void> result = getMovableValidator().validate(program, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(program, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
     @Test
     void validate_Deep_EmptyName() {
         final Program program = getValidatingData(1);
         program.setName("");
 
-        final Result<Void> result = getMovableValidator().validate(program, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(program, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -69,11 +70,11 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to english
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to english
      * Wikipedia page about program.
      */
     @Test
@@ -81,7 +82,7 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
         final Program program = getValidatingData(1);
         program.setWikiEn(null);
 
-        final Result<Void> result = getMovableValidator().validate(program, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(program, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -89,11 +90,11 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
                 "URL to english Wikipedia page about program mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to czech
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to czech
      * Wikipedia page about program.
      */
     @Test
@@ -101,7 +102,7 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
         final Program program = getValidatingData(1);
         program.setWikiCz(null);
 
-        final Result<Void> result = getMovableValidator().validate(program, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(program, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -109,11 +110,11 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
                 "URL to czech Wikipedia page about program mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
      * count of media.
      */
     @Test
@@ -121,7 +122,7 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
         final Program program = getValidatingData(1);
         program.setMediaCount(0);
 
-        final Result<Void> result = getMovableValidator().validate(program, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(program, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -129,18 +130,18 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null other data.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null other data.
      */
     @Test
     void validate_Deep_NullOtherData() {
         final Program program = getValidatingData(1);
         program.setOtherData(null);
 
-        final Result<Void> result = getMovableValidator().validate(program, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(program, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -148,30 +149,30 @@ class ProgramValidatorTest extends MovableValidatorTest<Program, cz.vhromada.cat
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link ProgramValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
     void validate_Deep_NullNote() {
         final Program program = getValidatingData(1);
         program.setNote(null);
 
-        final Result<Void> result = getMovableValidator().validate(program, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(program, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     @Override
-    protected MovableValidator<Program> getMovableValidator() {
-        return new ProgramValidator(getMovableService());
+    protected MovableValidator<Program> getValidator() {
+        return new ProgramValidator(getService());
     }
 
     @Override

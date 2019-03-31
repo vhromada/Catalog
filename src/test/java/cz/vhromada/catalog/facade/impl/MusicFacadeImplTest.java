@@ -15,14 +15,13 @@ import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.facade.MusicFacade;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.common.Time;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.facade.MovableParentFacadeTest;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -34,27 +33,27 @@ import org.junit.jupiter.api.Test;
 class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.catalog.domain.Music> {
 
     /**
-     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MovableService, Converter, MovableValidator)} with null service for music.
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null service for music.
      */
     @Test
     void constructor_NullMusicService() {
-        assertThatThrownBy(() -> new MusicFacadeImpl(null, getConverter(), getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MusicFacadeImpl(null, getConverter(), getValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MovableService, Converter, MovableValidator)} with null converter.
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null converter for music.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new MusicFacadeImpl(getMovableService(), null, getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MusicFacadeImpl(getService(), null, getValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MovableService, Converter, MovableValidator)} with null validator for music.
+     * Test method for {@link MusicFacadeImpl#MusicFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null validator for music.
      */
     @Test
     void constructor_NullMusicValidator() {
-        assertThatThrownBy(() -> new MusicFacadeImpl(getMovableService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MusicFacadeImpl(getService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -66,9 +65,9 @@ class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.cat
         final cz.vhromada.catalog.domain.Music music2 = MusicUtils.newMusicDomain(2);
         final int expectedCount = music1.getMediaCount() + music2.getMediaCount();
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(music1, music2));
+        when(getService().getAll()).thenReturn(List.of(music1, music2));
 
-        final Result<Integer> result = ((MusicFacade) getMovableParentFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((MusicFacade) getFacade()).getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -76,9 +75,9 @@ class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.cat
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
-        verifyZeroInteractions(getConverter(), getMovableValidator());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
+        verifyZeroInteractions(getConverter(), getValidator());
     }
 
     /**
@@ -86,7 +85,7 @@ class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.cat
      */
     @Test
     void getTotalLength() {
-        final List<cz.vhromada.catalog.domain.Music> musicList = CollectionUtils.newList(MusicUtils.newMusicWithSongs(1), MusicUtils.newMusicWithSongs(2));
+        final List<cz.vhromada.catalog.domain.Music> musicList = List.of(MusicUtils.newMusicWithSongs(1), MusicUtils.newMusicWithSongs(2));
         int totalLength = 0;
         for (final cz.vhromada.catalog.domain.Music music : musicList) {
             for (final Song song : music.getSongs()) {
@@ -95,9 +94,9 @@ class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.cat
         }
         final int expectedTotalLength = totalLength;
 
-        when(getMovableService().getAll()).thenReturn(musicList);
+        when(getService().getAll()).thenReturn(musicList);
 
-        final Result<Time> result = ((MusicFacade) getMovableParentFacade()).getTotalLength();
+        final Result<Time> result = ((MusicFacade) getFacade()).getTotalLength();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -105,9 +104,9 @@ class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.cat
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
-        verifyZeroInteractions(getConverter(), getMovableValidator());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
+        verifyZeroInteractions(getConverter(), getValidator());
     }
 
     /**
@@ -119,9 +118,9 @@ class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.cat
         final cz.vhromada.catalog.domain.Music music2 = MusicUtils.newMusicWithSongs(2);
         final int expectedSongs = music1.getSongs().size() + music2.getSongs().size();
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(music1, music2));
+        when(getService().getAll()).thenReturn(List.of(music1, music2));
 
-        final Result<Integer> result = ((MusicFacade) getMovableParentFacade()).getSongsCount();
+        final Result<Integer> result = ((MusicFacade) getFacade()).getSongsCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -129,28 +128,28 @@ class MusicFacadeImplTest extends MovableParentFacadeTest<Music, cz.vhromada.cat
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
-        verifyZeroInteractions(getConverter(), getMovableValidator());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
+        verifyZeroInteractions(getConverter(), getValidator());
     }
 
     @Override
     protected void initUpdateMock(final cz.vhromada.catalog.domain.Music domain) {
         super.initUpdateMock(domain);
 
-        when(getMovableService().get(any(Integer.class))).thenReturn(domain);
+        when(getService().get(any(Integer.class))).thenReturn(domain);
     }
 
     @Override
     protected void verifyUpdateMock(final Music entity, final cz.vhromada.catalog.domain.Music domain) {
         super.verifyUpdateMock(entity, domain);
 
-        verify(getMovableService()).get(entity.getId());
+        verify(getService()).get(entity.getId());
     }
 
     @Override
-    protected MovableParentFacade<Music> getMovableParentFacade() {
-        return new MusicFacadeImpl(getMovableService(), getConverter(), getMovableValidator());
+    protected MovableParentFacade<Music> getFacade() {
+        return new MusicFacadeImpl(getService(), getConverter(), getValidator());
     }
 
     @Override

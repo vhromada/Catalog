@@ -11,12 +11,13 @@ import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.common.Movable;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.validator.MovableValidatorTest;
+import cz.vhromada.common.validator.AbstractMovableValidator;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,32 +37,32 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MusicValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
     @Test
     void validate_Deep_NullName() {
         final Music music = getValidatingData(1);
         music.setName(null);
 
-        final Result<Void> result = getMovableValidator().validate(music, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(music, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with empty name.
      */
     @Test
     void validate_Deep_EmptyName() {
         final Music music = getValidatingData(1);
         music.setName("");
 
-        final Result<Void> result = getMovableValidator().validate(music, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(music, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -69,11 +70,11 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to english
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to english
      * Wikipedia page about music.
      */
     @Test
@@ -81,7 +82,7 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
         final Music music = getValidatingData(1);
         music.setWikiEn(null);
 
-        final Result<Void> result = getMovableValidator().validate(music, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(music, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -89,11 +90,11 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
                 "URL to english Wikipedia page about music mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to czech
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null URL to czech
      * Wikipedia page about music.
      */
     @Test
@@ -101,7 +102,7 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
         final Music music = getValidatingData(1);
         music.setWikiCz(null);
 
-        final Result<Void> result = getMovableValidator().validate(music, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(music, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -109,11 +110,11 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
                 "URL to czech Wikipedia page about music mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with not positive
      * count of media.
      */
     @Test
@@ -121,7 +122,7 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
         final Music music = getValidatingData(1);
         music.setMediaCount(0);
 
-        final Result<Void> result = getMovableValidator().validate(music, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(music, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -129,30 +130,30 @@ class MusicValidatorTest extends MovableValidatorTest<Music, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
-     * Test method for {@link MusicValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
     void validate_Deep_NullNote() {
         final Music music = getValidatingData(1);
         music.setNote(null);
 
-        final Result<Void> result = getMovableValidator().validate(music, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(music, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     @Override
-    protected MovableValidator<Music> getMovableValidator() {
-        return new MusicValidator(getMovableService());
+    protected MovableValidator<Music> getValidator() {
+        return new MusicValidator(getService());
     }
 
     @Override

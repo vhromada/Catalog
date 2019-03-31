@@ -133,6 +133,7 @@ class GenreRepositoryIntegrationTest {
      * Test method for remove all genres.
      */
     @Test
+    @SuppressWarnings("SqlWithoutWhere")
     void removeAll() {
         entityManager.createNativeQuery("DELETE FROM movie_genres").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM tv_show_genres").executeUpdate();

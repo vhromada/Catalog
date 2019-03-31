@@ -13,10 +13,10 @@ import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.validator.MovableValidatorTest;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,14 +43,14 @@ class GenreValidatorTest extends MovableValidatorTest<Genre, cz.vhromada.catalog
         final Genre genre = getValidatingData(1);
         genre.setName(null);
 
-        final Result<Void> result = getMovableValidator().validate(genre, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(genre, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
@@ -61,7 +61,7 @@ class GenreValidatorTest extends MovableValidatorTest<Genre, cz.vhromada.catalog
         final Genre genre = getValidatingData(1);
         genre.setName("");
 
-        final Result<Void> result = getMovableValidator().validate(genre, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(genre, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -69,12 +69,12 @@ class GenreValidatorTest extends MovableValidatorTest<Genre, cz.vhromada.catalog
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     @Override
-    protected MovableValidator<Genre> getMovableValidator() {
-        return new GenreValidator(getMovableService());
+    protected MovableValidator<Genre> getValidator() {
+        return new GenreValidator(getService());
     }
 
     @Override

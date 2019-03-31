@@ -9,9 +9,9 @@ import cz.vhromada.catalog.entity.Episode;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.AbstractMovableValidator;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class EpisodeValidator extends AbstractMovableValidator<Episode, Show> {
 
     @Override
     protected cz.vhromada.catalog.domain.Episode getData(final Episode data) {
-        for (final Show show : getMovableService().getAll()) {
+        for (final Show show : getService().getAll()) {
             for (final Season season : show.getSeasons()) {
                 for (final cz.vhromada.catalog.domain.Episode episode : season.getEpisodes()) {
                     if (data.getId().equals(episode.getId())) {
@@ -53,7 +53,7 @@ public class EpisodeValidator extends AbstractMovableValidator<Episode, Show> {
 
     @Override
     protected List<cz.vhromada.catalog.domain.Episode> getList(final Episode data) {
-        for (final Show show : getMovableService().getAll()) {
+        for (final Show show : getService().getAll()) {
             for (final Season season : show.getSeasons()) {
                 for (final cz.vhromada.catalog.domain.Episode episode : season.getEpisodes()) {
                     if (data.getId().equals(episode.getId())) {

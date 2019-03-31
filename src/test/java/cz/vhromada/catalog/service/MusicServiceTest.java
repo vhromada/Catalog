@@ -2,19 +2,20 @@ package cz.vhromada.catalog.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Collections;
+
 import cz.vhromada.catalog.domain.Music;
 import cz.vhromada.catalog.domain.Song;
 import cz.vhromada.catalog.repository.MusicRepository;
 import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
+import cz.vhromada.common.repository.MovableRepository;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.service.MovableServiceTest;
-import cz.vhromada.common.utils.CollectionUtils;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.cache.Cache;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * A class represents test for class {@link MusicService}.
@@ -27,7 +28,7 @@ class MusicServiceTest extends MovableServiceTest<Music> {
      * Instance of {@link MusicRepository}
      */
     @Mock
-    private MusicRepository musicRepository;
+    private MusicRepository repository;
 
     /**
      * Test method for {@link MusicService#MusicService(MusicRepository, Cache)} with null repository for music.
@@ -42,17 +43,17 @@ class MusicServiceTest extends MovableServiceTest<Music> {
      */
     @Test
     void constructor_NullCache() {
-        assertThatThrownBy(() -> new MusicService(musicRepository, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MusicService(repository, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Override
-    protected JpaRepository<Music, Integer> getRepository() {
-        return musicRepository;
+    protected MovableRepository<Music> getRepository() {
+        return repository;
     }
 
     @Override
-    protected MovableService<Music> getMovableService() {
-        return new MusicService(musicRepository, getCache());
+    protected MovableService<Music> getService() {
+        return new MusicService(repository, getCache());
     }
 
     @Override
@@ -106,7 +107,7 @@ class MusicServiceTest extends MovableServiceTest<Music> {
         if (id == null) {
             song.setPosition(0);
         }
-        music.setSongs(CollectionUtils.newList(song));
+        music.setSongs(Collections.singletonList(song));
 
         return music;
     }

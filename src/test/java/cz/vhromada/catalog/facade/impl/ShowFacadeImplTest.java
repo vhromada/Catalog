@@ -16,14 +16,13 @@ import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.ShowFacade;
 import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.common.Time;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.facade.MovableParentFacadeTest;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -35,27 +34,27 @@ import org.junit.jupiter.api.Test;
 class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catalog.domain.Show> {
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(MovableService, Converter, MovableValidator)} with null service for shows.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null service for shows.
      */
     @Test
     void constructor_NullShowService() {
-        assertThatThrownBy(() -> new ShowFacadeImpl(null, getConverter(), getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ShowFacadeImpl(null, getConverter(), getValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(MovableService, Converter, MovableValidator)} with null converter.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null converter for shows.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new ShowFacadeImpl(getMovableService(), null, getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ShowFacadeImpl(getService(), null, getValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(MovableService, Converter, MovableValidator)} with null validator for show.
+     * Test method for {@link ShowFacadeImpl#ShowFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null validator for show.
      */
     @Test
     void constructor_NullShowValidator() {
-        assertThatThrownBy(() -> new ShowFacadeImpl(getMovableService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ShowFacadeImpl(getService(), getConverter(), null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -63,7 +62,7 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
      */
     @Test
     void getTotalLength() {
-        final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
+        final List<cz.vhromada.catalog.domain.Show> showList = List.of(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
         int totalLength = 0;
         for (final cz.vhromada.catalog.domain.Show show : showList) {
             for (final Season season : show.getSeasons()) {
@@ -74,9 +73,9 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
         }
         final int expectedTotalLength = totalLength;
 
-        when(getMovableService().getAll()).thenReturn(showList);
+        when(getService().getAll()).thenReturn(showList);
 
-        final Result<Time> result = ((ShowFacade) getMovableParentFacade()).getTotalLength();
+        final Result<Time> result = ((ShowFacade) getFacade()).getTotalLength();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -84,9 +83,9 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
-        verifyZeroInteractions(getConverter(), getMovableValidator());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
+        verifyZeroInteractions(getConverter(), getValidator());
     }
 
     /**
@@ -98,9 +97,9 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
         final cz.vhromada.catalog.domain.Show show2 = ShowUtils.newShowWithSeasons(2);
         final int expectedSeasons = show1.getSeasons().size() + show2.getSeasons().size();
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(show1, show2));
+        when(getService().getAll()).thenReturn(List.of(show1, show2));
 
-        final Result<Integer> result = ((ShowFacade) getMovableParentFacade()).getSeasonsCount();
+        final Result<Integer> result = ((ShowFacade) getFacade()).getSeasonsCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -108,9 +107,9 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
-        verifyZeroInteractions(getConverter(), getMovableValidator());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
+        verifyZeroInteractions(getConverter(), getValidator());
     }
 
     /**
@@ -118,7 +117,7 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
      */
     @Test
     void getEpisodesCount() {
-        final List<cz.vhromada.catalog.domain.Show> showList = CollectionUtils.newList(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
+        final List<cz.vhromada.catalog.domain.Show> showList = List.of(ShowUtils.newShowWithSeasons(1), ShowUtils.newShowWithSeasons(2));
         int episodesCount = 0;
         for (final cz.vhromada.catalog.domain.Show show : showList) {
             for (final Season season : show.getSeasons()) {
@@ -127,9 +126,9 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
         }
         final int expectedEpisodes = episodesCount;
 
-        when(getMovableService().getAll()).thenReturn(showList);
+        when(getService().getAll()).thenReturn(showList);
 
-        final Result<Integer> result = ((ShowFacade) getMovableParentFacade()).getEpisodesCount();
+        final Result<Integer> result = ((ShowFacade) getFacade()).getEpisodesCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -137,28 +136,28 @@ class ShowFacadeImplTest extends MovableParentFacadeTest<Show, cz.vhromada.catal
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
-        verifyZeroInteractions(getConverter(), getMovableValidator());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
+        verifyZeroInteractions(getConverter(), getValidator());
     }
 
     @Override
     protected void initUpdateMock(final cz.vhromada.catalog.domain.Show domain) {
         super.initUpdateMock(domain);
 
-        when(getMovableService().get(any(Integer.class))).thenReturn(domain);
+        when(getService().get(any(Integer.class))).thenReturn(domain);
     }
 
     @Override
     protected void verifyUpdateMock(final Show entity, final cz.vhromada.catalog.domain.Show domain) {
         super.verifyUpdateMock(entity, domain);
 
-        verify(getMovableService()).get(entity.getId());
+        verify(getService()).get(entity.getId());
     }
 
     @Override
-    protected MovableParentFacade<Show> getMovableParentFacade() {
-        return new ShowFacadeImpl(getMovableService(), getConverter(), getMovableValidator());
+    protected MovableParentFacade<Show> getFacade() {
+        return new ShowFacadeImpl(getService(), getConverter(), getValidator());
     }
 
     @Override

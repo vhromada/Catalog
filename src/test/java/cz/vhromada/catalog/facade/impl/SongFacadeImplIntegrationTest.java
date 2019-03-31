@@ -15,10 +15,10 @@ import cz.vhromada.catalog.utils.MusicUtils;
 import cz.vhromada.catalog.utils.SongUtils;
 import cz.vhromada.common.facade.MovableChildFacade;
 import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
      * Instance of (@link SongFacade}
      */
     @Autowired
-    private SongFacade songFacade;
+    private SongFacade facade;
 
     /**
      * Test method for {@link SongFacade#add(Music, Song)} with song with null name.
@@ -54,7 +54,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(null);
         song.setName(null);
 
-        final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
+        final Result<Void> result = facade.add(MusicUtils.newMusic(1), song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -72,7 +72,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(null);
         song.setName("");
 
-        final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
+        final Result<Void> result = facade.add(MusicUtils.newMusic(1), song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -91,7 +91,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(null);
         song.setLength(-1);
 
-        final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
+        final Result<Void> result = facade.add(MusicUtils.newMusic(1), song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -110,7 +110,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(null);
         song.setNote(null);
 
-        final Result<Void> result = songFacade.add(MusicUtils.newMusic(1), song);
+        final Result<Void> result = facade.add(MusicUtils.newMusic(1), song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -128,7 +128,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(1);
         song.setName(null);
 
-        final Result<Void> result = songFacade.update(song);
+        final Result<Void> result = facade.update(song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -146,7 +146,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(1);
         song.setName("");
 
-        final Result<Void> result = songFacade.update(song);
+        final Result<Void> result = facade.update(song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -165,7 +165,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(1);
         song.setLength(-1);
 
-        final Result<Void> result = songFacade.update(song);
+        final Result<Void> result = facade.update(song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -184,7 +184,7 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
         final Song song = newChildData(1);
         song.setNote(null);
 
-        final Result<Void> result = songFacade.update(song);
+        final Result<Void> result = facade.update(song);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -195,8 +195,8 @@ class SongFacadeImplIntegrationTest extends MovableChildFacadeIntegrationTest<So
     }
 
     @Override
-    protected MovableChildFacade<Song, Music> getMovableChildFacade() {
-        return songFacade;
+    protected MovableChildFacade<Song, Music> getFacade() {
+        return facade;
     }
 
     @Override

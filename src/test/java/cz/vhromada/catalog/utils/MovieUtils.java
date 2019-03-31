@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,7 +13,6 @@ import cz.vhromada.catalog.domain.Genre;
 import cz.vhromada.catalog.domain.Medium;
 import cz.vhromada.catalog.entity.Movie;
 import cz.vhromada.common.Language;
-import cz.vhromada.common.utils.CollectionUtils;
 
 /**
  * A class represents utility class for movies.
@@ -61,8 +61,8 @@ public final class MovieUtils {
     public static cz.vhromada.catalog.domain.Movie newMovieDomain(final Integer id) {
         final cz.vhromada.catalog.domain.Movie movie = new cz.vhromada.catalog.domain.Movie();
         updateMovie(movie);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMediumDomain(id)));
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenreDomain(id)));
+        movie.setMedia(Collections.singletonList(MediumUtils.newMediumDomain(id)));
+        movie.setGenres(Collections.singletonList(GenreUtils.newGenreDomain(id)));
         movie.setPicture(id);
         if (id != null) {
             movie.setId(id);
@@ -83,7 +83,7 @@ public final class MovieUtils {
         movie.setOriginalName("origName");
         movie.setYear(START_YEAR);
         movie.setLanguage(Language.EN);
-        movie.setSubtitles(CollectionUtils.newList(Language.CZ));
+        movie.setSubtitles(new ArrayList<>(Collections.singletonList(Language.CZ)));
         movie.setCsfd("Csfd");
         movie.setImdbCode(1000);
         movie.setWikiEn("enWiki");
@@ -100,8 +100,8 @@ public final class MovieUtils {
     public static Movie newMovie(final Integer id) {
         final Movie movie = new Movie();
         updateMovie(movie);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(id)));
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(id)));
+        movie.setMedia(Collections.singletonList(MediumUtils.newMedium(id)));
+        movie.setGenres(Collections.singletonList(GenreUtils.newGenre(id)));
         movie.setPicture(id);
         if (id != null) {
             movie.setId(id);
@@ -122,7 +122,7 @@ public final class MovieUtils {
         movie.setOriginalName("origName");
         movie.setYear(START_YEAR);
         movie.setLanguage(Language.EN);
-        movie.setSubtitles(CollectionUtils.newList(Language.CZ));
+        movie.setSubtitles(Collections.singletonList(Language.CZ));
         movie.setCsfd("Csfd");
         movie.setImdbCode(1000);
         movie.setWikiEn("enWiki");
@@ -243,7 +243,7 @@ public final class MovieUtils {
     public static cz.vhromada.catalog.domain.Movie updateMovie(final EntityManager entityManager, final int id) {
         final cz.vhromada.catalog.domain.Movie movie = getMovie(entityManager, id);
         updateMovie(movie);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
+        movie.setGenres(new ArrayList<>(Collections.singletonList(GenreUtils.getGenreDomain(1))));
         movie.setPosition(POSITION);
 
         return movie;

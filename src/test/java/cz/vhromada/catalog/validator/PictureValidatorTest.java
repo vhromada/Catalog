@@ -11,12 +11,13 @@ import cz.vhromada.catalog.utils.PictureUtils;
 import cz.vhromada.common.Movable;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.validator.MovableValidatorTest;
+import cz.vhromada.common.validator.AbstractMovableValidator;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,14 +37,14 @@ class PictureValidatorTest extends MovableValidatorTest<Picture, cz.vhromada.cat
     }
 
     /**
-     * Test method for {@link PictureValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)} with {@link ValidationType#DEEP} with data with null name.
      */
     @Test
     void validate_Deep_NullContent() {
         final Picture picture = getValidatingData(1);
         picture.setContent(null);
 
-        final Result<Void> result = getMovableValidator().validate(picture, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(picture, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -51,12 +52,12 @@ class PictureValidatorTest extends MovableValidatorTest<Picture, cz.vhromada.cat
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "PICTURE_CONTENT_NULL", "Content mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     @Override
-    protected MovableValidator<Picture> getMovableValidator() {
-        return new PictureValidator(getMovableService());
+    protected MovableValidator<Picture> getValidator() {
+        return new PictureValidator(getService());
     }
 
     @Override

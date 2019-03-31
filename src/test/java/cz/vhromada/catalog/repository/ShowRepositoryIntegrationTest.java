@@ -3,6 +3,7 @@ package cz.vhromada.catalog.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,7 +15,6 @@ import cz.vhromada.catalog.utils.EpisodeUtils;
 import cz.vhromada.catalog.utils.GenreUtils;
 import cz.vhromada.catalog.utils.SeasonUtils;
 import cz.vhromada.catalog.utils.ShowUtils;
-import cz.vhromada.common.utils.CollectionUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,7 +93,7 @@ class ShowRepositoryIntegrationTest {
     void add() {
         final Show show = ShowUtils.newShowDomain(null);
         show.setPosition(ShowUtils.SHOWS_COUNT);
-        show.setGenres(CollectionUtils.newList(GenreUtils.getGenre(entityManager, 1)));
+        show.setGenres(Collections.singletonList(GenreUtils.getGenre(entityManager, 1)));
 
         showRepository.save(show);
 
@@ -103,7 +103,7 @@ class ShowRepositoryIntegrationTest {
         final Show expectedAddedShow = ShowUtils.newShowDomain(null);
         expectedAddedShow.setId(ShowUtils.SHOWS_COUNT + 1);
         expectedAddedShow.setPosition(ShowUtils.SHOWS_COUNT);
-        expectedAddedShow.setGenres(CollectionUtils.newList(GenreUtils.getGenreDomain(1)));
+        expectedAddedShow.setGenres(Collections.singletonList(GenreUtils.getGenreDomain(1)));
         ShowUtils.assertShowDeepEquals(expectedAddedShow, addedShow);
 
         assertSoftly(softly -> {

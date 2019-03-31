@@ -10,7 +10,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Medium;
@@ -24,14 +26,14 @@ import cz.vhromada.common.Movable;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.utils.TestConstants;
 import cz.vhromada.common.test.validator.MovableValidatorTest;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.utils.Constants;
+import cz.vhromada.common.validator.AbstractMovableValidator;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -98,7 +100,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
      */
     @Test
     void constructor_NullPictureValidator() {
-        assertThatThrownBy(() -> new MovieValidator(getMovableService(), null, genreValidator)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MovieValidator(getService(), null, genreValidator)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -106,11 +108,11 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
      */
     @Test
     void constructor_NullGenreValidator() {
-        assertThatThrownBy(() -> new MovieValidator(getMovableService(), pictureValidator, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new MovieValidator(getService(), pictureValidator, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null czech name.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null czech name.
      */
     @Test
     void validate_Deep_NullCzechName() {
@@ -119,7 +121,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -131,7 +133,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with empty string as
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with empty string as
      * czech name.
      */
     @Test
@@ -141,7 +143,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -153,7 +155,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null original name.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null original
+     * name.
      */
     @Test
     void validate_Deep_NullOriginalName() {
@@ -162,7 +165,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -174,7 +177,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with empty string as
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with empty string as
      * original name.
      */
     @Test
@@ -184,7 +187,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -196,7 +199,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad minimum year.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad minimum year.
      */
     @Test
     void validate_Deep_BadMinimumYear() {
@@ -205,7 +208,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -216,7 +219,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad maximum year.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad maximum year.
      */
     @Test
     void validate_Deep_BadMaximumYear() {
@@ -225,7 +228,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -236,7 +239,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null language.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null language.
      */
     @Test
     void validate_Deep_NullLanguage() {
@@ -245,7 +248,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -257,7 +260,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null subtitles.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null subtitles.
      */
     @Test
     void validate_Deep_NullSubtitles() {
@@ -266,7 +269,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -278,17 +281,17 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with subtitles with
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with subtitles with
      * null value.
      */
     @Test
     void validate_Deep_BadSubtitles() {
         final Movie movie = getValidatingData(1);
-        movie.setSubtitles(CollectionUtils.newList(Language.CZ, null));
+        movie.setSubtitles(Arrays.asList(Language.CZ, null));
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -300,7 +303,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null media.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null media.
      */
     @Test
     void validate_Deep_NullMedia() {
@@ -309,7 +312,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -320,16 +323,16 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data media with null value.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data media with null value.
      */
     @Test
     void validate_Deep_BadMedia() {
         final Movie movie = getValidatingData(1);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), null));
+        movie.setMedia(Arrays.asList(MediumUtils.newMedium(1), null));
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -341,7 +344,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with media with
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with media with
      * negative value as medium.
      */
     @Test
@@ -349,11 +352,11 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         final Medium badMedium = MediumUtils.newMedium(2);
         badMedium.setLength(-1);
         final Movie movie = getValidatingData(1);
-        movie.setMedia(CollectionUtils.newList(MediumUtils.newMedium(1), badMedium));
+        movie.setMedia(List.of(MediumUtils.newMedium(1), badMedium));
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -365,7 +368,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null URL to
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null URL to
      * ČSFD page about movie.
      */
     @Test
@@ -375,7 +378,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -387,7 +390,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad minimal IMDB code.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad minimal
+     * IMDB code.
      */
     @Test
     void validate_Deep_BadMinimalImdb() {
@@ -396,7 +400,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -407,7 +411,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad divider IMDB code.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad divider
+     * IMDB code.
      */
     @Test
     void validate_Deep_BadDividerImdb() {
@@ -416,7 +421,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -427,7 +432,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad maximal IMDB code.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad maximal
+     * IMDB code.
      */
     @Test
     void validate_Deep_BadMaximalImdb() {
@@ -436,7 +442,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -447,8 +453,8 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null URL to english
-     * Wikipedia page about movie.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null URL to
+     * english Wikipedia page about movie.
      */
     @Test
     void validate_Deep_NullWikiEn() {
@@ -457,7 +463,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -469,7 +475,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null URL to czech
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null URL to czech
      * Wikipedia page about movie.
      */
     @Test
@@ -479,7 +485,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -491,7 +497,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null note.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null note.
      */
     @Test
     void validate_Deep_NullNote() {
@@ -500,7 +506,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -511,7 +517,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad picture.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with bad picture.
      */
     @Test
     void validate_Deep_BadPicture() {
@@ -521,7 +527,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         when(pictureValidator.validate(any(Picture.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
         when(genreValidator.validate(any(Genre.class), any())).thenReturn(new Result<>());
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -532,7 +538,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null genres.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with null genres.
      */
     @Test
     void validate_Deep_NullGenres() {
@@ -541,7 +547,7 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -551,22 +557,23 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
 
         verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         verifyNoMoreInteractions(pictureValidator);
-        verifyZeroInteractions(getMovableService(), genreValidator);
+        verifyZeroInteractions(getService(), genreValidator);
 
         validatePicture(movie, pictureArgumentCaptor.getValue());
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with genres with null value.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with genres with
+     * null value.
      */
     @Test
     void validate_Deep_BadGenres() {
         final Movie movie = getValidatingData(1);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(1), null));
+        movie.setGenres(Arrays.asList(GenreUtils.newGenre(1), null));
 
         initDeepMock(movie);
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -577,25 +584,25 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
         verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS));
         verify(genreValidator).validate(movie.getGenres().get(0), ValidationType.EXISTS, ValidationType.DEEP);
         verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
 
         validatePicture(movie, pictureArgumentCaptor.getValue());
     }
 
     /**
-     * Test method for {@link MovieValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with genres with genre with
-     * invalid data.
+     * Test method for {@link AbstractMovableValidator#validate(Movable, ValidationType...)}} with {@link ValidationType#DEEP} with data with genres with genre
+     * with invalid data.
      */
     @Test
     void validate_Deep_GenresWithGenreWithInvalidData() {
         final Event event = new Event(Severity.ERROR, "GENRE_INVALID", "Invalid data");
         final Movie movie = getValidatingData(1);
-        movie.setGenres(CollectionUtils.newList(GenreUtils.newGenre(null)));
+        movie.setGenres(List.of(GenreUtils.newGenre(null)));
 
         when(pictureValidator.validate(any(Picture.class), any())).thenReturn(new Result<>());
         when(genreValidator.validate(any(Genre.class), any())).thenReturn(Result.error(event.getKey(), event.getMessage()));
 
-        final Result<Void> result = getMovableValidator().validate(movie, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(movie, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -622,14 +629,14 @@ class MovieValidatorTest extends MovableValidatorTest<Movie, cz.vhromada.catalog
             verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP);
         }
         verifyNoMoreInteractions(pictureValidator, genreValidator);
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
 
         validatePicture(validatingData, pictureArgumentCaptor.getValue());
     }
 
     @Override
-    protected MovableValidator<Movie> getMovableValidator() {
-        return new MovieValidator(getMovableService(), pictureValidator, genreValidator);
+    protected MovableValidator<Movie> getValidator() {
+        return new MovieValidator(getService(), pictureValidator, genreValidator);
     }
 
     @Override

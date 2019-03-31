@@ -20,13 +20,12 @@ import cz.vhromada.catalog.utils.ShowUtils;
 import cz.vhromada.common.Movable;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.validator.MovableValidatorTest;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +53,7 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
         final Episode episode = getValidatingData(1);
         episode.setNumber(0);
 
-        final Result<Void> result = getMovableValidator().validate(episode, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(episode, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -62,7 +61,7 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
@@ -73,14 +72,14 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
         final Episode episode = getValidatingData(1);
         episode.setName(null);
 
-        final Result<Void> result = getMovableValidator().validate(episode, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(episode, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
@@ -91,7 +90,7 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
         final Episode episode = getValidatingData(1);
         episode.setName("");
 
-        final Result<Void> result = getMovableValidator().validate(episode, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(episode, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -99,7 +98,7 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
@@ -111,7 +110,7 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
         final Episode episode = getValidatingData(1);
         episode.setLength(-1);
 
-        final Result<Void> result = getMovableValidator().validate(episode, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(episode, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -119,7 +118,7 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
                 .isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     /**
@@ -130,19 +129,19 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
         final Episode episode = getValidatingData(1);
         episode.setNote(null);
 
-        final Result<Void> result = getMovableValidator().validate(episode, ValidationType.DEEP);
+        final Result<Void> result = getValidator().validate(episode, ValidationType.DEEP);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
             softly.assertThat(result.getEvents()).isEqualTo(Collections.singletonList(new Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")));
         });
 
-        verifyZeroInteractions(getMovableService());
+        verifyZeroInteractions(getService());
     }
 
     @Override
-    protected MovableValidator<Episode> getMovableValidator() {
-        return new EpisodeValidator(getMovableService());
+    protected MovableValidator<Episode> getValidator() {
+        return new EpisodeValidator(getService());
     }
 
     @Override
@@ -182,35 +181,35 @@ class EpisodeValidatorTest extends MovableValidatorTest<Episode, Show> {
     protected void initExistsMock(final Episode validatingData, final boolean exists) {
         final Show show = exists ? ShowUtils.newShowWithSeasons(validatingData.getId()) : ShowUtils.newShowDomain(Integer.MAX_VALUE);
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(show));
+        when(getService().getAll()).thenReturn(Collections.singletonList(show));
     }
 
     @Override
     protected void verifyExistsMock(final Episode validatingData) {
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
     }
 
     @Override
     protected void initMovingMock(final Episode validatingData, final boolean up, final boolean valid) {
         final List<cz.vhromada.catalog.domain.Episode> episodes;
         if (up && valid || !up && !valid) {
-            episodes = CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(1), EpisodeUtils.newEpisodeDomain(validatingData.getId()));
+            episodes = List.of(EpisodeUtils.newEpisodeDomain(1), EpisodeUtils.newEpisodeDomain(validatingData.getId()));
         } else {
-            episodes = CollectionUtils.newList(EpisodeUtils.newEpisodeDomain(validatingData.getId()), EpisodeUtils.newEpisodeDomain(Integer.MAX_VALUE));
+            episodes = List.of(EpisodeUtils.newEpisodeDomain(validatingData.getId()), EpisodeUtils.newEpisodeDomain(Integer.MAX_VALUE));
         }
         final Season season = SeasonUtils.newSeasonDomain(1);
         season.setEpisodes(episodes);
         final Show show = ShowUtils.newShowDomain(1);
-        show.setSeasons(CollectionUtils.newList(season));
+        show.setSeasons(Collections.singletonList(season));
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(show));
+        when(getService().getAll()).thenReturn(Collections.singletonList(show));
     }
 
     @Override
     protected void verifyMovingMock(final Episode validatingData) {
-        verify(getMovableService(), times(2)).getAll();
-        verifyNoMoreInteractions(getMovableService());
+        verify(getService(), times(2)).getAll();
+        verifyNoMoreInteractions(getService());
     }
 
 }

@@ -7,17 +7,18 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import cz.vhromada.catalog.entity.Program;
 import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.utils.ProgramUtils;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.test.facade.MovableParentFacadeTest;
-import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,23 +30,23 @@ import org.junit.jupiter.api.Test;
 class ProgramFacadeImplTest extends MovableParentFacadeTest<Program, cz.vhromada.catalog.domain.Program> {
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, Converter, MovableValidator)} with null service for games.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null service for programs.
      */
     @Test
     void constructor_NullProgramService() {
-        assertThatThrownBy(() -> new ProgramFacadeImpl(null, getConverter(), getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ProgramFacadeImpl(null, getConverter(), getValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, Converter, MovableValidator)} with null converter.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null converter for programs.
      */
     @Test
     void constructor_NullConverter() {
-        assertThatThrownBy(() -> new ProgramFacadeImpl(getMovableService(), null, getMovableValidator())).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ProgramFacadeImpl(getService(), null, getValidator())).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
-     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, Converter, MovableValidator)} with null validator for game.
+     * Test method for {@link ProgramFacadeImpl#ProgramFacadeImpl(MovableService, MovableConverter, MovableValidator)} with null validator for program.
      */
     @Test
     void constructor_NullProgramValidator() {
@@ -60,9 +61,9 @@ class ProgramFacadeImplTest extends MovableParentFacadeTest<Program, cz.vhromada
         final cz.vhromada.catalog.domain.Program program2 = ProgramUtils.newProgramDomain(2);
         final int expectedCount = program1.getMediaCount() + program2.getMediaCount();
 
-        when(getMovableService().getAll()).thenReturn(CollectionUtils.newList(program1, program2));
+        when(getService().getAll()).thenReturn(List.of(program1, program2));
 
-        final Result<Integer> result = ((ProgramFacade) getMovableParentFacade()).getTotalMediaCount();
+        final Result<Integer> result = ((ProgramFacade) getFacade()).getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -70,14 +71,14 @@ class ProgramFacadeImplTest extends MovableParentFacadeTest<Program, cz.vhromada
             softly.assertThat(result.getEvents()).isEmpty();
         });
 
-        verify(getMovableService()).getAll();
-        verifyNoMoreInteractions(getMovableService());
-        verifyZeroInteractions(getConverter(), getMovableValidator());
+        verify(getService()).getAll();
+        verifyNoMoreInteractions(getService());
+        verifyZeroInteractions(getConverter(), getValidator());
     }
 
     @Override
-    protected MovableParentFacade<Program> getMovableParentFacade() {
-        return new ProgramFacadeImpl(getMovableService(), getConverter(), getMovableValidator());
+    protected MovableParentFacade<Program> getFacade() {
+        return new ProgramFacadeImpl(getService(), getConverter(), getValidator());
     }
 
     @Override

@@ -1,11 +1,8 @@
 package cz.vhromada.catalog.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cz.vhromada.catalog.CatalogTestConfiguration;
 import cz.vhromada.catalog.entity.Music;
 import cz.vhromada.catalog.utils.MusicUtils;
-import cz.vhromada.converter.Converter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,47 +20,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class MusicConverterTest {
 
     /**
-     * Instance of {@link Converter}
+     * Instance of {@link MusicConverter}
      */
     @Autowired
-    private Converter converter;
+    private MusicConverter converter;
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity.
+     * Test method for {@link MusicConverter#convert(Music)}.
      */
     @Test
-    void convertMusicDomain() {
-        final cz.vhromada.catalog.domain.Music musicDomain = MusicUtils.newMusicDomain(1);
-        final Music music = converter.convert(musicDomain, Music.class);
-
-        MusicUtils.assertMusicDeepEquals(music, musicDomain);
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from domain to entity with null music.
-     */
-    @Test
-    void convertMusicDomain_NullMusic() {
-        assertThat(converter.convert(null, Music.class)).isNull();
-    }
-
-    /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain.
-     */
-    @Test
-    void convertMusic() {
+    void convert() {
         final Music music = MusicUtils.newMusic(1);
-        final cz.vhromada.catalog.domain.Music musicDomain = converter.convert(music, cz.vhromada.catalog.domain.Music.class);
+        final cz.vhromada.catalog.domain.Music musicDomain = converter.convert(music);
 
         MusicUtils.assertMusicDeepEquals(music, musicDomain);
     }
 
     /**
-     * Test method for {@link Converter#convert(Object, Class)} from entity to domain with null music.
+     * Test method for {@link MusicConverter#convertBack(cz.vhromada.catalog.domain.Music)}.
      */
     @Test
-    void convertMusic_NullMusic() {
-        assertThat(converter.convert(null, cz.vhromada.catalog.domain.Music.class)).isNull();
+    void convertBack() {
+        final cz.vhromada.catalog.domain.Music musicDomain = MusicUtils.newMusicDomain(1);
+        final Music music = converter.convertBack(musicDomain);
+
+        MusicUtils.assertMusicDeepEquals(music, musicDomain);
     }
 
 }

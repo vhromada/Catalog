@@ -13,10 +13,10 @@ import cz.vhromada.catalog.facade.ProgramFacade;
 import cz.vhromada.catalog.utils.ProgramUtils;
 import cz.vhromada.common.facade.MovableParentFacade;
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
-import cz.vhromada.result.Status;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
+import cz.vhromada.validation.result.Status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
      * Instance of {@link ProgramFacade}
      */
     @Autowired
-    private ProgramFacade programFacade;
+    private ProgramFacade facade;
 
     /**
      * Test method for {@link ProgramFacade#add(Program)} with program with null name.
@@ -52,7 +52,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(null);
         program.setName(null);
 
-        final Result<Void> result = programFacade.add(program);
+        final Result<Void> result = facade.add(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -70,7 +70,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(null);
         program.setName("");
 
-        final Result<Void> result = programFacade.add(program);
+        final Result<Void> result = facade.add(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -89,7 +89,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(null);
         program.setWikiEn(null);
 
-        final Result<Void> result = programFacade.add(program);
+        final Result<Void> result = facade.add(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -108,7 +108,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(null);
         program.setWikiCz(null);
 
-        final Result<Void> result = programFacade.add(program);
+        final Result<Void> result = facade.add(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -127,7 +127,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(null);
         program.setMediaCount(0);
 
-        final Result<Void> result = programFacade.add(program);
+        final Result<Void> result = facade.add(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -146,7 +146,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(null);
         program.setOtherData(null);
 
-        final Result<Void> result = programFacade.add(program);
+        final Result<Void> result = facade.add(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -165,7 +165,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(null);
         program.setNote(null);
 
-        final Result<Void> result = programFacade.add(program);
+        final Result<Void> result = facade.add(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -183,7 +183,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(1);
         program.setName(null);
 
-        final Result<Void> result = programFacade.update(program);
+        final Result<Void> result = facade.update(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -201,7 +201,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(1);
         program.setName("");
 
-        final Result<Void> result = programFacade.update(program);
+        final Result<Void> result = facade.update(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -220,7 +220,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(1);
         program.setWikiEn(null);
 
-        final Result<Void> result = programFacade.update(program);
+        final Result<Void> result = facade.update(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -239,7 +239,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(1);
         program.setWikiCz(null);
 
-        final Result<Void> result = programFacade.update(program);
+        final Result<Void> result = facade.update(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -258,7 +258,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(1);
         program.setMediaCount(0);
 
-        final Result<Void> result = programFacade.update(program);
+        final Result<Void> result = facade.update(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -277,7 +277,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(1);
         program.setOtherData(null);
 
-        final Result<Void> result = programFacade.update(program);
+        final Result<Void> result = facade.update(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -296,7 +296,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
         final Program program = newData(1);
         program.setNote(null);
 
-        final Result<Void> result = programFacade.update(program);
+        final Result<Void> result = facade.update(program);
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.ERROR);
@@ -313,7 +313,7 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
     void getTotalMediaCount() {
         final int count = 600;
 
-        final Result<Integer> result = programFacade.getTotalMediaCount();
+        final Result<Integer> result = facade.getTotalMediaCount();
 
         assertSoftly(softly -> {
             softly.assertThat(result.getStatus()).isEqualTo(Status.OK);
@@ -325,8 +325,8 @@ class ProgramFacadeImplIntegrationTest extends MovableParentFacadeIntegrationTes
     }
 
     @Override
-    protected MovableParentFacade<Program> getMovableParentFacade() {
-        return programFacade;
+    protected MovableParentFacade<Program> getFacade() {
+        return facade;
     }
 
     @Override

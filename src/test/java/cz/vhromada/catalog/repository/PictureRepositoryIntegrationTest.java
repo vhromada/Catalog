@@ -133,6 +133,7 @@ class PictureRepositoryIntegrationTest {
      * Test method for remove all pictures.
      */
     @Test
+    @SuppressWarnings("SqlWithoutWhere")
     void removeAll() {
         entityManager.createNativeQuery("UPDATE movies SET picture = NULL").executeUpdate();
         entityManager.createNativeQuery("UPDATE tv_shows SET picture = NULL").executeUpdate();

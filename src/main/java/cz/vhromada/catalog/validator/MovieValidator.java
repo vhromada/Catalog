@@ -1,5 +1,7 @@
 package cz.vhromada.catalog.validator;
 
+import java.util.ArrayList;
+
 import cz.vhromada.catalog.entity.Genre;
 import cz.vhromada.catalog.entity.Medium;
 import cz.vhromada.catalog.entity.Movie;
@@ -9,9 +11,9 @@ import cz.vhromada.common.utils.Constants;
 import cz.vhromada.common.validator.AbstractMovableValidator;
 import cz.vhromada.common.validator.MovableValidator;
 import cz.vhromada.common.validator.ValidationType;
-import cz.vhromada.result.Event;
-import cz.vhromada.result.Result;
-import cz.vhromada.result.Severity;
+import cz.vhromada.validation.result.Event;
+import cz.vhromada.validation.result.Result;
+import cz.vhromada.validation.result.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -176,7 +178,7 @@ public class MovieValidator extends AbstractMovableValidator<Movie, cz.vhromada.
         if (data.getMedia() == null) {
             result.addEvent(new Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null."));
         } else {
-            if (data.getMedia().contains(null)) {
+            if (new ArrayList<>(data.getMedia()).contains(null)) {
                 result.addEvent(new Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value."));
             }
             for (final Medium medium : data.getMedia()) {
@@ -257,7 +259,7 @@ public class MovieValidator extends AbstractMovableValidator<Movie, cz.vhromada.
         if (data.getGenres() == null) {
             result.addEvent(new Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null."));
         } else {
-            if (data.getGenres().contains(null)) {
+            if (new ArrayList<>(data.getGenres()).contains(null)) {
                 result.addEvent(new Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value."));
             }
             for (final Genre genre : data.getGenres()) {

@@ -8,11 +8,11 @@ import cz.vhromada.catalog.entity.Season;
 import cz.vhromada.catalog.entity.Show;
 import cz.vhromada.catalog.facade.SeasonFacade;
 import cz.vhromada.catalog.utils.CatalogUtils;
+import cz.vhromada.common.converter.MovableConverter;
 import cz.vhromada.common.facade.AbstractMovableChildFacade;
 import cz.vhromada.common.service.MovableService;
 import cz.vhromada.common.utils.CollectionUtils;
 import cz.vhromada.common.validator.MovableValidator;
-import cz.vhromada.converter.Converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,23 +30,24 @@ public class SeasonFacadeImpl extends AbstractMovableChildFacade<Season, cz.vhro
      * Creates a new instance of SeasonFacadeImpl.
      *
      * @param showService     service for shows
-     * @param converter       converter
+     * @param converter       converter for seasons
      * @param showValidator   validator for show
      * @param seasonValidator validator for season
      * @throws IllegalArgumentException if service for shows is null
-     *                                  or converter is null
+     *                                  or converter for seasons is null
      *                                  or validator for show is null
      *                                  or validator for season is null
      */
     @Autowired
-    public SeasonFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Show> showService, final Converter converter,
-        final MovableValidator<Show> showValidator, final MovableValidator<Season> seasonValidator) {
+    public SeasonFacadeImpl(final MovableService<cz.vhromada.catalog.domain.Show> showService,
+        final MovableConverter<Season, cz.vhromada.catalog.domain.Season> converter, final MovableValidator<Show> showValidator,
+        final MovableValidator<Season> seasonValidator) {
         super(showService, converter, showValidator, seasonValidator);
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Season getDomainData(final Integer id) {
-        final List<cz.vhromada.catalog.domain.Show> shows = getMovableService().getAll();
+        final List<cz.vhromada.catalog.domain.Show> shows = getService().getAll();
         for (final cz.vhromada.catalog.domain.Show show : shows) {
             for (final cz.vhromada.catalog.domain.Season season : show.getSeasons()) {
                 if (id.equals(season.getId())) {
@@ -60,16 +61,13 @@ public class SeasonFacadeImpl extends AbstractMovableChildFacade<Season, cz.vhro
 
     @Override
     protected List<cz.vhromada.catalog.domain.Season> getDomainList(final Show parent) {
-        return getMovableService().get(parent.getId()).getSeasons();
+        return getService().get(parent.getId()).getSeasons();
     }
 
     @Override
     protected cz.vhromada.catalog.domain.Show getForAdd(final Show parent, final cz.vhromada.catalog.domain.Season data) {
-        final cz.vhromada.catalog.domain.Show show = getMovableService().get(parent.getId());
-        if (show.getSeasons() == null) {
-            show.setSeasons(new ArrayList<>());
-        }
-        show.getSeasons().add(data);
+        final cz.vhromada.catalog.domain.Show show = getService().get(parent.getId());
+        addSeasonToShow(show, data);
 
         return show;
     }
@@ -103,7 +101,7 @@ public class SeasonFacadeImpl extends AbstractMovableChildFacade<Season, cz.vhro
         final cz.vhromada.catalog.domain.Season seasonDomain = getSeason(data.getId(), show);
 
         final cz.vhromada.catalog.domain.Season newSeason = CatalogUtils.duplicateSeason(seasonDomain);
-        show.getSeasons().add(newSeason);
+        addSeasonToShow(show, newSeason);
 
         return show;
     }
@@ -126,16 +124,6 @@ public class SeasonFacadeImpl extends AbstractMovableChildFacade<Season, cz.vhro
         return show;
     }
 
-    @Override
-    protected Class<Season> getEntityClass() {
-        return Season.class;
-    }
-
-    @Override
-    protected Class<cz.vhromada.catalog.domain.Season> getDomainClass() {
-        return cz.vhromada.catalog.domain.Season.class;
-    }
-
     /**
      * Returns show for season.
      *
@@ -143,7 +131,7 @@ public class SeasonFacadeImpl extends AbstractMovableChildFacade<Season, cz.vhro
      * @return show for season
      */
     private cz.vhromada.catalog.domain.Show getShow(final Season season) {
-        for (final cz.vhromada.catalog.domain.Show show : getMovableService().getAll()) {
+        for (final cz.vhromada.catalog.domain.Show show : getService().getAll()) {
             for (final cz.vhromada.catalog.domain.Season seasonDomain : show.getSeasons()) {
                 if (season.getId().equals(seasonDomain.getId())) {
                     return show;
@@ -186,6 +174,18 @@ public class SeasonFacadeImpl extends AbstractMovableChildFacade<Season, cz.vhro
                 seasons.add(seasonDomain);
             }
         }
+        show.setSeasons(seasons);
+    }
+
+    /**
+     * Adds season to show.
+     *
+     * @param show   show
+     * @param season season
+     */
+    private static void addSeasonToShow(final cz.vhromada.catalog.domain.Show show, final cz.vhromada.catalog.domain.Season season) {
+        final List<cz.vhromada.catalog.domain.Season> seasons = show.getSeasons() == null ? new ArrayList<>() : new ArrayList<>(show.getSeasons());
+        seasons.add(season);
         show.setSeasons(seasons);
     }
 

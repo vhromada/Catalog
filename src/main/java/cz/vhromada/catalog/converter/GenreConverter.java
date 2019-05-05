@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class GenreConverter implements MovableConverter<Genre, cz.vhromada.catalog.domain.Genre> {
 
+    /**
+     * Mapper for genre
+     */
     private GenreMapper mapper;
 
+    /**
+     * Creates a new instance of GenreConverter.
+     */
     public GenreConverter() {
         this.mapper = Mappers.getMapper(GenreMapper.class);
     }

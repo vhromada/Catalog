@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class ProgramMapperTest {
 
+    /**
+     * Instance of {@link ProgramMapper}
+     */
     private ProgramMapper mapper;
 
     /**

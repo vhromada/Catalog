@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class EpisodeConverter implements MovableConverter<Episode, cz.vhromada.catalog.domain.Episode> {
 
+    /**
+     * Mapper for episode
+     */
     private EpisodeMapper mapper;
 
+    /**
+     * Creates a new instance of EpisodeConverter.
+     */
     public EpisodeConverter() {
         this.mapper = Mappers.getMapper(EpisodeMapper.class);
     }

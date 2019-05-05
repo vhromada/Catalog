@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeasonConverter implements MovableConverter<Season, cz.vhromada.catalog.domain.Season> {
 
+    /**
+     * Mapper for season
+     */
     private SeasonMapper mapper;
 
+    /**
+     * Creates a new instance of SeasonConverter.
+     */
     public SeasonConverter() {
         this.mapper = Mappers.getMapper(SeasonMapper.class);
     }

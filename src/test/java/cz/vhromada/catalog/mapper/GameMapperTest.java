@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class GameMapperTest {
 
+    /**
+     * Instance of {@link GameMapper}
+     */
     private GameMapper mapper;
 
     /**

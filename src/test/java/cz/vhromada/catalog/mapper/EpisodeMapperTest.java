@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class EpisodeMapperTest {
 
+    /**
+     * Instance of {@link EpisodeMapper}
+     */
     private EpisodeMapper mapper;
 
     /**

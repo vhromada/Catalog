@@ -22,14 +22,14 @@ public interface ProgramRepository extends MovableRepository<Program>, JpaReposi
 
     @Override
     default Program add(final Program data) {
-        assertData(data);
+        assertProgram(data);
 
         return save(data);
     }
 
     @Override
     default Program update(final Program data) {
-        assertData(data);
+        assertProgram(data);
 
         return save(data);
     }
@@ -45,7 +45,7 @@ public interface ProgramRepository extends MovableRepository<Program>, JpaReposi
 
     @Override
     default void remove(final Program data) {
-        assertData(data);
+        assertProgram(data);
 
         delete(data);
     }
@@ -55,9 +55,15 @@ public interface ProgramRepository extends MovableRepository<Program>, JpaReposi
         deleteAll();
     }
 
-    private static void assertData(final Program data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data mustn't be null.");
+    /**
+     * Checks program
+     *
+     * @param program program
+     * @throws IllegalArgumentException if program is null
+     */
+    private static void assertProgram(final Program program) {
+        if (program == null) {
+            throw new IllegalArgumentException("Program mustn't be null.");
         }
     }
 

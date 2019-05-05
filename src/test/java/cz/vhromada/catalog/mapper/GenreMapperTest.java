@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class GenreMapperTest {
 
+    /**
+     * Instance of {@link GenreMapper}
+     */
     private GenreMapper mapper;
 
     /**

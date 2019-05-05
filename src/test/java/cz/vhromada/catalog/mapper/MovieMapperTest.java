@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class MovieMapperTest {
 
+    /**
+     * Instance of {@link MovieMapper}
+     */
     private MovieMapper mapper;
 
     /**

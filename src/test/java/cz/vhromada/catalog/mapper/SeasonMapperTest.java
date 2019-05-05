@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class SeasonMapperTest {
 
+    /**
+     * Instance of {@link SeasonMapper}
+     */
     private SeasonMapper mapper;
 
     /**

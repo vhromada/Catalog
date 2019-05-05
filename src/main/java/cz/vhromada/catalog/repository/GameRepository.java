@@ -22,14 +22,14 @@ public interface GameRepository extends MovableRepository<Game>, JpaRepository<G
 
     @Override
     default Game add(final Game data) {
-        assertData(data);
+        assertGame(data);
 
         return save(data);
     }
 
     @Override
     default Game update(final Game data) {
-        assertData(data);
+        assertGame(data);
 
         return save(data);
     }
@@ -45,7 +45,7 @@ public interface GameRepository extends MovableRepository<Game>, JpaRepository<G
 
     @Override
     default void remove(final Game data) {
-        assertData(data);
+        assertGame(data);
 
         delete(data);
     }
@@ -55,9 +55,15 @@ public interface GameRepository extends MovableRepository<Game>, JpaRepository<G
         deleteAll();
     }
 
-    private static void assertData(final Game data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data mustn't be null.");
+    /**
+     * Checks game
+     *
+     * @param game game
+     * @throws IllegalArgumentException if game is null
+     */
+    private static void assertGame(final Game game) {
+        if (game == null) {
+            throw new IllegalArgumentException("Game mustn't be null.");
         }
     }
 

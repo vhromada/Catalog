@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class PictureMapperTest {
 
+    /**
+     * Instance of {@link PictureMapper}
+     */
     private PictureMapper mapper;
 
     /**

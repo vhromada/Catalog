@@ -22,14 +22,14 @@ public interface MovieRepository extends MovableRepository<Movie>, JpaRepository
 
     @Override
     default Movie add(final Movie data) {
-        assertData(data);
+        assertMovie(data);
 
         return save(data);
     }
 
     @Override
     default Movie update(final Movie data) {
-        assertData(data);
+        assertMovie(data);
 
         return save(data);
     }
@@ -45,7 +45,7 @@ public interface MovieRepository extends MovableRepository<Movie>, JpaRepository
 
     @Override
     default void remove(final Movie data) {
-        assertData(data);
+        assertMovie(data);
 
         delete(data);
     }
@@ -55,9 +55,15 @@ public interface MovieRepository extends MovableRepository<Movie>, JpaRepository
         deleteAll();
     }
 
-    private static void assertData(final Movie data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data mustn't be null.");
+    /**
+     * Checks movie
+     *
+     * @param movie movie
+     * @throws IllegalArgumentException if movie is null
+     */
+    private static void assertMovie(final Movie movie) {
+        if (movie == null) {
+            throw new IllegalArgumentException("Movie mustn't be null.");
         }
     }
 

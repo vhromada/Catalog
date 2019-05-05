@@ -22,14 +22,14 @@ public interface PictureRepository extends MovableRepository<Picture>, JpaReposi
 
     @Override
     default Picture add(final Picture data) {
-        assertData(data);
+        assertPicture(data);
 
         return save(data);
     }
 
     @Override
     default Picture update(final Picture data) {
-        assertData(data);
+        assertPicture(data);
 
         return save(data);
     }
@@ -45,7 +45,7 @@ public interface PictureRepository extends MovableRepository<Picture>, JpaReposi
 
     @Override
     default void remove(final Picture data) {
-        assertData(data);
+        assertPicture(data);
 
         delete(data);
     }
@@ -55,9 +55,15 @@ public interface PictureRepository extends MovableRepository<Picture>, JpaReposi
         deleteAll();
     }
 
-    private static void assertData(final Picture data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data mustn't be null.");
+    /**
+     * Checks picture
+     *
+     * @param picture picture
+     * @throws IllegalArgumentException if picture is null
+     */
+    private static void assertPicture(final Picture picture) {
+        if (picture == null) {
+            throw new IllegalArgumentException("Picture mustn't be null.");
         }
     }
 

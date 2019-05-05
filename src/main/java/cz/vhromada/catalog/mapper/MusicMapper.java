@@ -13,9 +13,21 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface MusicMapper {
 
+    /**
+     * Maps entity music to domain music.
+     *
+     * @param source entity music
+     * @return mapped domain music
+     */
     @Mapping(target = "songs", ignore = true)
     cz.vhromada.catalog.domain.Music map(Music source);
 
+    /**
+     * Maps domain music to entity music.
+     *
+     * @param source domain music
+     * @return mapped entity music
+     */
     Music mapBack(cz.vhromada.catalog.domain.Music source);
 
 }

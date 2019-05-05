@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class SongMapperTest {
 
+    /**
+     * Instance of {@link SongMapper}
+     */
     private SongMapper mapper;
 
     /**

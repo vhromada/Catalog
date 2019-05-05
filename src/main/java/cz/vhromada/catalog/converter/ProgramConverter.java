@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProgramConverter implements MovableConverter<Program, cz.vhromada.catalog.domain.Program> {
 
+    /**
+     * Mapper for program
+     */
     private ProgramMapper mapper;
 
+    /**
+     * Creates a new instance of ProgramConverter.
+     */
     public ProgramConverter() {
         this.mapper = Mappers.getMapper(ProgramMapper.class);
     }

@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameConverter implements MovableConverter<Game, cz.vhromada.catalog.domain.Game> {
 
+    /**
+     * Mapper for game
+     */
     private GameMapper mapper;
 
+    /**
+     * Creates a new instance of GameConverter.
+     */
     public GameConverter() {
         this.mapper = Mappers.getMapper(GameMapper.class);
     }

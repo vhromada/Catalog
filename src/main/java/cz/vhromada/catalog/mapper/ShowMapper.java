@@ -13,9 +13,21 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ShowMapper {
 
+    /**
+     * Maps entity show to domain show.
+     *
+     * @param source entity show
+     * @return mapped domain show
+     */
     @Mapping(target = "seasons", ignore = true)
     cz.vhromada.catalog.domain.Show map(Show source);
 
+    /**
+     * Maps domain show to entity show.
+     *
+     * @param source domain show
+     * @return mapped entity show
+     */
     Show mapBack(cz.vhromada.catalog.domain.Show source);
 
 }

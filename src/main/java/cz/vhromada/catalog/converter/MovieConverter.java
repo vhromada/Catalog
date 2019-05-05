@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MovieConverter implements MovableConverter<Movie, cz.vhromada.catalog.domain.Movie> {
 
+    /**
+     * Mapper for movie
+     */
     private MovieMapper mapper;
 
+    /**
+     * Creates a new instance of MovieConverter.
+     */
     public MovieConverter() {
         this.mapper = Mappers.getMapper(MovieMapper.class);
     }

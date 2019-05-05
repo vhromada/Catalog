@@ -22,14 +22,14 @@ public interface ShowRepository extends MovableRepository<Show>, JpaRepository<S
 
     @Override
     default Show add(final Show data) {
-        assertData(data);
+        assertShow(data);
 
         return save(data);
     }
 
     @Override
     default Show update(final Show data) {
-        assertData(data);
+        assertShow(data);
 
         return save(data);
     }
@@ -45,7 +45,7 @@ public interface ShowRepository extends MovableRepository<Show>, JpaRepository<S
 
     @Override
     default void remove(final Show data) {
-        assertData(data);
+        assertShow(data);
 
         delete(data);
     }
@@ -55,9 +55,15 @@ public interface ShowRepository extends MovableRepository<Show>, JpaRepository<S
         deleteAll();
     }
 
-    private static void assertData(final Show data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data mustn't be null.");
+    /**
+     * Checks show
+     *
+     * @param show show
+     * @throws IllegalArgumentException if show is null
+     */
+    private static void assertShow(final Show show) {
+        if (show == null) {
+            throw new IllegalArgumentException("Show mustn't be null.");
         }
     }
 

@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class PictureConverter implements MovableConverter<Picture, cz.vhromada.catalog.domain.Picture> {
 
+    /**
+     * Mapper for picture
+     */
     private PictureMapper mapper;
 
+    /**
+     * Creates a new instance of PictureConverter.
+     */
     public PictureConverter() {
         this.mapper = Mappers.getMapper(PictureMapper.class);
     }

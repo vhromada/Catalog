@@ -22,14 +22,14 @@ public interface MusicRepository extends MovableRepository<Music>, JpaRepository
 
     @Override
     default Music add(final Music data) {
-        assertData(data);
+        assertMusic(data);
 
         return save(data);
     }
 
     @Override
     default Music update(final Music data) {
-        assertData(data);
+        assertMusic(data);
 
         return save(data);
     }
@@ -45,7 +45,7 @@ public interface MusicRepository extends MovableRepository<Music>, JpaRepository
 
     @Override
     default void remove(final Music data) {
-        assertData(data);
+        assertMusic(data);
 
         delete(data);
     }
@@ -55,9 +55,15 @@ public interface MusicRepository extends MovableRepository<Music>, JpaRepository
         deleteAll();
     }
 
-    private static void assertData(final Music data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data mustn't be null.");
+    /**
+     * Checks music
+     *
+     * @param music music
+     * @throws IllegalArgumentException if music is null
+     */
+    private static void assertMusic(final Music music) {
+        if (music == null) {
+            throw new IllegalArgumentException("Music mustn't be null.");
         }
     }
 

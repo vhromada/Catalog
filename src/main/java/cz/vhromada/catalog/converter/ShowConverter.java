@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShowConverter implements MovableConverter<Show, cz.vhromada.catalog.domain.Show> {
 
+    /**
+     * Mapper for show
+     */
     private ShowMapper mapper;
 
+    /**
+     * Creates a new instance of ShowConverter.
+     */
     public ShowConverter() {
         this.mapper = Mappers.getMapper(ShowMapper.class);
     }

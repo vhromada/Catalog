@@ -22,14 +22,14 @@ public interface GenreRepository extends MovableRepository<Genre>, JpaRepository
 
     @Override
     default Genre add(final Genre data) {
-        assertData(data);
+        assertGenre(data);
 
         return save(data);
     }
 
     @Override
     default Genre update(final Genre data) {
-        assertData(data);
+        assertGenre(data);
 
         return save(data);
     }
@@ -45,7 +45,7 @@ public interface GenreRepository extends MovableRepository<Genre>, JpaRepository
 
     @Override
     default void remove(final Genre data) {
-        assertData(data);
+        assertGenre(data);
 
         delete(data);
     }
@@ -55,9 +55,15 @@ public interface GenreRepository extends MovableRepository<Genre>, JpaRepository
         deleteAll();
     }
 
-    private static void assertData(final Genre data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data mustn't be null.");
+    /**
+     * Checks genre
+     *
+     * @param genre genre
+     * @throws IllegalArgumentException if genre is null
+     */
+    private static void assertGenre(final Genre genre) {
+        if (genre == null) {
+            throw new IllegalArgumentException("Genre mustn't be null.");
         }
     }
 

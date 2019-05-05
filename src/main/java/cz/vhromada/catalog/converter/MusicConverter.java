@@ -15,8 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MusicConverter implements MovableConverter<Music, cz.vhromada.catalog.domain.Music> {
 
+    /**
+     * Mapper for music
+     */
     private MusicMapper mapper;
 
+    /**
+     * Creates a new instance of MusicConverter.
+     */
     public MusicConverter() {
         this.mapper = Mappers.getMapper(MusicMapper.class);
     }

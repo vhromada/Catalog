@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
  */
 class ShowMapperTest {
 
+    /**
+     * Instance of {@link ShowMapper}
+     */
     private ShowMapper mapper;
 
     /**

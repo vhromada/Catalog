@@ -7,10 +7,10 @@ import cz.vhromada.catalog.facade.SongFacade
 import cz.vhromada.catalog.utils.MusicUtils
 import cz.vhromada.catalog.utils.SongUtils
 import cz.vhromada.common.facade.MovableChildFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,7 +43,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.add] with song with null name.
      */
     @Test
-    fun add_NullName() {
+    fun addNullName() {
         val song = newChildData(null)
                 .copy(name = null)
 
@@ -61,7 +61,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.add] with song with empty string as name.
      */
     @Test
-    fun add_EmptyName() {
+    fun addEmptyName() {
         val song = newChildData(null)
                 .copy(name = "")
 
@@ -79,7 +79,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.add] with song with null length.
      */
     @Test
-    fun add_NullLength() {
+    fun addNullLength() {
         val song = newChildData(null)
                 .copy(length = null)
 
@@ -97,7 +97,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.add] with song with negative length.
      */
     @Test
-    fun add_NegativeLength() {
+    fun addNegativeLength() {
         val song = newChildData(null)
                 .copy(length = -1)
 
@@ -115,7 +115,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.add] with song with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val song = newChildData(null)
                 .copy(note = null)
 
@@ -133,7 +133,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.update] with song with null name.
      */
     @Test
-    fun update_NullName() {
+    fun updateNullName() {
         val song = newChildData(1)
                 .copy(name = null)
 
@@ -151,7 +151,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.update] with song with empty string as name.
      */
     @Test
-    fun update_EmptyName() {
+    fun updateEmptyName() {
         val song = newChildData(1)
                 .copy(name = "")
 
@@ -169,7 +169,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.update] with song with null length.
      */
     @Test
-    fun update_NullLength() {
+    fun updateNullLength() {
         val song = newChildData(1)
                 .copy(length = null)
 
@@ -187,7 +187,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.update] with song with negative length.
      */
     @Test
-    fun update_NegativeLength() {
+    fun updateNegativeLength() {
         val song = newChildData(1)
                 .copy(length = -1)
 
@@ -205,7 +205,7 @@ class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz
      * Test method for [SongFacade.update] with song with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val song = newChildData(1)
                 .copy(note = null)
 

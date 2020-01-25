@@ -4,9 +4,9 @@ import cz.vhromada.catalog.entity.Game
 import cz.vhromada.catalog.facade.GameFacade
 import cz.vhromada.common.facade.AbstractMovableParentFacade
 import cz.vhromada.common.mapper.Mapper
+import cz.vhromada.common.result.Result
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.validator.MovableValidator
-import cz.vhromada.validation.result.Result
 import org.springframework.stereotype.Component
 
 /**

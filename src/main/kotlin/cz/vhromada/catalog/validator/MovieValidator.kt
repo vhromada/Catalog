@@ -3,14 +3,14 @@ package cz.vhromada.catalog.validator
 import cz.vhromada.catalog.entity.Genre
 import cz.vhromada.catalog.entity.Movie
 import cz.vhromada.catalog.entity.Picture
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Result
+import cz.vhromada.common.result.Severity
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.Constants
 import cz.vhromada.common.validator.AbstractMovableValidator
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Result
-import cz.vhromada.validation.result.Severity
 import org.springframework.stereotype.Component
 
 /**
@@ -61,11 +61,13 @@ class MovieValidator(
      */
     override fun validateDataDeep(data: Movie, result: Result<Unit>) {
         validateNames(data, result)
-        if (data.year == null) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_YEAR_NULL", "Year mustn't be null."))
-        } else if (data.year < Constants.MIN_YEAR || data.year > Constants.CURRENT_YEAR) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_YEAR_NOT_VALID",
-                    "Year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}."))
+        when {
+            data.year == null -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_YEAR_NULL", "Year mustn't be null."))
+            }
+            data.year < Constants.MIN_YEAR || data.year > Constants.CURRENT_YEAR -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_YEAR_NOT_VALID", "Year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}."))
+            }
         }
         validateLanguages(data, result)
         validateMedia(data, result)
@@ -91,15 +93,21 @@ class MovieValidator(
      * @param result result with validation errors
      */
     private fun validateNames(data: Movie, result: Result<Unit>) {
-        if (data.czechName == null) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null."))
-        } else if (data.czechName.isBlank()) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string."))
+        when {
+            data.czechName == null -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null."))
+            }
+            data.czechName.isBlank() -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string."))
+            }
         }
-        if (data.originalName == null) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null."))
-        } else if (data.originalName.isBlank()) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."))
+        when {
+            data.originalName == null -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null."))
+            }
+            data.originalName.isBlank() -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."))
+            }
         }
     }
 
@@ -119,10 +127,13 @@ class MovieValidator(
         if (data.language == null) {
             result.addEvent(Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null."))
         }
-        if (data.subtitles == null) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null."))
-        } else if (data.subtitles.contains(null)) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value."))
+        when {
+            data.subtitles == null -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null."))
+            }
+            data.subtitles.contains(null) -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value."))
+            }
         }
     }
 
@@ -148,10 +159,13 @@ class MovieValidator(
             }
             for (medium in data.media) {
                 if (medium != null) {
-                    if (medium.length == null) {
-                        result.addEvent(Event(Severity.ERROR, "MOVIE_MEDIUM_NULL", "Length of medium  mustn't be null."))
-                    } else if (medium.length <= 0) {
-                        result.addEvent(Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number."))
+                    when {
+                        medium.length == null -> {
+                            result.addEvent(Event(Severity.ERROR, "MOVIE_MEDIUM_NULL", "Length of medium  mustn't be null."))
+                        }
+                        medium.length <= 0 -> {
+                            result.addEvent(Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number."))
+                        }
                     }
                 }
             }
@@ -176,10 +190,13 @@ class MovieValidator(
         if (data.csfd == null) {
             result.addEvent(Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null."))
         }
-        if (data.imdbCode == null) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_IMDB_CODE_NULL", "IMDB code mustn't be null."))
-        } else if (data.imdbCode != -1 && (data.imdbCode < 1 || data.imdbCode > Constants.MAX_IMDB_CODE)) {
-            result.addEvent(Event(Severity.ERROR, "MOVIE_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1."))
+        when {
+            data.imdbCode == null -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_IMDB_CODE_NULL", "IMDB code mustn't be null."))
+            }
+            data.imdbCode != -1 && (data.imdbCode < 1 || data.imdbCode > Constants.MAX_IMDB_CODE) -> {
+                result.addEvent(Event(Severity.ERROR, "MOVIE_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1."))
+            }
         }
         if (data.wikiEn == null) {
             result.addEvent(Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL", "URL to english Wikipedia page about movie mustn't be null."))

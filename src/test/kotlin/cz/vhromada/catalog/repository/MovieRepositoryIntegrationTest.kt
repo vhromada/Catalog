@@ -109,7 +109,7 @@ class MovieRepositoryIntegrationTest {
      * Test method for update movie with no media change.
      */
     @Test
-    fun update_NoMediaChange() {
+    fun updateNoMediaChange() {
         val movie = MovieUtils.updateMovie(entityManager, 1)
 
         movieRepository.save(movie)
@@ -131,7 +131,7 @@ class MovieRepositoryIntegrationTest {
      */
     @Test
     @DirtiesContext
-    fun update_AddedMedium() {
+    fun updateAddedMedium() {
         var movie = MovieUtils.updateMovie(entityManager, 1)
         val media = movie.media.toMutableList()
         media.add(MediumUtils.newMediumDomain(null))
@@ -157,7 +157,7 @@ class MovieRepositoryIntegrationTest {
      * Test method for update movie with removed medium.
      */
     @Test
-    fun update_RemovedMedium() {
+    fun updateRemovedMedium() {
         val mediaCount = MovieUtils.getMovie(1).media.size
         val movie = MovieUtils.updateMovie(entityManager, 1)
                 .copy(media = emptyList())

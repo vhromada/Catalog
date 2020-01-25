@@ -2,7 +2,7 @@ package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.entity.Genre
 import cz.vhromada.common.facade.MovableParentFacade
-import cz.vhromada.validation.result.Result
+import cz.vhromada.common.result.Result
 
 /**
  * An interface represents facade for genres.

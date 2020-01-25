@@ -15,16 +15,16 @@ import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.MediumUtils
 import cz.vhromada.catalog.utils.MovieUtils
 import cz.vhromada.common.Language
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Result
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.utils.TestConstants
 import cz.vhromada.common.test.validator.MovableValidatorTest
 import cz.vhromada.common.utils.Constants
 import cz.vhromada.common.validator.AbstractMovableValidator
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Result
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.BeforeEach
@@ -69,7 +69,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null czech name.
      */
     @Test
-    fun validate_Deep_NullCzechName() {
+    fun validateDeepNullCzechName() {
         val movie = getValidatingData(1)
                 .copy(czechName = null)
 
@@ -89,7 +89,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with empty string as czech name.
      */
     @Test
-    fun validate_Deep_EmptyCzechName() {
+    fun validateDeepEmptyCzechName() {
         val movie = getValidatingData(1)
                 .copy(czechName = "")
 
@@ -109,7 +109,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null original name.
      */
     @Test
-    fun validate_Deep_NullOriginalName() {
+    fun validateDeepNullOriginalName() {
         val movie = getValidatingData(1)
                 .copy(originalName = null)
 
@@ -129,7 +129,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with empty string as original name.
      */
     @Test
-    fun validate_Deep_EmptyOriginalName() {
+    fun validateDeepEmptyOriginalName() {
         val movie = getValidatingData(1)
                 .copy(originalName = "")
 
@@ -149,7 +149,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null year.
      */
     @Test
-    fun validate_Deep_NullYear() {
+    fun validateDeepNullYear() {
         val movie = getValidatingData(1)
                 .copy(year = null)
 
@@ -169,7 +169,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad minimum year.
      */
     @Test
-    fun validate_Deep_BadMinimumYear() {
+    fun validateDeepBadMinimumYear() {
         val movie = getValidatingData(1)
                 .copy(year = TestConstants.BAD_MIN_YEAR)
 
@@ -189,7 +189,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad maximum year.
      */
     @Test
-    fun validate_Deep_BadMaximumYear() {
+    fun validateDeepBadMaximumYear() {
         val movie = getValidatingData(1)
                 .copy(year = TestConstants.BAD_MAX_YEAR)
 
@@ -209,7 +209,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null language.
      */
     @Test
-    fun validate_Deep_NullLanguage() {
+    fun validateDeepNullLanguage() {
         val movie = getValidatingData(1)
                 .copy(language = null)
 
@@ -229,7 +229,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null subtitles.
      */
     @Test
-    fun validate_Deep_NullSubtitles() {
+    fun validateDeepNullSubtitles() {
         val movie = getValidatingData(1)
                 .copy(subtitles = null)
 
@@ -249,7 +249,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with subtitles with null value.
      */
     @Test
-    fun validate_Deep_BadSubtitles() {
+    fun validateDeepBadSubtitles() {
         val movie = getValidatingData(1)
                 .copy(subtitles = listOf(Language.CZ, null))
 
@@ -269,7 +269,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null media.
      */
     @Test
-    fun validate_Deep_NullMedia() {
+    fun validateDeepNullMedia() {
         val movie = getValidatingData(1)
                 .copy(media = null)
 
@@ -289,7 +289,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data media with null value.
      */
     @Test
-    fun validate_Deep_BadMedia() {
+    fun validateDeepBadMedia() {
         val movie = getValidatingData(1)
                 .copy(media = listOf(MediumUtils.newMedium(1), null))
 
@@ -309,7 +309,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with media with negative value as medium.
      */
     @Test
-    fun validate_Deep_MediaWithBadMedium() {
+    fun validateDeepMediaWithBadMedium() {
         val badMedium = MediumUtils.newMedium(2)
                 .copy(length = -1)
         val movie = getValidatingData(1)
@@ -331,7 +331,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null URL to ČSFD page about movie.
      */
     @Test
-    fun validate_Deep_NullCsfd() {
+    fun validateDeepNullCsfd() {
         val movie = getValidatingData(1)
                 .copy(csfd = null)
 
@@ -351,7 +351,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null IMDB code.
      */
     @Test
-    fun validate_Deep_NullImdb() {
+    fun validateDeepNullImdb() {
         val show = getValidatingData(1)
                 .copy(imdbCode = null)
 
@@ -371,7 +371,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad minimal IMDB code.
      */
     @Test
-    fun validate_Deep_BadMinimalImdb() {
+    fun validateDeepBadMinimalImdb() {
         val movie = getValidatingData(1)
                 .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
 
@@ -391,7 +391,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad divider IMDB code.
      */
     @Test
-    fun validate_Deep_BadDividerImdb() {
+    fun validateDeepBadDividerImdb() {
         val movie = getValidatingData(1)
                 .copy(imdbCode = 0)
 
@@ -411,7 +411,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad maximal IMDB code.
      */
     @Test
-    fun validate_Deep_BadMaximalImdb() {
+    fun validateDeepBadMaximalImdb() {
         val movie = getValidatingData(1)
                 .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
 
@@ -431,7 +431,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null URL to english Wikipedia page about movie.
      */
     @Test
-    fun validate_Deep_NullWikiEn() {
+    fun validateDeepNullWikiEn() {
         val movie = getValidatingData(1)
                 .copy(wikiEn = null)
 
@@ -452,7 +452,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null URL to czech Wikipedia page about movie.
      */
     @Test
-    fun validate_Deep_NullWikiCz() {
+    fun validateDeepNullWikiCz() {
         val movie = getValidatingData(1)
                 .copy(wikiCz = null)
 
@@ -473,7 +473,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null note.
      */
     @Test
-    fun validate_Deep_NullNote() {
+    fun validateDeepNullNote() {
         val movie = getValidatingData(1)
                 .copy(note = null)
 
@@ -493,7 +493,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad picture.
      */
     @Test
-    fun validate_Deep_BadPicture() {
+    fun validateDeepBadPicture() {
         val event = Event(Severity.ERROR, "PICTURE_INVALID", "Invalid data")
         val movie = getValidatingData(1)
 
@@ -514,7 +514,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null genres.
      */
     @Test
-    fun validate_Deep_NullGenres() {
+    fun validateDeepNullGenres() {
         val movie = getValidatingData(1)
                 .copy(genres = null)
 
@@ -538,7 +538,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with genres with null value.
      */
     @Test
-    fun validate_Deep_BadGenres() {
+    fun validateDeepBadGenres() {
         val movie = getValidatingData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(1), null))
 
@@ -563,7 +563,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with genres with genre with invalid data.
      */
     @Test
-    fun validate_Deep_GenresWithGenreWithInvalidData() {
+    fun validateDeepGenresWithGenreWithInvalidData() {
         val event = Event(Severity.ERROR, "GENRE_INVALID", "Invalid data")
         val movie = getValidatingData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(null)))
@@ -650,7 +650,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, cz.vhromada.catalog.domai
          * @param picture picture
          */
         private fun validatePicture(movie: Movie, picture: Picture) {
-            assertThat(picture).isNotNull()
+            assertThat(picture).isNotNull
             assertThat(picture.id).isEqualTo(movie.picture)
         }
     }

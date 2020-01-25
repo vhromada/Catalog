@@ -9,8 +9,8 @@ import cz.vhromada.catalog.entity.Program
 import cz.vhromada.catalog.facade.ProgramFacade
 import cz.vhromada.catalog.utils.ProgramUtils
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeTest
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 

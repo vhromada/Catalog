@@ -5,10 +5,10 @@ import cz.vhromada.catalog.entity.Program
 import cz.vhromada.catalog.facade.ProgramFacade
 import cz.vhromada.catalog.utils.ProgramUtils
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,7 +41,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with null name.
      */
     @Test
-    fun add_NullName() {
+    fun addNullName() {
         val program = newData(null)
                 .copy(name = null)
 
@@ -59,7 +59,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with empty string as name.
      */
     @Test
-    fun add_EmptyName() {
+    fun addEmptyName() {
         val program = newData(null)
                 .copy(name = "")
 
@@ -77,7 +77,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with null URL to english Wikipedia about program.
      */
     @Test
-    fun add_NullWikiEn() {
+    fun addNullWikiEn() {
         val program = newData(null)
                 .copy(wikiEn = null)
 
@@ -95,7 +95,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with null URL to czech Wikipedia about program.
      */
     @Test
-    fun add_NullWikiCz() {
+    fun addNullWikiCz() {
         val program = newData(null)
                 .copy(wikiCz = null)
 
@@ -113,7 +113,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with null count of media.
      */
     @Test
-    fun add_NullMediaCount() {
+    fun addNullMediaCount() {
         val program = newData(null)
                 .copy(mediaCount = null)
 
@@ -131,7 +131,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with not positive count of media.
      */
     @Test
-    fun add_NotPositiveMediaCount() {
+    fun addNotPositiveMediaCount() {
         val program = newData(null)
                 .copy(mediaCount = 0)
 
@@ -149,7 +149,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with null other data.
      */
     @Test
-    fun add_NullOtherData() {
+    fun addNullOtherData() {
         val program = newData(null)
                 .copy(otherData = null)
 
@@ -167,7 +167,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.add] with program with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val program = newData(null)
                 .copy(note = null)
 
@@ -185,7 +185,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with null name.
      */
     @Test
-    fun update_NullName() {
+    fun updateNullName() {
         val program = newData(1)
                 .copy(name = null)
 
@@ -203,7 +203,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with empty string as name.
      */
     @Test
-    fun update_EmptyName() {
+    fun updateEmptyName() {
         val program = newData(1)
                 .copy(name = "")
 
@@ -221,7 +221,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with null URL to english Wikipedia about program.
      */
     @Test
-    fun update_NullWikiEn() {
+    fun updateNullWikiEn() {
         val program = newData(1)
                 .copy(wikiEn = null)
 
@@ -239,7 +239,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with null URL to czech Wikipedia about program.
      */
     @Test
-    fun update_NullWikiCz() {
+    fun updateNullWikiCz() {
         val program = newData(1)
                 .copy(wikiCz = null)
 
@@ -257,7 +257,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with null count of media.
      */
     @Test
-    fun update_NullMediaCount() {
+    fun updateNullMediaCount() {
         val program = newData(1)
                 .copy(mediaCount = null)
 
@@ -275,7 +275,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with not positive count of media.
      */
     @Test
-    fun update_NotPositiveMediaCount() {
+    fun updateNotPositiveMediaCount() {
         val program = newData(1)
                 .copy(mediaCount = 0)
 
@@ -293,7 +293,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with null other data.
      */
     @Test
-    fun update_NullOtherData() {
+    fun updateNullOtherData() {
         val program = newData(1)
                 .copy(otherData = null)
 
@@ -311,7 +311,7 @@ class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Prog
      * Test method for [ProgramFacade.update] with program with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val program = newData(1)
                 .copy(note = null)
 

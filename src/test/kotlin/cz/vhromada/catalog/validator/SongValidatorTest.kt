@@ -9,13 +9,13 @@ import cz.vhromada.catalog.domain.Music
 import cz.vhromada.catalog.entity.Song
 import cz.vhromada.catalog.utils.MusicUtils
 import cz.vhromada.catalog.utils.SongUtils
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.validator.MovableValidatorTest
 import cz.vhromada.common.validator.AbstractMovableValidator
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
@@ -30,7 +30,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null name.
      */
     @Test
-    fun validate_Deep_NullName() {
+    fun validateDeepNullName() {
         val song = getValidatingData(1)
                 .copy(name = null)
 
@@ -48,7 +48,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with empty name.
      */
     @Test
-    fun validate_Deep_EmptyName() {
+    fun validateDeepEmptyName() {
         val song = getValidatingData(1)
                 .copy(name = "")
 
@@ -66,7 +66,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null length of song.
      */
     @Test
-    fun validate_Deep_NullLength() {
+    fun validateDeepNullLength() {
         val song = getValidatingData(1)
                 .copy(length = null)
 
@@ -84,7 +84,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with negative length of song.
      */
     @Test
-    fun validate_Deep_NegativeLength() {
+    fun validateDeepNegativeLength() {
         val song = getValidatingData(1)
                 .copy(length = -1)
 
@@ -102,7 +102,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null note.
      */
     @Test
-    fun validate_Deep_NullNote() {
+    fun validateDeepNullNote() {
         val song = getValidatingData(1)
                 .copy(note = null)
 

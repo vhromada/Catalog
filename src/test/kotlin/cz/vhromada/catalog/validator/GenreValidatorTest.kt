@@ -3,12 +3,12 @@ package cz.vhromada.catalog.validator
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import cz.vhromada.catalog.entity.Genre
 import cz.vhromada.catalog.utils.GenreUtils
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.validator.MovableValidatorTest
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
@@ -23,7 +23,7 @@ class GenreValidatorTest : MovableValidatorTest<Genre, cz.vhromada.catalog.domai
      * Test method for [GenreValidator.validate] with [ValidationType.DEEP] with data with null name.
      */
     @Test
-    fun validate_Deep_NullName() {
+    fun validateDeepNullName() {
         val genre = getValidatingData(1)
                 .copy(name = null)
 
@@ -41,7 +41,7 @@ class GenreValidatorTest : MovableValidatorTest<Genre, cz.vhromada.catalog.domai
      * Test method for [GenreValidator.validate] with [ValidationType.DEEP] with data with empty name.
      */
     @Test
-    fun validate_Deep_EmptyName() {
+    fun validateDeepEmptyName() {
         val genre = getValidatingData(1)
                 .copy(name = "")
 

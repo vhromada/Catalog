@@ -2,12 +2,12 @@ package cz.vhromada.catalog.validator
 
 import cz.vhromada.catalog.domain.Show
 import cz.vhromada.catalog.entity.Episode
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Result
+import cz.vhromada.common.result.Severity
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.sorted
 import cz.vhromada.common.validator.AbstractMovableValidator
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Result
-import cz.vhromada.validation.result.Severity
 import org.springframework.stereotype.Component
 
 /**
@@ -64,20 +64,29 @@ class EpisodeValidator(showService: MovableService<Show>) : AbstractMovableValid
      * @param result result with validation errors
      */
     override fun validateDataDeep(data: Episode, result: Result<Unit>) {
-        if (data.number == null) {
-            result.addEvent(Event(Severity.ERROR, "EPISODE_NUMBER_NULL", "Number of episode mustn't be null."))
-        } else if (data.number <= 0) {
-            result.addEvent(Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number."))
+        when {
+            data.number == null -> {
+                result.addEvent(Event(Severity.ERROR, "EPISODE_NUMBER_NULL", "Number of episode mustn't be null."))
+            }
+            data.number <= 0 -> {
+                result.addEvent(Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number."))
+            }
         }
-        if (data.name == null) {
-            result.addEvent(Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null."))
-        } else if (data.name.isBlank()) {
-            result.addEvent(Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string."))
+        when {
+            data.name == null -> {
+                result.addEvent(Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null."))
+            }
+            data.name.isBlank() -> {
+                result.addEvent(Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string."))
+            }
         }
-        if (data.length == null) {
-            result.addEvent(Event(Severity.ERROR, "EPISODE_LENGTH_NULL", "Length of episode mustn't be null."))
-        } else if (data.length < 0) {
-            result.addEvent(Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number."))
+        when {
+            data.length == null -> {
+                result.addEvent(Event(Severity.ERROR, "EPISODE_LENGTH_NULL", "Length of episode mustn't be null."))
+            }
+            data.length < 0 -> {
+                result.addEvent(Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number."))
+            }
         }
         if (data.note == null) {
             result.addEvent(Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null."))

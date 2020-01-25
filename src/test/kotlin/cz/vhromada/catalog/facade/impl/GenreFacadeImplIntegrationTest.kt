@@ -7,10 +7,10 @@ import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.MovieUtils
 import cz.vhromada.catalog.utils.ShowUtils
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -51,7 +51,7 @@ class GenreFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Genre,
      * Test method for [GenreFacade.add] with genre with null name.
      */
     @Test
-    fun add_NullName() {
+    fun addNullName() {
         val genre = newData(null)
                 .copy(name = null)
 
@@ -69,7 +69,7 @@ class GenreFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Genre,
      * Test method for [GenreFacade.add] with genre with empty string as name.
      */
     @Test
-    fun add_EmptyName() {
+    fun addEmptyName() {
         val genre = newData(null)
                 .copy(name = "")
 
@@ -87,7 +87,7 @@ class GenreFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Genre,
      * Test method for [GenreFacade.update] with genre with null name.
      */
     @Test
-    fun update_NullName() {
+    fun updateNullName() {
         val genre = newData(1)
                 .copy(name = null)
 
@@ -105,7 +105,7 @@ class GenreFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Genre,
      * Test method for [GenreFacade.update] with genre with empty string as name.
      */
     @Test
-    fun update_EmptyName() {
+    fun updateEmptyName() {
         val genre = newData(1)
                 .copy(name = "")
 

@@ -10,11 +10,11 @@ import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
 import cz.vhromada.common.Time
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
 import cz.vhromada.common.test.utils.TestConstants
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,7 +47,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null czech name.
      */
     @Test
-    fun add_NullCzechName() {
+    fun addNullCzechName() {
         val show = newData(null)
                 .copy(czechName = null)
 
@@ -65,7 +65,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with empty string as czech name.
      */
     @Test
-    fun add_EmptyCzechName() {
+    fun addEmptyCzechName() {
         val show = newData(null)
                 .copy(czechName = "")
 
@@ -83,7 +83,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null original name.
      */
     @Test
-    fun add_NullOriginalName() {
+    fun addNullOriginalName() {
         val show = newData(null)
                 .copy(originalName = null)
 
@@ -101,7 +101,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with empty string as original name.
      */
     @Test
-    fun add_EmptyOriginalName() {
+    fun addEmptyOriginalName() {
         val show = newData(null)
                 .copy(originalName = "")
 
@@ -119,7 +119,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null URL to ČSFD page about show.
      */
     @Test
-    fun add_NullCsfd() {
+    fun addNullCsfd() {
         val show = newData(null)
                 .copy(csfd = null)
 
@@ -137,7 +137,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null IMDB code.
      */
     @Test
-    fun add_NullImdb() {
+    fun addNullImdb() {
         val show = newData(null)
                 .copy(imdbCode = null)
 
@@ -155,7 +155,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with bad minimal IMDB code.
      */
     @Test
-    fun add_BadMinimalImdb() {
+    fun addBadMinimalImdb() {
         val show = newData(null)
                 .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
 
@@ -173,7 +173,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with bad divider IMDB code.
      */
     @Test
-    fun add_BadDividerImdb() {
+    fun addBadDividerImdb() {
         val show = newData(null)
                 .copy(imdbCode = 0)
 
@@ -191,7 +191,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with bad maximal IMDB code.
      */
     @Test
-    fun add_BadMaximalImdb() {
+    fun addBadMaximalImdb() {
         val show = newData(null)
                 .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
 
@@ -209,7 +209,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null URL to english Wikipedia page about show.
      */
     @Test
-    fun add_NullWikiEn() {
+    fun addNullWikiEn() {
         val show = newData(null)
                 .copy(wikiEn = null)
 
@@ -228,7 +228,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null URL to czech Wikipedia page about show.
      */
     @Test
-    fun add_NullWikiCz() {
+    fun addNullWikiCz() {
         val show = newData(null)
                 .copy(wikiCz = null)
 
@@ -247,7 +247,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val show = newData(null)
                 .copy(note = null)
 
@@ -265,7 +265,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with not existing picture.
      */
     @Test
-    fun add_NotExistingPicture() {
+    fun addNotExistingPicture() {
         val show = newData(null)
                 .copy(picture = Integer.MAX_VALUE)
 
@@ -283,7 +283,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with null genres.
      */
     @Test
-    fun add_NullGenres() {
+    fun addNullGenres() {
         val show = newData(null)
                 .copy(genres = null)
 
@@ -301,7 +301,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with genres with null value.
      */
     @Test
-    fun add_BadGenres() {
+    fun addBadGenres() {
         val show = newData(null)
                 .copy(genres = listOf(GenreUtils.newGenre(1), null))
 
@@ -319,7 +319,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with genres with genre with null ID.
      */
     @Test
-    fun add_NullGenreId() {
+    fun addNullGenreId() {
         val show = newData(null)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(null)))
 
@@ -337,7 +337,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with genres with genre with null name.
      */
     @Test
-    fun add_NullGenreName() {
+    fun addNullGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = null)
         val show = newData(null)
@@ -357,7 +357,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with genres with genre with empty string as name.
      */
     @Test
-    fun add_EmptyGenreName() {
+    fun addEmptyGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = "")
         val show = newData(null)
@@ -377,7 +377,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.add] with show with genres with not existing genre.
      */
     @Test
-    fun add_NotExistingGenre() {
+    fun addNotExistingGenre() {
         val show = newData(null)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
 
@@ -395,7 +395,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null czech name.
      */
     @Test
-    fun update_NullCzechName() {
+    fun updateNullCzechName() {
         val show = newData(1)
                 .copy(czechName = null)
 
@@ -413,7 +413,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with empty string as czech name.
      */
     @Test
-    fun update_EmptyCzechName() {
+    fun updateEmptyCzechName() {
         val show = newData(1)
                 .copy(czechName = "")
 
@@ -431,7 +431,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null original name.
      */
     @Test
-    fun update_NullOriginalName() {
+    fun updateNullOriginalName() {
         val show = newData(1)
                 .copy(originalName = null)
 
@@ -449,7 +449,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with empty string as original name.
      */
     @Test
-    fun update_EmptyOriginalName() {
+    fun updateEmptyOriginalName() {
         val show = newData(1)
                 .copy(originalName = "")
 
@@ -467,7 +467,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null URL to ČSFD page about show.
      */
     @Test
-    fun update_NullCsfd() {
+    fun updateNullCsfd() {
         val show = newData(1)
                 .copy(csfd = null)
 
@@ -485,7 +485,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null IMDB code.
      */
     @Test
-    fun update_NullImdb() {
+    fun updateNullImdb() {
         val show = newData(1)
                 .copy(imdbCode = null)
 
@@ -503,7 +503,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with bad minimal IMDB code.
      */
     @Test
-    fun update_BadMinimalImdb() {
+    fun updateBadMinimalImdb() {
         val show = newData(1)
                 .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
 
@@ -521,7 +521,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with bad divider IMDB code.
      */
     @Test
-    fun update_BadDividerImdb() {
+    fun updateBadDividerImdb() {
         val show = newData(1)
                 .copy(imdbCode = 0)
 
@@ -539,7 +539,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with bad maximal IMDB code.
      */
     @Test
-    fun update_BadMaximalImdb() {
+    fun updateBadMaximalImdb() {
         val show = newData(1)
                 .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
 
@@ -557,7 +557,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null URL to english Wikipedia page about show.
      */
     @Test
-    fun update_NullWikiEn() {
+    fun updateNullWikiEn() {
         val show = newData(1)
                 .copy(wikiEn = null)
 
@@ -576,7 +576,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null URL to czech Wikipedia page about show.
      */
     @Test
-    fun update_NullWikiCz() {
+    fun updateNullWikiCz() {
         val show = newData(1)
                 .copy(wikiCz = null)
 
@@ -595,7 +595,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val show = newData(1)
                 .copy(note = null)
 
@@ -613,7 +613,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with not existing picture.
      */
     @Test
-    fun update_NotExistingPicture() {
+    fun updateNotExistingPicture() {
         val show = newData(1)
                 .copy(picture = Integer.MAX_VALUE)
 
@@ -631,7 +631,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with null genres.
      */
     @Test
-    fun update_NullGenres() {
+    fun updateNullGenres() {
         val show = newData(1)
                 .copy(genres = null)
 
@@ -649,7 +649,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with genres with null value.
      */
     @Test
-    fun update_BadGenres() {
+    fun updateBadGenres() {
         val show = newData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(1), null))
 
@@ -667,7 +667,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with genres with genre with null ID.
      */
     @Test
-    fun update_NullGenreId() {
+    fun updateNullGenreId() {
         val show = newData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(null)))
 
@@ -685,7 +685,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with genres with genre with null name.
      */
     @Test
-    fun update_NullGenreName() {
+    fun updateNullGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = null)
         val show = newData(1)
@@ -705,7 +705,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with genres with genre with empty string as name.
      */
     @Test
-    fun update_EmptyGenreName() {
+    fun updateEmptyGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = "")
         val show = newData(1)
@@ -725,7 +725,7 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
      * Test method for [ShowFacade.update] with show with genres with not existing genre.
      */
     @Test
-    fun update_NotExistingGenre() {
+    fun updateNotExistingGenre() {
         val show = newData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
 

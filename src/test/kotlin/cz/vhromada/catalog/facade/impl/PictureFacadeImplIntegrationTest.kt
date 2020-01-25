@@ -5,10 +5,10 @@ import cz.vhromada.catalog.entity.Picture
 import cz.vhromada.catalog.facade.PictureFacade
 import cz.vhromada.catalog.utils.PictureUtils
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,7 +49,7 @@ class PictureFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Pict
      * Test method for [PictureFacade.add] with picture with null content.
      */
     @Test
-    fun add_NullContent() {
+    fun addNullContent() {
         val picture = newData(null)
                 .copy(content = null)
 
@@ -67,7 +67,7 @@ class PictureFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Pict
      * Test method for [PictureFacade.update] with picture with null content.
      */
     @Test
-    fun update_NullContent() {
+    fun updateNullContent() {
         val picture = newData(1)
                 .copy(content = null)
 

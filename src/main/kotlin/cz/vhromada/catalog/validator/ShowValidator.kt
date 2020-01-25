@@ -3,14 +3,14 @@ package cz.vhromada.catalog.validator
 import cz.vhromada.catalog.entity.Genre
 import cz.vhromada.catalog.entity.Picture
 import cz.vhromada.catalog.entity.Show
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Result
+import cz.vhromada.common.result.Severity
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.Constants
 import cz.vhromada.common.validator.AbstractMovableValidator
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Result
-import cz.vhromada.validation.result.Severity
 import org.springframework.stereotype.Component
 
 /**
@@ -74,15 +74,21 @@ class ShowValidator(
      * @param result result with validation errors
      */
     private fun validateNames(data: Show, result: Result<Unit>) {
-        if (data.czechName == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null."))
-        } else if (data.czechName.isBlank()) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string."))
+        when {
+            data.czechName == null -> {
+                result.addEvent(Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null."))
+            }
+            data.czechName.isBlank() -> {
+                result.addEvent(Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string."))
+            }
         }
-        if (data.originalName == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null."))
-        } else if (data.originalName.isBlank()) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."))
+        when {
+            data.originalName == null -> {
+                result.addEvent(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null."))
+            }
+            data.originalName.isBlank() -> {
+                result.addEvent(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."))
+            }
         }
     }
 
@@ -104,10 +110,13 @@ class ShowValidator(
         if (data.csfd == null) {
             result.addEvent(Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null."))
         }
-        if (data.imdbCode == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_IMDB_CODE_NULL", "IMDB code mustn't be null."))
-        } else if (data.imdbCode != -1 && (data.imdbCode < 1 || data.imdbCode > Constants.MAX_IMDB_CODE)) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1."))
+        when {
+            data.imdbCode == null -> {
+                result.addEvent(Event(Severity.ERROR, "SHOW_IMDB_CODE_NULL", "IMDB code mustn't be null."))
+            }
+            data.imdbCode != -1 && (data.imdbCode < 1 || data.imdbCode > Constants.MAX_IMDB_CODE) -> {
+                result.addEvent(Event(Severity.ERROR, "SHOW_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1."))
+            }
         }
         if (data.wikiEn == null) {
             result.addEvent(Event(Severity.ERROR, "SHOW_WIKI_EN_NULL", "URL to english Wikipedia page about show mustn't be null."))

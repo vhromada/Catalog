@@ -10,15 +10,15 @@ import cz.vhromada.catalog.entity.Season
 import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
 import cz.vhromada.common.Language
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.utils.TestConstants
 import cz.vhromada.common.test.validator.MovableValidatorTest
 import cz.vhromada.common.utils.Constants
 import cz.vhromada.common.validator.AbstractMovableValidator
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
@@ -33,7 +33,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null number of season.
      */
     @Test
-    fun validate_Deep_NullNumber() {
+    fun validateDeepNullNumber() {
         val season = getValidatingData(1)
                 .copy(number = null)
 
@@ -51,7 +51,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with not positive number of season.
      */
     @Test
-    fun validate_Deep_NotPositiveNumber() {
+    fun validateDeepNotPositiveNumber() {
         val season = getValidatingData(1)
                 .copy(number = 0)
 
@@ -69,7 +69,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null starting year.
      */
     @Test
-    fun validate_Deep_NullStartingYear() {
+    fun validateDeepNullStartingYear() {
         val season = SeasonUtils.newSeason(1)
                 .copy(startYear = null)
 
@@ -87,7 +87,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null ending year.
      */
     @Test
-    fun validate_Deep_NullEndingYear() {
+    fun validateDeepNullEndingYear() {
         val season = SeasonUtils.newSeason(1)
                 .copy(endYear = null)
 
@@ -105,7 +105,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with bad minimum starting year and bad minimum ending year.
      */
     @Test
-    fun validate_Deep_BadMinimumYears() {
+    fun validateDeepBadMinimumYears() {
         val season = SeasonUtils.newSeason(1)
                 .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
 
@@ -123,7 +123,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with bad maximum starting year and bad maximum ending year.
      */
     @Test
-    fun validate_Deep_BadMaximumYears() {
+    fun validateDeepBadMaximumYears() {
         val season = SeasonUtils.newSeason(1)
                 .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
 
@@ -141,7 +141,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with starting year greater than ending year.
      */
     @Test
-    fun validate_Deep_BadYears() {
+    fun validateDeepBadYears() {
         var season = SeasonUtils.newSeason(1)
         season = season.copy(startYear = season.endYear!! + 1)
 
@@ -159,7 +159,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null language.
      */
     @Test
-    fun validate_Deep_NullLanguage() {
+    fun validateDeepNullLanguage() {
         val season = getValidatingData(1)
                 .copy(language = null)
 
@@ -177,7 +177,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null subtitles.
      */
     @Test
-    fun validate_Deep_NullSubtitles() {
+    fun validateDeepNullSubtitles() {
         val season = getValidatingData(1)
                 .copy(subtitles = null)
 
@@ -195,7 +195,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with subtitles with null value.
      */
     @Test
-    fun validate_Deep_BadSubtitles() {
+    fun validateDeepBadSubtitles() {
         val season = getValidatingData(1)
                 .copy(subtitles = listOf(Language.CZ, null))
 
@@ -213,7 +213,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
      * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null note.
      */
     @Test
-    fun validate_Deep_NullNote() {
+    fun validateDeepNullNote() {
         val season = getValidatingData(1)
                 .copy(note = null)
 

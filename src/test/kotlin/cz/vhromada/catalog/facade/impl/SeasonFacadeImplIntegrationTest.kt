@@ -10,12 +10,12 @@ import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
 import cz.vhromada.common.Language
 import cz.vhromada.common.facade.MovableChildFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest
 import cz.vhromada.common.test.utils.TestConstants
 import cz.vhromada.common.utils.Constants
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,7 +48,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with null number of season.
      */
     @Test
-    fun add_NullNumber() {
+    fun addNullNumber() {
         val season = newChildData(null)
                 .copy(number = null)
 
@@ -66,7 +66,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with not positive number of season.
      */
     @Test
-    fun add_NotPositiveNumber() {
+    fun addNotPositiveNumber() {
         val season = newChildData(null)
                 .copy(number = 0)
 
@@ -84,7 +84,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with null starting year.
      */
     @Test
-    fun add_NullStartYear() {
+    fun addNullStartYear() {
         val season = newChildData(null)
                 .copy(startYear = null)
 
@@ -102,7 +102,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with null ending year.
      */
     @Test
-    fun add_NullEndYear() {
+    fun addNullEndYear() {
         val season = newChildData(null)
                 .copy(endYear = null)
 
@@ -120,7 +120,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with bad minimum starting year and bad minimum ending year.
      */
     @Test
-    fun add_BadMinimumYears() {
+    fun addBadMinimumYears() {
         val season = newChildData(null)
                 .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
 
@@ -138,7 +138,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with bad maximum starting year and bad maximum ending year.
      */
     @Test
-    fun add_BadMaximumYears() {
+    fun addBadMaximumYears() {
         val season = newChildData(null)
                 .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
 
@@ -156,7 +156,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with starting year greater than ending year.
      */
     @Test
-    fun add_BadYears() {
+    fun addBadYears() {
         var season = newChildData(null)
         season = season.copy(startYear = season.endYear!! + 1)
 
@@ -174,7 +174,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with null language.
      */
     @Test
-    fun add_NullLanguage() {
+    fun addNullLanguage() {
         val season = newChildData(null)
                 .copy(language = null)
 
@@ -192,7 +192,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with null subtitles.
      */
     @Test
-    fun add_NullSubtitles() {
+    fun addNullSubtitles() {
         val season = newChildData(null)
                 .copy(subtitles = null)
 
@@ -210,7 +210,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with subtitles with null value.
      */
     @Test
-    fun add_BadSubtitles() {
+    fun addBadSubtitles() {
         val season = newChildData(null)
                 .copy(subtitles = listOf(Language.CZ, null))
 
@@ -228,7 +228,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.add] with season with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val season = newChildData(null)
                 .copy(note = null)
 
@@ -246,7 +246,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with null number of season.
      */
     @Test
-    fun update_NullNumber() {
+    fun updateNullNumber() {
         val season = newChildData(1)
                 .copy(number = null)
 
@@ -264,7 +264,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with not positive number of season.
      */
     @Test
-    fun update_NotPositiveNumber() {
+    fun updateNotPositiveNumber() {
         val season = newChildData(1)
                 .copy(number = 0)
 
@@ -282,7 +282,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with null starting year.
      */
     @Test
-    fun update_NullStartYear() {
+    fun updateNullStartYear() {
         val season = newChildData(1)
                 .copy(startYear = null)
 
@@ -300,7 +300,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with null ending year.
      */
     @Test
-    fun update_NullEndYear() {
+    fun updateNullEndYear() {
         val season = newChildData(1)
                 .copy(endYear = null)
 
@@ -318,7 +318,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with bad minimum starting year and bad minimum ending year.
      */
     @Test
-    fun update_BadMinimumYears() {
+    fun updateBadMinimumYears() {
         val season = newChildData(1)
                 .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
 
@@ -336,7 +336,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with bad maximum starting year and bad maximum ending year.
      */
     @Test
-    fun update_BadMaximumYears() {
+    fun updateBadMaximumYears() {
         val season = newChildData(1)
                 .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
 
@@ -354,7 +354,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with starting year greater than ending year.
      */
     @Test
-    fun update_BadYears() {
+    fun updateBadYears() {
         var season = newChildData(4)
         season = season.copy(startYear = season.endYear!! + 1)
 
@@ -372,7 +372,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with null language.
      */
     @Test
-    fun update_NullLanguage() {
+    fun updateNullLanguage() {
         val season = newChildData(1)
                 .copy(language = null)
 
@@ -390,7 +390,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with null subtitles.
      */
     @Test
-    fun update_NullSubtitles() {
+    fun updateNullSubtitles() {
         val season = newChildData(1)
                 .copy(subtitles = null)
 
@@ -408,7 +408,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with subtitles with null value.
      */
     @Test
-    fun update_BadSubtitles() {
+    fun updateBadSubtitles() {
         val season = newChildData(1)
                 .copy(subtitles = listOf(Language.CZ, null))
 
@@ -426,7 +426,7 @@ class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season
      * Test method for [SeasonFacade.update] with season with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val season = newChildData(1)
                 .copy(note = null)
 

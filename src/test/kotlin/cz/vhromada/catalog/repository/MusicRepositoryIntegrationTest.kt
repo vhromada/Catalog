@@ -45,7 +45,7 @@ class MusicRepositoryIntegrationTest {
      * Test method for get all music.
      */
     @Test
-    fun getMusic_All() {
+    fun getMusicAll() {
         val music = musicRepository.findAll(Sort.by("position", "id"))
 
         MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(), music)
@@ -60,7 +60,7 @@ class MusicRepositoryIntegrationTest {
      * Test method for get one music.
      */
     @Test
-    fun getMusic_One() {
+    fun getMusicOne() {
         for (i in 1..MusicUtils.MUSIC_COUNT) {
             val music = musicRepository.findById(i).orElse(null)
 
@@ -102,7 +102,7 @@ class MusicRepositoryIntegrationTest {
      * Test method for update music with updated data.
      */
     @Test
-    fun update_Data() {
+    fun updateData() {
         val music = MusicUtils.updateMusic(entityManager, 1)
 
         musicRepository.save(music)
@@ -123,7 +123,7 @@ class MusicRepositoryIntegrationTest {
      * Test method for update music with added song.
      */
     @Test
-    fun update_AddedSong() {
+    fun updateAddedSong() {
         val song = SongUtils.newSongDomain(null)
                 .copy(position = SongUtils.SONGS_COUNT)
         entityManager.persist(song)

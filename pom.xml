@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>cz.vhromada.maven</groupId>
-        <artifactId>parent</artifactId>
-        <version>3.0.1</version>
+        <groupId>cz.vhromada.project</groupId>
+        <artifactId>project-parent</artifactId>
+        <version>4.0.2</version>
     </parent>
 
     <groupId>cz.vhromada.catalog</groupId>
     <artifactId>catalog</artifactId>
-    <version>8.0.0</version>
+    <version>8.0.1</version>
 
     <name>Catalog</name>
     <description>Catalog of movies, games, music and programs</description>
@@ -41,13 +41,13 @@
     </scm>
 
     <properties>
-        <common.version>3.0.1</common.version>
+        <common.version>3.0.2</common.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>cz.vhromada.common</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>common-core</artifactId>
             <version>${common.version}</version>
         </dependency>
         <dependency>
@@ -68,7 +68,7 @@
         </dependency>
         <dependency>
             <groupId>cz.vhromada.common</groupId>
-            <artifactId>test</artifactId>
+            <artifactId>common-test</artifactId>
             <version>${common.version}</version>
             <scope>test</scope>
         </dependency>

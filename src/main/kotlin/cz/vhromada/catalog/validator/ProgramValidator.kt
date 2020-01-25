@@ -1,11 +1,11 @@
 package cz.vhromada.catalog.validator
 
 import cz.vhromada.catalog.entity.Program
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Result
+import cz.vhromada.common.result.Severity
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.validator.AbstractMovableValidator
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Result
-import cz.vhromada.validation.result.Severity
 import org.springframework.stereotype.Component
 
 /**
@@ -34,16 +34,22 @@ class ProgramValidator(programService: MovableService<cz.vhromada.catalog.domain
      * @param result result with validation errors
      */
     override fun validateDataDeep(data: Program, result: Result<Unit>) {
-        if (data.name == null) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null."))
-        } else if (data.name.isBlank()) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string."))
+        when {
+            data.name == null -> {
+                result.addEvent(Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null."))
+            }
+            data.name.isBlank() -> {
+                result.addEvent(Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string."))
+            }
         }
         validateUrls(data, result)
-        if (data.mediaCount == null) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
-        } else if (data.mediaCount <= 0) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
+        when {
+            data.mediaCount == null -> {
+                result.addEvent(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
+            }
+            data.mediaCount <= 0 -> {
+                result.addEvent(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
+            }
         }
         if (data.otherData == null) {
             result.addEvent(Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null."))

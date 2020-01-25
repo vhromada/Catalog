@@ -5,10 +5,10 @@ import cz.vhromada.catalog.entity.Game
 import cz.vhromada.catalog.facade.GameFacade
 import cz.vhromada.catalog.utils.GameUtils
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,7 +41,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with null name.
      */
     @Test
-    fun add_NullName() {
+    fun addNullName() {
         val game = newData(null)
                 .copy(name = null)
 
@@ -59,7 +59,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with empty string as name.
      */
     @Test
-    fun add_EmptyName() {
+    fun addEmptyName() {
         val game = newData(null)
                 .copy(name = "")
 
@@ -77,7 +77,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with null URL to english Wikipedia about game.
      */
     @Test
-    fun add_NullWikiEn() {
+    fun addNullWikiEn() {
         val game = newData(null)
                 .copy(wikiEn = null)
 
@@ -95,7 +95,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with null URL to czech Wikipedia about game.
      */
     @Test
-    fun add_NullWikiCz() {
+    fun addNullWikiCz() {
         val game = newData(null)
                 .copy(wikiCz = null)
 
@@ -113,7 +113,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with null count of media.
      */
     @Test
-    fun add_NullMediaCount() {
+    fun addNullMediaCount() {
         val game = newData(null)
                 .copy(mediaCount = null)
 
@@ -131,7 +131,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with not positive count of media.
      */
     @Test
-    fun add_NotPositiveMediaCount() {
+    fun addNotPositiveMediaCount() {
         val game = newData(null)
                 .copy(mediaCount = 0)
 
@@ -149,7 +149,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with null other data.
      */
     @Test
-    fun add_NullOtherData() {
+    fun addNullOtherData() {
         val game = newData(null)
                 .copy(otherData = null)
 
@@ -167,7 +167,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.add] with game with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val game = newData(null)
                 .copy(note = null)
 
@@ -185,7 +185,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with null name.
      */
     @Test
-    fun update_NullName() {
+    fun updateNullName() {
         val game = newData(1)
                 .copy(name = null)
 
@@ -203,7 +203,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with empty string as name.
      */
     @Test
-    fun update_EmptyName() {
+    fun updateEmptyName() {
         val game = newData(1)
                 .copy(name = "")
 
@@ -221,7 +221,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with null URL to english Wikipedia about game.
      */
     @Test
-    fun update_NullWikiEn() {
+    fun updateNullWikiEn() {
         val game = newData(1)
                 .copy(wikiEn = null)
 
@@ -239,7 +239,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with null URL to czech Wikipedia about game.
      */
     @Test
-    fun update_NullWikiCz() {
+    fun updateNullWikiCz() {
         val game = newData(1)
                 .copy(wikiCz = null)
 
@@ -257,7 +257,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with null count of media.
      */
     @Test
-    fun update_NullMediaCount() {
+    fun updateNullMediaCount() {
         val game = newData(1)
                 .copy(mediaCount = null)
 
@@ -275,7 +275,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with not positive count of media.
      */
     @Test
-    fun update_NotPositiveMediaCount() {
+    fun updateNotPositiveMediaCount() {
         val game = newData(1)
                 .copy(mediaCount = 0)
 
@@ -293,7 +293,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with null other data.
      */
     @Test
-    fun update_NullOtherData() {
+    fun updateNullOtherData() {
         val game = newData(1)
                 .copy(otherData = null)
 
@@ -311,7 +311,7 @@ class GameFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Game, c
      * Test method for [GameFacade.update] with game with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val game = newData(1)
                 .copy(note = null)
 

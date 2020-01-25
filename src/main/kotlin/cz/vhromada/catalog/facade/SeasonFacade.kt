@@ -3,7 +3,7 @@ package cz.vhromada.catalog.facade
 import cz.vhromada.catalog.entity.Season
 import cz.vhromada.catalog.entity.Show
 import cz.vhromada.common.facade.MovableChildFacade
-import cz.vhromada.validation.result.Result
+import cz.vhromada.common.result.Result
 
 /**
  * An interface represents facade for seasons.

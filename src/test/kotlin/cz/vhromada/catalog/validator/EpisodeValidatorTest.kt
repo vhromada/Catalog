@@ -10,12 +10,12 @@ import cz.vhromada.catalog.entity.Episode
 import cz.vhromada.catalog.utils.EpisodeUtils
 import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.validator.MovableValidatorTest
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
@@ -30,7 +30,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
      * Test method for [EpisodeValidator.validate] with [ValidationType.DEEP] with data with null number of episode.
      */
     @Test
-    fun validate_Deep_NullNumber() {
+    fun validateDeepNullNumber() {
         val episode = getValidatingData(1)
                 .copy(number = null)
 
@@ -48,7 +48,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
      * Test method for [EpisodeValidator.validate] with [ValidationType.DEEP] with data with not positive number of episode.
      */
     @Test
-    fun validate_Deep_NotPositiveNumber() {
+    fun validateDeepNotPositiveNumber() {
         val episode = getValidatingData(1)
                 .copy(number = 0)
 
@@ -66,7 +66,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
      * Test method for [EpisodeValidator.validate] with [ValidationType.DEEP] with data with null name.
      */
     @Test
-    fun validate_Deep_NullName() {
+    fun validateDeepNullName() {
         val episode = getValidatingData(1)
                 .copy(name = null)
 
@@ -84,7 +84,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
      * Test method for [EpisodeValidator.validate] with [ValidationType.DEEP] with data with empty name.
      */
     @Test
-    fun validate_Deep_EmptyName() {
+    fun validateDeepEmptyName() {
         val episode = getValidatingData(1)
                 .copy(name = "")
 
@@ -102,7 +102,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
      * Test method for [EpisodeValidator.validate] with [ValidationType.DEEP] with data with null length of episode.
      */
     @Test
-    fun validate_Deep_NullLength() {
+    fun validateDeepNullLength() {
         val episode = getValidatingData(1)
                 .copy(length = null)
 
@@ -120,7 +120,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
      * Test method for [EpisodeValidator.validate] with [ValidationType.DEEP] with data with negative length of episode.
      */
     @Test
-    fun validate_Deep_NegativeLength() {
+    fun validateDeepNegativeLength() {
         val episode = getValidatingData(1)
                 .copy(length = -1)
 
@@ -138,7 +138,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
      * Test method for [EpisodeValidator.validate] with [ValidationType.DEEP] with data with null note.
      */
     @Test
-    fun validate_Deep_NullNote() {
+    fun validateDeepNullNote() {
         val episode = getValidatingData(1)
                 .copy(note = null)
 

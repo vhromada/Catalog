@@ -3,13 +3,13 @@ package cz.vhromada.catalog.validator
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import cz.vhromada.catalog.entity.Picture
 import cz.vhromada.catalog.utils.PictureUtils
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.validator.MovableValidatorTest
 import cz.vhromada.common.validator.AbstractMovableValidator
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
@@ -24,7 +24,7 @@ class PictureValidatorTest : MovableValidatorTest<Picture, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null content.
      */
     @Test
-    fun validate_Deep_NullContent() {
+    fun validateDeepNullContent() {
         val picture = getValidatingData(1)
                 .copy(content = null)
 

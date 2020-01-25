@@ -7,10 +7,10 @@ import cz.vhromada.catalog.utils.MusicUtils
 import cz.vhromada.catalog.utils.SongUtils
 import cz.vhromada.common.Time
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
@@ -44,7 +44,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.add] with music with null name.
      */
     @Test
-    fun add_NullName() {
+    fun addNullName() {
         val music = newData(null)
                 .copy(name = null)
 
@@ -62,7 +62,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.add] with music with empty string as name.
      */
     @Test
-    fun add_EmptyName() {
+    fun addEmptyName() {
         val music = newData(null)
                 .copy(name = "")
 
@@ -80,7 +80,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.add] with music with null URL to english Wikipedia about music.
      */
     @Test
-    fun add_NullWikiEn() {
+    fun addNullWikiEn() {
         val music = newData(null)
                 .copy(wikiEn = null)
 
@@ -99,7 +99,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.add] with music with null URL to czech Wikipedia about music.
      */
     @Test
-    fun add_NullWikiCz() {
+    fun addNullWikiCz() {
         val music = newData(null)
                 .copy(wikiCz = null)
 
@@ -118,7 +118,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.add] with music with null count of media.
      */
     @Test
-    fun add_NullMediaCount() {
+    fun addNullMediaCount() {
         val music = newData(null)
                 .copy(mediaCount = null)
 
@@ -136,7 +136,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.add] with music with not positive count of media.
      */
     @Test
-    fun add_NotPositiveMediaCount() {
+    fun addNotPositiveMediaCount() {
         val music = newData(null)
                 .copy(mediaCount = 0)
 
@@ -154,7 +154,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.add] with music with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val music = newData(null)
                 .copy(note = null)
 
@@ -172,7 +172,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.update] with music with null name.
      */
     @Test
-    fun update_NullName() {
+    fun updateNullName() {
         val music = newData(1)
                 .copy(name = null)
 
@@ -190,7 +190,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.update] with music with empty string as name.
      */
     @Test
-    fun update_EmptyName() {
+    fun updateEmptyName() {
         val music = newData(1)
                 .copy(name = "")
 
@@ -208,7 +208,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.update] with music with null URL to english Wikipedia about music.
      */
     @Test
-    fun update_NullWikiEn() {
+    fun updateNullWikiEn() {
         val music = newData(1)
                 .copy(wikiEn = null)
 
@@ -227,7 +227,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.update] with music with null URL to czech Wikipedia about music.
      */
     @Test
-    fun update_NullWikiCz() {
+    fun updateNullWikiCz() {
         val music = newData(1)
                 .copy(wikiCz = null)
 
@@ -246,7 +246,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.update] with music with null count of media.
      */
     @Test
-    fun update_NullMediaCount() {
+    fun updateNullMediaCount() {
         val music = newData(1)
                 .copy(mediaCount = null)
 
@@ -264,7 +264,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.update] with music with not positive count of media.
      */
     @Test
-    fun update_NotPositiveMediaCount() {
+    fun updateNotPositiveMediaCount() {
         val music = newData(1)
                 .copy(mediaCount = 0)
 
@@ -282,7 +282,7 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
      * Test method for [MusicFacade.update] with music with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val music = newData(1)
                 .copy(note = null)
 

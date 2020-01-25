@@ -9,10 +9,10 @@ import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
 import cz.vhromada.common.facade.MovableChildFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableChildFacadeIntegrationTest
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +45,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.add] with episode with null number of episode.
      */
     @Test
-    fun add_NullNumber() {
+    fun addNullNumber() {
         val episode = newChildData(null)
                 .copy(number = null)
 
@@ -63,7 +63,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.add] with episode with not positive number of episode.
      */
     @Test
-    fun add_NotPositiveNumber() {
+    fun addNotPositiveNumber() {
         val episode = newChildData(null)
                 .copy(number = 0)
 
@@ -81,7 +81,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.add] with episode with null name.
      */
     @Test
-    fun add_NullName() {
+    fun addNullName() {
         val episode = newChildData(null)
                 .copy(name = null)
 
@@ -99,7 +99,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.add] with episode with empty string as name.
      */
     @Test
-    fun add_EmptyName() {
+    fun addEmptyName() {
         val episode = newChildData(null)
                 .copy(name = "")
 
@@ -117,7 +117,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.add] with episode with null length.
      */
     @Test
-    fun add_NullLength() {
+    fun addNullLength() {
         val episode = newChildData(null)
                 .copy(length = null)
 
@@ -135,7 +135,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.add] with episode with negative length.
      */
     @Test
-    fun add_NegativeLength() {
+    fun addNegativeLength() {
         val episode = newChildData(null)
                 .copy(length = -1)
 
@@ -153,7 +153,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.add] with episode with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val episode = newChildData(null)
                 .copy(note = null)
 
@@ -171,7 +171,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.update] with episode with null number of episode.
      */
     @Test
-    fun update_NullNumber() {
+    fun updateNullNumber() {
         val episode = newChildData(1)
                 .copy(number = null)
 
@@ -189,7 +189,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.update] with episode with not positive number of episode.
      */
     @Test
-    fun update_NotPositiveNumber() {
+    fun updateNotPositiveNumber() {
         val episode = newChildData(1)
                 .copy(number = 0)
 
@@ -207,7 +207,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.update] with episode with null name.
      */
     @Test
-    fun update_NullName() {
+    fun updateNullName() {
         val episode = newChildData(1)
                 .copy(name = null)
 
@@ -225,7 +225,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.update] with episode with empty string as name.
      */
     @Test
-    fun update_EmptyName() {
+    fun updateEmptyName() {
         val episode = newChildData(1)
                 .copy(name = "")
 
@@ -243,7 +243,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.update] with episode with null length.
      */
     @Test
-    fun update_NullLength() {
+    fun updateNullLength() {
         val episode = newChildData(1)
                 .copy(length = null)
 
@@ -261,7 +261,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.update] with episode with negative length.
      */
     @Test
-    fun update_NegativeLength() {
+    fun updateNegativeLength() {
         val episode = newChildData(1)
                 .copy(length = -1)
 
@@ -279,7 +279,7 @@ class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episo
      * Test method for [EpisodeFacade.update] with episode with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val episode = newChildData(1)
                 .copy(note = null)
 

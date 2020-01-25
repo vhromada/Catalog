@@ -2,13 +2,13 @@ package cz.vhromada.catalog.validator
 
 import cz.vhromada.catalog.domain.Show
 import cz.vhromada.catalog.entity.Season
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Result
+import cz.vhromada.common.result.Severity
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.Constants
 import cz.vhromada.common.utils.sorted
 import cz.vhromada.common.validator.AbstractMovableValidator
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Result
-import cz.vhromada.validation.result.Severity
 import org.springframework.stereotype.Component
 
 /**
@@ -65,10 +65,13 @@ class SeasonValidator(showService: MovableService<Show>) : AbstractMovableValida
      * @param result result with validation errors
      */
     override fun validateDataDeep(data: Season, result: Result<Unit>) {
-        if (data.number == null) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_NUMBER_NULL", "Number of season mustn't be null."))
-        } else if (data.number <= 0) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number."))
+        when {
+            data.number == null -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_NUMBER_NULL", "Number of season mustn't be null."))
+            }
+            data.number <= 0 -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number."))
+            }
         }
         validateYears(data, result)
         validateLanguages(data, result)
@@ -92,17 +95,21 @@ class SeasonValidator(showService: MovableService<Show>) : AbstractMovableValida
      * @param result result with validation errors
      */
     private fun validateYears(data: Season, result: Result<Unit>) {
-        if (data.startYear == null) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_START_YEAR_NULL", "Starting year mustn't be null."))
-        } else if (data.startYear < Constants.MIN_YEAR || data.startYear > Constants.CURRENT_YEAR) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID",
-                    "Starting year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}."))
+        when {
+            data.startYear == null -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_START_YEAR_NULL", "Starting year mustn't be null."))
+            }
+            data.startYear < Constants.MIN_YEAR || data.startYear > Constants.CURRENT_YEAR -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID", "Starting year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}."))
+            }
         }
-        if (data.endYear == null) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_END_YEAR_NULL", "Ending year mustn't be null."))
-        } else if (data.endYear < Constants.MIN_YEAR || data.endYear > Constants.CURRENT_YEAR) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID",
-                    "Ending year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}."))
+        when {
+            data.endYear == null -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_END_YEAR_NULL", "Ending year mustn't be null."))
+            }
+            data.endYear < Constants.MIN_YEAR || data.endYear > Constants.CURRENT_YEAR -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID", "Ending year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}."))
+            }
         }
         if (data.startYear != null && data.endYear != null && data.startYear > data.endYear) {
             result.addEvent(Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year."))
@@ -125,10 +132,13 @@ class SeasonValidator(showService: MovableService<Show>) : AbstractMovableValida
         if (data.language == null) {
             result.addEvent(Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null."))
         }
-        if (data.subtitles == null) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null."))
-        } else if (data.subtitles.contains(null)) {
-            result.addEvent(Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value."))
+        when {
+            data.subtitles == null -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null."))
+            }
+            data.subtitles.contains(null) -> {
+                result.addEvent(Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value."))
+            }
         }
     }
 

@@ -3,13 +3,13 @@ package cz.vhromada.catalog.validator
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import cz.vhromada.catalog.entity.Program
 import cz.vhromada.catalog.utils.ProgramUtils
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.validator.MovableValidatorTest
 import cz.vhromada.common.validator.AbstractMovableValidator
 import cz.vhromada.common.validator.MovableValidator
 import cz.vhromada.common.validator.ValidationType
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
@@ -24,7 +24,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null name.
      */
     @Test
-    fun validate_Deep_NullName() {
+    fun validateDeepNullName() {
         val program = getValidatingData(1)
                 .copy(name = null)
 
@@ -42,7 +42,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with empty name.
      */
     @Test
-    fun validate_Deep_EmptyName() {
+    fun validateDeepEmptyName() {
         val program = getValidatingData(1)
                 .copy(name = "")
 
@@ -60,7 +60,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null URL to english Wikipedia page about program.
      */
     @Test
-    fun validate_Deep_NullWikiEn() {
+    fun validateDeepNullWikiEn() {
         val program = getValidatingData(1)
                 .copy(wikiEn = null)
 
@@ -78,7 +78,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null URL to czech Wikipedia page about program.
      */
     @Test
-    fun validate_Deep_NullWikiCz() {
+    fun validateDeepNullWikiCz() {
         val program = getValidatingData(1)
                 .copy(wikiCz = null)
 
@@ -97,7 +97,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null count of media.
      */
     @Test
-    fun validate_Deep_NullMediaCount() {
+    fun validateDeepNullMediaCount() {
         val program = getValidatingData(1)
                 .copy(mediaCount = null)
 
@@ -115,7 +115,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with not positive count of media.
      */
     @Test
-    fun validate_Deep_NotPositiveMediaCount() {
+    fun validateDeepNotPositiveMediaCount() {
         val program = getValidatingData(1)
                 .copy(mediaCount = 0)
 
@@ -133,7 +133,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null other data.
      */
     @Test
-    fun validate_Deep_NullOtherData() {
+    fun validateDeepNullOtherData() {
         val program = getValidatingData(1)
                 .copy(otherData = null)
 
@@ -151,7 +151,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, cz.vhromada.catalog.d
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null note.
      */
     @Test
-    fun validate_Deep_NullNote() {
+    fun validateDeepNullNote() {
         val program = getValidatingData(1)
                 .copy(note = null)
 

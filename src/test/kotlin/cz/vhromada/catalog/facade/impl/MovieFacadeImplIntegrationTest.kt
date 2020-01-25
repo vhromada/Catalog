@@ -10,12 +10,12 @@ import cz.vhromada.catalog.utils.PictureUtils
 import cz.vhromada.common.Language
 import cz.vhromada.common.Time
 import cz.vhromada.common.facade.MovableParentFacade
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Severity
+import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
 import cz.vhromada.common.test.utils.TestConstants
 import cz.vhromada.common.utils.Constants
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Severity
-import cz.vhromada.validation.result.Status
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,7 +48,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null czech name.
      */
     @Test
-    fun add_NullCzechName() {
+    fun addNullCzechName() {
         val movie = newData(null)
                 .copy(czechName = null)
 
@@ -66,7 +66,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with empty string as czech name.
      */
     @Test
-    fun add_EmptyCzechName() {
+    fun addEmptyCzechName() {
         val movie = newData(null)
                 .copy(czechName = "")
 
@@ -84,7 +84,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null original name.
      */
     @Test
-    fun add_NullOriginalName() {
+    fun addNullOriginalName() {
         val movie = newData(null)
                 .copy(originalName = null)
 
@@ -102,7 +102,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with empty string as original name.
      */
     @Test
-    fun add_EmptyOriginalName() {
+    fun addEmptyOriginalName() {
         val movie = newData(null)
                 .copy(originalName = "")
 
@@ -120,7 +120,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null year.
      */
     @Test
-    fun add_NullYear() {
+    fun addNullYear() {
         val movie = newData(null)
                 .copy(year = null)
 
@@ -138,7 +138,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with bad minimum year.
      */
     @Test
-    fun add_BadMinimumYear() {
+    fun addBadMinimumYear() {
         val movie = newData(null)
                 .copy(year = TestConstants.BAD_MIN_YEAR)
 
@@ -156,7 +156,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with bad maximum year.
      */
     @Test
-    fun add_BadMaximumYear() {
+    fun addBadMaximumYear() {
         val movie = newData(null)
                 .copy(year = TestConstants.BAD_MAX_YEAR)
 
@@ -174,7 +174,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null language.
      */
     @Test
-    fun add_NullLanguage() {
+    fun addNullLanguage() {
         val movie = newData(null)
                 .copy(language = null)
 
@@ -192,7 +192,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null subtitles.
      */
     @Test
-    fun add_NullSubtitles() {
+    fun addNullSubtitles() {
         val movie = newData(null)
                 .copy(subtitles = null)
 
@@ -210,7 +210,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with subtitles with null value.
      */
     @Test
-    fun add_BadSubtitles() {
+    fun addBadSubtitles() {
         val movie = newData(null)
                 .copy(subtitles = listOf(Language.CZ, null))
 
@@ -228,7 +228,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null media.
      */
     @Test
-    fun add_NullMedia() {
+    fun addNullMedia() {
         val movie = newData(null)
                 .copy(media = null)
 
@@ -246,7 +246,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with media with null value.
      */
     @Test
-    fun add_BadMedia() {
+    fun addBadMedia() {
         val movie = newData(null)
                 .copy(media = listOf(MediumUtils.newMedium(1), null))
 
@@ -264,7 +264,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with media with negative value as medium.
      */
     @Test
-    fun add_BadMedium() {
+    fun addBadMedium() {
         val badMedium = MediumUtils.newMedium(Integer.MAX_VALUE)
                 .copy(length = -1)
         val movie = newData(null)
@@ -284,7 +284,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null URL to ČSFD page about movie.
      */
     @Test
-    fun add_NullCsfd() {
+    fun addNullCsfd() {
         val movie = newData(null)
                 .copy(csfd = null)
 
@@ -302,7 +302,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null IMDB code.
      */
     @Test
-    fun add_NullImdb() {
+    fun addNullImdb() {
         val movie = newData(null)
                 .copy(imdbCode = null)
 
@@ -320,7 +320,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with bad minimal IMDB code.
      */
     @Test
-    fun add_BadMinimalImdb() {
+    fun addBadMinimalImdb() {
         val movie = newData(null)
                 .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
 
@@ -338,7 +338,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with bad divider IMDB code.
      */
     @Test
-    fun add_BadDividerImdb() {
+    fun addBadDividerImdb() {
         val movie = newData(null)
                 .copy(imdbCode = 0)
 
@@ -356,7 +356,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with bad maximal IMDB code.
      */
     @Test
-    fun add_BadMaximalImdb() {
+    fun addBadMaximalImdb() {
         val movie = newData(null)
                 .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
 
@@ -374,7 +374,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null URL to english Wikipedia page about movie.
      */
     @Test
-    fun add_NullWikiEn() {
+    fun addNullWikiEn() {
         val movie = newData(null)
                 .copy(wikiEn = null)
 
@@ -393,7 +393,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null URL to czech Wikipedia page about movie.
      */
     @Test
-    fun add_NullWikiCz() {
+    fun addNullWikiCz() {
         val movie = newData(null)
                 .copy(wikiCz = null)
 
@@ -412,7 +412,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null note.
      */
     @Test
-    fun add_NullNote() {
+    fun addNullNote() {
         val movie = newData(null)
                 .copy(note = null)
 
@@ -430,7 +430,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with not existing picture.
      */
     @Test
-    fun add_NotExistingPicture() {
+    fun addNotExistingPicture() {
         val movie = newData(null)
                 .copy(picture = Integer.MAX_VALUE)
 
@@ -448,7 +448,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with null genres.
      */
     @Test
-    fun add_NullGenres() {
+    fun addNullGenres() {
         val movie = newData(null)
                 .copy(genres = null)
 
@@ -466,7 +466,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with genres with null value.
      */
     @Test
-    fun add_BadGenres() {
+    fun addBadGenres() {
         val movie = newData(null)
                 .copy(genres = listOf(GenreUtils.newGenre(1), null))
 
@@ -484,7 +484,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with genres with genre with null ID.
      */
     @Test
-    fun add_NullGenreId() {
+    fun addNullGenreId() {
         val movie = newData(null)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(null)))
 
@@ -502,7 +502,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with genres with genre with null name.
      */
     @Test
-    fun add_NullGenreName() {
+    fun addNullGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = null)
         val movie = newData(null)
@@ -522,7 +522,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with movie with genres with genre with empty string as name.
      */
     @Test
-    fun add_EmptyGenreName() {
+    fun addEmptyGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = "")
         val movie = newData(null)
@@ -542,7 +542,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.add] with show with genres with not existing genre.
      */
     @Test
-    fun add_NotExistingGenre() {
+    fun addNotExistingGenre() {
         val show = newData(null)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
 
@@ -560,7 +560,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null czech name.
      */
     @Test
-    fun update_NullCzechName() {
+    fun updateNullCzechName() {
         val movie = newData(1)
                 .copy(czechName = null)
 
@@ -578,7 +578,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with empty string as czech name.
      */
     @Test
-    fun update_EmptyCzechName() {
+    fun updateEmptyCzechName() {
         val movie = newData(1)
                 .copy(czechName = "")
 
@@ -596,7 +596,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null original name.
      */
     @Test
-    fun update_NullOriginalName() {
+    fun updateNullOriginalName() {
         val movie = newData(1)
                 .copy(originalName = null)
 
@@ -614,7 +614,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with empty string as original name.
      */
     @Test
-    fun update_EmptyOriginalName() {
+    fun updateEmptyOriginalName() {
         val movie = newData(1)
                 .copy(originalName = "")
 
@@ -632,7 +632,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null year.
      */
     @Test
-    fun update_NullYear() {
+    fun updateNullYear() {
         val movie = newData(1)
                 .copy(year = null)
 
@@ -650,7 +650,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with bad minimum year.
      */
     @Test
-    fun update_BadMinimumYear() {
+    fun updateBadMinimumYear() {
         val movie = newData(1)
                 .copy(year = TestConstants.BAD_MIN_YEAR)
 
@@ -668,7 +668,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with bad maximum year.
      */
     @Test
-    fun update_BadMaximumYear() {
+    fun updateBadMaximumYear() {
         val movie = newData(1)
                 .copy(year = TestConstants.BAD_MAX_YEAR)
 
@@ -686,7 +686,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null language.
      */
     @Test
-    fun update_NullLanguage() {
+    fun updateNullLanguage() {
         val movie = newData(1)
                 .copy(language = null)
 
@@ -704,7 +704,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null subtitles.
      */
     @Test
-    fun update_NullSubtitles() {
+    fun updateNullSubtitles() {
         val movie = newData(1)
                 .copy(subtitles = null)
 
@@ -722,7 +722,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with subtitles with null value.
      */
     @Test
-    fun update_BadSubtitles() {
+    fun updateBadSubtitles() {
         val movie = newData(1)
                 .copy(subtitles = listOf(Language.CZ, null))
 
@@ -740,7 +740,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null media.
      */
     @Test
-    fun update_NullMedia() {
+    fun updateNullMedia() {
         val movie = newData(1)
                 .copy(media = null)
 
@@ -758,7 +758,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with media with null value.
      */
     @Test
-    fun update_BadMedia() {
+    fun updateBadMedia() {
         val movie = newData(1)
                 .copy(media = listOf(MediumUtils.newMedium(1), null))
 
@@ -776,7 +776,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with media with negative value as medium.
      */
     @Test
-    fun update_BadMedium() {
+    fun updateBadMedium() {
         val badMedium = MediumUtils.newMedium(Integer.MAX_VALUE)
                 .copy(length = -1)
         val movie = newData(1)
@@ -796,7 +796,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null URL to ČSFD page about movie.
      */
     @Test
-    fun update_NullCsfd() {
+    fun updateNullCsfd() {
         val movie = newData(1)
                 .copy(csfd = null)
 
@@ -814,7 +814,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null IMDB code.
      */
     @Test
-    fun update_NullImdb() {
+    fun updateNullImdb() {
         val movie = newData(1)
                 .copy(imdbCode = null)
 
@@ -832,7 +832,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with bad minimal IMDB code.
      */
     @Test
-    fun update_BadMinimalImdb() {
+    fun updateBadMinimalImdb() {
         val movie = newData(1)
                 .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
 
@@ -850,7 +850,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with bad divider IMDB code.
      */
     @Test
-    fun update_BadDividerImdb() {
+    fun updateBadDividerImdb() {
         val movie = newData(1)
                 .copy(imdbCode = 0)
 
@@ -868,7 +868,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with bad maximal IMDB code.
      */
     @Test
-    fun update_BadMaximalImdb() {
+    fun updateBadMaximalImdb() {
         val movie = newData(1)
                 .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
 
@@ -886,7 +886,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null URL to english Wikipedia page about movie.
      */
     @Test
-    fun update_NullWikiEn() {
+    fun updateNullWikiEn() {
         val movie = newData(1)
                 .copy(wikiEn = null)
 
@@ -905,7 +905,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null URL to czech Wikipedia page about movie.
      */
     @Test
-    fun update_NullWikiCz() {
+    fun updateNullWikiCz() {
         val movie = newData(1)
                 .copy(wikiCz = null)
 
@@ -924,7 +924,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null note.
      */
     @Test
-    fun update_NullNote() {
+    fun updateNullNote() {
         val movie = newData(1)
                 .copy(note = null)
 
@@ -942,7 +942,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with not existing picture.
      */
     @Test
-    fun update_NotExistingPicture() {
+    fun updateNotExistingPicture() {
         val movie = newData(1)
                 .copy(picture = Integer.MAX_VALUE)
 
@@ -960,7 +960,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with null genres.
      */
     @Test
-    fun update_NullGenres() {
+    fun updateNullGenres() {
         val movie = newData(1)
                 .copy(genres = null)
 
@@ -978,7 +978,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with genres with null value.
      */
     @Test
-    fun update_BadGenres() {
+    fun updateBadGenres() {
         val movie = newData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(1), null))
 
@@ -996,7 +996,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with genres with genre with null ID.
      */
     @Test
-    fun update_NullGenreId() {
+    fun updateNullGenreId() {
         val movie = newData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(null)))
 
@@ -1014,7 +1014,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with genres with genre with null name.
      */
     @Test
-    fun update_NullGenreName() {
+    fun updateNullGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = null)
         val movie = newData(1)
@@ -1034,7 +1034,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with movie with genres with genre with empty string as name.
      */
     @Test
-    fun update_EmptyGenreName() {
+    fun updateEmptyGenreName() {
         val badGenre = GenreUtils.newGenre(1)
                 .copy(name = "")
         val movie = newData(1)
@@ -1054,7 +1054,7 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
      * Test method for [MovieFacade.update] with show with genres with not existing genre.
      */
     @Test
-    fun update_NotExistingGenre() {
+    fun updateNotExistingGenre() {
         val show = newData(1)
                 .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
 

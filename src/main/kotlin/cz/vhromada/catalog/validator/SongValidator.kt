@@ -2,12 +2,12 @@ package cz.vhromada.catalog.validator
 
 import cz.vhromada.catalog.domain.Music
 import cz.vhromada.catalog.entity.Song
+import cz.vhromada.common.result.Event
+import cz.vhromada.common.result.Result
+import cz.vhromada.common.result.Severity
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.sorted
 import cz.vhromada.common.validator.AbstractMovableValidator
-import cz.vhromada.validation.result.Event
-import cz.vhromada.validation.result.Result
-import cz.vhromada.validation.result.Severity
 import org.springframework.stereotype.Component
 
 /**
@@ -58,15 +58,21 @@ class SongValidator(musicService: MovableService<Music>) : AbstractMovableValida
      * @param result result with validation errors
      */
     override fun validateDataDeep(data: Song, result: Result<Unit>) {
-        if (data.name == null) {
-            result.addEvent(Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null."))
-        } else if (data.name.isBlank()) {
-            result.addEvent(Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string."))
+        when {
+            data.name == null -> {
+                result.addEvent(Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null."))
+            }
+            data.name.isBlank() -> {
+                result.addEvent(Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string."))
+            }
         }
-        if (data.length == null) {
-            result.addEvent(Event(Severity.ERROR, "SONG_LENGTH_NULL", "Length of song mustn't be null."))
-        } else if (data.length < 0) {
-            result.addEvent(Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number."))
+        when {
+            data.length == null -> {
+                result.addEvent(Event(Severity.ERROR, "SONG_LENGTH_NULL", "Length of song mustn't be null."))
+            }
+            data.length < 0 -> {
+                result.addEvent(Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number."))
+            }
         }
         if (data.note == null) {
             result.addEvent(Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null."))

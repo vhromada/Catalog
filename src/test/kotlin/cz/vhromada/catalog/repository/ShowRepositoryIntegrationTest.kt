@@ -107,7 +107,7 @@ class ShowRepositoryIntegrationTest {
      * Test method for update show with updated data.
      */
     @Test
-    fun update_Data() {
+    fun updateData() {
         val show = ShowUtils.updateShow(entityManager, 1)
 
         showRepository.save(show)
@@ -129,7 +129,7 @@ class ShowRepositoryIntegrationTest {
      * Test method for update show with added season.
      */
     @Test
-    fun update_AddedSeason() {
+    fun updateAddedSeason() {
         var season = SeasonUtils.newSeasonDomain(null)
         season = season.copy(subtitles = season.subtitles.toMutableList(),
                 position = SeasonUtils.SEASONS_COUNT)

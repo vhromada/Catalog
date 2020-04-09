@@ -22,7 +22,8 @@ class SeasonMapper : Mapper<Season, cz.vhromada.catalog.domain.Season> {
                 subtitles = source.subtitles!!.filterNotNull(),
                 note = source.note,
                 position = source.position,
-                episodes = emptyList())
+                episodes = emptyList(),
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Season): Season {

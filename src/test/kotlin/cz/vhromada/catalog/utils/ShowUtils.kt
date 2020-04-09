@@ -12,7 +12,14 @@ import javax.persistence.EntityManager
  * @return updated show
  */
 fun cz.vhromada.catalog.domain.Show.updated(): cz.vhromada.catalog.domain.Show {
-    return copy(czechName = "czName", originalName = "origName", csfd = "Csfd", imdbCode = 1000, wikiEn = "enWiki", wikiCz = "czWiki", note = "Note")
+    return copy(czechName = "czName",
+            originalName = "origName",
+            csfd = "Csfd",
+            imdbCode = 1000,
+            wikiEn = "enWiki",
+            wikiCz = "czWiki",
+            note = "Note",
+            audit = AuditUtils.newAudit())
 }
 
 /**
@@ -21,7 +28,13 @@ fun cz.vhromada.catalog.domain.Show.updated(): cz.vhromada.catalog.domain.Show {
  * @return updated show
  */
 fun Show.updated(): Show {
-    return copy(czechName = "czName", originalName = "origName", csfd = "Csfd", imdbCode = 1000, wikiEn = "enWiki", wikiCz = "czWiki", note = "Note")
+    return copy(czechName = "czName",
+            originalName = "origName",
+            csfd = "Csfd",
+            imdbCode = 1000,
+            wikiEn = "enWiki",
+            wikiCz = "czWiki",
+            note = "Note")
 }
 
 /**
@@ -79,7 +92,8 @@ object ShowUtils {
                 note = null,
                 position = if (id == null) null else id - 1,
                 genres = listOf(GenreUtils.newGenreDomain(id)),
-                seasons = emptyList())
+                seasons = emptyList(),
+                audit = null)
                 .updated()
     }
 
@@ -142,7 +156,8 @@ object ShowUtils {
                 note = if (index == 2) SHOW + "2 note" else "",
                 position = index - 1,
                 genres = genres,
-                seasons = SeasonUtils.getSeasons(index))
+                seasons = SeasonUtils.getSeasons(index),
+                audit = AuditUtils.getAudit())
     }
 
     /**
@@ -223,6 +238,7 @@ object ShowUtils {
             it.assertThat(expected.position).isEqualTo(actual.position)
             GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
             SeasonUtils.assertSeasonsDeepEquals(expected.seasons, actual.seasons)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

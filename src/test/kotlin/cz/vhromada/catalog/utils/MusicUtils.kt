@@ -12,7 +12,7 @@ import javax.persistence.EntityManager
  * @return updated music
  */
 fun cz.vhromada.catalog.domain.Music.updated(): cz.vhromada.catalog.domain.Music {
-    return copy(name = "Name", wikiEn = "enWiki", wikiCz = "czWiki", mediaCount = 1, note = "Note")
+    return copy(name = "Name", wikiEn = "enWiki", wikiCz = "czWiki", mediaCount = 1, note = "Note", audit = AuditUtils.newAudit())
 }
 
 /**
@@ -75,7 +75,8 @@ object MusicUtils {
                 mediaCount = 0,
                 note = null,
                 position = if (id == null) null else id - 1,
-                songs = emptyList())
+                songs = emptyList(),
+                audit = null)
                 .updated()
     }
 
@@ -123,7 +124,8 @@ object MusicUtils {
                 mediaCount = index * 10,
                 note = if (index == 2) MUSIC + "2 note" else "",
                 position = index - 1,
-                songs = SongUtils.getSongs(index))
+                songs = SongUtils.getSongs(index),
+                audit = AuditUtils.getAudit())
     }
 
     /**
@@ -200,6 +202,7 @@ object MusicUtils {
             it.assertThat(expected.note).isEqualTo(actual.note)
             it.assertThat(expected.position).isEqualTo(actual.position)
             SongUtils.assertSongsDeepEquals(expected.songs, actual.songs)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

@@ -8,4 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository
  *
  * @author Vladimir Hromada
  */
-interface ShowRepository : JpaRepository<Show, Int>
+interface ShowRepository : JpaRepository<Show, Int> {
+
+    /**
+     * Returns all shows created by user.
+     *
+     * @param user user's ID
+     * @return all shows created by user
+     */
+    fun findByAuditCreatedUser(user: Int): List<Show>
+
+}

@@ -2,9 +2,11 @@ package cz.vhromada.catalog.facade.impl
 
 import cz.vhromada.catalog.entity.Show
 import cz.vhromada.catalog.facade.ShowFacade
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.AbstractMovableParentFacade
 import cz.vhromada.common.mapper.Mapper
+import cz.vhromada.common.provider.AccountProvider
+import cz.vhromada.common.provider.TimeProvider
 import cz.vhromada.common.result.Result
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.validator.MovableValidator
@@ -18,8 +20,10 @@ import org.springframework.stereotype.Component
 @Component("showFacade")
 class ShowFacadeImpl(
         showService: MovableService<cz.vhromada.catalog.domain.Show>,
+        accountProvider: AccountProvider,
+        timeProvider: TimeProvider,
         mapper: Mapper<Show, cz.vhromada.catalog.domain.Show>,
-        showValidator: MovableValidator<Show>) : AbstractMovableParentFacade<Show, cz.vhromada.catalog.domain.Show>(showService, mapper, showValidator), ShowFacade {
+        showValidator: MovableValidator<Show>) : AbstractMovableParentFacade<Show, cz.vhromada.catalog.domain.Show>(showService, accountProvider, timeProvider, mapper, showValidator), ShowFacade {
 
     override fun getTotalLength(): Result<Time> {
         return Result.of(Time(service.getAll().sumBy { it.seasons.sumBy { s -> s.episodes.sumBy { e -> e.length } } }))

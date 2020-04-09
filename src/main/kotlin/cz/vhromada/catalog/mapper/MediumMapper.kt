@@ -16,7 +16,8 @@ class MediumMapper : Mapper<Medium, cz.vhromada.catalog.domain.Medium> {
         return cz.vhromada.catalog.domain.Medium(
                 id = source.id,
                 number = source.number!!,
-                length = source.length!!)
+                length = source.length!!,
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Medium): Medium {

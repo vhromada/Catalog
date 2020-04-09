@@ -11,7 +11,7 @@ import javax.persistence.EntityManager
  * @return updated episode
  */
 fun cz.vhromada.catalog.domain.Episode.updated(): cz.vhromada.catalog.domain.Episode {
-    return copy(number = 2, name = "Name", length = 5, note = "Note")
+    return copy(number = 2, name = "Name", length = 5, note = "Note", audit = AuditUtils.newAudit())
 }
 
 /**
@@ -57,7 +57,14 @@ object EpisodeUtils {
      * @return episode
      */
     fun newEpisodeDomain(id: Int?): cz.vhromada.catalog.domain.Episode {
-        return cz.vhromada.catalog.domain.Episode(id = id, number = 0, name = "", length = 0, note = null, position = if (id == null) null else id - 1)
+        return cz.vhromada.catalog.domain.Episode(
+                id = id,
+                number = 0,
+                name = "",
+                length = 0,
+                note = null,
+                position = if (id == null) null else id - 1,
+                audit = null)
                 .updated()
     }
 
@@ -68,7 +75,13 @@ object EpisodeUtils {
      * @return episode
      */
     fun newEpisode(id: Int?): Episode {
-        return Episode(id = id, number = 0, name = "", length = 0, note = null, position = if (id == null) null else id - 1)
+        return Episode(
+                id = id,
+                number = 0,
+                name = "",
+                length = 0,
+                note = null,
+                position = if (id == null) null else id - 1)
                 .updated()
     }
 
@@ -117,7 +130,8 @@ object EpisodeUtils {
                 name = "Show $showIndex Season $seasonIndex Episode $episodeIndex",
                 length = episodeIndex * LENGTH_MULTIPLIERS[seasonIndex - 1],
                 note = if (episodeIndex == 2) "Show $showIndex Season $seasonIndex Episode 2 note" else "",
-                position = episodeIndex - 1)
+                position = episodeIndex - 1,
+                audit = AuditUtils.getAudit())
     }
 
     /**
@@ -179,6 +193,7 @@ object EpisodeUtils {
             it.assertThat(expected.length).isEqualTo(actual.length)
             it.assertThat(expected.note).isEqualTo(actual.note)
             it.assertThat(expected.position).isEqualTo(actual.position)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

@@ -1,8 +1,7 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Program
-import cz.vhromada.catalog.facade.ProgramFacade
 import cz.vhromada.catalog.utils.ProgramUtils
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Event
@@ -17,12 +16,12 @@ import org.springframework.test.context.ContextConfiguration
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [ProgramFacadeImpl].
+ * A class represents integration test for class [ProgramFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class ProgramFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Program, cz.vhromada.catalog.domain.Program>() {
+class ProgramFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Program, cz.vhromada.catalog.domain.Program>() {
 
     /**
      * Instance of [EntityManager]

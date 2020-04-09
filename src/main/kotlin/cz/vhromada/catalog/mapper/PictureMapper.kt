@@ -16,7 +16,8 @@ class PictureMapper : Mapper<Picture, cz.vhromada.catalog.domain.Picture> {
         return cz.vhromada.catalog.domain.Picture(
                 id = source.id,
                 content = source.content!!.copyOf(),
-                position = source.position)
+                position = source.position,
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Picture): Picture {

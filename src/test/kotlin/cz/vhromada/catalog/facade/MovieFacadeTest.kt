@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
@@ -6,21 +6,22 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import cz.vhromada.catalog.entity.Movie
-import cz.vhromada.catalog.facade.MovieFacade
+import cz.vhromada.catalog.facade.impl.MovieFacadeImpl
 import cz.vhromada.catalog.utils.MovieUtils
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeTest
+import cz.vhromada.common.test.utils.TestConstants
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
 /**
- * A class represents test for class [MovieFacadeImpl].
+ * A class represents test for class [MovieFacade].
  *
  * @author Vladimir Hromada
  */
-class MovieFacadeImplTest : MovableParentFacadeTest<Movie, cz.vhromada.catalog.domain.Movie>() {
+class MovieFacadeTest : MovableParentFacadeTest<Movie, cz.vhromada.catalog.domain.Movie>() {
 
     /**
      * Test method for [MovieFacade.getTotalMediaCount].
@@ -43,7 +44,7 @@ class MovieFacadeImplTest : MovableParentFacadeTest<Movie, cz.vhromada.catalog.d
 
         verify(service).getAll()
         verifyNoMoreInteractions(service)
-        verifyZeroInteractions(mapper, validator)
+        verifyZeroInteractions(accountProvider, mapper, validator)
     }
 
     /**
@@ -72,7 +73,7 @@ class MovieFacadeImplTest : MovableParentFacadeTest<Movie, cz.vhromada.catalog.d
 
         verify(service).getAll()
         verifyNoMoreInteractions(service)
-        verifyZeroInteractions(mapper, validator)
+        verifyZeroInteractions(accountProvider, mapper, validator)
     }
 
     override fun initUpdateMock(domain: cz.vhromada.catalog.domain.Movie) {
@@ -81,14 +82,19 @@ class MovieFacadeImplTest : MovableParentFacadeTest<Movie, cz.vhromada.catalog.d
         whenever(service.get(any())).thenReturn(domain)
     }
 
-    override fun verifyUpdateMock(entity: Movie, domain: cz.vhromada.catalog.domain.Movie) {
-        super.verifyUpdateMock(entity, domain)
+    override fun initAddProviders() {
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+        whenever(timeProvider.getTime()).thenReturn(TestConstants.TIME)
+    }
 
-        verify(service).get(entity.id!!)
+    override fun verifyAddProviders() {
+        verify(accountProvider).getAccount()
+        verify(timeProvider).getTime()
+        verifyNoMoreInteractions(accountProvider, timeProvider)
     }
 
     override fun getFacade(): MovableParentFacade<Movie> {
-        return MovieFacadeImpl(service, mapper, validator)
+        return MovieFacadeImpl(service, accountProvider, timeProvider, mapper, validator)
     }
 
     override fun newEntity(id: Int?): Movie {

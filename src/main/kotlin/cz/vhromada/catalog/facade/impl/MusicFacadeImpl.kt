@@ -2,9 +2,11 @@ package cz.vhromada.catalog.facade.impl
 
 import cz.vhromada.catalog.entity.Music
 import cz.vhromada.catalog.facade.MusicFacade
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.AbstractMovableParentFacade
 import cz.vhromada.common.mapper.Mapper
+import cz.vhromada.common.provider.AccountProvider
+import cz.vhromada.common.provider.TimeProvider
 import cz.vhromada.common.result.Result
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.validator.MovableValidator
@@ -18,8 +20,11 @@ import org.springframework.stereotype.Component
 @Component("musicFacade")
 class MusicFacadeImpl(
         musicService: MovableService<cz.vhromada.catalog.domain.Music>,
+        accountProvider: AccountProvider,
+        timeProvider: TimeProvider,
         mapper: Mapper<Music, cz.vhromada.catalog.domain.Music>,
-        musicValidator: MovableValidator<Music>) : AbstractMovableParentFacade<Music, cz.vhromada.catalog.domain.Music>(musicService, mapper, musicValidator), MusicFacade {
+        musicValidator: MovableValidator<Music>
+) : AbstractMovableParentFacade<Music, cz.vhromada.catalog.domain.Music>(musicService, accountProvider, timeProvider, mapper, musicValidator), MusicFacade {
 
     override fun getTotalMediaCount(): Result<Int> {
         return Result.of(service.getAll().sumBy { it.mediaCount })

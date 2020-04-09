@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.domain
 
-import cz.vhromada.common.Movable
+import cz.vhromada.common.domain.Audit
+import cz.vhromada.common.domain.AuditEntity
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.util.Objects
@@ -75,7 +76,12 @@ data class Music(
         @JoinColumn(name = "music", referencedColumnName = "id")
         @OrderBy("position, id")
         @Fetch(FetchMode.SELECT)
-        val songs: List<Song>) : Movable {
+        val songs: List<Song>,
+
+        /**
+         * Audit
+         */
+        override var audit: Audit?) : AuditEntity(audit) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

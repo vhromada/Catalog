@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.repository
 
 import cz.vhromada.catalog.CatalogTestConfiguration
+import cz.vhromada.catalog.utils.AuditUtils
 import cz.vhromada.catalog.utils.PictureUtils
 import cz.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
@@ -55,6 +56,7 @@ class PictureRepositoryIntegrationTest {
      * Test method for get picture.
      */
     @Test
+    @Suppress("UsePropertyAccessSyntax")
     fun getPicture() {
         for (i in 1..PictureUtils.PICTURES_COUNT) {
             val picture = pictureRepository.findById(i).orElse(null)
@@ -72,8 +74,9 @@ class PictureRepositoryIntegrationTest {
      */
     @Test
     fun add() {
+        val audit = AuditUtils.getAudit()
         val picture = PictureUtils.newPictureDomain(null)
-                .copy(position = PictureUtils.PICTURES_COUNT)
+                .copy(position = PictureUtils.PICTURES_COUNT, audit = audit)
 
         pictureRepository.save(picture)
 
@@ -81,7 +84,7 @@ class PictureRepositoryIntegrationTest {
 
         val addedPicture = PictureUtils.getPicture(entityManager, PictureUtils.PICTURES_COUNT + 1)!!
         val expectedAddPicture = PictureUtils.newPictureDomain(null)
-                .copy(id = PictureUtils.PICTURES_COUNT + 1, position = PictureUtils.PICTURES_COUNT)
+                .copy(id = PictureUtils.PICTURES_COUNT + 1, position = PictureUtils.PICTURES_COUNT, audit = audit)
         PictureUtils.assertPictureDeepEquals(expectedAddPicture, addedPicture)
 
         assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT + 1)
@@ -112,7 +115,7 @@ class PictureRepositoryIntegrationTest {
     @DirtiesContext
     fun remove() {
         val picture = PictureUtils.newPictureDomain(null)
-                .copy(position = PictureUtils.PICTURES_COUNT)
+                .copy(position = PictureUtils.PICTURES_COUNT, audit = AuditUtils.getAudit())
         entityManager.persist(picture)
         assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT + 1)
 
@@ -134,6 +137,18 @@ class PictureRepositoryIntegrationTest {
         pictureRepository.deleteAll()
 
         assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(0)
+    }
+
+    /**
+     * Test method for get pictures for user.
+     */
+    @Test
+    fun findByAuditCreatedUser() {
+        val pictures = pictureRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+
+        PictureUtils.assertPicturesDeepEquals(PictureUtils.getPictures(), pictures)
+
+        assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class MusicMapperTest {
+class MusicMapperIntegrationTest {
 
     /**
      * Instance of [MusicMapper]

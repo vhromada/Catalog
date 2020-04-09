@@ -1,9 +1,8 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Music
 import cz.vhromada.catalog.entity.Song
-import cz.vhromada.catalog.facade.SongFacade
 import cz.vhromada.catalog.utils.MusicUtils
 import cz.vhromada.catalog.utils.SongUtils
 import cz.vhromada.common.facade.MovableChildFacade
@@ -19,12 +18,12 @@ import org.springframework.test.context.ContextConfiguration
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [SongFacadeImpl].
+ * A class represents integration test for class [SongFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class SongFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz.vhromada.catalog.domain.Song, Music>() {
+class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, cz.vhromada.catalog.domain.Song, Music>() {
 
     /**
      * Instance of [EntityManager]

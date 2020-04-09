@@ -3,7 +3,7 @@ package cz.vhromada.catalog.utils
 import cz.vhromada.catalog.domain.Genre
 import cz.vhromada.catalog.domain.Medium
 import cz.vhromada.catalog.entity.Movie
-import cz.vhromada.common.Language
+import cz.vhromada.common.entity.Language
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import java.util.ArrayList
@@ -25,7 +25,8 @@ fun cz.vhromada.catalog.domain.Movie.updated(): cz.vhromada.catalog.domain.Movie
             imdbCode = 1000,
             wikiEn = "enWiki",
             wikiCz = "czWiki",
-            note = "Note")
+            note = "Note",
+            audit = AuditUtils.newAudit())
 }
 
 /**
@@ -110,7 +111,8 @@ object MovieUtils {
                 picture = id,
                 note = null,
                 position = if (id == null) null else id - 1,
-                genres = listOf(GenreUtils.newGenreDomain(id)))
+                genres = listOf(GenreUtils.newGenreDomain(id)),
+                audit = null)
                 .updated()
     }
 
@@ -169,7 +171,8 @@ object MovieUtils {
                 picture = index,
                 note = if (index == 3) MOVIE + "3 note" else "",
                 position = index - 1,
-                genres = genres)
+                genres = genres,
+                audit = AuditUtils.getAudit())
     }
 
     /**
@@ -291,6 +294,7 @@ object MovieUtils {
             it.assertThat(expected.note).isEqualTo(actual.note)
             it.assertThat(expected.position).isEqualTo(actual.position)
             GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

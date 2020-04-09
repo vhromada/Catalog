@@ -5,6 +5,8 @@ import cz.vhromada.catalog.entity.Song
 import cz.vhromada.catalog.facade.SongFacade
 import cz.vhromada.common.facade.AbstractMovableChildFacade
 import cz.vhromada.common.mapper.Mapper
+import cz.vhromada.common.provider.AccountProvider
+import cz.vhromada.common.provider.TimeProvider
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.sorted
 import cz.vhromada.common.validator.MovableValidator
@@ -18,10 +20,13 @@ import org.springframework.stereotype.Component
 @Component("songFacade")
 class SongFacadeImpl(
         musicService: MovableService<cz.vhromada.catalog.domain.Music>,
+        accountProvider: AccountProvider,
+        timeProvider: TimeProvider,
         mapper: Mapper<Song, cz.vhromada.catalog.domain.Song>,
         musicValidator: MovableValidator<Music>,
         songValidator: MovableValidator<Song>
-) : AbstractMovableChildFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>(musicService, mapper, musicValidator, songValidator), SongFacade {
+) : AbstractMovableChildFacade<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>(musicService, accountProvider, timeProvider, mapper, musicValidator,
+        songValidator), SongFacade {
 
     override fun getDomainData(id: Int): cz.vhromada.catalog.domain.Song? {
         val musicList = service.getAll()
@@ -128,10 +133,13 @@ class SongFacadeImpl(
      * @param song  song
      * @return updated songs
      */
+    @Suppress("DuplicatedCode")
     private fun updateSong(music: cz.vhromada.catalog.domain.Music, song: cz.vhromada.catalog.domain.Song): List<cz.vhromada.catalog.domain.Song> {
         val songs = mutableListOf<cz.vhromada.catalog.domain.Song>()
         for (songDomain in music.songs) {
             if (songDomain == song) {
+                val audit = getAudit()
+                song.audit = songDomain.audit!!.copy(updatedUser = audit.updatedUser, updatedTime = audit.updatedTime)
                 songs.add(song)
             } else {
                 songs.add(songDomain)

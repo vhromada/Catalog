@@ -11,7 +11,7 @@ import javax.persistence.EntityManager
  * @return updated song
  */
 fun cz.vhromada.catalog.domain.Song.updated(): cz.vhromada.catalog.domain.Song {
-    return copy(name = "Name", length = 5, note = "Note")
+    return copy(name = "Name", length = 5, note = "Note", audit = AuditUtils.newAudit())
 }
 
 /**
@@ -52,7 +52,7 @@ object SongUtils {
      * @return song
      */
     fun newSongDomain(id: Int?): cz.vhromada.catalog.domain.Song {
-        return cz.vhromada.catalog.domain.Song(id = id, name = "", length = 0, note = null, position = if (id == null) null else id - 1)
+        return cz.vhromada.catalog.domain.Song(id = id, name = "", length = 0, note = null, position = if (id == null) null else id - 1, audit = null)
                 .updated()
     }
 
@@ -108,7 +108,8 @@ object SongUtils {
                 name = "Music $musicIndex Song $songIndex",
                 length = songIndex * LENGTH_MULTIPLIERS[musicIndex - 1],
                 note = if (songIndex == 2) "Music $musicIndex Song 2 note" else "",
-                position = songIndex - 1)
+                position = songIndex - 1,
+                audit = AuditUtils.getAudit())
     }
 
     /**
@@ -169,6 +170,7 @@ object SongUtils {
             it.assertThat(expected.length).isEqualTo(actual.length)
             it.assertThat(expected.note).isEqualTo(actual.note)
             it.assertThat(expected.position).isEqualTo(actual.position)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

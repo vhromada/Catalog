@@ -21,7 +21,8 @@ class MusicMapper : Mapper<Music, cz.vhromada.catalog.domain.Music> {
                 mediaCount = source.mediaCount!!,
                 note = source.note,
                 position = source.position,
-                songs = emptyList())
+                songs = emptyList(),
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Music): Music {

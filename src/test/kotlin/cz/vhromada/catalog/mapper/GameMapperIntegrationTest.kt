@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class GameMapperTest {
+class GameMapperIntegrationTest {
 
     /**
      * Instance of [GameMapper]

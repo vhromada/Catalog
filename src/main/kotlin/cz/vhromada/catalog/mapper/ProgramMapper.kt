@@ -23,7 +23,8 @@ class ProgramMapper : Mapper<Program, cz.vhromada.catalog.domain.Program> {
                 serialKey = source.serialKey!!,
                 otherData = source.otherData,
                 note = source.note,
-                position = source.position)
+                position = source.position,
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Program): Program {

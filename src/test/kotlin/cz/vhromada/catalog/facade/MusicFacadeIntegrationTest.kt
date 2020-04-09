@@ -1,11 +1,10 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Music
-import cz.vhromada.catalog.facade.MusicFacade
 import cz.vhromada.catalog.utils.MusicUtils
 import cz.vhromada.catalog.utils.SongUtils
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Event
 import cz.vhromada.common.result.Severity
@@ -20,12 +19,12 @@ import org.springframework.test.context.ContextConfiguration
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [MusicFacadeImpl].
+ * A class represents integration test for class [MusicFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music, cz.vhromada.catalog.domain.Music>() {
+class MusicFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Music, cz.vhromada.catalog.domain.Music>() {
 
     /**
      * Instance of [EntityManager]
@@ -434,6 +433,15 @@ class MusicFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Music,
         val music = super.getExpectedDuplicatedData()
         for (song in music.songs) {
             song.id = SongUtils.SONGS_COUNT + music.songs.indexOf(song) + 1
+        }
+
+        return music
+    }
+
+    override fun getExpectedUpdatePositionData(index: Int): cz.vhromada.catalog.domain.Music {
+        val music = super.getExpectedUpdatePositionData(index)
+        for (song in music.songs) {
+            song.modify(getUpdatedAudit())
         }
 
         return music

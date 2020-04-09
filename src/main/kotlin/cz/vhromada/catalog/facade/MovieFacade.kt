@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.entity.Movie
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Result
 

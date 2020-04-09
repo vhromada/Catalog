@@ -11,7 +11,7 @@ import javax.persistence.EntityManager
  * @return updated genre
  */
 fun cz.vhromada.catalog.domain.Genre.updated(): cz.vhromada.catalog.domain.Genre {
-    return copy(name = "Name")
+    return copy(name = "Name", audit = AuditUtils.newAudit())
 }
 
 /**
@@ -61,7 +61,7 @@ object GenreUtils {
      * @return genre
      */
     fun newGenreDomain(id: Int?): cz.vhromada.catalog.domain.Genre {
-        return cz.vhromada.catalog.domain.Genre(id = id, name = "", position = if (id == null) null else id - 1)
+        return cz.vhromada.catalog.domain.Genre(id = id, name = "", position = if (id == null) null else id - 1, audit = null)
                 .updated()
     }
 
@@ -83,7 +83,7 @@ object GenreUtils {
      * @return genre for index
      */
     fun getGenreDomain(index: Int): cz.vhromada.catalog.domain.Genre {
-        return cz.vhromada.catalog.domain.Genre(id = index, name = "Genre $index name", position = index - 1)
+        return cz.vhromada.catalog.domain.Genre(id = index, name = "Genre $index name", position = index - 1, audit = AuditUtils.getAudit())
     }
 
     /**
@@ -165,6 +165,7 @@ object GenreUtils {
             it.assertThat(expected!!.id).isEqualTo(actual!!.id)
             it.assertThat(expected.name).isEqualTo(actual.name)
             it.assertThat(expected.position).isEqualTo(actual.position)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

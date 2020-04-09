@@ -1,14 +1,13 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Movie
-import cz.vhromada.catalog.facade.MovieFacade
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.MediumUtils
 import cz.vhromada.catalog.utils.MovieUtils
 import cz.vhromada.catalog.utils.PictureUtils
-import cz.vhromada.common.Language
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Language
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Event
 import cz.vhromada.common.result.Severity
@@ -24,12 +23,12 @@ import org.springframework.test.context.ContextConfiguration
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [MovieFacadeImpl].
+ * A class represents integration test for class [MovieFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie, cz.vhromada.catalog.domain.Movie>() {
+class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, cz.vhromada.catalog.domain.Movie>() {
 
     /**
      * Instance of [EntityManager]
@@ -1213,8 +1212,11 @@ class MovieFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Movie,
     }
 
     override fun getExpectedAddData(): cz.vhromada.catalog.domain.Movie {
+        val medium = MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)
+        medium.audit = getUpdatedAudit()
+
         return super.getExpectedAddData()
-                .copy(media = listOf(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)),
+                .copy(media = listOf(medium),
                         picture = 1,
                         genres = listOf(GenreUtils.getGenreDomain(1)))
     }

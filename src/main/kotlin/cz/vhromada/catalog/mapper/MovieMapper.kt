@@ -30,7 +30,8 @@ class MovieMapper(
                 picture = source.picture,
                 note = source.note,
                 position = source.position,
-                genres = genreMapper.map(source.genres!!.filterNotNull()))
+                genres = genreMapper.map(source.genres!!.filterNotNull()),
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Movie): Movie {

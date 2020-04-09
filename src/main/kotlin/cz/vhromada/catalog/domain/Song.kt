@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.domain
 
-import cz.vhromada.common.Movable
+import cz.vhromada.common.domain.Audit
+import cz.vhromada.common.domain.AuditEntity
 import java.util.Objects
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -47,7 +48,12 @@ data class Song(
         /**
          * Position
          */
-        override var position: Int?) : Movable {
+        override var position: Int?,
+
+        /**
+         * Audit
+         */
+        override var audit: Audit?) : AuditEntity(audit) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

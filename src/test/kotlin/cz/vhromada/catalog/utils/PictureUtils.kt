@@ -11,7 +11,7 @@ import javax.persistence.EntityManager
  * @return updated picture
  */
 fun cz.vhromada.catalog.domain.Picture.updated(): cz.vhromada.catalog.domain.Picture {
-    return copy(content = PictureUtils.CONTENT.toByteArray())
+    return copy(content = PictureUtils.CONTENT.toByteArray(), audit = AuditUtils.newAudit())
 }
 
 /**
@@ -66,7 +66,7 @@ object PictureUtils {
      * @return picture
      */
     fun newPictureDomain(id: Int?): cz.vhromada.catalog.domain.Picture {
-        return cz.vhromada.catalog.domain.Picture(id = id, content = ByteArray(0), position = if (id == null) null else id - 1)
+        return cz.vhromada.catalog.domain.Picture(id = id, content = ByteArray(0), position = if (id == null) null else id - 1, audit = null)
                 .updated()
     }
 
@@ -90,7 +90,7 @@ object PictureUtils {
     fun getPicture(index: Int): cz.vhromada.catalog.domain.Picture {
         val value = Integer.parseInt((16 + index).toString(), 16)
 
-        return cz.vhromada.catalog.domain.Picture(id = index, content = byteArrayOf(value.toByte()), position = index - 1)
+        return cz.vhromada.catalog.domain.Picture(id = index, content = byteArrayOf(value.toByte()), position = index - 1, audit = AuditUtils.getAudit())
     }
 
     /**
@@ -162,6 +162,7 @@ object PictureUtils {
             it.assertThat(expected!!.id).isEqualTo(actual!!.id)
             it.assertThat(expected.content).isEqualTo(actual.content)
             it.assertThat(expected.position).isEqualTo(actual.position)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

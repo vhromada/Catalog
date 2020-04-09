@@ -1,14 +1,13 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Season
 import cz.vhromada.catalog.entity.Show
-import cz.vhromada.catalog.facade.SeasonFacade
 import cz.vhromada.catalog.utils.EpisodeUtils
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
-import cz.vhromada.common.Language
+import cz.vhromada.common.entity.Language
 import cz.vhromada.common.facade.MovableChildFacade
 import cz.vhromada.common.result.Event
 import cz.vhromada.common.result.Severity
@@ -24,12 +23,12 @@ import org.springframework.test.context.ContextConfiguration
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [SeasonFacadeImpl].
+ * A class represents integration test for class [SeasonFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class SeasonFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Season, cz.vhromada.catalog.domain.Season, Show>() {
+class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, cz.vhromada.catalog.domain.Season, Show>() {
 
     /**
      * Instance of [EntityManager]

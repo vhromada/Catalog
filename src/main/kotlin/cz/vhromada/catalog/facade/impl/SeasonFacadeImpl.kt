@@ -5,6 +5,8 @@ import cz.vhromada.catalog.entity.Show
 import cz.vhromada.catalog.facade.SeasonFacade
 import cz.vhromada.common.facade.AbstractMovableChildFacade
 import cz.vhromada.common.mapper.Mapper
+import cz.vhromada.common.provider.AccountProvider
+import cz.vhromada.common.provider.TimeProvider
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.sorted
 import cz.vhromada.common.validator.MovableValidator
@@ -18,10 +20,13 @@ import org.springframework.stereotype.Component
 @Component("seasonFacade")
 class SeasonFacadeImpl(
         showService: MovableService<cz.vhromada.catalog.domain.Show>,
+        accountProvider: AccountProvider,
+        timeProvider: TimeProvider,
         mapper: Mapper<Season, cz.vhromada.catalog.domain.Season>,
         showValidator: MovableValidator<Show>,
         seasonValidator: MovableValidator<Season>
-) : AbstractMovableChildFacade<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show>(showService, mapper, showValidator, seasonValidator), SeasonFacade {
+) : AbstractMovableChildFacade<Season, cz.vhromada.catalog.domain.Season, Show, cz.vhromada.catalog.domain.Show>(showService, accountProvider, timeProvider, mapper, showValidator,
+        seasonValidator), SeasonFacade {
 
     override fun getDomainData(id: Int): cz.vhromada.catalog.domain.Season? {
         val shows = service.getAll()
@@ -134,6 +139,8 @@ class SeasonFacadeImpl(
         val seasons = mutableListOf<cz.vhromada.catalog.domain.Season>()
         for (seasonDomain in show.seasons) {
             if (seasonDomain == season) {
+                val audit = getAudit()
+                season.audit = seasonDomain.audit!!.copy(updatedUser = audit.updatedUser, updatedTime = audit.updatedTime)
                 seasons.add(season)
             } else {
                 seasons.add(seasonDomain)

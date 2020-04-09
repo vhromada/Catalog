@@ -9,7 +9,7 @@ import cz.vhromada.catalog.domain.Show
 import cz.vhromada.catalog.entity.Season
 import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
-import cz.vhromada.common.Language
+import cz.vhromada.common.entity.Language
 import cz.vhromada.common.result.Event
 import cz.vhromada.common.result.Severity
 import cz.vhromada.common.result.Status

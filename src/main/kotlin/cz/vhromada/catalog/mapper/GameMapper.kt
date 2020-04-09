@@ -28,7 +28,8 @@ class GameMapper : Mapper<Game, cz.vhromada.catalog.domain.Game> {
                 saves = source.saves!!,
                 otherData = source.otherData,
                 note = source.note,
-                position = source.position)
+                position = source.position,
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Game): Game {

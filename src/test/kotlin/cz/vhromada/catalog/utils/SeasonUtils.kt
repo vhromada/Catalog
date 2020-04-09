@@ -1,7 +1,7 @@
 package cz.vhromada.catalog.utils
 
 import cz.vhromada.catalog.entity.Season
-import cz.vhromada.common.Language
+import cz.vhromada.common.entity.Language
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import javax.persistence.EntityManager
@@ -17,7 +17,8 @@ fun cz.vhromada.catalog.domain.Season.updated(): cz.vhromada.catalog.domain.Seas
             endYear = SeasonUtils.START_YEAR + 1,
             language = Language.SK,
             subtitles = listOf(Language.CZ),
-            note = "Note")
+            note = "Note",
+            audit = AuditUtils.newAudit())
 }
 
 /**
@@ -72,7 +73,8 @@ object SeasonUtils {
                 subtitles = emptyList(),
                 note = null,
                 position = if (id == null) null else id - 1,
-                episodes = emptyList())
+                episodes = emptyList(),
+                audit = null)
                 .updated()
     }
 
@@ -168,7 +170,8 @@ object SeasonUtils {
                 subtitles = subtitles,
                 note = if (seasonIndex == 2) "Show $showIndex Season 2 note" else "",
                 position = seasonIndex - 1,
-                episodes = EpisodeUtils.getEpisodes(showIndex, seasonIndex))
+                episodes = EpisodeUtils.getEpisodes(showIndex, seasonIndex),
+                audit = AuditUtils.getAudit())
     }
 
     /**
@@ -233,6 +236,7 @@ object SeasonUtils {
             it.assertThat(expected.note).isEqualTo(actual.note)
             it.assertThat(expected.position).isEqualTo(actual.position)
             EpisodeUtils.assertEpisodesDeepEquals(expected.episodes, actual.episodes)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import cz.vhromada.catalog.entity.Program
-import cz.vhromada.catalog.facade.ProgramFacade
+import cz.vhromada.catalog.facade.impl.ProgramFacadeImpl
 import cz.vhromada.catalog.utils.ProgramUtils
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Status
@@ -15,11 +15,11 @@ import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
 /**
- * A class represents test for class [ProgramFacadeImpl].
+ * A class represents test for class [ProgramFacade].
  *
  * @author Vladimir Hromada
  */
-class ProgramFacadeImplTest : MovableParentFacadeTest<Program, cz.vhromada.catalog.domain.Program>() {
+class ProgramFacadeTest : MovableParentFacadeTest<Program, cz.vhromada.catalog.domain.Program>() {
 
     /**
      * Test method for [ProgramFacade.getTotalMediaCount].
@@ -42,11 +42,11 @@ class ProgramFacadeImplTest : MovableParentFacadeTest<Program, cz.vhromada.catal
 
         verify(service).getAll()
         verifyNoMoreInteractions(service)
-        verifyZeroInteractions(mapper, validator)
+        verifyZeroInteractions(accountProvider, mapper, validator)
     }
 
     override fun getFacade(): MovableParentFacade<Program> {
-        return ProgramFacadeImpl(service, mapper, validator)
+        return ProgramFacadeImpl(service, accountProvider, timeProvider, mapper, validator)
     }
 
     override fun newEntity(id: Int?): Program {

@@ -16,7 +16,8 @@ class GenreMapper : Mapper<Genre, cz.vhromada.catalog.domain.Genre> {
         return cz.vhromada.catalog.domain.Genre(
                 id = source.id,
                 name = source.name!!,
-                position = source.position)
+                position = source.position,
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Genre): Genre {

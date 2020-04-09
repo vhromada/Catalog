@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.repository
 
 import cz.vhromada.catalog.CatalogTestConfiguration
+import cz.vhromada.catalog.utils.AuditUtils
 import cz.vhromada.catalog.utils.GameUtils
 import cz.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
@@ -54,6 +55,7 @@ class GameRepositoryIntegrationTest {
      * Test method for get game.
      */
     @Test
+    @Suppress("UsePropertyAccessSyntax")
     fun getGame() {
         for (i in 1..GameUtils.GAMES_COUNT) {
             val game = gameRepository.findById(i).orElse(null)
@@ -71,8 +73,9 @@ class GameRepositoryIntegrationTest {
      */
     @Test
     fun add() {
+        val audit = AuditUtils.getAudit()
         val game = GameUtils.newGameDomain(null)
-                .copy(position = GameUtils.GAMES_COUNT)
+                .copy(position = GameUtils.GAMES_COUNT, audit = audit)
 
         gameRepository.save(game)
 
@@ -80,7 +83,7 @@ class GameRepositoryIntegrationTest {
 
         val addedGame = GameUtils.getGame(entityManager, GameUtils.GAMES_COUNT + 1)!!
         val expectedAddGame = GameUtils.newGameDomain(null)
-                .copy(id = GameUtils.GAMES_COUNT + 1, position = GameUtils.GAMES_COUNT)
+                .copy(id = GameUtils.GAMES_COUNT + 1, position = GameUtils.GAMES_COUNT, audit = audit)
         GameUtils.assertGameDeepEquals(expectedAddGame, addedGame)
 
         assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT + 1)
@@ -124,6 +127,18 @@ class GameRepositoryIntegrationTest {
         gameRepository.deleteAll()
 
         assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(0)
+    }
+
+    /**
+     * Test method for get games for user.
+     */
+    @Test
+    fun findByAuditCreatedUser() {
+        val games = gameRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+
+        GameUtils.assertGamesDeepEquals(GameUtils.getGames(), games)
+
+        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
     }
 
 }

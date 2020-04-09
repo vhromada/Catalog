@@ -23,7 +23,8 @@ fun cz.vhromada.catalog.domain.Game.updated(): cz.vhromada.catalog.domain.Game {
             editor = true,
             saves = true,
             otherData = "Other data",
-            note = "Note")
+            note = "Note",
+            audit = AuditUtils.newAudit())
 }
 
 /**
@@ -105,7 +106,8 @@ object GameUtils {
                 saves = false,
                 otherData = null,
                 note = null,
-                position = if (id == null) null else id - 1)
+                position = if (id == null) null else id - 1,
+                audit = null)
                 .updated()
     }
 
@@ -157,7 +159,8 @@ object GameUtils {
                 saves = index == 3,
                 otherData = if (index == 3) GAME + "3 other data" else "",
                 note = if (index == 3) GAME + "3 note" else "",
-                position = index - 1)
+                position = index - 1,
+                audit = AuditUtils.getAudit())
     }
 
     /**
@@ -241,6 +244,7 @@ object GameUtils {
             it.assertThat(expected.otherData).isEqualTo(actual.otherData)
             it.assertThat(expected.note).isEqualTo(actual.note)
             it.assertThat(expected.position).isEqualTo(actual.position)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

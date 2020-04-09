@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.domain
 
-import cz.vhromada.common.Movable
+import cz.vhromada.common.domain.Audit
+import cz.vhromada.common.domain.AuditEntity
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.util.Objects
@@ -100,7 +101,12 @@ data class Show(
         @JoinColumn(name = "tv_show", referencedColumnName = "id")
         @OrderBy("position, id")
         @Fetch(FetchMode.SELECT)
-        val seasons: List<Season>) : Movable {
+        val seasons: List<Season>,
+
+        /**
+         * Audit
+         */
+        override var audit: Audit?) : AuditEntity(audit) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

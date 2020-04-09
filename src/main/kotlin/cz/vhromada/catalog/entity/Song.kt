@@ -1,6 +1,6 @@
 package cz.vhromada.catalog.entity
 
-import cz.vhromada.common.Movable
+import cz.vhromada.common.entity.Movable
 import java.util.Objects
 
 /**

@@ -1,8 +1,8 @@
 package cz.vhromada.catalog.domain
 
-import java.io.Serializable
+import cz.vhromada.common.domain.Audit
+import cz.vhromada.common.domain.Auditable
 import java.util.Objects
-
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -38,7 +38,12 @@ data class Medium(
          * Length
          */
         @Column(name = "medium_length")
-        val length: Int) : Serializable {
+        val length: Int,
+
+        /**
+         * Audit
+         */
+        override var audit: Audit?) : Auditable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

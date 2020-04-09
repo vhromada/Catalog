@@ -8,5 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository
  *
  * @author Vladimir Hromada
  */
-interface GenreRepository : JpaRepository<Genre, Int>
+interface GenreRepository : JpaRepository<Genre, Int> {
 
+    /**
+     * Returns all genres created by user.
+     *
+     * @param user user's ID
+     * @return all genres created by user
+     */
+    fun findByAuditCreatedUser(user: Int): List<Genre>
+
+}

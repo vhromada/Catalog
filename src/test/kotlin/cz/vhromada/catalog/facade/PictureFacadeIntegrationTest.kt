@@ -1,8 +1,7 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Picture
-import cz.vhromada.catalog.facade.PictureFacade
 import cz.vhromada.catalog.utils.PictureUtils
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Event
@@ -19,12 +18,12 @@ import org.springframework.transaction.support.DefaultTransactionDefinition
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [PictureFacadeImpl].
+ * A class represents integration test for class [PictureFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class PictureFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Picture, cz.vhromada.catalog.domain.Picture>() {
+class PictureFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Picture, cz.vhromada.catalog.domain.Picture>() {
 
     /**
      * Instance of [EntityManager]

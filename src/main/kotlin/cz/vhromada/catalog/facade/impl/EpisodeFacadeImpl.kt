@@ -4,9 +4,11 @@ import cz.vhromada.catalog.domain.Show
 import cz.vhromada.catalog.entity.Episode
 import cz.vhromada.catalog.entity.Season
 import cz.vhromada.catalog.facade.EpisodeFacade
-import cz.vhromada.common.Movable
+import cz.vhromada.common.entity.Movable
 import cz.vhromada.common.facade.AbstractMovableChildFacade
 import cz.vhromada.common.mapper.Mapper
+import cz.vhromada.common.provider.AccountProvider
+import cz.vhromada.common.provider.TimeProvider
 import cz.vhromada.common.service.MovableService
 import cz.vhromada.common.utils.sorted
 import cz.vhromada.common.validator.MovableValidator
@@ -20,10 +22,12 @@ import org.springframework.stereotype.Component
 @Component("episodeFacade")
 class EpisodeFacadeImpl(
         showService: MovableService<Show>,
+        accountProvider: AccountProvider,
+        timeProvider: TimeProvider,
         mapper: Mapper<Episode, cz.vhromada.catalog.domain.Episode>,
         seasonValidator: MovableValidator<Season>,
         episodeValidator: MovableValidator<Episode>
-) : AbstractMovableChildFacade<Episode, cz.vhromada.catalog.domain.Episode, Season, Show>(showService, mapper, seasonValidator, episodeValidator), EpisodeFacade {
+) : AbstractMovableChildFacade<Episode, cz.vhromada.catalog.domain.Episode, Season, Show>(showService, accountProvider, timeProvider, mapper, seasonValidator, episodeValidator), EpisodeFacade {
 
     override fun getDomainData(id: Int): cz.vhromada.catalog.domain.Episode? {
         val shows = service.getAll()
@@ -228,10 +232,13 @@ class EpisodeFacadeImpl(
      * @param episode episode
      * @return updated episodes
      */
+    @Suppress("DuplicatedCode")
     private fun updateEpisode(season: cz.vhromada.catalog.domain.Season, episode: cz.vhromada.catalog.domain.Episode): List<cz.vhromada.catalog.domain.Episode> {
         val episodes = mutableListOf<cz.vhromada.catalog.domain.Episode>()
         for (episodeDomain in season.episodes) {
             if (episodeDomain == episode) {
+                val audit = getAudit()
+                episode.audit = episodeDomain.audit!!.copy(updatedUser = audit.updatedUser, updatedTime = audit.updatedTime)
                 episodes.add(episode)
             } else {
                 episodes.add(episodeDomain)

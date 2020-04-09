@@ -8,7 +8,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 /**
- * A class represents Spring configuration.
+ * A class represents Spring configuration for catalog.
  *
  * @author Vladimir Hromada
  */

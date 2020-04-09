@@ -18,7 +18,8 @@ class SongMapper : Mapper<Song, cz.vhromada.catalog.domain.Song> {
                 name = source.name!!,
                 length = source.length!!,
                 note = source.note,
-                position = source.position)
+                position = source.position,
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Song): Song {

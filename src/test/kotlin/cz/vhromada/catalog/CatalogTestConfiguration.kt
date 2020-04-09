@@ -1,5 +1,9 @@
 package cz.vhromada.catalog
 
+import cz.vhromada.common.entity.Account
+import cz.vhromada.common.provider.AccountProvider
+import cz.vhromada.common.provider.TimeProvider
+import cz.vhromada.common.test.utils.TestConstants
 import net.sf.ehcache.CacheManager
 import org.springframework.cache.ehcache.EhCacheCacheManager
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
@@ -14,6 +18,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.support.SharedEntityManagerBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
+import java.time.LocalDateTime
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
@@ -72,6 +77,28 @@ class CatalogTestConfiguration {
         val cacheManager = EhCacheCacheManager()
         cacheManager.cacheManager = cacheManagerFactory
         return cacheManager
+    }
+
+    @Bean
+    fun accountProvider(): AccountProvider {
+        return object : AccountProvider {
+
+            override fun getAccount(): Account {
+                return TestConstants.ACCOUNT
+            }
+
+        }
+    }
+
+    @Bean
+    fun timeProvider(): TimeProvider {
+        return object : TimeProvider {
+
+            override fun getTime(): LocalDateTime {
+                return TestConstants.TIME
+            }
+
+        }
     }
 
 }

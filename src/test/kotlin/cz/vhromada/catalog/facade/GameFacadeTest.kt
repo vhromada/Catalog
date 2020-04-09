@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import cz.vhromada.catalog.entity.Game
-import cz.vhromada.catalog.facade.GameFacade
+import cz.vhromada.catalog.facade.impl.GameFacadeImpl
 import cz.vhromada.catalog.utils.GameUtils
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Status
@@ -15,11 +15,11 @@ import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
 /**
- * A class represents test for class [GameFacadeImpl].
+ * A class represents test for class [GameFacade].
  *
  * @author Vladimir Hromada
  */
-class GameFacadeImplTest : MovableParentFacadeTest<Game, cz.vhromada.catalog.domain.Game>() {
+class GameFacadeTest : MovableParentFacadeTest<Game, cz.vhromada.catalog.domain.Game>() {
 
     /**
      * Test method for [GameFacade.getTotalMediaCount].
@@ -42,11 +42,11 @@ class GameFacadeImplTest : MovableParentFacadeTest<Game, cz.vhromada.catalog.dom
 
         verify(service).getAll()
         verifyNoMoreInteractions(service)
-        verifyZeroInteractions(mapper, validator)
+        verifyZeroInteractions(accountProvider, mapper, validator)
     }
 
     override fun getFacade(): MovableParentFacade<Game> {
-        return GameFacadeImpl(service, mapper, validator)
+        return GameFacadeImpl(service, accountProvider, timeProvider, mapper, validator)
     }
 
     override fun newEntity(id: Int?): Game {

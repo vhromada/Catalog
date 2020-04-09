@@ -1,24 +1,25 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import cz.vhromada.catalog.entity.Music
 import cz.vhromada.catalog.entity.Song
+import cz.vhromada.catalog.facade.impl.SongFacadeImpl
 import cz.vhromada.catalog.utils.MusicUtils
 import cz.vhromada.catalog.utils.SongUtils
 import cz.vhromada.common.facade.MovableChildFacade
 import cz.vhromada.common.test.facade.MovableChildFacadeTest
 
 /**
- * A class represents test for class [SongFacadeImpl].
+ * A class represents test for class [SongFacade].
  *
  * @author Vladimir Hromada
  */
-class SongFacadeImplTest : MovableChildFacadeTest<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>() {
+class SongFacadeTest : MovableChildFacadeTest<Song, cz.vhromada.catalog.domain.Song, Music, cz.vhromada.catalog.domain.Music>() {
 
     override fun getFacade(): MovableChildFacade<Song, Music> {
-        return SongFacadeImpl(service, mapper, parentMovableValidator, childMovableValidator)
+        return SongFacadeImpl(service, accountProvider, timeProvider, mapper, parentMovableValidator, childMovableValidator)
     }
 
     override fun newParentEntity(id: Int): Music {

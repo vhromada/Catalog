@@ -25,7 +25,8 @@ class ShowMapper(private val genreMapper: GenreMapper) : Mapper<Show, cz.vhromad
                 note = source.note,
                 position = source.position,
                 genres = genreMapper.map(source.genres!!.filterNotNull()),
-                seasons = emptyList())
+                seasons = emptyList(),
+                audit = null)
     }
 
     override fun mapBack(source: cz.vhromada.catalog.domain.Show): Show {

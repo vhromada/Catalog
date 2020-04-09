@@ -1,9 +1,8 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Episode
 import cz.vhromada.catalog.entity.Season
-import cz.vhromada.catalog.facade.EpisodeFacade
 import cz.vhromada.catalog.utils.EpisodeUtils
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.SeasonUtils
@@ -21,12 +20,12 @@ import org.springframework.test.context.ContextConfiguration
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [EpisodeFacadeImpl].
+ * A class represents integration test for class [EpisodeFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class EpisodeFacadeImplIntegrationTest : MovableChildFacadeIntegrationTest<Episode, cz.vhromada.catalog.domain.Episode, Season>() {
+class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, cz.vhromada.catalog.domain.Episode, Season>() {
 
     /**
      * Instance of [EntityManager]

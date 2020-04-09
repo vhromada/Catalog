@@ -8,4 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository
  *
  * @author Vladimir Hromada
  */
-interface MovieRepository : JpaRepository<Movie, Int>
+interface MovieRepository : JpaRepository<Movie, Int> {
+
+    /**
+     * Returns all movies created by user.
+     *
+     * @param user user's ID
+     * @return all movies created by user
+     */
+    fun findByAuditCreatedUser(user: Int): List<Movie>
+
+}

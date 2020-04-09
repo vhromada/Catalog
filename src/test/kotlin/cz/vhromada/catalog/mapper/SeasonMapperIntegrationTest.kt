@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class SeasonMapperTest {
+class SeasonMapperIntegrationTest {
 
     /**
      * Instance of [SeasonMapper]

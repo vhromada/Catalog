@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.repository
 
 import cz.vhromada.catalog.CatalogTestConfiguration
+import cz.vhromada.catalog.utils.AuditUtils
 import cz.vhromada.catalog.utils.MusicUtils
 import cz.vhromada.catalog.utils.SongUtils
 import cz.vhromada.catalog.utils.updated
@@ -60,6 +61,7 @@ class MusicRepositoryIntegrationTest {
      * Test method for get one music.
      */
     @Test
+    @Suppress("UsePropertyAccessSyntax")
     fun getMusicOne() {
         for (i in 1..MusicUtils.MUSIC_COUNT) {
             val music = musicRepository.findById(i).orElse(null)
@@ -80,8 +82,9 @@ class MusicRepositoryIntegrationTest {
      */
     @Test
     fun add() {
+        val audit = AuditUtils.getAudit()
         val music = MusicUtils.newMusicDomain(null)
-                .copy(position = MusicUtils.MUSIC_COUNT)
+                .copy(position = MusicUtils.MUSIC_COUNT, audit = audit)
 
         musicRepository.save(music)
 
@@ -89,7 +92,7 @@ class MusicRepositoryIntegrationTest {
 
         val addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1)!!
         val expectedAddMusic = MusicUtils.newMusicDomain(null)
-                .copy(id = MusicUtils.MUSIC_COUNT + 1, position = MusicUtils.MUSIC_COUNT)
+                .copy(id = MusicUtils.MUSIC_COUNT + 1, position = MusicUtils.MUSIC_COUNT, audit = audit)
         MusicUtils.assertMusicDeepEquals(expectedAddMusic, addedMusic)
 
         assertSoftly {
@@ -124,8 +127,9 @@ class MusicRepositoryIntegrationTest {
      */
     @Test
     fun updateAddedSong() {
+        val audit = AuditUtils.getAudit()
         val song = SongUtils.newSongDomain(null)
-                .copy(position = SongUtils.SONGS_COUNT)
+                .copy(position = SongUtils.SONGS_COUNT, audit = audit)
         entityManager.persist(song)
 
         var music = MusicUtils.getMusic(entityManager, 1)!!
@@ -137,7 +141,7 @@ class MusicRepositoryIntegrationTest {
 
         val updatedMusic = MusicUtils.getMusic(entityManager, 1)!!
         val expectedSong = SongUtils.newSongDomain(null)
-                .copy(id = SongUtils.SONGS_COUNT + 1, position = SongUtils.SONGS_COUNT)
+                .copy(id = SongUtils.SONGS_COUNT + 1, position = SongUtils.SONGS_COUNT, audit = audit)
         var expectedUpdatedMusic = MusicUtils.getMusic(1)
         val expectedSongs = expectedUpdatedMusic.songs.toMutableList()
         expectedSongs.add(expectedSong)
@@ -177,6 +181,21 @@ class MusicRepositoryIntegrationTest {
         assertSoftly {
             it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(0)
             it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(0)
+        }
+    }
+
+    /**
+     * Test method for get music for user.
+     */
+    @Test
+    fun findByAuditCreatedUser() {
+        val music = musicRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+
+        MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(), music)
+
+        assertSoftly {
+            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
+            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
         }
     }
 

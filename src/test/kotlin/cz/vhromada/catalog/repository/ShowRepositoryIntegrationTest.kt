@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.repository
 
 import cz.vhromada.catalog.CatalogTestConfiguration
+import cz.vhromada.catalog.utils.AuditUtils
 import cz.vhromada.catalog.utils.EpisodeUtils
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.SeasonUtils
@@ -63,6 +64,7 @@ class ShowRepositoryIntegrationTest {
      * Test method for get show.
      */
     @Test
+    @Suppress("UsePropertyAccessSyntax")
     fun getShow() {
         for (i in 1..ShowUtils.SHOWS_COUNT) {
             val show = showRepository.findById(i).orElse(null)
@@ -84,8 +86,9 @@ class ShowRepositoryIntegrationTest {
      */
     @Test
     fun add() {
+        val audit = AuditUtils.getAudit()
         val show = ShowUtils.newShowDomain(null)
-                .copy(position = ShowUtils.SHOWS_COUNT, genres = listOf(GenreUtils.getGenre(entityManager, 1)!!))
+                .copy(position = ShowUtils.SHOWS_COUNT, genres = listOf(GenreUtils.getGenre(entityManager, 1)!!), audit = audit)
 
         showRepository.save(show)
 
@@ -93,7 +96,7 @@ class ShowRepositoryIntegrationTest {
 
         val addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1)!!
         val expectedAddedShow = ShowUtils.newShowDomain(null)
-                .copy(id = ShowUtils.SHOWS_COUNT + 1, position = ShowUtils.SHOWS_COUNT, genres = listOf(GenreUtils.getGenreDomain(1)))
+                .copy(id = ShowUtils.SHOWS_COUNT + 1, position = ShowUtils.SHOWS_COUNT, genres = listOf(GenreUtils.getGenreDomain(1)), audit = audit)
         ShowUtils.assertShowDeepEquals(expectedAddedShow, addedShow)
 
         assertSoftly {
@@ -130,9 +133,10 @@ class ShowRepositoryIntegrationTest {
      */
     @Test
     fun updateAddedSeason() {
+        val audit = AuditUtils.getAudit()
         var season = SeasonUtils.newSeasonDomain(null)
         season = season.copy(subtitles = season.subtitles.toMutableList(),
-                position = SeasonUtils.SEASONS_COUNT)
+                position = SeasonUtils.SEASONS_COUNT, audit = audit)
         entityManager.persist(season)
 
         var show = ShowUtils.getShow(entityManager, 1)!!
@@ -144,7 +148,7 @@ class ShowRepositoryIntegrationTest {
 
         val updatedShow = ShowUtils.getShow(entityManager, 1)!!
         val expectedSeason = SeasonUtils.newSeasonDomain(null)
-                .copy(id = SeasonUtils.SEASONS_COUNT + 1, position = SeasonUtils.SEASONS_COUNT)
+                .copy(id = SeasonUtils.SEASONS_COUNT + 1, position = SeasonUtils.SEASONS_COUNT, audit = audit)
         var expectedUpdatedShow = ShowUtils.getShow(1)
         val expectedSeasons = expectedUpdatedShow.seasons.toMutableList()
         expectedSeasons.add(expectedSeason)
@@ -188,6 +192,22 @@ class ShowRepositoryIntegrationTest {
             it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(0)
             it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(0)
             it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(0)
+        }
+    }
+
+    /**
+     * Test method for get shows for user.
+     */
+    @Test
+    fun findByAuditCreatedUser() {
+        val shows = showRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+
+        ShowUtils.assertShowsDeepEquals(ShowUtils.getShows(), shows)
+
+        assertSoftly {
+            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
     }
 

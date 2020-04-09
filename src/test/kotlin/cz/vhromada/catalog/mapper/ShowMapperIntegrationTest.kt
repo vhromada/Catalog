@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class ShowMapperTest {
+class ShowMapperIntegrationTest {
 
     /**
      * Instance of [ShowMapper]

@@ -38,7 +38,7 @@ object MediumUtils {
      * @return medium
      */
     fun newMediumDomain(id: Int?): cz.vhromada.catalog.domain.Medium {
-        return cz.vhromada.catalog.domain.Medium(id = id, number = 1, length = 10)
+        return cz.vhromada.catalog.domain.Medium(id = id, number = 1, length = 10, audit = null)
     }
 
     /**
@@ -60,7 +60,7 @@ object MediumUtils {
     fun getMedium(index: Int): cz.vhromada.catalog.domain.Medium {
         val lengthMultiplier = 100
 
-        return cz.vhromada.catalog.domain.Medium(id = index, number = if (index < 4) 1 else 2, length = index * lengthMultiplier)
+        return cz.vhromada.catalog.domain.Medium(id = index, number = if (index < 4) 1 else 2, length = index * lengthMultiplier, audit = AuditUtils.getAudit())
     }
 
     /**
@@ -108,6 +108,7 @@ object MediumUtils {
             it.assertThat(expected!!.id).isEqualTo(actual!!.id)
             it.assertThat(expected.number).isEqualTo(actual.number)
             it.assertThat(expected.length).isEqualTo(actual.length)
+            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
         }
     }
 

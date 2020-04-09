@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
@@ -6,9 +6,9 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import cz.vhromada.catalog.entity.Show
-import cz.vhromada.catalog.facade.ShowFacade
+import cz.vhromada.catalog.facade.impl.ShowFacadeImpl
 import cz.vhromada.catalog.utils.ShowUtils
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Status
 import cz.vhromada.common.test.facade.MovableParentFacadeTest
@@ -16,11 +16,11 @@ import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 
 /**
- * A class represents test for class [ShowFacadeImpl].
+ * A class represents test for class [ShowFacade].
  *
  * @author Vladimir Hromada
  */
-class ShowFacadeImplTest : MovableParentFacadeTest<Show, cz.vhromada.catalog.domain.Show>() {
+class ShowFacadeTest : MovableParentFacadeTest<Show, cz.vhromada.catalog.domain.Show>() {
 
     /**
      * Test method for [ShowFacade.getTotalLength].
@@ -50,7 +50,7 @@ class ShowFacadeImplTest : MovableParentFacadeTest<Show, cz.vhromada.catalog.dom
 
         verify(service).getAll()
         verifyNoMoreInteractions(service)
-        verifyZeroInteractions(mapper, validator)
+        verifyZeroInteractions(accountProvider, mapper, validator)
     }
 
     /**
@@ -74,7 +74,7 @@ class ShowFacadeImplTest : MovableParentFacadeTest<Show, cz.vhromada.catalog.dom
 
         verify(service).getAll()
         verifyNoMoreInteractions(service)
-        verifyZeroInteractions(mapper, validator)
+        verifyZeroInteractions(accountProvider, mapper, validator)
     }
 
     /**
@@ -103,7 +103,7 @@ class ShowFacadeImplTest : MovableParentFacadeTest<Show, cz.vhromada.catalog.dom
 
         verify(service).getAll()
         verifyNoMoreInteractions(service)
-        verifyZeroInteractions(mapper, validator)
+        verifyZeroInteractions(accountProvider, mapper, validator)
     }
 
     override fun initUpdateMock(domain: cz.vhromada.catalog.domain.Show) {
@@ -112,14 +112,8 @@ class ShowFacadeImplTest : MovableParentFacadeTest<Show, cz.vhromada.catalog.dom
         whenever(service.get(any())).thenReturn(domain)
     }
 
-    override fun verifyUpdateMock(entity: Show, domain: cz.vhromada.catalog.domain.Show) {
-        super.verifyUpdateMock(entity, domain)
-
-        verify(service).get(entity.id!!)
-    }
-
     override fun getFacade(): MovableParentFacade<Show> {
-        return ShowFacadeImpl(service, mapper, validator)
+        return ShowFacadeImpl(service, accountProvider, timeProvider, mapper, validator)
     }
 
     override fun newEntity(id: Int?): Show {

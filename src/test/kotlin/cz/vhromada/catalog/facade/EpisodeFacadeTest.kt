@@ -1,4 +1,4 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import cz.vhromada.catalog.domain.Show
 import cz.vhromada.catalog.entity.Episode
 import cz.vhromada.catalog.entity.Season
+import cz.vhromada.catalog.facade.impl.EpisodeFacadeImpl
 import cz.vhromada.catalog.utils.EpisodeUtils
 import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
@@ -13,18 +14,18 @@ import cz.vhromada.common.facade.MovableChildFacade
 import cz.vhromada.common.test.facade.MovableChildFacadeTest
 
 /**
- * A class represents test for class [EpisodeFacadeImpl].
+ * A class represents test for class [EpisodeFacade].
  *
  * @author Vladimir Hromada
  */
-class EpisodeFacadeImplTest : MovableChildFacadeTest<Episode, cz.vhromada.catalog.domain.Episode, Season, Show>() {
+class EpisodeFacadeTest : MovableChildFacadeTest<Episode, cz.vhromada.catalog.domain.Episode, Season, Show>() {
 
     override fun isFirstChild(): Boolean {
         return false
     }
 
     override fun getFacade(): MovableChildFacade<Episode, Season> {
-        return EpisodeFacadeImpl(service, mapper, parentMovableValidator, childMovableValidator)
+        return EpisodeFacadeImpl(service, accountProvider, timeProvider, mapper, parentMovableValidator, childMovableValidator)
     }
 
     override fun newParentEntity(id: Int): Season {

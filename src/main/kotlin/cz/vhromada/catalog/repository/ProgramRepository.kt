@@ -8,4 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository
  *
  * @author Vladimir Hromada
  */
-interface ProgramRepository : JpaRepository<Program, Int>
+interface ProgramRepository : JpaRepository<Program, Int> {
+
+    /**
+     * Returns all programs created by user.
+     *
+     * @param user user's ID
+     * @return all programs created by user
+     */
+    fun findByAuditCreatedUser(user: Int): List<Program>
+
+}

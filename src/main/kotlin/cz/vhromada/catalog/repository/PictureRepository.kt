@@ -8,4 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository
  *
  * @author Vladimir Hromada
  */
-interface PictureRepository : JpaRepository<Picture, Int>
+interface PictureRepository : JpaRepository<Picture, Int> {
+
+    /**
+     * Returns all pictures created by user.
+     *
+     * @param user user's ID
+     * @return all pictures created by user
+     */
+    fun findByAuditCreatedUser(user: Int): List<Picture>
+
+}

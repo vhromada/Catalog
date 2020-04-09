@@ -8,4 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository
  *
  * @author Vladimir Hromada
  */
-interface MusicRepository : JpaRepository<Music, Int>
+interface MusicRepository : JpaRepository<Music, Int> {
+
+    /**
+     * Returns all music created by user.
+     *
+     * @param user user's ID
+     * @return all music created by user
+     */
+    fun findByAuditCreatedUser(user: Int): List<Music>
+
+}

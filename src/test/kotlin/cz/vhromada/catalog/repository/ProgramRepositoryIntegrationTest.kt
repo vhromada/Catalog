@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.repository
 
 import cz.vhromada.catalog.CatalogTestConfiguration
+import cz.vhromada.catalog.utils.AuditUtils
 import cz.vhromada.catalog.utils.ProgramUtils
 import cz.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
@@ -54,6 +55,7 @@ class ProgramRepositoryIntegrationTest {
      * Test method for get program.
      */
     @Test
+    @Suppress("UsePropertyAccessSyntax")
     fun getProgram() {
         for (i in 1..ProgramUtils.PROGRAMS_COUNT) {
             val program = programRepository.findById(i).orElse(null)
@@ -71,8 +73,9 @@ class ProgramRepositoryIntegrationTest {
      */
     @Test
     fun add() {
+        val audit = AuditUtils.getAudit()
         val program = ProgramUtils.newProgramDomain(null)
-                .copy(position = ProgramUtils.PROGRAMS_COUNT)
+                .copy(position = ProgramUtils.PROGRAMS_COUNT, audit = audit)
 
         programRepository.save(program)
 
@@ -80,7 +83,7 @@ class ProgramRepositoryIntegrationTest {
 
         val addedProgram = ProgramUtils.getProgram(entityManager, ProgramUtils.PROGRAMS_COUNT + 1)!!
         val expectedAddProgram = ProgramUtils.newProgramDomain(null)
-                .copy(id = ProgramUtils.PROGRAMS_COUNT + 1, position = ProgramUtils.PROGRAMS_COUNT)
+                .copy(id = ProgramUtils.PROGRAMS_COUNT + 1, position = ProgramUtils.PROGRAMS_COUNT, audit = audit)
         ProgramUtils.assertProgramDeepEquals(expectedAddProgram, addedProgram)
 
         assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT + 1)
@@ -124,6 +127,18 @@ class ProgramRepositoryIntegrationTest {
         programRepository.deleteAll()
 
         assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(0)
+    }
+
+    /**
+     * Test method for get programs for user.
+     */
+    @Test
+    fun findByAuditCreatedUser() {
+        val programs = programRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+
+        ProgramUtils.assertProgramsDeepEquals(ProgramUtils.getPrograms(), programs)
+
+        assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT)
     }
 
 }

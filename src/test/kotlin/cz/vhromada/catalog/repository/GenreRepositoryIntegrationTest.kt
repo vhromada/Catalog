@@ -1,6 +1,7 @@
 package cz.vhromada.catalog.repository
 
 import cz.vhromada.catalog.CatalogTestConfiguration
+import cz.vhromada.catalog.utils.AuditUtils
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
@@ -55,6 +56,7 @@ class GenreRepositoryIntegrationTest {
      * Test method for get genre.
      */
     @Test
+    @Suppress("UsePropertyAccessSyntax")
     fun getGenre() {
         for (i in 1..GenreUtils.GENRES_COUNT) {
             val genre = genreRepository.findById(i).orElse(null)
@@ -72,8 +74,9 @@ class GenreRepositoryIntegrationTest {
      */
     @Test
     fun add() {
+        val audit = AuditUtils.getAudit()
         val genre = GenreUtils.newGenreDomain(null)
-                .copy(position = GenreUtils.GENRES_COUNT)
+                .copy(position = GenreUtils.GENRES_COUNT, audit = audit)
 
         genreRepository.save(genre)
 
@@ -81,7 +84,7 @@ class GenreRepositoryIntegrationTest {
 
         val addedGenre = GenreUtils.getGenre(entityManager, GenreUtils.GENRES_COUNT + 1)!!
         val expectedAddGenre = GenreUtils.newGenreDomain(null)
-                .copy(id = GenreUtils.GENRES_COUNT + 1, position = GenreUtils.GENRES_COUNT)
+                .copy(id = GenreUtils.GENRES_COUNT + 1, position = GenreUtils.GENRES_COUNT, audit = audit)
         GenreUtils.assertGenreDeepEquals(expectedAddGenre, addedGenre)
 
         assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT + 1)
@@ -112,7 +115,7 @@ class GenreRepositoryIntegrationTest {
     @DirtiesContext
     fun remove() {
         val genre = GenreUtils.newGenreDomain(null)
-                .copy(position = GenreUtils.GENRES_COUNT)
+                .copy(position = GenreUtils.GENRES_COUNT, audit = AuditUtils.getAudit())
         entityManager.persist(genre)
         assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT + 1)
 
@@ -134,6 +137,18 @@ class GenreRepositoryIntegrationTest {
         genreRepository.deleteAll()
 
         assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(0)
+    }
+
+    /**
+     * Test method for get genres for user.
+     */
+    @Test
+    fun findByAuditCreatedUser() {
+        val genres = genreRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+
+        GenreUtils.assertGenresDeepEquals(GenreUtils.getGenres(), genres)
+
+        assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
     }
 
 }

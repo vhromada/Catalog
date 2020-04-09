@@ -1,8 +1,7 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Genre
-import cz.vhromada.catalog.facade.GenreFacade
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.MovieUtils
 import cz.vhromada.catalog.utils.ShowUtils
@@ -21,12 +20,12 @@ import org.springframework.transaction.support.DefaultTransactionDefinition
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [GenreFacadeImpl].
+ * A class represents integration test for class [GenreFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class GenreFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Genre, cz.vhromada.catalog.domain.Genre>() {
+class GenreFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Genre, cz.vhromada.catalog.domain.Genre>() {
 
     /**
      * Instance of [EntityManager]

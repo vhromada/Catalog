@@ -1,14 +1,13 @@
-package cz.vhromada.catalog.facade.impl
+package cz.vhromada.catalog.facade
 
 import cz.vhromada.catalog.CatalogTestConfiguration
 import cz.vhromada.catalog.entity.Show
-import cz.vhromada.catalog.facade.ShowFacade
 import cz.vhromada.catalog.utils.EpisodeUtils
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.PictureUtils
 import cz.vhromada.catalog.utils.SeasonUtils
 import cz.vhromada.catalog.utils.ShowUtils
-import cz.vhromada.common.Time
+import cz.vhromada.common.entity.Time
 import cz.vhromada.common.facade.MovableParentFacade
 import cz.vhromada.common.result.Event
 import cz.vhromada.common.result.Severity
@@ -23,12 +22,12 @@ import org.springframework.test.context.ContextConfiguration
 import javax.persistence.EntityManager
 
 /**
- * A class represents integration test for class [ShowFacadeImpl].
+ * A class represents integration test for class [ShowFacade].
  *
  * @author Vladimir Hromada
  */
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, cz.vhromada.catalog.domain.Show>() {
+class ShowFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Show, cz.vhromada.catalog.domain.Show>() {
 
     /**
      * Instance of [EntityManager]
@@ -909,6 +908,18 @@ class ShowFacadeImplIntegrationTest : MovableParentFacadeIntegrationTest<Show, c
             season.id = SeasonUtils.SEASONS_COUNT + index + 1
             for (episode in season.episodes) {
                 episode.id = EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SEASON_COUNT * index + season.episodes.indexOf(episode) + 1
+            }
+        }
+
+        return show
+    }
+
+    override fun getExpectedUpdatePositionData(index: Int): cz.vhromada.catalog.domain.Show {
+        val show = super.getExpectedUpdatePositionData(index)
+        for (season in show.seasons) {
+            season.modify(getUpdatedAudit())
+            for (episode in season.episodes) {
+                episode.modify(getUpdatedAudit())
             }
         }
 

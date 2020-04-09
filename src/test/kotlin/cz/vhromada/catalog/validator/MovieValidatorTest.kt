@@ -14,7 +14,7 @@ import cz.vhromada.catalog.entity.Picture
 import cz.vhromada.catalog.utils.GenreUtils
 import cz.vhromada.catalog.utils.MediumUtils
 import cz.vhromada.catalog.utils.MovieUtils
-import cz.vhromada.common.Language
+import cz.vhromada.common.entity.Language
 import cz.vhromada.common.result.Event
 import cz.vhromada.common.result.Result
 import cz.vhromada.common.result.Severity

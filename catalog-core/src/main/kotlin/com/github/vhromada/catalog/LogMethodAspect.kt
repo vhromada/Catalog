@@ -50,7 +50,7 @@ class LogMethodAspect {
     /**
      * Pointcut for facade layer
      */
-    @Pointcut("execution(public * cz.vhromada.catalog..*FacadeImpl.*(..))")
+    @Pointcut("execution(public * com.github.vhromada.catalog..*FacadeImpl.*(..))")
     @Suppress("unused")
     fun catalogFacadePointcut() {
         // pointcut
@@ -59,7 +59,7 @@ class LogMethodAspect {
     /**
      * Pointcut for service layer
      */
-    @Pointcut("execution(public * cz.vhromada.common..*Facade.*(..))")
+    @Pointcut("execution(public * com.github.vhromada.common..*Facade.*(..))")
     @Suppress("unused")
     fun commonFacadePointcut() {
         // pointcut

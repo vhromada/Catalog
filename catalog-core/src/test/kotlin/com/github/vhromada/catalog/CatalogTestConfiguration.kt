@@ -5,6 +5,7 @@ import com.github.vhromada.common.provider.AccountProvider
 import com.github.vhromada.common.provider.TimeProvider
 import com.github.vhromada.common.test.utils.TestConstants
 import net.sf.ehcache.CacheManager
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 import org.springframework.cache.ehcache.EhCacheCacheManager
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
 import org.springframework.context.annotation.Bean
@@ -28,14 +29,13 @@ import javax.sql.DataSource
  * @author Vladimir Hromada
  */
 @Configuration
-@Import(CatalogConfiguration::class)
+@Import(CatalogConfiguration::class, FlywayAutoConfiguration.FlywayConfiguration::class)
 class CatalogTestConfiguration {
 
     @Bean
     fun dataSource(): DataSource {
         return EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScripts("catalog.sql", "data.sql")
                 .build()
     }
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <form th:action="@{/login}" method="POST">
+            <fieldset>
+                <span class="error global" th:if="${loginError}">Wrong user or password</span>
+                <div class="form-group">
+                    <label class="col-md-2 col-form-label" for="username">Username</label>
+                    <div class="col-md-10">
+                        <input type="text" id="username" name="username" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-form-label" for="password">Password</label>
+                    <div class="col-md-10">
+                        <input type="password" id="password" name="password" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <button type="submit" id="submit" name="submit" class="btn btn-primary">Log in</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </body>
+</html>

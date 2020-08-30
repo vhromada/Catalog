@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="picture/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover" th:if="${!#lists.isEmpty(pictures)}">
+                <thead>
+                    <tr>
+                        <th>Picture</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="picture : ${pictures}">
+                        <tr>
+                            <td><img th:src="@{|/pictures/${picture}|}" alt="Picture" class="picture"/></td>
+                            <td><a th:href="@{|/pictures/moveUp/${picture}|}" th:if="${pictures.indexOf(picture) > 0}">Move up</a></td>
+                            <td><a th:href="@{|/pictures/moveDown/${picture}|}" th:if="${pictures.indexOf(picture) < pictures.size() - 1}">Move down</a></td>
+                            <td><a th:href="@{|/pictures/remove/${picture}|}">Remove</a></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${#lists.isEmpty(pictures)}">No records.</th:block>
+        </div>
+    </body>
+</html>

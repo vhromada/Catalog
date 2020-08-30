@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="movie/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <img th:src="@{|/pictures/${movie.picture}|}" alt="Picture" class="picture" th:if="${movie.picture != null}"/>
+            <table class="table table-hover detail">
+                <tbody>
+                    <tr>
+                        <td class="title">Czech name</td>
+                        <td th:text="${movie.czechName}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Original name</td>
+                        <td th:text="${movie.originalName}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Genres</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGenres(movie.genres)}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Year</td>
+                        <td th:text="${movie.year}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Language</td>
+                        <td th:text="${movie.language}"></td>
+                    </tr>
+                    <tr th:if="${!#lists.isEmpty(movie.subtitles)}">
+                        <td class="title">Subtitles</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertLanguages(movie.subtitles)}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Media</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertMedia(movie.media)}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Total length</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertMovieTotalLength(movie.media)}"></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(movie.note)}">
+                        <td class="title">Note</td>
+                        <td th:text="${movie.note}"></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(movie.csfd)}">
+                        <td colspan="2"><a th:href="@{|http://www.csfd.cz/film/${movie.csfd}|}" target="_blank">ČSFD</a></td>
+                    </tr>
+                    <tr th:if="${movie.imdbCode > 0}">
+                        <td colspan="2">
+                            <a th:href="@{http://www.imdb.com/title/{imdb}(imdb = 'tt' + ${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertImdbCode(movie.imdbCode)})}"
+                               target="_blank">
+                                IMDB
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(movie.wikiCz)}">
+                        <td colspan="2"><a th:href="@{|http://cz.wikipedia.org/wiki/${movie.wikiCz}|}" target="_blank">Czech Wikipedia</a></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(movie.wikiEn)}">
+                        <td colspan="2"><a th:href="@{|http://en.wikipedia.org/wiki/${movie.wikiEn}|}" target="_blank">English Wikipedia</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="song/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover" th:if="${!#lists.isEmpty(songs)}">
+                <thead>
+                    <tr>
+                        <th>Song</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="song : ${songs}">
+                        <tr>
+                            <td><a th:href="@{|/music/${music}/songs/${song.id}/detail|}" th:text="${song.name}"></a></td>
+                            <td><a th:href="@{|/music/${music}/songs/moveUp/${song.id}|}" th:if="${songs.indexOf(song) > 0}">Move up</a></td>
+                            <td><a th:href="@{|/music/${music}/songs/moveDown/${song.id}|}" th:if="${songs.indexOf(song) < songs.size() - 1}">Move down</a></td>
+                            <td><a th:href="@{|/music/${music}/songs/duplicate/${song.id}|}">Duplicate</a></td>
+                            <td><a th:href="@{|/music/${music}/songs/edit/${song.id}|}">Edit</a></td>
+                            <td><a th:href="@{|/music/${music}/songs/remove/${song.id}|}">Remove</a></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${#lists.isEmpty(songs)}">No records.</th:block>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Catalog
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  thymeleaf:
+    cache: false

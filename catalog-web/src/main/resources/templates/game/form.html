@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="action" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="game" type="com.github.vhromada.catalog.web.fo.GameFO"*/-->
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="game/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <form th:action="@{|/games/${action}|}" method="POST" th:object="${game}">
+                <fieldset>
+                    <input type="hidden" id="id" name="id" th:field="*{id}" th:if="${action == 'edit'}"/>
+                    <input type="hidden" id="position" name="position" th:field="*{position}" th:if="${action == 'edit'}"/>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="name">Name</label>
+                        <div class="col-md-10">
+                            <input type="text" id="name" name="name" class="form-control" th:field="*{name}"/>
+                            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="wikiCz">Czech Wikipedia</label>
+                        <div class="col-md-10">
+                            <input type="text" id="wikiCz" name="wikiCz" class="form-control" th:field="*{wikiCz}"/>
+                            <span class="error" th:if="${#fields.hasErrors('wikiCz')}" th:errors="*{wikiCz}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="wikiEn">English Wikipedia</label>
+                        <div class="col-md-10">
+                            <input type="text" id="wikiEn" name="wikiEn" class="form-control" th:field="*{wikiEn}"/>
+                            <span class="error" th:if="${#fields.hasErrors('wikiEn')}" th:errors="*{wikiEn}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="mediaCount">Count of media</label>
+                        <div class="col-md-10">
+                            <input type="number" id="mediaCount" name="mediaCount" class="form-control" min="1" max="100" step="1" th:field="*{mediaCount}"/>
+                            <span class="error" th:if="${#fields.hasErrors('mediaCount')}" th:errors="*{mediaCount}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="crack">Crack</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="crack" name="crack" th:field="*{crack}"/>
+                            <span class="error" th:if="${#fields.hasErrors('crack')}" th:errors="*{crack}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="serialKey">Serial key</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="serialKey" name="serialKey" th:field="*{serialKey}"/>
+                            <span class="error" th:if="${#fields.hasErrors('serialKey')}" th:errors="*{serialKey}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="patch">Patch</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="patch" name="patch" th:field="*{patch}"/>
+                            <span class="error" th:if="${#fields.hasErrors('patch')}" th:errors="*{patch}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="trainer">Trainer</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="trainer" name="trainer" th:field="*{trainer}"/>
+                            <span class="error" th:if="${#fields.hasErrors('trainer')}" th:errors="*{trainer}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="trainerData">Data for trainer</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="trainerData" name="trainerData" th:field="*{trainerData}"/>
+                            <span class="error" th:if="${#fields.hasErrors('trainerData')}" th:errors="*{trainerData}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="editor">Editor</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="editor" name="editor" th:field="*{editor}"/>
+                            <span class="error" th:if="${#fields.hasErrors('editor')}" th:errors="*{editor}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="saves">Saves</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="saves" name="saves" th:field="*{saves}"/>
+                            <span class="error" th:if="${#fields.hasErrors('saves')}" th:errors="*{saves}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="otherData">Other data</label>
+                        <div class="col-md-10">
+                            <input type="text" id="otherData" name="otherData" class="form-control" th:field="*{otherData}"/>
+                            <span class="error" th:if="${#fields.hasErrors('otherData')}" th:errors="*{otherData}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="note">Note</label>
+                        <div class="col-md-10">
+                            <input type="text" id="note" name="note" class="form-control" th:field="*{note}"/>
+                            <span class="error" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <button type="submit" id="create" name="create" class="btn btn-primary" th:if="${action == 'add'}">Create</button>
+                            <button type="submit" id="update" name="update" class="btn btn-primary" th:if="${action == 'edit'}">Update</button>
+                            <button type="submit" id="cancel" name="cancel" class="btn btn-danger" formnovalidate="formnovalidate">Cancel</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>

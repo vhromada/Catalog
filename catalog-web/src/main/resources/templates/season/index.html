@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="season/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover" th:if="${!#lists.isEmpty(seasons)}">
+                <thead>
+                    <tr>
+                        <th>Season</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="season : ${seasons}">
+                        <tr>
+                            <td><a th:href="@{|/shows/${show}/seasons/${season.id}/detail|}" th:text="${season.number}"></a></td>
+                            <td><a th:href="@{|/shows/${show}/seasons/${season.id}/episodes/list|}">Episodes</a></td>
+                            <td><a th:href="@{|/shows/${show}/seasons/moveUp/${season.id}|}" th:if="${seasons.indexOf(season) > 0}">Move up</a></td>
+                            <td>
+                                <a th:href="@{|/shows/${show}/seasons/moveDown/${season.id}|}" th:if="${seasons.indexOf(season) < seasons.size() - 1}">
+                                    Move down
+                                </a>
+                            </td>
+                            <td><a th:href="@{|/shows/${show}/seasons/duplicate/${season.id}|}">Duplicate</a></td>
+                            <td><a th:href="@{|/shows/${show}/seasons/edit/${season.id}|}">Edit</a></td>
+                            <td><a th:href="@{|/shows/${show}/seasons/remove/${season.id}|}">Remove</a></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${#lists.isEmpty(seasons)}">No records.</th:block>
+        </div>
+    </body>
+</html>

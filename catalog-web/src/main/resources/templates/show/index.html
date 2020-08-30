@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="show/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover" th:if="${!#lists.isEmpty(shows)}">
+                <thead>
+                    <tr>
+                        <th>Show</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="show : ${shows}">
+                        <tr>
+                            <td><a th:href="@{|/shows/${show.id}/detail|}" th:text="${show.czechName}"></a></td>
+                            <td><a th:href="@{|/shows/${show.id}/seasons/list|}">Seasons</a></td>
+                            <td><a th:href="@{|/shows/moveUp/${show.id}|}" th:if="${shows.indexOf(show) > 0}">Move up</a></td>
+                            <td><a th:href="@{|/shows/moveDown/${show.id}|}" th:if="${shows.indexOf(show) < shows.size() - 1}">Move down</a></td>
+                            <td><a th:href="@{|/shows/duplicate/${show.id}|}">Duplicate</a></td>
+                            <td><a th:href="@{|/shows/edit/${show.id}|}">Edit</a></td>
+                            <td><a th:href="@{|/shows/remove/${show.id}|}">Remove</a></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${#lists.isEmpty(shows)}">No records.</th:block>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count of shows</th>
+                        <th>Count of seasons</th>
+                        <th>Count of episodes</th>
+                        <th>Total length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${shows.size()}"></td>
+                        <td th:text="${seasonsCount}"></td>
+                        <td th:text="${episodesCount}"></td>
+                        <td th:text="${totalLength}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

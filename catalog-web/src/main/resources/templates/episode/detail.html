@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="episode/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover detail">
+                <tbody>
+                    <tr>
+                        <td class="title">Number</td>
+                        <td th:text="${episode.number}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Name</td>
+                        <td th:text="${episode.name}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Length</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertLength(episode.length)}"></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(episode.note)}">
+                        <td class="title">Note</td>
+                        <td th:text="${episode.note}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="season/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover detail">
+                <tbody>
+                    <tr>
+                        <td class="title">Number</td>
+                        <td th:text="${season.season.number}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Year</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertSeasonYears(season.season)}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Language</td>
+                        <td th:text="${season.season.language}"></td>
+                    </tr>
+                    <tr th:if="${!#lists.isEmpty(season.season.subtitles)}">
+                        <td class="title">Subtitles</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertLanguages(season.season.subtitles)}"></td>
+                    </tr>
+                    <th:block th:if="${season.episodesCount > 0}">
+                        <tr>
+                            <td class="title">Episodes count</td>
+                            <td th:text="${season.episodesCount}"></td>
+                        </tr>
+                        <tr>
+                            <td class="title">Total length</td>
+                            <td th:text="${season.totalLength}"></td>
+                        </tr>
+                    </th:block>
+                    <tr th:if="${!#strings.isEmpty(season.season.note)}">
+                        <td class="title">Note</td>
+                        <td th:text="${season.season.note}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

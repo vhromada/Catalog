@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="errorMessage" type="java.lang.String"*/-->
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <th:block th:text="${errorMessage}"/>
+        </div>
+    </body>
+</html>

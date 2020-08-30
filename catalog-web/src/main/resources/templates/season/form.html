@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="showId" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="action" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="season" type="com.github.vhromada.catalog.web.fo.SeasonFO"*/-->
+    <!--/*@thymesVar id="languages" type="com.github.vhromada.common.entity.Language[]"*/-->
+    <!--/*@thymesVar id="subtitles" type="com.github.vhromada.common.entity.Language[]"*/-->
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="season/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <form th:action="@{|/shows/${showId}/seasons/${action}|}" method="POST" th:object="${season}">
+                <fieldset>
+                    <input type="hidden" id="id" name="id" th:field="*{id}" th:if="${action == 'edit'}"/>
+                    <input type="hidden" id="position" name="position" th:field="*{position}" th:if="${action == 'edit'}"/>
+                    <span class="error global" th:if="${#fields.hasErrors('global')}" th:errors="*{global}"></span>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="number">Number</label>
+                        <div class="col-md-10">
+                            <input type="number" id="number" name="number" class="form-control" min="1" max="100" step="1" th:field="*{number}"/>
+                            <span class="error" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="startYear">Starting year</label>
+                        <div class="col-md-10">
+                            <input type="number" id="startYear" name="startYear" class="form-control" min="1930" max="2500" step="1" th:field="*{startYear}"/>
+                            <span class="error" th:if="${#fields.hasErrors('startYear')}" th:errors="*{startYear}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="endYear">Ending year</label>
+                        <div class="col-md-10">
+                            <input type="number" id="endYear" name="endYear" class="form-control" min="1930" max="2500" step="1" th:field="*{endYear}"/>
+                            <span class="error" th:if="${#fields.hasErrors('endYear')}" th:errors="*{endYear}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Language</label>
+                        <div class="col-md-10">
+                            <th:block th:each="language : ${languages}">
+                                <label class="form-check custom">
+                                    <input type="radio" th:field="*{language}" th:value="${language}"/>
+                                    <th:block th:text="${language}"/>
+                                </label>
+                            </th:block>
+                            <span class="error" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Subtitles</label>
+                        <div class="col-md-10">
+                            <th:block th:each="subtitlesItem : ${subtitles}">
+                                <label class="form-check custom">
+                                    <input type="checkbox" th:field="*{subtitles}" th:value="${subtitlesItem}"/>
+                                    <th:block th:text="${subtitlesItem}"/>
+                                </label>
+                            </th:block>
+                            <span class="error" th:if="${#fields.hasErrors('subtitles')}" th:errors="*{subtitles}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="note">Note</label>
+                        <div class="col-md-10">
+                            <input type="text" id="note" name="note" class="form-control" th:field="*{note}"/>
+                            <span class="error" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <button type="submit" id="create" name="create" class="btn btn-primary" th:if="${action == 'add'}">Create</button>
+                            <button type="submit" id="update" name="update" class="btn btn-primary" th:if="${action == 'edit'}">Update</button>
+                            <button type="submit" id="cancel" name="cancel" class="btn btn-danger" formnovalidate="formnovalidate">Cancel</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>

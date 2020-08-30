@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="action" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="genre" type="com.github.vhromada.catalog.web.fo.GenreFO"*/-->
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="genre/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <form th:action="@{|/genres/${action}|}" method="POST" th:object="${genre}">
+                <fieldset>
+                    <input type="hidden" id="id" name="id" th:field="*{id}" th:if="${action == 'edit'}"/>
+                    <input type="hidden" id="position" name="position" th:field="*{position}" th:if="${action == 'edit'}"/>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="name">Name</label>
+                        <div class="col-md-10">
+                            <input type="text" id="name" name="name" class="form-control" th:field="*{name}"/>
+                            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <button type="submit" id="create" name="create" class="btn btn-primary" th:if="${action == 'add'}">Create</button>
+                            <button type="submit" id="update" name="update" class="btn btn-primary" th:if="${action == 'edit'}">Update</button>
+                            <button type="submit" id="cancel" name="cancel" class="btn btn-danger" formnovalidate="formnovalidate">Cancel</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>

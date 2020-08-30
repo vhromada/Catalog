@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="program/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover" th:if="${!#lists.isEmpty(programs)}">
+                <thead>
+                    <tr>
+                        <th>Program</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="program : ${programs}">
+                        <tr>
+                            <td><a th:href="@{|/programs/${program.id}/detail|}" th:text="${program.name}"></a></td>
+                            <td><a th:href="@{|/programs/moveUp/${program.id}|}" th:if="${programs.indexOf(program) > 0}">Move up</a></td>
+                            <td><a th:href="@{|/programs/moveDown/${program.id}|}" th:if="${programs.indexOf(program) < programs.size() - 1}">Move down</a></td>
+                            <td><a th:href="@{|/programs/duplicate/${program.id}|}">Duplicate</a></td>
+                            <td><a th:href="@{|/programs/edit/${program.id}|}">Edit</a></td>
+                            <td><a th:href="@{|/programs/remove/${program.id}|}">Remove</a></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${#lists.isEmpty(programs)}">No records.</th:block>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count of programs</th>
+                        <th>Count of media</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${programs.size()}"></td>
+                        <td th:text="${mediaCount}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

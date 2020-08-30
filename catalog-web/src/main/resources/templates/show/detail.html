@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="show/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <img th:src="@{|/pictures/${show.show.picture}|}" alt="Picture" class="picture" th:if="${show.show.picture != null}"/>
+            <table class="table table-hover detail">
+                <tbody>
+                    <tr>
+                        <td class="title">Czech name</td>
+                        <td th:text="${show.show.czechName}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Original name</td>
+                        <td th:text="${show.show.originalName}"></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Genres</td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGenres(show.show.genres)}"></td>
+                    </tr>
+                    <tr th:if="${show.seasonsCount > 0}">
+                        <td class="title">Count of seasons</td>
+                        <td th:text="${show.seasonsCount}"></td>
+                    </tr>
+                    <th:block th:if="${show.episodesCount > 0}">
+                        <tr>
+                            <td class="title">Count of episodes</td>
+                            <td th:text="${show.episodesCount}"></td>
+                        </tr>
+                        <tr>
+                            <td class="title">Total length</td>
+                            <td th:text="${show.totalLength}"></td>
+                        </tr>
+                    </th:block>
+                    <tr th:if="${!#strings.isEmpty(show.show.note)}">
+                        <td class="title">Note</td>
+                        <td th:text="${show.show.note}"></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(show.show.csfd)}">
+                        <td colspan="2"><a th:href="@{|http://www.csfd.cz/film/${show.show.csfd}|}" target="_blank">ČSFD</a></td>
+                    </tr>
+                    <tr th:if="${show.show.imdbCode > 0}">
+                        <td colspan="2">
+                            <a th:href="@{http://www.imdb.com/title/{imdb}(imdb = 'tt' + ${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertImdbCode(show.show.imdbCode)})}"
+                               target="_blank">
+                                IMDB
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(show.show.wikiCz)}">
+                        <td colspan="2"><a th:href="@{|http://cz.wikipedia.org/wiki/${show.show.wikiCz}|}" target="_blank">Czech Wikipedia</a></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(show.show.wikiEn)}">
+                        <td colspan="2"><a th:href="@{|http://en.wikipedia.org/wiki/${show.show.wikiEn}|}" target="_blank">English Wikipedia</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

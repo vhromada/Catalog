@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="action" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="movie" type="com.github.vhromada.catalog.web.fo.MovieFO"*/-->
+    <!--/*@thymesVar id="languages" type="com.github.vhromada.common.entity.Language[]"*/-->
+    <!--/*@thymesVar id="subtitles" type="com.github.vhromada.common.entity.Language[]"*/-->
+    <!--/*@thymesVar id="genres" type="java.util.List<com.github.vhromada.catalog.entity.Genre>"*/-->
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="movie/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <form th:action="@{|/movies/${action}|}" method="POST" th:object="${movie}">
+                <fieldset>
+                    <input type="hidden" id="id" name="id" th:field="*{id}" th:if="${action == 'edit'}"/>
+                    <input type="hidden" id="position" name="position" th:field="*{position}" th:if="${action == 'edit'}"/>
+                    <span class="error global" th:if="${#fields.hasErrors('media')}" th:errors="*{media}"></span>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="czechName">Czech name</label>
+                        <div class="col-md-10">
+                            <input type="text" id="czechName" name="czechName" class="form-control" th:field="*{czechName}"/>
+                            <span class="error" th:if="${#fields.hasErrors('czechName')}" th:errors="*{czechName}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="originalName">Original name</label>
+                        <div class="col-md-10">
+                            <input type="text" id="originalName" name="originalName" class="form-control" th:field="*{originalName}"/>
+                            <span class="error" th:if="${#fields.hasErrors('originalName')}" th:errors="*{originalName}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="year">Year</label>
+                        <div class="col-md-10">
+                            <input type="number" id="year" name="year" class="form-control" min="1930" max="2500" step="1" th:field="*{year}"/>
+                            <span class="error" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Language</label>
+                        <div class="col-md-10">
+                            <th:block th:each="language : ${languages}">
+                                <label class="form-check custom">
+                                    <input type="radio" th:field="*{language}" th:value="${language}"/>
+                                    <th:block th:text="${language}"/>
+                                </label>
+                            </th:block>
+                            <span class="error" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Subtitles</label>
+                        <div class="col-md-10">
+                            <th:block th:each="subtitlesItem : ${subtitles}">
+                                <label class="form-check custom">
+                                    <input type="checkbox" th:field="*{subtitles}" th:value="${subtitlesItem}"/>
+                                    <th:block th:text="${subtitlesItem}"/>
+                                </label>
+                            </th:block>
+                            <span class="error" th:if="${#fields.hasErrors('subtitles')}" th:errors="*{subtitles}"></span>
+                        </div>
+                    </div>
+                    <label class="col-md-2 col-form-label">Media</label>
+                    <th:block th:each="medium, info : *{media}">
+                        <div class="form-group">
+                            <label class="col-md-2 col-form-label" th:text="|Medium ${info.index + 1}|"></label>
+                            <button type="submit" th:id="|removeMedium${info.index}|" th:name="|removeMedium${info.index}|" class="btn btn-danger col-md-1" formnovalidate="formnovalidate"
+                                    th:if="${info.index > 0}">
+                                Remove
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-form-label" th:for="|medium${info.index}Hours|" th:text="|Medium ${info.index + 1} hours|"></label>
+                            <div class="col-md-10">
+                                <input type="number" th:id="|medium${info.index}Hours|" th:name="|medium${info.index}Hours|" class="form-control" min="0" max="23" step="1"
+                                       th:field="*{media[__${info.index}__].hours}"/>
+                                <span class="error" th:if="${#fields.hasErrors('media[__${info.index}__].hours')}" th:errors="*{media[__${info.index}__].hours}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-form-label" th:for="|medium${info.index}Minutes|" th:text="|Medium ${info.index + 1} minutes|"></label>
+                            <div class="col-md-10">
+                                <input type="number" th:id="|medium${info.index}Minutes|" th:name="|medium${info.index}Minutes|" class="form-control" min="0" max="59" step="1"
+                                       th:field="*{media[__${info.index}__].minutes}"/>
+                                <span class="error" th:if="${#fields.hasErrors('media[__${info.index}__].minutes')}" th:errors="*{media[__${info.index}__].minutes}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-form-label" th:for="|medium${info.index}Seconds|" th:text="|Medium ${info.index + 1} seconds|"></label>
+                            <div class="col-md-10">
+                                <input type="number" th:id="|medium${info.index}Seconds|" th:name="|medium${info.index}Seconds|" class="form-control" min="0" max="59" step="1"
+                                       th:field="*{media[__${info.index}__].seconds}"/>
+                                <span class="error" th:if="${#fields.hasErrors('media[__${info.index}__].seconds')}" th:errors="*{media[__${info.index}__].seconds}"></span>
+                                <span class="error" th:if="${#fields.hasErrors('media[__${info.index}__]')}" th:errors="*{media[__${info.index}__]}"></span>
+                            </div>
+                        </div>
+                    </th:block>
+                    <div class="form-group">
+                        <button type="submit" id="addMedium" name="addMedium" class="btn btn-success col-md-1" formnovalidate="formnovalidate">Add</button>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="csfd">ČSFD</label>
+                        <div class="col-md-10">
+                            <input type="text" id="csfd" name="csfd" class="form-control" th:field="*{csfd}"/>
+                            <span class="error" th:if="${#fields.hasErrors('csfd')}" th:errors="*{csfd}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="imdb">IMDB</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" id="imdb" name="imdb" onclick="imdbShow();" th:field="*{imdb}">
+                            <div id="imdbPanel">
+                                <input type="number" id="imdbCode" name="imdbCode" class="form-control" min="1" max="9999999" step="1" th:field="*{imdbCode}"/>
+                                <span class="help-inline error" th:if="${#fields.hasErrors('global')}" th:errors="*{global}"></span>
+                                <span class="help-inline error" th:if="${#fields.hasErrors('imdb')}" th:errors="*{imdb}"></span>
+                                <span class="help-inline error" th:if="${#fields.hasErrors('imdbCode')}" th:errors="*{imdbCode}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="wikiCz">Czech Wikipedia</label>
+                        <div class="col-md-10">
+                            <input type="text" id="wikiCz" name="wikiCz" class="form-control" th:field="*{wikiCz}"/>
+                            <span class="error" th:if="${#fields.hasErrors('wikiCz')}" th:errors="*{wikiCz}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="wikiEn">English Wikipedia</label>
+                        <div class="col-md-10">
+                            <input type="text" id="wikiEn" name="wikiEn" class="form-control" th:field="*{wikiEn}"/>
+                            <span class="error" th:if="${#fields.hasErrors('wikiEn')}" th:errors="*{wikiEn}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Picture</label>
+                        <div class="col-md-10">
+                            <img th:src="@{|/pictures/${movie.picture}|}" alt="Picture" class="picture" th:if="${movie.picture != null}"/>
+                            <button type="submit" id="removePicture" name="removePicture" class="btn btn-danger" formnovalidate="formnovalidate" th:if="${movie.picture != null}">Remove</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#picturesModal">Choose picture</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="note">Note</label>
+                        <div class="col-md-10">
+                            <input type="text" id="note" name="note" class="form-control" th:field="*{note}"/>
+                            <span class="error" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="genres">Genres</label>
+                        <div class="col-md-10">
+                            <select id="genres" name="genres" multiple="multiple" class="form-control" th:field="*{genres}">
+                                <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
+                            </select>
+                            <span class="error" th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <button type="submit" id="create" name="create" class="btn btn-primary" th:if="${action == 'add'}">Create</button>
+                            <button type="submit" id="update" name="update" class="btn btn-primary" th:if="${action == 'edit'}">Update</button>
+                            <button type="submit" id="cancel" name="cancel" class="btn btn-danger" formnovalidate="formnovalidate">Cancel</button>
+                        </div>
+                    </div>
+                    <th:block th:replace="picture/modal :: modal"/>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+    <head th:fragment="head">
+        <title>Catalog</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link type="text/css" th:href="@{/css/bootstrap.css}" rel="stylesheet" media="screen"/>
+        <link type="text/css" th:href="@{/css/catalog.css}" rel="stylesheet" media="screen"/>
+        <script type="text/javascript" th:src="@{/js/jquery-3.5.0.js}"></script>
+        <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+        <script type="text/javascript" th:src="@{/js/catalog.js}"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-light bg-light navbar-expand-md" th:fragment="menu">
+            <a class="navbar-brand" th:href="@{/}">Catalog</a>
+            <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                    <a th:href="@{/movies/list}" class="nav-link">Movies</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                    <a th:href="@{/shows/list}" class="nav-link">Shows</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                    <a th:href="@{/games/list}" class="nav-link">Games</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                    <a th:href="@{/music/list}" class="nav-link">Music</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                    <a th:href="@{/programs/list}" class="nav-link">Programs</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                    <a th:href="@{/genres/list}" class="nav-link">Genres</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                    <a th:href="@{/pictures/list}" class="nav-link">Pictures</a>
+                </li>
+            </ul>
+            <form th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
+                <button type="submit" id="logout" name="logout" class="btn">Logout</button>
+            </form>
+        </nav>
+        <h2 th:text="${title}" th:fragment="title"></h2>
+    </body>
+</html>

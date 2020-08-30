@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Catalog
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      indent_output: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB

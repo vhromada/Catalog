@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="show" type="java.lang.Integer"*/-->
+    <body>
+        <th:block th:fragment="menu">
+            <th:block th:replace="show/menu :: menu"/>
+            <div class="navbar navbar-light bg-light navbar-expand-md innerMenu">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item"><a th:href="@{|/shows/${show}/seasons/list|}" class="nav-link">All seasons</a></li>
+                    <li class="nav-item"><a th:href="@{|/shows/${show}/seasons/add|}" class="nav-link">Add season</a></li>
+                </ul>
+            </div>
+        </th:block>
+    </body>
+</html>

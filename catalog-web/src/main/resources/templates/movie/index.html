@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="movie/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover" th:if="${!#lists.isEmpty(movies)}">
+                <thead>
+                    <tr>
+                        <th>Movie</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="movie : ${movies}">
+                        <tr>
+                            <td><a th:href="@{|/movies/${movie.id}/detail|}" th:text="${movie.czechName}"></a></td>
+                            <td><a th:href="@{|/movies/moveUp/${movie.id}|}" th:if="${movies.indexOf(movie) > 0}">Move up</a></td>
+                            <td><a th:href="@{|/movies/moveDown/${movie.id}|}" th:if="${movies.indexOf(movie) < movies.size() - 1}">Move down</a></td>
+                            <td><a th:href="@{|/movies/duplicate/${movie.id}|}">Duplicate</a></td>
+                            <td><a th:href="@{|/movies/edit/${movie.id}|}">Edit</a></td>
+                            <td><a th:href="@{|/movies/remove/${movie.id}|}">Remove</a></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${#lists.isEmpty(movies)}">No records.</th:block>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count of movies</th>
+                        <th>Total length</th>
+                        <th>Count of media</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${movies.size()}"></td>
+                        <td th:text="${totalLength}"></td>
+                        <td th:text="${mediaCount}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

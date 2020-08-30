@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="pictures" type="java.util.List<java.lang.Integer>"*/-->
+    <div class="modal fade" id="picturesModal" tabindex="-1" role="dialog" aria-hidden="true" th:fragment="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <th:block th:each="picture : ${pictures}">
+                        <label class="radio custom">
+                            <input type="radio" th:field="*{picture}" th:value="${picture}"/>
+                            <img th:src="@{|/pictures/${picture}|}" alt="Picture" class="picture"/>
+                        </label>
+                    </th:block>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="choosePicture" name="choosePicture" class="btn btn-primary" formnovalidate="formnovalidate">Choose</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>

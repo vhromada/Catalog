@@ -84,7 +84,7 @@ class GenreServiceTest : MovableServiceTest<Genre>() {
     }
 
     override fun verifyAllDataMock() {
-        verify(repository).findByAuditCreatedUser(TestConstants.ACCOUNT_ID)
+        verify(repository).findByAuditCreatedUser(TestConstants.ACCOUNT_UUID)
         verifyNoMoreInteractions(repository)
     }
 

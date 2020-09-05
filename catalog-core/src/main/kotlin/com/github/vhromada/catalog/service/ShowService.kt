@@ -26,7 +26,7 @@ class ShowService(
         @Value("#{cacheManager.getCache('catalogCache')}") cache: Cache) : AbstractMovableService<Show>(showRepository, accountProvider, timeProvider, cache, "shows") {
 
     override fun getAccountData(account: Account): List<Show> {
-        return showRepository.findByAuditCreatedUser(account.id)
+        return showRepository.findByAuditCreatedUser(account.uuid)
     }
 
     override fun getCopy(data: Show): Show {

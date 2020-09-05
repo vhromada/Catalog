@@ -9,6 +9,7 @@ CREATE TABLE roles (
 
 CREATE TABLE accounts (
   id       INTEGER      NOT NULL CONSTRAINT accounts_pk PRIMARY KEY,
+  uuid     VARCHAR(36)  NOT NULL CONSTRAINT accounts_uuid_ck CHECK (LENGTH(uuid) > 0),
   username VARCHAR(200) NOT NULL CONSTRAINT accounts_username_ck CHECK (LENGTH(username) > 0),
   password VARCHAR(200) NOT NULL CONSTRAINT accounts_password_ck CHECK (LENGTH(password) > 0)
 );

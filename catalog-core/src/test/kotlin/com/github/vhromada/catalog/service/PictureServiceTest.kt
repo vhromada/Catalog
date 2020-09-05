@@ -84,7 +84,7 @@ class PictureServiceTest : MovableServiceTest<Picture>() {
     }
 
     override fun verifyAllDataMock() {
-        verify(repository).findByAuditCreatedUser(TestConstants.ACCOUNT_ID)
+        verify(repository).findByAuditCreatedUser(TestConstants.ACCOUNT_UUID)
         verifyNoMoreInteractions(repository)
     }
 

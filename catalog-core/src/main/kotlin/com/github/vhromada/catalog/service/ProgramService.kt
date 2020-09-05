@@ -24,7 +24,7 @@ class ProgramService(
         @Value("#{cacheManager.getCache('catalogCache')}") cache: Cache) : AbstractMovableService<Program>(programRepository, accountProvider, timeProvider, cache, "programs") {
 
     override fun getAccountData(account: Account): List<Program> {
-        return programRepository.findByAuditCreatedUser(account.id)
+        return programRepository.findByAuditCreatedUser(account.uuid)
     }
 
     override fun getCopy(data: Program): Program {

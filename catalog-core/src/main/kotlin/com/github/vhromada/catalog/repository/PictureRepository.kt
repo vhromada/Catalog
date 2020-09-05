@@ -13,9 +13,9 @@ interface PictureRepository : JpaRepository<Picture, Int> {
     /**
      * Returns all pictures created by user.
      *
-     * @param user user's ID
+     * @param user user's UUID
      * @return all pictures created by user
      */
-    fun findByAuditCreatedUser(user: Int): List<Picture>
+    fun findByAuditCreatedUser(user: String): List<Picture>
 
 }

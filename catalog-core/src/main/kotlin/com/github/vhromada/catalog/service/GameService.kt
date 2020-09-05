@@ -24,7 +24,7 @@ class GameService(
         @Value("#{cacheManager.getCache('catalogCache')}") cache: Cache) : AbstractMovableService<Game>(gameRepository, accountProvider, timeProvider, cache, "games") {
 
     override fun getAccountData(account: Account): List<Game> {
-        return gameRepository.findByAuditCreatedUser(account.id)
+        return gameRepository.findByAuditCreatedUser(account.uuid)
     }
 
     override fun getCopy(data: Game): Game {

@@ -13,9 +13,9 @@ interface ShowRepository : JpaRepository<Show, Int> {
     /**
      * Returns all shows created by user.
      *
-     * @param user user's ID
+     * @param user user's UUID
      * @return all shows created by user
      */
-    fun findByAuditCreatedUser(user: Int): List<Show>
+    fun findByAuditCreatedUser(user: String): List<Show>
 
 }

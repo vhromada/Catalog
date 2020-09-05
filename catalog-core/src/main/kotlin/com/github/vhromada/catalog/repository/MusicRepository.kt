@@ -13,9 +13,9 @@ interface MusicRepository : JpaRepository<Music, Int> {
     /**
      * Returns all music created by user.
      *
-     * @param user user's ID
+     * @param user user's UUID
      * @return all music created by user
      */
-    fun findByAuditCreatedUser(user: Int): List<Music>
+    fun findByAuditCreatedUser(user: String): List<Music>
 
 }

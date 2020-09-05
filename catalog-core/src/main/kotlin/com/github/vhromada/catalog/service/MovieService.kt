@@ -24,7 +24,7 @@ class MovieService(
         @Value("#{cacheManager.getCache('catalogCache')}") cache: Cache) : AbstractMovableService<Movie>(movieRepository, accountProvider, timeProvider, cache, "movies") {
 
     override fun getAccountData(account: Account): List<Movie> {
-        return movieRepository.findByAuditCreatedUser(account.id)
+        return movieRepository.findByAuditCreatedUser(account.uuid)
     }
 
     override fun getCopy(data: Movie): Movie {

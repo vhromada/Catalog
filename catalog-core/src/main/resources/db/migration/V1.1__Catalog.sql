@@ -19,30 +19,30 @@ CREATE TABLE genres (
   id           INTEGER      NOT NULL CONSTRAINT genres_pk PRIMARY KEY,
   genre_name   VARCHAR(200) NOT NULL CONSTRAINT genres_genre_name_ck CHECK (LENGTH(genre_name) > 0),
   position     INTEGER      NOT NULL CONSTRAINT genres_position_ck CHECK (position >= 0),
-  created_user INTEGER      NOT NULL,
+  created_user VARCHAR(36)  NOT NULL,
   created_time TIMESTAMP    NOT NULL,
-  updated_user INTEGER      NOT NULL,
+  updated_user VARCHAR(36)  NOT NULL,
   updated_time TIMESTAMP    NOT NULL
 );
 
 CREATE TABLE pictures (
-  id           INTEGER   NOT NULL CONSTRAINT pictures_pk PRIMARY KEY,
-  content      BLOB      NOT NULL,
-  position     INTEGER   NOT NULL CONSTRAINT pictures_position_ck CHECK (position >= 0),
-  created_user INTEGER   NOT NULL,
-  created_time TIMESTAMP NOT NULL,
-  updated_user INTEGER   NOT NULL,
-  updated_time TIMESTAMP NOT NULL
+  id           INTEGER     NOT NULL CONSTRAINT pictures_pk PRIMARY KEY,
+  content      BLOB        NOT NULL,
+  position     INTEGER     NOT NULL CONSTRAINT pictures_position_ck CHECK (position >= 0),
+  created_user VARCHAR(36) NOT NULL,
+  created_time TIMESTAMP   NOT NULL,
+  updated_user VARCHAR(36) NOT NULL,
+  updated_time TIMESTAMP   NOT NULL
 );
 
 CREATE TABLE media (
-  id            INTEGER   NOT NULL CONSTRAINT media_pk PRIMARY KEY,
-  medium_number INTEGER   NOT NULL CONSTRAINT media_medium_number_ck CHECK (medium_number > 0),
-  medium_length INTEGER   NOT NULL CONSTRAINT media_medium_length_ck CHECK (medium_length >= 0),
-  created_user  INTEGER   NOT NULL,
-  created_time  TIMESTAMP NOT NULL,
-  updated_user  INTEGER   NOT NULL,
-  updated_time  TIMESTAMP NOT NULL
+  id            INTEGER     NOT NULL CONSTRAINT media_pk PRIMARY KEY,
+  medium_number INTEGER     NOT NULL CONSTRAINT media_medium_number_ck CHECK (medium_number > 0),
+  medium_length INTEGER     NOT NULL CONSTRAINT media_medium_length_ck CHECK (medium_length >= 0),
+  created_user  VARCHAR(36) NOT NULL,
+  created_time  TIMESTAMP   NOT NULL,
+  updated_user  VARCHAR(36) NOT NULL,
+  updated_time  TIMESTAMP   NOT NULL
 );
 
 CREATE TABLE movies (
@@ -58,9 +58,9 @@ CREATE TABLE movies (
   wiki_cz        VARCHAR(100) NOT NULL,
   note           VARCHAR(100) NOT NULL,
   position       INTEGER      NOT NULL CONSTRAINT movies_position_ck CHECK (position >= 0),
-  created_user   INTEGER      NOT NULL,
+  created_user   VARCHAR(36)  NOT NULL,
   created_time   TIMESTAMP    NOT NULL,
-  updated_user   INTEGER      NOT NULL,
+  updated_user   VARCHAR(36)  NOT NULL,
   updated_time   TIMESTAMP    NOT NULL
 );
 
@@ -90,9 +90,9 @@ CREATE TABLE tv_shows (
   wiki_cz       VARCHAR(100) NOT NULL,
   note          VARCHAR(100) NOT NULL,
   position      INTEGER      NOT NULL CONSTRAINT tv_shows_position_ck CHECK (position >= 0),
-  created_user  INTEGER      NOT NULL,
+  created_user  VARCHAR(36)  NOT NULL,
   created_time  TIMESTAMP    NOT NULL,
-  updated_user  INTEGER      NOT NULL,
+  updated_user  VARCHAR(36)  NOT NULL,
   updated_time  TIMESTAMP    NOT NULL
 );
 
@@ -110,9 +110,9 @@ CREATE TABLE seasons (
   season_language VARCHAR(2)   NOT NULL CONSTRAINT seasons_season_language_ck CHECK (season_language IN ('CZ', 'EN', 'FR', 'JP', 'SK')),
   note            VARCHAR(100) NOT NULL,
   position        INTEGER      NOT NULL CONSTRAINT seasons_position_ck CHECK (position >= 0),
-  created_user    INTEGER      NOT NULL,
+  created_user    VARCHAR(36)  NOT NULL,
   created_time    TIMESTAMP    NOT NULL,
-  updated_user    INTEGER      NOT NULL,
+  updated_user    VARCHAR(36)  NOT NULL,
   updated_time    TIMESTAMP    NOT NULL,
   CONSTRAINT seasons_years_ck CHECK (start_year <= end_year)
 );
@@ -130,9 +130,9 @@ CREATE TABLE episodes (
   episode_length INTEGER      NOT NULL CONSTRAINT episodes_episode_length_ck CHECK (episode_length >= 0),
   note           VARCHAR(100) NOT NULL,
   position       INTEGER      NOT NULL CONSTRAINT episodes_position_ck CHECK (position >= 0),
-  created_user   INTEGER      NOT NULL,
+  created_user   VARCHAR(36)  NOT NULL,
   created_time   TIMESTAMP    NOT NULL,
-  updated_user   INTEGER      NOT NULL,
+  updated_user   VARCHAR(36)  NOT NULL,
   updated_time   TIMESTAMP    NOT NULL
 );
 
@@ -152,9 +152,9 @@ CREATE TABLE games (
   other_data   VARCHAR(100) NOT NULL,
   note         VARCHAR(100) NOT NULL,
   position     INTEGER      NOT NULL CONSTRAINT games_position_ck CHECK (position >= 0),
-  created_user INTEGER      NOT NULL,
+  created_user VARCHAR(36)  NOT NULL,
   created_time TIMESTAMP    NOT NULL,
-  updated_user INTEGER      NOT NULL,
+  updated_user VARCHAR(36)  NOT NULL,
   updated_time TIMESTAMP    NOT NULL
 );
 
@@ -166,9 +166,9 @@ CREATE TABLE music (
   media_count  INTEGER      NOT NULL CONSTRAINT music_media_count_ck CHECK (media_count > 0),
   note         VARCHAR(100) NOT NULL,
   position     INTEGER      NOT NULL CONSTRAINT music_position_ck CHECK (position >= 0),
-  created_user INTEGER      NOT NULL,
+  created_user VARCHAR(36)  NOT NULL,
   created_time TIMESTAMP    NOT NULL,
-  updated_user INTEGER      NOT NULL,
+  updated_user VARCHAR(36)  NOT NULL,
   updated_time TIMESTAMP    NOT NULL
 );
 
@@ -179,9 +179,9 @@ CREATE TABLE songs (
   song_length  INTEGER      NOT NULL CONSTRAINT songs_song_length_ck CHECK (song_length >= 0),
   note         VARCHAR(100) NOT NULL,
   position     INTEGER      NOT NULL CONSTRAINT songs_position_ck CHECK (position >= 0),
-  created_user INTEGER      NOT NULL,
+  created_user VARCHAR(36)  NOT NULL,
   created_time TIMESTAMP    NOT NULL,
-  updated_user INTEGER      NOT NULL,
+  updated_user VARCHAR(36)  NOT NULL,
   updated_time TIMESTAMP    NOT NULL
 );
 
@@ -196,9 +196,9 @@ CREATE TABLE programs (
   other_data   VARCHAR(100) NOT NULL,
   note         VARCHAR(100) NOT NULL,
   position     INTEGER      NOT NULL CONSTRAINT programs_position_ck CHECK (position >= 0),
-  created_user INTEGER      NOT NULL,
+  created_user VARCHAR(36)  NOT NULL,
   created_time TIMESTAMP    NOT NULL,
-  updated_user INTEGER      NOT NULL,
+  updated_user VARCHAR(36)  NOT NULL,
   updated_time TIMESTAMP    NOT NULL
 );
 

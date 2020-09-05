@@ -19,7 +19,7 @@ object AuditUtils {
      * @return audit
      */
     fun newAudit(): Audit {
-        return Audit(user = TestConstants.ACCOUNT_ID, time = TestConstants.TIME)
+        return Audit(user = TestConstants.ACCOUNT_UUID, time = TestConstants.TIME)
     }
 
     /**
@@ -29,9 +29,9 @@ object AuditUtils {
      */
     fun getAudit(): Audit {
         return Audit(
-                createdUser = 10,
+                createdUser = TestConstants.ACCOUNT_UUID,
                 createdTime = LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-                updatedUser = 2,
+                updatedUser = "0998ab47-0d27-4538-b551-ee7a471cfcf1",
                 updatedTime = LocalDateTime.of(2020, 1, 2, 0, 0, 0))
     }
 

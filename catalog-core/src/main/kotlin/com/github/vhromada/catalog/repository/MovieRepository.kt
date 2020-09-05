@@ -13,9 +13,9 @@ interface MovieRepository : JpaRepository<Movie, Int> {
     /**
      * Returns all movies created by user.
      *
-     * @param user user's ID
+     * @param user user's UUID
      * @return all movies created by user
      */
-    fun findByAuditCreatedUser(user: Int): List<Movie>
+    fun findByAuditCreatedUser(user: String): List<Movie>
 
 }

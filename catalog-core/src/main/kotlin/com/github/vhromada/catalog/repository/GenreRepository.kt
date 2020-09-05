@@ -13,9 +13,9 @@ interface GenreRepository : JpaRepository<Genre, Int> {
     /**
      * Returns all genres created by user.
      *
-     * @param user user's ID
+     * @param user user's UUID
      * @return all genres created by user
      */
-    fun findByAuditCreatedUser(user: Int): List<Genre>
+    fun findByAuditCreatedUser(user: String): List<Genre>
 
 }

@@ -13,9 +13,9 @@ interface ProgramRepository : JpaRepository<Program, Int> {
     /**
      * Returns all programs created by user.
      *
-     * @param user user's ID
+     * @param user user's UUID
      * @return all programs created by user
      */
-    fun findByAuditCreatedUser(user: Int): List<Program>
+    fun findByAuditCreatedUser(user: String): List<Program>
 
 }

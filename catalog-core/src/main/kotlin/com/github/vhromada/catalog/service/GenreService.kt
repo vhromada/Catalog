@@ -24,7 +24,7 @@ class GenreService(
         @Value("#{cacheManager.getCache('catalogCache')}") cache: Cache) : AbstractMovableService<Genre>(genreRepository, accountProvider, timeProvider, cache, "genres") {
 
     override fun getAccountData(account: Account): List<Genre> {
-        return genreRepository.findByAuditCreatedUser(account.id)
+        return genreRepository.findByAuditCreatedUser(account.uuid)
     }
 
     override fun getCopy(data: Genre): Genre {

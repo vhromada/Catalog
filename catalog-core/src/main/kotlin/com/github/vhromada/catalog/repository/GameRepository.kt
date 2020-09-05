@@ -13,9 +13,9 @@ interface GameRepository : JpaRepository<Game, Int> {
     /**
      * Returns all games created by user.
      *
-     * @param user user's ID
+     * @param user user's UUID
      * @return all games created by user
      */
-    fun findByAuditCreatedUser(user: Int): List<Game>
+    fun findByAuditCreatedUser(user: String): List<Game>
 
 }

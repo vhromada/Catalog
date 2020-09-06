@@ -57,9 +57,9 @@ object SeasonUtils {
         }
         assertSoftly {
             it.assertThat(actual!!.id).isEqualTo(expected!!.id)
-            it.assertThat(actual.number).isEqualTo(Integer.parseInt(expected.number))
-            it.assertThat(actual.startYear).isEqualTo(Integer.parseInt(expected.startYear))
-            it.assertThat(actual.endYear).isEqualTo(Integer.parseInt(expected.endYear))
+            it.assertThat(actual.number).isEqualTo(expected.number!!.toInt())
+            it.assertThat(actual.startYear).isEqualTo(expected.startYear!!.toInt())
+            it.assertThat(actual.endYear).isEqualTo(expected.endYear!!.toInt())
             it.assertThat<Language>(actual.language).isEqualTo(expected.language)
             it.assertThat<Language>(actual.subtitles).isEqualTo(expected.subtitles)
             it.assertThat(actual.note).isEqualTo(expected.note)

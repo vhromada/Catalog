@@ -64,7 +64,7 @@ class GenreRepositoryIntegrationTest {
             GenreUtils.assertGenreDeepEquals(GenreUtils.getGenreDomain(i), genre)
         }
 
-        assertThat(genreRepository.findById(Integer.MAX_VALUE).isPresent).isFalse()
+        assertThat(genreRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
         assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
     }

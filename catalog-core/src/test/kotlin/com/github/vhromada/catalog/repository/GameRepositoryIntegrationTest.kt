@@ -63,7 +63,7 @@ class GameRepositoryIntegrationTest {
             GameUtils.assertGameDeepEquals(GameUtils.getGame(i), game)
         }
 
-        assertThat(gameRepository.findById(Integer.MAX_VALUE).isPresent).isFalse()
+        assertThat(gameRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
         assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
     }

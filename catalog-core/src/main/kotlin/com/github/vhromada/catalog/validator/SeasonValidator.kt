@@ -2,6 +2,7 @@ package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.domain.Show
 import com.github.vhromada.catalog.entity.Season
+import com.github.vhromada.common.entity.Movable
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
@@ -10,6 +11,7 @@ import com.github.vhromada.common.utils.Constants
 import com.github.vhromada.common.utils.sorted
 import com.github.vhromada.common.validator.AbstractMovableValidator
 import org.springframework.stereotype.Component
+import java.util.Optional
 
 /**
  * A class represents validator for season.
@@ -19,16 +21,16 @@ import org.springframework.stereotype.Component
 @Component("seasonValidator")
 class SeasonValidator(showService: MovableService<Show>) : AbstractMovableValidator<Season, Show>("Season", showService) {
 
-    override fun getData(data: Season): com.github.vhromada.catalog.domain.Season? {
+    override fun getData(data: Season): Optional<Movable> {
         for (show in service.getAll()) {
             for (season in show.seasons) {
                 if (data.id == season.id) {
-                    return season
+                    return Optional.of(season)
                 }
             }
         }
 
-        return null
+        return Optional.empty()
     }
 
     override fun getList(data: Season): List<com.github.vhromada.catalog.domain.Season> {

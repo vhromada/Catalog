@@ -72,7 +72,7 @@ class ShowRepositoryIntegrationTest {
             ShowUtils.assertShowDeepEquals(ShowUtils.getShow(i), show)
         }
 
-        assertThat(showRepository.findById(Integer.MAX_VALUE).isPresent).isFalse()
+        assertThat(showRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
         assertSoftly {
             it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)

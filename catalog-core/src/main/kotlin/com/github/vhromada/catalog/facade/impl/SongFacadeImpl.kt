@@ -42,11 +42,11 @@ class SongFacadeImpl(
     }
 
     override fun getDomainList(parent: Music): List<com.github.vhromada.catalog.domain.Song> {
-        return service.get(parent.id!!)!!.songs
+        return service.get(parent.id!!).get().songs
     }
 
     override fun getForAdd(parent: Music, data: com.github.vhromada.catalog.domain.Song): com.github.vhromada.catalog.domain.Music {
-        val music = service.get(parent.id!!)!!
+        val music = service.get(parent.id!!).get()
         val songs = music.songs.toMutableList()
         songs.add(data)
 

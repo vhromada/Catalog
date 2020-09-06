@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group = "com.github.vhromada.catalog"
-    version = "10.0.0"
+    version = "10.0.1"
 
     apply(plugin = "kotlin")
     apply(plugin = "org.gradle.maven-publish")

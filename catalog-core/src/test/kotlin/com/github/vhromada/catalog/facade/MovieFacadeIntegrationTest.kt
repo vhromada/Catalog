@@ -264,7 +264,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun addBadMedium() {
-        val badMedium = MediumUtils.newMedium(Integer.MAX_VALUE)
+        val badMedium = MediumUtils.newMedium(Int.MAX_VALUE)
                 .copy(length = -1)
         val movie = newData(null)
                 .copy(media = listOf(MediumUtils.newMedium(1), badMedium))
@@ -431,7 +431,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
     @Test
     fun addNotExistingPicture() {
         val movie = newData(null)
-                .copy(picture = Integer.MAX_VALUE)
+                .copy(picture = Int.MAX_VALUE)
 
         val result = facade.add(movie)
 
@@ -543,7 +543,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
     @Test
     fun addNotExistingGenre() {
         val show = newData(null)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
+                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Int.MAX_VALUE)))
 
         val result = facade.add(show)
 
@@ -776,7 +776,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadMedium() {
-        val badMedium = MediumUtils.newMedium(Integer.MAX_VALUE)
+        val badMedium = MediumUtils.newMedium(Int.MAX_VALUE)
                 .copy(length = -1)
         val movie = newData(1)
                 .copy(media = listOf(MediumUtils.newMedium(1), badMedium))
@@ -943,7 +943,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
     @Test
     fun updateNotExistingPicture() {
         val movie = newData(1)
-                .copy(picture = Integer.MAX_VALUE)
+                .copy(picture = Int.MAX_VALUE)
 
         val result = facade.update(movie)
 
@@ -1055,7 +1055,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
     @Test
     fun updateNotExistingGenre() {
         val show = newData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
+                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Int.MAX_VALUE)))
 
         val result = facade.update(show)
 
@@ -1122,7 +1122,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
     override fun newData(id: Int?): Movie {
         var movie = MovieUtils.newMovie(id)
-        if (id == null || Integer.MAX_VALUE == id) {
+        if (id == null || Int.MAX_VALUE == id) {
             movie = movie.copy(picture = 1, genres = listOf(GenreUtils.newGenre(1)))
         }
         return movie

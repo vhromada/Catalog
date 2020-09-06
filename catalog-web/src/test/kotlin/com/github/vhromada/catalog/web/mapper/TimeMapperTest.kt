@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 /**
- * A class represents test for mapper between [Integer] and [TimeFO].
+ * A class represents test for mapper between [Int] and [TimeFO].
  *
  * @author Vladimir Hromada
  */

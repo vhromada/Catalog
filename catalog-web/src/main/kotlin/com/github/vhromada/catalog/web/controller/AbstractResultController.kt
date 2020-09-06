@@ -1,7 +1,6 @@
 package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.common.result.Result
-import com.github.vhromada.common.result.Status
 
 /**
  * An abstract class represents controller for processing result.
@@ -22,7 +21,7 @@ abstract class AbstractResultController {
             result.addEvents(resultItem.events())
         }
 
-        require(Status.OK == result.status) { "Operation result with errors. $result" }
+        require(result.isOk()) { "Operation result with errors. $result" }
     }
 
 }

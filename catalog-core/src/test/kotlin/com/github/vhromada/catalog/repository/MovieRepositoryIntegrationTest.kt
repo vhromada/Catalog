@@ -71,7 +71,7 @@ class MovieRepositoryIntegrationTest {
             MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), movie)
         }
 
-        assertThat(movieRepository.findById(Integer.MAX_VALUE).isPresent).isFalse()
+        assertThat(movieRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
         assertSoftly {
             it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)

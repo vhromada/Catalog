@@ -146,7 +146,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
     }
 
     override fun initExistsMock(validatingData: Song, exists: Boolean) {
-        val music = if (exists) MusicUtils.newMusicWithSongs(validatingData.id) else MusicUtils.newMusicDomain(Integer.MAX_VALUE)
+        val music = if (exists) MusicUtils.newMusicWithSongs(validatingData.id) else MusicUtils.newMusicDomain(Int.MAX_VALUE)
 
         whenever(service.getAll()).thenReturn(listOf(music))
     }
@@ -160,7 +160,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
         val songs = if (up && valid || !up && !valid) {
             listOf(SongUtils.newSongDomain(1), SongUtils.newSongDomain(validatingData.id))
         } else {
-            listOf(SongUtils.newSongDomain(validatingData.id), SongUtils.newSongDomain(Integer.MAX_VALUE))
+            listOf(SongUtils.newSongDomain(validatingData.id), SongUtils.newSongDomain(Int.MAX_VALUE))
         }
         val music = MusicUtils.newMusicDomain(1)
                 .copy(songs = songs)

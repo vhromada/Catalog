@@ -88,7 +88,7 @@ object PictureUtils {
      * @return picture for index
      */
     fun getPicture(index: Int): com.github.vhromada.catalog.domain.Picture {
-        val value = Integer.parseInt((16 + index).toString(), 16)
+        val value = (16 + index).toString().toInt(16)
 
         return com.github.vhromada.catalog.domain.Picture(id = index, content = byteArrayOf(value.toByte()), position = index - 1, audit = AuditUtils.getAudit())
     }

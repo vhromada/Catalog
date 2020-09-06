@@ -11,6 +11,7 @@
     <logger name="com.zaxxer" level="warn"/>
     <logger name="org.aspectj" level="warn"/>
     <logger name="net.sf.ehcache" level="warn"/>
+    <logger name="springfox.documentation" level="warn"/>
     <logger name="org.jboss.logging" level="warn"/>
     <logger name="ch.qos" level="warn"/>
     <logger name="com.github.vhromada" level="all"/>

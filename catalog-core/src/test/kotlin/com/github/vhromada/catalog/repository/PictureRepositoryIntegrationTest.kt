@@ -64,7 +64,7 @@ class PictureRepositoryIntegrationTest {
             PictureUtils.assertPictureDeepEquals(PictureUtils.getPicture(i), picture)
         }
 
-        assertThat(pictureRepository.findById(Integer.MAX_VALUE).isPresent).isFalse()
+        assertThat(pictureRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
         assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
     }

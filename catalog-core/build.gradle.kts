@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    val commonVersion = "5.0.0"
+    val commonVersion = "6.0.0"
     implementation(platform("com.github.vhromada.project:project-parent:5.0.0"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))

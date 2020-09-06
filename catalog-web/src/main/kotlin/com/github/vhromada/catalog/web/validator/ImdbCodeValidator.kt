@@ -21,7 +21,7 @@ class ImdbCodeValidator : ConstraintValidator<ImdbCode, String> {
             return false
         }
 
-        return Integer.parseInt(imdbCode) in 1..Constants.MAX_IMDB_CODE
+        return imdbCode.toInt() in 1..Constants.MAX_IMDB_CODE
     }
 
     @Suppress("CheckStyle")

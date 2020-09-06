@@ -257,7 +257,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
     }
 
     override fun initExistsMock(validatingData: Season, exists: Boolean) {
-        val show = if (exists) ShowUtils.newShowWithSeasons(validatingData.id) else ShowUtils.newShowDomain(Integer.MAX_VALUE)
+        val show = if (exists) ShowUtils.newShowWithSeasons(validatingData.id) else ShowUtils.newShowDomain(Int.MAX_VALUE)
 
         whenever(service.getAll()).thenReturn(listOf(show))
     }
@@ -271,7 +271,7 @@ class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
         val seasons = if (up && valid || !up && !valid) {
             listOf(SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(validatingData.id))
         } else {
-            listOf(SeasonUtils.newSeasonDomain(validatingData.id), SeasonUtils.newSeasonDomain(Integer.MAX_VALUE))
+            listOf(SeasonUtils.newSeasonDomain(validatingData.id), SeasonUtils.newSeasonDomain(Int.MAX_VALUE))
         }
         val show = ShowUtils.newShowDomain(1)
                 .copy(seasons = seasons)

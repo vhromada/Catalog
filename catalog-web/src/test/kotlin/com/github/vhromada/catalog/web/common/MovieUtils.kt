@@ -81,7 +81,7 @@ object MovieUtils {
             it.assertThat(actual!!.id).isEqualTo(expected!!.id)
             it.assertThat(actual.czechName).isEqualTo(expected.czechName)
             it.assertThat(actual.originalName).isEqualTo(expected.originalName)
-            it.assertThat(actual.year).isEqualTo(Integer.parseInt(expected.year))
+            it.assertThat(actual.year).isEqualTo(expected.year!!.toInt())
             it.assertThat<Language>(actual.language).isEqualTo(expected.language)
             it.assertThat<Language>(actual.subtitles).isEqualTo(expected.subtitles)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)

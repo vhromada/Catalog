@@ -39,7 +39,7 @@ class MusicFacadeImpl(
     }
 
     override fun getDataForUpdate(data: Music): com.github.vhromada.catalog.domain.Music {
-        return super.getDataForUpdate(data).copy(songs = service.get(data.id!!)!!.songs)
+        return super.getDataForUpdate(data).copy(songs = service.get(data.id!!).get().songs)
     }
 
 }

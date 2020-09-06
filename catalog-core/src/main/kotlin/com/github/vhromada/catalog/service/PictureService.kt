@@ -24,7 +24,7 @@ class PictureService(
         @Value("#{cacheManager.getCache('catalogCache')}") cache: Cache) : AbstractMovableService<Picture>(pictureRepository, accountProvider, timeProvider, cache, "pictures") {
 
     override fun getAccountData(account: Account): List<Picture> {
-        return pictureRepository.findByAuditCreatedUser(account.uuid)
+        return pictureRepository.findByAuditCreatedUser(account.uuid!!)
     }
 
     override fun getCopy(data: Picture): Picture {

@@ -47,7 +47,7 @@ class MovieFacadeImpl(
 
     override fun getDataForUpdate(data: Movie): com.github.vhromada.catalog.domain.Movie {
         val movie = super.getDataForUpdate(data)
-        val media = getUpdatedMedia(service.get(data.id!!)!!.media, data.media!!)
+        val media = getUpdatedMedia(service.get(data.id!!).get().media, data.media!!)
 
         return movie.copy(media = media)
     }

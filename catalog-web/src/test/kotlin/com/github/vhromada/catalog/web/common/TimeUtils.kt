@@ -44,9 +44,9 @@ object TimeUtils {
      */
     private fun assertTimeDeepEquals(expected: TimeFO, actual: Time) {
         assertSoftly {
-            it.assertThat(actual.getData(Time.TimeData.HOUR)).isEqualTo(Integer.parseInt(expected.hours))
-            it.assertThat(actual.getData(Time.TimeData.MINUTE)).isEqualTo(Integer.parseInt(expected.minutes))
-            it.assertThat(actual.getData(Time.TimeData.SECOND)).isEqualTo(Integer.parseInt(expected.seconds))
+            it.assertThat(actual.getData(Time.TimeData.HOUR)).isEqualTo(expected.hours!!.toInt())
+            it.assertThat(actual.getData(Time.TimeData.MINUTE)).isEqualTo(expected.minutes!!.toInt())
+            it.assertThat(actual.getData(Time.TimeData.SECOND)).isEqualTo(expected.seconds!!.toInt())
         }
     }
 

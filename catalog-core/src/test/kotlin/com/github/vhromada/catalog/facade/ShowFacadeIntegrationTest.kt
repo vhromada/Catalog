@@ -266,7 +266,7 @@ class ShowFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Show, com.g
     @Test
     fun addNotExistingPicture() {
         val show = newData(null)
-                .copy(picture = Integer.MAX_VALUE)
+                .copy(picture = Int.MAX_VALUE)
 
         val result = facade.add(show)
 
@@ -378,7 +378,7 @@ class ShowFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Show, com.g
     @Test
     fun addNotExistingGenre() {
         val show = newData(null)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
+                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Int.MAX_VALUE)))
 
         val result = facade.add(show)
 
@@ -614,7 +614,7 @@ class ShowFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Show, com.g
     @Test
     fun updateNotExistingPicture() {
         val show = newData(1)
-                .copy(picture = Integer.MAX_VALUE)
+                .copy(picture = Int.MAX_VALUE)
 
         val result = facade.update(show)
 
@@ -726,7 +726,7 @@ class ShowFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Show, com.g
     @Test
     fun updateNotExistingGenre() {
         val show = newData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Integer.MAX_VALUE)))
+                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Int.MAX_VALUE)))
 
         val result = facade.update(show)
 
@@ -808,7 +808,7 @@ class ShowFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Show, com.g
 
     override fun newData(id: Int?): Show {
         var show = ShowUtils.newShow(id)
-        if (id == null || Integer.MAX_VALUE == id) {
+        if (id == null || Int.MAX_VALUE == id) {
             show = show.copy(picture = 1, genres = listOf(GenreUtils.newGenre(1)))
         }
         return show

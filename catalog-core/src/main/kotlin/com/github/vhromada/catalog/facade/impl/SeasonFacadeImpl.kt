@@ -42,11 +42,11 @@ class SeasonFacadeImpl(
     }
 
     override fun getDomainList(parent: Show): List<com.github.vhromada.catalog.domain.Season> {
-        return service.get(parent.id!!)!!.seasons
+        return service.get(parent.id!!).get().seasons
     }
 
     override fun getForAdd(parent: Show, data: com.github.vhromada.catalog.domain.Season): com.github.vhromada.catalog.domain.Show {
-        val show = service.get(parent.id!!)!!
+        val show = service.get(parent.id!!).get()
         val seasons = show.seasons.toMutableList()
         seasons.add(data)
 

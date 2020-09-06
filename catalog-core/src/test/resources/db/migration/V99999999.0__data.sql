@@ -1,5 +1,3 @@
-INSERT INTO roles (id, role_name) VALUES (1, 'ROLE_ADMIN');
-INSERT INTO roles (id, role_name) VALUES (2, 'ROLE_USER');
 INSERT INTO accounts (id, uuid, username, password) VALUES (1, 'd53b2577-a3de-4df7-a8dd-2e6d9e5c1014', 'Account 1 username', 'Account 1 password');
 INSERT INTO accounts (id, uuid, username, password) VALUES (2, '0998ab47-0d27-4538-b551-ee7a471cfcf1', 'Account 2 username', 'Account 2 password');
 INSERT INTO account_roles (account, role) VALUES (1, 2);

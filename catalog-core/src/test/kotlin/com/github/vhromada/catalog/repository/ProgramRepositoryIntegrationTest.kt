@@ -63,7 +63,7 @@ class ProgramRepositoryIntegrationTest {
             ProgramUtils.assertProgramDeepEquals(ProgramUtils.getProgram(i), program)
         }
 
-        assertThat(programRepository.findById(Integer.MAX_VALUE).isPresent).isFalse()
+        assertThat(programRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
         assertThat(ProgramUtils.getProgramsCount(entityManager)).isEqualTo(ProgramUtils.PROGRAMS_COUNT)
     }

@@ -25,7 +25,7 @@ class MusicService(
         @Value("#{cacheManager.getCache('catalogCache')}") cache: Cache) : AbstractMovableService<Music>(musicRepository, accountProvider, timeProvider, cache, "music") {
 
     override fun getAccountData(account: Account): List<Music> {
-        return musicRepository.findByAuditCreatedUser(account.uuid)
+        return musicRepository.findByAuditCreatedUser(account.uuid!!)
     }
 
     override fun getCopy(data: Music): Music {

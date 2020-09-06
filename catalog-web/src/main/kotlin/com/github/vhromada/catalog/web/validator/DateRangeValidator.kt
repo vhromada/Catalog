@@ -27,7 +27,7 @@ class DateRangeValidator : ConstraintValidator<DateRange, String> {
             return false
         }
 
-        return Integer.parseInt(date) in minDate..Constants.CURRENT_YEAR
+        return date.toInt() in minDate..Constants.CURRENT_YEAR
     }
 
     @Suppress("CheckStyle")

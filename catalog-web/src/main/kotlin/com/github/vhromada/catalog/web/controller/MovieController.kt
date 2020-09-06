@@ -448,7 +448,7 @@ class MovieController(
         while (names.hasMoreElements() && index == null) {
             val name = names.nextElement()
             if (name.startsWith("removeMedium")) {
-                index = Integer.parseInt(name.substring(12))
+                index = (name.substring(12).toInt())
             }
         }
 

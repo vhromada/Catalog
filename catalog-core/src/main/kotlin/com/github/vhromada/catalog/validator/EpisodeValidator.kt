@@ -2,6 +2,7 @@ package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.domain.Show
 import com.github.vhromada.catalog.entity.Episode
+import com.github.vhromada.common.entity.Movable
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
@@ -9,6 +10,7 @@ import com.github.vhromada.common.service.MovableService
 import com.github.vhromada.common.utils.sorted
 import com.github.vhromada.common.validator.AbstractMovableValidator
 import org.springframework.stereotype.Component
+import java.util.Optional
 
 /**
  * A class represents validator for episode.
@@ -18,18 +20,18 @@ import org.springframework.stereotype.Component
 @Component("episodeValidator")
 class EpisodeValidator(showService: MovableService<Show>) : AbstractMovableValidator<Episode, Show>("Episode", showService) {
 
-    override fun getData(data: Episode): com.github.vhromada.catalog.domain.Episode? {
+    override fun getData(data: Episode): Optional<Movable> {
         for (show in service.getAll()) {
             for (season in show.seasons) {
                 for (episode in season.episodes) {
                     if (data.id == episode.id) {
-                        return episode
+                        return Optional.of(episode)
                     }
                 }
             }
         }
 
-        return null
+        return Optional.empty()
     }
 
     override fun getList(data: Episode): List<com.github.vhromada.catalog.domain.Episode> {

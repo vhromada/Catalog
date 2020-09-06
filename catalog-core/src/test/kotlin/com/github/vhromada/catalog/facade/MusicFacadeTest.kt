@@ -14,6 +14,7 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
+import java.util.Optional
 
 /**
  * A class represents test for class [MusicFacade].
@@ -102,7 +103,7 @@ class MusicFacadeTest : MovableParentFacadeTest<Music, com.github.vhromada.catal
     override fun initUpdateMock(domain: com.github.vhromada.catalog.domain.Music) {
         super.initUpdateMock(domain)
 
-        whenever(service.get(any())).thenReturn(domain)
+        whenever(service.get(any())).thenReturn(Optional.of(domain))
     }
 
     override fun getFacade(): MovableParentFacade<Music> {

@@ -38,7 +38,7 @@ class ShowFacadeImpl(
     }
 
     override fun getDataForUpdate(data: Show): com.github.vhromada.catalog.domain.Show {
-        return super.getDataForUpdate(data).copy(seasons = service.get(data.id!!)!!.seasons)
+        return super.getDataForUpdate(data).copy(seasons = service.get(data.id!!).get().seasons)
     }
 
 }

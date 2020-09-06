@@ -4,6 +4,7 @@ import com.github.vhromada.catalog.CatalogConfiguration
 import com.github.vhromada.common.entity.Account
 import com.github.vhromada.common.provider.AccountProvider
 import com.github.vhromada.common.provider.TimeProvider
+import com.github.vhromada.common.provider.UuidProvider
 import com.github.vhromada.common.web.WebConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,6 +20,7 @@ import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
 import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * A class represents Spring configuration for catalog.
@@ -56,6 +58,17 @@ class CatalogRestConfiguration : WebMvcConfigurer {
 
             override fun getTime(): LocalDateTime {
                 return LocalDateTime.now()
+            }
+
+        }
+    }
+
+    @Bean
+    fun uuidProvider(): UuidProvider {
+        return object : UuidProvider {
+
+            override fun getUuid(): String {
+                return UUID.randomUUID().toString()
             }
 
         }

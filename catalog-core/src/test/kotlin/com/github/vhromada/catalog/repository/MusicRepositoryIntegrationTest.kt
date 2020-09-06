@@ -69,7 +69,7 @@ class MusicRepositoryIntegrationTest {
             MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), music)
         }
 
-        assertThat(musicRepository.findById(Integer.MAX_VALUE).isPresent).isFalse()
+        assertThat(musicRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
         assertSoftly {
             it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)

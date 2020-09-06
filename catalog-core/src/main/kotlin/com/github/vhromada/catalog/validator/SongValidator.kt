@@ -2,6 +2,7 @@ package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.domain.Music
 import com.github.vhromada.catalog.entity.Song
+import com.github.vhromada.common.entity.Movable
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
@@ -9,6 +10,7 @@ import com.github.vhromada.common.service.MovableService
 import com.github.vhromada.common.utils.sorted
 import com.github.vhromada.common.validator.AbstractMovableValidator
 import org.springframework.stereotype.Component
+import java.util.Optional
 
 /**
  * A class represents validator for song.
@@ -18,16 +20,16 @@ import org.springframework.stereotype.Component
 @Component("songValidator")
 class SongValidator(musicService: MovableService<Music>) : AbstractMovableValidator<Song, Music>("Song", musicService) {
 
-    override fun getData(data: Song): com.github.vhromada.catalog.domain.Song? {
+    override fun getData(data: Song): Optional<Movable> {
         for (music in service.getAll()) {
             for (song in music.songs) {
                 if (data.id == song.id) {
-                    return song
+                    return Optional.of(song)
                 }
             }
         }
 
-        return null
+        return Optional.empty()
     }
 
     override fun getList(data: Song): List<com.github.vhromada.catalog.domain.Song> {

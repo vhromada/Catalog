@@ -95,6 +95,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      * @param game new value of game
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody game: Game) {
         processResult(gameFacade.update(game))
     }

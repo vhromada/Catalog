@@ -1,2 +1,2 @@
-INSERT INTO roles (id, role_name) VALUES (1, 'ROLE_ADMIN');
-INSERT INTO roles (id, role_name) VALUES (2, 'ROLE_USER');
+INSERT INTO roles (id, role_name) VALUES (roles_sq.nextval, 'ROLE_ADMIN');
+INSERT INTO roles (id, role_name) VALUES (roles_sq.nextval, 'ROLE_USER');

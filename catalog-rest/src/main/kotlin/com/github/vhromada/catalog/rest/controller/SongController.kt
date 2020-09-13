@@ -83,6 +83,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * @param song    new value of song
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@PathVariable("musicId") musicId: Int,
                @RequestBody song: Song) {
         processResult(songFacade.update(song))

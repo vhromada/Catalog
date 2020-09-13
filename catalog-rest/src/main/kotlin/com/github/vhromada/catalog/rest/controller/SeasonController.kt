@@ -87,6 +87,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * @param season new value of season
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@PathVariable("showId") showId: Int,
                @RequestBody season: Season) {
         processResult(seasonFacade.update(season))

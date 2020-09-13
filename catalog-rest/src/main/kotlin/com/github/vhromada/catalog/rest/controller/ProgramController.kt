@@ -95,6 +95,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      * @param program new value of program
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody program: Program) {
         processResult(programFacade.update(program))
     }

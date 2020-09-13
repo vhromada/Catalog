@@ -130,6 +130,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
      * @return validation errors
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody movie: Movie) {
         processResult(movieFacade.update(movie))
     }

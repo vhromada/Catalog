@@ -6,7 +6,7 @@ plugins {
 }
 
 dependencies {
-    val commonVersion = "6.0.0"
+    val commonVersion: String by rootProject.extra
     implementation(platform("com.github.vhromada.project:project-parent:5.0.0"))
     implementation(project(":catalog-core"))
     implementation(kotlin("stdlib-jdk8"))

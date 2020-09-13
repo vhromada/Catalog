@@ -85,6 +85,7 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
      * @param genre new value of genre
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody genre: Genre) {
         processResult(genreFacade.update(genre))
     }

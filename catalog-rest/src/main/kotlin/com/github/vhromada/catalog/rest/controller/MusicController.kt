@@ -95,6 +95,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      * @param music new value of music
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody music: Music) {
         processResult(musicFacade.update(music))
     }

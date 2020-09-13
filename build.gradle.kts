@@ -9,12 +9,13 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
 }
 
+val commonVersion by extra("6.0.1")
+
 allprojects {
     group = "com.github.vhromada.catalog"
-    version = "10.0.1"
+    version = "10.0.2-SNAPSHOT"
 
     apply(plugin = "kotlin")
-    apply(plugin = "org.gradle.maven-publish")
 
     repositories {
         mavenCentral()

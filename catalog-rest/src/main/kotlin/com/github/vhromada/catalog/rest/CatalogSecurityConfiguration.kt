@@ -33,6 +33,8 @@ class CatalogSecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
+                .antMatchers("/catalog/accounts/add").permitAll()
+                .antMatchers("/catalog/accounts/roles").hasAnyRole("ADMIN")
                 .anyRequest().hasAnyRole("ADMIN", "USER")
         http.httpBasic()
         http.csrf().disable()

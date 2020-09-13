@@ -113,6 +113,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      * @param show new value of show
      */
     @PostMapping("/update")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody show: Show) {
         processResult(showFacade.update(show))
     }

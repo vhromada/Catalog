@@ -3,7 +3,7 @@ package com.github.vhromada.catalog.utils
 import com.github.vhromada.common.domain.Audit
 import com.github.vhromada.common.test.utils.TestConstants
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.SoftAssertions
+import org.assertj.core.api.SoftAssertions.assertSoftly
 import java.time.LocalDateTime
 
 /**
@@ -46,7 +46,7 @@ object AuditUtils {
             assertThat(actual).isNull()
         } else {
             assertThat(actual).isNotNull
-            SoftAssertions.assertSoftly {
+            assertSoftly {
                 it.assertThat(expected.createdUser).isEqualTo(actual!!.createdUser)
                 it.assertThat(expected.createdTime).isEqualToIgnoringNanos(actual.createdTime)
                 it.assertThat(expected.updatedUser).isEqualTo(actual.updatedUser)

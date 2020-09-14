@@ -46,7 +46,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      * Returns show with ID or null if there isn't such show.
      *
      * @param id ID
-     * @return show with ID or null if there isn't such sho
+     * @return show with ID or null if there isn't such show
      */
     @GetMapping("/{id}")
     fun getShow(@PathVariable("id") id: Int): Show? {

@@ -38,6 +38,12 @@
                 <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
                     <a th:href="@{/pictures/list}" class="nav-link">Pictures</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/accounts/list}" class="nav-link">Accounts</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/accounts/edit}" class="nav-link">Update account</a>
+                </li>
             </ul>
             <form th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
                 <button type="submit" id="logout" name="logout" class="btn">Logout</button>

@@ -249,7 +249,6 @@ class GenreController(
         throw IllegalRequestException("Genre doesn't exist.")
     }
 
-
     /**
      * Returns page's view with form.
      *

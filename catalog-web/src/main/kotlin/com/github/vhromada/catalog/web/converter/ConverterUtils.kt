@@ -193,6 +193,28 @@ object ConverterUtils {
         return imdbCode.toString().padStart(7, '0')
     }
 
+
+    /**
+     * Converts roles.
+     *
+     * @param roles roles
+     * @return converted roles
+     */
+    @JvmStatic
+    fun convertRoles(roles: List<String>): String {
+        if (roles.isEmpty()) {
+            return ""
+        }
+
+        val result = StringBuilder()
+        for (role in roles) {
+            result.append(role)
+            result.append(", ")
+        }
+
+        return result.substring(0, result.length - 2)
+    }
+
     /**
      * Adds data to result.
      *

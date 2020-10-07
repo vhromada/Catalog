@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <table class="table table-hover" th:if="${!#lists.isEmpty(accounts)}">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="account : ${accounts}">
+                        <tr>
+                            <td th:text="${account.username}"></td>
+                            <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertRoles(account.roles)}"></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${#lists.isEmpty(accounts)}">No records.</th:block>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count of accounts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${accounts.size()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

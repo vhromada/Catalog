@@ -148,7 +148,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
      *
      * @param id ID of moving picture
      * @return view for redirect to page with list of pictures
-     * @throws IllegalRequestException  if picture doesn't exist
+     * @throws IllegalRequestException if picture doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
@@ -174,7 +174,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
      *
      * @param id ID
      * @return picture with ID
-     * @throws IllegalRequestException  if picture doesn't exist
+     * @throws IllegalRequestException if picture doesn't exist
      */
     private fun getPicture(id: Int): Picture {
         val picture = Picture(id = id,
@@ -188,10 +188,15 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
             return picture
         }
 
-        throw IllegalRequestException("Picture doesn't exist.")
+        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
     }
 
     companion object {
+
+        /**
+         * Message for illegal request
+         */
+        private const val ILLEGAL_REQUEST_MESSAGE = "Picture doesn't exist."
 
         /**
          * Redirect URL to list

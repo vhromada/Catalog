@@ -406,7 +406,7 @@ class MovieController(
     /**
      * Returns processed movie.
      *
-     * @param movie for processing
+     * @param movie movie for processing
      * @return processed movie
      * @throws IllegalRequestException if movie doesn't exist
      */

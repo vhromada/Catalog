@@ -63,7 +63,7 @@ class GameController(
      * @param model model
      * @param id    ID of editing game
      * @return view for page with detail of game
-     * @throws IllegalRequestException  if game doesn't exist
+     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/{id}/detail")
     fun showDetail(model: Model, @PathVariable("id") id: Int?): String {
@@ -144,7 +144,7 @@ class GameController(
      * @param model model
      * @param id    ID of editing game
      * @return view for page for editing game
-     * @throws IllegalRequestException  if game doesn't exist
+     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
@@ -196,7 +196,7 @@ class GameController(
      *
      * @param id ID of duplicating game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException  if game doesn't exist
+     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
@@ -210,7 +210,7 @@ class GameController(
      *
      * @param id ID of removing game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException  if game doesn't exist
+     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
@@ -224,7 +224,7 @@ class GameController(
      *
      * @param id ID of moving game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException  if game doesn't exist
+     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
@@ -238,7 +238,7 @@ class GameController(
      *
      * @param id ID of moving game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException  if game doesn't exist
+     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
@@ -264,7 +264,7 @@ class GameController(
      *
      * @param id ID
      * @return game with ID
-     * @throws IllegalRequestException  if game doesn't exist
+     * @throws IllegalRequestException if game doesn't exist
      */
     private fun getGame(id: Int): Game {
         val game = Game(id = id,
@@ -289,7 +289,7 @@ class GameController(
     /**
      * Returns processed game.
      *
-     * @param game for processing
+     * @param game game for processing
      * @return processed game
      * @throws IllegalRequestException if game doesn't exist
      */

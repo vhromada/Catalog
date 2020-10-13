@@ -31,7 +31,7 @@ class RegistrationController(
      */
     @GetMapping
     fun login(model: Model): String {
-        return createFormView(model, AccountFO(username = null, password = null))
+        return createFormView(model, AccountFO(username = null, password = null, copyPassword = null))
     }
 
     /**

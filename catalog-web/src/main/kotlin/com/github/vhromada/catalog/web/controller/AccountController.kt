@@ -1,6 +1,5 @@
 package com.github.vhromada.catalog.web.controller
 
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.AccountFO
 import com.github.vhromada.catalog.web.mapper.AccountMapper
 import com.github.vhromada.common.account.facade.AccountFacade
@@ -49,7 +48,7 @@ class AccountController(
      */
     @GetMapping("/edit")
     fun showEdit(model: Model): String {
-        return createFormView(model, AccountFO(username = null, password = null))
+        return createFormView(model, AccountFO(username = null, password = null, copyPassword = null))
     }
 
     /**
@@ -59,7 +58,6 @@ class AccountController(
      * @param account FO for account
      * @param errors  errors
      * @return view for redirect to page with list of accounts (no errors) or view for page for editing account (errors)
-     * @throws IllegalRequestException  if account doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["update"])
     fun processEdit(model: Model, @ModelAttribute("account") @Valid account: AccountFO, errors: Errors): String {

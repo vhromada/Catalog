@@ -11,6 +11,7 @@
                     <tr>
                         <th>Username</th>
                         <th>Roles</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,6 +19,7 @@
                         <tr>
                             <td th:text="${account.username}"></td>
                             <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertRoles(account.roles)}"></td>
+                            <td><a th:href="@{|/accounts/${account.id}/roles/edit|}">Edit</a></td>
                         </tr>
                     </th:block>
                 </tbody>

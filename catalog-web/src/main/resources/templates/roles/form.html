@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="accountId" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="role" type="com.github.vhromada.catalog.web.fo.RoleFO"*/-->
+    <!--/*@thymesVar id="roles" type="java.lang.String[]"*/-->
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <form th:action="@{|/accounts/${accountId}/roles/edit|}" method="POST" th:object="${role}">
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <th:block th:each="role : ${roles}">
+                                <label class="form-check custom">
+                                    <input type="checkbox" th:field="*{roles}" th:value="${role}"/>
+                                    <th:block th:text="${role}"/>
+                                </label>
+                            </th:block>
+                            <span class="error" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <button type="submit" id="update" name="update" class="btn btn-primary">Update</button>
+                            <button type="submit" id="cancel" name="cancel" class="btn btn-danger" formnovalidate="formnovalidate">Cancel</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>

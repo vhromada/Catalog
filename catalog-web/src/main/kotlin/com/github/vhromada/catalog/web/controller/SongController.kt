@@ -35,7 +35,7 @@ class SongController(
      * @param model   model
      * @param musicId music ID
      * @return view for page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("", "/list")
     fun showList(model: Model, @PathVariable("musicId") musicId: Int): String {
@@ -58,7 +58,7 @@ class SongController(
      * @param musicId music ID
      * @param id      ID of editing song
      * @return view for page with detail of song
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist
      */
     @GetMapping("/{id}/detail")
@@ -86,7 +86,7 @@ class SongController(
      * @param model   model
      * @param musicId music ID
      * @return view for page for adding song
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("/add")
     fun showAdd(model: Model, @PathVariable("musicId") musicId: Int): String {
@@ -109,7 +109,7 @@ class SongController(
      * @param errors  errors
      * @return view for redirect to page with list of songs (no errors) or view for page for adding song (errors)
      * @throws IllegalArgumentException if ID isn't null
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      */
     @PostMapping(value = ["/add"], params = ["create"])
     fun processAdd(model: Model, @PathVariable("musicId") musicId: Int, @ModelAttribute("song") @Valid song: SongFO, errors: Errors): String {
@@ -130,7 +130,7 @@ class SongController(
      *
      * @param musicId music ID
      * @return view for redirect to page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      */
     @PostMapping(value = ["/add"], params = ["cancel"])
     fun cancelAdd(@PathVariable("musicId") musicId: Int): String {
@@ -144,7 +144,7 @@ class SongController(
      * @param musicId music ID
      * @param id      ID of editing song
      * @return view for page for editing song
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist
      */
     @GetMapping("/edit/{id}")
@@ -192,7 +192,7 @@ class SongController(
      *
      * @param musicId music ID
      * @return view for redirect to page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      */
     @PostMapping("/edit")
     fun cancelEdit(@PathVariable("musicId") musicId: Int): String {
@@ -205,7 +205,7 @@ class SongController(
      * @param musicId music ID
      * @param id      ID of duplicating song
      * @return view for redirect to page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist
      */
     @GetMapping("/duplicate/{id}")
@@ -221,7 +221,7 @@ class SongController(
      * @param musicId music ID
      * @param id      ID of removing song
      * @return view for redirect to page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist
      */
     @GetMapping("/remove/{id}")
@@ -237,7 +237,7 @@ class SongController(
      * @param musicId music ID
      * @param id      ID of moving song
      * @return view for redirect to page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist
      */
     @GetMapping("/moveUp/{id}")
@@ -253,7 +253,7 @@ class SongController(
      * @param musicId music ID
      * @param id      ID of moving song
      * @return view for redirect to page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist
      */
     @GetMapping("/moveDown/{id}")
@@ -268,7 +268,7 @@ class SongController(
      *
      * @param musicId music ID
      * @return view for redirect to page with list of songs
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      */
     private fun cancel(musicId: Int): String {
         getMusic(musicId)
@@ -296,7 +296,7 @@ class SongController(
      * @param musicId music ID
      * @param id      ID
      * @return song with ID
-     * @throws IllegalRequestException  if music doesn't exist
+     * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist
      */
     private fun getSong(musicId: Int, id: Int): Song {
@@ -314,7 +314,7 @@ class SongController(
     /**
      * Returns processed song.
      *
-     * @param song for processing
+     * @param song song for processing
      * @return processed song
      * @throws IllegalRequestException if song doesn't exist
      */

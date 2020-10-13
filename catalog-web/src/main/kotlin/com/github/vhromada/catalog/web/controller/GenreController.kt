@@ -103,7 +103,7 @@ class GenreController(
      * @param model model
      * @param id    ID of editing genre
      * @return view for page for editing genre
-     * @throws IllegalRequestException  if genre doesn't exist
+     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
@@ -114,7 +114,7 @@ class GenreController(
         return if (genre != null) {
             createFormView(model, genreMapper.map(genre), "Edit genre", "edit")
         } else {
-            throw IllegalRequestException("Genre doesn't exist.")
+            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
         }
     }
 
@@ -155,7 +155,7 @@ class GenreController(
      *
      * @param id ID of duplicating genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException  if genre doesn't exist
+     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
@@ -169,7 +169,7 @@ class GenreController(
      *
      * @param id ID of removing genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException  if genre doesn't exist
+     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
@@ -183,7 +183,7 @@ class GenreController(
      *
      * @param id ID of moving genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException  if genre doesn't exist
+     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
@@ -197,7 +197,7 @@ class GenreController(
      *
      * @param id ID of moving genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException  if genre doesn't exist
+     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
@@ -223,7 +223,7 @@ class GenreController(
      *
      * @param id ID
      * @return genre with ID
-     * @throws IllegalRequestException  if genre doesn't exist
+     * @throws IllegalRequestException if genre doesn't exist
      */
     private fun getGenre(id: Int): Genre {
         val genre = Genre(id = id, name = null, position = null)
@@ -234,7 +234,7 @@ class GenreController(
     /**
      * Returns processed genre.
      *
-     * @param genre for processing
+     * @param genre genre for processing
      * @return processed genre
      * @throws IllegalRequestException if genre doesn't exist
      */
@@ -246,7 +246,7 @@ class GenreController(
             return genre
         }
 
-        throw IllegalRequestException("Genre doesn't exist.")
+        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
     }
 
     /**
@@ -267,6 +267,11 @@ class GenreController(
     }
 
     companion object {
+
+        /**
+         * Message for illegal request
+         */
+        private const val ILLEGAL_REQUEST_MESSAGE = "Genre doesn't exist."
 
         /**
          * Redirect URL to list

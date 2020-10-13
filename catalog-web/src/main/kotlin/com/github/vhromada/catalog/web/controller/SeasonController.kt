@@ -40,7 +40,7 @@ class SeasonController(
      * @param model  model
      * @param showId show ID
      * @return view for page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("", "/list")
     fun showList(model: Model, @PathVariable("showId") showId: Int): String {
@@ -63,7 +63,7 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of editing season
      * @return view for page with detail of season
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("/{id}/detail")
@@ -95,7 +95,7 @@ class SeasonController(
      * @param model  model
      * @param showId show ID
      * @return view for page for adding season
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/add")
     fun showAdd(model: Model, @PathVariable("showId") showId: Int): String {
@@ -143,7 +143,7 @@ class SeasonController(
      *
      * @param showId show ID
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      */
     @PostMapping(value = ["/add"], params = ["cancel"])
     fun cancelAdd(@PathVariable("showId") showId: Int): String {
@@ -157,7 +157,7 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of editing season
      * @return view for page for editing season
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("/edit/{id}")
@@ -184,7 +184,7 @@ class SeasonController(
      * @param errors   errors
      * @return view for redirect to page with list of seasons (no errors) or view for page for editing season (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["update"])
@@ -206,7 +206,7 @@ class SeasonController(
      *
      * @param showId show ID
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["cancel"])
     fun cancelEdit(@PathVariable("showId") showId: Int): String {
@@ -219,7 +219,7 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of duplicating season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("/duplicate/{id}")
@@ -235,7 +235,7 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of removing season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("/remove/{id}")
@@ -251,7 +251,7 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of moving season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("/moveUp/{id}")
@@ -267,7 +267,7 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of moving season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("/moveDown/{id}")
@@ -282,7 +282,7 @@ class SeasonController(
      *
      * @param showId show ID
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      */
     private fun cancel(showId: Int): String {
         getShow(showId)
@@ -310,7 +310,7 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID
      * @return season with ID
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     private fun getSeason(showId: Int, id: Int): Season {
@@ -331,7 +331,7 @@ class SeasonController(
     /**
      * Returns processed season.
      *
-     * @param season for processing
+     * @param season season for processing
      * @return processed season
      * @throws IllegalRequestException if season doesn't exist
      */

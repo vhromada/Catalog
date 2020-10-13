@@ -17,7 +17,7 @@ object AccountUtils {
      * @return FO for account
      */
     fun getAccount(): AccountFO {
-        return AccountFO(username = "username", password = "password")
+        return AccountFO(username = "username", password = "password", copyPassword = "copyPassword")
     }
 
     /**

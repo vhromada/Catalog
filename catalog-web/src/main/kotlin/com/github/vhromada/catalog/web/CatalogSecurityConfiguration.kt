@@ -36,7 +36,7 @@ class CatalogSecurityConfiguration : WebSecurityConfigurerAdapter() {
                 .antMatchers("/login", "/login/error", "/registration").permitAll()
                 .antMatchers("/css/**", "/js/**").permitAll()
                 .antMatchers("/logout").authenticated()
-                .antMatchers("/accounts", "/accounts/", "/accounts/list").hasAnyRole("ADMIN")
+                .antMatchers("/accounts", "/accounts/", "/accounts/list", "/accounts/**/roles/**").hasAnyRole("ADMIN")
                 .anyRequest().hasAnyRole("ADMIN", "USER")
         http.formLogin()
                 .loginPage("/login")

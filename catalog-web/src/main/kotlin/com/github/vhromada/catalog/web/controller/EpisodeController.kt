@@ -38,7 +38,7 @@ class EpisodeController(
      * @param showId   show ID
      * @param seasonId season ID
      * @return view for page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("", "/list")
@@ -66,7 +66,7 @@ class EpisodeController(
      * @param seasonId season ID
      * @param id       ID of editing episode
      * @return view for page with detail of episode
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      * or episode doesn't exist
      */
@@ -98,7 +98,7 @@ class EpisodeController(
      * @param showId   show ID
      * @param seasonId season ID
      * @return view for page for adding episode
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @GetMapping("add")
@@ -149,7 +149,7 @@ class EpisodeController(
      * @param showId   show ID
      * @param seasonId season ID
      * @return view for redirect to page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @PostMapping(value = ["/add"], params = ["cancel"])
@@ -165,7 +165,7 @@ class EpisodeController(
      * @param seasonId season ID
      * @param id       ID of editing episode
      * @return view for page for editing episode
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      * or episode doesn't exist
      */
@@ -219,7 +219,7 @@ class EpisodeController(
      * @param showId   show ID
      * @param seasonId season ID
      * @return view for redirect to page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["cancel"])
@@ -234,7 +234,7 @@ class EpisodeController(
      * @param seasonId season ID
      * @param id       ID of duplicating episode
      * @return view for redirect to page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      * or episode doesn't exist
      */
@@ -255,7 +255,7 @@ class EpisodeController(
      * @param seasonId season ID
      * @param id       ID of removing episode
      * @return view for redirect to page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      * or episode doesn't exist
      */
@@ -273,7 +273,7 @@ class EpisodeController(
      * @param seasonId season ID
      * @param id       ID of moving episode
      * @return view for redirect to page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      * or episode doesn't exist
      */
@@ -291,7 +291,7 @@ class EpisodeController(
      * @param seasonId season ID
      * @param id       ID of moving episode
      * @return view for redirect to page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      * or episode doesn't exist
      */
@@ -308,7 +308,7 @@ class EpisodeController(
      * @param showId   show ID
      * @param seasonId season ID
      * @return view for redirect to page with list of episodes
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      */
     private fun cancel(showId: Int, seasonId: Int): String {
@@ -354,7 +354,7 @@ class EpisodeController(
      * @param seasonId season ID
      * @param id       ID
      * @return episode with ID
-     * @throws IllegalRequestException  if show doesn't exist
+     * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
      * or episode doesn't exist
      */
@@ -375,7 +375,7 @@ class EpisodeController(
     /**
      * Returns processed episode.
      *
-     * @param episode for processing
+     * @param episode episode for processing
      * @return processed episode
      * @throws IllegalRequestException if episode doesn't exist
      */

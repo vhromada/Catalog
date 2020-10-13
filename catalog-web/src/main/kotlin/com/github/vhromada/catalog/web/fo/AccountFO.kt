@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.web.fo
 
+import com.github.vhromada.catalog.web.validator.constraints.Password
 import java.io.Serializable
 import javax.validation.constraints.NotBlank
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotBlank
  *
  * @author Vladimir Hromada
  */
+@Password
 data class AccountFO(
 
         /**
@@ -20,4 +22,10 @@ data class AccountFO(
          * Password
          */
         @field:NotBlank
-        val password: String?) : Serializable
+        val password: String?,
+
+        /**
+         * Copy of password
+         */
+        @field:NotBlank
+        val copyPassword: String?) : Serializable

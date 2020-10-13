@@ -63,7 +63,7 @@ class ProgramController(
      * @param model model
      * @param id    ID of editing program
      * @return view for page with detail of program
-     * @throws IllegalRequestException  if program doesn't exist
+     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/{id}/detail")
     fun showDetail(model: Model, @PathVariable("id") id: Int): String {
@@ -139,7 +139,7 @@ class ProgramController(
      * @param model model
      * @param id    ID of editing program
      * @return view for page for editing program
-     * @throws IllegalRequestException  if program doesn't exist
+     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
@@ -191,7 +191,7 @@ class ProgramController(
      *
      * @param id ID of duplicating program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException  if program doesn't exist
+     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
@@ -205,7 +205,7 @@ class ProgramController(
      *
      * @param id ID of removing program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException  if program doesn't exist
+     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
@@ -219,7 +219,7 @@ class ProgramController(
      *
      * @param id ID of moving program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException  if program doesn't exist
+     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
@@ -233,7 +233,7 @@ class ProgramController(
      *
      * @param id ID of moving program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException  if program doesn't exist
+     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
@@ -259,7 +259,7 @@ class ProgramController(
      *
      * @param id ID
      * @return program with ID
-     * @throws IllegalRequestException  if program doesn't exist
+     * @throws IllegalRequestException if program doesn't exist
      */
     private fun getProgram(id: Int): Program {
         val program = Program(id = id,
@@ -279,7 +279,7 @@ class ProgramController(
     /**
      * Returns processed program.
      *
-     * @param program for processing
+     * @param program program for processing
      * @return processed program
      * @throws IllegalRequestException if program doesn't exist
      */

@@ -21,8 +21,23 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
 }
 
-tasks.jar {
-    manifest {
-        attributes["Implementation-Title"] = "Rest"
+tasks {
+    bootJar {
+        manifest {
+            attributes["Implementation-Title"] = "Rest"
+        }
     }
+}
+
+tasks {
+    build {
+        finalizedBy("copyJar")
+    }
+}
+
+tasks.register<Copy>("copyJar") {
+    from(file("$buildDir/libs"))
+    include("catalog-rest*.jar")
+    into(file("$buildDir/app"))
+    rename { "Catalog.jar" }
 }

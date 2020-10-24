@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.web.common
 
+import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.catalog.entity.Program
 import com.github.vhromada.catalog.web.fo.ProgramFO
 import org.assertj.core.api.SoftAssertions.assertSoftly
@@ -22,6 +23,7 @@ object ProgramUtils {
                 wikiEn = CatalogUtils.EN_WIKI,
                 wikiCz = CatalogUtils.CZ_WIKI,
                 mediaCount = CatalogUtils.MEDIA.toString(),
+                format = Format.STEAM,
                 crack = true,
                 serialKey = true,
                 otherData = "Other data",
@@ -40,6 +42,7 @@ object ProgramUtils {
                 wikiEn = CatalogUtils.EN_WIKI,
                 wikiCz = CatalogUtils.CZ_WIKI,
                 mediaCount = CatalogUtils.MEDIA,
+                format = Format.STEAM,
                 crack = true,
                 serialKey = true,
                 otherData = "Other data",
@@ -64,6 +67,7 @@ object ProgramUtils {
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount?.toInt())
+            it.assertThat(actual.format).isEqualTo(expected.format)
             it.assertThat(actual.crack).isEqualTo(expected.crack)
             it.assertThat(actual.serialKey).isEqualTo(expected.serialKey)
             it.assertThat(actual.otherData).isEqualTo(expected.otherData)

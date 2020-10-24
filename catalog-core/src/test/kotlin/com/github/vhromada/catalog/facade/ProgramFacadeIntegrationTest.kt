@@ -145,6 +145,24 @@ class ProgramFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Program,
     }
 
     /**
+     * Test method for [ProgramFacade.add] with program with null format.
+     */
+    @Test
+    fun addNullFormat() {
+        val program = newData(null)
+                .copy(format = null)
+
+        val result = facade.add(program)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_FORMAT_NULL", "Format mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
      * Test method for [ProgramFacade.add] with program with null other data.
      */
     @Test
@@ -283,6 +301,24 @@ class ProgramFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Program,
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
             it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [ProgramFacade.update] with program with null format.
+     */
+    @Test
+    fun updateNullFormat() {
+        val program = newData(1)
+                .copy(format = null)
+
+        val result = facade.update(program)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_FORMAT_NULL", "Format mustn't be null.")))
         }
 
         assertDefaultRepositoryData()

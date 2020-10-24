@@ -17,6 +17,10 @@
                         <td class="title">Count of media</td>
                         <td th:text="${game.mediaCount}"></td>
                     </tr>
+                    <tr>
+                        <td class="title">Format</td>
+                        <td th:text="${game.format}"></td>
+                    </tr>
                     <tr th:if="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGameAdditionalDataContent(game)}">
                         <td class="title">Additional data</td>
                         <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGameAdditionalData(game)}"></td>

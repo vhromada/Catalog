@@ -27,6 +27,7 @@ class GameValidator(gameService: MovableService<com.github.vhromada.catalog.doma
      *  * URL to czech Wikipedia page about game is null
      *  * Count of media is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *
@@ -50,6 +51,9 @@ class GameValidator(gameService: MovableService<com.github.vhromada.catalog.doma
             data.mediaCount <= 0 -> {
                 result.addEvent(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
             }
+        }
+        if (data.format == null) {
+            result.addEvent(Event(Severity.ERROR, "GAME_FORMAT_NULL", "Format mustn't be null."))
         }
         if (data.otherData == null) {
             result.addEvent(Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null."))

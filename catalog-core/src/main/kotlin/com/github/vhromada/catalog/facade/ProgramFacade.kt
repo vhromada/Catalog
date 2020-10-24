@@ -24,6 +24,7 @@ interface ProgramFacade : MovableParentFacade<Program> {
      *  * URL to czech Wikipedia page about program is null
      *  * Count of media is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *
@@ -45,6 +46,7 @@ interface ProgramFacade : MovableParentFacade<Program> {
      *  * URL to czech Wikipedia page about program is null
      *  * Count of media is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *  * Program doesn't exist in data storage

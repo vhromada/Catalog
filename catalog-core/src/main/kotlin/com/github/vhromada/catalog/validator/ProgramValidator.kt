@@ -27,6 +27,7 @@ class ProgramValidator(programService: MovableService<com.github.vhromada.catalo
      *  * URL to czech Wikipedia page about program is null
      *  * Count of media is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *
@@ -50,6 +51,9 @@ class ProgramValidator(programService: MovableService<com.github.vhromada.catalo
             data.mediaCount <= 0 -> {
                 result.addEvent(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
             }
+        }
+        if (data.format == null) {
+            result.addEvent(Event(Severity.ERROR, "PROGRAM_FORMAT_NULL", "Format mustn't be null."))
         }
         if (data.otherData == null) {
             result.addEvent(Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null."))

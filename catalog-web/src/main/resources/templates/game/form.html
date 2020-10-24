@@ -3,6 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
     <!--/*@thymesVar id="action" type="java.lang.String"*/-->
     <!--/*@thymesVar id="game" type="com.github.vhromada.catalog.web.fo.GameFO"*/-->
+    <!--/*@thymesVar id="formats" type="com.github.vhromada.catalog.common.Format[]"*/-->
     <head th:replace="layout :: head"></head>
     <body>
         <th:block th:replace="layout :: menu"/>
@@ -39,6 +40,18 @@
                         <div class="col-md-10">
                             <input type="number" id="mediaCount" name="mediaCount" class="form-control" min="1" max="100" step="1" th:field="*{mediaCount}"/>
                             <span class="error" th:if="${#fields.hasErrors('mediaCount')}" th:errors="*{mediaCount}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Format</label>
+                        <div class="col-md-10">
+                            <th:block th:each="format : ${formats}">
+                                <label class="form-check custom">
+                                    <input type="radio" th:field="*{format}" th:value="${format}"/>
+                                    <th:block th:text="${format}"/>
+                                </label>
+                            </th:block>
+                            <span class="error" th:if="${#fields.hasErrors('format')}" th:errors="*{format}"></span>
                         </div>
                     </div>
                     <div class="form-group">

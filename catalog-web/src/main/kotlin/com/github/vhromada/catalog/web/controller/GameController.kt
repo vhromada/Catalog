@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.web.controller
 
+import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.GameFacade
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
@@ -94,6 +95,7 @@ class GameController(
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = null,
+                format = null,
                 crack = null,
                 serialKey = null,
                 patch = null,
@@ -272,6 +274,7 @@ class GameController(
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = null,
+                format = null,
                 crack = null,
                 serialKey = null,
                 patch = null,
@@ -316,6 +319,7 @@ class GameController(
     private fun createFormView(model: Model, game: GameFO, title: String, action: String): String {
         model.addAttribute("game", game)
         model.addAttribute("title", title)
+        model.addAttribute("formats", Format.values())
         model.addAttribute("action", action)
 
         return "game/form"

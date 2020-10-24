@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.entity
 
+import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.common.entity.Movable
 import java.util.Objects
 
@@ -34,6 +35,11 @@ data class Program(
          * Count of media
          */
         val mediaCount: Int?,
+
+        /**
+         * Format
+         */
+        val format: Format?,
 
         /**
          * True if there is crack

@@ -24,6 +24,7 @@ interface GameFacade : MovableParentFacade<Game> {
      *  * URL to czech Wikipedia page about game is null
      *  * Count of media is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *
@@ -45,6 +46,7 @@ interface GameFacade : MovableParentFacade<Game> {
      *  * URL to czech Wikipedia page about game is null
      *  * Count of media is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *  * Game doesn't exist in data storage

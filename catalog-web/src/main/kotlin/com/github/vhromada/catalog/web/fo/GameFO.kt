@@ -1,9 +1,11 @@
 package com.github.vhromada.catalog.web.fo
 
+import com.github.vhromada.catalog.common.Format
 import org.hibernate.validator.constraints.Range
 import java.io.Serializable
 import java.util.Objects
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 /**
  * A class represents FO for game.
@@ -38,6 +40,12 @@ data class GameFO(
          */
         @field:Range(min = 1, max = 100)
         val mediaCount: String?,
+
+        /**
+         * Format
+         */
+        @field:NotNull
+        val format: Format?,
 
         /**
          * True if there is crack

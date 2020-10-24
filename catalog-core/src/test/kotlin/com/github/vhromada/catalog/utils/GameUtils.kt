@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.utils
 
+import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.catalog.entity.Game
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
@@ -15,6 +16,7 @@ fun com.github.vhromada.catalog.domain.Game.updated(): com.github.vhromada.catal
             wikiEn = "enWiki",
             wikiCz = "czWiki",
             mediaCount = 1,
+            format = Format.STEAM,
             crack = true,
             serialKey = true,
             patch = true,
@@ -37,6 +39,7 @@ fun Game.updated(): Game {
             wikiEn = "enWiki",
             wikiCz = "czWiki",
             mediaCount = 1,
+            format = Format.STEAM,
             crack = true,
             serialKey = true,
             patch = true,
@@ -97,6 +100,7 @@ object GameUtils {
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = 0,
+                format = Format.STEAM,
                 crack = false,
                 serialKey = false,
                 patch = false,
@@ -124,6 +128,7 @@ object GameUtils {
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = 0,
+                format = Format.STEAM,
                 crack = false,
                 serialKey = false,
                 patch = false,
@@ -150,6 +155,7 @@ object GameUtils {
                 wikiEn = "$GAME$index English Wikipedia",
                 wikiCz = "$GAME$index Czech Wikipedia",
                 mediaCount = index,
+                format = getFormat(index),
                 crack = index != 1,
                 serialKey = index != 1,
                 patch = index != 1,
@@ -161,6 +167,21 @@ object GameUtils {
                 note = if (index == 3) GAME + "3 note" else "",
                 position = index - 1,
                 audit = AuditUtils.getAudit())
+    }
+
+    /**
+     * Returns format for index.
+     *
+     * @param index index
+     * @return format for index
+     */
+    private fun getFormat(index: Int): Format {
+        return when (index) {
+            1 -> Format.ISO
+            2 -> Format.STEAM
+            3 -> Format.BINARY
+            else -> throw IllegalArgumentException("Bad index")
+        }
     }
 
     /**
@@ -234,6 +255,7 @@ object GameUtils {
             it.assertThat(expected.wikiEn).isEqualTo(actual.wikiEn)
             it.assertThat(expected.wikiCz).isEqualTo(actual.wikiCz)
             it.assertThat(expected.mediaCount).isEqualTo(actual.mediaCount)
+            it.assertThat(expected.format).isEqualTo(actual.format)
             it.assertThat(expected.crack).isEqualTo(actual.crack)
             it.assertThat(expected.serialKey).isEqualTo(actual.serialKey)
             it.assertThat(expected.patch).isEqualTo(actual.patch)
@@ -284,6 +306,7 @@ object GameUtils {
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
+            it.assertThat(actual.format).isEqualTo(expected.format)
             it.assertThat(actual.crack).isEqualTo(expected.crack)
             it.assertThat(actual.serialKey).isEqualTo(expected.serialKey)
             it.assertThat(actual.patch).isEqualTo(expected.patch)

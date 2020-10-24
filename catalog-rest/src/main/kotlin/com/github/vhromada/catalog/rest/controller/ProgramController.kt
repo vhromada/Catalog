@@ -65,6 +65,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      *  * URL to english Wikipedia page about program is null
      *  * URL to czech Wikipedia page about program is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *
@@ -88,6 +89,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      *  * URL to english Wikipedia page about program is null
      *  * URL to czech Wikipedia page about program is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *  * Program doesn't exist in data storage
@@ -112,7 +114,17 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        val program = Program(id = id, name = null, mediaCount = null, wikiEn = null, wikiCz = null, crack = null, serialKey = null, otherData = null, note = null, position = null)
+        val program = Program(id = id,
+                name = null,
+                mediaCount = null,
+                wikiEn = null,
+                wikiCz = null,
+                format = null,
+                crack = null,
+                serialKey = null,
+                otherData = null,
+                note = null,
+                position = null)
         processResult(programFacade.remove(program))
     }
 

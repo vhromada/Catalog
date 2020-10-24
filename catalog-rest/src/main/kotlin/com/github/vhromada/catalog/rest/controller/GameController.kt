@@ -65,6 +65,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      *  * URL to english Wikipedia page about game is null
      *  * URL to czech Wikipedia page about game is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *
@@ -88,6 +89,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      *  * URL to english Wikipedia page about game is null
      *  * URL to czech Wikipedia page about game is null
      *  * Count of media isn't positive number
+     *  * Format is null
      *  * Other data is null
      *  * Note is null
      *  * Game doesn't exist in data storage
@@ -117,6 +119,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
                 mediaCount = null,
                 wikiEn = null,
                 wikiCz = null,
+                format = null,
                 crack = null,
                 serialKey = null,
                 patch = null,

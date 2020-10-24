@@ -145,6 +145,24 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
     }
 
     /**
+     * Test method for [GameFacade.add] with game with null format.
+     */
+    @Test
+    fun addNullFormat() {
+        val game = newData(null)
+                .copy(format = null)
+
+        val result = facade.add(game)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_FORMAT_NULL", "Format mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
      * Test method for [GameFacade.add] with game with null other data.
      */
     @Test
@@ -283,6 +301,24 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
             it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [GameFacade.update] with game with null format.
+     */
+    @Test
+    fun updateNullFormat() {
+        val game = newData(1)
+                .copy(format = null)
+
+        val result = facade.update(game)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_FORMAT_NULL", "Format mustn't be null.")))
         }
 
         assertDefaultRepositoryData()

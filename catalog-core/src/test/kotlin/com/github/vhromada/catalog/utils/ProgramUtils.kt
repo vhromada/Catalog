@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.utils
 
+import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.catalog.entity.Program
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
@@ -15,6 +16,7 @@ fun com.github.vhromada.catalog.domain.Program.updated(): com.github.vhromada.ca
             wikiEn = "enWiki",
             wikiCz = "czWiki",
             mediaCount = 1,
+            format = Format.STEAM,
             crack = true,
             serialKey = true,
             otherData = "Other data",
@@ -32,6 +34,7 @@ fun Program.updated(): Program {
             wikiEn = "enWiki",
             wikiCz = "czWiki",
             mediaCount = 1,
+            format = Format.STEAM,
             crack = true,
             serialKey = true,
             otherData = "Other data",
@@ -87,6 +90,7 @@ object ProgramUtils {
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = 0,
+                format = Format.STEAM,
                 crack = false,
                 serialKey = false,
                 otherData = null,
@@ -109,6 +113,7 @@ object ProgramUtils {
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = 0,
+                format = Format.STEAM,
                 crack = false,
                 serialKey = false,
                 otherData = null,
@@ -132,12 +137,28 @@ object ProgramUtils {
                 wikiEn = "$PROGRAM$index English Wikipedia",
                 wikiCz = "$PROGRAM$index Czech Wikipedia",
                 mediaCount = index * mediaCountMultiplier,
+                format = getFormat(index),
                 crack = index == 3,
                 serialKey = index != 1,
                 otherData = if (index == 3) PROGRAM + "3 other data" else "",
                 note = if (index == 3) PROGRAM + "3 note" else "",
                 position = index - 1,
                 audit = AuditUtils.getAudit())
+    }
+
+    /**
+     * Returns format for index.
+     *
+     * @param index index
+     * @return format for index
+     */
+    private fun getFormat(index: Int): Format {
+        return when (index) {
+            1 -> Format.ISO
+            2 -> Format.STEAM
+            3 -> Format.BINARY
+            else -> throw IllegalArgumentException("Bad index")
+        }
     }
 
     /**
@@ -211,6 +232,7 @@ object ProgramUtils {
             it.assertThat(expected.wikiEn).isEqualTo(actual.wikiEn)
             it.assertThat(expected.wikiCz).isEqualTo(actual.wikiCz)
             it.assertThat(expected.mediaCount).isEqualTo(actual.mediaCount)
+            it.assertThat(expected.format).isEqualTo(actual.format)
             it.assertThat(expected.crack).isEqualTo(actual.crack)
             it.assertThat(expected.serialKey).isEqualTo(actual.serialKey)
             it.assertThat(expected.otherData).isEqualTo(actual.otherData)
@@ -256,6 +278,7 @@ object ProgramUtils {
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
+            it.assertThat(actual.format).isEqualTo(expected.format)
             it.assertThat(actual.crack).isEqualTo(expected.crack)
             it.assertThat(actual.serialKey).isEqualTo(expected.serialKey)
             it.assertThat(actual.otherData).isEqualTo(expected.otherData)

@@ -130,6 +130,24 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
     }
 
     /**
+     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null format.
+     */
+    @Test
+    fun validateDeepNullFormat() {
+        val program = getValidatingData(1)
+                .copy(format = null)
+
+        val result = getValidator().validate(program, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_FORMAT_NULL", "Format mustn't be null.")))
+        }
+
+        verifyZeroInteractions(service)
+    }
+
+    /**
      * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null other data.
      */
     @Test

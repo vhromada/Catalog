@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.web.controller
 
+import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.catalog.entity.Program
 import com.github.vhromada.catalog.facade.ProgramFacade
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
@@ -94,6 +95,7 @@ class ProgramController(
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = null,
+                format = null,
                 crack = null,
                 serialKey = null,
                 otherData = null,
@@ -267,6 +269,7 @@ class ProgramController(
                 wikiEn = null,
                 wikiCz = null,
                 mediaCount = null,
+                format = null,
                 crack = null,
                 serialKey = null,
                 otherData = null,
@@ -307,6 +310,7 @@ class ProgramController(
     private fun createFormView(model: Model, program: ProgramFO, title: String, action: String): String {
         model.addAttribute("program", program)
         model.addAttribute("title", title)
+        model.addAttribute("formats", Format.values())
         model.addAttribute("action", action)
 
         return "program/form"

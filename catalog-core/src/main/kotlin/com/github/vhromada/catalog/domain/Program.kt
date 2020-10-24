@@ -1,10 +1,13 @@
 package com.github.vhromada.catalog.domain
 
+import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.common.domain.Audit
 import com.github.vhromada.common.domain.AuditEntity
 import java.util.Objects
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -50,6 +53,12 @@ data class Program(
          */
         @Column(name = "media_count")
         val mediaCount: Int,
+
+        /**
+         * Format
+         */
+        @Enumerated(EnumType.STRING)
+        val format: Format,
 
         /**
          * True if there is crack

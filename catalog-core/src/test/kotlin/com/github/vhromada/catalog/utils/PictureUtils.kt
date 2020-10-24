@@ -125,7 +125,7 @@ object PictureUtils {
      */
     @Suppress("CheckStyle")
     fun getPicturesCount(entityManager: EntityManager): Int {
-        return entityManager.createQuery("SELECT COUNT(g.id) FROM Picture g", java.lang.Long::class.java).singleResult.toInt()
+        return entityManager.createQuery("SELECT COUNT(p.id) FROM Picture p", java.lang.Long::class.java).singleResult.toInt()
     }
 
     /**

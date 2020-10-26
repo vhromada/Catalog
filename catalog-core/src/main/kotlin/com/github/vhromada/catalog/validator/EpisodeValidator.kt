@@ -68,30 +68,30 @@ class EpisodeValidator(showService: MovableService<Show>) : AbstractMovableValid
     override fun validateDataDeep(data: Episode, result: Result<Unit>) {
         when {
             data.number == null -> {
-                result.addEvent(Event(Severity.ERROR, "EPISODE_NUMBER_NULL", "Number of episode mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NULL", "Number of episode mustn't be null."))
             }
             data.number <= 0 -> {
-                result.addEvent(Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NOT_POSITIVE", "Number of episode must be positive number."))
             }
         }
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
             }
         }
         when {
             data.length == null -> {
-                result.addEvent(Event(Severity.ERROR, "EPISODE_LENGTH_NULL", "Length of episode mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NULL", "Length of episode mustn't be null."))
             }
             data.length < 0 -> {
-                result.addEvent(Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NEGATIVE", "Length of episode mustn't be negative number."))
             }
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
         }
     }
 

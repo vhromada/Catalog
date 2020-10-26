@@ -4,13 +4,17 @@ import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.common.domain.Audit
 import com.github.vhromada.common.domain.AuditEntity
 import java.util.Objects
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
@@ -60,6 +64,13 @@ data class Game(
          */
         @Enumerated(EnumType.STRING)
         val format: Format,
+
+        /**
+         * Cheat
+         */
+        @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
+        @JoinColumn(name = "cheat", referencedColumnName = "id")
+        val cheat: Cheat?,
 
         /**
          * True if there is crack

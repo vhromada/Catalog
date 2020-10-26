@@ -52,7 +52,6 @@ class YearsValidator : ConstraintValidator<Years, SeasonFO> {
         return value < Constants.MIN_YEAR || value > Constants.CURRENT_YEAR
     }
 
-    @Suppress("CheckStyle")
     companion object {
 
         /**

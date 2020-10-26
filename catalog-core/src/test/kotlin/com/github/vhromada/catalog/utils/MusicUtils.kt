@@ -158,7 +158,6 @@ object MusicUtils {
      * @param entityManager entity manager
      * @return count of music
      */
-    @Suppress("CheckStyle")
     fun getMusicCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(m.id) FROM Music m", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -166,8 +165,8 @@ object MusicUtils {
     /**
      * Asserts music deep equals.
      *
-     * @param expected expected music
-     * @param actual   actual music
+     * @param expected expected list of music
+     * @param actual   actual list of music
      */
     fun assertMusicDeepEquals(expected: List<com.github.vhromada.catalog.domain.Music?>?, actual: List<com.github.vhromada.catalog.domain.Music?>?) {
         assertSoftly {
@@ -194,23 +193,23 @@ object MusicUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.name).isEqualTo(actual.name)
-            it.assertThat(expected.wikiEn).isEqualTo(actual.wikiEn)
-            it.assertThat(expected.wikiCz).isEqualTo(actual.wikiCz)
-            it.assertThat(expected.mediaCount).isEqualTo(actual.mediaCount)
-            it.assertThat(expected.note).isEqualTo(actual.note)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            SongUtils.assertSongsDeepEquals(expected.songs, actual.songs)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        SongUtils.assertSongsDeepEquals(expected!!.songs, actual!!.songs)
+        AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
     }
 
     /**
      * Asserts music deep equals.
      *
      * @param expected expected list of music
-     * @param actual   actual music
+     * @param actual   actual list of music
      */
     fun assertMusicListDeepEquals(expected: List<Music?>?, actual: List<com.github.vhromada.catalog.domain.Music?>?) {
         assertSoftly {

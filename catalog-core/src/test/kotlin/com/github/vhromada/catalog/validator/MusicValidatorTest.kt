@@ -32,7 +32,7 @@ class MusicValidatorTest : MovableValidatorTest<Music, com.github.vhromada.catal
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -50,7 +50,7 @@ class MusicValidatorTest : MovableValidatorTest<Music, com.github.vhromada.catal
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         verifyZeroInteractions(service)
@@ -68,7 +68,7 @@ class MusicValidatorTest : MovableValidatorTest<Music, com.github.vhromada.catal
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL",
                     "URL to english Wikipedia page about music mustn't be null.")))
         }
 
@@ -87,7 +87,7 @@ class MusicValidatorTest : MovableValidatorTest<Music, com.github.vhromada.catal
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
                     "URL to czech Wikipedia page about music mustn't be null.")))
         }
 
@@ -106,7 +106,7 @@ class MusicValidatorTest : MovableValidatorTest<Music, com.github.vhromada.catal
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -124,7 +124,7 @@ class MusicValidatorTest : MovableValidatorTest<Music, com.github.vhromada.catal
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
         }
 
         verifyZeroInteractions(service)
@@ -142,7 +142,7 @@ class MusicValidatorTest : MovableValidatorTest<Music, com.github.vhromada.catal
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         verifyZeroInteractions(service)

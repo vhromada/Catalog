@@ -123,7 +123,6 @@ object PictureUtils {
      * @param entityManager entity manager
      * @return count of pictures
      */
-    @Suppress("CheckStyle")
     fun getPicturesCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(p.id) FROM Picture p", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -131,8 +130,8 @@ object PictureUtils {
     /**
      * Asserts pictures deep equals.
      *
-     * @param expected expected pictures
-     * @param actual   actual pictures
+     * @param expected expected list of pictures
+     * @param actual   actual list of pictures
      */
     fun assertPicturesDeepEquals(expected: List<com.github.vhromada.catalog.domain.Picture?>?, actual: List<com.github.vhromada.catalog.domain.Picture?>?) {
         assertSoftly {
@@ -159,18 +158,18 @@ object PictureUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.content).isEqualTo(actual.content)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.content).isEqualTo(expected.content)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
      * Asserts pictures deep equals.
      *
-     * @param expected expected list of picture
-     * @param actual   actual pictures
+     * @param expected expected list of pictures
+     * @param actual   actual list of pictures
      */
     fun assertPictureListDeepEquals(expected: List<Picture?>?, actual: List<com.github.vhromada.catalog.domain.Picture?>?) {
         assertSoftly {

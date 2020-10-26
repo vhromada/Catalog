@@ -33,7 +33,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
     private lateinit var entityManager: EntityManager
 
     /**
-     * Instance of (@link SongFacade}
+     * Instance of [SongFacade]
      */
     @Autowired
     private lateinit var facade: SongFacade
@@ -50,7 +50,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -68,7 +68,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -86,7 +86,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_LENGTH_NULL", "Length of song mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NULL", "Length of song mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -104,7 +104,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")))
         }
 
         assertDefaultRepositoryData()
@@ -122,7 +122,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -140,7 +140,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -158,7 +158,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -176,7 +176,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_LENGTH_NULL", "Length of song mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NULL", "Length of song mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -194,7 +194,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")))
         }
 
         assertDefaultRepositoryData()
@@ -212,7 +212,7 @@ class SongFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Song, com.gi
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()

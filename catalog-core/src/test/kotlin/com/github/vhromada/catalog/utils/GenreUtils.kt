@@ -126,7 +126,6 @@ object GenreUtils {
      * @param entityManager entity manager
      * @return count of genres
      */
-    @Suppress("CheckStyle")
     fun getGenresCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(g.id) FROM Genre g", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -134,8 +133,8 @@ object GenreUtils {
     /**
      * Asserts genres deep equals.
      *
-     * @param expected expected genres
-     * @param actual   actual genres
+     * @param expected expected list of genres
+     * @param actual   actual list of genres
      */
     fun assertGenresDeepEquals(expected: List<com.github.vhromada.catalog.domain.Genre?>?, actual: List<com.github.vhromada.catalog.domain.Genre?>?) {
         assertSoftly {
@@ -162,18 +161,18 @@ object GenreUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.name).isEqualTo(actual.name)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
      * Asserts genres deep equals.
      *
-     * @param expected expected list of genre
-     * @param actual   actual genres
+     * @param expected expected list of genres
+     * @param actual   actual list of genres
      */
     fun assertGenreListDeepEquals(expected: List<Genre?>?, actual: List<com.github.vhromada.catalog.domain.Genre?>?) {
         assertSoftly {

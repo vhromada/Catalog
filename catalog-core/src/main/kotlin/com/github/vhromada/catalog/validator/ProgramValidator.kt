@@ -37,29 +37,29 @@ class ProgramValidator(programService: MovableService<com.github.vhromada.catalo
     override fun validateDataDeep(data: Program, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
             }
         }
         validateUrls(data, result)
         when {
             data.mediaCount == null -> {
-                result.addEvent(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
             }
             data.mediaCount <= 0 -> {
-                result.addEvent(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
             }
         }
         if (data.format == null) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_FORMAT_NULL", "Format mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null."))
         }
         if (data.otherData == null) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null."))
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
         }
     }
 
@@ -76,10 +76,10 @@ class ProgramValidator(programService: MovableService<com.github.vhromada.catalo
      */
     private fun validateUrls(data: Program, result: Result<Unit>) {
         if (data.wikiEn == null) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null."))
         }
         if (data.wikiCz == null) {
-            result.addEvent(Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL", "URL to czech Wikipedia page about program mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about program mustn't be null."))
         }
     }
 

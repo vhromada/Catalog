@@ -2,6 +2,8 @@ package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Game
+import com.github.vhromada.catalog.utils.CheatDataUtils
+import com.github.vhromada.catalog.utils.CheatUtils
 import com.github.vhromada.catalog.utils.GameUtils
 import com.github.vhromada.common.facade.MovableParentFacade
 import com.github.vhromada.common.result.Event
@@ -48,7 +50,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -66,7 +68,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -84,7 +86,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -102,7 +104,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -120,7 +122,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -138,7 +140,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -156,7 +158,25 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_FORMAT_NULL", "Format mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [GameFacade.add] with game with not null cheat.
+     */
+    @Test
+    fun addNotNullCheat() {
+        val game = newData(null)
+                .copy(cheat = CheatUtils.newCheat(1))
+
+        val result = facade.add(game)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CHEAT_NOT_NULL", "Cheat must be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -174,7 +194,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -192,7 +212,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -210,7 +230,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -228,7 +248,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -246,7 +266,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -264,7 +284,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -282,7 +302,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -300,7 +320,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -318,7 +338,25 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_FORMAT_NULL", "Format mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [GameFacade.update] with game with not null cheat.
+     */
+    @Test
+    fun updateNotNullCheat() {
+        val game = newData(1)
+                .copy(cheat = CheatUtils.newCheat(1))
+
+        val result = facade.update(game)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CHEAT_NOT_NULL", "Cheat must be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -336,7 +374,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -354,7 +392,7 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -424,6 +462,61 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
 
     override fun assertDataDomainDeepEquals(expected: com.github.vhromada.catalog.domain.Game, actual: com.github.vhromada.catalog.domain.Game) {
         GameUtils.assertGameDeepEquals(expected, actual)
+    }
+
+    override fun assertDefaultRepositoryData() {
+        super.assertDefaultRepositoryData()
+
+        assertReferences()
+    }
+
+    override fun assertNewRepositoryData() {
+        super.assertNewRepositoryData()
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(0)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(0)
+        }
+    }
+
+    override fun assertAddRepositoryData() {
+        super.assertAddRepositoryData()
+
+        assertReferences()
+    }
+
+    override fun assertUpdateRepositoryData() {
+        super.assertUpdateRepositoryData()
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    override fun assertRemoveRepositoryData() {
+        super.assertRemoveRepositoryData()
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    override fun assertDuplicateRepositoryData() {
+        super.assertDuplicateRepositoryData()
+
+        assertReferences()
+    }
+
+    /**
+     * Asserts references.
+     */
+    private fun assertReferences() {
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
 }

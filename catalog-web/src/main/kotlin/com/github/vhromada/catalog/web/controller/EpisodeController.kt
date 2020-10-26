@@ -422,7 +422,6 @@ class EpisodeController(
         return "redirect:/shows/$showId/seasons/$seasonId/episodes/list"
     }
 
-
     companion object {
 
         /**

@@ -28,7 +28,7 @@ class PictureValidator(pictureService: MovableService<com.github.vhromada.catalo
      */
     override fun validateDataDeep(data: Picture, result: Result<Unit>) {
         if (data.content == null) {
-            result.addEvent(Event(Severity.ERROR, "PICTURE_CONTENT_NULL", "Content mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CONTENT_NULL", "Content mustn't be null."))
         }
     }
 

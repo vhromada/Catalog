@@ -30,10 +30,10 @@ class GenreValidator(genreService: MovableService<com.github.vhromada.catalog.do
     override fun validateDataDeep(data: Genre, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
             }
         }
     }

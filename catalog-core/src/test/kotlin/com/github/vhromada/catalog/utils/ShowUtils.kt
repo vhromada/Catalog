@@ -190,7 +190,6 @@ object ShowUtils {
      * @param entityManager entity manager
      * @return count of shows
      */
-    @Suppress("CheckStyle")
     fun getShowsCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(s.id) FROM Show s", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -198,8 +197,8 @@ object ShowUtils {
     /**
      * Asserts shows deep equals.
      *
-     * @param expected expected shows
-     * @param actual   actual shows
+     * @param expected expected list of shows
+     * @param actual   actual list of shows
      */
     fun assertShowsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Show?>?, actual: List<com.github.vhromada.catalog.domain.Show?>?) {
         assertSoftly {
@@ -226,27 +225,27 @@ object ShowUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.czechName).isEqualTo(actual.czechName)
-            it.assertThat(expected.originalName).isEqualTo(actual.originalName)
-            it.assertThat(expected.csfd).isEqualTo(actual.csfd)
-            it.assertThat(expected.imdbCode).isEqualTo(actual.imdbCode)
-            it.assertThat(expected.wikiEn).isEqualTo(actual.wikiEn)
-            it.assertThat(expected.wikiCz).isEqualTo(actual.wikiCz)
-            it.assertThat(expected.picture).isEqualTo(actual.picture)
-            it.assertThat(expected.note).isEqualTo(actual.note)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
-            SeasonUtils.assertSeasonsDeepEquals(expected.seasons, actual.seasons)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.czechName).isEqualTo(expected.czechName)
+            it.assertThat(actual.originalName).isEqualTo(expected.originalName)
+            it.assertThat(actual.csfd).isEqualTo(expected.csfd)
+            it.assertThat(actual.imdbCode).isEqualTo(expected.imdbCode)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.picture).isEqualTo(expected.picture)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        GenreUtils.assertGenresDeepEquals(expected!!.genres, actual!!.genres)
+        SeasonUtils.assertSeasonsDeepEquals(expected.seasons, actual.seasons)
+        AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
     }
 
     /**
      * Asserts shows deep equals.
      *
-     * @param expected expected shows
-     * @param actual   actual shows
+     * @param expected expected list of shows
+     * @param actual   actual list of shows
      */
     fun assertShowListDeepEquals(expected: List<Show?>?, actual: List<com.github.vhromada.catalog.domain.Show?>?) {
         assertSoftly {
@@ -283,8 +282,8 @@ object ShowUtils {
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
-            GenreUtils.assertGenreListDeepEquals(expected.genres, actual.genres)
         }
+        GenreUtils.assertGenreListDeepEquals(expected!!.genres, actual!!.genres)
     }
 
 }

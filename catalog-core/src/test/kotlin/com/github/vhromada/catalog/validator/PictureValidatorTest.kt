@@ -32,7 +32,7 @@ class PictureValidatorTest : MovableValidatorTest<Picture, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PICTURE_CONTENT_NULL", "Content mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CONTENT_NULL", "Content mustn't be null.")))
         }
 
         verifyZeroInteractions(service)

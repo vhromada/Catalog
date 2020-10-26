@@ -276,6 +276,7 @@ class GameController(
                 mediaCount = null,
                 format = null,
                 crack = null,
+                cheat = null,
                 serialKey = null,
                 patch = null,
                 trainer = null,

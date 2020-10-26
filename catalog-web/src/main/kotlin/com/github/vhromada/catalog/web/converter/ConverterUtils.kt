@@ -193,7 +193,6 @@ object ConverterUtils {
         return imdbCode.toString().padStart(7, '0')
     }
 
-
     /**
      * Converts roles.
      *

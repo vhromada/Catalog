@@ -62,22 +62,22 @@ class SongValidator(musicService: MovableService<Music>) : AbstractMovableValida
     override fun validateDataDeep(data: Song, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
             }
         }
         when {
             data.length == null -> {
-                result.addEvent(Event(Severity.ERROR, "SONG_LENGTH_NULL", "Length of song mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NULL", "Length of song mustn't be null."))
             }
             data.length < 0 -> {
-                result.addEvent(Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NEGATIVE", "Length of song mustn't be negative number."))
             }
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
         }
     }
 

@@ -36,23 +36,23 @@ class MusicValidator(musicService: MovableService<com.github.vhromada.catalog.do
     override fun validateDataDeep(data: Music, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "MUSIC_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
             }
             !StringUtils.hasText(data.name) -> {
-                result.addEvent(Event(Severity.ERROR, "MUSIC_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
             }
         }
         validateUrls(data, result)
         when {
             data.mediaCount == null -> {
-                result.addEvent(Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
             }
             data.mediaCount <= 0 -> {
-                result.addEvent(Event(Severity.ERROR, "MUSIC_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
             }
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "MUSIC_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
         }
     }
 
@@ -69,10 +69,10 @@ class MusicValidator(musicService: MovableService<com.github.vhromada.catalog.do
      */
     private fun validateUrls(data: Music, result: Result<Unit>) {
         if (data.wikiEn == null) {
-            result.addEvent(Event(Severity.ERROR, "MUSIC_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null."))
         }
         if (data.wikiCz == null) {
-            result.addEvent(Event(Severity.ERROR, "MUSIC_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null."))
         }
     }
 

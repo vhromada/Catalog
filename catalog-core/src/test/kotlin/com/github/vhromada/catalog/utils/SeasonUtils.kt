@@ -191,7 +191,6 @@ object SeasonUtils {
      * @param entityManager entity manager
      * @return count of seasons
      */
-    @Suppress("CheckStyle")
     fun getSeasonsCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(s.id) FROM Season s", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -199,8 +198,8 @@ object SeasonUtils {
     /**
      * Asserts seasons deep equals.
      *
-     * @param expected expected seasons
-     * @param actual   actual seasons
+     * @param expected expected list of seasons
+     * @param actual   actual list of seasons
      */
     fun assertSeasonsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Season?>?, actual: List<com.github.vhromada.catalog.domain.Season?>?) {
         assertSoftly {
@@ -227,24 +226,26 @@ object SeasonUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.number).isEqualTo(actual.number)
-            it.assertThat(expected.startYear).isEqualTo(actual.startYear)
-            it.assertThat(expected.endYear).isEqualTo(actual.endYear)
-            it.assertThat(expected.language).isEqualTo(actual.language)
-            it.assertThat(expected.subtitles).isEqualTo(actual.subtitles)
-            it.assertThat(expected.note).isEqualTo(actual.note)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            EpisodeUtils.assertEpisodesDeepEquals(expected.episodes, actual.episodes)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.number).isEqualTo(expected.number)
+            it.assertThat(actual.startYear).isEqualTo(expected.startYear)
+            it.assertThat(actual.endYear).isEqualTo(expected.endYear)
+            it.assertThat(actual.language).isEqualTo(expected.language)
+            it.assertThat(actual.subtitles)
+                    .hasSameSizeAs(expected.subtitles)
+                    .hasSameElementsAs(expected.subtitles)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        EpisodeUtils.assertEpisodesDeepEquals(expected!!.episodes, actual!!.episodes)
+        AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
     }
 
     /**
      * Asserts seasons deep equals.
      *
-     * @param expected expected list of season
-     * @param actual   actual seasons
+     * @param expected expected list of seasons
+     * @param actual   actual list of seasons
      */
     fun assertSeasonListDeepEquals(expected: List<Season?>?, actual: List<com.github.vhromada.catalog.domain.Season?>?) {
         assertSoftly {

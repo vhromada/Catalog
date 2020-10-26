@@ -271,7 +271,6 @@ class MovieController(
         return LIST_REDIRECT_URL
     }
 
-
     /**
      * Process adding movie.
      *

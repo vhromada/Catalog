@@ -193,7 +193,6 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
         processResult(showFacade.updatePositions())
     }
 
-
     /**
      * Returns total length of all shows.
      *

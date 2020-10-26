@@ -38,7 +38,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NUMBER_NULL", "Number of episode mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NULL", "Number of episode mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -56,7 +56,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")))
         }
 
         verifyZeroInteractions(service)
@@ -74,7 +74,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -92,7 +92,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         verifyZeroInteractions(service)
@@ -110,7 +110,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_LENGTH_NULL", "Length of episode mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NULL", "Length of episode mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -128,7 +128,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")))
         }
 
         verifyZeroInteractions(service)
@@ -146,7 +146,7 @@ class EpisodeValidatorTest : MovableValidatorTest<Episode, Show>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         verifyZeroInteractions(service)

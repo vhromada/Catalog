@@ -28,7 +28,7 @@ class GameService(
     }
 
     override fun getCopy(data: Game): Game {
-        return data.copy(id = null)
+        return data.copy(id = null, cheat = null)
     }
 
 }

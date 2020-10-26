@@ -33,7 +33,6 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
         return processResult(movieFacade.getAll())!!
     }
 
-
     /**
      * Creates new data.
      */

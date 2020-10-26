@@ -129,7 +129,6 @@ object SongUtils {
      * @param entityManager entity manager
      * @return count of songs
      */
-    @Suppress("CheckStyle")
     fun getSongsCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(s.id) FROM Song s", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -137,8 +136,8 @@ object SongUtils {
     /**
      * Asserts songs deep equals.
      *
-     * @param expected expected songs
-     * @param actual   actual songs
+     * @param expected expected list of songs
+     * @param actual   actual list of songs
      */
     fun assertSongsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Song?>?, actual: List<com.github.vhromada.catalog.domain.Song?>?) {
         assertSoftly {
@@ -165,20 +164,20 @@ object SongUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.name).isEqualTo(actual.name)
-            it.assertThat(expected.length).isEqualTo(actual.length)
-            it.assertThat(expected.note).isEqualTo(actual.note)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.length).isEqualTo(expected.length)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
      * Asserts songs deep equals.
      *
-     * @param expected expected list of song
-     * @param actual   actual songs
+     * @param expected expected list of songs
+     * @param actual   actual list of songs
      */
     fun assertSongListDeepEquals(expected: List<Song?>?, actual: List<com.github.vhromada.catalog.domain.Song?>?) {
         assertSoftly {

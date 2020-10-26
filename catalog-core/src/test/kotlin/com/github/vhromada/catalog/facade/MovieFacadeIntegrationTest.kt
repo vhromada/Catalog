@@ -55,7 +55,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -73,7 +73,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -91,7 +91,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -109,7 +109,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -127,7 +127,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_YEAR_NULL", "Year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_YEAR_NULL", "Year mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -181,7 +181,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -199,7 +199,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -217,7 +217,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -235,7 +235,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_NULL", "Media mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -253,7 +253,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -273,7 +273,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -291,7 +291,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -309,7 +309,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -381,7 +381,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL",
                     "URL to english Wikipedia page about movie mustn't be null.")))
         }
 
@@ -400,7 +400,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
                     "URL to czech Wikipedia page about movie mustn't be null.")))
         }
 
@@ -419,7 +419,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -455,7 +455,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -473,7 +473,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -567,7 +567,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_CZECH_NAME_NULL", "Czech name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -585,7 +585,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -603,7 +603,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -621,7 +621,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -639,7 +639,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_YEAR_NULL", "Year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_YEAR_NULL", "Year mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -693,7 +693,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_LANGUAGE_NULL", "Language mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -711,7 +711,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_SUBTITLES_NULL", "Subtitles mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -729,7 +729,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -747,7 +747,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_MEDIA_NULL", "Media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_NULL", "Media mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -765,7 +765,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -785,7 +785,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -803,7 +803,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -821,7 +821,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -893,7 +893,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_WIKI_EN_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL",
                     "URL to english Wikipedia page about movie mustn't be null.")))
         }
 
@@ -912,7 +912,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_WIKI_CZ_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
                     "URL to czech Wikipedia page about movie mustn't be null.")))
         }
 
@@ -931,7 +931,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -967,7 +967,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_GENRES_NULL", "Genres mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -985,7 +985,7 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "MOVIE_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -1098,7 +1098,6 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertDefaultRepositoryData()
     }
-
 
     override fun getFacade(): MovableParentFacade<Movie> {
         return facade

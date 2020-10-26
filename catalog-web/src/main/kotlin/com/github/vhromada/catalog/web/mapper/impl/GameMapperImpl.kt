@@ -39,6 +39,7 @@ class GameMapperImpl : GameMapper {
                 wikiCz = source.wikiCz,
                 mediaCount = source.mediaCount!!.toInt(),
                 format = source.format,
+                cheat = null,
                 crack = source.crack,
                 serialKey = source.serialKey,
                 patch = source.patch,

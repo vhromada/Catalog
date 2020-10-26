@@ -191,7 +191,6 @@ object ProgramUtils {
      * @param entityManager entity manager
      * @return count of programs
      */
-    @Suppress("CheckStyle")
     fun getProgramsCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(p.id) FROM Program p", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -199,8 +198,8 @@ object ProgramUtils {
     /**
      * Asserts programs deep equals.
      *
-     * @param expected expected programs
-     * @param actual   actual programs
+     * @param expected expected list of programs
+     * @param actual   actual list of programs
      */
     fun assertProgramsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Program?>?, actual: List<com.github.vhromada.catalog.domain.Program?>?) {
         assertSoftly {
@@ -227,26 +226,26 @@ object ProgramUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.name).isEqualTo(actual.name)
-            it.assertThat(expected.wikiEn).isEqualTo(actual.wikiEn)
-            it.assertThat(expected.wikiCz).isEqualTo(actual.wikiCz)
-            it.assertThat(expected.mediaCount).isEqualTo(actual.mediaCount)
-            it.assertThat(expected.format).isEqualTo(actual.format)
-            it.assertThat(expected.crack).isEqualTo(actual.crack)
-            it.assertThat(expected.serialKey).isEqualTo(actual.serialKey)
-            it.assertThat(expected.otherData).isEqualTo(actual.otherData)
-            it.assertThat(expected.note).isEqualTo(actual.note)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
+            it.assertThat(actual.format).isEqualTo(expected.format)
+            it.assertThat(actual.crack).isEqualTo(expected.crack)
+            it.assertThat(actual.serialKey).isEqualTo(expected.serialKey)
+            it.assertThat(actual.otherData).isEqualTo(expected.otherData)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
      * Asserts programs deep equals.
      *
-     * @param expected expected list of program
-     * @param actual   actual programs
+     * @param expected expected list of programs
+     * @param actual   actual list of programs
      */
     fun assertProgramListDeepEquals(expected: List<Program?>?, actual: List<com.github.vhromada.catalog.domain.Program?>?) {
         assertSoftly {

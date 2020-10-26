@@ -35,7 +35,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
     private lateinit var entityManager: EntityManager
 
     /**
-     * Instance of (@link EpisodeFacade}
+     * Instance of [EpisodeFacade]
      */
     @Autowired
     private lateinit var facade: EpisodeFacade
@@ -52,7 +52,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NUMBER_NULL", "Number of episode mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NULL", "Number of episode mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -70,7 +70,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -88,7 +88,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -106,7 +106,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -124,7 +124,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_LENGTH_NULL", "Length of episode mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NULL", "Length of episode mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -142,7 +142,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")))
         }
 
         assertDefaultRepositoryData()
@@ -160,7 +160,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -178,7 +178,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NUMBER_NULL", "Number of episode mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NULL", "Number of episode mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -196,7 +196,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NOT_POSITIVE", "Number of episode must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -214,7 +214,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -232,7 +232,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()
@@ -250,7 +250,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_LENGTH_NULL", "Length of episode mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NULL", "Length of episode mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -268,7 +268,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LENGTH_NEGATIVE", "Length of episode mustn't be negative number.")))
         }
 
         assertDefaultRepositoryData()
@@ -286,7 +286,7 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "EPISODE_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -353,7 +353,6 @@ class EpisodeFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Episode, 
 
     override fun assertDataDeepEquals(expected: Episode, actual: com.github.vhromada.catalog.domain.Episode) {
         EpisodeUtils.assertEpisodeDeepEquals(expected, actual)
-
     }
 
     override fun assertDataDomainDeepEquals(expected: com.github.vhromada.catalog.domain.Episode, actual: com.github.vhromada.catalog.domain.Episode) {

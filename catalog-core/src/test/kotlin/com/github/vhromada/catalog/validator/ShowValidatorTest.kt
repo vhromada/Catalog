@@ -76,7 +76,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null.")))
         }
 
         verifyDeepMock(show)
@@ -96,7 +96,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
         }
 
         verifyDeepMock(show)
@@ -116,7 +116,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
         }
 
         verifyDeepMock(show)
@@ -136,7 +136,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
         }
 
         verifyDeepMock(show)
@@ -156,7 +156,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")))
         }
 
         verifyDeepMock(show)
@@ -176,7 +176,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
         }
 
         verifyDeepMock(show)
@@ -256,7 +256,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_WIKI_EN_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL",
                     "URL to english Wikipedia page about show mustn't be null.")))
         }
 
@@ -277,7 +277,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_WIKI_CZ_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
                     "URL to czech Wikipedia page about show mustn't be null.")))
         }
 
@@ -298,7 +298,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         verifyDeepMock(show)
@@ -339,7 +339,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null.")))
         }
 
         verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS))
@@ -363,7 +363,7 @@ class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
         }
 
         verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS))

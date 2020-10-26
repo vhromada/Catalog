@@ -28,4 +28,9 @@ class GameFacadeImpl(
         return Result.of(service.getAll().sumBy { it.mediaCount })
     }
 
+    override fun getDataForUpdate(data: Game): com.github.vhromada.catalog.domain.Game {
+        return super.getDataForUpdate(data)
+                .copy(cheat = service.get(data.id!!).get().cheat)
+    }
+
 }

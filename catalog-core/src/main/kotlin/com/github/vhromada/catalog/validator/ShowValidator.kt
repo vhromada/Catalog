@@ -54,7 +54,7 @@ class ShowValidator(
         validateNames(data, result)
         validateUrls(data, result)
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
         }
         validatePicture(data, result)
         validateGenres(data, result)
@@ -76,18 +76,18 @@ class ShowValidator(
     private fun validateNames(data: Show, result: Result<Unit>) {
         when {
             data.czechName == null -> {
-                result.addEvent(Event(Severity.ERROR, "SHOW_CZECH_NAME_NULL", "Czech name mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null."))
             }
             data.czechName.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "SHOW_CZECH_NAME_EMPTY", "Czech name mustn't be empty string."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string."))
             }
         }
         when {
             data.originalName == null -> {
-                result.addEvent(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_NULL", "Original name mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null."))
             }
             data.originalName.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "SHOW_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."))
             }
         }
     }
@@ -108,21 +108,21 @@ class ShowValidator(
      */
     private fun validateUrls(data: Show, result: Result<Unit>) {
         if (data.csfd == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_CSFD_NULL", "URL to ČSFD page about show mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about show mustn't be null."))
         }
         when {
             data.imdbCode == null -> {
-                result.addEvent(Event(Severity.ERROR, "SHOW_IMDB_CODE_NULL", "IMDB code mustn't be null."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null."))
             }
             data.imdbCode != -1 && (data.imdbCode < 1 || data.imdbCode > Constants.MAX_IMDB_CODE) -> {
-                result.addEvent(Event(Severity.ERROR, "SHOW_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1."))
             }
         }
         if (data.wikiEn == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_WIKI_EN_NULL", "URL to english Wikipedia page about show mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about show mustn't be null."))
         }
         if (data.wikiCz == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_WIKI_CZ_NULL", "URL to czech Wikipedia page about show mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about show mustn't be null."))
         }
     }
 
@@ -161,10 +161,10 @@ class ShowValidator(
      */
     private fun validateGenres(data: Show, result: Result<Unit>) {
         if (data.genres == null) {
-            result.addEvent(Event(Severity.ERROR, "SHOW_GENRES_NULL", "Genres mustn't be null."))
+            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null."))
         } else {
             if (data.genres.contains(null)) {
-                result.addEvent(Event(Severity.ERROR, "SHOW_GENRES_CONTAIN_NULL", "Genres mustn't contain null value."))
+                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value."))
             }
             for (genre in data.genres) {
                 if (genre != null) {

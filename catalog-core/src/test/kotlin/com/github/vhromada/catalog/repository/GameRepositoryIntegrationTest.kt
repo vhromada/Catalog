@@ -2,9 +2,12 @@ package com.github.vhromada.catalog.repository
 
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.utils.AuditUtils
+import com.github.vhromada.catalog.utils.CheatDataUtils
+import com.github.vhromada.catalog.utils.CheatUtils
 import com.github.vhromada.catalog.utils.GameUtils
 import com.github.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,7 +51,11 @@ class GameRepositoryIntegrationTest {
 
         GameUtils.assertGamesDeepEquals(GameUtils.getGames(), games)
 
-        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+        assertSoftly {
+            it.assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -65,7 +72,11 @@ class GameRepositoryIntegrationTest {
 
         assertThat(gameRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
 
-        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+        assertSoftly {
+            it.assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -86,7 +97,11 @@ class GameRepositoryIntegrationTest {
                 .copy(id = GameUtils.GAMES_COUNT + 1, position = GameUtils.GAMES_COUNT, audit = audit)
         GameUtils.assertGameDeepEquals(expectedAddGame, addedGame)
 
-        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT + 1)
+        assertSoftly {
+            it.assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT + 1)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -104,7 +119,11 @@ class GameRepositoryIntegrationTest {
                 .copy(position = GameUtils.POSITION)
         GameUtils.assertGameDeepEquals(expectedUpdatedGame, updatedGame)
 
-        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+        assertSoftly {
+            it.assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -112,11 +131,15 @@ class GameRepositoryIntegrationTest {
      */
     @Test
     fun remove() {
-        gameRepository.delete(GameUtils.getGame(entityManager, 1)!!)
+        gameRepository.delete(GameUtils.getGame(entityManager, 2)!!)
 
-        assertThat(GameUtils.getGame(entityManager, 1)).isNull()
+        assertThat(GameUtils.getGame(entityManager, 2)).isNull()
 
-        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT - 1)
+        assertSoftly {
+            it.assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT - 1)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT - 1)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT - CheatDataUtils.CHEAT_DATA_CHEAT_COUNT)
+        }
     }
 
     /**
@@ -126,7 +149,11 @@ class GameRepositoryIntegrationTest {
     fun removeAll() {
         gameRepository.deleteAll()
 
-        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(0)
+        assertSoftly {
+            it.assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(0)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(0)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(0)
+        }
     }
 
     /**
@@ -138,7 +165,11 @@ class GameRepositoryIntegrationTest {
 
         GameUtils.assertGamesDeepEquals(GameUtils.getGames(), games)
 
-        assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+        assertSoftly {
+            it.assertThat(GameUtils.getGamesCount(entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
 }

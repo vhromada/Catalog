@@ -47,10 +47,10 @@ object AuditUtils {
         } else {
             assertThat(actual).isNotNull
             assertSoftly {
-                it.assertThat(expected.createdUser).isEqualTo(actual!!.createdUser)
-                it.assertThat(expected.createdTime).isEqualToIgnoringNanos(actual.createdTime)
-                it.assertThat(expected.updatedUser).isEqualTo(actual.updatedUser)
-                it.assertThat(expected.updatedTime).isEqualToIgnoringNanos(actual.updatedTime)
+                it.assertThat(actual!!.createdUser).isEqualTo(expected.createdUser)
+                it.assertThat(actual.createdTime).isEqualToIgnoringNanos(expected.createdTime)
+                it.assertThat(actual.updatedUser).isEqualTo(expected.updatedUser)
+                it.assertThat(actual.updatedTime).isEqualToIgnoringNanos(expected.updatedTime)
             }
         }
     }

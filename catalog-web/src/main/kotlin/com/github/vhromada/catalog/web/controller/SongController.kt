@@ -329,7 +329,6 @@ class SongController(
         throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
     }
 
-
     /**
      * Returns page's view with form.
      *

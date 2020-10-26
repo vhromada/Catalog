@@ -32,7 +32,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -50,7 +50,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         verifyZeroInteractions(service)
@@ -68,7 +68,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about program mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -86,7 +86,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_WIKI_CZ_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
                     "URL to czech Wikipedia page about program mustn't be null.")))
         }
 
@@ -105,7 +105,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -123,7 +123,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
         }
 
         verifyZeroInteractions(service)
@@ -141,7 +141,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_FORMAT_NULL", "Format mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -159,7 +159,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_OTHER_DATA_NULL", "Other data mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -177,7 +177,7 @@ class ProgramValidatorTest : MovableValidatorTest<Program, com.github.vhromada.c
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PROGRAM_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         verifyZeroInteractions(service)

@@ -38,7 +38,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -56,7 +56,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         verifyZeroInteractions(service)
@@ -74,7 +74,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_LENGTH_NULL", "Length of song mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NULL", "Length of song mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -92,7 +92,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")))
         }
 
         verifyZeroInteractions(service)
@@ -110,7 +110,7 @@ class SongValidatorTest : MovableValidatorTest<Song, Music>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SONG_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         verifyZeroInteractions(service)

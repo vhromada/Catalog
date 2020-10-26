@@ -30,7 +30,6 @@ class DateRangeValidator : ConstraintValidator<DateRange, String> {
         return date.toInt() in minDate..Constants.CURRENT_YEAR
     }
 
-    @Suppress("CheckStyle")
     companion object {
 
         /**

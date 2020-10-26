@@ -38,7 +38,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
     private lateinit var entityManager: EntityManager
 
     /**
-     * Instance of (@link SeasonFacade}
+     * Instance of [SeasonFacade]
      */
     @Autowired
     private lateinit var facade: SeasonFacade
@@ -55,7 +55,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_NUMBER_NULL", "Number of season mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NULL", "Number of season mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -73,7 +73,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -91,7 +91,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_START_YEAR_NULL", "Starting year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_START_YEAR_NULL", "Starting year mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -109,7 +109,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_END_YEAR_NULL", "Ending year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_END_YEAR_NULL", "Ending year mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -163,7 +163,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
         }
 
         assertDefaultRepositoryData()
@@ -181,7 +181,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -199,7 +199,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -217,7 +217,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -235,7 +235,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -253,7 +253,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_NUMBER_NULL", "Number of season mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NULL", "Number of season mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -271,7 +271,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")))
         }
 
         assertDefaultRepositoryData()
@@ -289,7 +289,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_START_YEAR_NULL", "Starting year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_START_YEAR_NULL", "Starting year mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -307,7 +307,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_END_YEAR_NULL", "Ending year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_END_YEAR_NULL", "Ending year mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -361,7 +361,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
         }
 
         assertDefaultRepositoryData()
@@ -379,7 +379,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_LANGUAGE_NULL", "Language mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -397,7 +397,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_SUBTITLES_NULL", "Subtitles mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
         }
 
         assertDefaultRepositoryData()
@@ -415,7 +415,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
         }
 
         assertDefaultRepositoryData()
@@ -433,7 +433,7 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "SEASON_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         assertDefaultRepositoryData()

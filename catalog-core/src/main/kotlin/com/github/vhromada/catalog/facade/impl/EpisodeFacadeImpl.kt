@@ -183,7 +183,6 @@ class EpisodeFacadeImpl(
         throw IllegalStateException("Unknown episode")
     }
 
-
     /**
      * Returns episode with ID.
      *
@@ -202,7 +201,6 @@ class EpisodeFacadeImpl(
 
         throw IllegalStateException("Unknown episode")
     }
-
 
     /**
      * Updates season in show.

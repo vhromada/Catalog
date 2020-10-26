@@ -69,7 +69,6 @@ object MediumUtils {
      * @param entityManager entity manager
      * @return count of media
      */
-    @Suppress("CheckStyle")
     fun getMediaCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(m.id) FROM Medium m", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -77,8 +76,8 @@ object MediumUtils {
     /**
      * Asserts media deep equals.
      *
-     * @param expected expected media
-     * @param actual   actual media
+     * @param expected expected list of media
+     * @param actual   actual list of media
      */
     fun assertMediaDeepEquals(expected: List<com.github.vhromada.catalog.domain.Medium?>?, actual: List<com.github.vhromada.catalog.domain.Medium?>?) {
         assertSoftly {
@@ -105,18 +104,18 @@ object MediumUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.number).isEqualTo(actual.number)
-            it.assertThat(expected.length).isEqualTo(actual.length)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.number).isEqualTo(expected.number)
+            it.assertThat(actual.length).isEqualTo(expected.length)
         }
+        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
      * Asserts media deep equals.
      *
-     * @param expected expected list of medium
-     * @param actual   actual media
+     * @param expected expected list of media
+     * @param actual   actual list of media
      */
     fun assertMediumListDeepEquals(expected: List<Medium?>?, actual: List<com.github.vhromada.catalog.domain.Medium?>?) {
         assertSoftly {

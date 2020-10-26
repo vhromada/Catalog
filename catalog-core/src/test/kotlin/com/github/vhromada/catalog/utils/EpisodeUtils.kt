@@ -151,7 +151,6 @@ object EpisodeUtils {
      * @param entityManager entity manager
      * @return count of episodes
      */
-    @Suppress("CheckStyle")
     fun getEpisodesCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(e.id) FROM Episode e", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -159,8 +158,8 @@ object EpisodeUtils {
     /**
      * Asserts episodes deep equals.
      *
-     * @param expected expected episodes
-     * @param actual   actual episodes
+     * @param expected expected list of episodes
+     * @param actual   actual list of episodes
      */
     fun assertEpisodesDeepEquals(expected: List<com.github.vhromada.catalog.domain.Episode?>?, actual: List<com.github.vhromada.catalog.domain.Episode?>?) {
         assertSoftly {
@@ -187,21 +186,21 @@ object EpisodeUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.number).isEqualTo(actual.number)
-            it.assertThat(expected.name).isEqualTo(actual.name)
-            it.assertThat(expected.length).isEqualTo(actual.length)
-            it.assertThat(expected.note).isEqualTo(actual.note)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.number).isEqualTo(expected.number)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.length).isEqualTo(expected.length)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
      * Asserts episodes deep equals.
      *
-     * @param expected expected list of episode
-     * @param actual   actual episodes
+     * @param expected expected list of episodes
+     * @param actual   actual list of episodes
      */
     fun assertEpisodeListDeepEquals(expected: List<Episode?>?, actual: List<com.github.vhromada.catalog.domain.Episode?>?) {
         assertSoftly {

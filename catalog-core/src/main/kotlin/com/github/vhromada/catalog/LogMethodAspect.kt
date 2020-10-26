@@ -25,7 +25,6 @@ class LogMethodAspect {
      */
     @Around("catalogFacadePointcut() || commonFacadePointcut()")
     @Throws(Throwable::class)
-    //CHECKSTYLE.OFF: IllegalThrows
     fun log(proceedingJoinPoint: ProceedingJoinPoint): Any {
         val result: Any
 
@@ -45,7 +44,6 @@ class LogMethodAspect {
 
         return result
     }
-    //CHECKSTYLE.ON: IllegalThrows
 
     /**
      * Pointcut for facade layer

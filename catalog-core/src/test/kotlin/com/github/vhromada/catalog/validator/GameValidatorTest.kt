@@ -1,6 +1,7 @@
 package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.entity.Game
+import com.github.vhromada.catalog.utils.CheatUtils
 import com.github.vhromada.catalog.utils.GameUtils
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
@@ -32,7 +33,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -50,7 +51,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
         }
 
         verifyZeroInteractions(service)
@@ -68,7 +69,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -86,7 +87,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_WIKI_CZ_NULL",
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
                     "URL to czech Wikipedia page about game mustn't be null.")))
         }
 
@@ -105,7 +106,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -123,7 +124,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
         }
 
         verifyZeroInteractions(service)
@@ -141,7 +142,25 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_FORMAT_NULL", "Format mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null.")))
+        }
+
+        verifyZeroInteractions(service)
+    }
+
+    /**
+     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with not null cheat.
+     */
+    @Test
+    fun validateDeepNotNullCheat() {
+        val game = getValidatingData(1)
+                .copy(cheat = CheatUtils.newCheat(1))
+
+        val result = getValidator().validate(game, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CHEAT_NOT_NULL", "Cheat must be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -159,7 +178,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_OTHER_DATA_NULL", "Other data mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -177,7 +196,7 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
         }
 
         verifyZeroInteractions(service)

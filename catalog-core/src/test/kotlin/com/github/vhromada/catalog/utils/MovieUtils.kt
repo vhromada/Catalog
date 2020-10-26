@@ -243,7 +243,6 @@ object MovieUtils {
      * @param entityManager entity manager
      * @return count of movies
      */
-    @Suppress("CheckStyle")
     fun getMoviesCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(m.id) FROM Movie m", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -251,8 +250,8 @@ object MovieUtils {
     /**
      * Asserts movies deep equals.
      *
-     * @param expected expected movies
-     * @param actual   actual movies
+     * @param expected expected list of movies
+     * @param actual   actual list of movies
      */
     fun assertMoviesDeepEquals(expected: List<com.github.vhromada.catalog.domain.Movie?>?, actual: List<com.github.vhromada.catalog.domain.Movie?>?) {
         assertSoftly {
@@ -279,30 +278,32 @@ object MovieUtils {
             it.assertThat(actual).isNotNull
         }
         assertSoftly {
-            it.assertThat(expected!!.id).isEqualTo(actual!!.id)
-            it.assertThat(expected.czechName).isEqualTo(actual.czechName)
-            it.assertThat(expected.originalName).isEqualTo(actual.originalName)
-            it.assertThat(expected.year).isEqualTo(actual.year)
-            it.assertThat(expected.language).isEqualTo(actual.language)
-            it.assertThat(expected.subtitles).isEqualTo(actual.subtitles)
-            MediumUtils.assertMediaDeepEquals(expected.media, actual.media)
-            it.assertThat(expected.csfd).isEqualTo(actual.csfd)
-            it.assertThat(expected.imdbCode).isEqualTo(actual.imdbCode)
-            it.assertThat(expected.wikiEn).isEqualTo(actual.wikiEn)
-            it.assertThat(expected.wikiCz).isEqualTo(actual.wikiCz)
-            it.assertThat(expected.picture).isEqualTo(actual.picture)
-            it.assertThat(expected.note).isEqualTo(actual.note)
-            it.assertThat(expected.position).isEqualTo(actual.position)
-            GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
-            AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.czechName).isEqualTo(expected.czechName)
+            it.assertThat(actual.originalName).isEqualTo(expected.originalName)
+            it.assertThat(actual.year).isEqualTo(expected.year)
+            it.assertThat(actual.language).isEqualTo(expected.language)
+            it.assertThat(actual.subtitles)
+                    .hasSameSizeAs(expected.subtitles)
+                    .hasSameElementsAs(expected.subtitles)
+            it.assertThat(actual.csfd).isEqualTo(expected.csfd)
+            it.assertThat(actual.imdbCode).isEqualTo(expected.imdbCode)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.picture).isEqualTo(expected.picture)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        MediumUtils.assertMediaDeepEquals(expected!!.media, actual!!.media)
+        GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
+        AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
     }
 
     /**
      * Asserts movies deep equals.
      *
-     * @param expected expected list of To for movie
-     * @param actual   actual movies
+     * @param expected expected list of movies
+     * @param actual   actual list of movies
      */
     fun assertMovieListDeepEquals(expected: List<Movie?>?, actual: List<com.github.vhromada.catalog.domain.Movie?>?) {
         assertSoftly {
@@ -337,7 +338,6 @@ object MovieUtils {
             it.assertThat(actual.subtitles)
                     .hasSameSizeAs(expected.subtitles)
                     .hasSameElementsAs(expected.subtitles)
-            MediumUtils.assertMediumListDeepEquals(expected.media, actual.media)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)
             it.assertThat(actual.imdbCode).isEqualTo(expected.imdbCode)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
@@ -345,8 +345,9 @@ object MovieUtils {
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
-            GenreUtils.assertGenreListDeepEquals(expected.genres, actual.genres)
         }
+        MediumUtils.assertMediumListDeepEquals(expected!!.media, actual!!.media)
+        GenreUtils.assertGenreListDeepEquals(expected.genres, actual.genres)
     }
 
 }

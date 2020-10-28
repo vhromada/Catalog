@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
  * @author Vladimir Hromada
  */
 @Component("gameMapper")
-class GameMapper(private val cheatMapper: CheatMapper) : Mapper<Game, com.github.vhromada.catalog.domain.Game> {
+class GameMapper : Mapper<Game, com.github.vhromada.catalog.domain.Game> {
 
     override fun map(source: Game): com.github.vhromada.catalog.domain.Game {
         return com.github.vhromada.catalog.domain.Game(
@@ -20,7 +20,7 @@ class GameMapper(private val cheatMapper: CheatMapper) : Mapper<Game, com.github
                 wikiCz = source.wikiCz,
                 mediaCount = source.mediaCount!!,
                 format = source.format!!,
-                cheat = if (source.cheat == null) null else cheatMapper.map(source.cheat),
+                cheat = null,
                 crack = source.crack!!,
                 serialKey = source.serialKey!!,
                 patch = source.patch!!,
@@ -42,7 +42,6 @@ class GameMapper(private val cheatMapper: CheatMapper) : Mapper<Game, com.github
                 wikiCz = source.wikiCz,
                 mediaCount = source.mediaCount,
                 format = source.format,
-                cheat = if (source.cheat == null) null else cheatMapper.mapBack(source.cheat),
                 crack = source.crack,
                 serialKey = source.serialKey,
                 patch = source.patch,

@@ -2,10 +2,12 @@ package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.catalog.entity.Game
+import com.github.vhromada.catalog.facade.CheatFacade
 import com.github.vhromada.catalog.facade.GameFacade
+import com.github.vhromada.catalog.web.domain.GameData
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.GameFO
-import com.github.vhromada.catalog.web.mapper.GameMapper
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -25,7 +27,8 @@ import javax.validation.Valid
 @RequestMapping("/games")
 class GameController(
         private val gameFacade: GameFacade,
-        private val gameMapper: GameMapper) : AbstractResultController() {
+        private val cheatFacade: CheatFacade,
+        private val gameMapper: Mapper<Game, GameFO>) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -51,7 +54,14 @@ class GameController(
         val mediaCountResult = gameFacade.getTotalMediaCount()
         processResults(gamesResult, mediaCountResult)
 
-        model.addAttribute("games", gamesResult.data)
+        val games = gamesResult.data?.map {
+            val cheatResult = cheatFacade.find(it)
+            processResults(cheatResult)
+
+            GameData(game = it, cheat = cheatResult.data?.firstOrNull())
+        }
+
+        model.addAttribute("games", games)
         model.addAttribute("mediaCount", mediaCountResult.data)
         model.addAttribute("title", "Games")
 
@@ -62,7 +72,7 @@ class GameController(
      * Shows page with detail of game.
      *
      * @param model model
-     * @param id    ID of editing game
+     * @param id    ID of showing game
      * @return view for page with detail of game
      * @throws IllegalRequestException if game doesn't exist
      */
@@ -73,7 +83,10 @@ class GameController(
 
         val game = result.data
         if (game != null) {
-            model.addAttribute("game", game)
+            val cheatResult = cheatFacade.find(game)
+            processResults(cheatResult)
+
+            model.addAttribute("game", GameData(game = game, cheat = cheatResult.data?.firstOrNull()))
             model.addAttribute("title", "Game detail")
 
             return "game/detail"
@@ -276,7 +289,6 @@ class GameController(
                 mediaCount = null,
                 format = null,
                 crack = null,
-                cheat = null,
                 serialKey = null,
                 patch = null,
                 trainer = null,

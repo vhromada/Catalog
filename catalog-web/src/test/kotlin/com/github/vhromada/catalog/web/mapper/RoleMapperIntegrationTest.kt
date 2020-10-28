@@ -3,6 +3,7 @@ package com.github.vhromada.catalog.web.mapper
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.fo.RoleFO
 import com.github.vhromada.common.account.entity.UpdateRoles
+import com.github.vhromada.common.mapper.Mapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,13 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class RoleMapperTest {
+class RoleMapperIntegrationTest {
 
     /**
-     * Mapper for roles
+     * Instance of [RoleMapper]
      */
     @Autowired
-    private lateinit var mapper: RoleMapper
+    private lateinit var mapper: Mapper<RoleFO, UpdateRoles>
 
     /**
      * Test method for [RoleMapper.map].

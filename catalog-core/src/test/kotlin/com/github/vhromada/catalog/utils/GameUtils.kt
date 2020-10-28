@@ -141,7 +141,6 @@ object GameUtils {
                 wikiCz = null,
                 mediaCount = 0,
                 format = Format.STEAM,
-                cheat = null,
                 crack = false,
                 serialKey = false,
                 patch = false,

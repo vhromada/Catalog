@@ -10,8 +10,8 @@ import com.github.vhromada.catalog.facade.ShowFacade
 import com.github.vhromada.catalog.web.domain.ShowData
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.ShowFO
-import com.github.vhromada.catalog.web.mapper.ShowMapper
 import com.github.vhromada.common.entity.Time
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.util.Assert
@@ -37,7 +37,7 @@ class ShowController(
         private val episodeFacade: EpisodeFacade,
         private val pictureFacade: PictureFacade,
         private val genreFacade: GenreFacade,
-        private val showMapper: ShowMapper) : AbstractResultController() {
+        private val showMapper: Mapper<Show, ShowFO>) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -78,7 +78,7 @@ class ShowController(
      * Shows page with detail of show.
      *
      * @param model model
-     * @param id    ID of editing show
+     * @param id    ID of showing show
      * @return view for page with detail of show
      * @throws IllegalRequestException if show doesn't exist
      */

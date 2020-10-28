@@ -1,8 +1,9 @@
 package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.catalog.web.fo.AccountFO
-import com.github.vhromada.catalog.web.mapper.AccountMapper
+import com.github.vhromada.common.account.entity.Credentials
 import com.github.vhromada.common.account.facade.AccountFacade
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -21,7 +22,7 @@ import javax.validation.Valid
 @RequestMapping("/registration")
 class RegistrationController(
         private val accountFacade: AccountFacade,
-        private val accountMapper: AccountMapper) : AbstractResultController() {
+        private val accountMapper: Mapper<AccountFO, Credentials>) : AbstractResultController() {
 
     /**
      * Shows page for registration.

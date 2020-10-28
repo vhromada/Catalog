@@ -85,15 +85,15 @@ object MovieUtils {
             it.assertThat<Language>(actual.language).isEqualTo(expected.language)
             it.assertThat<Language>(actual.subtitles).isEqualTo(expected.subtitles)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)
-            CatalogUtils.assertImdbCodeDeepEquals(expected.imdb, expected.imdbCode, actual.imdbCode)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
-            assertMediaDeepEquals(expected.media, actual.media)
-            GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
         }
+        CatalogUtils.assertImdbCodeDeepEquals(expected!!.imdb, expected.imdbCode, actual!!.imdbCode)
+        assertMediaDeepEquals(expected.media, actual.media)
+        GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
     }
 
     /**
@@ -128,8 +128,8 @@ object MovieUtils {
         assertSoftly {
             it.assertThat(actual!!.id).isNull()
             it.assertThat(actual.number).isEqualTo(index + 1)
-            TimeUtils.assertTimeDeepEquals(expected, actual.length)
         }
+        TimeUtils.assertTimeDeepEquals(expected, actual!!.length)
     }
 
     /**
@@ -151,15 +151,15 @@ object MovieUtils {
             it.assertThat<Language>(actual.language).isEqualTo(expected.language)
             it.assertThat(actual.subtitles).isEqualTo(expected.subtitles)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)
-            CatalogUtils.assertImdbDeepEquals(expected.imdbCode, actual.imdb, actual.imdbCode)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
-            assertMediumListDeepEquals(expected.media, actual.media)
-            GenreUtils.assertGenreListDeepEquals(expected.genres, actual.genres)
         }
+        CatalogUtils.assertImdbDeepEquals(expected!!.imdbCode, actual!!.imdb, actual.imdbCode)
+        assertMediumListDeepEquals(expected.media, actual.media)
+        GenreUtils.assertGenreListDeepEquals(expected.genres, actual.genres)
     }
 
     /**
@@ -176,10 +176,8 @@ object MovieUtils {
         assertThat(actual!!.size).isEqualTo(expected!!.size)
         for (i in expected.indices) {
             val actualTime = actual[i]
-            assertSoftly {
-                it.assertThat(actualTime).isNotNull
-                TimeUtils.assertTimeDeepEquals(actualTime, expected[i]!!.length)
-            }
+            assertThat(actualTime).isNotNull
+            TimeUtils.assertTimeDeepEquals(actualTime, expected[i]!!.length)
         }
     }
 

@@ -4,7 +4,7 @@ import com.github.vhromada.catalog.entity.Movie
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.common.MovieUtils
 import com.github.vhromada.catalog.web.fo.MovieFO
-import com.github.vhromada.catalog.web.mapper.impl.MovieMapperImpl
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,16 +18,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class MovieMapperTest {
+class MovieMapperIntegrationTest {
 
     /**
-     * Mapper for movies
+     * Instance of [MovieMapper]
      */
     @Autowired
-    private lateinit var mapper: MovieMapper
+    private lateinit var mapper: Mapper<Movie, MovieFO>
 
     /**
-     * Test method for [MovieMapperImpl.map].
+     * Test method for [MovieMapper.map].
      */
     @Test
     fun map() {
@@ -39,7 +39,7 @@ class MovieMapperTest {
     }
 
     /**
-     * Test method for [MovieMapperImpl.mapBack].
+     * Test method for [MovieMapper.mapBack].
      */
     @Test
     fun mapBack() {

@@ -1,5 +1,7 @@
 package com.github.vhromada.catalog.mapper
 
+import com.github.vhromada.catalog.entity.Genre
+import com.github.vhromada.catalog.entity.Medium
 import com.github.vhromada.catalog.entity.Movie
 import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Component
@@ -11,8 +13,8 @@ import org.springframework.stereotype.Component
  */
 @Component("movieMapper")
 class MovieMapper(
-        private val mediumMapper: MediumMapper,
-        private val genreMapper: GenreMapper) : Mapper<Movie, com.github.vhromada.catalog.domain.Movie> {
+        private val mediumMapper: Mapper<Medium, com.github.vhromada.catalog.domain.Medium>,
+        private val genreMapper: Mapper<Genre, com.github.vhromada.catalog.domain.Genre>) : Mapper<Movie, com.github.vhromada.catalog.domain.Movie> {
 
     override fun map(source: Movie): com.github.vhromada.catalog.domain.Movie {
         return com.github.vhromada.catalog.domain.Movie(

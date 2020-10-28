@@ -51,6 +51,9 @@
                             </a>
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="2"><a th:href="@{|/shows/${show.show.id}/seasons/list|}">Seasons</a></td>
+                    </tr>
                     <tr th:if="${!#strings.isEmpty(show.show.wikiCz)}">
                         <td colspan="2"><a th:href="@{|http://cz.wikipedia.org/wiki/${show.show.wikiCz}|}" target="_blank">Czech Wikipedia</a></td>
                     </tr>

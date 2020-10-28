@@ -1,9 +1,9 @@
 package com.github.vhromada.catalog.web.mapper
 
-import com.github.vhromada.catalog.entity.Song
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.SongUtils
-import com.github.vhromada.catalog.web.fo.SongFO
+import com.github.vhromada.catalog.web.common.TimeUtils
+import com.github.vhromada.catalog.web.fo.TimeFO
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,42 +11,42 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 /**
- * A class represents test for mapper between [Song] and [SongFO].
+ * A class represents test for mapper between [Int] and [TimeFO].
  *
  * @author Vladimir Hromada
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class SongMapperTest {
+class TimeMapperIntegrationTest {
 
     /**
-     * Mapper for songs
+     * Instance of [TimeMapper]
      */
     @Autowired
-    private lateinit var mapper: SongMapper
+    private lateinit var mapper: Mapper<Int, TimeFO>
 
     /**
-     * Test method for [SongMapper.map].
+     * Test method for [TimeMapper.map].
      */
     @Test
     fun map() {
-        val song = SongUtils.getSong()
+        val length = 100
 
-        val songFO = mapper.map(song)
+        val time = mapper.map(length)
 
-        SongUtils.assertSongDeepEquals(songFO, song)
+        TimeUtils.assertTimeDeepEquals(time, length)
     }
 
     /**
-     * Test method for [SongMapper.mapBack].
+     * Test method for [TimeMapper.mapBack].
      */
     @Test
     fun mapBack() {
-        val songFO = SongUtils.getSongFO()
+        val time = TimeUtils.getTimeFO()
 
-        val song = mapper.mapBack(songFO)
+        val length = mapper.mapBack(time)
 
-        SongUtils.assertSongDeepEquals(songFO, song)
+        TimeUtils.assertTimeDeepEquals(time, length)
     }
 
 }

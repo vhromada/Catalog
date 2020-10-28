@@ -25,7 +25,6 @@ interface GameFacade : MovableParentFacade<Game> {
      *  * Count of media is null
      *  * Count of media isn't positive number
      *  * Format is null
-     *  * Cheat is not null
      *  * Other data is null
      *  * Note is null
      *
@@ -48,7 +47,6 @@ interface GameFacade : MovableParentFacade<Game> {
      *  * Count of media is null
      *  * Count of media isn't positive number
      *  * Format is null
-     *  * Cheat is not null
      *  * Other data is null
      *  * Note is null
      *  * Game doesn't exist in data storage

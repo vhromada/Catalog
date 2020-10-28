@@ -20,8 +20,14 @@ interface CheatFacade : MovableChildFacade<Cheat, Game> {
      *  * Game ID is null
      *  * Game doesn't exist in data storage
      *  * Cheat ID isn't null
-     *  * Cheat setting for game is null
-     *  * Cheat setting for cheat is null
+     *  * Setting for game is null
+     *  * Setting for cheat is null
+     *  * Cheat's data are null
+     *  * Cheat's data contain null value
+     *  * Action is null
+     *  * Action is empty string
+     *  * Description is null
+     *  * Description is empty string
      *  * Game has already cheat in data storage
      *
      * @param parent  game
@@ -38,6 +44,12 @@ interface CheatFacade : MovableChildFacade<Cheat, Game> {
      *  * ID is null
      *  * Setting for game is null
      *  * Setting for cheat is null
+     *  * Cheat's data are null
+     *  * Cheat's data contain null value
+     *  * Action is null
+     *  * Action is empty string
+     *  * Description is null
+     *  * Description is empty string
      *  * Cheat doesn't exist in data storage
      *
      * @param data new value of cheat

@@ -4,6 +4,7 @@ import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.common.GenreUtils
 import com.github.vhromada.catalog.web.fo.GenreFO
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class GenreMapperTest {
+class GenreMapperIntegrationTest {
 
     /**
-     * Mapper for genres
+     * Instance of [GenreMapper]
      */
     @Autowired
-    private lateinit var mapper: GenreMapper
+    private lateinit var mapper: Mapper<Genre, GenreFO>
 
     /**
      * Test method for [GenreMapper.map].

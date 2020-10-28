@@ -54,10 +54,10 @@ object EpisodeUtils {
             it.assertThat(actual!!.id).isEqualTo(expected!!.id)
             it.assertThat(actual.number).isEqualTo(expected.number!!.toInt())
             it.assertThat(actual.name).isEqualTo(expected.name)
-            TimeUtils.assertTimeDeepEquals(expected.length, actual.length)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
         }
+        TimeUtils.assertTimeDeepEquals(expected!!.length, actual!!.length)
     }
 
 }

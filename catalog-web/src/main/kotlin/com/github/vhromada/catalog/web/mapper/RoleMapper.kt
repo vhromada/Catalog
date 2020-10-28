@@ -2,20 +2,23 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.web.fo.RoleFO
 import com.github.vhromada.common.account.entity.UpdateRoles
+import com.github.vhromada.common.mapper.Mapper
+import org.springframework.stereotype.Component
 
 /**
- * An interface represents mapper for roles.
+ * A class represents mapper for roles.
  *
  * @author Vladimir Hromada
  */
-interface RoleMapper {
+@Component("webRoleMapper")
+class RoleMapper : Mapper<RoleFO, UpdateRoles> {
 
-    /**
-     * Returns updating roles.
-     *
-     * @param source FO for role
-     * @return updating roles
-     */
-    fun map(source: RoleFO): UpdateRoles
+    override fun map(source: RoleFO): UpdateRoles {
+        return UpdateRoles(roles = source.roles)
+    }
+
+    override fun mapBack(source: UpdateRoles): RoleFO {
+        throw UnsupportedOperationException("Not supported")
+    }
 
 }

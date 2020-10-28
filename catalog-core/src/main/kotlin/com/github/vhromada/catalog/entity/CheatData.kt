@@ -1,6 +1,6 @@
 package com.github.vhromada.catalog.entity
 
-import com.github.vhromada.common.entity.Movable
+import java.io.Serializable
 import java.util.Objects
 
 /**
@@ -13,7 +13,7 @@ data class CheatData(
         /**
          * ID
          */
-        override var id: Int?,
+        val id: Int?,
 
         /**
          * Action
@@ -23,12 +23,7 @@ data class CheatData(
         /**
          * Description
          */
-        val description: String?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+        val description: String?) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

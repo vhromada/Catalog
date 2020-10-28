@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="game" type="java.lang.Integer"*/-->
+    <body>
+        <th:block th:fragment="menu">
+            <th:block th:replace="game/menu :: menu"/>
+            <div class="navbar navbar-light bg-light navbar-expand-md innerMenu">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item"><a th:href="@{|/games/${gameId}/cheats|}" class="nav-link">Cheats</a></li>
+                    <li class="nav-item"><a th:href="@{|/games/${gameId}/cheats/edit|}" class="nav-link">Edit cheats</a></li>
+                    <li class="nav-item"><a th:href="@{|/games/${gameId}/cheats/remove|}" class="nav-link">Remove cheats</a></li>
+                </ul>
+            </div>
+        </th:block>
+    </body>
+</html>

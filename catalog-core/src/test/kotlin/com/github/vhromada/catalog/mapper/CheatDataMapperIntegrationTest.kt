@@ -3,6 +3,7 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.CheatData
 import com.github.vhromada.catalog.utils.CheatDataUtils
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,7 @@ class CheatDataMapperIntegrationTest {
      * Instance of [CheatDataMapper]
      */
     @Autowired
-    private lateinit var mapper: CheatDataMapper
+    private lateinit var mapper: Mapper<CheatData, com.github.vhromada.catalog.domain.CheatData>
 
     /**
      * Test method for [CheatDataMapper.map].

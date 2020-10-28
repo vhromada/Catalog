@@ -13,7 +13,7 @@ data class Medium(
         /**
          * ID
          */
-        var id: Int?,
+        val id: Int?,
 
         /**
          * Number

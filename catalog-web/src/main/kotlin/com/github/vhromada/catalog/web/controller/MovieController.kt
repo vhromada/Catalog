@@ -8,8 +8,8 @@ import com.github.vhromada.catalog.facade.PictureFacade
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.MovieFO
 import com.github.vhromada.catalog.web.fo.TimeFO
-import com.github.vhromada.catalog.web.mapper.MovieMapper
 import com.github.vhromada.common.entity.Language
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -32,7 +32,7 @@ class MovieController(
         private val movieFacade: MovieFacade,
         private val pictureFacade: PictureFacade,
         private val genreFacade: GenreFacade,
-        private val movieMapper: MovieMapper) : AbstractResultController() {
+        private val movieMapper: Mapper<Movie, MovieFO>) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -71,7 +71,7 @@ class MovieController(
      * Shows page with detail of movie.
      *
      * @param model model
-     * @param id    ID of editing movie
+     * @param id    ID of showing movie
      * @return view for page with detail of movie
      * @throws IllegalRequestException if movie doesn't exist
      */

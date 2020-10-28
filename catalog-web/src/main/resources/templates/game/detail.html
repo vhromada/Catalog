@@ -11,29 +11,35 @@
                 <tbody>
                     <tr>
                         <td class="title">Name</td>
-                        <td th:text="${game.name}"></td>
+                        <td th:text="${game.game.name}"></td>
                     </tr>
                     <tr>
                         <td class="title">Count of media</td>
-                        <td th:text="${game.mediaCount}"></td>
+                        <td th:text="${game.game.mediaCount}"></td>
                     </tr>
                     <tr>
                         <td class="title">Format</td>
-                        <td th:text="${game.format}"></td>
+                        <td th:text="${game.game.format}"></td>
                     </tr>
-                    <tr th:if="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGameAdditionalDataContent(game)}">
+                    <tr th:if="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGameAdditionalDataContent(game.game)}">
                         <td class="title">Additional data</td>
-                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGameAdditionalData(game)}"></td>
+                        <td th:text="${T(com.github.vhromada.catalog.web.converter.ConverterUtils).convertGameAdditionalData(game.game)}"></td>
                     </tr>
-                    <tr th:if="${!#strings.isEmpty(game.note)}">
+                    <tr th:if="${!#strings.isEmpty(game.game.note)}">
                         <td class="title">Note</td>
-                        <td th:text="${game.note}"></td>
+                        <td th:text="${game.game.note}"></td>
                     </tr>
-                    <tr th:if="${!#strings.isEmpty(game.wikiCz)}">
-                        <td colspan="2"><a th:href="@{|http://cz.wikipedia.org/wiki/${game.wikiCz}|}" target="_blank">Czech Wikipedia</a></td>
+                    <tr th:if="${game.cheat == null}">
+                        <td colspan="2"><a th:href="@{|/games/${game.game.id}/cheats/add|}">Add cheats</a></td>
                     </tr>
-                    <tr th:if="${!#strings.isEmpty(game.wikiEn)}">
-                        <td colspan="2"><a th:href="@{|http://en.wikipedia.org/wiki/${game.wikiEn}|}" target="_blank">English Wikipedia</a></td>
+                    <tr th:if="${game.cheat != null}">
+                        <td colspan="2"><a th:href="@{|/games/${game.game.id}/cheats|}">Cheats</a></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(game.game.wikiCz)}">
+                        <td colspan="2"><a th:href="@{|http://cz.wikipedia.org/wiki/${game.game.wikiCz}|}" target="_blank">Czech Wikipedia</a></td>
+                    </tr>
+                    <tr th:if="${!#strings.isEmpty(game.game.wikiEn)}">
+                        <td colspan="2"><a th:href="@{|http://en.wikipedia.org/wiki/${game.game.wikiEn}|}" target="_blank">English Wikipedia</a></td>
                     </tr>
                 </tbody>
             </table>

@@ -3,6 +3,7 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Movie
 import com.github.vhromada.catalog.utils.MovieUtils
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,7 @@ class MovieMapperIntegrationTest {
      * Instance of [MovieMapper]
      */
     @Autowired
-    private lateinit var mapper: MovieMapper
+    private lateinit var mapper: Mapper<Movie, com.github.vhromada.catalog.domain.Movie>
 
     /**
      * Test method for [MovieMapper.map].

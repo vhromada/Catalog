@@ -1,6 +1,7 @@
 package com.github.vhromada.catalog.facade.impl
 
 import com.github.vhromada.catalog.entity.Cheat
+import com.github.vhromada.catalog.entity.CheatData
 import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.CheatFacade
 import com.github.vhromada.common.facade.AbstractMovableChildFacade
@@ -13,6 +14,7 @@ import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.service.MovableService
 import com.github.vhromada.common.validator.MovableValidator
 import org.springframework.stereotype.Component
+import kotlin.math.min
 
 /**
  * A class represents implementation of facade for cheats.
@@ -72,6 +74,9 @@ class CheatFacadeImpl(
     }
 
     override fun getForAdd(parent: Game, data: com.github.vhromada.catalog.domain.Cheat): com.github.vhromada.catalog.domain.Game {
+        for (cheatData in data.data) {
+            cheatData.audit = getAudit()
+        }
         return service.get(parent.id!!).get()
                 .copy(cheat = data)
     }
@@ -82,6 +87,13 @@ class CheatFacadeImpl(
         val cheat = getDataForUpdate(data)
         cheat.audit = game.cheat!!.audit!!.copy(updatedUser = audit.updatedUser, updatedTime = audit.updatedTime)
         return game.copy(cheat = cheat)
+    }
+
+    override fun getDataForUpdate(data: Cheat): com.github.vhromada.catalog.domain.Cheat {
+        val cheat = super.getDataForUpdate(data)
+        val cheatData = getUpdatedCheatData(getDomainData(data.id!!)!!.data, data.data!!)
+
+        return cheat.copy(data = cheatData)
     }
 
     override fun getForRemove(data: Cheat): com.github.vhromada.catalog.domain.Game {
@@ -107,6 +119,48 @@ class CheatFacadeImpl(
         val game = service.getAll()
                 .find { it.cheat?.id == cheat.id }
         return game ?: throw IllegalStateException("Unknown cheat.")
+    }
+
+    /**
+     * Updates cheat's data.
+     *
+     * @param originalData original cheat's data
+     * @param updatedData  updated cheat's data
+     * @return updated cheat's data
+     */
+    @Suppress("DuplicatedCode")
+    private fun getUpdatedCheatData(originalData: List<com.github.vhromada.catalog.domain.CheatData>, updatedData: List<CheatData?>): List<com.github.vhromada.catalog.domain.CheatData> {
+        val result = mutableListOf<com.github.vhromada.catalog.domain.CheatData>()
+        val audit = getAudit()
+
+        var index = 0
+        val max = min(originalData.size, updatedData.size)
+        while (index < max) {
+            val cheatData = getUpdatedMedium(updatedData, index)
+            cheatData.id = originalData[index].id
+            cheatData.audit = originalData[index].audit
+            cheatData.modify(audit)
+            result.add(cheatData)
+            index++
+        }
+        while (index < updatedData.size) {
+            val cheatData = getUpdatedMedium(updatedData, index)
+            cheatData.audit = audit
+            result.add(cheatData)
+            index++
+        }
+
+        return result
+    }
+
+    /**
+     * Returns updated cheat's data.
+     *
+     * @param updatedData list of updated cheat's data
+     * @return updated cheat's data
+     */
+    private fun getUpdatedMedium(updatedData: List<CheatData?>, index: Int): com.github.vhromada.catalog.domain.CheatData {
+        return com.github.vhromada.catalog.domain.CheatData(id = null, action = updatedData[index]!!.action!!, description = updatedData[index]!!.description!!, audit = null)
     }
 
 }

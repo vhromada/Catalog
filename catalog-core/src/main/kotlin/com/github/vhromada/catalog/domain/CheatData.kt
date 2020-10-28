@@ -1,7 +1,7 @@
 package com.github.vhromada.catalog.domain
 
 import com.github.vhromada.common.domain.Audit
-import com.github.vhromada.common.domain.AuditEntity
+import com.github.vhromada.common.domain.Auditable
 import java.util.Objects
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -26,7 +26,7 @@ data class CheatData(
         @Id
         @SequenceGenerator(name = "cheat_data_generator", sequenceName = "cheat_data_sq", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cheat_data_generator")
-        override var id: Int?,
+        var id: Int?,
 
         /**
          * Action
@@ -39,15 +39,10 @@ data class CheatData(
         val description: String,
 
         /**
-         * Position
-         */
-        override var position: Int?,
-
-        /**
          * Audit
          */
         @Embedded
-        override var audit: Audit?) : AuditEntity(audit) {
+        override var audit: Audit?) : Auditable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

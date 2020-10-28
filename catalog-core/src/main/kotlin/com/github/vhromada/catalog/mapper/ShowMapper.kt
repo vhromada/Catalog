@@ -1,5 +1,6 @@
 package com.github.vhromada.catalog.mapper
 
+import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Component
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component
  * @author Vladimir Hromada
  */
 @Component("showMapper")
-class ShowMapper(private val genreMapper: GenreMapper) : Mapper<Show, com.github.vhromada.catalog.domain.Show> {
+class ShowMapper(private val genreMapper: Mapper<Genre, com.github.vhromada.catalog.domain.Genre>) : Mapper<Show, com.github.vhromada.catalog.domain.Show> {
 
     override fun map(source: Show): com.github.vhromada.catalog.domain.Show {
         return com.github.vhromada.catalog.domain.Show(

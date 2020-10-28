@@ -286,7 +286,7 @@ class MovieValidatorTest : MovableValidatorTest<Movie, com.github.vhromada.catal
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data media with null value.
+     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with media with null value.
      */
     @Test
     fun validateDeepBadMedia() {

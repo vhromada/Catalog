@@ -5,7 +5,7 @@ import com.github.vhromada.catalog.entity.Program
 import com.github.vhromada.catalog.facade.ProgramFacade
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.ProgramFO
-import com.github.vhromada.catalog.web.mapper.ProgramMapper
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -25,7 +25,7 @@ import javax.validation.Valid
 @RequestMapping("/programs")
 class ProgramController(
         private val programFacade: ProgramFacade,
-        private val programMapper: ProgramMapper) : AbstractResultController() {
+        private val programMapper: Mapper<Program, ProgramFO>) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -62,7 +62,7 @@ class ProgramController(
      * Shows page with detail of program.
      *
      * @param model model
-     * @param id    ID of editing program
+     * @param id    ID of showing program
      * @return view for page with detail of program
      * @throws IllegalRequestException if program doesn't exist
      */

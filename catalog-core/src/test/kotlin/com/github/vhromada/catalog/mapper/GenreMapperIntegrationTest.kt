@@ -3,6 +3,7 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.utils.GenreUtils
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,7 @@ class GenreMapperIntegrationTest {
      * Instance of [GenreMapper]
      */
     @Autowired
-    private lateinit var mapper: GenreMapper
+    private lateinit var mapper: Mapper<Genre, com.github.vhromada.catalog.domain.Genre>
 
     /**
      * Test method for [GenreMapper.map].

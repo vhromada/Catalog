@@ -2,10 +2,11 @@ package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.RoleFO
-import com.github.vhromada.catalog.web.mapper.RoleMapper
+import com.github.vhromada.common.account.entity.UpdateRoles
 import com.github.vhromada.common.account.facade.AccountFacade
 import com.github.vhromada.common.account.facade.RoleFacade
 import com.github.vhromada.common.entity.Account
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -26,7 +27,7 @@ import javax.validation.Valid
 class RoleController(
         private val accountFacade: AccountFacade,
         private val roleFacade: RoleFacade,
-        private val roleMapper: RoleMapper) : AbstractResultController() {
+        private val roleMapper: Mapper<RoleFO, UpdateRoles>) : AbstractResultController() {
 
     /**
      * Shows page for editing roles.

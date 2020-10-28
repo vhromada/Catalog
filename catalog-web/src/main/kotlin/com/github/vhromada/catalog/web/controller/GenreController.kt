@@ -4,7 +4,7 @@ import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.facade.GenreFacade
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.GenreFO
-import com.github.vhromada.catalog.web.mapper.GenreMapper
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -24,7 +24,7 @@ import javax.validation.Valid
 @RequestMapping("/genres")
 class GenreController(
         private val genreFacade: GenreFacade,
-        private val genreMapper: GenreMapper) : AbstractResultController() {
+        private val genreMapper: Mapper<Genre, GenreFO>) : AbstractResultController() {
 
     /**
      * Process new data.

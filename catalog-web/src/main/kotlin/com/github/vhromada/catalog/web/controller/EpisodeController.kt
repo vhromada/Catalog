@@ -7,7 +7,7 @@ import com.github.vhromada.catalog.facade.SeasonFacade
 import com.github.vhromada.catalog.facade.ShowFacade
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.EpisodeFO
-import com.github.vhromada.catalog.web.mapper.EpisodeMapper
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -29,7 +29,7 @@ class EpisodeController(
         private val showFacade: ShowFacade,
         private val seasonFacade: SeasonFacade,
         private val episodeFacade: EpisodeFacade,
-        private val episodeMapper: EpisodeMapper) : AbstractResultController() {
+        private val episodeMapper: Mapper<Episode, EpisodeFO>) : AbstractResultController() {
 
     /**
      * Shows page with list of episodes.
@@ -64,7 +64,7 @@ class EpisodeController(
      * @param model    model
      * @param showId   show ID
      * @param seasonId season ID
-     * @param id       ID of editing episode
+     * @param id       ID of showing episode
      * @return view for page with detail of episode
      * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist

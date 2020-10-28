@@ -6,7 +6,7 @@ import com.github.vhromada.catalog.facade.MusicFacade
 import com.github.vhromada.catalog.facade.SongFacade
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.SongFO
-import com.github.vhromada.catalog.web.mapper.SongMapper
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -27,7 +27,7 @@ import javax.validation.Valid
 class SongController(
         private val musicFacade: MusicFacade,
         private val songFacade: SongFacade,
-        private val songMapper: SongMapper) : AbstractResultController() {
+        private val songMapper: Mapper<Song, SongFO>) : AbstractResultController() {
 
     /**
      * Shows page with list of songs.
@@ -56,7 +56,7 @@ class SongController(
      *
      * @param model   model
      * @param musicId music ID
-     * @param id      ID of editing song
+     * @param id      ID of showing song
      * @return view for page with detail of song
      * @throws IllegalRequestException if music doesn't exist
      * or song doesn't exist

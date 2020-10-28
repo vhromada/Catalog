@@ -8,9 +8,9 @@ import com.github.vhromada.catalog.facade.ShowFacade
 import com.github.vhromada.catalog.web.domain.SeasonData
 import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.SeasonFO
-import com.github.vhromada.catalog.web.mapper.SeasonMapper
 import com.github.vhromada.common.entity.Language
 import com.github.vhromada.common.entity.Time
+import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -32,7 +32,7 @@ class SeasonController(
         private val showFacade: ShowFacade,
         private val seasonFacade: SeasonFacade,
         private val episodeFacade: EpisodeFacade,
-        private val seasonMapper: SeasonMapper) : AbstractResultController() {
+        private val seasonMapper: Mapper<Season, SeasonFO>) : AbstractResultController() {
 
     /**
      * Shows page with list of seasons.
@@ -61,7 +61,7 @@ class SeasonController(
      *
      * @param model  model
      * @param showId show ID
-     * @param id     ID of editing season
+     * @param id     ID of showing season
      * @return view for page with detail of season
      * @throws IllegalRequestException if show doesn't exist
      * or season doesn't exist
@@ -79,7 +79,7 @@ class SeasonController(
             processResults(episodesResult)
 
             val length = episodesResult.data!!.sumBy { it.length!! }
-            model.addAttribute("season", SeasonData(season = season, episodesCount = episodesResult.data!!.size, totalLength = Time(length)))
+            model.addAttribute("season", SeasonData(showId = showId, season = season, episodesCount = episodesResult.data!!.size, totalLength = Time(length)))
             model.addAttribute("show", showId)
             model.addAttribute("title", "Season detail")
 

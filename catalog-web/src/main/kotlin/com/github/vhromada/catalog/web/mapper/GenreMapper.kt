@@ -2,28 +2,27 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.web.fo.GenreFO
+import com.github.vhromada.common.mapper.Mapper
+import org.springframework.stereotype.Component
 
 /**
- * An interface represents mapper for genres.
+ * A class represents mapper for genres.
  *
  * @author Vladimir Hromada
  */
-interface GenreMapper {
+@Component("webGenreMapper")
+class GenreMapper : Mapper<Genre, GenreFO> {
 
-    /**
-     * Returns FO for genre.
-     *
-     * @param source genre
-     * @return FO for genre
-     */
-    fun map(source: Genre): GenreFO
+    override fun map(source: Genre): GenreFO {
+        return GenreFO(id = source.id,
+                name = source.name,
+                position = source.position)
+    }
 
-    /**
-     * Returns genre.
-     *
-     * @param source FO for genre
-     * @return genre
-     */
-    fun mapBack(source: GenreFO): Genre
+    override fun mapBack(source: GenreFO): Genre {
+        return Genre(id = source.id,
+                name = source.name,
+                position = source.position)
+    }
 
 }

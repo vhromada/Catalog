@@ -1,28 +1,27 @@
 package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.web.fo.TimeFO
+import com.github.vhromada.common.entity.Time
+import com.github.vhromada.common.mapper.Mapper
+import org.springframework.stereotype.Component
 
 /**
- * An interface represents mapper for time.
+ * A class represents mapper for time.
  *
  * @author Vladimir Hromada
  */
-interface TimeMapper {
+@Component("webTimeMapper")
+class TimeMapper : Mapper<Int, TimeFO> {
 
-    /**
-     * Returns FO for time.
-     *
-     * @param source length
-     * @return time
-     */
-    fun map(source: Int): TimeFO
+    override fun map(source: Int): TimeFO {
+        val time = Time(source)
+        return TimeFO(hours = time.getData(Time.TimeData.HOUR).toString(),
+                minutes = time.getData(Time.TimeData.MINUTE).toString(),
+                seconds = time.getData(Time.TimeData.SECOND).toString())
+    }
 
-    /**
-     * Returns length.
-     *
-     * @param source FO for time
-     * @return length
-     */
-    fun mapBack(source: TimeFO): Int
+    override fun mapBack(source: TimeFO): Int {
+        return Time(source.hours!!.toInt(), source.minutes!!.toInt(), source.seconds!!.toInt()).length
+    }
 
 }

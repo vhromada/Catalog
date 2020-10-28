@@ -3,6 +3,7 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.utils.ShowUtils
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,7 @@ class ShowMapperIntegrationTest {
      * Instance of [ShowMapper]
      */
     @Autowired
-    private lateinit var mapper: ShowMapper
+    private lateinit var mapper: Mapper<Show, com.github.vhromada.catalog.domain.Show>
 
     /**
      * Test method for [ShowMapper.map].

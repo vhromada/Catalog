@@ -28,7 +28,7 @@ class GameValidator(gameService: MovableService<com.github.vhromada.catalog.doma
      *  * Count of media is null
      *  * Count of media isn't positive number
      *  * Format is null
-     *  * Cheat is not null
+     *  * Cheat is ot null
      *  * Other data is null
      *  * Note is null
      *
@@ -55,9 +55,6 @@ class GameValidator(gameService: MovableService<com.github.vhromada.catalog.doma
         }
         if (data.format == null) {
             result.addEvent(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null."))
-        }
-        if (data.cheat != null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CHEAT_NOT_NULL", "Cheat must be null."))
         }
         if (data.otherData == null) {
             result.addEvent(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null."))

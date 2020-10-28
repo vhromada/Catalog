@@ -96,7 +96,7 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * Episode doesn't exist in season storage
+     *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
@@ -117,7 +117,7 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * Validation errors:
      *
      *  * ID is null
-     *  * Episode doesn't exist in season storage
+     *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
@@ -137,8 +137,8 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * Validation errors:
      *
      *  * ID is null
-     *  * Season can't be moved up
-     *  * Episode doesn't exist in season storage
+     *  * Episode can't be moved up
+     *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
@@ -158,8 +158,8 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * Validation errors:
      *
      *  * ID is null
-     *  * Season can't be moved down
-     *  * Episode doesn't exist in season storage
+     *  * Episode can't be moved down
+     *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID

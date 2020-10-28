@@ -17,7 +17,6 @@ class CheatDataMapper : Mapper<CheatData, com.github.vhromada.catalog.domain.Che
                 id = source.id,
                 action = source.action!!,
                 description = source.description!!,
-                position = source.position,
                 audit = null)
     }
 
@@ -25,8 +24,7 @@ class CheatDataMapper : Mapper<CheatData, com.github.vhromada.catalog.domain.Che
         return CheatData(
                 id = source.id,
                 action = source.action,
-                description = source.description,
-                position = source.position)
+                description = source.description)
     }
 
 }

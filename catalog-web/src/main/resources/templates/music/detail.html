@@ -31,6 +31,9 @@
                         <td class="title">Note</td>
                         <td th:text="${music.music.note}"></td>
                     </tr>
+                    <tr>
+                        <td colspan="2"><a th:href="@{|/music/${music.music.id}/songs/list|}">Songs</a></td>
+                    </tr>
                     <tr th:if="${!#strings.isEmpty(music.music.wikiCz)}">
                         <td colspan="2"><a th:href="@{|http://cz.wikipedia.org/wiki/${music.music.wikiCz}|}" target="_blank">Czech Wikipedia</a></td>
                     </tr>

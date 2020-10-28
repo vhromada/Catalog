@@ -95,6 +95,122 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
     }
 
     /**
+     * Test method for [CheatFacade.add] with cheat with null cheat's data.
+     */
+    @Test
+    fun addNullCheatData() {
+        val cheat = newChildData(null)
+                .copy(data = null)
+
+        val result = facade.add(newParentData(1), cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_NULL", "Cheat's data mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with null value.
+     */
+    @Test
+    fun addBadCheatData() {
+        val cheat = newChildData(null)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), null))
+
+        val result = facade.add(newParentData(1), cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_CONTAIN_NULL", "Cheat's data mustn't contain null value.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with null action.
+     */
+    @Test
+    fun addCheatDataWithNullAction() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(action = null)
+        val cheat = newChildData(null)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.add(newParentData(1), cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_NULL", "Cheat's data action mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with empty action.
+     */
+    @Test
+    fun addCheatDataWithEmptyAction() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(action = "")
+        val cheat = newChildData(null)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.add(newParentData(1), cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_EMPTY", "Cheat's data action mustn't be empty string.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with null description.
+     */
+    @Test
+    fun addCheatDataWithNullDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(description = null)
+        val cheat = newChildData(null)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.add(newParentData(1), cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_NULL", "Cheat's data description mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with empty description.
+     */
+    @Test
+    fun addCheatDataWithEmptyDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(description = "")
+        val cheat = newChildData(null)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.add(newParentData(1), cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_EMPTY", "Cheat's data description mustn't be empty string.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
      * Test method for [CheatFacade.add] with game with cheat.
      */
     @Test
@@ -158,6 +274,122 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
             it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_CHEAT_SETTING_NULL", "Setting for cheat mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.update] with cheat with null cheat's data.
+     */
+    @Test
+    fun updateNullCheatData() {
+        val cheat = newChildData(1)
+                .copy(data = null)
+
+        val result = facade.update(cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_NULL", "Cheat's data mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.update] with cheat with cheat's data with null value.
+     */
+    @Test
+    fun updateBadCheatData() {
+        val cheat = newChildData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), null))
+
+        val result = facade.update(cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_CONTAIN_NULL", "Cheat's data mustn't contain null value.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.update] with cheat with cheat's data with null action.
+     */
+    @Test
+    fun updateCheatDataWithNullAction() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(action = null)
+        val cheat = newChildData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.update(cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_NULL", "Cheat's data action mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.update] with cheat with cheat's data with empty action.
+     */
+    @Test
+    fun updateCheatDataWithEmptyAction() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(action = "")
+        val cheat = newChildData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.update(cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_EMPTY", "Cheat's data action mustn't be empty string.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.update] with cheat with cheat's data with null description.
+     */
+    @Test
+    fun updateCheatDataWithNullDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(description = null)
+        val cheat = newChildData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.update(cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_NULL", "Cheat's data description mustn't be null.")))
+        }
+
+        assertDefaultRepositoryData()
+    }
+
+    /**
+     * Test method for [CheatFacade.update] with cheat with cheat's data with empty description.
+     */
+    @Test
+    fun updateCheatDataWithEmptyDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(description = "")
+        val cheat = newChildData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = facade.update(cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_EMPTY", "Cheat's data description mustn't be empty string.")))
         }
 
         assertDefaultRepositoryData()

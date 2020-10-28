@@ -4,6 +4,7 @@ import com.github.vhromada.catalog.entity.Season
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.common.SeasonUtils
 import com.github.vhromada.catalog.web.fo.SeasonFO
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class SeasonMapperTest {
+class SeasonMapperIntegrationTest {
 
     /**
-     * Mapper for seasons
+     * Instance of [SeasonMapper]
      */
     @Autowired
-    private lateinit var mapper: SeasonMapper
+    private lateinit var mapper: Mapper<Season, SeasonFO>
 
     /**
      * Test method for [SeasonMapper.map].

@@ -1,7 +1,6 @@
 package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.entity.Game
-import com.github.vhromada.catalog.utils.CheatUtils
 import com.github.vhromada.catalog.utils.GameUtils
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
@@ -143,24 +142,6 @@ class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
             it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null.")))
-        }
-
-        verifyZeroInteractions(service)
-    }
-
-    /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with not null cheat.
-     */
-    @Test
-    fun validateDeepNotNullCheat() {
-        val game = getValidatingData(1)
-                .copy(cheat = CheatUtils.newCheat(1))
-
-        val result = getValidator().validate(game, ValidationType.DEEP)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CHEAT_NOT_NULL", "Cheat must be null.")))
         }
 
         verifyZeroInteractions(service)

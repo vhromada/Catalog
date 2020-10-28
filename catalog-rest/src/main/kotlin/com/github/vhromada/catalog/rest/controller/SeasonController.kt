@@ -98,7 +98,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
-     *  * Season doesn't exist in season storage
+     *  * Season doesn't exist in data storage
      *
      * @param showId show ID
      * @param id     ID
@@ -117,7 +117,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * Validation errors:
      *
      *  * ID is null
-     *  * Season doesn't exist in season storage
+     *  * Season doesn't exist in data storage
      *
      * @param showId show ID
      * @param season season
@@ -136,7 +136,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      *
      *  * ID is null
      *  * Season can't be moved up
-     *  * Season doesn't exist in season storage
+     *  * Season doesn't exist in data storage
      *
      * @param showId show ID
      * @param season season
@@ -155,7 +155,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      *
      *  * ID is null
      *  * Season can't be moved down
-     *  * Season doesn't exist in season storage
+     *  * Season doesn't exist in data storage
      *
      * @param showId show ID
      * @param season season

@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS cheat_data;
+DROP TABLE IF EXISTS cheat_cheat_data;
 DROP TABLE IF EXISTS cheats;
 
 CREATE TABLE cheats (
@@ -13,14 +14,17 @@ CREATE TABLE cheats (
 
 CREATE TABLE cheat_data (
   id           INTEGER      NOT NULL CONSTRAINT cheat_data_pk PRIMARY KEY,
-  cheat        INTEGER      CONSTRAINT cheat_data_cheat_fk REFERENCES cheats (id),
   action       VARCHAR(200) NOT NULL CONSTRAINT cheat_data_action_ck CHECK (LENGTH(action) > 0),
   description  VARCHAR(200) NOT NULL CONSTRAINT cheat_data_description_ck CHECK (LENGTH(description) > 0),
-  position     INTEGER      NOT NULL CONSTRAINT cheat_data_position_ck CHECK (position >= 0),
   created_user VARCHAR(36)  NOT NULL,
   created_time TIMESTAMP    NOT NULL,
   updated_user VARCHAR(36)  NOT NULL,
   updated_time TIMESTAMP    NOT NULL
+);
+
+CREATE TABLE cheat_cheat_data (
+  cheat      INTEGER NOT NULL CONSTRAINT cheat_cheat_data_cheat_fk REFERENCES cheats (id),
+  cheat_data INTEGER NOT NULL CONSTRAINT cheat_cheat_data_cheat_data_fk REFERENCES cheat_data (id)
 );
 
 ALTER TABLE games ADD cheat INTEGER CONSTRAINT games_cheat_fk REFERENCES cheats (id);

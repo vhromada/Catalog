@@ -120,7 +120,6 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
                 wikiEn = null,
                 wikiCz = null,
                 format = null,
-                cheat = null,
                 crack = null,
                 serialKey = null,
                 patch = null,

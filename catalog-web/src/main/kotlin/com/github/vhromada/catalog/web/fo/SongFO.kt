@@ -55,8 +55,4 @@ data class SongFO(
         return Objects.hashCode(id)
     }
 
-    override fun toString(): String {
-        return String.format("SongFO [id=%d, name=%s, length=%s, note=%s, position=%d]", id, name, length, note, position)
-    }
-
 }

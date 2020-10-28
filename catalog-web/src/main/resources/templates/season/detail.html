@@ -39,6 +39,9 @@
                         <td class="title">Note</td>
                         <td th:text="${season.season.note}"></td>
                     </tr>
+                    <tr>
+                        <td colspan="2"><a th:href="@{|/shows/${season.showId}/seasons/${season.season.id}/episodes/list|}">Episodes</a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

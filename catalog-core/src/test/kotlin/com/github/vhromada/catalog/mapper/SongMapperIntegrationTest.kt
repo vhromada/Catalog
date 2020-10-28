@@ -3,6 +3,7 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Song
 import com.github.vhromada.catalog.utils.SongUtils
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,7 @@ class SongMapperIntegrationTest {
      * Instance of [SongMapper]
      */
     @Autowired
-    private lateinit var mapper: SongMapper
+    private lateinit var mapper: Mapper<Song, com.github.vhromada.catalog.domain.Song>
 
     /**
      * Test method for [SongMapper.map].

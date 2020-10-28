@@ -42,11 +42,6 @@ data class Game(
         val format: Format?,
 
         /**
-         * Cheat
-         */
-        val cheat: Cheat?,
-
-        /**
          * True if there is crack
          */
         val crack: Boolean?,

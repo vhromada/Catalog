@@ -2,28 +2,34 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Episode
 import com.github.vhromada.catalog.web.fo.EpisodeFO
+import com.github.vhromada.catalog.web.fo.TimeFO
+import com.github.vhromada.common.mapper.Mapper
+import org.springframework.stereotype.Component
 
 /**
- * An interface represents mapper for episodes.
+ * A class represents mapper for episodes.
  *
  * @author Vladimir Hromada
  */
-interface EpisodeMapper {
+@Component("webEpisodeMapper")
+class EpisodeMapper(private val timeMapper: Mapper<Int, TimeFO>) : Mapper<Episode, EpisodeFO> {
 
-    /**
-     * Returns FO for episode.
-     *
-     * @param source episode
-     * @return FO for episode
-     */
-    fun map(source: Episode): EpisodeFO
+    override fun map(source: Episode): EpisodeFO {
+        return EpisodeFO(id = source.id,
+                number = source.number!!.toString(),
+                length = timeMapper.map(source.length!!),
+                name = source.name,
+                note = source.note,
+                position = source.position)
+    }
 
-    /**
-     * Returns episode.
-     *
-     * @param source FO for episode
-     * @return episode
-     */
-    fun mapBack(source: EpisodeFO): Episode
+    override fun mapBack(source: EpisodeFO): Episode {
+        return Episode(id = source.id,
+                number = source.number!!.toInt(),
+                length = timeMapper.mapBack(source.length!!),
+                name = source.name,
+                note = source.note,
+                position = source.position)
+    }
 
 }

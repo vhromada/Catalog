@@ -4,6 +4,7 @@ import com.github.vhromada.catalog.entity.Music
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.common.MusicUtils
 import com.github.vhromada.catalog.web.fo.MusicFO
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class MusicMapperTest {
+class MusicMapperIntegrationTest {
 
     /**
-     * Mapper for music
+     * Instance of [MusicMapper]
      */
     @Autowired
-    private lateinit var mapper: MusicMapper
+    private lateinit var mapper: Mapper<Music, MusicFO>
 
     /**
      * Test method for [MusicMapper.map].

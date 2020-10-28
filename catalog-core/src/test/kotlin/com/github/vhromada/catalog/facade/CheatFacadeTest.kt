@@ -57,8 +57,8 @@ class CheatFacadeTest : MovableChildFacadeTest<Cheat, com.github.vhromada.catalo
 
         verify(service, times(2)).get(parentEntity.id!!)
         verify(service).update(argumentCaptor.capture())
-        verify(accountProvider).getAccount()
-        verify(timeProvider).getTime()
+        verify(accountProvider, times(2)).getAccount()
+        verify(timeProvider, times(2)).getTime()
         verify(parentMovableValidator).validate(parentEntity, ValidationType.EXISTS)
         verify(childMovableValidator).validate(childArgumentCaptor.capture(), eq(ValidationType.NEW), eq(ValidationType.DEEP))
         verify(mapper).map(childArgumentCaptor.capture())
@@ -196,12 +196,7 @@ class CheatFacadeTest : MovableChildFacadeTest<Cheat, com.github.vhromada.catalo
     }
 
     override fun newChildDomain(id: Int?): com.github.vhromada.catalog.domain.Cheat {
-        val cheat = CheatUtils.newCheatWithData(id)
-        for (data in cheat.data) {
-            data.position = 0
-        }
-
-        return cheat
+        return CheatUtils.newCheatWithData(id)
     }
 
     override fun getParentRemovedData(parent: com.github.vhromada.catalog.domain.Game, child: com.github.vhromada.catalog.domain.Cheat): com.github.vhromada.catalog.domain.Game {

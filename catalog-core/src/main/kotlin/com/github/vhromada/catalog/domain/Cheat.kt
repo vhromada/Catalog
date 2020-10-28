@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
 import javax.persistence.OneToMany
 import javax.persistence.OrderBy
 import javax.persistence.SequenceGenerator
@@ -52,8 +53,8 @@ data class Cheat(
          * Data
          */
         @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
-        @JoinColumn(name = "cheat", referencedColumnName = "id")
-        @OrderBy("position, id")
+        @JoinTable(name = "cheat_cheat_data", joinColumns = [JoinColumn(name = "cheat")], inverseJoinColumns = [JoinColumn(name = "cheat_data")])
+        @OrderBy("id")
         @Fetch(FetchMode.SELECT)
         val data: List<CheatData>,
 

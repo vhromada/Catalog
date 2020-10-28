@@ -10,11 +10,11 @@ plugins {
 }
 
 val projectParentVersion by extra("5.0.1")
-val commonVersion by extra("6.0.8")
+val commonVersion by extra("6.0.9")
 
 allprojects {
     group = "com.github.vhromada.catalog"
-    version = "10.2.0-SNAPSHOT"
+    version = "10.2.0"
 
     apply(plugin = "kotlin")
 

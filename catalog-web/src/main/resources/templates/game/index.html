@@ -16,17 +16,20 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <th:block th:each="game : ${games}">
                         <tr>
-                            <td><a th:href="@{|/games/${game.id}/detail|}" th:text="${game.name}"></a></td>
-                            <td><a th:href="@{|/games/moveUp/${game.id}|}" th:if="${games.indexOf(game) > 0}">Move up</a></td>
-                            <td><a th:href="@{|/games/moveDown/${game.id}|}" th:if="${games.indexOf(game) < games.size() - 1}">Move down</a></td>
-                            <td><a th:href="@{|/games/duplicate/${game.id}|}">Duplicate</a></td>
-                            <td><a th:href="@{|/games/edit/${game.id}|}">Edit</a></td>
-                            <td><a th:href="@{|/games/remove/${game.id}|}">Remove</a></td>
+                            <td><a th:href="@{|/games/${game.game.id}/detail|}" th:text="${game.game.name}"></a></td>
+                            <td th:if="${game.cheat == null}"><a th:href="@{|/games/${game.game.id}/cheats/add|}">Add cheats</a></td>
+                            <td th:if="${game.cheat != null}"><a th:href="@{|/games/${game.game.id}/cheats|}">Cheats</a></td>
+                            <td><a th:href="@{|/games/moveUp/${game.game.id}|}" th:if="${games.indexOf(game) > 0}">Move up</a></td>
+                            <td><a th:href="@{|/games/moveDown/${game.game.id}|}" th:if="${games.indexOf(game) < games.size() - 1}">Move down</a></td>
+                            <td><a th:href="@{|/games/duplicate/${game.game.id}|}">Duplicate</a></td>
+                            <td><a th:href="@{|/games/edit/${game.game.id}|}">Edit</a></td>
+                            <td><a th:href="@{|/games/remove/${game.game.id}|}">Remove</a></td>
                         </tr>
                     </th:block>
                 </tbody>

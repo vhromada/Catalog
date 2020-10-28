@@ -2,28 +2,32 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Song
 import com.github.vhromada.catalog.web.fo.SongFO
+import com.github.vhromada.catalog.web.fo.TimeFO
+import com.github.vhromada.common.mapper.Mapper
+import org.springframework.stereotype.Component
 
 /**
- * An interface represents mapper for songs.
+ * A class represents mapper for songs.
  *
  * @author Vladimir Hromada
  */
-interface SongMapper {
+@Component("webSongMapper")
+class SongMapper(private val timeMapper: Mapper<Int, TimeFO>) : Mapper<Song, SongFO> {
 
-    /**
-     * Returns FO for song.
-     *
-     * @param source song
-     * @return FO for song
-     */
-    fun map(source: Song): SongFO
+    override fun map(source: Song): SongFO {
+        return SongFO(id = source.id,
+                name = source.name,
+                length = timeMapper.map(source.length!!),
+                note = source.note,
+                position = source.position)
+    }
 
-    /**
-     * Returns song.
-     *
-     * @param source FO for song
-     * @return song
-     */
-    fun mapBack(source: SongFO): Song
+    override fun mapBack(source: SongFO): Song {
+        return Song(id = source.id,
+                name = source.name,
+                length = timeMapper.mapBack(source.length!!),
+                note = source.note,
+                position = source.position)
+    }
 
 }

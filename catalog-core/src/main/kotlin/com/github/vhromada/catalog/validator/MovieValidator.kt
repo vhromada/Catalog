@@ -161,7 +161,7 @@ class MovieValidator(
                 if (medium != null) {
                     when {
                         medium.length == null -> {
-                            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIUM_NULL", "Length of medium  mustn't be null."))
+                            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIUM_NULL", "Length of medium mustn't be null."))
                         }
                         medium.length <= 0 -> {
                             result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number."))

@@ -48,7 +48,6 @@ object GameUtils {
                 wikiCz = CatalogUtils.CZ_WIKI,
                 mediaCount = CatalogUtils.MEDIA,
                 format = Format.STEAM,
-                cheat = null,
                 crack = true,
                 serialKey = true,
                 patch = true,

@@ -2,28 +2,35 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Music
 import com.github.vhromada.catalog.web.fo.MusicFO
+import com.github.vhromada.common.mapper.Mapper
+import org.springframework.stereotype.Component
 
 /**
- * An interface represents mapper for music.
+ * A class represents mapper for music.
  *
  * @author Vladimir Hromada
  */
-interface MusicMapper {
+@Component("webMusicMapper")
+class MusicMapper : Mapper<Music, MusicFO> {
 
-    /**
-     * Returns FO for music.
-     *
-     * @param source music
-     * @return FO for music
-     */
-    fun map(source: Music): MusicFO
+    override fun map(source: Music): MusicFO {
+        return MusicFO(id = source.id,
+                name = source.name,
+                wikiEn = source.wikiEn,
+                wikiCz = source.wikiCz,
+                mediaCount = source.mediaCount!!.toString(),
+                note = source.note,
+                position = source.position)
+    }
 
-    /**
-     * Returns music.
-     *
-     * @param source FO for music
-     * @return music
-     */
-    fun mapBack(source: MusicFO): Music
+    override fun mapBack(source: MusicFO): Music {
+        return Music(id = source.id,
+                name = source.name,
+                wikiEn = source.wikiEn,
+                wikiCz = source.wikiCz,
+                mediaCount = source.mediaCount!!.toInt(),
+                note = source.note,
+                position = source.position)
+    }
 
 }

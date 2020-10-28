@@ -59,6 +59,7 @@ class MovieFacadeImpl(
      * @param updatedMedia  updated media
      * @return updated media
      */
+    @Suppress("DuplicatedCode")
     private fun getUpdatedMedia(originalMedia: List<com.github.vhromada.catalog.domain.Medium>, updatedMedia: List<Medium?>): List<com.github.vhromada.catalog.domain.Medium> {
         val result = mutableListOf<com.github.vhromada.catalog.domain.Medium>()
         val audit = getAudit()

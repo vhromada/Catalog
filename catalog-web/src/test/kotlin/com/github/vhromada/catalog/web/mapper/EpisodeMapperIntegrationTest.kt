@@ -4,6 +4,7 @@ import com.github.vhromada.catalog.entity.Episode
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.common.EpisodeUtils
 import com.github.vhromada.catalog.web.fo.EpisodeFO
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class EpisodeMapperTest {
+class EpisodeMapperIntegrationTest {
 
     /**
-     * Mapper for episodes
+     * Instance of [EpisodeMapper]
      */
     @Autowired
-    private lateinit var mapper: EpisodeMapper
+    private lateinit var mapper: Mapper<Episode, EpisodeFO>
 
     /**
      * Test method for [EpisodeMapper.map].

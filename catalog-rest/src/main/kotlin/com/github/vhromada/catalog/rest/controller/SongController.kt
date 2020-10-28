@@ -94,7 +94,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * Song doesn't exist in song storage
+     *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
      * @param id      ID
@@ -113,7 +113,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * Validation errors:
      *
      *  * ID is null
-     *  * Song doesn't exist in song storage
+     *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
      * @param song    song
@@ -132,7 +132,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      *
      *  * ID is null
      *  * Song can't be moved up
-     *  * Song doesn't exist in song storage
+     *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
      * @param song    song
@@ -151,7 +151,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      *
      *  * ID is null
      *  * Song can't be moved down
-     *  * Song doesn't exist in song storage
+     *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
      * @param song    song

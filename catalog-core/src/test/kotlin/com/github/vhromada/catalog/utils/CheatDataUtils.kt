@@ -51,7 +51,6 @@ object CheatDataUtils {
                 id = id,
                 action = "Action",
                 description = "Description",
-                position = if (id == null) null else id - 1,
                 audit = null)
                 .updated()
     }
@@ -66,8 +65,7 @@ object CheatDataUtils {
         return CheatData(
                 id = id,
                 action = "Action",
-                description = "Description",
-                position = if (id == null) null else id - 1)
+                description = "Description")
                 .updated()
     }
 
@@ -111,7 +109,6 @@ object CheatDataUtils {
                 id = (cheatIndex - 1) * CHEAT_DATA_CHEAT_COUNT + cheatDataIndex,
                 action = "Cheat $cheatIndex Data $cheatDataIndex action",
                 description = "Cheat $cheatIndex Data $cheatDataIndex description",
-                position = cheatDataIndex - 1,
                 audit = AuditUtils.getAudit())
     }
 
@@ -170,7 +167,6 @@ object CheatDataUtils {
             it.assertThat(actual!!.id).isEqualTo(expected!!.id)
             it.assertThat(actual.action).isEqualTo(expected.action)
             it.assertThat(actual.description).isEqualTo(expected.description)
-            it.assertThat(actual.position).isEqualTo(expected.position)
         }
         AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
@@ -209,7 +205,6 @@ object CheatDataUtils {
             it.assertThat(actual!!.id).isEqualTo(expected!!.id)
             it.assertThat(actual.action).isEqualTo(expected.action)
             it.assertThat(actual.description).isEqualTo(expected.description)
-            it.assertThat(actual.position).isEqualTo(expected.position)
         }
     }
 

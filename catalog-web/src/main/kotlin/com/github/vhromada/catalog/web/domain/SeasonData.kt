@@ -13,6 +13,11 @@ import java.util.Objects
 data class SeasonData(
 
         /**
+         * Show ID
+         */
+        val showId: Int,
+
+        /**
          * Season
          */
         val season: Season,

@@ -3,6 +3,7 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Picture
 import com.github.vhromada.catalog.utils.PictureUtils
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,7 @@ class PictureMapperIntegrationTest {
      * Instance of [PictureMapper]
      */
     @Autowired
-    private lateinit var mapper: PictureMapper
+    private lateinit var mapper: Mapper<Picture, com.github.vhromada.catalog.domain.Picture>
 
     /**
      * Test method for [PictureMapper.map].

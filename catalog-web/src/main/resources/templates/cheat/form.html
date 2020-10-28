@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="gameId" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="action" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="cheat" type="com.github.vhromada.catalog.web.fo.CheatFO"*/-->
+    <head th:replace="layout :: head"></head>
+    <body>
+        <th:block th:replace="layout :: menu"/>
+        <th:block th:replace="cheat/menu :: menu"/>
+        <div class="container-fluid">
+            <th:block th:replace="layout :: title"/>
+            <form th:action="@{|/games/${gameId}/cheats/${action}|}" method="POST" th:object="${cheat}">
+                <fieldset>
+                    <input type="hidden" id="id" name="id" th:field="*{id}" th:if="${action == 'edit'}"/>
+                    <input type="hidden" id="position" name="position" th:field="*{position}" th:if="${action == 'edit'}"/>
+                    <span class="error global" th:if="${#fields.hasErrors('data')}" th:errors="*{data}"></span>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="gameSetting">Setting for game</label>
+                        <div class="col-md-10">
+                            <input type="text" id="gameSetting" name="gameSetting" class="form-control" th:field="*{gameSetting}"/>
+                            <span class="error" th:if="${#fields.hasErrors('gameSetting')}" th:errors="*{gameSetting}"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="cheatSetting">Setting for cheat</label>
+                        <div class="col-md-10">
+                            <input type="text" id="cheatSetting" name="cheatSetting" class="form-control" th:field="*{cheatSetting}"/>
+                            <span class="error" th:if="${#fields.hasErrors('cheatSetting')}" th:errors="*{cheatSetting}"></span>
+                        </div>
+                    </div>
+                    <label class="col-md-2 col-form-label">Cheats</label>
+                    <th:block th:each="item, info : *{data}">
+                        <div class="form-group">
+                            <label class="col-md-2 col-form-label" th:text="|Cheat ${info.index + 1}|"></label>
+                            <button type="submit" th:id="|removeCheat${info.index}|" th:name="|removeCheat${info.index}|" class="btn btn-danger col-md-1" formnovalidate="formnovalidate"
+                                    th:if="${info.index > 0}">
+                                Remove
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-form-label" th:for="|cheat${info.index}Action|" th:text="|Cheat ${info.index + 1} action|"></label>
+                            <div class="col-md-10">
+                                <input type="text" th:id="|cheat${info.index}Action|" th:name="|cheat${info.index}Action|" class="form-control"
+                                       th:field="*{data[__${info.index}__].action}"/>
+                                <span class="error" th:if="${#fields.hasErrors('data[__${info.index}__].action')}" th:errors="*{data[__${info.index}__].action}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-form-label" th:for="|cheat${info.index}Description|" th:text="|Cheat ${info.index + 1} description|"></label>
+                            <div class="col-md-10">
+                                <input type="text" th:id="|cheat${info.index}Description|" th:name="|cheat${info.index}Description|" class="form-control"
+                                       th:field="*{data[__${info.index}__].description}"/>
+                                <span class="error" th:if="${#fields.hasErrors('data[__${info.index}__].description')}" th:errors="*{data[__${info.index}__].description}"></span>
+                            </div>
+                        </div>
+                    </th:block>
+                    <div class="form-group">
+                        <button type="submit" id="addCheat" name="addCheat" class="btn btn-success col-md-1" formnovalidate="formnovalidate">Add</button>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <button type="submit" id="create" name="create" class="btn btn-primary" th:if="${action == 'add'}">Create</button>
+                            <button type="submit" id="update" name="update" class="btn btn-primary" th:if="${action == 'edit'}">Update</button>
+                            <button type="submit" id="cancel" name="cancel" class="btn btn-danger" formnovalidate="formnovalidate">Cancel</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>

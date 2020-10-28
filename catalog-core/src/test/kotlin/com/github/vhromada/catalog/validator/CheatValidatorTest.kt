@@ -2,12 +2,14 @@ package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.domain.Game
 import com.github.vhromada.catalog.entity.Cheat
+import com.github.vhromada.catalog.utils.CheatDataUtils
 import com.github.vhromada.catalog.utils.CheatUtils
 import com.github.vhromada.catalog.utils.GameUtils
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
 import com.github.vhromada.common.test.validator.MovableValidatorTest
+import com.github.vhromada.common.validator.AbstractMovableValidator
 import com.github.vhromada.common.validator.MovableValidator
 import com.github.vhromada.common.validator.ValidationType
 import com.nhaarman.mockitokotlin2.verify
@@ -36,7 +38,7 @@ class CheatValidatorTest : MovableValidatorTest<Cheat, Game>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "CHEAT_GAME_SETTING_NULL", "Setting for game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GAME_SETTING_NULL", "Setting for game mustn't be null.")))
         }
 
         verifyZeroInteractions(service)
@@ -54,7 +56,123 @@ class CheatValidatorTest : MovableValidatorTest<Cheat, Game>() {
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "CHEAT_CHEAT_SETTING_NULL", "Setting for cheat mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CHEAT_SETTING_NULL", "Setting for cheat mustn't be null.")))
+        }
+
+        verifyZeroInteractions(service)
+    }
+
+    /**
+     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null cheat's data.
+     */
+    @Test
+    fun validateDeepNullCheatData() {
+        val cheat = getValidatingData(1)
+                .copy(data = null)
+
+        val result = getValidator().validate(cheat, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_DATA_NULL", "Cheat's data mustn't be null.")))
+        }
+
+        verifyDeepMock(cheat)
+    }
+
+    /**
+     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with cheat's data with null value.
+     */
+    @Test
+    fun validateDeepBadCheatData() {
+        val cheat = getValidatingData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), null))
+
+        val result = getValidator().validate(cheat, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_DATA_CONTAIN_NULL", "Cheat's data mustn't contain null value.")))
+        }
+
+        verifyDeepMock(cheat)
+    }
+
+    /**
+     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with cheat's data with null action.
+     */
+    @Test
+    fun validateDeepCheatDataWithNullAction() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(action = null)
+        val cheat = getValidatingData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = getValidator().validate(cheat, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_DATA_ACTION_NULL", "Cheat's data action mustn't be null.")))
+        }
+
+        verifyDeepMock(cheat)
+    }
+
+    /**
+     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with cheat's data with empty action.
+     */
+    @Test
+    fun validateDeepCheatDataWithEmptyAction() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(action = "")
+        val cheat = getValidatingData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = getValidator().validate(cheat, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_DATA_ACTION_EMPTY", "Cheat's data action mustn't be empty string.")))
+        }
+
+        verifyZeroInteractions(service)
+    }
+
+    /**
+     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with cheat's data with null description.
+     */
+    @Test
+    fun validateDeepCheatDataWithNullDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(description = null)
+        val cheat = getValidatingData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = getValidator().validate(cheat, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_DATA_DESCRIPTION_NULL", "Cheat's data description mustn't be null.")))
+        }
+
+        verifyZeroInteractions(service)
+    }
+
+    /**
+     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with cheat's data with empty description.
+     */
+    @Test
+    fun validateDeepCheatDataWithEmptyDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(2)
+                .copy(description = "")
+        val cheat = getValidatingData(1)
+                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+
+        val result = getValidator().validate(cheat, ValidationType.DEEP)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_DATA_DESCRIPTION_EMPTY", "Cheat's data description mustn't be empty string.")))
         }
 
         verifyZeroInteractions(service)

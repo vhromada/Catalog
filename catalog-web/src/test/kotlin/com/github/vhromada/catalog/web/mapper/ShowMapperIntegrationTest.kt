@@ -4,7 +4,7 @@ import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.common.ShowUtils
 import com.github.vhromada.catalog.web.fo.ShowFO
-import com.github.vhromada.catalog.web.mapper.impl.ShowMapperImpl
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,16 +18,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class ShowMapperTest {
+class ShowMapperIntegrationTest {
 
     /**
-     * Mapper for shows
+     * Instance of [ShowMapper]
      */
     @Autowired
-    private lateinit var mapper: ShowMapper
+    private lateinit var mapper: Mapper<Show, ShowFO>
 
     /**
-     * Test method for [ShowMapperImpl.map].
+     * Test method for [ShowMapper.map].
      */
     @Test
     fun map() {
@@ -39,7 +39,7 @@ class ShowMapperTest {
     }
 
     /**
-     * Test method for [ShowMapperImpl.mapBack].
+     * Test method for [ShowMapper.mapBack].
      */
     @Test
     fun mapBack() {

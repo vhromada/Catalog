@@ -165,24 +165,6 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
     }
 
     /**
-     * Test method for [GameFacade.add] with game with not null cheat.
-     */
-    @Test
-    fun addNotNullCheat() {
-        val game = newData(null)
-                .copy(cheat = CheatUtils.newCheat(1))
-
-        val result = facade.add(game)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CHEAT_NOT_NULL", "Cheat must be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
      * Test method for [GameFacade.add] with game with null other data.
      */
     @Test
@@ -339,24 +321,6 @@ class GameFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Game, com.g
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
             it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [GameFacade.update] with game with not null cheat.
-     */
-    @Test
-    fun updateNotNullCheat() {
-        val game = newData(1)
-                .copy(cheat = CheatUtils.newCheat(1))
-
-        val result = facade.update(game)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CHEAT_NOT_NULL", "Cheat must be null.")))
         }
 
         assertDefaultRepositoryData()

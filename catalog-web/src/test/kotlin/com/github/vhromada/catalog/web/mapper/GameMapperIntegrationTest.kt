@@ -4,6 +4,7 @@ import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
 import com.github.vhromada.catalog.web.common.GameUtils
 import com.github.vhromada.catalog.web.fo.GameFO
+import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
  */
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogMapperTestConfiguration::class])
-class GameMapperTest {
+class GameMapperIntegrationTest {
 
     /**
-     * Mapper for games
+     * Instance of [GameMapper]
      */
     @Autowired
-    private lateinit var mapper: GameMapper
+    private lateinit var mapper: Mapper<Game, GameFO>
 
     /**
      * Test method for [GameMapper.map].

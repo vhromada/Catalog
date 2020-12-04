@@ -7,7 +7,6 @@ import com.github.vhromada.catalog.entity.Program
 import com.github.vhromada.catalog.entity.Season
 import com.github.vhromada.common.entity.Language
 import com.github.vhromada.common.entity.Time
-import org.springframework.util.StringUtils
 
 /**
  * A class represents utility class for converters.
@@ -34,6 +33,7 @@ object ConverterUtils {
      * @return converted languages
      */
     @JvmStatic
+    @Suppress("DuplicatedCode")
     fun convertLanguages(languages: List<Language>): String {
         if (languages.isEmpty()) {
             return ""
@@ -117,14 +117,14 @@ object ConverterUtils {
      */
     @JvmStatic
     fun convertGameAdditionalDataContent(game: Game): Boolean {
-        return !StringUtils.isEmpty(convertGameAdditionalData(game))
+        return convertGameAdditionalData(game).isNotEmpty()
     }
 
     /**
-     * Converts seasons's years.
+     * Converts season's years.
      *
      * @param season season
-     * @return converted seasons's years
+     * @return converted season's years
      */
     @JvmStatic
     fun convertSeasonYears(season: Season): String {
@@ -162,7 +162,7 @@ object ConverterUtils {
      */
     @JvmStatic
     fun convertProgramAdditionalDataContent(program: Program): Boolean {
-        return !StringUtils.isEmpty(convertProgramAdditionalData(program))
+        return convertProgramAdditionalData(program).isNotEmpty()
     }
 
     /**
@@ -200,6 +200,7 @@ object ConverterUtils {
      * @return converted roles
      */
     @JvmStatic
+    @Suppress("DuplicatedCode")
     fun convertRoles(roles: List<String>): String {
         if (roles.isEmpty()) {
             return ""

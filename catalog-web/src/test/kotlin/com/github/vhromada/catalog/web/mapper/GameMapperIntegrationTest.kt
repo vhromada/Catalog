@@ -32,7 +32,6 @@ class GameMapperIntegrationTest {
     @Test
     fun map() {
         val game = GameUtils.getGame()
-
         val gameFO = mapper.map(source = game)
 
         GameUtils.assertGameDeepEquals(expected = game, actual = gameFO)
@@ -44,7 +43,6 @@ class GameMapperIntegrationTest {
     @Test
     fun mapBack() {
         val gameFO = GameUtils.getGameFO()
-
         val game = mapper.mapBack(source = gameFO)
 
         GameUtils.assertGameDeepEquals(expected = gameFO, actual = game)

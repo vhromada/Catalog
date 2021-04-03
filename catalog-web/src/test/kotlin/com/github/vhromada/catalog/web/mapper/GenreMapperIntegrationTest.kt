@@ -32,7 +32,6 @@ class GenreMapperIntegrationTest {
     @Test
     fun map() {
         val genre = GenreUtils.getGenre()
-
         val genreFO = mapper.map(source = genre)
 
         GenreUtils.assertGenreDeepEquals(expected = genre, actual = genreFO)
@@ -44,7 +43,6 @@ class GenreMapperIntegrationTest {
     @Test
     fun mapBack() {
         val genreFO = GenreUtils.getGenreFO()
-
         val genre = mapper.mapBack(source = genreFO)
 
         GenreUtils.assertGenreDeepEquals(expected = genreFO, actual = genre)

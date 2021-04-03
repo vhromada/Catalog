@@ -122,7 +122,8 @@ class ShowFacadeTest {
         verify(showService).get(id = entity.id!!)
         verify(mapper).mapBack(source = domain)
         verify(showValidator).validateExists(data = Optional.of(domain))
-        verifyNoMoreInteractions(showService, pictureService, genreService, mapper, showValidator)
+        verifyNoMoreInteractions(showService, mapper, showValidator)
+        verifyZeroInteractions(pictureService, genreService, pictureValidator, genreValidator)
     }
 
     /**
@@ -202,7 +203,7 @@ class ShowFacadeTest {
 
         verify(showValidator).validate(data = entity, update = true)
         verifyNoMoreInteractions(showValidator)
-        verifyZeroInteractions(showService, mapper)
+        verifyZeroInteractions(showService, pictureService, genreService, mapper, pictureValidator, genreValidator)
     }
 
     /**

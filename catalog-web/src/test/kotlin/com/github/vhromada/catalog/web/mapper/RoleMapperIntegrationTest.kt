@@ -32,7 +32,6 @@ class RoleMapperIntegrationTest {
     @Test
     fun map() {
         val role = RoleFO(roles = listOf("ROLE"))
-
         val updateRoles = mapper.map(source = role)
 
         assertThat(updateRoles.roles).isEqualTo(role.roles)

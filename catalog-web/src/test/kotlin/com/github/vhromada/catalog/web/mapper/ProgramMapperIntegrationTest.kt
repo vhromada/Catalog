@@ -32,7 +32,6 @@ class ProgramMapperIntegrationTest {
     @Test
     fun map() {
         val program = ProgramUtils.getProgram()
-
         val programFO = mapper.map(source = program)
 
         ProgramUtils.assertProgramDeepEquals(expected = program, actual = programFO)
@@ -44,7 +43,6 @@ class ProgramMapperIntegrationTest {
     @Test
     fun mapBack() {
         val programFO = ProgramUtils.getProgramFO()
-
         val program = mapper.mapBack(source = programFO)
 
         ProgramUtils.assertProgramDeepEquals(expected = programFO, actual = program)

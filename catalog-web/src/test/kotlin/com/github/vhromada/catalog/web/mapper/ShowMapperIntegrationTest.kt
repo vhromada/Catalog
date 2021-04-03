@@ -32,7 +32,6 @@ class ShowMapperIntegrationTest {
     @Test
     fun map() {
         val show = ShowUtils.getShow()
-
         val showFO = mapper.map(source = show)
 
         ShowUtils.assertShowDeepEquals(expected = show, actual = showFO)
@@ -44,7 +43,6 @@ class ShowMapperIntegrationTest {
     @Test
     fun mapBack() {
         val showFO = ShowUtils.getShowFO()
-
         val show = mapper.mapBack(source = showFO)
 
         ShowUtils.assertShowDeepEquals(expected = showFO, actual = show)

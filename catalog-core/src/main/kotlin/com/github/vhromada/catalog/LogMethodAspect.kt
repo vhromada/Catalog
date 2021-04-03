@@ -36,11 +36,11 @@ class LogMethodAspect {
         try {
             result = proceedingJoinPoint.proceed()
         } catch (exception: Exception) {
-            finishLogMessage(proceedingJoinPoint, message, start)
+            finishLogMessage(proceedingJoinPoint = proceedingJoinPoint, message = message, start = start)
             throw exception
         }
 
-        finishLogMessage(proceedingJoinPoint, message, start)
+        finishLogMessage(proceedingJoinPoint = proceedingJoinPoint, message = message, start = start)
 
         return result
     }

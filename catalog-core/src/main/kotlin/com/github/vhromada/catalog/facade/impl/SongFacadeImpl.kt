@@ -33,22 +33,22 @@ class SongFacadeImpl(
 
     @Suppress("DuplicatedCode")
     override fun updateData(data: Song): Result<Unit> {
-        val storedSong = service.get(data.id!!)
-        val validationResult = validator.validateExists(storedSong)
+        val storedSong = service.get(id = data.id!!)
+        val validationResult = validator.validateExists(data = storedSong)
         if (validationResult.isOk()) {
-            val song = mapper.map(data)
+            val song = mapper.map(source = data)
             song.createdUser = storedSong.get().createdUser
             song.createdTime = storedSong.get().createdTime
             song.music = storedSong.get().music
-            service.update(song)
+            service.update(data = song)
         }
         return validationResult
     }
 
     override fun addData(parent: com.github.vhromada.catalog.domain.Music, data: Song): Result<Unit> {
-        val song = mapper.map(data)
+        val song = mapper.map(source = data)
         song.music = parent
-        service.add(song)
+        service.add(data = song)
         return Result()
     }
 

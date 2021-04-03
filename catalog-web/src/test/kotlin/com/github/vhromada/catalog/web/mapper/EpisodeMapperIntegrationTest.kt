@@ -32,7 +32,6 @@ class EpisodeMapperIntegrationTest {
     @Test
     fun map() {
         val episode = EpisodeUtils.getEpisode()
-
         val episodeFO = mapper.map(source = episode)
 
         EpisodeUtils.assertEpisodeDeepEquals(expected = episode, actual = episodeFO)
@@ -44,7 +43,6 @@ class EpisodeMapperIntegrationTest {
     @Test
     fun mapBack() {
         val episodeFO = EpisodeUtils.getEpisodeFO()
-
         val episode = mapper.mapBack(source = episodeFO)
 
         EpisodeUtils.assertEpisodeDeepEquals(expected = episodeFO, actual = episode)

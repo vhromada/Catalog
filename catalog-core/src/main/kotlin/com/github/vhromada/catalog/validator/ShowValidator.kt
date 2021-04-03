@@ -143,7 +143,7 @@ class ShowValidator(
             for (genre in show.genres) {
                 if (genre != null) {
                     val validationResult = genreValidator.validate(data = genre, update = true)
-                    result.addEvents(validationResult.events())
+                    result.addEvents(eventList = validationResult.events())
                 }
             }
         }

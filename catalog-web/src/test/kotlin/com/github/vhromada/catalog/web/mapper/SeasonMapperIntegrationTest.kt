@@ -32,7 +32,6 @@ class SeasonMapperIntegrationTest {
     @Test
     fun map() {
         val season = SeasonUtils.getSeason()
-
         val seasonFO = mapper.map(source = season)
 
         SeasonUtils.assertSeasonDeepEquals(expected = season, actual = seasonFO)
@@ -44,7 +43,6 @@ class SeasonMapperIntegrationTest {
     @Test
     fun mapBack() {
         val seasonFO = SeasonUtils.getSeasonFO()
-
         val season = mapper.mapBack(source = seasonFO)
 
         SeasonUtils.assertSeasonDeepEquals(expected = seasonFO, actual = season)

@@ -32,7 +32,6 @@ class MusicMapperIntegrationTest {
     @Test
     fun map() {
         val music = MusicUtils.getMusic()
-
         val musicFO = mapper.map(source = music)
 
         MusicUtils.assertMusicDeepEquals(expected = music, actual = musicFO)
@@ -44,7 +43,6 @@ class MusicMapperIntegrationTest {
     @Test
     fun mapBack() {
         val musicFO = MusicUtils.getMusicFO()
-
         val music = mapper.mapBack(source = musicFO)
 
         MusicUtils.assertMusicDeepEquals(expected = musicFO, actual = music)

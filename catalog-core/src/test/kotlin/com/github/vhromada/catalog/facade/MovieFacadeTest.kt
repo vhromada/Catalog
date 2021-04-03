@@ -122,7 +122,8 @@ class MovieFacadeTest {
         verify(movieService).get(id = entity.id!!)
         verify(mapper).mapBack(source = domain)
         verify(movieValidator).validateExists(data = Optional.of(domain))
-        verifyNoMoreInteractions(movieService, pictureService, genreService, mapper, movieValidator)
+        verifyNoMoreInteractions(movieService, mapper, movieValidator)
+        verifyZeroInteractions(pictureService, genreService, pictureValidator, genreValidator)
     }
 
     /**
@@ -202,7 +203,7 @@ class MovieFacadeTest {
 
         verify(movieValidator).validate(data = entity, update = true)
         verifyNoMoreInteractions(movieValidator)
-        verifyZeroInteractions(movieService, mapper)
+        verifyZeroInteractions(movieService, pictureService, genreService, mapper, pictureValidator, genreValidator)
     }
 
     /**

@@ -32,7 +32,6 @@ class TimeMapperIntegrationTest {
     @Test
     fun map() {
         val length = 100
-
         val time = mapper.map(source = length)
 
         assertSoftly {
@@ -46,7 +45,6 @@ class TimeMapperIntegrationTest {
     @Test
     fun mapBack() {
         val time = TimeUtils.getTimeFO()
-
         val length = mapper.mapBack(source = time)
 
         assertSoftly {

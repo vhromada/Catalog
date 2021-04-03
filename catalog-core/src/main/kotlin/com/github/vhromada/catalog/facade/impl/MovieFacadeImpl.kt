@@ -94,7 +94,7 @@ class MovieFacadeImpl(
     @Suppress("DuplicatedCode")
     private fun getGenres(movie: Movie): Result<MutableList<com.github.vhromada.catalog.domain.Genre>> {
         val genres = mutableListOf<com.github.vhromada.catalog.domain.Genre>()
-        val result = Result.of(genres)
+        val result = Result.of(data = genres)
         movie.genres!!.filterNotNull()
             .map { genreService.get(id = it.id!!) }
             .forEach {

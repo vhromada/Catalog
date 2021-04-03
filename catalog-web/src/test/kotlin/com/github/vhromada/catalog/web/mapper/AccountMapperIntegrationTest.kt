@@ -32,7 +32,6 @@ class AccountMapperIntegrationTest {
     @Test
     fun map() {
         val account = AccountUtils.getAccount()
-
         val credentials = mapper.map(source = account)
 
         AccountUtils.assertAccountDeepEquals(expected = account, actual = credentials)

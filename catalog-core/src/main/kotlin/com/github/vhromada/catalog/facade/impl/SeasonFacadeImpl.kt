@@ -32,23 +32,23 @@ class SeasonFacadeImpl(
 ), SeasonFacade {
 
     override fun updateData(data: Season): Result<Unit> {
-        val storedSeason = service.get(data.id!!)
-        val validationResult = validator.validateExists(storedSeason)
+        val storedSeason = service.get(id = data.id!!)
+        val validationResult = validator.validateExists(data = storedSeason)
         if (validationResult.isOk()) {
-            val season = mapper.map(data)
+            val season = mapper.map(source = data)
             season.createdUser = storedSeason.get().createdUser
             season.createdTime = storedSeason.get().createdTime
             season.show = storedSeason.get().show
             season.episodes.addAll(storedSeason.get().episodes)
-            service.update(season)
+            service.update(data = season)
         }
         return validationResult
     }
 
     override fun addData(parent: com.github.vhromada.catalog.domain.Show, data: Season): Result<Unit> {
-        val season = mapper.map(data)
+        val season = mapper.map(source = data)
         season.show = parent
-        service.add(season)
+        service.add(data = season)
         return Result()
     }
 

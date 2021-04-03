@@ -29,4 +29,3 @@ tasks.jar {
         attributes["Implementation-Title"] = "Core"
     }
 }
-

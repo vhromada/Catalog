@@ -32,7 +32,6 @@ class MovieMapperIntegrationTest {
     @Test
     fun map() {
         val movie = MovieUtils.getMovie()
-
         val movieFO = mapper.map(source = movie)
 
         MovieUtils.assertMovieDeepEquals(expected = movie, actual = movieFO)
@@ -44,7 +43,6 @@ class MovieMapperIntegrationTest {
     @Test
     fun mapBack() {
         val movieFO = MovieUtils.getMovieFO()
-
         val movie = mapper.mapBack(source = movieFO)
 
         MovieUtils.assertMovieDeepEquals(expected = movieFO, actual = movie)

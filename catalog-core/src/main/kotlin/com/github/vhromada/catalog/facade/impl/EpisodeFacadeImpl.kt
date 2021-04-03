@@ -32,22 +32,22 @@ class EpisodeFacadeImpl(
 
     @Suppress("DuplicatedCode")
     override fun updateData(data: Episode): Result<Unit> {
-        val storedEpisode = service.get(data.id!!)
-        val validationResult = validator.validateExists(storedEpisode)
+        val storedEpisode = service.get(id = data.id!!)
+        val validationResult = validator.validateExists(data = storedEpisode)
         if (validationResult.isOk()) {
-            val episode = mapper.map(data)
+            val episode = mapper.map(source = data)
             episode.createdUser = storedEpisode.get().createdUser
             episode.createdTime = storedEpisode.get().createdTime
             episode.season = storedEpisode.get().season
-            service.update(episode)
+            service.update(data = episode)
         }
         return validationResult
     }
 
     override fun addData(parent: com.github.vhromada.catalog.domain.Season, data: Episode): Result<Unit> {
-        val episode = mapper.map(data)
+        val episode = mapper.map(source = data)
         episode.season = parent
-        service.add(episode)
+        service.add(data = episode)
         return Result()
     }
 

@@ -32,7 +32,6 @@ class CheatMapperIntegrationTest {
     @Test
     fun map() {
         val cheat = CheatUtils.getCheat()
-
         val cheatFO = mapper.map(source = cheat)
 
         CheatUtils.assertCheatDeepEquals(expected = cheat, actual = cheatFO)
@@ -44,7 +43,6 @@ class CheatMapperIntegrationTest {
     @Test
     fun mapBack() {
         val cheatFO = CheatUtils.getCheatFO()
-
         val cheat = mapper.mapBack(source = cheatFO)
 
         CheatUtils.assertCheatDeepEquals(expected = cheatFO, actual = cheat)

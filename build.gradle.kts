@@ -14,7 +14,7 @@ val commonVersion by extra(initialValue = "6.1.1")
 
 allprojects {
     group = "com.github.vhromada.catalog"
-    version = "11.0.1"
+    version = "11.0.2"
 
     apply(plugin = "kotlin")
 

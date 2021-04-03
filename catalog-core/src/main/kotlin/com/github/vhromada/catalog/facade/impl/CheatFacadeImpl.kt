@@ -46,15 +46,15 @@ class CheatFacadeImpl(
     }
 
     override fun updateData(data: Cheat): Result<Unit> {
-        val storedCheat = service.get(data.id!!)
-        val validationResult = validator.validateExists(storedCheat)
+        val storedCheat = service.get(id = data.id!!)
+        val validationResult = validator.validateExists(data = storedCheat)
         if (validationResult.isOk()) {
-            val cheat = mapper.map(data)
+            val cheat = mapper.map(source = data)
                 .copy(data = getUpdatedCheatData(originalData = storedCheat.get().data, updatedData = data.data!!))
             cheat.createdUser = storedCheat.get().createdUser
             cheat.createdTime = storedCheat.get().createdTime
             cheat.game = storedCheat.get().game
-            service.update(cheat)
+            service.update(data = cheat)
         }
         return validationResult
     }
@@ -64,8 +64,8 @@ class CheatFacadeImpl(
             return Result.error(key = "GAME_CHEAT_EXIST", "Game already has cheat.")
         }
 
-        parent.cheat = mapper.map(data)
-        parentService.update(parent)
+        parent.cheat = mapper.map(source = data)
+        parentService.update(data = parent)
         return Result()
     }
 
